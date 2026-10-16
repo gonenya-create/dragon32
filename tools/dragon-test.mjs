@@ -730,6 +730,29 @@ if (part('full computer /dragon/app/ (theater, coder, AI)')) {
   check('folding the drawn keyboard hides it and the TV grows', !(await p.locator('.d32-kbd').isVisible()) && tvAfter > tvBefore, tvBefore + ' -> ' + tvAfter);
   await p.locator('.d32-theater-kbd').click();
   await p.waitForTimeout(150);
+  // פקודות מוכנות: לשונית "פקודות", כרטיס נפתח, "לנסות עכשיו" מצייר, "להוסיף לתוכנית" נותן מספר שורה, וחיפוש
+  await p.locator('.d32-tab[data-tab="commands"]').click();
+  check('commands: drawing category shows cards', (await p.locator('.d32-cmd').count()) >= 4);
+  await p.locator('.d32-cmd-head:has-text("מציירים עיגול")').click();
+  check('a card opens with its code', /CIRCLE\(128,96\),40/.test(await p.locator('.d32-cmd-code').textContent()));
+  await p.locator('.d32-cmd-form input').first().fill('100');
+  check('the form changes the code', /CIRCLE\(100,96\),40/.test(await p.locator('.d32-cmd-code').textContent()));
+  await p.locator('.d32-cmd-try').click();
+  await p.waitForFunction(() => document.querySelector('#dragon-room').classList.contains('is-gfx'), null, { timeout: 8000 });
+  check('"try now" types it and draws on the graphics screen', true);
+  await p.keyboard.press('Escape');
+  await p.waitForTimeout(300);
+  check('Esc goes back to the text screen', !(await room.evaluate(e => e.classList.contains('is-gfx'))));
+  await p.locator('.d32-cmds-search input').fill('צליל');
+  check('search finds sound commands across categories', (await p.locator('.d32-cmd-head:has-text("צפצוף")').count()) === 1);
+  await p.locator('.d32-cmds-cats button:has-text("חזרות ותנועה")').click();
+  await p.locator('.d32-cmd-head:has-text("לנצח")').click();
+  await p.locator('.d32-cmd-add').click();
+  await p.waitForFunction(() => /GOTO/.test(document.querySelector('#dragon-room .d32-out').textContent), null, { timeout: 8000 });
+  await p.waitForTimeout(400);
+  const prog = await p.evaluate(() => document.querySelector('#dragon-room').d32 && document.querySelector('.d32-coder-list').textContent);
+  check('"add to program" adds numbered lines that GOTO the right line', /PRINT "DRAGON ";[\s\S]*GOTO\s*\d+/.test(prog), prog);
+  await p.locator('.d32-tab[data-tab="program"]').click();
   check('full computer has the coder panel and the AI helper', await p.locator('.d32-coder').isVisible() && await p.locator('.d32-ai').isVisible());
   check('full computer is installable (manifest)', (await p.locator('link[rel="manifest"]').getAttribute('href')) === '/manifest.webmanifest');
   const icons = await p.evaluate(async () => {

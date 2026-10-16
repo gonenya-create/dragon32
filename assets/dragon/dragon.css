@@ -479,3 +479,46 @@ html.d32-booting .page { visibility: hidden; }
 a.d32-cart.is-more { text-decoration: none; opacity: 0.85; outline: 2px dashed #c9cfdb; outline-offset: -6px; }
 a.d32-cart.is-more:hover { opacity: 1; transform: translateY(-2px); }
 a.d32-cart.is-more:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+/* ---------- פקודות מוכנות (commands.js), בלשונית "פקודות" של ארגז הכלים ---------- */
+.d32-cmds { display: flex; flex-direction: column; gap: 10px; }
+.d32-cmds-search input {
+  width: 100%; box-sizing: border-box; min-height: 40px; padding: 6px 10px; border: 1px solid #4a3d31; border-radius: 8px;
+  background: #0f0c0a; color: #efe6d2; font: 15px/1.3 var(--font-body);
+}
+.d32-cmds-cats { display: flex; flex-wrap: wrap; gap: 6px; }
+.d32-coder .d32-cmds-cats button {
+  min-height: 34px; padding: 4px 11px; border: 1px solid #4a3d31; border-radius: 999px; background: #241e19; color: #e1d5c1; font: 500 14px/1.2 var(--font-body); cursor: pointer;
+}
+.d32-coder .d32-cmds-cats button[aria-pressed="true"] { background: #f2c94c; border-color: #f2c94c; color: #1b1206; font-weight: 700; }
+.prose .d32-cmds-none { margin: 0; color: #c9bba5; font-size: 14px; }
+.d32-cmds-list { display: flex; flex-direction: column; gap: 8px; }
+.d32-cmd { border: 1px solid #3f342a; border-radius: 10px; background: #211b16; }
+.d32-cmd:has(.d32-cmd-body) { border-color: #6b5a46; background: #2a221b; }
+.d32-coder .d32-cmd-head {
+  width: 100%; display: flex; align-items: baseline; gap: 8px; min-height: 44px; padding: 8px 12px; border: 0; background: transparent;
+  color: #efe6d2; font: 600 15px/1.3 var(--font-body); text-align: right; cursor: pointer; border-radius: 10px;
+}
+.d32-coder .d32-cmd-head:hover { background: #2b241d; }
+.d32-cmd-en { font: 700 13px/1.2 'Courier New', ui-monospace, monospace; color: #f2c94c; }
+.d32-cmd-body { display: flex; flex-direction: column; gap: 8px; padding: 0 12px 12px; }
+.prose .d32-cmd-say, .prose .d32-cmd-note { margin: 0; font-size: 14px; line-height: 1.5; color: #d9ccb6; }
+.prose .d32-cmd-note { color: #f2c94c; font-size: 13px; }
+.d32-cmd.is-danger .d32-cmd-note { color: #ff9b8a; }
+.d32-cmd-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.d32-cmd-form label { display: flex; flex-direction: column; gap: 3px; font-size: 13px; color: #c9bba5; }
+.d32-cmd-form :is(input, select) {
+  min-height: 36px; box-sizing: border-box; width: 100%; padding: 4px 8px; border: 1px solid #4a3d31; border-radius: 6px;
+  background: #0f0c0a; color: #efe6d2; font: 14px/1.2 var(--font-body);
+}
+.prose .d32-coder code.d32-cmd-code, .d32-cmd-code {
+  display: block; white-space: pre-wrap; word-break: break-all; padding: 8px; border: 0; border-radius: 6px; background: #0f0c0a; color: #8dff8d;
+  font: 13px/1.5 'Courier New', ui-monospace, monospace; text-align: left;
+}
+.d32-cmd-row { display: flex; gap: 6px; }
+.d32-coder .d32-cmd-row button {
+  flex: 1; min-height: 40px; padding: 6px 10px; border: 1px solid #6b5d4d; border-radius: 8px; background: transparent; color: #efe6d2; font: 600 14px/1.2 var(--font-body); cursor: pointer;
+}
+.d32-coder .d32-cmd-row button.is-main { background: #f2c94c; border-color: #f2c94c; color: #1b1206; }
+.d32-coder .d32-cmd-row button:hover { border-color: #efe6d2; }
+.d32-coder :is(.d32-cmd-head, .d32-cmds-cats button, .d32-cmd-row button, .d32-cmd-form :is(input, select), .d32-cmds-search input):focus-visible { outline: 3px solid #f2c94c; outline-offset: 2px; }

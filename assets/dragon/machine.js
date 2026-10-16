@@ -1199,7 +1199,7 @@ export function createMachine({ view, sound, loadTape, saveTape, joy }) {
       const n = running.order[Math.min(running.pc.i, running.order.length - 1)];
       running.waiting = null;
       stop('BREAK IN ' + n, true);
-    }
+    } else if (G.on) { G.on = false; view.graphics(false); }   // ציור ישיר (בלי תוכנית): BREAK חוזר למסך הטקסט
   }
 
   function parseProgram(text) {

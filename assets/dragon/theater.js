@@ -3,6 +3,7 @@
 // רק תצוגה: כל מקש נשלח לשורת ההקלדה או כאירוע מקלדת, כך שה-BASIC, הגרפיקה והמחסניות עובדים כרגיל.
 
 import { createCoder } from './coder.js';
+import { createCommands } from './commands.js';
 
 // המקלדת: [תו, תו עם SHIFT, רוחב]. מקשים מיוחדים באותיות גדולות.
 const ROWS = [
@@ -135,7 +136,8 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   });
   showTab(tab);
   // מה עובר לכל לשונית בזמן המסך המלא
-  const MOVE = [['.d32-try', 'commands'], ['.d32-tip', 'commands'], ['.d32-share-row', 'program'], ['.d32-cartshelf', 'shelf'], ['.d32-shelf:not(.d32-cartshelf)', 'shelf']];
+  panes.commands.appendChild(createCommands({ root, machine, powerOn, input }));
+  const MOVE = [['.d32-share-row', 'program'], ['.d32-cartshelf', 'shelf'], ['.d32-shelf:not(.d32-cartshelf)', 'shelf']];
   const moved = [];
   function toTabs() {
     for (const [sel, id] of MOVE) {
@@ -248,8 +250,18 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
 
   // המקלדת האמיתית מדליקה את המקש המצויר
   const which = e => FROM_KEY[e.key] || (e.key.length === 1 ? e.key.toUpperCase() : null);
+  // לחצו על לשונית או כפתור ואז התחילו להקליד: האותיות הולכות למחשב, לא לכפתור
+  const typingField = el => el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName));
   function down(e) {
     if (!active || !e.isTrusted) return;
+    const onButton = document.activeElement?.closest?.('button, a, [role="tab"]');
+    // רווח ו-Enter על כפתור לוחצים עליו (נגישות מקלדת); כל שאר האותיות הולכות לשורת ההקלדה
+    const activates = onButton && (e.key === ' ' || e.key === 'Enter');
+    if (!typingField(document.activeElement) && !activates && !e.ctrlKey && !e.metaKey && !e.altKey
+      && (e.key.length === 1 || e.key === 'Backspace')
+      && !root.classList.contains('is-cart') && !root.classList.contains('is-gfx')) {
+      input.focus({ preventScroll: true });
+    }
     const k = which(e);
     if (!k) return;
     light(k, true);
