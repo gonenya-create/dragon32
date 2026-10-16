@@ -691,6 +691,7 @@ if (part('cartridge DRAGON CASTLE (full computer)')) {
   await p.waitForTimeout(800);
   const st = () => p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return { mode: s.mode, paused: !!s.paused, x: s.p && s.p.x, room: s.room && s.room.name, n: s.n }; });
   check('castle shows its title', (await st()).mode === 'title');
+  check('while a cartridge plays, the toolbox and helpers fold away', !(await p.locator('.d32-coder').isVisible()) && !(await p.locator('.d32-side').isVisible()));
   // מסך הפתיחה מקבל JUMP רק אחרי חצי שנייה; באתר החי טעינת המחסנית לפעמים איטית יותר
   await p.waitForFunction(() => document.querySelector('#dragon-room').d32Cart.state.t > 30);
   await p.keyboard.press('Space');
@@ -753,6 +754,20 @@ if (part('full computer /dragon/app/ (theater, coder, AI)')) {
   const prog = await p.evaluate(() => document.querySelector('#dragon-room').d32 && document.querySelector('.d32-coder-list').textContent);
   check('"add to program" adds numbered lines that GOTO the right line', /PRINT "DRAGON ";[\s\S]*GOTO\s*\d+/.test(prog), prog);
   await p.locator('.d32-tab[data-tab="program"]').click();
+  // סדנה: חלון התוכנית רחב, בלי מקלדת מצוירת; מסך בלבד: רק המסך
+  const cwNormal = await p.locator('.d32-coder').evaluate(e => e.getBoundingClientRect().width);
+  await p.locator('.d32-theater-shop').click();
+  await p.waitForTimeout(150);
+  const shopW = await p.locator('.d32-coder').evaluate(e => e.getBoundingClientRect().width);
+  check('workshop: the program window is wide and the drawn keyboard is hidden', shopW > cwNormal + 100 && !(await p.locator('.d32-kbd').isVisible()), cwNormal + ' -> ' + shopW);
+  await p.locator('.d32-theater-shop').click();
+  await p.locator('.d32-theater-only').click();
+  await p.waitForTimeout(300);
+  const only = await p.evaluate(() => ({ bar: getComputedStyle(document.querySelector('.d32-theater-bar')).display, coder: getComputedStyle(document.querySelector('.d32-coder')).display, sw: document.querySelector('.d32-screen').getBoundingClientRect().width }));
+  check('screen only: no bar, no tools, the screen fills the window', only.bar === 'none' && only.coder === 'none' && only.sw > 1100, JSON.stringify(only));
+  await p.locator('.d32-only-out').click();
+  await p.waitForTimeout(200);
+  check('leaving "screen only" brings the tools back', await p.locator('.d32-coder').isVisible() && await p.locator('.d32-theater-bar').isVisible());
   check('full computer has the coder panel and the AI helper', await p.locator('.d32-coder').isVisible() && await p.locator('.d32-ai').isVisible());
   check('full computer is installable (manifest)', (await p.locator('link[rel="manifest"]').getAttribute('href')) === '/manifest.webmanifest');
   const icons = await p.evaluate(async () => {

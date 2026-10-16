@@ -36,9 +36,16 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   bar.innerHTML = '<span class="d32-bar-brand"><b dir="ltr">Dragon 1982</b><span class="d32-status" role="status" data-s="off">כבוי</span></span>'
     + '<p class="d32-theater-hint">מקלידים במקלדת שלכם, או לוחצים על המקשים המצוירים. <bdi dir="ltr">Esc</bdi> הוא <bdi dir="ltr">BREAK</bdi>.</p>'
     + '<span class="d32-theater-btns"><button type="button" class="d32-theater-code" aria-pressed="false">ארגז כלים</button>'
+    + '<button type="button" class="d32-theater-shop" aria-pressed="false">סדנה</button>'
     + '<button type="button" class="d32-theater-kbd" aria-pressed="true">מקלדת מצוירת</button>'
     + '<button type="button" class="d32-theater-click" aria-pressed="true">צליל מקשים</button>'
+    + '<button type="button" class="d32-theater-only">מסך בלבד ⛶</button>'
     + '<button type="button" class="d32-theater-exit">המדריך והדף ←</button></span>';
+  // יציאה ממצב "מסך בלבד": כפתור קטן בפינה (גם Esc של הדפדפן יוצא ממסך מלא)
+  const onlyOut = document.createElement('button');
+  onlyOut.type = 'button';
+  onlyOut.className = 'd32-only-out';
+  onlyOut.textContent = 'יציאה ממסך בלבד';
   tv.before(bar);
 
   // הצד של הטלוויזיה: רמקול, שני כפתורי סיבוב, ערוץ 36 (שם כיוונו את ה-Dragon) ונורית
@@ -188,6 +195,38 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   }
   kbdBtn.addEventListener('click', () => { setKbd(!showKbd); input.focus({ preventScroll: true }); });
 
+  // סדנה: מצב לכתיבת תוכניות. אותו מחשב, בתצוגה אחרת
+  let shop = false, only = false;
+  const shopBtn = bar.querySelector('.d32-theater-shop');
+  shopBtn.addEventListener('click', () => {
+    shop = !shop;
+    shopBtn.setAttribute('aria-pressed', String(shop));
+    root.classList.toggle('is-shop', shop);
+    if (shop) { coding = true; root.classList.add('has-coder'); codeBtn.setAttribute('aria-pressed', 'true'); coder.start(); showTab('program'); }
+    layout();
+    input.focus({ preventScroll: true });
+  });
+  // מסך בלבד: רק התמונה של המחשב, על כל המסך (Fullscreen API כשיש; אחרת על כל החלון)
+  function setOnly(on) {
+    if (only === on) return;
+    only = on;
+    root.classList.toggle('is-only', on);
+    if (on) { root.appendChild(onlyOut); if (root.requestFullscreen && !document.fullscreenElement) root.requestFullscreen().catch(() => {}); }
+    else { onlyOut.remove(); if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); }
+    layout();
+    if (!root.classList.contains('is-cart')) input.focus({ preventScroll: true });
+  }
+  bar.querySelector('.d32-theater-only').addEventListener('click', () => setOnly(true));
+  onlyOut.addEventListener('click', () => setOnly(false));
+  // Esc של הדפדפן יוצא ממסך מלא: אז יוצאים גם ממצב "מסך בלבד"
+  document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && only) setOnly(false); });
+  // מחסנית נכנסת או יוצאת: מחשבים מחדש את הגודל (הכלים מתקפלים בזמן משחק)
+  let wasCart = false;
+  new MutationObserver(() => {
+    const c = root.classList.contains('is-cart');
+    if (c !== wasCart) { wasCart = c; layout(); }
+  }).observe(root, { attributes: true, attributeFilter: ['class'] });
+
   // שורת המצב בראש המסך: מה המחשב עושה עכשיו
   const status = bar.querySelector('.d32-status');
   let statusTimer = 0;
@@ -202,11 +241,34 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   // הגודל: הטלוויזיה והמקלדת נכנסות יחד לגובה החלון
   function layout() {
     if (!active) return;
+    const cart = root.classList.contains('is-cart');
+    if (only) {
+      // רק המסך, ביחס 4:3, על כל החלון. --tvw מחושב כך שהמסך (79% מהטלוויזיה) ממלא את החלון
+      const sw = Math.min(innerWidth, innerHeight * 4 / 3);
+      root.style.setProperty('--tvw', sw / 0.79 + 'px');
+      root.style.setProperty('--fs', Math.min((sw - 28) / 19.6, (sw * 0.75 - 24) / (16 * 1.12)) + 'px');
+      return;
+    }
+    if (shop && !cart) {
+      // סדנה: חלון התוכנית רחב משמאל, העוזרים מימין, והטלוויזיה קטנה ביניהם, בלי מקלדת מצוירת
+      const cw = Math.min(400, Math.max(280, innerWidth * 0.2));
+      const ww = Math.max(420, innerWidth * 0.4);
+      const w = Math.max(360, Math.min(innerWidth - ww - cw - 96, (innerHeight - bar.offsetHeight - 60) / 0.7));
+      root.classList.remove('coder-over');
+      root.style.setProperty('--cw', cw + 'px');
+      root.style.setProperty('--ww', ww + 'px');
+      root.style.setProperty('--ctop', bar.offsetHeight + 'px');
+      root.style.setProperty('--tvw', w + 'px');
+      const sw = w * 0.79;
+      root.style.setProperty('--fs', Math.min((sw - 28) / 19.6, (sw * 0.75 - 24) / (16 * 1.12)) + 'px');
+      return;
+    }
     const avail = innerHeight - bar.offsetHeight - 40;
     // חלון התוכנית צריך לפחות 280 פיקסלים בצד; אם אין מקום, הוא נפתח מעל הטלוויזיה
-    const room = coding ? innerWidth - 2 * (280 + 32) : innerWidth * 0.94;
+    // בזמן משחק מחסנית הכלים מתקפלים, והטלוויזיה תופסת את כל הרוחב
+    const room = coding && !cart ? innerWidth - 2 * (280 + 32) : innerWidth * 0.94;
     // הטלוויזיה גבוהה בערך 0.67 מהרוחב שלה, ועם המקלדת בערך פי 1
-    const w = Math.max(560, Math.min(innerWidth * 0.94, room, 1180, (avail - 20) / (showKbd ? 1.0 : 0.7)));
+    const w = Math.max(560, Math.min(innerWidth * 0.94, room, cart ? 1400 : 1180, (avail - 20) / (showKbd ? 1.0 : 0.7)));
     const side = (innerWidth - w) / 2 - 32;
     root.classList.toggle('coder-over', side < 280);
     root.style.setProperty('--cw', Math.min(400, Math.max(280, side)) + 'px');
@@ -323,6 +385,7 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
     root.classList.remove('is-theater');
     coder.stop();
     clearInterval(statusTimer);
+    setOnly(false);
     fromSide();
     fromTabs();
     document.documentElement.classList.remove('d32-theater-on');

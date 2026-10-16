@@ -522,3 +522,26 @@ a.d32-cart.is-more:focus-visible { outline: 3px solid var(--focus); outline-offs
 .d32-coder .d32-cmd-row button.is-main { background: #f2c94c; border-color: #f2c94c; color: #1b1206; }
 .d32-coder .d32-cmd-row button:hover { border-color: #efe6d2; }
 .d32-coder :is(.d32-cmd-head, .d32-cmds-cats button, .d32-cmd-row button, .d32-cmd-form :is(input, select), .d32-cmds-search input):focus-visible { outline: 3px solid #f2c94c; outline-offset: 2px; }
+
+/* ---------- שלב 3: מחסנית, סדנה ומסך בלבד (theater.js) ---------- */
+/* בזמן משחק מחסנית: הכלים והעוזרים מתקפלים, ונשארים המסך והמשחק */
+.d32.is-theater.is-cart :is(.d32-coder, .d32-side) { display: none; }
+/* סדנה: חלון התוכנית רחב משמאל, טלוויזיה קטנה בין שני הצדדים, בלי מקלדת מצוירת */
+.d32.is-theater.is-shop:not(.is-cart) { padding-left: calc(var(--ww) + 32px); padding-right: calc(var(--cw) + 32px); }
+.d32.is-theater.is-shop:not(.is-cart) .d32-theater-bar { margin-left: calc(-1 * (var(--ww) + 32px)); margin-right: calc(-1 * (var(--cw) + 32px)); width: 100vw; }
+.d32.is-theater.is-shop.has-coder:not(.is-cart) .d32-coder { width: var(--ww); }
+.d32.is-theater.is-shop:not(.is-cart) .d32-kbd { display: none; }
+.d32.is-theater.is-shop .d32-coder .d32-coder-list button { font-size: 16px; line-height: 1.7; }
+.d32-theater-bar button[aria-pressed="true"].d32-theater-shop { border-color: #f2c94c; color: #f2c94c; }
+/* מסך בלבד: רק תמונת המחשב, ביחס 4:3, על כל המסך */
+.d32.is-theater.is-only { background: #000; justify-content: center; padding: 0; }
+.d32.is-theater.is-only > :not(.d32-tv, .d32-only-out, .d32-pad) { display: none; }
+.d32.is-theater.is-only .d32-tv { padding: 0; background: none; box-shadow: none; border-radius: 0; }
+.d32.is-theater.is-only :is(.d32-tv-panel) { display: none; }
+.d32.is-theater.is-only .d32-crt { left: 0; top: 0; }
+.d32-only-out {
+  position: fixed; z-index: 1002; top: 12px; left: 12px; padding: 8px 14px; border: 1.5px solid #6b5d4d; border-radius: 8px;
+  background: rgba(20, 16, 12, 0.85); color: #efe6d2; font: 700 14px/1.2 var(--font-body); cursor: pointer; opacity: 0.45;
+}
+.d32-only-out:hover, .d32-only-out:focus-visible { opacity: 1; }
+.d32-only-out:focus-visible { outline: 3px solid #f2c94c; outline-offset: 2px; }
