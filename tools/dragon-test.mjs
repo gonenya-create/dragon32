@@ -90,7 +90,7 @@ console.log('Dragon 32 test → ' + PAGE);
 if (part('basics')) {
   console.log('basics');
   const p = await fresh();
-  check('boot screen', /DRAGON DATA LTD[\s\S]*OK\s*$/.test(await screenText(p)));
+  check('boot screen', /DRAGON 1982 BASIC 1\.0\n\(C\) 2026 GONEN YAROM[\s\S]*OK\s*$/.test(await screenText(p)));
   await send(p, 'print 7*6');
   check('PRINT 7*6 = 42', / 42 \nOK$/.test(await screenText(p)), await screenText(p));
   await send(p, 'a$="dragon":print a$;len(a$)');
@@ -281,7 +281,7 @@ if (part('room /dragon/')) {
   check('room starts switched off', await p.locator('#dragon-room').evaluate(e => e.classList.contains('is-off')) && await p.locator('.d32-power').isVisible());
   await p.locator('.d32-power').click();
   await p.waitForFunction(() => /OK\s*$/.test(document.querySelector('#dragon-room .d32-out').textContent), null, { timeout: 4000 });
-  check('room boots', /DRAGON DATA LTD[\s\S]*OK\s*$/.test(await p.locator('#dragon-room .d32-out').textContent()));
+  check('room boots', /DRAGON 1982 BASIC 1\.0\n\(C\) 2026 GONEN YAROM[\s\S]*OK\s*$/.test(await p.locator('#dragon-room .d32-out').textContent()));
   check('room shelf has 6 tapes', (await p.locator('#dragon-room .d32-tape').count()) === 6);
   const input = p.locator('#dragon-room .d32-input');
   await input.fill('print 6*7'); await input.press('Enter'); await p.waitForTimeout(250);

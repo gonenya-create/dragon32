@@ -1239,9 +1239,9 @@ export function createMachine({ view, sound, loadTape, saveTape, joy }) {
     },
     brk,
     boot() {
-      print('(C) 1982 DRAGON DATA LTD');
-      print('16K BASIC INTERPRETER 1.0');
-      print('(C) 1982 BY MICROSOFT');
+      // מסך פתיחה מקורי שלנו, בסגנון של אז. לא מעתיקים את הודעות זכויות היוצרים של Dragon Data ו-Microsoft (16.10, החלטת גונן)
+      print('DRAGON 1982 BASIC 1.0');
+      print('(C) 2026 GONEN YAROM');
       print('');
       print('OK');
     }
