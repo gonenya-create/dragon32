@@ -684,6 +684,9 @@ if (part('cartridge DRAGON CASTLE (full computer)')) {
   p.on('pageerror', e => pageErrors.push(e.message));
   await p.goto(base.replace(/\/$/, '') + '/');
   await p.waitForSelector('#dragon-room.is-ready');
+  // במסך המלא המדף נמצא בלשונית "קלטות ומחסניות" של ארגז הכלים
+  await p.locator('.d32-tab[data-tab="shelf"]').click();
+  check('the shelf tab shows the cartridges', await p.locator('.d32-pane[data-pane="shelf"] .d32-cart').first().isVisible());
   await p.locator('.d32-cart:has-text("טירת הדרקון")').click();
   await p.waitForTimeout(800);
   const st = () => p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return { mode: s.mode, paused: !!s.paused, x: s.p && s.p.x, room: s.room && s.room.name, n: s.n }; });
@@ -718,6 +721,15 @@ if (part('full computer /dragon/app/ (theater, coder, AI)')) {
   const room = p.locator('#dragon-room');
   await p.waitForTimeout(1400);
   check('the full computer opens straight in full screen', await room.evaluate(e => e.classList.contains('is-theater')));
+  check('top bar: brand and status "מוכן"', (await p.locator('.d32-bar-brand b').textContent()) === 'Dragon 1982' && /מוכן/.test(await p.locator('.d32-status').textContent()));
+  check('toolbox has 3 tabs; the tapes are in the shelf tab', (await p.locator('.d32-tab').count()) === 3 && (await p.locator('.d32-pane[data-pane="shelf"] .d32-tape').count()) >= 6);
+  const tvBefore = await p.locator('.d32-tv').evaluate(e => e.getBoundingClientRect().width);
+  await p.locator('.d32-theater-kbd').click();
+  await p.waitForTimeout(150);
+  const tvAfter = await p.locator('.d32-tv').evaluate(e => e.getBoundingClientRect().width);
+  check('folding the drawn keyboard hides it and the TV grows', !(await p.locator('.d32-kbd').isVisible()) && tvAfter > tvBefore, tvBefore + ' -> ' + tvAfter);
+  await p.locator('.d32-theater-kbd').click();
+  await p.waitForTimeout(150);
   check('full computer has the coder panel and the AI helper', await p.locator('.d32-coder').isVisible() && await p.locator('.d32-ai').isVisible());
   check('full computer is installable (manifest)', (await p.locator('link[rel="manifest"]').getAttribute('href')) === '/manifest.webmanifest');
   const icons = await p.evaluate(async () => {

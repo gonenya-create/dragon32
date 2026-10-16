@@ -216,8 +216,40 @@ html.d32-booting .page { visibility: hidden; }
 }
 .d32.is-theater > :is(.d32-title, .d32-help, .d32-tip, .d32-try, .d32-then, .d32-share-row, .d32-theater-open, noscript) { display: none; }
 .d32.is-theater .d32-theater-bar {
-  display: flex; align-items: center; justify-content: space-between; gap: 16px; width: var(--tvw); padding: 12px 0; box-sizing: border-box;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%; padding: 10px 16px; box-sizing: border-box;
 }
+/* שורת המותג והמצב (שלב 1 של העיצוב החדש, 16.10) */
+.d32-bar-brand { display: flex; align-items: center; gap: 12px; color: #efe6d2; white-space: nowrap; }
+.d32-bar-brand b { font: 700 19px/1.2 var(--font-body); }
+.d32-status { font-size: 13px; padding: 3px 10px; border-radius: 999px; background: #2b241d; color: #c9bba5; }
+.d32-status::before { content: '● '; }
+.d32-status[data-s="ok"] { background: #1f3a22; color: #8fe39a; }
+.d32-status[data-s="run"] { background: #2a2014; color: #f2c94c; }
+.d32-status[data-s="cart"] { background: #1e2a3a; color: #9cc8ff; }
+@media (max-width: 1279px) { .prose .d32.is-theater .d32-theater-hint { display: none; } }
+.d32-theater-bar button[aria-pressed="true"]:is(.d32-theater-kbd, .d32-theater-click) { border-color: #8dff8d; color: #8dff8d; }
+.d32.is-theater.kbd-off .d32-kbd { display: none; }
+
+/* ארגז הכלים: לשוניות בחלון שמשמאל */
+.d32-tabs { display: flex; border-bottom: 1px solid #4a3d31; margin: -14px -14px 0; }
+.d32-coder .d32-tabs .d32-tab {
+  flex: 1; min-height: 44px; padding: 8px 6px; border: 0; border-bottom: 3px solid transparent; border-radius: 0; background: transparent;
+  color: #c9bba5; font: 500 15px/1.2 var(--font-body); cursor: pointer;
+}
+.d32-coder .d32-tabs .d32-tab[aria-selected="true"] { color: #efe6d2; font-weight: 700; border-bottom-color: #f2c94c; }
+.d32-coder .d32-tabs .d32-tab:hover { color: #efe6d2; background: #241e19; }
+.d32-pane { display: flex; flex-direction: column; gap: 10px; min-height: 0; flex: 1; overflow: auto; }
+.d32-pane[hidden] { display: none; }
+.d32.is-theater .d32-coder .d32-shelf { width: auto; max-width: none; margin-top: 0; }
+.d32-coder .d32-tapes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.d32-coder .d32-share-row .d32-check { display: none; }
+.d32-coder .d32-carts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.d32-coder .d32-cart { width: auto; }
+.d32-coder .d32-try { max-width: none; margin-top: 0; }
+.d32-coder .d32-try button { background: #241e19; color: #efe6d2; border-color: #6b5d4d; }
+.d32-coder .d32-try button:hover { border-color: #efe6d2; }
+.prose .d32-coder :is(.d32-tip, .d32-share-row) { color: #c9bba5; }
+.d32-coder .d32-share { background: #241e19; color: #efe6d2; border-color: #6b5d4d; }
 .d32-theater-bar button {
   padding: 7px 14px; border: 1.5px solid #6b5d4d; border-radius: 8px; background: #241e19; color: #efe6d2; font: 700 15px/1.2 var(--font-body); cursor: pointer; white-space: nowrap;
 }
@@ -330,12 +362,12 @@ html.d32-booting .page { visibility: hidden; }
 .prose .d32-coder h2 { margin: 0; font-size: 18px; color: #efe6d2; }
 .d32-coder-count { font-size: 13px; color: #c9bba5; }
 .d32-coder-tools, .d32-coder-row { display: flex; flex-wrap: wrap; gap: 6px; }
-.d32-coder button {
+.d32-coder [data-pane="program"] button {
   padding: 6px 10px; border: 1.5px solid #6b5d4d; border-radius: 8px; background: #241e19; color: #efe6d2; font: 600 14px/1.2 var(--font-body); cursor: pointer;
 }
-.d32-coder button:hover { border-color: #efe6d2; }
+.d32-coder [data-pane="program"] button:hover { border-color: #efe6d2; }
 .d32-coder button:focus-visible, .d32-coder textarea:focus-visible { outline: 3px solid #f2c94c; outline-offset: 2px; }
-.d32-coder button.is-main { border-color: #8dff8d; color: #8dff8d; }
+.d32-coder [data-pane="program"] button.is-main { border-color: #8dff8d; color: #8dff8d; }
 .d32-coder-paste { display: flex; flex-direction: column; gap: 8px; }
 .d32-coder-paste[hidden] { display: none; }
 .d32-coder-paste label { font-size: 14px; color: #c9bba5; }
