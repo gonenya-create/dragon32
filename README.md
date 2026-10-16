@@ -10,6 +10,7 @@ programmer tools and an AI helper. Installable as an app.
   No original ROM or software is used.
 - A hobby tribute project. Not affiliated with, or endorsed by, Dragon Data Ltd.
 - Built by [Gonen Yarom](https://www.gonenyarom.co.il) with AI.
+- Code licence: [MIT](LICENSE). The licence covers the code only, not the name "Dragon 1982" or the domain.
 
 ---
 
