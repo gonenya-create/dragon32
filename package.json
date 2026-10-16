@@ -1,0 +1,9 @@
+{
+  "name": "dragon32",
+  "private": true,
+  "type": "module",
+  "description": "Dragon 32 (1982) in the browser. Static app; this file only exists for the one server function in api/ (the AI helper).",
+  "dependencies": {
+    "@anthropic-ai/sdk": "0.135.0"
+  }
+}

@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dragon 32 — המחשב המלא</title>
+<meta name="description" content="המחשב המלא: Dragon 32 מ-1982 במסך מלא, עם טלוויזיה ומקלדת מהתקופה, כלים למתכנת, עוזר AI ומשחקי מחסנית. אפשר להתקין אותו כאפליקציה.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="he_IL">
+<meta property="og:title" content="Dragon 32 — המחשב המלא">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Dragon 32">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1a1511">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;500;700&amp;family=Amatic+SC:wght@700&amp;display=swap">
+<link rel="stylesheet" href="/assets/notebook.css">
+<link rel="stylesheet" href="/assets/dragon/dragon.css">
+</head>
+<body>
+<a class="skip-link" href="#main">דילוג לתוכן</a>
+<div class="page">
+
+<header class="site-header">
+<a class="brand" href="https://www.gonenyarom.co.il/" aria-label="גונן ירום — האתר האישי"><span class="brand-name">גונן ירום</span><span class="brand-tag">בונה עם AI</span></a>
+<nav class="site-nav" aria-label="ניווט ראשי">
+<a href="https://www.gonenyarom.co.il/#projects">פרויקטים</a>
+<a href="https://www.gonenyarom.co.il/#guides">מדריכים</a>
+<a href="https://www.gonenyarom.co.il/history/">התפתחות המכונה</a>
+<a href="https://www.gonenyarom.co.il/book/">הספר</a>
+<a href="https://www.gonenyarom.co.il/games/">מה בניתי</a>
+<a href="https://www.gonenyarom.co.il/whats-new/">מה חדש</a>
+<a href="https://www.gonenyarom.co.il/about/">אודות</a>
+</nav>
+</header>
+
+<main id="main" style="display: flex; flex-direction: column; gap: 48px;">
+
+<section class="hero" aria-labelledby="room-title">
+<div class="hero-main">
+<p class="hero-kicker">המחשב המלא</p>
+<h1 id="room-title"><bdi>Dragon 32</bdi>, המחשב המלא</h1>
+<p class="hero-lead"><bdi>Dragon 32</bdi> יצא בוויילס <span class="nobr">ב-1982</span>: <bdi>32</bdi> קילובייט זיכרון, מקלדת שמתחברת לטלוויזיה, וקלטת קסטה במקום כונן. כאן הוא רץ בדפדפן: מכניסים מחסנית ומשחקים, טוענים משחקים מהקלטת, או כותבים BASIC בעצמכם.</p>
+<p class="room-full-link">כאן יש הכול: מסך מלא, כלים למתכנת, עוזר AI וכל המחסניות. אפשר גם להתקין אותו כאפליקציה: בטלפון "הוספה למסך הבית", ובמחשב סמל ההתקנה בשורת הכתובת. <a href="https://www.gonenyarom.co.il/dragon/">לגרסה הקצרה באתר ←</a></p>
+</div>
+</section>
+
+<div class="prose room-machine">
+<section id="dragon-room" class="d32 d32-room" data-edition="full" data-power="off" aria-labelledby="d32-title">
+  <h2 id="d32-title" class="d32-title visually-hidden">המחשב</h2>
+  <p class="d32-help">ככה נראה המסך כשהדלקנו את המחשב. געו במסך הירוק, איפה שהריבוע מהבהב, הקלידו פקודה באנגלית ולחצו <bdi>Enter</bdi>. עברית הוא לא הכיר, נסו ותראו.</p>
+  <div class="d32-tv">
+    <button type="button" class="d32-power"><span class="d32-power-led" aria-hidden="true"></span>הדלקת המחשב</button>
+    <div class="d32-screen" dir="ltr">
+      <pre class="d32-out" aria-live="off"></pre>
+      <label class="d32-prompt"><span class="visually-hidden">פקודה למחשב</span><input class="d32-input" type="text" dir="ltr" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" enterkeyhint="send" maxlength="249" /></label>
+    </div>
+  </div>
+  <div class="d32-try" dir="ltr">
+    <button type="button" data-d32="1" data-lines='PRINT "HELLO"'>PRINT "HELLO"</button>
+    <button type="button" data-d32="1" data-lines="PRINT 2+2">PRINT 2+2</button>
+    <button type="button" data-d32="1" data-lines='NEW|10 PRINT "GONEN ";|20 GOTO 10|LIST|RUN'>10 PRINT "GONEN" : 20 GOTO 10</button>
+    <button type="button" data-d32="1" data-lines="NEW|10 FOR I=1 TO 12|20 SOUND I*20,2|30 NEXT I|RUN">SOUND</button>
+    <button type="button" data-d32="1" data-lines="CLS 3">CLS 3</button>
+    <button type="button" data-d32="1" data-lines="AUTO">AUTO</button>
+    <button type="button" data-d32="1" data-lines='PLAY "T5L4EEFGGFEDCCDEE.L8DL2D"'>PLAY</button>
+    <button type="button" data-d32="1" data-lines='NEW|10 PMODE 3,1:PCLS 3:SCREEN 1,0|20 COLOR 2:CIRCLE(200,40),20:PAINT(200,40),2|30 DRAW "BM0,180C1R255":PAINT(5,188),1|40 DRAW "BM60,180C4U40R60D40L60":PAINT(90,160),4|50 DRAW "BM60,140C1E30F30L60":PAINT(90,130),1|60 PLAY "T6L8CEGO3L4C"|70 IF INKEY$="" THEN 70|RUN'>DRAW + PAINT</button>
+    <button type="button" data-d32="break" class="d32-break">BREAK</button>
+  </div>
+  <p class="d32-help d32-tip">טיפ: אפשר גם להקליד <bdi dir="ltr">CLOAD "LANDER"</bdi>, ואחרי משחק <bdi dir="ltr">LIST</bdi> מראה את הקוד שלו. <bdi dir="ltr">CLS</bdi> עם מספר מ-0 עד 8 צובע את המסך. <bdi dir="ltr">AUTO</bdi> ממספר בשבילכם את שורות התוכנית, ושורה ריקה מסיימת. כשהתוכנית מוכנה, מקלידים <bdi dir="ltr">RUN</bdi>, ו-<bdi dir="ltr">CSAVE "NAME"</bdi> שומר אותה על המדף.</p>
+  <div class="d32-shelf d32-cartshelf" role="group" aria-labelledby="d32-carts-title">
+    <p id="d32-carts-title" class="d32-shelf-title">חריץ המחסניות: משחקי פעולה עם גרפיקה. בחרו מחסנית, והיא תיכנס למחשב</p>
+    <div class="d32-carts"></div>
+  </div>
+  <div class="d32-shelf" role="group" aria-labelledby="d32-shelf-title">
+    <p id="d32-shelf-title" class="d32-shelf-title">מדף הקלטות: בחרו קלטת, והיא תיטען ותתחיל</p>
+    <div class="d32-tapes"></div>
+  </div>
+  <p class="d32-share-row"><button type="button" class="d32-share">🔗 שיתוף התוכנית בקישור</button> <span class="d32-share-note" role="status"></span></p>
+  <details class="d32-then">
+    <summary>אז והיום: מה הייתי כותב היום <span class="nobr">ל-Claude</span></summary>
+    <p class="d32-then-lead">אז היה צריך לדעת בדיוק איך לכתוב כל שורה. היום מספיק להסביר מה רוצים.</p>
+    <div class="d32-pair">
+      <pre class="d32-code" dir="ltr">10 PRINT "GONEN ";
+20 GOTO 10</pre>
+      <p class="d32-now">"תמלא לי את המסך בשם שלי, שוב ושוב, עד שאגיד די."</p>
+    </div>
+    <div class="d32-pair">
+      <pre class="d32-code" dir="ltr">10 FOR I=1 TO 12
+20 SOUND I*20,2
+30 NEXT I</pre>
+      <p class="d32-now">"תשמיע לי סולם של צלילים, מהנמוך לגבוה."</p>
+    </div>
+    <div class="d32-pair">
+      <pre class="d32-code" dir="ltr">30 N=RND(100):T=0
+40 INPUT "YOUR GUESS";G
+50 T=T+1
+60 IF G&lt;N THEN PRINT "HIGHER!":GOTO 40
+70 IF G&gt;N THEN PRINT "LOWER!":GOTO 40
+80 PRINT "YES! IT WAS";N</pre>
+      <p class="d32-now">"תבנה לי משחק קטן: המחשב בוחר מספר בין 1 ל-100, אני מנחש, והוא אומר לי אם לעלות או לרדת. בסוף תגיד לי בכמה ניסיונות הצלחתי."</p>
+    </div>
+  </details>
+  <noscript><p class="d32-help">המסך הזה צריך JavaScript כדי לעבוד.</p></noscript>
+</section>
+</div>
+
+<section class="room-mag" aria-labelledby="mag-title">
+<div class="mag-page">
+<p class="mag-kicker" dir="ltr">TYPE-IN PROGRAM · 1983</p>
+<h2 id="mag-title" class="mag-title" dir="ltr">DRAGON DERBY</h2>
+<p class="mag-lead">תוכנית מעיתון. בשנות ה-80 עיתוני מחשבים הדפיסו תוכניות שלמות, וילדים ישבו שעות והקלידו אותן אות אחרי אות. מספיקה טעות אחת קטנה, והמחשב עונה <bdi dir="ltr">?SN ERROR</bdi>. זו תוכנית מקורית שלנו, בסגנון של אז: מרוץ סוסים קטן. מהמרים על סוס, ורואים מי מגיע ראשון.</p>
+<p class="mag-lead">איך: הקלידו <bdi dir="ltr">AUTO</bdi> במחשב שלמעלה, ואחריו את השורות (בלי המספרים, <bdi dir="ltr">AUTO</bdi> מוסיף אותם). בסוף <bdi dir="ltr">RUN</bdi>. או שתנו למחשב להקליד בשבילכם.</p>
+<pre id="listing-derby" class="mag-listing" dir="ltr">10 CLS 6
+20 PRINT &quot;DRAGON DERBY&quot;
+30 INPUT &quot;BET ON HORSE (1-3)&quot;;B
+40 X=0:Y=0:Z=0
+50 X=X+RND(3):Y=Y+RND(3):Z=Z+RND(3)
+60 CLS 6
+70 FOR I=1 TO X:PRINT &quot;-&quot;;:NEXT I:PRINT &quot;1&quot;
+80 FOR I=1 TO Y:PRINT &quot;-&quot;;:NEXT I:PRINT &quot;2&quot;
+90 FOR I=1 TO Z:PRINT &quot;-&quot;;:NEXT I:PRINT &quot;3&quot;
+100 SOUND 60+X+Y+Z,1
+110 FOR T=1 TO 150:NEXT T
+120 IF X&lt;25 AND Y&lt;25 AND Z&lt;25 THEN 50
+130 W=1:M=X
+140 IF Y&gt;M THEN W=2:M=Y
+150 IF Z&gt;M THEN W=3
+160 PRINT &quot;HORSE&quot;;W;&quot;WINS!&quot;
+170 IF W=B THEN PRINT &quot;YOU WIN!&quot;:FOR I=1 TO 5:SOUND 150+I*20,1:NEXT I:END
+180 PRINT &quot;BETTER LUCK NEXT TIME&quot;</pre>
+<p class="mag-note">שימו לב לשורה 110: <bdi dir="ltr">FOR T=1 TO 150:NEXT T</bdi> היא לולאה שלא עושה כלום, רק סופרת. ככה עשו "המתנה" אז, כדי שהסוסים לא ירוצו מהר מדי.</p>
+<p class="mag-actions"><button type="button" class="mag-typein" data-typein="#listing-derby" data-target="#dragon-room" data-run="1">⌨ תקליד בשבילי</button></p>
+</div>
+</section>
+
+<section class="prose room-hof" aria-labelledby="hof-title">
+<h2 id="hof-title">היכל התהילה</h2>
+<p>חמשת השיאים בכל מחסנית, עם שלוש אותיות של שם, כמו במכונות הארקייד. הם נשמרים רק בדפדפן הזה, אז זה היכל התהילה של הבית.</p>
+<div class="d32-hof" data-hof></div>
+</section>
+
+<section class="prose room-manual" aria-labelledby="manual-title">
+<h2 id="manual-title">המדריך הקצר</h2>
+<p><strong>קלטות ומחסניות.</strong> <span class="nobr">ב-Dragon</span> היו שתי דרכים לטעון משחק. קלטת הייתה איטית: תוכנית BASIC שנטענה לאט, לפעמים כמה דקות, ואפשר היה לראות את הקוד שלה. מחסנית נכנסה לחריץ בצד המחשב, ועבדה מיד. המשחקים בה נכתבו בשפת מכונה, ולכן רצו חלק, עם גרפיקה ותנועה. המחסניות כאן הן משחקים מקוריים ברוח המשחקים של אז.</p>
+<p><strong>במחסנית</strong> משחקים עם החצים ועם רווח, ובטלפון עם הכפתורים שמתחת למסך. <bdi dir="ltr">Esc</bdi> או "הוצאת המחסנית" מחזירים ל-BASIC.</p>
+<p><strong>ב-BASIC</strong> מקלידים באנגלית, ושולחים כל שורה עם <bdi>Enter</bdi>. זה התקציר של ספר ההוראות:</p>
+<h3 class="d32-manual-h">הבסיס</h3>
+<dl class="d32-manual">
+<div><dt dir="ltr">PRINT "HELLO"</dt><dd>מדפיס על המסך. גם חשבון: <bdi dir="ltr">PRINT 7*6</bdi>.</dd></div>
+<div><dt dir="ltr">10 PRINT "HI"</dt><dd>שורה עם מספר לא רצה מיד. היא נשמרת בתוכנית, לפי סדר המספרים.</dd></div>
+<div><dt dir="ltr">RUN</dt><dd>מריץ את התוכנית.</dd></div>
+<div><dt dir="ltr">LIST</dt><dd>מציג את התוכנית. אחרי שטוענים משחק, אפשר לראות את הקוד שלו.</dd></div>
+<div><dt dir="ltr">AUTO</dt><dd>ממספר בשבילכם את השורות: 10, 20, 30. שורה ריקה מסיימת.</dd></div>
+<div><dt dir="ltr">NEW</dt><dd>מוחק את התוכנית ומתחיל מחדש.</dd></div>
+<div><dt dir="ltr">BREAK / Esc</dt><dd>עוצר תוכנית שרצה.</dd></div>
+<div><dt dir="ltr">CLS 3</dt><dd>מנקה את המסך וצובע אותו. מספר מ-0 עד 8.</dd></div>
+<div><dt dir="ltr">SOUND 100,4</dt><dd>צפצוף: גובה הצליל, ואז האורך.</dd></div>
+<div><dt dir="ltr">INKEY$</dt><dd>המקש שנלחץ עכשיו, בלי לחכות ל-Enter. ככה כתבו משחקים: <bdi dir="ltr">IF INKEY$="" THEN 100</bdi> מחכה למקש.</dd></div>
+</dl>
+<h3 class="d32-manual-h">קלטות</h3>
+<dl class="d32-manual">
+<div><dt dir="ltr">CLOAD "LANDER"</dt><dd>טוען משחק מהקלטת. בלי שם נטען "נחש את המספר".</dd></div>
+<div><dt dir="ltr">CSAVE "SHIR"</dt><dd>שומר את התוכנית שכתבתם על "קלטת" בדפדפן הזה. היא מופיעה על מדף הקלטות, ו-<bdi dir="ltr">CLOAD "SHIR"</bdi> מחזיר אותה גם מחר. עד 8 אותיות או ספרות באנגלית, ועד 6 קלטות.</dd></div>
+<div><dt dir="ltr">✕</dt><dd>הכפתור הקטן על "הקלטת שלי" מוחק קלטת ששמרתם. לחיצה ראשונה שואלת "למחוק?", ורק השנייה מוחקת.</dd></div>
+</dl>
+<h3 class="d32-manual-h">תוכניות</h3>
+<dl class="d32-manual">
+<div><dt dir="ltr">IF A&gt;5 THEN 100 ELSE 200</dt><dd>אם התנאי נכון, עושים את מה שאחרי <bdi dir="ltr">THEN</bdi>. אחרת את מה שאחרי <bdi dir="ltr">ELSE</bdi>.</dd></div>
+<div><dt dir="ltr">GOSUB 100 … RETURN</dt><dd>קופץ לשורה 100, ו-<bdi dir="ltr">RETURN</bdi> חוזר לפקודה שאחרי ה-<bdi dir="ltr">GOSUB</bdi>. ככה כותבים חלק שמשתמשים בו כמה פעמים.</dd></div>
+<div><dt dir="ltr">ON X GOTO 100,200</dt><dd>אם X הוא 1 קופץ ל-100, אם 2 ל-200. עובד גם עם <bdi dir="ltr">GOSUB</bdi>.</dd></div>
+<div><dt dir="ltr">DIM A(20)</dt><dd>רשימה (מערך) של 21 מספרים: <bdi dir="ltr">A(0)</bdi> עד <bdi dir="ltr">A(20)</bdi>. עם <bdi dir="ltr">$</bdi> זו רשימה של מילים, ואפשר גם טבלה: <bdi dir="ltr">DIM B(5,5)</bdi>.</dd></div>
+<div><dt dir="ltr">READ A$ : DATA DOG,CAT</dt><dd><bdi dir="ltr">READ</bdi> לוקח את הערך הבא משורות ה-<bdi dir="ltr">DATA</bdi> בתוכנית, לפי הסדר. <bdi dir="ltr">RESTORE</bdi> חוזר להתחלה.</dd></div>
+<div><dt dir="ltr">INPUT "AGE";A</dt><dd>שואל ומחכה לתשובה. <bdi dir="ltr">INPUT A,B</bdi> מבקש שני ערכים עם פסיק ביניהם, ואם חסר אחד המחשב שואל שוב עם <bdi dir="ltr">??</bdi>.</dd></div>
+<div><dt dir="ltr">LINE INPUT N$</dt><dd>מקבל שורה שלמה, גם עם פסיקים.</dd></div>
+<div><dt dir="ltr">DEF FNA(X)=X*X</dt><dd>נוסחה משלכם. אחר כך <bdi dir="ltr">PRINT FNA(3)</bdi> מדפיס 9.</dd></div>
+<div><dt dir="ltr">STOP … CONT</dt><dd><bdi dir="ltr">STOP</bdi> עוצר את התוכנית באמצע, ואפשר לבדוק משתנים עם <bdi dir="ltr">PRINT</bdi>. <bdi dir="ltr">CONT</bdi> ממשיך מאותו מקום (גם אחרי <bdi dir="ltr">BREAK</bdi>).</dd></div>
+<div><dt dir="ltr">TRON / TROFF</dt><dd><bdi dir="ltr">TRON</bdi> מראה בסוגריים כל שורה שרצה, כדי למצוא איפה התוכנית טועה. <bdi dir="ltr">TROFF</bdi> מכבה.</dd></div>
+<div><dt dir="ltr">CLEAR</dt><dd>מאפס את כל המשתנים והרשימות.</dd></div>
+</dl>
+<h3 class="d32-manual-h">לתקן ולסדר</h3>
+<dl class="d32-manual">
+<div><dt dir="ltr">EDIT 20</dt><dd>מעלה את שורה 20 לשורת ההקלדה. מתקנים ולוחצים <bdi dir="ltr">Enter</bdi>.</dd></div>
+<div><dt dir="ltr">DEL 20-50</dt><dd>מוחק את השורות 20 עד 50. גם <bdi dir="ltr">DEL 20</bdi> לשורה אחת.</dd></div>
+<div><dt dir="ltr">RENUM</dt><dd>ממספר מחדש: 10, 20, 30, ומתקן את כל ה-<bdi dir="ltr">GOTO</bdi> וה-<bdi dir="ltr">GOSUB</bdi> שמצביעים על השורות.</dd></div>
+</dl>
+<h3 class="d32-manual-h">מילים ומספרים</h3>
+<dl class="d32-manual">
+<div><dt dir="ltr">LEFT$  MID$  RIGHT$</dt><dd>חלקים ממילה. מההתחלה: <bdi dir="ltr">LEFT$("DRAGON",3) = DRA</bdi>. מהאמצע: <bdi dir="ltr">MID$("DRAGON",2,3) = RAG</bdi>. מהסוף: <bdi dir="ltr">RIGHT$("DRAGON",2) = ON</bdi>.</dd></div>
+<div><dt dir="ltr">LEN  INSTR  ASC  CHR$</dt><dd>אורך המילה: <bdi dir="ltr">LEN("DOG") = 3</bdi>. איפה מופיעה אות: <bdi dir="ltr">INSTR("HELLO","L") = 3</bdi>. קוד של אות: <bdi dir="ltr">ASC("A") = 65</bdi>, ובחזרה: <bdi dir="ltr">CHR$(65) = A</bdi>.</dd></div>
+<div><dt dir="ltr">STR$  VAL  HEX$  STRING$</dt><dd>מספר למילה: <bdi dir="ltr">STR$(5)</bdi>. מילה למספר: <bdi dir="ltr">VAL("12") = 12</bdi>. בבסיס 16: <bdi dir="ltr">HEX$(255) = FF</bdi>. אות שחוזרת: <bdi dir="ltr">STRING$(5,"*") = *****</bdi>.</dd></div>
+<div><dt dir="ltr">INT  RND  ABS  SGN  FIX</dt><dd>מספר אקראי מ-1 עד 6: <bdi dir="ltr">RND(6)</bdi>. בלי מה שאחרי הנקודה: <bdi dir="ltr">INT</bdi> ו-<bdi dir="ltr">FIX</bdi>. בלי מינוס: <bdi dir="ltr">ABS</bdi>. הסימן של מספר: <bdi dir="ltr">SGN</bdi> (1, 0 או מינוס 1).</dd></div>
+<div><dt dir="ltr">SQR  SIN  COS  TAN  ATN  LOG  EXP</dt><dd>שורש, טריגונומטריה (ברדיאנים), לוגריתם וחזקה.</dd></div>
+<div><dt dir="ltr">TIMER</dt><dd>שעון שסופר 50 פעמים בשנייה. <bdi dir="ltr">TIMER=0</bdi> מאפס אותו, טוב למדידת זמן במשחק.</dd></div>
+<div><dt dir="ltr">PRINT TAB(10);"X"</dt><dd>מתחיל לכתוב בעמודה 10.</dd></div>
+<div><dt dir="ltr">PRINT USING "##.##";A</dt><dd>מספרים מיושרים: <bdi dir="ltr">#</bdi> ספרה, <bdi dir="ltr">$</bdi> סימן דולר, <bdi dir="ltr">,</bdi> פסיקים של אלפים. <bdi dir="ltr">!</bdi> האות הראשונה של מילה.</dd></div>
+<div><dt dir="ltr">PRINT @ 240,"HI"</dt><dd>כותב במקום מסוים במסך. כל שורה היא 32 מקומות: 0 בפינה למעלה, 32 בתחילת השורה השנייה.</dd></div>
+</dl>
+<h3 class="d32-manual-h">גרפיקה וצליל</h3>
+<dl class="d32-manual">
+<div><dt dir="ltr">PMODE 3,1 : SCREEN 1,0</dt><dd>עובר למסך הגרפי (4 צבעים). <bdi dir="ltr">PCLS 3</bdi> צובע את כולו בכחול.</dd></div>
+<div><dt dir="ltr">PMODE 0 … PMODE 4</dt><dd>רמות פירוט: 4 הכי חד עם 2 צבעים, 3 עם 4 צבעים, ו-0 עד 2 גסים יותר.</dd></div>
+<div><dt dir="ltr">COLOR 4</dt><dd>בוחר צבע לציור: 1 ירוק, 2 צהוב, 3 כחול, 4 אדום. עם <bdi dir="ltr">SCREEN 1,1</bdi>: בז', תכלת, סגול, כתום.</dd></div>
+<div><dt dir="ltr">PSET(128,96)</dt><dd>נקודה. המסך הוא 256 על 192, ו-(0,0) בפינה השמאלית העליונה.</dd></div>
+<div><dt dir="ltr">LINE(0,0)-(255,191),PSET</dt><dd>קו. עם <bdi dir="ltr">,B</bdi> בסוף: מלבן, ועם <bdi dir="ltr">,BF</bdi>: מלבן מלא.</dd></div>
+<div><dt dir="ltr">CIRCLE(128,96),40</dt><dd>עיגול: מרכז ורדיוס.</dd></div>
+<div><dt dir="ltr">PAINT(128,96),3,4</dt><dd>צובע צורה סגורה: מהנקודה החוצה, בכחול (3), עד שנתקלים בקו אדום (4). ככה ממלאים עיגול.</dd></div>
+<div><dt dir="ltr">DRAW "U20R20D20L20"</dt><dd>מצייר בתנועות: <bdi dir="ltr">U</bdi> למעלה, <bdi dir="ltr">D</bdi> למטה, <bdi dir="ltr">L</bdi> שמאלה, <bdi dir="ltr">R</bdi> ימינה, ו-<bdi dir="ltr">E F G H</bdi> באלכסון. <bdi dir="ltr">BM10,20</bdi> קופץ למקום בלי לצייר, <bdi dir="ltr">C2</bdi> מחליף צבע, <bdi dir="ltr">S8</bdi> מגדיל פי 2.</dd></div>
+<div><dt dir="ltr">PPOINT(10,10)</dt><dd>איזה צבע יש בנקודה. כך משחק יודע שנגעתם בקיר.</dd></div>
+<div><dt dir="ltr">GET(0,0)-(15,15),S</dt><dd>שומר ריבוע מהציור ברשימה <bdi dir="ltr">S</bdi> (קודם <bdi dir="ltr">DIM S(10)</bdi>). <bdi dir="ltr">PUT(100,50)-(115,65),S</bdi> מדביק אותו במקום אחר. ככה מזיזים דמות.</dd></div>
+<div><dt dir="ltr">PCOPY 1 TO 2</dt><dd>מעתיק עמוד גרפי שלם. <bdi dir="ltr">PMODE 3,2</bdi> מציג את עמוד 2.</dd></div>
+<div><dt dir="ltr">SET(10,5,3)</dt><dd>ריבוע צבעוני גס על מסך הטקסט (64 על 30). <bdi dir="ltr">RESET</bdi> מכבה אותו, ו-<bdi dir="ltr">POINT(10,5)</bdi> בודק איזה צבע יש שם.</dd></div>
+<div><dt dir="ltr">JOYSTK(0)  JOYSTK(1)</dt><dd>הג'ויסטיק: מ-0 עד 63, למעלה-למטה וימינה-שמאלה. במחשב עם החצים, ובטלפון בנגיעה במסך.</dd></div>
+<div><dt dir="ltr">PLAY "CDEFGAB"</dt><dd>מנגן תווים. <bdi dir="ltr">#</bdi> אחרי תו מעלה חצי טון, <bdi dir="ltr">O3</bdi> אוקטבה גבוהה יותר, <bdi dir="ltr">L8</bdi> תווים קצרים, <bdi dir="ltr">T6</bdi> קצב מהיר יותר, <bdi dir="ltr">P4</bdi> הפסקה.</dd></div>
+</dl>
+<p>מותר גם: <bdi dir="ltr">INPUT</bdi>, <bdi dir="ltr">IF … THEN</bdi>, <bdi dir="ltr">GOTO</bdi>, <bdi dir="ltr">FOR … NEXT</bdi>, משתנים כמו <bdi dir="ltr">A</bdi> או <bdi dir="ltr">N$</bdi>, וכמה פקודות בשורה אחת עם נקודתיים. ואם תקלידו את השם שלי, הוא יענה.</p>
+</section>
+
+<p class="room-back"><a href="https://www.gonenyarom.co.il/dragon/">← לחדר ה-Dragon באתר</a></p>
+
+</main>
+
+<footer class="site-footer">
+<p>פרויקט מחווה של חובב ל-<bdi>Dragon 32</bdi> מ-1982. לא קשור ל-<bdi>Dragon Data</bdi> ולא מורשה על ידה. התוכנה, המשחקים והגרפיקה כאן מקוריים.</p>
+<p>אני גונן ירום, מפתח חובב שבונה עם בינה מלאכותית שלושה פרויקטים: אנציקלופדיה עברית <span class="nobr">ל-AI</span>, מתכנן טיולים ואפליקציה לשיחה בקול עם דמויות דיגיטליות.</p>
+<nav class="footer-links" aria-label="קישורים בתחתית">
+<a href="https://www.gonenyarom.co.il/about/#contact">יצירת קשר</a>
+<a href="https://www.linkedin.com/in/gonen-yarom/">לינקדאין</a>
+<a href="https://www.gonenyarom.co.il/accessibility/">נגישות</a>
+<a href="https://www.gonenyarom.co.il/privacy/">פרטיות</a>
+<span>© 2026 גונן ירום</span>
+</nav>
+</footer>
+
+</div>
+<script type="module" src="/assets/dragon/main.js"></script>
+<script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});</script>
+<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
