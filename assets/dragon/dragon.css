@@ -206,6 +206,9 @@ button.d32-cart:focus-visible { outline: 3px solid var(--focus); outline-offset:
   .d32-theater-open:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
 }
 html.d32-theater-on, html.d32-theater-on body { overflow: hidden; }
+/* האפליקציה נטענת במחשב שולחני: עד שהמסך המלא מוכן רואים רק רקע כהה, בלי הבהוב של הדף */
+html.d32-booting, html.d32-booting body { background: #0d0b09; }
+html.d32-booting .page { visibility: hidden; }
 .d32.is-theater {
   position: fixed; inset: 0; z-index: 1000; margin: 0; overflow: auto; overscroll-behavior: contain;
   display: flex; flex-direction: column; align-items: center; padding: 0 0 40px;

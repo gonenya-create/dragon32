@@ -480,6 +480,7 @@ function mount(root) {
     const desk = matchMedia('(hover: hover) and (pointer: fine) and (min-width: 900px)');
     const auto = () => { if (desk.matches && !theater.active && !theater.left) theater.enter(); };
     auto();
+    document.documentElement.classList.remove('d32-booting');
     desk.addEventListener('change', auto);
     addEventListener('pageshow', e => { if (e.persisted) auto(); });
   }

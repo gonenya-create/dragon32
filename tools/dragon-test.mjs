@@ -253,7 +253,8 @@ if (part('share link')) {
   await toPage(p);
   await ensureOn(p);
   await p.locator('#dragon-room .d32-share').click();
-  check('share with no program explains what to do', /אין עדיין תוכנית/.test(await p.locator('#dragon-room .d32-share-note').textContent()));
+  await p.waitForFunction(() => document.querySelector('#dragon-room .d32-share-note').textContent.trim() !== '', null, { timeout: 4000 }).catch(() => {});
+  check('share with no program explains what to do', /אין עדיין תוכנית/.test(await p.locator('#dragon-room .d32-share-note').textContent()), await p.locator('#dragon-room .d32-share-note').textContent());
   for (const l of ['10 print "shared ok"', '20 print 6*7']) await send(p, l, 80);
   await p.locator('#dragon-room .d32-share').click();
   await p.waitForTimeout(300);
