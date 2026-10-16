@@ -95,7 +95,8 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   root.appendChild(coder.panel);
   // ארגז הכלים: שלוש לשוניות בחלון שמשמאל. "תוכנית" היא חלון התוכנית; לשתי האחרות עוברים, בזמן המסך המלא,
   // הפקודות המוכנות והמדפים מהדף (וחוזרים לדף ביציאה)
-  const TABS = [['program', 'תוכנית'], ['commands', 'פקודות'], ['shelf', 'מדף']];
+  // "עוזר" מופיעה רק בטלפון (במחשב העוזרים בעמודה הימנית)
+  const TABS = [['program', 'תוכנית'], ['commands', 'פקודות'], ['shelf', 'מדף'], ['help', 'עוזר']];
   const tabbar = document.createElement('div');
   tabbar.className = 'd32-tabs';
   tabbar.setAttribute('role', 'tablist');
@@ -121,14 +122,14 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   coder.panel.removeAttribute('aria-labelledby');
   coder.panel.setAttribute('aria-label', 'ארגז הכלים');
   coder.panel.append(tabbar, ...Object.values(panes));
-  let tab = 'program';
-  try { tab = localStorage.getItem('d32-tab') || tab; } catch { /* בלי זיכרון בדפדפן */ }
-  function showTab(id) {
+  let tab = 'program', savedTab = false;
+  try { const t = localStorage.getItem('d32-tab'); if (t) { tab = t; savedTab = true; } } catch { /* בלי זיכרון בדפדפן */ }
+  function showTab(id, save = true) {
     if (!panes[id]) id = 'program';
     tab = id;
     for (const b of tabbar.children) { const on = b.dataset.tab === id; b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; }
     for (const [k, p] of Object.entries(panes)) p.hidden = k !== id;
-    try { localStorage.setItem('d32-tab', id); } catch { /* בלי זיכרון בדפדפן */ }
+    if (save && id !== 'help') try { localStorage.setItem('d32-tab', id); savedTab = true; } catch { /* בלי זיכרון בדפדפן */ }
   }
   tabbar.addEventListener('click', e => { const b = e.target.closest('.d32-tab'); if (b) showTab(b.dataset.tab); });
   tabbar.addEventListener('keydown', e => {
@@ -141,7 +142,7 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
     showTab(ids[i]);
     tabbar.children[i].focus();
   });
-  showTab(tab);
+  showTab(tab, false);
   // מה עובר לכל לשונית בזמן המסך המלא
   panes.commands.appendChild(createCommands({ root, machine, powerOn, input }));
   const MOVE = [['.d32-share-row', 'program'], ['.d32-cartshelf', 'shelf'], ['.d32-shelf:not(.d32-cartshelf)', 'shelf']];
@@ -154,6 +155,15 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
       el.before(mark);
       moved.push([mark, el]);
       panes[id].appendChild(el);
+    }
+  }
+  // בטלפון גם "מה קרה?" והעוזר עוברים ללשונית "עוזר"
+  function helpToTab() {
+    for (const el of root.querySelectorAll(':scope > .d32-helper, :scope > .d32-ai')) {
+      const mark = document.createComment('d32-tab');
+      el.before(mark);
+      moved.push([mark, el]);
+      panes.help.appendChild(el);
     }
   }
   function fromTabs() {
@@ -393,8 +403,40 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
     open.focus({ preventScroll: true });
   }
   open.addEventListener('click', enter);
-  bar.querySelector('.d32-theater-exit').addEventListener('click', exit);
+  bar.querySelector('.d32-theater-exit').addEventListener('click', () => (phone ? exitPhone() : exit()));
   addEventListener('resize', layout);
 
-  return { enter, exit, get active() { return active; }, get left() { return left; } };
+  // הטלפון: אפליקציה במסך אחד. המחשב למעלה, ארבע לשוניות למטה ומגירה אחת פתוחה
+  let phone = false;
+  function enterPhone() {
+    if (phone || active) return;
+    phone = true;
+    toTabs();
+    helpToTab();
+    // בפעם הראשונה בטלפון מתחילים בפקודות המוכנות
+    if (!savedTab || !panes[tab]) showTab('commands');
+    root.classList.add('is-phone');
+    document.documentElement.classList.add('d32-theater-on');
+    coder.start();
+    showStatus();
+    clearInterval(statusTimer);
+    statusTimer = setInterval(showStatus, 300);
+    scrollTo(0, 0);
+  }
+  function exitPhone() {
+    if (!phone) return;
+    phone = false;
+    left = true;
+    root.classList.remove('is-phone');
+    document.documentElement.classList.remove('d32-theater-on');
+    coder.stop();
+    clearInterval(statusTimer);
+    fromTabs();
+    root.scrollIntoView({ block: 'start' });
+  }
+  // "מה קרה?" נפתח בזמן שלשונית אחרת פתוחה: עוברים ללשונית העוזר
+  const helperBox = root.querySelector('.d32-helper');
+  if (helperBox) new MutationObserver(() => { if (phone && !helperBox.hidden) showTab('help'); }).observe(helperBox, { attributes: true, attributeFilter: ['hidden'] });
+
+  return { enter, exit, enterPhone, get active() { return active; }, get left() { return left; }, get phone() { return phone; } };
 }

@@ -545,3 +545,44 @@ a.d32-cart.is-more:focus-visible { outline: 3px solid var(--focus); outline-offs
 }
 .d32-only-out:hover, .d32-only-out:focus-visible { opacity: 1; }
 .d32-only-out:focus-visible { outline: 3px solid #f2c94c; outline-offset: 2px; }
+
+/* ---------- שלב 4: הטלפון (theater.js, enterPhone). המחשב למעלה, מגירה עם ארבע לשוניות למטה ---------- */
+.d32-tab[data-tab="help"] { display: none; }
+.d32.is-phone {
+  position: fixed; inset: 0; z-index: 1000; margin: 0; height: 100dvh; box-sizing: border-box; overflow: hidden;
+  display: flex; flex-direction: column; padding: 0 10px; background: #0e0b09; color: #efe6d2;
+}
+.d32.is-phone > :is(.d32-title, .d32-help, .d32-tip, .d32-try, .d32-then, .d32-share-row, .d32-theater-open, noscript, .d32-kbd, .d32-side) { display: none; }
+.d32.is-phone .d32-theater-bar { display: flex; align-items: center; gap: 8px; padding: 8px 2px; width: auto; }
+.d32.is-phone .d32-theater-btns > :not(.d32-theater-exit), .prose .d32.is-phone .d32-theater-hint { display: none; }
+.d32.is-phone .d32-bar-brand b { font-size: 17px; }
+.d32.is-phone .d32-theater-exit { padding: 6px 10px; font-size: 13px; }
+.d32.is-phone .d32-tv { flex: none; max-width: none; }
+.d32.is-phone .d32-pad { max-width: none; }
+.d32.is-phone .d32-coder {
+  display: flex; flex-direction: column; flex: 1; min-height: 0; margin: 10px -10px 0; padding: 12px 12px 0; gap: 10px;
+  background: #1d1813; border-top: 1px solid #4a3d31; border-radius: 18px 18px 0 0; color: #efe6d2; box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.4);
+}
+.d32.is-phone.is-cart .d32-coder { display: none; }
+.d32.is-phone .d32-pane { order: 1; padding-bottom: 10px; }
+.d32.is-phone .d32-tabs { order: 2; margin: 0 -12px; border-bottom: 0; border-top: 1px solid #4a3d31; background: #15110e; padding-bottom: env(safe-area-inset-bottom); }
+.d32.is-phone .d32-coder .d32-tabs .d32-tab { min-height: 56px; border-bottom: 0; border-top: 3px solid transparent; }
+.d32.is-phone .d32-coder .d32-tabs .d32-tab[aria-selected="true"] { border-top-color: #f2c94c; }
+.d32.is-phone .d32-tab[data-tab="help"] { display: block; }
+.d32.is-phone .d32-coder .d32-shelf { width: auto; max-width: none; margin-top: 0; }
+/* העוזרים בלשונית "עוזר": באותם צבעים כהים של המגירה */
+.d32.is-phone :is(.d32-helper, .d32-ai) { max-width: none; margin: 0; background: #241e19; color: #efe6d2; box-shadow: none; }
+.d32.is-phone .d32-ai { border-color: #6b5d4d; }
+.d32.is-phone .d32-helper { border-color: #ff6b57; }
+.d32.is-phone .d32-helper-x { background: #241e19; color: #efe6d2; border-color: #6b5d4d; }
+.d32.is-phone .d32-ai textarea { background: #0f0c0a; color: #efe6d2; border-color: #4a3d31; }
+.d32.is-phone .d32-ai button { background: #241e19; color: #efe6d2; border-color: #6b5d4d; }
+.d32.is-phone .d32-ai-msg.is-user { background: #2b241d; }
+.d32.is-phone .d32-ai-msg.is-assistant { border-color: #4a3d31; }
+.prose .d32.is-phone :is(.d32-ai-note, .d32-ai h2, .d32-helper-title), .d32.is-phone .d32-ai-msg.is-note { color: #e1d5c1; }
+/* משחק מחסנית בטלפון: כפתורים כהים וגדולים, שממלאים את המקום שהמגירה פינתה */
+.d32.is-phone.is-cart .d32-pad { flex: 1; align-content: center; margin-top: 16px; }
+.d32.is-phone .d32-pad-btn { min-height: 76px; background: #2a2119; color: #efe6d2; border-color: #4a3d31; }
+.d32.is-phone .d32-pad-btn.is-down { background: #efe6d2; color: #1b1206; }
+.d32.is-phone .d32-pad-fire { border-color: #c2503f; color: #ff9b8a; }
+.d32.is-phone .d32-eject { background: #241e19; color: #efe6d2; border-color: #6b5d4d; }

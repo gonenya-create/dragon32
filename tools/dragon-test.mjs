@@ -60,7 +60,7 @@ async function fresh(opts = {}) {
 // במחשב שולחני האפליקציה נפתחת במסך מלא. בדיקות של הדף הרגיל יוצאות ממנו קודם ("חזרה לדף")
 async function toPage(page) {
   await page.waitForTimeout(300);
-  if (await page.locator('#dragon-room').evaluate(e => e.classList.contains('is-theater'))) await page.locator('.d32-theater-exit').click();
+  if (await page.locator('#dragon-room').evaluate(e => e.classList.contains('is-theater') || e.classList.contains('is-phone'))) await page.locator('.d32-theater-exit').click();
 }
 const screenText = page => page.locator('#dragon-room .d32-out').textContent();
 // החדר מתחיל כבוי (גם אחרי טעינה מחדש): אם צריך, מדליקים לפני שמקלידים
@@ -278,6 +278,7 @@ if (part('room /dragon/')) {
   p.on('pageerror', e => pageErrors.push(e.message));
   await p.goto(base.replace(/\/$/, '') + '/');
   await p.waitForSelector('#dragon-room.is-ready');
+  await toPage(p);   // בטלפון האפליקציה נפתחת במסך הלשוניות; כאן בודקים את הדף הרגיל
   check('room starts switched off', await p.locator('#dragon-room').evaluate(e => e.classList.contains('is-off')) && await p.locator('.d32-power').isVisible());
   await p.locator('.d32-power').click();
   await p.waitForFunction(() => /OK\s*$/.test(document.querySelector('#dragon-room .d32-out').textContent), null, { timeout: 4000 });
@@ -723,7 +724,7 @@ if (part('full computer /dragon/app/ (theater, coder, AI)')) {
   await p.waitForTimeout(1400);
   check('the full computer opens straight in full screen', await room.evaluate(e => e.classList.contains('is-theater')));
   check('top bar: brand and status "מוכן"', (await p.locator('.d32-bar-brand b').textContent()) === 'Dragon 1982' && /מוכן/.test(await p.locator('.d32-status').textContent()));
-  check('toolbox has 3 tabs; the tapes are in the shelf tab', (await p.locator('.d32-tab').count()) === 3 && (await p.locator('.d32-pane[data-pane="shelf"] .d32-tape').count()) >= 6);
+  check('toolbox has 3 tabs on a computer; the tapes are in the shelf tab', (await p.locator('.d32-tab:visible').count()) === 3 && (await p.locator('.d32-pane[data-pane="shelf"] .d32-tape').count()) >= 6);
   const tvBefore = await p.locator('.d32-tv').evaluate(e => e.getBoundingClientRect().width);
   await p.locator('.d32-theater-kbd').click();
   await p.waitForTimeout(150);
@@ -815,7 +816,15 @@ if (part('full computer /dragon/app/ (theater, coder, AI)')) {
   const ph = await browser.newPage({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
   await ph.goto(base.replace(/\/$/, '') + '/');
   await ph.waitForSelector('#dragon-room.is-ready');
-  check('phone: full computer stays a normal page (no theater)', !(await ph.locator('.d32-theater-open').isVisible()) && !(await ph.locator('#dragon-room').evaluate(e => e.classList.contains('is-theater'))) && await ph.locator('.d32-ai').count() === 1);
+  await ph.waitForTimeout(400);
+  const ph1 = await ph.evaluate(() => ({ phone: document.querySelector('#dragon-room').classList.contains('is-phone'), sel: document.querySelector('.d32-tab[aria-selected="true"]')?.dataset.tab, sw: document.documentElement.scrollWidth }));
+  check('phone: opens as an app (tabs at the bottom, ready-made commands first, no sideways scroll)', ph1.phone && ph1.sel === 'commands' && ph1.sw <= 390 && await ph.locator('.d32-tab[data-tab="help"]').isVisible(), JSON.stringify(ph1));
+  await ph.locator('.d32-tab[data-tab="help"]').tap();
+  check('phone: the AI helper is in the "עוזר" tab', await ph.locator('.d32-pane[data-pane="help"] .d32-ai').isVisible());
+  await ph.locator('.d32-tab[data-tab="shelf"]').tap();
+  await ph.locator('button.d32-cart').first().tap();
+  await ph.waitForTimeout(600);
+  check('phone: while a cartridge plays the drawer closes and the game buttons show', !(await ph.locator('.d32-coder').isVisible()) && await ph.locator('.d32-pad-btn').first().isVisible());
   await ph.close();
 }
 

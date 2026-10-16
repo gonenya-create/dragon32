@@ -478,7 +478,13 @@ function mount(root) {
   // וכשחוזרים לעמוד בכפתור "חזרה" של הדפדפן. אם המשתמש יצא בעצמו, לא נכנסים שוב.
   if (theater) {
     const desk = matchMedia('(hover: hover) and (pointer: fine) and (min-width: 900px)');
-    const auto = () => { if (desk.matches && !theater.active && !theater.left) theater.enter(); };
+    // בטלפון (מסך מגע, לא מחשב): האפליקציה נפתחת במסך אחד עם לשוניות למטה
+    const touchPhone = matchMedia('(pointer: coarse)');
+    const auto = () => {
+      if (theater.left) return;
+      if (desk.matches) { if (!theater.active) theater.enter(); }
+      else if (touchPhone.matches && !theater.phone) theater.enterPhone();
+    };
     auto();
     document.documentElement.classList.remove('d32-booting');
     desk.addEventListener('change', auto);

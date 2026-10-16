@@ -25,9 +25,9 @@
 <link rel="stylesheet" href="/assets/notebook.css">
 <link rel="stylesheet" href="/assets/dragon/dragon.css">
 <script>
-// במחשב שולחני האפליקציה נפתחת ישר במסך המלא: מסתירים את הדף עד שהמסך המלא מוכן, כדי שלא יהבהב.
+// במחשב שולחני האפליקציה נפתחת ישר במסך המלא, ובטלפון במסך האפליקציה: מסתירים את הדף עד שהמסך המלא מוכן, כדי שלא יהבהב.
 // אם משהו נתקע, אחרי 3 שניות הדף מופיע בכל מקרה
-if (matchMedia('(hover: hover) and (pointer: fine) and (min-width: 900px)').matches && !/#p=/.test(location.hash)) {
+if ((matchMedia('(hover: hover) and (pointer: fine) and (min-width: 900px)').matches || matchMedia('(pointer: coarse)').matches) && !/#p=/.test(location.hash)) {
   document.documentElement.classList.add('d32-booting');
   setTimeout(() => document.documentElement.classList.remove('d32-booting'), 3000);
 }
