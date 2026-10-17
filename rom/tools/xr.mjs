@@ -102,6 +102,15 @@ export async function runRom(lines, opts = {}) {
   try {
     const src = join(dir, 'src'), rom = join(dir, 'test.rom'), sym = join(dir, 'test.sym'), sna = join(dir, 'test.sna');
     await cp(source, src, { recursive: true });
+    // חיבור פונקציות רק בעותק הבדיקה; קובצי המפרש המקוריים נשמרים.
+    if (opts.gfxFunctions) {
+      const basicPath = join(src, 'basic.s');
+      const basic = await readFile(basicPath, 'utf8');
+      const marker = /([ \t]*lbsr[ \t]+fn_dispatch)/;
+      if (!marker.test(basic)) throw new Error('Missing fn_dispatch integration point');
+      await writeFile(basicPath, basic.replace(marker,
+        '\t\tlbsr\tgfx_fn\n\t\tbeq\t8F\n$1'));
+    }
     const bytes = [input.length, ...input];
     const table = [];
     for (let i = 0; i < bytes.length; i += 16)
