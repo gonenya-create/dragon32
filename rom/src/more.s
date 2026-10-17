@@ -31,7 +31,9 @@ st_cls		lbsr	skipsp
 		ldx	#SCREEN
 		stx	CURSOR
 		puls	x,pc
-1		lbra	cls
+1		pshs	x		; cls משתמש ב-X
+		lbsr	cls
+		puls	x,pc
 
 ; CONT: ממשיכים מהמקום שבו BREAK או STOP עצרו
 st_cont		ldd	CONTLN

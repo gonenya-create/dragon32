@@ -261,6 +261,8 @@ g_pcls  ldb g_bg
         stb g_ink
         lbsr skipsp
         beq 1F
+        cmpa #':                ; PCLS בלי צבע ואחריו פקודה נוספת (Claude)
+        beq 1F
         lbsr getbyte
         lbsr g_colour
         stb g_ink

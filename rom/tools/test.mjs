@@ -97,7 +97,10 @@ const CASES = [
   ['LINE INPUT takes the whole line', ['10 LINE INPUT "LINE";L$:PRINT L$', 'RUN', 'A,B "C"'], /LINEA,B "C"\nA,B "C"\nOK/],
   ['TRON shows line numbers', ['10 A=1', '20 A=2', 'TRON:RUN'], /\[10\]\[20\]\nOK/],
   ['CLEAR resets variables', ['X=5:CLEAR:PRINT X'], /\n 0\nOK/],
-  ['DEF FN in direct mode = ?ID', ['DEF FNA(X)=X'], /\?ID ERROR\nOK/]
+  ['DEF FN in direct mode = ?ID', ['DEF FNA(X)=X'], /\?ID ERROR\nOK/],
+  ['CLS then more commands on the same line', ['CLS:SET(5,5,3):PRINT POINT(5,5)'], /^ 3\nOK/],
+  ['PCLS without a colour, then ":"', ['PMODE 3,1:PCLS:PRINT 1'], /\n 1\nOK/],
+  ['PPOINT in an expression', ['PMODE 3,1:PCLS:PSET(10,10,4):PRINT PPOINT(10,10);PPOINT(11,11)'], /\n 4  1\nOK/]
 ];
 let fail = 0;
 for (const [name, lines, re, timeout] of CASES) {
