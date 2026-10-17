@@ -64,7 +64,7 @@ setTimeout(() => document.documentElement.classList.remove('d32-booting'), 3000)
 <div class="hero-main">
 <p class="hero-kicker">מחשב ביתי · 1982</p>
 <h1 id="room-title"><bdi>Dragon 32</bdi>, בדפדפן</h1>
-<p class="hero-lead"><bdi>Dragon 32</bdi> יצא בוויילס <span class="nobr">ב-1982</span>: <bdi>32</bdi> קילובייט זיכרון, מקלדת שמתחברת לטלוויזיה, וקלטת קסטה במקום כונן. כאן הוא רץ בדפדפן: מכניסים מחסנית ומשחקים, טוענים משחקים מהקלטת, או כותבים BASIC בעצמכם.</p>
+<p class="hero-lead"><bdi>Dragon 32</bdi> יצא בוויילס <span class="nobr">ב-1982</span>: <bdi>32</bdi> קילובייט זיכרון, מקלדת שמתחברת לטלוויזיה, וקלטת קסטה במקום כונן. כאן הוא נבנה מחדש בדפדפן, בסגנון של אז: מכניסים מחסנית ומשחקים, טוענים משחקים מהקלטת, או כותבים BASIC בעצמכם. כל מה שכאן כתבנו מאפס; אין כאן קוד או ROM מקוריים של <bdi>Dragon</bdi>.</p>
 <p class="room-full-link">זה המדריך. המחשב עצמו נפתח בכפתור "חזרה למחשב". אפשר גם להתקין אותו כאפליקציה: בטלפון "הוספה למסך הבית", ובמחשב סמל ההתקנה בשורת הכתובת.</p>
 <noscript><p class="d32-help">המחשב צריך JavaScript כדי לעבוד.</p></noscript>
 </div>
@@ -136,6 +136,21 @@ setTimeout(() => document.documentElement.classList.remove('d32-booting'), 3000)
 </details>
 <p class="mag-note">אפשר גם להעתיק, לחזור למחשב ולהדביק (<bdi dir="ltr">⌘V</bdi> או <bdi dir="ltr">Ctrl+V</bdi>): המחשב מקליד את כל השורות לבד.</p>
 </div>
+</section>
+
+<section class="prose room-made" aria-labelledby="made-title">
+<h2 id="made-title">מה כאן מקורי?</h2>
+<p>שום דבר מה-<bdi>Dragon</bdi> המקורי: אין כאן ה-ROM של <bdi>Microsoft</bdi> ו-<bdi>Dragon Data</bdi>, ואין משחקים מ-1982. כל חלק נכתב מחדש:</p>
+<table class="made-table">
+<thead><tr><th scope="col">חלק</th><th scope="col">במה נכתב</th><th scope="col">מה זה</th></tr></thead>
+<tbody>
+<tr><th scope="row">ה-BASIC (המחשב עצמו)</th><td><bdi>JavaScript</bdi></td><td>מפרש שכתבנו, שמתנהג כמו ה-BASIC של ה-<bdi>Dragon</bdi> ברוב הדברים. לא זהה לו בכל פרט.</td></tr>
+<tr><th scope="row">המסך, המקלדת והצליל</th><td><bdi>JavaScript</bdi></td><td>ציור מחדש בדפדפן, בצבעים ובגופן של אז.</td></tr>
+<tr><th scope="row">4 המחסניות</th><td><bdi>JavaScript</bdi></td><td>משחקים חדשים שכתבנו ברוח המשחקים של אז. במקור, מחסניות נכתבו בשפת מכונה.</td></tr>
+<tr><th scope="row">6 הקלטות ותוכנית העיתון</th><td><bdi>BASIC</bdi></td><td>תוכניות שכתבנו, בשפה של ה-<bdi>Dragon</bdi>. אחרי הטעינה <bdi dir="ltr">LIST</bdi> מראה את הקוד.</td></tr>
+<tr><th scope="row">העוזר</th><td><bdi>Claude</bdi></td><td>בינה מלאכותית של היום, שמכירה את ה-BASIC הזה.</td></tr>
+</tbody>
+</table>
 </section>
 
 <section class="prose room-then" aria-label="אז והיום">
@@ -251,7 +266,7 @@ setTimeout(() => document.documentElement.classList.remove('d32-booting'), 3000)
 </main>
 
 <footer class="site-footer">
-<p>פרויקט מחווה של חובב ל-<bdi>Dragon 32</bdi> מ-1982. לא קשור ל-<bdi>Dragon Data</bdi> ולא מורשה על ידה. התוכנה, המשחקים והגרפיקה כאן מקוריים.</p>
+<p>פרויקט מחווה של חובב ל-<bdi>Dragon 32</bdi> מ-1982. לא קשור ל-<bdi>Dragon Data</bdi> ולא מורשה על ידה. התוכנה, המשחקים והגרפיקה כאן נכתבו מחדש על ידינו, בלי קוד או ROM מקוריים.</p>
 <p>נבנה על ידי <a href="https://www.gonenyarom.co.il/">גונן ירום</a>, שגדל על המחשב הזה, בעזרת בינה מלאכותית. הקוד פתוח (<bdi>MIT</bdi>).</p>
 <nav class="footer-links" aria-label="קישורים בתחתית">
 <a href="https://github.com/gonenya-create/dragon32">הקוד ב-GitHub</a>

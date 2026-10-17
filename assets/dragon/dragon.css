@@ -710,3 +710,10 @@ a.d32-cart.is-more:focus-visible { outline: 3px solid var(--focus); outline-offs
 /* באנגלית (משמאל לימין) כפתור הסגירה של "מה קרה?" בצד ימין */
 html[lang="en"] .d32-helper-x { left: auto; right: 8px; }
 html[lang="en"] .d32-helper-title { padding-right: 34px; }
+
+/* תווית "במה נכתב" על כל קלטת ומחסנית */
+.d32-made { display: block; margin-top: 4px; font: 600 10px/1.2 var(--font-body); color: #f2c94c; text-align: center; letter-spacing: 0; }
+.made-table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 15px; }
+.made-table th, .made-table td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: start; vertical-align: top; }
+.made-table thead th { font-weight: 700; color: var(--muted); font-size: 13px; }
+@media (max-width: 600px) { .made-table thead { display: none; } .made-table tr { display: block; padding: 8px 0; border-bottom: 1px solid var(--line); } .made-table th, .made-table td { display: block; border: 0; padding: 2px 0; } }

@@ -60,7 +60,7 @@ setTimeout(() => document.documentElement.classList.remove('d32-booting'), 3000)
 <div class="hero-main">
 <p class="hero-kicker">Home computer · 1982</p>
 <h1 id="room-title">The Dragon 32, in your browser</h1>
-<p class="hero-lead">The Dragon 32 came out of Wales in 1982: 32 kilobytes of memory, a keyboard that plugged into the family TV, and a cassette recorder instead of a disk drive. Here it runs in your browser. Plug in a cartridge and play, load a program from cassette, or type your own BASIC.</p>
+<p class="hero-lead">The Dragon 32 came out of Wales in 1982: 32 kilobytes of memory, a keyboard that plugged into the family TV, and a cassette recorder instead of a disk drive. Here it is rebuilt in your browser, in the style of the time. Plug in a cartridge and play, load a program from cassette, or type your own BASIC. Everything here was written from scratch; there is no original Dragon code or ROM.</p>
 <p class="room-full-link">This is the guide. The computer itself opens with "Back to the computer". You can also install it as an app: on a phone, "Add to Home Screen"; on a computer, the install icon in the address bar.</p>
 <noscript><p class="d32-help">The computer needs JavaScript to work.</p></noscript>
 </div>
@@ -132,6 +132,21 @@ setTimeout(() => document.documentElement.classList.remove('d32-booting'), 3000)
 </details>
 <p class="mag-note">You can also copy it, go back to the computer and paste (<kbd>⌘V</kbd> or <kbd>Ctrl+V</kbd>): the computer types every line by itself.</p>
 </div>
+</section>
+
+<section class="prose room-made" aria-labelledby="made-title">
+<h2 id="made-title">What here is original?</h2>
+<p>Nothing from the original Dragon: there is no Microsoft / Dragon Data ROM and no games from 1982. Every part was written anew:</p>
+<table class="made-table">
+<thead><tr><th scope="col">Part</th><th scope="col">Written in</th><th scope="col">What it is</th></tr></thead>
+<tbody>
+<tr><th scope="row">The BASIC (the computer itself)</th><td>JavaScript</td><td>An interpreter we wrote that behaves like Dragon BASIC in most things. Not identical in every detail.</td></tr>
+<tr><th scope="row">Screen, keyboard and sound</th><td>JavaScript</td><td>Redrawn in the browser, in the colours and font of the time.</td></tr>
+<tr><th scope="row">The 4 cartridges</th><td>JavaScript</td><td>New games we wrote in the spirit of the time. Original cartridges were written in machine code.</td></tr>
+<tr><th scope="row">The 6 cassettes and the magazine program</th><td>BASIC</td><td>Programs we wrote in Dragon BASIC. After loading, <code>LIST</code> shows the code.</td></tr>
+<tr><th scope="row">The helper</th><td>Claude</td><td>Today's AI, which knows this BASIC.</td></tr>
+</tbody>
+</table>
 </section>
 
 <section class="prose room-then" aria-label="Then and now">
@@ -247,7 +262,7 @@ setTimeout(() => document.documentElement.classList.remove('d32-booting'), 3000)
 </main>
 
 <footer class="site-footer">
-<p>A hobbyist's tribute to the 1982 Dragon 32. Not affiliated with or endorsed by Dragon Data. The software, games and graphics here are original.</p>
+<p>A hobbyist's tribute to the 1982 Dragon 32. Not affiliated with or endorsed by Dragon Data. The software, games and graphics here were written anew by us, with no original code or ROM.</p>
 <p>Built by <a href="https://www.gonenyarom.co.il/">Gonen Yarom</a>, who grew up on this machine, with the help of AI. Open source (MIT).</p>
 <nav class="footer-links" aria-label="Footer links">
 <a href="https://github.com/gonenya-create/dragon32">The code on GitHub</a>
