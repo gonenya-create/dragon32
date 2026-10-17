@@ -110,6 +110,9 @@ const CASES = [
   ['IF THEN ELSE', ['10 FOR I=1 TO 3:IF I=2 THEN PRINT "T"; ELSE PRINT I;','20 NEXT','RUN'], /RUN\n 1 T 3\nOK/],
   ['ELSE line number and assignment', ['10 A=5:IF A>3 THEN B=1 ELSE B=2','20 IF A<3 THEN 90 ELSE PRINT B:PRINT "E"','90 END','RUN'], /RUN\n 1\nE\nOK/],
   ['nested IF takes the nearest ELSE', ['A=5:B=1:IF A=5 THEN IF B=2 THEN PRINT "X" ELSE PRINT "Y" ELSE PRINT "Z"','IF A=1 THEN IF B=1 THEN PRINT "X" ELSE PRINT "Y" ELSE PRINT "Z"'], /\nY\nOK[\s\S]*\nZ\nOK/],
+  ['RENUM fixes GOTO GOSUB THEN ELSE ON RESTORE, not REM', ['1 REM GOTO 5','5 PRINT 1;:GOSUB 30','7 IF X=0 THEN 20 ELSE 5','20 ON 1 GOTO 30,5','30 RESTORE 5:X=1:RETURN','RENUM','LIST'], /LIST\n10 REM GOTO 5\n20 PRINT 1;:GOSUB 50\n30 IF X=0 THEN 40 ELSE 20\n40 ON 1 GOTO 50,20\n50 RESTORE 20:X=1:RETURN\nOK/],
+  ['RENUM start, from line, step; program still runs', ['1 PRINT 1;','2 GOTO 3','3 PRINT 3;:GOTO 999','RENUM 100,2,5','LIST','RUN'], /LIST\n1 PRINT 1;\n100 GOTO 105\n105 PRINT 3;:GOTO 999\nOK\nRUN\n 1  3\n\?UL ERROR IN 105/],
+  ['RENUM that would mix the order = ?FC', ['1 PRINT 1','2 PRINT 2','RENUM 1,2','RENUM 5,,0','LIST'], /\?FC ERROR[\s\S]*\?FC ERROR\nOK\nLIST\n1 PRINT 1\n2 PRINT 2\nOK/],
   ['GOTO ELSE, :ELSE and ELSE in quotes', ['A=5:IF A=1 GOTO 9 ELSE PRINT "G"','IF A=5 THEN PRINT "S":ELSE PRINT "NO"','IF A=1 THEN PRINT "ELSE" ELSE PRINT "C"'], /\nG\nOK\n[\s\S]*\nS\nOK\n[\s\S]*\nC\nOK/]
 ];
 let fail = 0;

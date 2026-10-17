@@ -385,3 +385,7 @@ irq		lda	PIA0+2
 ; ה-SAM ממפה את $FFF2-$FFFF אל $BFF2-$BFFF
 		org	$bff2
 		fdb	reset,reset,reset,irq,reset,reset,reset	; SWI3 SWI2 FIRQ IRQ SWI NMI RESET
+
+; ---------- ההרחבה: השבב השני, בחריץ המחסנית ----------
+		org	$c000
+		include	"ext.s"

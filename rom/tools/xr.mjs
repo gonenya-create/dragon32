@@ -129,10 +129,15 @@ export async function runRom(lines, opts = {}) {
     for (let i = 0; i < bytes.length; i += 16)
       table.push(`${i === 0 ? 'testq' : ''}\tfcb\t${bytes.slice(i, i + 16).join(',')}`);
     await writeFile(join(src, 'testq.s'), table.join('\n') + '\n');
-    await exec('asm6809', ['-B', '-o', rom, '-s', sym, 'boot.s'], { cwd: src, timeout: wallTimeout, killSignal: 'SIGKILL' });
+    const all = join(dir, 'all.bin'), ext = join(dir, 'ext.rom');
+    await exec('asm6809', ['-B', '-o', all, '-s', sym, 'boot.s'], { cwd: src, timeout: wallTimeout, killSignal: 'SIGKILL' });
+    // כמו build.sh: 16K ל-BASIC ב-$8000, והשאר לשבב ההרחבה בחריץ המחסנית ($C000)
+    const whole = await readFile(all);
+    await writeFile(rom, whole.subarray(0, 16384));
+    await writeFile(ext, Buffer.concat([whole.subarray(16384), Buffer.alloc(Math.max(0, 24576 - whole.length))]));
     const symbols = new Map([...((await readFile(sym, 'utf8')).matchAll(/^(\w+)\s+equ\s+(\d+)\s*$/gm))].map(m => [m[1], Number(m[2])]));
     if (!symbols.has(trapSym)) throw new Error(`Unknown trap symbol: ${trapSym}`);
-    const args = ['-no-tape-fast', '-no-tape-pad-auto', '-ui', 'null', '-ao', 'null', '-machine', 'dragon32', '-extbas', rom, '-no-ratelimit', '-trap', `pc=0x${symbols.get(trapSym).toString(16)}`];
+    const args = ['-no-tape-fast', '-no-tape-pad-auto', '-ui', 'null', '-ao', 'null', '-machine', 'dragon32', '-extbas', rom, '-cart', 'd32x', '-cart-type', 'rom', '-cart-rom', ext, '-no-cart-autorun', '-no-ratelimit', '-trap', `pc=0x${symbols.get(trapSym).toString(16)}`];
     if (opts.tapeLoad) args.push('-load-tape', opts.tapeLoad);
     if (opts.tapeWrite) args.push('-tape-write', opts.tapeWrite);
     if (range !== undefined) args.push('-trap-range', String(range));

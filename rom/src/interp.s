@@ -175,6 +175,11 @@ isassign	pshs	x
 		puls	x,pc		; Z מההשוואה
 9		andcc	#$fb
 		puls	x,pc
+; ext_try: אם בחריץ המחסנית יש את שבב ההרחבה שלנו, הוא מנסה את הפקודה. Z=1 אם טופלה
+ext_try		ldd	ext_sig
+		cmpd	#$4458		; DX
+		lbeq	ext_dispatch
+		rts
 kw_timer	fcc	"TIMER"
 		fcb	0
 st_let		; גרפיקה? (gfx.s)
@@ -188,6 +193,9 @@ st_let		; גרפיקה? (gfx.s)
 		beq	st_none
 		; קלטת? (tape.s)
 		lbsr	tape_dispatch
+		beq	st_none
+		; ההרחבה (השבב בחריץ המחסנית, ext.s)?
+		lbsr	ext_try
 		beq	st_none
 		lbsr	skipsp
 		cmpa	#'A
