@@ -22,7 +22,13 @@ const CASES = [
   ['two-letter variable names (SCORE = SC)', ['SCORE=5:PRINT SC+1'], /\n 6\nOK/],
   ['STEP and nested loops', ['FOR I=3 TO 1 STEP -1:FOR J=1 TO 2:PRINT I*10+J;:NEXT J,I'], /\n 31  32  21  22  11  12\nOK/],
   ['comparisons give -1 / 0', ['PRINT 1<2;2<1;3=3;2<>2'], /\n-1  0 -1  0\nOK/],
-  ['NEW clears the program', ['10 PRINT 1', 'NEW', 'LIST'], /NEW\nOK\nLIST\nOK/]
+  ['NEW clears the program', ['10 PRINT 1', 'NEW', 'LIST'], /NEW\nOK\nLIST\nOK/],
+  ['graphics expression and PRINT coexist', ['PMODE 2+2,1','PCLS 0','PSET(2*4,12/2)','PRINT 6*7'], /\n 42\nOK/],
+  ['invalid mode', ['PMODE 5'], /\?FC ERROR\nOK/],
+  ['invalid page', ['PMODE 4,0'], /\?FC ERROR\nOK/],
+  ['invalid coordinate', ['PSET(0,192)'], /\?FC ERROR\nOK/],
+  ['invalid colour', ['PMODE 1','PCLS 0'], /\?FC ERROR\nOK/],
+  ['graphics syntax', ['LINE(0,0)-(10,10),X'], /\?SN ERROR\nOK/]
 ];
 let fail = 0;
 for (const [name, lines, re] of CASES) {
@@ -32,4 +38,7 @@ for (const [name, lines, re] of CASES) {
   console.log((ok ? '  ✓ ' : '  ✗ ') + name + (ok ? '' : '\n' + out.split('\n').map(l => '      | ' + l).join('\n')));
 }
 console.log(`\n${CASES.length - fail} passed, ${fail} failed`);
+try {
+  execFileSync('node', [new URL('./gfx-test.mjs', import.meta.url).pathname], {stdio:'inherit'});
+} catch { fail++; }
 process.exit(fail ? 1 : 0);

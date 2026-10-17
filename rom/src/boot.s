@@ -30,6 +30,7 @@ reset		orcc	#$50		; בלי פסיקות
 		lbsr	cls
 		clr	KEYQ		; תור הקלט ריק
 		lbsr	newprog
+		clr	$0340		; מצב הגרפיקה (gfx.s) יאותחל בפעם הראשונה
 		clr	LASTKEY
 		leax	banner,pcr
 		lbsr	puts
@@ -37,7 +38,8 @@ reset		orcc	#$50		; בלי פסיקות
 ; הלולאה הראשית: קוראים שורה ומבצעים אותה
 main		lbsr	getline
 		lbsr	execute
-main_ok		lda	CURSOR+1	; אם הסמן לא בתחילת שורה (PRINT שנגמר ב-;), קודם שורה חדשה
+main_ok		lbsr	gfx_text	; ההודעה OK תמיד על מסך הטקסט
+		lda	CURSOR+1	; אם הסמן לא בתחילת שורה (PRINT שנגמר ב-;), קודם שורה חדשה
 		anda	#$1f
 		beq	1F
 		lda	#13

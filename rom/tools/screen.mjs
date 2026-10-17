@@ -20,7 +20,7 @@ function connect() {
     let buf = '';
     const waiters = [];
     s.on('data', d => {
-      buf += d.toString('latin1');
+      buf += d.toString('latin1'); if (process.env.GDBLOG) console.error('<<', JSON.stringify(d.toString('latin1')));
       buf = buf.replace(/^\++/, '');
       for (;;) {
         const m = /\$([^#]*)#[0-9a-fA-F]{2}/.exec(buf);
@@ -31,12 +31,13 @@ function connect() {
         if (w) w(m[1]);
       }
     });
-    const send = c => { let sum = 0; for (const ch of c) sum = (sum + ch.charCodeAt(0)) & 255; s.write('$' + c + '#' + sum.toString(16).padStart(2, '0')); };
+    const send = c => { if (process.env.GDBLOG) console.error('>>', JSON.stringify(c)); let sum = 0; for (const ch of c) sum = (sum + ch.charCodeAt(0)) & 255; s.write('$' + c + '#' + sum.toString(16).padStart(2, '0')); };
     const reply = () => new Promise((r, j) => { waiters.push(r); setTimeout(() => j(new Error('no reply')), 4000); });
     const api = {
       cmd: c => { const p = reply(); send(c); return p; },
       go: () => { send('c'); },                         // התשובה תגיע רק בעצירה
-      halt: () => { const p = reply(); s.write('\x03'); return p; },
+      // עצירה: Ctrl-C גולמי. לפעמים XRoar מפספס אותו, אז שולחים שוב כל חצי שנייה עד שעונה
+      halt: () => { const p = reply(); s.write('\x03'); const t = setInterval(() => s.write('\x03'), 500); return p.finally(() => clearInterval(t)); },
       close: () => s.destroy()
     };
     s.on('connect', () => ok(api));
