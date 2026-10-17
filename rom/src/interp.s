@@ -181,6 +181,9 @@ st_let		; גרפיקה? (gfx.s)
 		; GOSUB, RETURN, ON, DATA, READ, RESTORE, DIM? (stmt2.s)
 		lbsr	st2_dispatch
 		beq	st_none
+		; קלטת? (tape.s)
+		lbsr	tape_dispatch
+		beq	st_none
 		lbsr	skipsp
 		cmpa	#'A
 		lblo	err_sn

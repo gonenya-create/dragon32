@@ -369,6 +369,7 @@ cursor_off	pshs	a,x
 		include	"strings.s"
 		include	"more.s"
 		include	"fn2.s"
+		include	"tape.s"
 		include	"testq.s"
 
 ; irq: 50 פעמים בשנייה. מנקים את הדגל (קריאת PIA0 B) ומקדמים את השעון
