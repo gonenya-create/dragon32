@@ -57,10 +57,18 @@ async function fresh(opts = {}) {
   await page.waitForFunction(() => /OK\s*$/.test(document.querySelector('#dragon-room .d32-out').textContent), null, { timeout: 4000 });
   return page;
 }
-// במחשב שולחני האפליקציה נפתחת במסך מלא. בדיקות של הדף הרגיל יוצאות ממנו קודם ("חזרה לדף")
-async function toPage(page) {
+// מ-17.10 אין מחשב בתוך הדף: הוא תמיד במסך המלא (מחשב) או במסך האפליקציה (טלפון/חלון צר).
+// לשונית בארגז הכלים (בטלפון: המגירה), למשל "program" בשביל כפתורי השיתוף והבדיקה
+async function toTab(page, id = 'program') {
   await page.waitForTimeout(300);
-  if (await page.locator('#dragon-room').evaluate(e => e.classList.contains('is-theater') || e.classList.contains('is-phone'))) await page.locator('.d32-theater-exit').click();
+  const t = page.locator(`.d32-tab[data-tab="${id}"]`);
+  if (await t.isVisible()) await t.click();
+}
+// מחסנית אחרת: קודם מוציאים את מה שבחריץ (בטלפון המגירה סגורה בזמן משחק), ואז בוחרים מהמדף
+async function pickCart(page, name) {
+  if (await page.locator('#dragon-room').evaluate(e => e.classList.contains('is-cart'))) { await page.keyboard.press('Escape'); await page.waitForTimeout(300); }
+  await toTab(page, 'shelf');
+  await page.locator(`button.d32-cart:has-text("${name}")`).click();
 }
 const screenText = page => page.locator('#dragon-room .d32-out').textContent();
 // החדר מתחיל כבוי (גם אחרי טעינה מחדש): אם צריך, מדליקים לפני שמקלידים
@@ -77,6 +85,7 @@ async function send(page, text, wait = 250) {
   await page.waitForTimeout(wait);
 }
 async function loadTape(page, name) {
+  await toTab(page, 'shelf');
   await page.locator(`#dragon-room .d32-tape:has-text("${name}")`).click();
   // כל המשחקים מתחילים בשאלה (INPUT), לכן מחכים ל-"? " בסוף המסך
   await page.waitForFunction(() => /\?\s*$/.test(document.querySelector('#dragon-room .d32-out').textContent), null, { timeout: 10000 });
@@ -134,11 +143,11 @@ if (part('programs')) {
   check('FOR/NEXT + IF', / 1 \n 2 \n 3 \nDONE\nOK$/.test(await screenText(p)), tail(await screenText(p), 6));
   await send(p, 'list', 300);
   check('LIST', /10 FOR I=1 TO 3\n20 PRINT I\n30 NEXT I\n40 IF I>3 THEN PRINT "DONE"\nOK$/.test(await screenText(p)));
-  await p.locator('#dragon-room [data-lines*="GOTO 10"]').click();
+  for (const l of ['new', '10 print "gonen ";', '20 goto 10', 'run']) await send(p, l, 60);
   await p.waitForTimeout(1200);
   const running = await p.locator('#dragon-room').evaluate(e => e.classList.contains('is-running'));
   check('GONEN loop runs', running && /GONEN GONEN/.test(await screenText(p)));
-  await p.locator('#dragon-room .d32-break').click();
+  await p.locator('#dragon-room .d32-stop').click();
   await p.waitForTimeout(200);
   check('BREAK stops it', /BREAK IN \d+\nOK$/.test(await screenText(p)), tail(await screenText(p), 3));
   await p.close();
@@ -257,7 +266,7 @@ if (part('share link')) {
   p.on('pageerror', e => pageErrors.push(e.message));
   await p.goto(PAGE);
   await p.waitForSelector('#dragon-room.is-ready');
-  await toPage(p);
+  await toTab(p);
   await ensureOn(p);
   await p.locator('#dragon-room .d32-share').click();
   await p.waitForFunction(() => document.querySelector('#dragon-room .d32-share-note').textContent.trim() !== '', null, { timeout: 4000 }).catch(() => {});
@@ -285,7 +294,7 @@ if (part('room /dragon/')) {
   p.on('pageerror', e => pageErrors.push(e.message));
   await p.goto(base.replace(/\/$/, '') + '/');
   await p.waitForSelector('#dragon-room.is-ready');
-  await toPage(p);   // בטלפון האפליקציה נפתחת במסך הלשוניות; כאן בודקים את הדף הרגיל
+  await p.waitForTimeout(300);   // בטלפון האפליקציה נפתחת במסך הלשוניות, והמחשב למעלה
   check('room starts switched off', await p.locator('#dragon-room').evaluate(e => e.classList.contains('is-off')) && await p.locator('.d32-power').isVisible());
   await p.locator('.d32-power').click();
   await p.waitForFunction(() => /OK\s*$/.test(document.querySelector('#dragon-room .d32-out').textContent), null, { timeout: 4000 });
@@ -298,7 +307,7 @@ if (part('room /dragon/')) {
   check('full shelf: all 4 cartridges, no links out', (await p.locator('button.d32-cart').count()) === 4 && (await p.locator('a.d32-cart.is-more').count()) === 0);
 
   // מחסנית: נכנסת, מסך כותרת, משחק עם "שחקן אוטומטי" שמזיז את הסל אל הביצים ומתרחק מאש
-  await p.locator('button.d32-cart:has-text("EGGS")').click();
+  await pickCart(p, 'EGGS');
   await p.waitForFunction(() => document.querySelector('#dragon-room').d32Cart?.state?.mode === 'title');
   check('cartridge in: graphics screen + pad', await p.locator('#dragon-room').evaluate(e => e.classList.contains('is-cart')) && await p.locator('.d32-canvas').isVisible() && await p.locator('.d32-pad-left').isVisible() && !(await p.locator('.d32-pad-up').isVisible()));
   await p.waitForTimeout(700);   // מסך הכותרת מתעלם מלחיצות בחצי השנייה הראשונה
@@ -338,7 +347,7 @@ if (part('room /dragon/')) {
   await p.waitForFunction(() => !document.querySelector('#dragon-room').d32Cart.overlay, null, { timeout: 3000 });
   check('hall of fame: the page table shows GON', /GON/.test(await p.locator('[data-hof]').textContent()));
   // מגדל הדרקון: הליכה, סולם, קפיצה, הגעה לקלטת = שלב 2, ופגיעה של חבית = מאבדים חיים
-  await p.locator('button.d32-cart:has-text("TOWER")').click();
+  await pickCart(p, 'TOWER');
   await p.waitForFunction(() => document.querySelector('#dragon-room').d32Cart?.state?.mode === 'title');
   check('TOWER: all 5 touch buttons', await p.locator('.d32-pad-up').isVisible() && await p.locator('.d32-pad-down').isVisible());
   await p.waitForTimeout(700);
@@ -364,7 +373,7 @@ if (part('room /dragon/')) {
   check('TOWER: the tape at the top = level 2 + bonus', await tw(() => document.querySelector('#dragon-room').d32Cart.state.score) >= 2000);
 
   // נדנדת הג'ונגל: "שחקן אוטומטי" רץ לקצה הביצה, קופץ כשהחבל קרוב, ומשחרר כשהחבל בתנופה ימינה
-  await p.locator('button.d32-cart:has-text("JUNGLE")').click();
+  await pickCart(p, 'JUNGLE');
   await p.waitForFunction(() => document.querySelector('#dragon-room').d32Cart?.state?.mode === 'title');
   await p.waitForTimeout(700);
   await p.keyboard.press('Space');
@@ -402,6 +411,10 @@ if (part('magazine type-in')) {
   p.on('pageerror', e => pageErrors.push(e.message));
   await p.goto(base.replace(/\/$/, '') + '/');
   await p.waitForSelector('#dragon-room.is-ready');
+  // המדריך: יוצאים מהמחשב, ומשם "הקלד במחשב" חוזר אליו ומקליד
+  await p.waitForTimeout(300);
+  await p.locator('.d32-theater-exit').click();
+  check('the guide has no second computer in it, and a "back to the computer" button', !(await p.locator('#dragon-room').isVisible()) && await p.locator('.guide-back').isVisible());
   await p.locator('.mag-typein').click();
   await p.waitForFunction(() => /BET ON HORSE \(1-3\)\? $/.test(document.querySelector('#dragon-room .d32-out').textContent), null, { timeout: 15000 });
   check('type-in: the listing is typed and RUN asks for a bet', true);
@@ -409,6 +422,12 @@ if (part('magazine type-in')) {
   await input.fill('2'); await input.press('Enter');
   await p.waitForFunction(() => /HORSE\s+\d\s+WINS!/.test(document.querySelector('#dragon-room .d32-out').textContent), null, { timeout: 30000 });
   check('type-in: the race finishes with a winner', /(YOU WIN!|BETTER LUCK NEXT TIME)/.test(await p.locator('#dragon-room .d32-out').textContent()) || true);
+  // הדבקה כשהמחשב פתוח, בלי ללחוץ קודם על המסך: השורות נכנסות למחשב
+  await p.keyboard.press('Escape');
+  await p.waitForTimeout(300);
+  await p.evaluate(() => { const dt = new DataTransfer(); dt.setData('text/plain', 'NEW\n10 PRINT "PASTED"\nRUN'); document.body.dispatchEvent(new ClipboardEvent('paste', { clipboardData: dt, bubbles: true })); });
+  await p.waitForFunction(() => /PASTED\nOK\s*$/.test(document.querySelector('#dragon-room .d32-out').textContent), null, { timeout: 5000 });
+  check('paste anywhere (⌘V) types the code into the computer', true);
   await ctx.close();
 }
 
@@ -463,7 +482,7 @@ if (part('PLAY, DRAW, PAINT, PRINT @')) {
   check('PAINT fills the circle blue, outside stays green', px.inCircle === '36,36,224' && px.ring === '216,30,30' && px.out === '19,214,19', JSON.stringify(px));
   check('DRAW square in yellow + PAINT inside it', px.sqEdge === '242,242,14' && px.sqIn === '242,242,14', JSON.stringify(px));
   check('DRAW S (size) and N (go back)', px.scaled === '216,30,30' && px.nu === '216,30,30' && px.down === '216,30,30', JSON.stringify(px));
-  await p.locator('#dragon-room .d32-break').click({ force: true }).catch(() => p.keyboard.press('Escape'));
+  await p.locator('#dragon-room .d32-stop').click({ force: true }).catch(() => p.keyboard.press('Escape'));
   await p.keyboard.press('Escape');
   await p.waitForTimeout(300);
   check('BREAK after PLAY/DRAW program', /BREAK IN \d+\nOK\s*$/.test(await screenText(p)), tail(await screenText(p), 2));
@@ -626,7 +645,7 @@ if (part('round 3: functions, editing, graphics')) {
   await send(p, 'run', 700);
   const rows16 = (await screenText(p)).split('\n');
   check('16 rows while running, SET reaches the bottom rows', rows16.length === 16 && /^ 2  3 /.test(rows16[0]), rows16.length + ' | ' + rows16[0]);
-  await p.locator('#dragon-room .d32-break').click();
+  await p.locator('#dragon-room .d32-stop').click();
   await p.waitForTimeout(200);
   await expect('PRINT CHR$(143) draws a block', 'cls:print chr$(143)+chr$(191)', /OK$/);
   check('semigraphic CHR$ shows as blocks', await p.locator('#dragon-room .d32-sg').count() === 2, String(await p.locator('#dragon-room .d32-sg').count()));
@@ -635,6 +654,7 @@ if (part('round 3: functions, editing, graphics')) {
   await send(p, '10 print "x"', 60);
   await send(p, 'csave "gone"', 2600);
   check('saved tape for delete', await p.locator('.d32-tape-mine:has-text("GONE")').count() === 1);
+  await toTab(p, 'shelf');
   await p.locator('.d32-tape-del').first().click();
   check('first tap asks', (await p.locator('.d32-tape-del').first().textContent()) === 'למחוק?');
   await p.locator('.d32-tape-del').first().click();
@@ -651,7 +671,7 @@ if (part('GO TO and the "מה קרה?" helper')) {
   p.on('pageerror', e => pageErrors.push(e.message));
   await p.goto(base.replace(/\/$/, '') + '/');
   await p.waitForSelector('#dragon-room.is-ready');
-  await toPage(p);
+  await toTab(p);
   await ensureOn(p);
   await p.waitForTimeout(300);
   const inp = p.locator('#dragon-room .d32-input');
@@ -679,8 +699,8 @@ if (part('GO TO and the "מה קרה?" helper')) {
   await inp.press('Escape');
   await p.waitForTimeout(200);
   check('after BREAK the helper explains the missing NEXT', await helper.isVisible() && /30 NEXT I/.test(await helper.innerText()), await helper.innerText());
-  await say('30 NEXT I', 80);
-  await p.locator('#dragon-room .d32-check').click();
+  await say('30 NEXT I', 500);   // חלון התוכנית מתעדכן כל 0.4 שניות; עד אז כפתור הבדיקה מוסתר (תוכנית ריקה)
+  await p.locator('#dragon-room [data-act="check"]').click();
   await p.waitForTimeout(200);
   check('"בדיקת התוכנית" finds no bug after the fix', await helper.isVisible() && !/⚠️/.test(await helper.innerText()), await helper.innerText());
   await p.close();

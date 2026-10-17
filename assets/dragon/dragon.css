@@ -600,3 +600,27 @@ a.d32-cart.is-more:focus-visible { outline: 3px solid var(--focus); outline-offs
 /* קלטת שתמחק תוכנית שלא נשמרה: לחיצה ראשונה מזהירה */
 .d32-tape.is-armed { outline: 3px solid var(--red, #d33); outline-offset: 2px; }
 .d32-tape-warn { margin: 8px 0 0; padding: 8px 10px; border: 1.5px solid var(--red, #d33); border-radius: 8px; font-size: 14px; line-height: 1.5; }
+
+/* ---------- שלב 2 (17.10): הדף הוא מדריך בלבד. המחשב נפתח רק במסך המלא או במסך האפליקציה ---------- */
+.d32-room:not(.is-theater):not(.is-phone), .room-machine:not(:has(.d32.is-theater, .d32.is-phone)) { display: none; }
+.guide-bar { position: sticky; top: 10px; z-index: 50; display: flex; justify-content: flex-end; margin: 0 0 -20px; pointer-events: none; }
+.guide-bar > * { pointer-events: auto; }
+.guide-back { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 18px; border: 2px solid var(--ink); border-radius: 999px; background: var(--ink); color: var(--paper); font: 700 16px/1.2 var(--font-body); cursor: pointer; box-shadow: 0 4px 12px var(--shadow, rgba(0,0,0,.15)); }
+.guide-back:hover { transform: translateY(-1px); }
+.guide-back:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.guide-steps { margin: 0; padding-inline-start: 22px; display: grid; gap: 8px; }
+.guide-steps li { line-height: 1.6; }
+/* תוכנית מהעיתון: הקוד מקופל, ושלושה כפתורים */
+.mag-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 4px 0 14px; }
+.mag-copy { padding: 10px 16px; border: 2px solid #2a2418; border-radius: 8px; background: transparent; color: #2a2418; font: 700 16px/1 var(--font-body); cursor: pointer; }
+.mag-copy:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.mag-copied { font-size: 14px; font-weight: 700; color: #2a2418; }
+.mag-code { margin: 0 0 12px; }
+.mag-code > summary { cursor: pointer; font-weight: 700; color: #2a2418; padding: 6px 0; }
+.mag-code[open] > summary { margin-bottom: 8px; }
+/* "חלון גדול לכתיבה": בראש לשונית "תוכנית" (במקום כפתור "סדנה" נפרד). בטלפון אין צורך */
+.d32-coder .d32-pane .d32-theater-shop { display: inline-flex; width: auto; align-self: flex-start; justify-self: start; align-items: center; gap: 6px; margin: 0 0 10px; padding: 6px 12px; border: 1.5px solid #6b5d4d; border-radius: 8px; background: transparent; color: #efe6d2; font: 700 14px/1.2 var(--font-body); cursor: pointer; }
+.d32-pane .d32-theater-shop:hover { border-color: #efe6d2; }
+.d32-coder .d32-pane .d32-theater-shop[aria-pressed="true"] { border-color: #f2c94c; color: #f2c94c; }
+.d32-pane .d32-theater-shop:focus-visible { outline: 3px solid #f2c94c; outline-offset: 2px; }
+.d32.is-phone .d32-theater-shop { display: none; }

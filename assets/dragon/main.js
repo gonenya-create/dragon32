@@ -505,27 +505,45 @@ function mount(root) {
     const text = decodeProgram(sharedCode);
     if (text) {
       powerOn().then(() => { machine.loadText(text, 'LINK'); });
-      if (on) machine.boot();
-      root.scrollIntoView({ block: 'start' });
-      return;
     }
   }
-  if (on) machine.boot();
+  if (on && !sharedTaken) machine.boot();
   // במחשב שולחני נכנסים לבד למסך המלא: בטעינה, כשהחלון מקבל את גודלו רק אחרי הטעינה,
   // וכשחוזרים לעמוד בכפתור "חזרה" של הדפדפן. אם המשתמש יצא בעצמו, לא נכנסים שוב.
   if (theater) {
     const desk = matchMedia('(hover: hover) and (pointer: fine) and (min-width: 900px)');
     // בטלפון (מסך מגע, לא מחשב): האפליקציה נפתחת במסך אחד עם לשוניות למטה
     const touchPhone = matchMedia('(pointer: coarse)');
+    // המחשב: במחשב שולחני רחב מסך מלא, ובכל השאר (טלפון, חלון צר) מסך האפליקציה. הדף עצמו הוא רק המדריך
+    const toComputer = () => {
+      if (desk.matches && !touchPhone.matches) { if (!theater.active) theater.enter(); }
+      else if (!theater.phone) theater.enterPhone();
+    };
+    root.d32.toComputer = toComputer;
     const auto = () => {
       if (theater.left) return;
-      if (desk.matches) { if (!theater.active) theater.enter(); }
-      else if (touchPhone.matches && !theater.phone) theater.enterPhone();
+      if (desk.matches && theater.phone) theater.exitPhone(true);   // החלון התרחב: עוברים למסך המלא
+      toComputer();
     };
     auto();
     document.documentElement.classList.remove('d32-booting');
     desk.addEventListener('change', auto);
     addEventListener('pageshow', e => { if (e.persisted) auto(); });
+    document.querySelector('.guide-back')?.addEventListener('click', toComputer);
+    // הדבקה כשהמחשב פתוח (⌘V / Ctrl+V), גם בלי ללחוץ קודם על המסך: הקוד נכנס למחשב
+    document.addEventListener('paste', e => {
+      if (!theater.active && !theater.phone) return;
+      const t = e.target;
+      if (t === input || (t && t.closest && t.closest('input, textarea, [contenteditable="true"]'))) return;
+      const text = (e.clipboardData || window.clipboardData).getData('text') || '';
+      if (!text.trim()) return;
+      e.preventDefault();
+      powerOn().then(() => {
+        if (/[\r\n]/.test(text.trim())) machine.queue(text.split(/\r?\n/).filter(l => l.trim() !== ''));
+        else { input.value += text.trim(); input.dispatchEvent(new Event('input')); }
+        input.focus({ preventScroll: true });
+      });
+    });
   }
 }
 
@@ -539,7 +557,25 @@ document.querySelectorAll('[data-typein]').forEach(b => {
     const root = document.querySelector(b.dataset.target);
     if (!pre || !root || !root.d32) return;
     const lines = ['NEW'].concat(pre.textContent.split('\n').map(l => l.trim()).filter(Boolean), b.dataset.run ? ['RUN'] : []);
-    root.querySelector('.d32-tv').scrollIntoView({ block: 'center', behavior: 'smooth' });
+    // חוזרים למחשב, ושם הוא מקליד את התוכנית
+    if (root.d32.toComputer) root.d32.toComputer();
+    else root.querySelector('.d32-tv').scrollIntoView({ block: 'center', behavior: 'smooth' });
     root.d32.powerOn().then(() => root.d32.typeLines(lines));
+  });
+});
+
+// "העתקה": כל התוכנית ללוח, כדי לשמור אותה או להדביק במחשב
+document.querySelectorAll('[data-copy]').forEach(b => {
+  const done = b.parentElement.querySelector('.mag-copied');
+  b.addEventListener('click', async () => {
+    const pre = document.querySelector(b.dataset.copy);
+    if (!pre) return;
+    let ok = true;
+    try { await navigator.clipboard.writeText(pre.textContent.trim() + '\n'); } catch { ok = false; }
+    if (done) {
+      done.textContent = ok ? 'הועתק ✓ עכשיו אפשר לחזור למחשב ולהדביק.' : 'לא הצלחתי להעתיק. אפשר לפתוח את הקוד ולסמן אותו.';
+      clearTimeout(b._t);
+      b._t = setTimeout(() => { done.textContent = ''; }, 5000);
+    }
   });
 });

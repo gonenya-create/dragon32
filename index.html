@@ -25,12 +25,10 @@
 <link rel="stylesheet" href="/assets/notebook.css">
 <link rel="stylesheet" href="/assets/dragon/dragon.css">
 <script>
-// במחשב שולחני האפליקציה נפתחת ישר במסך המלא, ובטלפון במסך האפליקציה: מסתירים את הדף עד שהמסך המלא מוכן, כדי שלא יהבהב.
-// אם משהו נתקע, אחרי 3 שניות הדף מופיע בכל מקרה
-if ((matchMedia('(hover: hover) and (pointer: fine) and (min-width: 900px)').matches || matchMedia('(pointer: coarse)').matches) && !/#p=/.test(location.hash)) {
-  document.documentElement.classList.add('d32-booting');
-  setTimeout(() => document.documentElement.classList.remove('d32-booting'), 3000);
-}
+// האפליקציה נפתחת תמיד במחשב (מסך מלא במחשב, מסך אפליקציה בטלפון). המדריך הוא דף נפרד, בלי מחשב בתוכו.
+// מסתירים את הדף עד שהמחשב מוכן, כדי שלא יהבהב. אם משהו נתקע, אחרי 3 שניות הדף מופיע בכל מקרה
+document.documentElement.classList.add('d32-booting');
+setTimeout(() => document.documentElement.classList.remove('d32-booting'), 3000);
 </script>
 </head>
 <body>
@@ -45,6 +43,8 @@ if ((matchMedia('(hover: hover) and (pointer: fine) and (min-width: 900px)').mat
 </nav>
 </header>
 
+<div class="guide-bar"><button type="button" class="guide-back"><span aria-hidden="true">🖥</span> חזרה למחשב</button></div>
+
 <main id="main" style="display: flex; flex-direction: column; gap: 48px;">
 
 <section class="hero" aria-labelledby="room-title">
@@ -52,14 +52,26 @@ if ((matchMedia('(hover: hover) and (pointer: fine) and (min-width: 900px)').mat
 <p class="hero-kicker">מחשב ביתי · 1982</p>
 <h1 id="room-title"><bdi>Dragon 32</bdi>, בדפדפן</h1>
 <p class="hero-lead"><bdi>Dragon 32</bdi> יצא בוויילס <span class="nobr">ב-1982</span>: <bdi>32</bdi> קילובייט זיכרון, מקלדת שמתחברת לטלוויזיה, וקלטת קסטה במקום כונן. כאן הוא רץ בדפדפן: מכניסים מחסנית ומשחקים, טוענים משחקים מהקלטת, או כותבים BASIC בעצמכם.</p>
-<p class="room-full-link">כאן יש הכול: מסך מלא, כלים למתכנת, עוזר AI וכל המחסניות. אפשר גם להתקין אותו כאפליקציה: בטלפון "הוספה למסך הבית", ובמחשב סמל ההתקנה בשורת הכתובת.</p>
+<p class="room-full-link">זה המדריך. המחשב עצמו נפתח בכפתור "חזרה למחשב". אפשר גם להתקין אותו כאפליקציה: בטלפון "הוספה למסך הבית", ובמחשב סמל ההתקנה בשורת הכתובת.</p>
+<noscript><p class="d32-help">המחשב צריך JavaScript כדי לעבוד.</p></noscript>
 </div>
+</section>
+
+<section class="prose room-start" aria-labelledby="start-title">
+<h2 id="start-title">איך מתחילים</h2>
+<ol class="guide-steps">
+<li><strong>מדליקים.</strong> במחשב הוא נדלק לבד. בטלפון לוחצים "הדלקת המחשב".</li>
+<li><strong>מקלידים באנגלית ולוחצים <bdi>Enter</bdi>.</strong> למשל <bdi dir="ltr">PRINT "HELLO"</bdi>. בטלפון נוגעים במסך הירוק כדי לפתוח מקלדת.</li>
+<li><strong>לא רוצים להקליד?</strong> בלשונית "פקודות" יש פקודות מוכנות: בוחרים, ולוחצים "לנסות עכשיו".</li>
+<li><strong>לשחק:</strong> בלשונית "מדף" יש מחסניות (משחקי פעולה) וקלטות (משחקי BASIC).</li>
+<li><strong>לעצור:</strong> הכפתור "עצירה" על המסך, או <bdi dir="ltr">Esc</bdi>. אחרי ציור, "חזרה למסך הטקסט".</li>
+<li><strong>תקועים?</strong> בלשונית "עוזר" (במחשב: בצד ימין) שואלים בעברית.</li>
+</ol>
 </section>
 
 <div class="prose room-machine">
 <section id="dragon-room" class="d32 d32-room" data-edition="full" data-power="off" aria-labelledby="d32-title">
   <h2 id="d32-title" class="d32-title visually-hidden">המחשב</h2>
-  <p class="d32-help">ככה נראה המסך כשהדלקנו את המחשב. געו במסך הירוק, איפה שהריבוע מהבהב, הקלידו פקודה באנגלית ולחצו <bdi>Enter</bdi>. עברית הוא לא הכיר, נסו ותראו.</p>
   <div class="d32-tv">
     <button type="button" class="d32-power"><span class="d32-power-led" aria-hidden="true"></span>הדלקת המחשב</button>
     <div class="d32-screen" dir="ltr">
@@ -68,18 +80,6 @@ if ((matchMedia('(hover: hover) and (pointer: fine) and (min-width: 900px)').mat
     </div>
     <button type="button" class="d32-stop"><span class="d32-stop-run">■ עצירה</span><span class="d32-stop-gfx">↩ חזרה למסך הטקסט</span></button>
   </div>
-  <div class="d32-try" dir="ltr">
-    <button type="button" data-d32="1" data-lines='PRINT "HELLO"'>PRINT "HELLO"</button>
-    <button type="button" data-d32="1" data-lines="PRINT 2+2">PRINT 2+2</button>
-    <button type="button" data-d32="1" data-lines='NEW|10 PRINT "GONEN ";|20 GOTO 10|LIST|RUN'>10 PRINT "GONEN" : 20 GOTO 10</button>
-    <button type="button" data-d32="1" data-lines="NEW|10 FOR I=1 TO 12|20 SOUND I*20,2|30 NEXT I|RUN">SOUND</button>
-    <button type="button" data-d32="1" data-lines="CLS 3">CLS 3</button>
-    <button type="button" data-d32="1" data-lines="AUTO">AUTO</button>
-    <button type="button" data-d32="1" data-lines='PLAY "T5L4EEFGGFEDCCDEE.L8DL2D"'>PLAY</button>
-    <button type="button" data-d32="1" data-lines='NEW|10 PMODE 3,1:PCLS 3:SCREEN 1,0|20 COLOR 2:CIRCLE(200,40),20:PAINT(200,40),2|30 DRAW "BM0,180C1R255":PAINT(5,188),1|40 DRAW "BM60,180C4U40R60D40L60":PAINT(90,160),4|50 DRAW "BM60,140C1E30F30L60":PAINT(90,130),1|60 PLAY "T6L8CEGO3L4C"|70 IF INKEY$="" THEN 70|RUN'>DRAW + PAINT</button>
-    <button type="button" data-d32="break" class="d32-break">BREAK</button>
-  </div>
-  <p class="d32-help d32-tip">טיפ: אפשר גם להקליד <bdi dir="ltr">CLOAD "LANDER"</bdi>, ואחרי משחק <bdi dir="ltr">LIST</bdi> מראה את הקוד שלו. <bdi dir="ltr">CLS</bdi> עם מספר מ-0 עד 8 צובע את המסך. <bdi dir="ltr">AUTO</bdi> ממספר בשבילכם את שורות התוכנית, ושורה ריקה מסיימת. כשהתוכנית מוכנה, מקלידים <bdi dir="ltr">RUN</bdi>, ו-<bdi dir="ltr">CSAVE "NAME"</bdi> שומר אותה על המדף.</p>
   <div class="d32-shelf d32-cartshelf" role="group" aria-labelledby="d32-carts-title">
     <p id="d32-carts-title" class="d32-shelf-title">חריץ המחסניות: משחקי פעולה עם גרפיקה. בחרו מחסנית, והיא תיכנס למחשב</p>
     <div class="d32-carts"></div>
@@ -89,7 +89,44 @@ if ((matchMedia('(hover: hover) and (pointer: fine) and (min-width: 900px)').mat
     <div class="d32-tapes"></div>
   </div>
   <p class="d32-share-row"><button type="button" class="d32-share">🔗 שיתוף התוכנית בקישור</button> <span class="d32-share-note" role="status"></span></p>
-  <details class="d32-then">
+</section>
+</div>
+
+<section class="room-mag" aria-labelledby="mag-title">
+<div class="mag-page">
+<p class="mag-kicker" dir="ltr">TYPE-IN PROGRAM · 1983</p>
+<h2 id="mag-title" class="mag-title" dir="ltr">DRAGON DERBY</h2>
+<p class="mag-lead">תוכנית מעיתון. בשנות ה-80 עיתוני מחשבים הדפיסו תוכניות שלמות, וילדים ישבו שעות והקלידו אותן אות אחרי אות. מספיקה טעות אחת קטנה, והמחשב עונה <bdi dir="ltr">?SN ERROR</bdi>. זו תוכנית מקורית שלנו, בסגנון של אז: מרוץ סוסים קטן. מהמרים על סוס, ורואים מי מגיע ראשון.</p>
+<p class="mag-lead">איך: במחשב מקלידים <bdi dir="ltr">AUTO</bdi>, ואחריו את השורות (בלי המספרים, <bdi dir="ltr">AUTO</bdi> מוסיף אותם). בסוף <bdi dir="ltr">RUN</bdi>. או שהמחשב יקליד בשבילכם.</p>
+<p class="mag-actions"><button type="button" class="mag-typein" data-typein="#listing-derby" data-target="#dragon-room" data-run="1">⌨ הקלד במחשב</button> <button type="button" class="mag-copy" data-copy="#listing-derby">📋 העתקה</button> <span class="mag-copied" role="status"></span></p>
+<details class="mag-code">
+<summary>הצג את הקוד (18 שורות)</summary>
+<pre id="listing-derby" class="mag-listing" dir="ltr">10 CLS 6
+20 PRINT &quot;DRAGON DERBY&quot;
+30 INPUT &quot;BET ON HORSE (1-3)&quot;;B
+40 X=0:Y=0:Z=0
+50 X=X+RND(3):Y=Y+RND(3):Z=Z+RND(3)
+60 CLS 6
+70 FOR I=1 TO X:PRINT &quot;-&quot;;:NEXT I:PRINT &quot;1&quot;
+80 FOR I=1 TO Y:PRINT &quot;-&quot;;:NEXT I:PRINT &quot;2&quot;
+90 FOR I=1 TO Z:PRINT &quot;-&quot;;:NEXT I:PRINT &quot;3&quot;
+100 SOUND 60+X+Y+Z,1
+110 FOR T=1 TO 150:NEXT T
+120 IF X&lt;25 AND Y&lt;25 AND Z&lt;25 THEN 50
+130 W=1:M=X
+140 IF Y&gt;M THEN W=2:M=Y
+150 IF Z&gt;M THEN W=3
+160 PRINT &quot;HORSE&quot;;W;&quot;WINS!&quot;
+170 IF W=B THEN PRINT &quot;YOU WIN!&quot;:FOR I=1 TO 5:SOUND 150+I*20,1:NEXT I:END
+180 PRINT &quot;BETTER LUCK NEXT TIME&quot;</pre>
+<p class="mag-note">שימו לב לשורה 110: <bdi dir="ltr">FOR T=1 TO 150:NEXT T</bdi> היא לולאה שלא עושה כלום, רק סופרת. ככה עשו "המתנה" אז, כדי שהסוסים לא ירוצו מהר מדי.</p>
+</details>
+<p class="mag-note">אפשר גם להעתיק, לחזור למחשב ולהדביק (<bdi dir="ltr">⌘V</bdi> או <bdi dir="ltr">Ctrl+V</bdi>): המחשב מקליד את כל השורות לבד.</p>
+</div>
+</section>
+
+<section class="prose room-then" aria-label="אז והיום">
+  <details class="d32-then" open>
     <summary>אז והיום: מה הייתי כותב היום <span class="nobr">ל-Claude</span></summary>
     <p class="d32-then-lead">אז היה צריך לדעת בדיוק איך לכתוב כל שורה. היום מספיק להסביר מה רוצים.</p>
     <div class="d32-pair">
@@ -113,37 +150,6 @@ if ((matchMedia('(hover: hover) and (pointer: fine) and (min-width: 900px)').mat
       <p class="d32-now">"תבנה לי משחק קטן: המחשב בוחר מספר בין 1 ל-100, אני מנחש, והוא אומר לי אם לעלות או לרדת. בסוף תגיד לי בכמה ניסיונות הצלחתי."</p>
     </div>
   </details>
-  <noscript><p class="d32-help">המסך הזה צריך JavaScript כדי לעבוד.</p></noscript>
-</section>
-</div>
-
-<section class="room-mag" aria-labelledby="mag-title">
-<div class="mag-page">
-<p class="mag-kicker" dir="ltr">TYPE-IN PROGRAM · 1983</p>
-<h2 id="mag-title" class="mag-title" dir="ltr">DRAGON DERBY</h2>
-<p class="mag-lead">תוכנית מעיתון. בשנות ה-80 עיתוני מחשבים הדפיסו תוכניות שלמות, וילדים ישבו שעות והקלידו אותן אות אחרי אות. מספיקה טעות אחת קטנה, והמחשב עונה <bdi dir="ltr">?SN ERROR</bdi>. זו תוכנית מקורית שלנו, בסגנון של אז: מרוץ סוסים קטן. מהמרים על סוס, ורואים מי מגיע ראשון.</p>
-<p class="mag-lead">איך: הקלידו <bdi dir="ltr">AUTO</bdi> במחשב שלמעלה, ואחריו את השורות (בלי המספרים, <bdi dir="ltr">AUTO</bdi> מוסיף אותם). בסוף <bdi dir="ltr">RUN</bdi>. או שתנו למחשב להקליד בשבילכם.</p>
-<pre id="listing-derby" class="mag-listing" dir="ltr">10 CLS 6
-20 PRINT &quot;DRAGON DERBY&quot;
-30 INPUT &quot;BET ON HORSE (1-3)&quot;;B
-40 X=0:Y=0:Z=0
-50 X=X+RND(3):Y=Y+RND(3):Z=Z+RND(3)
-60 CLS 6
-70 FOR I=1 TO X:PRINT &quot;-&quot;;:NEXT I:PRINT &quot;1&quot;
-80 FOR I=1 TO Y:PRINT &quot;-&quot;;:NEXT I:PRINT &quot;2&quot;
-90 FOR I=1 TO Z:PRINT &quot;-&quot;;:NEXT I:PRINT &quot;3&quot;
-100 SOUND 60+X+Y+Z,1
-110 FOR T=1 TO 150:NEXT T
-120 IF X&lt;25 AND Y&lt;25 AND Z&lt;25 THEN 50
-130 W=1:M=X
-140 IF Y&gt;M THEN W=2:M=Y
-150 IF Z&gt;M THEN W=3
-160 PRINT &quot;HORSE&quot;;W;&quot;WINS!&quot;
-170 IF W=B THEN PRINT &quot;YOU WIN!&quot;:FOR I=1 TO 5:SOUND 150+I*20,1:NEXT I:END
-180 PRINT &quot;BETTER LUCK NEXT TIME&quot;</pre>
-<p class="mag-note">שימו לב לשורה 110: <bdi dir="ltr">FOR T=1 TO 150:NEXT T</bdi> היא לולאה שלא עושה כלום, רק סופרת. ככה עשו "המתנה" אז, כדי שהסוסים לא ירוצו מהר מדי.</p>
-<p class="mag-actions"><button type="button" class="mag-typein" data-typein="#listing-derby" data-target="#dragon-room" data-run="1">⌨ תקליד בשבילי</button></p>
-</div>
 </section>
 
 <section class="prose room-hof" aria-labelledby="hof-title">
@@ -165,7 +171,7 @@ if ((matchMedia('(hover: hover) and (pointer: fine) and (min-width: 900px)').mat
 <div><dt dir="ltr">LIST</dt><dd>מציג את התוכנית. אחרי שטוענים משחק, אפשר לראות את הקוד שלו.</dd></div>
 <div><dt dir="ltr">AUTO</dt><dd>ממספר בשבילכם את השורות: 10, 20, 30. שורה ריקה מסיימת.</dd></div>
 <div><dt dir="ltr">NEW</dt><dd>מוחק את התוכנית ומתחיל מחדש.</dd></div>
-<div><dt dir="ltr">BREAK / Esc</dt><dd>עוצר תוכנית שרצה.</dd></div>
+<div><dt dir="ltr">BREAK / Esc</dt><dd>עוצר תוכנית שרצה. יש גם כפתור "עצירה" על המסך.</dd></div>
 <div><dt dir="ltr">CLS 3</dt><dd>מנקה את המסך וצובע אותו. מספר מ-0 עד 8.</dd></div>
 <div><dt dir="ltr">SOUND 100,4</dt><dd>צפצוף: גובה הצליל, ואז האורך.</dd></div>
 <div><dt dir="ltr">INKEY$</dt><dd>המקש שנלחץ עכשיו, בלי לחכות ל-Enter. ככה כתבו משחקים: <bdi dir="ltr">IF INKEY$="" THEN 100</bdi> מחכה למקש.</dd></div>

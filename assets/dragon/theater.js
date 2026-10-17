@@ -21,7 +21,6 @@ const FROM_KEY = { Escape: 'BREAK', Enter: 'ENTER', ArrowUp: 'UP', ArrowDown: 'D
 
 export function createTheater({ root, input, machine, sound, powerOn }) {
   const tv = root.querySelector('.d32-tv');
-  const quiet = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // הכפתור שפותח את המצב. CSS מציג אותו רק במחשב עם עכבר ומסך רחב
   const open = document.createElement('button');
@@ -36,11 +35,10 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   bar.innerHTML = '<span class="d32-bar-brand"><b dir="ltr">Dragon 1982</b><span class="d32-status" role="status" data-s="off">כבוי</span></span>'
     + '<p class="d32-theater-hint">מקלידים במקלדת שלכם, או לוחצים על המקשים המצוירים. <bdi dir="ltr">Esc</bdi> הוא <bdi dir="ltr">BREAK</bdi>.</p>'
     + '<span class="d32-theater-btns"><button type="button" class="d32-theater-code" aria-pressed="false">ארגז כלים</button>'
-    + '<button type="button" class="d32-theater-shop" aria-pressed="false">סדנה</button>'
     + '<button type="button" class="d32-theater-kbd" aria-pressed="true">מקלדת מצוירת</button>'
     + '<button type="button" class="d32-theater-click" aria-pressed="true">צליל מקשים</button>'
     + '<button type="button" class="d32-theater-only">מסך בלבד ⛶</button>'
-    + '<button type="button" class="d32-theater-exit">המדריך והדף ←</button></span>';
+    + '<button type="button" class="d32-theater-exit"><span aria-hidden="true">📖</span> מדריך</button></span>';
   // יציאה ממצב "מסך בלבד": כפתור קטן בפינה (גם Esc של הדפדפן יוצא ממסך מלא)
   const onlyOut = document.createElement('button');
   onlyOut.type = 'button';
@@ -174,6 +172,7 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   const codeBtn = bar.querySelector('.d32-theater-code');
   codeBtn.setAttribute('aria-pressed', String(coding));
   codeBtn.addEventListener('click', () => {
+    if (shop && coding) { setShop(false); }   // סוגרים את הכלים: גם החלון הגדול נסגר
     coding = !coding;
     codeBtn.setAttribute('aria-pressed', String(coding));
     root.classList.toggle('has-coder', coding);
@@ -217,10 +216,17 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
 
   // סדנה: מצב לכתיבת תוכניות. אותו מחשב, בתצוגה אחרת
   let shop = false, only = false;
-  const shopBtn = bar.querySelector('.d32-theater-shop');
-  shopBtn.addEventListener('click', () => {
-    shop = !shop;
+  // הכפתור נמצא בראש לשונית "תוכנית" (במקום כפתור "סדנה" נפרד בפס העליון): מגדיל את חלון התוכנית לכתיבה
+  const shopBtn = document.createElement('button');
+  shopBtn.type = 'button';
+  shopBtn.className = 'd32-theater-shop';
+  shopBtn.setAttribute('aria-pressed', 'false');
+  const shopLabel = () => { shopBtn.innerHTML = shop ? '<span aria-hidden="true">⤡</span> חלון רגיל' : '<span aria-hidden="true">⤢</span> חלון גדול לכתיבה'; };
+  panes.program.prepend(shopBtn);
+  function setShop(on) {
+    shop = on;
     shopBtn.setAttribute('aria-pressed', String(shop));
+    shopLabel();
     root.classList.toggle('is-shop', shop);
     shopKbd = false;
     root.classList.remove('shop-kbd');
@@ -228,7 +234,9 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
     if (shop) { coding = true; root.classList.add('has-coder'); codeBtn.setAttribute('aria-pressed', 'true'); coder.start(); showTab('program'); }
     layout();
     input.focus({ preventScroll: true });
-  });
+  }
+  shopLabel();
+  shopBtn.addEventListener('click', () => setShop(!shop));
   // מסך בלבד: רק התמונה של המחשב, על כל המסך (Fullscreen API כשיש; אחרת על כל החלון)
   function setOnly(on) {
     if (only === on) return;
@@ -386,6 +394,7 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
 
   let left = false; // המשתמש יצא בעצמו ("חזרה לדף"), אז לא נכנסים שוב לבד
   function enter() {
+    left = false;
     active = true;
     toSide();
     toTabs();
@@ -414,8 +423,12 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
     fromSide();
     fromTabs();
     document.documentElement.classList.remove('d32-theater-on');
-    open.scrollIntoView({ block: 'start', behavior: quiet() ? 'auto' : 'smooth' });
-    open.focus({ preventScroll: true });
+    toGuide();
+  }
+  // יציאה מהמחשב: המדריך, מלמעלה, והפוקוס על "חזרה למחשב"
+  function toGuide() {
+    scrollTo(0, 0);
+    document.querySelector('.guide-back')?.focus({ preventScroll: true });
   }
   open.addEventListener('click', enter);
   bar.querySelector('.d32-theater-exit').addEventListener('click', () => (phone ? exitPhone() : exit()));
@@ -425,6 +438,7 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   let phone = false;
   function enterPhone() {
     if (phone || active) return;
+    left = false;
     phone = true;
     toTabs();
     helpToTab();
@@ -438,20 +452,21 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
     statusTimer = setInterval(showStatus, 300);
     scrollTo(0, 0);
   }
-  function exitPhone() {
+  // quiet=true: עוברים ישר למסך המלא (החלון התרחב), לא למדריך
+  function exitPhone(quiet) {
     if (!phone) return;
     phone = false;
-    left = true;
+    left = !quiet;
     root.classList.remove('is-phone');
     document.documentElement.classList.remove('d32-theater-on');
     coder.stop();
     clearInterval(statusTimer);
     fromTabs();
-    root.scrollIntoView({ block: 'start' });
+    if (!quiet) toGuide();
   }
   // "מה קרה?" נפתח בזמן שלשונית אחרת פתוחה: עוברים ללשונית העוזר
   const helperBox = root.querySelector('.d32-helper');
   if (helperBox) new MutationObserver(() => { if (phone && !helperBox.hidden) showTab('help'); }).observe(helperBox, { attributes: true, attributeFilter: ['hidden'] });
 
-  return { enter, exit, enterPhone, get active() { return active; }, get left() { return left; }, get phone() { return phone; } };
+  return { enter, exit, enterPhone, exitPhone, get active() { return active; }, get left() { return left; }, get phone() { return phone; } };
 }
