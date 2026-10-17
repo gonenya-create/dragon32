@@ -1,5 +1,5 @@
 // מדף קלטות במחשב האמיתי: אותן קלטות BASIC כמו באפליקציה. הקלטת נבנית כאן בפורמט של הרשמקול
-// (קובץ CAS, תוכנית בטקסט), נכנסת לרשמקול של XRoar, והמקלדת מקלידה CLOAD. את RUN מקלידים בעצמכם, כמו אז.
+// (קובץ CAS, תוכנית בטקסט), נכנסת לרשמקול של XRoar, והמקלדת מקלידה CLOAD, וכשעל המסך מופיע OK, גם RUN.
 (function () {
   const EN = document.documentElement.lang === 'en';
   const TAPES = [
@@ -39,21 +39,75 @@
     box.appendChild(b);
   }
   let busy = false;
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  // זיכרון המחשב המדומה נמצא בתוך הזיכרון של XRoar. מוצאים אותו פעם אחת לפי שורת הפתיחה שעל המסך
+  // (המסך מתחיל ב-$0400), וכך אפשר לקרוא מה כתוב על המסך ולדעת מתי הטעינה נגמרה
+  const scr = c => { const n = c.charCodeAt(0); return n >= 0x40 ? n : n + 0x40; };
+  let ram = -1;
+  function findRam() {
+    if (ram >= 0 || typeof HEAPU8 === 'undefined') return ram;
+    const sig = [...'DRAGON 1982 BASIC'].map(scr), h = HEAPU8;
+    for (let i = 0x400; i < h.length - sig.length; i++) {
+      if (h[i] !== sig[0]) continue;
+      let k = 1;
+      while (k < sig.length && h[i + k] === sig[k]) k++;
+      if (k === sig.length) { ram = i - 0x400; break; }
+    }
+    return ram;
+  }
+  window.d32Screen = () => (findRam() >= 0 ? screenRows() : null);
+  function screenRows() {
+    const rows = [];
+    for (let r = 0; r < 16; r++) {
+      let t = '';
+      for (let c = 0; c < 32; c++) { const b = HEAPU8[ram + 0x400 + r * 32 + c]; t += b >= 0x80 ? ' ' : String.fromCharCode(b >= 0x60 ? b - 0x40 : b); }   // ריבועי צבע = רווח
+      rows.push(t.trimEnd());
+    }
+    return rows;
+  }
+  // מחפשים מיד אחרי ההדלקה, כשמשפט הפתיחה עוד על המסך
+  const early = setInterval(() => { if (window.d32Ready) { clearInterval(early); setTimeout(findRam, 1500); } }, 300);
+  // אחרי CLOAD: מחכים ל-OK (נטען) או לשגיאה. בלי גישה לזיכרון: לפי האורך של הקלטת
+  async function loaded(bytes) {
+    if (ram < 0) { await wait(3000 + bytes * 9 + 2000); return true; }
+    const start = Date.now();
+    while (Date.now() - start < 90000) {
+      await wait(250);
+      const rows = screenRows();
+      const at = rows.map(r => r.startsWith('CLOAD')).lastIndexOf(true);
+      if (at < 0) continue;
+      const after = rows.slice(at + 1);
+      if (after.some(r => /ERROR/.test(r))) return false;
+      if (after.includes('OK')) return true;
+    }
+    return false;
+  }
   async function load(id, title, button) {
     if (busy) return;
     if (typeof Module === 'undefined' || !window.d32Ready) { status.textContent = EN ? 'The computer is still starting. Try again in a moment.' : 'המחשב עוד נדלק. נסו שוב בעוד רגע.'; return; }
     busy = true;
+    findRam();
     try {
       const text = await (await fetch('/assets/dragon/tapes/' + id + '.bas')).text();
       const path = '/tape-' + id + '.cas';
       FS.writeFile(path, cassette(id, text));
       Module.ccall('wasm_load_file', null, ['string', 'number', 'number'], [path, 2, 0]);
       box.querySelectorAll('.tape').forEach(t => t.classList.toggle('in', t === button));
-      status.textContent = EN
-        ? '"' + title + '" is in the tape player. The computer types CLOAD; when OK appears, type RUN and press ENTER.'
-        : '"' + title + '" ברשמקול. המחשב מקליד CLOAD; כשמופיע OK, מקלידים RUN ולוחצים ENTER.';
-      document.querySelector('.tv').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      status.textContent = EN ? 'Loading "' + title + '" from the tape…' : 'טוען את "' + title + '" מהקלטת…';
+      if (innerWidth < 1000) document.querySelector('.tv').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // עוצרים תוכנית שרצה (פעמיים: תוכנית שמחכה למקש עלולה לבלוע את הראשון), ומנקים את המסך,
+      // כדי שהמילים CLOAD ו-OK שנבדוק יהיו של הטעינה הזאת ולא של קודמת
+      await window.d32Type('\x1b');
+      await wait(400);
+      await window.d32Type('\x1b');
+      await wait(400);
+      await window.d32Type('CLS\n');
+      await wait(300);
       await window.d32Type('CLOAD\n');
+      if (await loaded(text.length)) {
+        await window.d32Type('RUN\n');
+        status.textContent = EN ? '"' + title + '" is running. To stop: BREAK.' : '"' + title + '" רץ. לעצירה: BREAK.';
+      } else status.textContent = EN ? 'The tape did not load. Try again.' : 'הקלטת לא נטענה. נסו שוב.';
     } catch (e) {
       status.textContent = EN ? 'The tape did not load. Try again.' : 'הקלטת לא נטענה. נסו שוב.';
     } finally { busy = false; }

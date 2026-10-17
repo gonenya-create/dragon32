@@ -1036,7 +1036,7 @@ if (part('real machine lab')) {
       await p.click('#tapes .tape:has-text("GUESS")');
       await p.waitForTimeout(1500);
       check('a tape goes into the tape player and CLOAD is typed', await p.evaluate(() =>
-        document.querySelector('#tapes .tape.in small')?.textContent === 'GUESS' && /CLOAD/.test(document.getElementById('tape-status').textContent)
+        document.querySelector('#tapes .tape.in small')?.textContent === 'GUESS' && /טוען|רץ/.test(document.getElementById('tape-status').textContent)
         && FS.stat('/tape-guess.cas').size > 280) && errs.length === 0, errs.join(' | '));
     }
     await p.close();

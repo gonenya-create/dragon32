@@ -123,6 +123,7 @@ st_lineinput	ldd	CURLN
 		lbpl	err_tm
 		pshs	x,u
 		lbsr	getline
+		lbcs	in_break
 		ldx	#LINBUF
 		stx	SPTR
 		clrb
