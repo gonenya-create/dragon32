@@ -222,10 +222,12 @@ poparg		puls	y
 
 ; ---------- PRINT ----------
 ; כמו במקור: מספר מודפס עם רווח או מינוס לפניו ורווח אחריו; ; צמוד, , לעמודה הבאה (16), ובסוף שורה חדשה אלא אם נגמר ב-; או ,
-st_print	lbsr	skipsp
-		lbeq	pr_nl		; סוף השורה
-		cmpa	#':
-		lbeq	pr_nl		; סוף הפקודה
+st_print	lbsr	atend		; סוף הפקודה (סוף שורה, : או ELSE)
+		lbeq	pr_nl
+		leau	kw_using,pcr	; PRINT USING: בשבב ההרחבה
+		lbsr	match
+		lbeq	pr_using
+		lda	,x
 		cmpa	#'@
 		bne	pr_item
 		; PRINT @ מקום,: מתחילים לכתוב במקום הזה במסך (0-511)
@@ -239,9 +241,7 @@ st_print	lbsr	skipsp
 		cmpa	#',
 		lbne	pr_next
 		leax	1,x
-		lbsr	skipsp
-		lbeq	pr_done
-		cmpa	#':
+		lbsr	atend
 		lbeq	pr_done
 pr_item		cmpa	#';
 		beq	pr_semi
@@ -277,9 +277,7 @@ pr_item		cmpa	#';
 		lbsr	putc
 		bra	pr_next
 pr_semi		leax	1,x
-		lbsr	skipsp
-		beq	pr_done
-		cmpa	#':
+		lbsr	atend
 		beq	pr_done
 		bra	pr_item
 pr_comma	leax	1,x
@@ -289,14 +287,10 @@ pr_comma	leax	1,x
 		lda	CURSOR+1
 		anda	#$0f
 		bne	4B
-		lbsr	skipsp
-		beq	pr_done
-		cmpa	#':
+		lbsr	atend
 		beq	pr_done
 		bra	pr_item
-pr_next		lbsr	skipsp
-		beq	pr_nl
-		cmpa	#':
+pr_next		lbsr	atend
 		beq	pr_nl
 		cmpa	#';
 		beq	pr_semi
@@ -308,6 +302,24 @@ pr_nl		lda	#13
 pr_done		rts
 kw_tab		fcc	"TAB("
 		fcb	0
+kw_using	fcc	"USING"
+		fcb	0
+
+; atend: סוף פקודה? Z=1 בסוף השורה, ב-: או ב-ELSE (בלי להתקדם). A = התו
+atend		lbsr	skipsp
+		beq	9F
+		cmpa	#':
+		beq	9F
+		cmpa	#'E
+		bne	9F
+		pshs	d
+		ldd	1,x
+		cmpd	#$4c53		; LS
+		bne	8F
+		lda	3,x
+		cmpa	#'E
+8		puls	d
+9		rts
 
 ; match: האם הטקסט ב-X מתחיל במילה שב-U (מסתיימת ב-0)? אם כן Z=1 ו-X אחריה
 match		pshs	x

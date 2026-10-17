@@ -14,8 +14,8 @@ body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 'IBM 
 header { display: flex; align-items: center; gap: 12px; padding: 10px 16px; flex-wrap: wrap; }
 header b { font-size: 18px; }
 .tag { font-size: 13px; padding: 3px 10px; border-radius: 999px; background: #3a2a10; color: var(--accent); }
-header a:first-of-type { margin-inline-start: auto; }
-header a { color: var(--ink); text-decoration: none; border: 1.5px solid var(--line); border-radius: 8px; padding: 6px 12px; font-size: 14px; }
+#full-open { margin-inline-start: auto; }
+header a, #full-open { color: var(--ink); text-decoration: none; border: 1.5px solid var(--line); border-radius: 8px; padding: 6px 12px; font-size: 14px; }
 main { max-width: 900px; margin: 0 auto; padding: 0 16px 24px; }
 .tv { background: linear-gradient(180deg, #4a3b2f, #241c16); border-radius: 18px; padding: 14px; }
 canvas { display: block; width: 100%; aspect-ratio: 4 / 3; height: auto; background: #000; border-radius: 10px; outline: none; image-rendering: pixelated; }
@@ -41,24 +41,41 @@ details.note summary { cursor: pointer; color: var(--ink); }
 .tape.in { border-color: var(--accent); background: #3a2a10; }
 .tape:focus-visible, .k:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 #tape-status { min-height: 1.5em; color: var(--accent); }
+.mine-title { font-size: 16px; margin: 18px 0 2px; }
+.mytapes { display: grid; gap: 6px; margin-top: 8px; }
+.mytape { display: flex; gap: 6px; align-items: stretch; }
+.mytape .tape { flex: 1; min-width: 0; border-color: #2f6fd6; }
+.mytape .tape small { color: #9cc4ff; }
+.mini { border: 1.5px solid var(--line); border-radius: 10px; background: #1b1511; color: var(--ink); font: inherit; font-size: 14px; padding: 0 10px; cursor: pointer; min-width: 44px; }
+.mini.armed { border-color: #ff8a7a; color: #ff8a7a; }
+.mini:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.upload { margin-top: 8px; padding: 8px 12px; }
 @media (min-width: 1100px) {
   html, body { height: 100%; }
-  main { max-width: none; display: grid; gap: 0 24px; align-items: start;
+  main { max-width: none; display: grid; gap: 0 24px; align-items: start; padding-bottom: 8px;
     grid-template-columns: minmax(240px, 1fr) min(900px, calc((100vh - 370px) * 4 / 3 + 28px), calc(100vw - 600px)) minmax(240px, 1fr);
-    grid-template-rows: auto 1fr; }
+    grid-template-rows: auto 1fr; height: calc(100vh - 60px); }
   main > p.note:first-child { grid-column: 1; grid-row: 1; margin-top: 0; }
-  .info { grid-column: 1; grid-row: 2; }
+  .info { grid-column: 1; grid-row: 2; min-height: 0; max-height: 100%; overflow-y: auto; padding-inline-end: 6px; }
   .machine { grid-column: 2; grid-row: 1 / 3; }
-  .shelf { grid-column: 3; grid-row: 1 / 3; margin-top: 0; }
-  .tapes { grid-template-columns: 1fr; }
+  .shelf { grid-column: 3; grid-row: 1 / 3; margin-top: 0; max-height: calc(100vh - 70px); overflow-y: auto; padding-inline-end: 6px; }
+  .tapes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .info > p.note:first-child { margin-top: 0; }
 }
+#full-open { background: #3a2a10; border-color: var(--accent); color: var(--accent); cursor: pointer; font: inherit; font-size: 14px; }
+#full-close { display: none; position: fixed; top: 8px; inset-inline-end: 8px; z-index: 5; font: inherit; font-size: 14px; color: var(--ink); background: #1b1511; border: 1.5px solid var(--line); border-radius: 8px; padding: 6px 12px; cursor: pointer; opacity: .85; }
+body.full header, body.full main > p.note:first-child, body.full .shelf, body.full .info { display: none; }
+body.full #full-close { display: block; }
+body.full main { display: flex; justify-content: center; align-items: center; max-width: none; min-height: 100vh; min-height: 100dvh; padding: 44px 8px 8px; }
+body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); min-width: min(100%, 520px); }
+@media (max-width: 600px) { body.full main { align-items: start; padding: 48px 4px 4px; } body.full .tv { padding: 6px; border-radius: 10px; } }
 @media (max-width: 600px) { .k { height: 40px; font-size: 12px; } .k small { font-size: 9px; } .k.wide { font-size: 8px; letter-spacing: -0.3px; } }
 </style>
 </head>
 <body>
 <header>
   <b dir="ltr">Dragon 1982</b><span class="tag">המחשב האמיתי · ניסוי</span>
+  <button type="button" id="full-open">📺 מסך מלא</button>
   <a href="/en/lab/1982/" lang="en" hreflang="en" data-lang="en">English</a>
   <a href="/">← חזרה לאפליקציה</a>
 </header>
@@ -77,13 +94,24 @@ details.note summary { cursor: pointer; color: var(--ink); }
     </details>
     <div class="tapes" id="tapes"></div>
     <p class="note" id="tape-status" role="status" aria-live="polite"></p>
+    <h3 class="mine-title">הקלטות שלי</h3>
+    <p class="note">כותבים תוכנית ומקלידים <code dir="ltr">CSAVE "NAME"</code> (שם באנגלית, עד 8 אותיות). היא מוקלטת לקלטת ונשמרת כאן. טוענים בלחיצה על הקלטת, או מקלידים <code dir="ltr">CLOAD "NAME"</code>.</p>
+    <div class="mytapes" id="mytapes"></div>
+    <button type="button" class="mini upload" id="tape-upload">📂 טעינת קלטת מקובץ</button>
+    <input type="file" id="tape-file" accept=".cas" hidden>
+    <p class="note">הקלטות נשמרות רק בדפדפן הזה, ונמחקות אם מנקים אותו (בספארי גם אחרי שבוע בלי ביקור). כדי לשמור לתמיד או להעביר למכשיר אחר: ⬇ מוריד את הקלטת כקובץ.</p>
   </section>
   <div class="info">
   <p class="note">נסו: <code dir="ltr">PRINT 2+3</code>, או תוכנית: <code dir="ltr">10 FOR I=1 TO 10:PRINT I*I:NEXT</code> ואז <code dir="ltr">RUN</code>. עצירה: <code dir="ltr">BREAK</code>.</p>
   <details class="note" open><summary><strong>מה כבר עובד, ומה עוד חסר</strong></summary>
-    <p><strong>עובד:</strong> מספרים ומחרוזות, משתנים ומערכים, <span dir="ltr">IF, AND/OR/NOT, FOR, GOTO, GOSUB, ON, DATA/READ, INPUT, DEF FN</span>, הפונקציות (<span dir="ltr">INT, RND, SIN, LEFT$, MID$...</span>), גרפיקה (<span dir="ltr">PMODE, LINE, CIRCLE, PAINT, DRAW, GET/PUT</span>), צליל (<span dir="ltr">SOUND, PLAY</span>), קלטת (<span dir="ltr">CSAVE/CLOAD</span>), <span dir="ltr">AUTO, DEL, STOP/CONT, TRON</span>.</p>
-    <p><strong>עוד חסר:</strong> <span dir="ltr">EDIT, RENUM, PRINT USING</span>. קלטות של תוכניות מקוריות מ-1982 לא נטענות (הן שמורות בפורמט אחר). המהירות עדיין קצת פחות מהמקור. המחסניות והעוזר של האפליקציה לא עובדים כאן.</p>
+    <p><strong>עובד:</strong> מספרים ומחרוזות, משתנים ומערכים, <span dir="ltr">IF/THEN/ELSE, AND/OR/NOT, FOR, GOTO, GOSUB, ON, DATA/READ, INPUT, DEF FN</span>, הפונקציות (<span dir="ltr">INT, RND, SIN, LEFT$, MID$...</span>), גרפיקה (<span dir="ltr">PMODE, LINE, CIRCLE, PAINT, DRAW, GET/PUT</span>), צליל (<span dir="ltr">SOUND, PLAY</span>), קלטת (<span dir="ltr">CSAVE/CLOAD</span>), <span dir="ltr">PRINT USING, EDIT, RENUM, AUTO, DEL, STOP/CONT, TRON</span>.</p>
+    <p><strong>עוד חסר:</strong> קלטות של תוכניות מקוריות מ-1982 לא נטענות (הן שמורות בפורמט אחר). המהירות עדיין קצת פחות מהמקור. המחסניות והעוזר של האפליקציה לא עובדים כאן.</p>
     <p><strong>מצאתם הבדל מה-Dragon שהכרתם?</strong> זה בדיוק מה שאנחנו מחפשים. אפשר <a href="https://github.com/gonenya-create/dragon32/issues/new?labels=real-machine&amp;title=%D7%94%D7%91%D7%93%D7%9C%20%D7%9E%D7%94%D7%9E%D7%A7%D7%95%D7%A8%3A%20&amp;body=%D7%9E%D7%94%20%D7%94%D7%A7%D7%9C%D7%93%D7%AA%D7%99%3A%0A%0A%0A%D7%9E%D7%94%20%D7%A7%D7%99%D7%91%D7%9C%D7%AA%D7%99%3A%0A%0A%0A%D7%9E%D7%94%20%D7%94%D7%99%D7%94%20%D7%A7%D7%95%D7%A8%D7%94%20%D7%91-Dragon%20%D7%94%D7%9E%D7%A7%D7%95%D7%A8%D7%99%3A%0A%0A%0A%D7%9E%D7%97%D7%A9%D7%91%20/%20%D7%98%D7%9C%D7%A4%D7%95%D7%9F%20%D7%95%D7%93%D7%A4%D7%93%D7%A4%D7%9F%3A%0A">לפתוח דיווח ב-GitHub</a> (טופס מוכן עם שלוש שאלות; צריך חשבון GitHub), או לכתוב לנו דרך <a href="https://www.gonenyarom.co.il/about/#contact">יצירת קשר</a>: מה הקלדתם, מה קיבלתם, ומה היה קורה במקור.</p>
+  </details>
+  <details class="note"><summary><strong>איך עורכים שורה (<span dir="ltr">EDIT</span>)</strong></summary>
+    <p>מקלידים <code dir="ltr">EDIT 20</code>, ומספר השורה מופיע. עכשיו כל מקש הוא פקודה. מספר לפני פקודה אומר כמה פעמים, למשל <code dir="ltr">3 D</code>.</p>
+    <p><strong>רווח:</strong> תו קדימה · <strong>←:</strong> תו אחורה · <strong><span dir="ltr">D</span>:</strong> מחיקה · <strong><span dir="ltr">C</span>:</strong> החלפה · <strong><span dir="ltr">I</span>:</strong> הוספה · <strong><span dir="ltr">X</span>:</strong> הוספה בסוף · <strong><span dir="ltr">H</span>:</strong> מחיקת הסוף והוספה · <strong><span dir="ltr">S</span> ותו:</strong> קפיצה אל התו · <strong><span dir="ltr">K</span> ותו:</strong> מחיקה עד התו · <strong><span dir="ltr">L</span>:</strong> הצגת השורה · <strong><span dir="ltr">A</span>:</strong> ביטול השינויים.</p>
+    <p>יציאה ממצב הוספה: <strong><span dir="ltr">SHIFT+↑</span></strong> (במקלדת של מחשב: <code dir="ltr">_</code>). <strong><span dir="ltr">ENTER</span></strong> שומר את השורה, <strong><span dir="ltr">BREAK</span></strong> יוצא בלי לשמור.</p>
   </details>
   <p class="note">האמולטור הוא <a href="https://www.6809.org.uk/xroar/" dir="ltr">XRoar</a> של Ciaran Anscomb, ברישיון <span dir="ltr">GPL v3</span>. <a href="./SOURCE.md">קוד המקור והרישיון</a>. ה-BASIC שלנו: <a href="https://github.com/gonenya-create/dragon32/tree/main/rom" dir="ltr">github.com/gonenya-create/dragon32</a>.</p>
   </div>
@@ -95,12 +123,15 @@ for (const f of ['ui_done_initialising', 'ui_menu_add', 'ui_menu_add_str', 'ui_m
 var Module = {
   canvas: document.getElementById('canvas'),
   // ה-ROM שלנו במקום ה-BASIC המקורי; kbd-translate: מה שמקלידים במחשב הוא מה שמופיע
-  arguments: ['-machine', 'dragon32', '-extbas', '/d32.rom', '-kbd-translate', '-kbd-lang', 'us', '-no-vo-colour-killer'],
+  arguments: ['-machine', 'dragon32', '-extbas', '/d32.rom', '-cart', 'd32x', '-cart-type', 'rom', '-cart-rom', '/d32x.rom', '-no-cart-autorun', '-kbd-translate', '-kbd-lang', 'us', '-no-vo-colour-killer', '-tape-write', '/out.cas'],
   print: () => {}, printErr: () => {},
   onRuntimeInitialized: () => { window.d32Ready = true; },
   preRun: [function () {
-    addRunDependency('rom');
-    fetch('/lab/1982/d32.rom').then(r => r.arrayBuffer()).then(b => { FS.writeFile('/d32.rom', new Uint8Array(b)); removeRunDependency('rom'); });
+    // שני שבבים: ה-BASIC ($8000) ושבב ההרחבה בחריץ המחסנית ($C000)
+    for (const f of ['d32.rom', 'd32x.rom']) {
+      addRunDependency(f);
+      fetch('/lab/1982/' + f).then(r => r.arrayBuffer()).then(b => { FS.writeFile('/' + f, new Uint8Array(b)); removeRunDependency(f); });
+    }
   }]
 };
 
@@ -128,7 +159,9 @@ function fire(type, key, code) {
 function press(label, alt, hold = 70) {
   if (label === 'SHIFT') { shift = !shift; kbd.querySelectorAll('[data-k="SHIFT"]').forEach(b => b.classList.toggle('on', shift)); return; }
   let key, code, needShift = false;
-  if (CODE[label]) [key, code] = CODE[label];
+  // SHIFT+↑ (יציאה ממצב הוספה ב-EDIT): ב-XRoar זה התו _
+  if (shift && label === '↑') { key = '_'; code = 'Minus'; needShift = true; }
+  else if (CODE[label]) [key, code] = CODE[label];
   else {
     key = shift && alt ? alt : label;
     if (/^[A-Z]$/.test(key)) code = 'Key' + key;
@@ -138,7 +171,7 @@ function press(label, alt, hold = 70) {
   if (needShift) fire('keydown', 'Shift', 'ShiftLeft');
   fire('keydown', key, code);
   setTimeout(() => { fire('keyup', key, code); if (needShift) fire('keyup', 'Shift', 'ShiftLeft'); }, hold);
-  if (shift && label.length === 1) { shift = false; kbd.querySelectorAll('[data-k="SHIFT"]').forEach(b => b.classList.remove('on')); }
+  if (shift && (label.length === 1 || label === '↑')) { shift = false; kbd.querySelectorAll('[data-k="SHIFT"]').forEach(b => b.classList.remove('on')); }
 }
 // מקליד מחרוזת מקש אחרי מקש (לכפתורי הקלטות). \n = ENTER
 window.d32Type = async function (text) {
@@ -170,6 +203,7 @@ for (const row of ROWS) {
 }
 </script>
 <script src="/lab/1982/shelf.js"></script>
+<script src="/lab/1982/full.js"></script>
 <script src="/lab/1982/xroar.js"></script>
 </body>
 </html>

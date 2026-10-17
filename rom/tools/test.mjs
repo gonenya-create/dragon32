@@ -106,7 +106,22 @@ const CASES = [
   ['NOT binds looser than =', ['X=3:IF NOT X=3 THEN PRINT 1:ELSE PRINT 2', 'IF NOT X=2 THEN PRINT 5'], /\n 5\nOK/],
   ['AND OR with strings compared', ['A$="R":PRINT A$<>"R" AND A$<>"P";A$="R" OR A$="P"'], /\n 0 -1\nOK/],
   ['AND out of range', ['PRINT 40000 AND 1'], /\?FC ERROR\nOK/],
-  ['AND on a string', ['PRINT "A" AND 1'], /\?TM ERROR\nOK/]
+  ['AND on a string', ['PRINT "A" AND 1'], /\?TM ERROR\nOK/],
+  ['IF THEN ELSE', ['10 FOR I=1 TO 3:IF I=2 THEN PRINT "T"; ELSE PRINT I;','20 NEXT','RUN'], /RUN\n 1 T 3\nOK/],
+  ['ELSE line number and assignment', ['10 A=5:IF A>3 THEN B=1 ELSE B=2','20 IF A<3 THEN 90 ELSE PRINT B:PRINT "E"','90 END','RUN'], /RUN\n 1\nE\nOK/],
+  ['nested IF takes the nearest ELSE', ['A=5:B=1:IF A=5 THEN IF B=2 THEN PRINT "X" ELSE PRINT "Y" ELSE PRINT "Z"','IF A=1 THEN IF B=1 THEN PRINT "X" ELSE PRINT "Y" ELSE PRINT "Z"'], /\nY\nOK[\s\S]*\nZ\nOK/],
+  ['RENUM fixes GOTO GOSUB THEN ELSE ON RESTORE, not REM', ['1 REM GOTO 5','5 PRINT 1;:GOSUB 30','7 IF X=0 THEN 20 ELSE 5','20 ON 1 GOTO 30,5','30 RESTORE 5:X=1:RETURN','RENUM','LIST'], /LIST\n10 REM GOTO 5\n20 PRINT 1;:GOSUB 50\n30 IF X=0 THEN 40 ELSE 20\n40 ON 1 GOTO 50,20\n50 RESTORE 20:X=1:RETURN\nOK/],
+  ['RENUM start, from line, step; program still runs', ['1 PRINT 1;','2 GOTO 3','3 PRINT 3;:GOTO 999','RENUM 100,2,5','LIST','RUN'], /LIST\n1 PRINT 1;\n100 GOTO 105\n105 PRINT 3;:GOTO 999\nOK\nRUN\n 1  3\n\?UL ERROR IN 105/],
+  ['RENUM that would mix the order = ?FC', ['1 PRINT 1','2 PRINT 2','RENUM 1,2','RENUM 5,,0','LIST'], /\?FC ERROR[\s\S]*\?FC ERROR\nOK\nLIST\n1 PRINT 1\n2 PRINT 2\nOK/],
+  ['PRINT USING digits, rounding, too big', ['PRINT USING "###.##";3.14159;-2.5;1234.5'], /\n  3\.14 -2\.50%1234\.50\nOK/],
+  ['PRINT USING commas, stars, dollar', ['PRINT USING "**$##,###.##";1234.5','PRINT USING "$$##.##";7.5'], /\n\*\*\*\$1,234\.50\nOK[\s\S]*\n  \$7\.50\nOK/],
+  ['PRINT USING signs', ['PRINT USING "+##.#";5;-5','PRINT USING "##.#-";-3.25;3'], /\n \+5\.0 -5\.0\nOK[\s\S]*\n 3\.3- 3\.0\nOK/],
+  ['PRINT USING strings and repeating', ['PRINT USING "!:% %/";"HELLO";"WORLD"','PRINT USING "A=## B=##";1;2;3'], /\nH:WOR\/\nOK[\s\S]*\nA= 1 B= 2A= 3 B=\nOK/],
+  ['PRINT USING errors', ['PRINT USING "X";1','PRINT USING "##";"A"','PRINT USING "!";5'], /\?FC ERROR\nOK[\s\S]*\?TM ERROR\nOK[\s\S]*\?TM ERROR\nOK/],
+  ['EDIT: X adds at the end, S finds, D deletes, I inserts', ['10 PRINT "HELLO"','EDIT 10','XAB','EDIT 10','SL2DIJJ','LIST'], /EDIT 10\n10 PRINT "HE\\LL\\JJO"AB\nOK\nLIST\n10 PRINT "HEJJO"AB\nOK/],
+  ['EDIT: count + space, SHIFT+up leaves insert, C changes, L restarts', ['10 PRINT "HELLO"','EDIT 10','6 I12_2CXYL','LIST'], /LIST\n10 PRINT 12XYELLO"\nOK/],
+  ['EDIT: H replaces the rest; missing line = ?UL', ['10 PRINT 1','EDIT 10','6 H7','RUN','EDIT 99'], /RUN\n 7\nOK[\s\S]*\?UL ERROR\nOK/],
+  ['GOTO ELSE, :ELSE and ELSE in quotes', ['A=5:IF A=1 GOTO 9 ELSE PRINT "G"','IF A=5 THEN PRINT "S":ELSE PRINT "NO"','IF A=1 THEN PRINT "ELSE" ELSE PRINT "C"'], /\nG\nOK\n[\s\S]*\nS\nOK\n[\s\S]*\nC\nOK/]
 ];
 let fail = 0;
 for (const [name, lines, re, timeout] of CASES) {

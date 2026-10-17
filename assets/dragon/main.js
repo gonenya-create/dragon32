@@ -104,7 +104,15 @@ function fillShelf(root) {
     b.querySelector('.d32-tape-file').textContent = file;
     // במה נכתב: כל הקלטות הן תוכניות BASIC שכתבנו (אפשר לראות את הקוד ב-LIST)
     b.querySelector('.d32-made').textContent = tr('BASIC · נכתב על ידינו', 'BASIC · written by us');
-    box.appendChild(b);
+    // מתחת לקלטת: אותה קלטת במחשב האמיתי (שם היא נטענת ומתחילה לבד)
+    const real = document.createElement('a');
+    real.className = 'd32-tape-real';
+    real.href = (EN ? '/en' : '') + '/lab/1982/?tape=' + file.toLowerCase();
+    real.textContent = tr('🧪 במחשב האמיתי', '🧪 On the real machine');
+    const wrap = document.createElement('div');
+    wrap.className = 'd32-tape-box';
+    wrap.append(b, real);
+    box.appendChild(wrap);
   }
 }
 

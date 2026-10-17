@@ -10,7 +10,7 @@
   - הפרטים ב-`rom/README.md`.
 
 ## ה-BASIC: Dragon 1982 BASIC
-- **מה זה:** הקובץ `d32.rom` הוא ה-BASIC שכתבנו מאפס לשבב 6809. אין בו שום חלק מה-ROM המקורי של Dragon Data או של Microsoft.
+- **מה זה:** הקבצים `d32.rom` (ה-BASIC, ב-$8000) ו-`d32x.rom` (שבב ההרחבה בחריץ המחסנית, ב-$C000) הם ה-BASIC שכתבנו מאפס לשבב 6809. אין בהם שום חלק מה-ROM המקורי של Dragon Data או של Microsoft.
 - **קוד המקור:** בתיקייה `rom/` בריפו https://github.com/gonenya-create/dragon32.
 - **רישיון:** MIT.
 - **השראה:** פורמט המספרים לפי BASIC-M6502 של Microsoft, שהוא קוד פתוח ברישיון MIT (`rom/LICENSE-MSBASIC`).

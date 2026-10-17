@@ -4,7 +4,7 @@ BASIC משלנו למעבד 6809, שנטען במקום ה-ROM המקורי של
 
 - **בנייה:** `rom/build.sh` (צריך `asm6809`: `brew install asm6809`).
 - **בדיקות:** `node rom/tools/test.mjs` (צריך `xroar`: `brew install xroar`). הכלי בונה עותק זמני של המקור עם קלט בתור, מריץ את XRoar בלי חלון וקורא צילום מצב. אין צורך בבנייה מוקדמת ואין ניסיונות חוזרים. בדיקות התשתית: ⁨`node --test rom/tools/xr-test.mjs`⁩.
-- **מסך ידני:** `xroar -machine dragon32 -extbas rom/build/d32.rom`.
+- **מסך ידני:** `xroar -machine dragon32 -extbas rom/build/d32.rom -cart d32x -cart-type rom -cart-rom rom/build/d32x.rom -no-cart-autorun` (השבב השני, `d32x.rom`, הוא ההרחבה בחריץ המחסנית: פקודות שלא נכנסו ב-16K).
 - **מקור:** הכול נכתב מאפס. פורמט המספרים והאלגוריתמים לפי BASIC-M6502 של Microsoft (רישיון MIT, `LICENSE-MSBASIC`). אין כאן שום קוד או נתונים מה-ROM המקורי של Dragon Data או Microsoft.
 
 

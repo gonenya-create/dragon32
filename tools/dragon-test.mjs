@@ -310,6 +310,7 @@ if (part('room /dragon/')) {
   await p.waitForFunction(() => /OK\s*$/.test(document.querySelector('#dragon-room .d32-out').textContent), null, { timeout: 4000 });
   check('room boots', /DRAGON 1982 BASIC 1\.0\n\(C\) 2026 GONEN YAROM[\s\S]*OK\s*$/.test(await p.locator('#dragon-room .d32-out').textContent()));
   check('room shelf has 6 tapes', (await p.locator('#dragon-room .d32-tape').count()) === 6);
+  check('every tape has an "on the real machine" link', (await p.locator('#dragon-room .d32-tape-real[href^="/lab/1982/?tape="]').count()) === 6);
   const input = p.locator('#dragon-room .d32-input');
   await input.fill('print 6*7'); await input.press('Enter'); await p.waitForTimeout(250);
   check('room PRINT works', / 42 \nOK$/.test(await p.locator('#dragon-room .d32-out').textContent()));
@@ -1031,6 +1032,14 @@ if (part('real machine lab')) {
     await p.waitForTimeout(3500);
     check(`${path} loads with the drawn keyboard`, r.status() === 200 && (await p.locator('.kbd .k').count()) > 50 && errs.length === 0, errs.join(' | '));
     check(`${path} has the tape shelf (7 tapes)`, (await p.locator('#tapes .tape').count()) === 7);
+    await p.click('#full-open');
+    await p.waitForTimeout(300);
+    check(`${path} full screen: only the computer and keyboard, nothing to scroll`, await p.evaluate(() =>
+      document.body.classList.contains('full') && !document.querySelector('.shelf').offsetParent && !document.querySelector('header').offsetParent
+      && document.documentElement.scrollHeight <= innerHeight + 1 && document.getElementById('kbd').getBoundingClientRect().bottom <= innerHeight));
+    await p.click('#full-close');
+    await p.waitForTimeout(300);
+    check(`${path} leaving full screen brings the page back`, await p.evaluate(() => !document.body.classList.contains('full') && !!document.querySelector('.shelf').offsetParent));
     if (path === '/lab/1982/') {
       await p.waitForFunction(() => window.d32Ready, null, { timeout: 20000 });
       await p.click('#tapes .tape:has-text("GUESS")');
@@ -1038,6 +1047,47 @@ if (part('real machine lab')) {
       check('a tape goes into the tape player and CLOAD is typed', await p.evaluate(() =>
         document.querySelector('#tapes .tape.in small')?.textContent === 'GUESS' && /טוען|רץ/.test(document.getElementById('tape-status').textContent)
         && FS.stat('/tape-guess.cas').size > 280) && errs.length === 0, errs.join(' | '));
+    }
+    if (path === '/lab/1982/') {
+      // מהאפליקציה: ?tape=lander טוען את הקלטת לבד
+      const q = await browser.newPage({ viewport: { width: 1000, height: 900 } });
+      await q.goto(base.replace(/\/$/, '') + path + '?tape=lander');
+      await q.waitForFunction(() => document.querySelector('#tapes .tape.in small')?.textContent === 'LANDER', null, { timeout: 30000 }).catch(() => {});
+      check('?tape=lander from the app loads that tape by itself', await q.evaluate(() => document.querySelector('#tapes .tape.in small')?.textContent === 'LANDER'));
+      await q.close();
+      // הקלטות שלי: CSAVE מקליט ושומר בדפדפן, ואחרי טעינה מחדש CLOAD מוצא את התוכנית
+      const m = await browser.newPage({ viewport: { width: 1000, height: 900 } });
+      const merrs = [];
+      m.on('pageerror', e => merrs.push(e.message));
+      await m.goto(base.replace(/\/$/, '') + path);
+      await m.waitForFunction(() => window.d32Ready, null, { timeout: 20000 });
+      await m.waitForTimeout(2000);
+      await m.evaluate(() => d32Type('10 PRINT "SAVED"\nCSAVE "MYPROG"\n'));
+      await m.waitForFunction(() => [...document.querySelectorAll('#mytapes .tape small')].some(e => e.textContent === 'MYPROG'), null, { timeout: 20000 }).catch(() => {});
+      check('CSAVE on the real machine puts the program on "my tapes"', await m.locator('#mytapes .tape small:text-is("MYPROG")').count() === 1);
+      await m.reload();
+      await m.waitForFunction(() => window.d32Ready, null, { timeout: 20000 });
+      await m.waitForTimeout(4000);
+      await m.evaluate(() => d32Type('CLOAD "MYPROG"\n'));
+      await m.waitForFunction(() => (d32Screen() || []).includes('F MYPROG') && (d32Screen() || []).slice(-3).includes('OK'), null, { timeout: 20000 }).catch(() => {});
+      await m.evaluate(() => d32Type('LIST\n'));
+      await m.waitForTimeout(1500);
+      check('after a reload, CLOAD "MYPROG" loads it back', (await m.evaluate(() => d32Screen())).includes('10 PRINT "SAVED"') && merrs.length === 0, (await m.evaluate(() => d32Screen())).filter(Boolean).join(' | ') + merrs.join(' | '));
+      const del = m.locator('#mytapes .mytape .mini').nth(1);
+      await del.click();
+      await del.click();
+      check('a saved tape can be deleted (two taps)', await m.locator('#mytapes .tape').count() === 0);
+      // הפקודות שבשבב ההרחבה (חריץ המחסנית): ELSE, RENUM, PRINT USING, ו-EDIT עם SHIFT+↑ מהמקלדת המצוירת
+      await m.evaluate(() => d32Type('NEW\n5 IF 1 THEN PRINT USING "##.#";3.14159 ELSE 7\n7 PRINT "NO"\nRENUM\nEDIT 20\nX;'));
+      await m.click('.k[data-k="SHIFT"] >> nth=0');
+      await m.dispatchEvent('.k[data-k="↑"]', 'pointerdown');
+      await m.waitForTimeout(300);
+      await m.evaluate(() => d32Type('Q\nLIST\nRUN\n'));
+      await m.waitForTimeout(2500);
+      const lines = (await m.evaluate(() => d32Screen())).filter(Boolean);
+      const shown = lines.join('');   // שורות ארוכות נשברות ב-32 תווים
+      check('real machine: ELSE, RENUM, PRINT USING and EDIT (SHIFT+↑ leaves insert mode)', shown.includes('10 IF 1 THEN PRINT USING "##.#";3.14159 ELSE 20') && lines.includes('20 PRINT "NO";') && lines.includes(' 3.1') && !shown.includes('ERROR'), lines.join(' | '));
+      await m.close();
     }
     await p.close();
   }
