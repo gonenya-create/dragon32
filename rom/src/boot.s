@@ -300,7 +300,7 @@ gk_scan		lbsr	keyindex
 1
 		puls	b,x,pc
 
-; getline: קורא שורה למאגר LINBUF (מסתיים ב-0). ← מוחק, ENTER מסיים
+; getline: קורא שורה למאגר LINBUF (מסתיים ב-0). ← מוחק, ENTER מסיים. BREAK: שורה ריקה ו-C=1
 getline		clrb
 ; getline_b: כמו getline, אבל B תווים כבר נמצאים ב-LINBUF (ומוצגים)
 getline_b	pshs	b,x
@@ -341,10 +341,12 @@ gl_brk		; BREAK בזמן הקלדה: השורה מתבטלת, וגם AUTO
 		lda	#13
 		lbsr	putc
 		clr	,x
+		orcc	#1		; C=1: נלחץ BREAK
 		puls	b,x,pc
 gl_done		clr	b,x
 		lda	#13
 		lbsr	putc
+		andcc	#$fe
 		puls	b,x,pc
 
 ; הסמן: ריבוע מלא במקום הבא במסך

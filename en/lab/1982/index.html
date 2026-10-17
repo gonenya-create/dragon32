@@ -41,6 +41,18 @@ details.note summary { cursor: pointer; color: var(--ink); }
 .tape.in { border-color: var(--accent); background: #3a2a10; }
 .tape:focus-visible, .k:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 #tape-status { min-height: 1.5em; color: var(--accent); }
+@media (min-width: 1100px) {
+  html, body { height: 100%; }
+  main { max-width: none; display: grid; gap: 0 24px; align-items: start;
+    grid-template-columns: minmax(240px, 1fr) min(900px, calc((100vh - 370px) * 4 / 3 + 28px), calc(100vw - 600px)) minmax(240px, 1fr);
+    grid-template-rows: auto 1fr; }
+  main > p.note:first-child { grid-column: 1; grid-row: 1; margin-top: 0; }
+  .info { grid-column: 1; grid-row: 2; }
+  .machine { grid-column: 2; grid-row: 1 / 3; }
+  .shelf { grid-column: 3; grid-row: 1 / 3; margin-top: 0; }
+  .tapes { grid-template-columns: 1fr; }
+  .info > p.note:first-child { margin-top: 0; }
+}
 @media (max-width: 600px) { .k { height: 40px; font-size: 12px; } .k small { font-size: 9px; } .k.wide { font-size: 8px; letter-spacing: -0.3px; } }
 </style>
 </head>
@@ -52,14 +64,21 @@ details.note summary { cursor: pointer; color: var(--ink); }
 </header>
 <main>
   <p class="note">This is a <strong>Dragon 32 emulated at chip level</strong> (the 6809 CPU, memory and video chip), running <strong>a BASIC we wrote from scratch</strong>, without the original ROM. It is still a trial: some things are missing, and it is a little slower than the original. Click the screen and type, or use the keyboard below.</p>
+  <div class="machine">
   <div class="tv"><canvas id="canvas" tabindex="0" oncontextmenu="event.preventDefault()" aria-label="Computer screen"></canvas></div>
   <div class="kbd" id="kbd" aria-label="Dragon 32 keyboard"></div>
+  </div>
   <section class="shelf" aria-labelledby="shelf-title">
     <h2 id="shelf-title">Tape shelf</h2>
-    <p class="note">The same BASIC programs as in the app, this time on the real machine. Pick a tape: it goes into the tape player and the computer types <code>CLOAD</code>. When <code>OK</code> appears, type <code>RUN</code>.</p>
+    <p class="note">Tap a tape and the game loads and starts by itself.</p>
+    <details class="note how"><summary><strong>How did you load a game in 1982?</strong></summary>
+      <p>Games were sold on audio cassettes. You put the tape in a cassette player wired to the computer and typed <code>CLOAD</code> ("load from cassette"). The computer listened to the tape for a few seconds and copied the game into memory. Then you typed <code>RUN</code> and the game started.</p>
+      <p>Here you just tap a tape, and the computer does it for you, so you can see what it looked like.</p>
+    </details>
     <div class="tapes" id="tapes"></div>
     <p class="note" id="tape-status" role="status" aria-live="polite"></p>
   </section>
+  <div class="info">
   <p class="note">Try: <code>PRINT 2+3</code>, or a program: <code>10 FOR I=1 TO 10:PRINT I*I:NEXT</code> then <code>RUN</code>. To stop: <code>BREAK</code> (Esc).</p>
   <details class="note" open><summary><strong>What works, and what's still missing</strong></summary>
     <p><strong>Works:</strong> numbers and strings, variables and arrays, IF, AND/OR/NOT, FOR, GOTO, GOSUB, ON, DATA/READ, INPUT, DEF FN, the functions (INT, RND, SIN, LEFT$, MID$...), graphics (PMODE, LINE, CIRCLE, PAINT, DRAW, GET/PUT), sound (SOUND, PLAY), cassette (CSAVE/CLOAD), AUTO, DEL, STOP/CONT, TRON.</p>
@@ -67,6 +86,7 @@ details.note summary { cursor: pointer; color: var(--ink); }
     <p><strong>Found a difference from the Dragon you remember?</strong> That is exactly what we're looking for. <a href="https://github.com/gonenya-create/dragon32/issues/new?labels=real-machine&amp;title=Difference%20from%20the%20original%3A%20&amp;body=What%20I%20typed%3A%0A%0A%0AWhat%20I%20got%3A%0A%0A%0AWhat%20the%20original%20Dragon%20would%20do%3A%0A%0A%0AComputer%20/%20phone%20and%20browser%3A%0A">Open a report on GitHub</a> (a ready form with three questions; a GitHub account is needed), or write via the <a href="https://www.gonenyarom.co.il/about/#contact">contact page</a> (in Hebrew; English is fine): what you typed, what you got, and what the original would have done.</p>
   </details>
   <p class="note">The emulator is <a href="https://www.6809.org.uk/xroar/">XRoar</a> by Ciaran Anscomb, licensed under GPL v3. <a href="/lab/1982/SOURCE.md">Sources and licences</a>. Our BASIC: <a href="https://github.com/gonenya-create/dragon32/tree/main/rom">github.com/gonenya-create/dragon32</a>.</p>
+  </div>
 </main>
 <script src="/assets/dragon/langpick.js" defer></script>
 <script>
@@ -105,7 +125,7 @@ function fire(type, key, code) {
   const e = new KeyboardEvent(type, { key, code, bubbles: true, cancelable: true });
   canvas.dispatchEvent(e);
 }
-function press(label, alt) {
+function press(label, alt, hold = 70) {
   if (label === 'SHIFT') { shift = !shift; kbd.querySelectorAll('[data-k="SHIFT"]').forEach(b => b.classList.toggle('on', shift)); return; }
   let key, code, needShift = false;
   if (CODE[label]) [key, code] = CODE[label];
@@ -117,13 +137,15 @@ function press(label, alt) {
   }
   if (needShift) fire('keydown', 'Shift', 'ShiftLeft');
   fire('keydown', key, code);
-  setTimeout(() => { fire('keyup', key, code); if (needShift) fire('keyup', 'Shift', 'ShiftLeft'); }, 70);
+  setTimeout(() => { fire('keyup', key, code); if (needShift) fire('keyup', 'Shift', 'ShiftLeft'); }, hold);
   if (shift && label.length === 1) { shift = false; kbd.querySelectorAll('[data-k="SHIFT"]').forEach(b => b.classList.remove('on')); }
 }
 // מקליד מחרוזת מקש אחרי מקש (לכפתורי הקלטות). \n = ENTER
 window.d32Type = async function (text) {
   canvas.focus({ preventScroll: true });
   for (const c of text) {
+    // BREAK מוחזק יותר זמן: ה-BASIC בודק אותו רק בין פקודות, ופקודה כמו SOUND לוקחת זמן
+    if (c === '\x1b') { press('BREAK', '', 450); await new Promise(r => setTimeout(r, 600)); continue; }
     press(c === '\n' ? 'ENTER' : c);
     await new Promise(r => setTimeout(r, 160));
   }

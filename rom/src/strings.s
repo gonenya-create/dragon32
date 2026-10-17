@@ -572,6 +572,11 @@ f_inkey		; המקש שנלחץ עכשיו, בלי לחכות. אין: ""
 		rts
 
 ; ---------- INPUT ----------
+; BREAK בזמן INPUT או LINE INPUT: התוכנית נעצרת, כמו במקור ("BREAK IN שורה"). כאן CONT לא ממשיך
+in_break	ldd	#0
+		std	CONTLN
+		leau	m_break,pcr
+		lbra	error2
 ; INPUT ["הודעה";] משתנה[,משתנה...]
 st_input	ldd	CURLN
 		lbeq	err_id		; רק בתוך תוכנית, כמו במקור
@@ -589,6 +594,7 @@ in_ask		lda	#'?
 		lbsr	putc
 in_more		pshs	x
 		lbsr	getline		; התשובה ב-LINBUF
+		lbcs	in_break
 		puls	x
 		ldy	#LINBUF
 in_var		; המשתנה הבא (getvar משתמש ב-Y, ששומר את המקום בתשובה)
