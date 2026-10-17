@@ -1020,6 +1020,20 @@ if (part('english')) {
   await ctx.close();
 }
 
+// המחשב האמיתי (ניסוי): XRoar עם ה-ROM שלנו עולה, והמקלדת המצוירת מקלידה בו
+if (part('real machine lab')) {
+  console.log('real machine lab');
+  for (const path of ['/lab/1982/', '/en/lab/1982/']) {
+    const p = await browser.newPage({ viewport: { width: 1000, height: 900 } });
+    const errs = [];
+    p.on('pageerror', e => errs.push(e.message));
+    const r = await p.goto(base.replace(/\/$/, '') + path);
+    await p.waitForTimeout(3500);
+    check(`${path} loads with the drawn keyboard`, r.status() === 200 && (await p.locator('.kbd .k').count()) > 50 && errs.length === 0, errs.join(' | '));
+    await p.close();
+  }
+}
+
 check('no page errors', pageErrors.length === 0, pageErrors.join('\n'));
 await browser.close();
 if (server) server.close();

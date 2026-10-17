@@ -717,3 +717,4 @@ html[lang="en"] .d32-helper-title { padding-right: 34px; }
 .made-table th, .made-table td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: start; vertical-align: top; }
 .made-table thead th { font-weight: 700; color: var(--muted); font-size: 13px; }
 @media (max-width: 600px) { .made-table thead { display: none; } .made-table tr { display: block; padding: 8px 0; border-bottom: 1px solid var(--line); } .made-table th, .made-table td { display: block; border: 0; padding: 2px 0; } }
+.prose .lab-link { margin-top: 14px; padding: 10px 14px; border: 1.5px dashed var(--line); border-radius: 10px; }

@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dragon 1982 — the real machine (trial)</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;700&amp;display=swap">
+<style>
+:root { --bg: #0e0b09; --ink: #efe6d2; --muted: #c9bba5; --line: #4a3d31; --key: #2a2119; --accent: #f2c94c; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 'IBM Plex Sans Hebrew', system-ui, sans-serif; }
+header { display: flex; align-items: center; gap: 12px; padding: 10px 16px; flex-wrap: wrap; }
+header b { font-size: 18px; }
+.tag { font-size: 13px; padding: 3px 10px; border-radius: 999px; background: #3a2a10; color: var(--accent); }
+header a:first-of-type { margin-inline-start: auto; }
+header a { color: var(--ink); text-decoration: none; border: 1.5px solid var(--line); border-radius: 8px; padding: 6px 12px; font-size: 14px; }
+main { max-width: 900px; margin: 0 auto; padding: 0 16px 24px; }
+.tv { background: linear-gradient(180deg, #4a3b2f, #241c16); border-radius: 18px; padding: 14px; }
+canvas { display: block; width: 100%; aspect-ratio: 4 / 3; height: auto; background: #000; border-radius: 10px; outline: none; image-rendering: pixelated; }
+.wait { position: absolute; }
+.kbd { direction: ltr; margin-top: 12px; padding: 8px; border-radius: 12px; background: linear-gradient(180deg, #f1e8d4, #ddd0b4); user-select: none; -webkit-user-select: none; touch-action: manipulation; }
+.row { display: flex; gap: 4px; margin-top: 4px; }
+.row:first-child { margin-top: 0; }
+.k { flex: 1 0 0; min-width: 0; height: 46px; border: 0; border-radius: 6px; background: linear-gradient(180deg, #34312e, #1a1816); color: #f4efe4; font: 700 14px/1 'Courier New', monospace; box-shadow: 0 3px 0 #050505; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.k small { font-size: 10px; opacity: .7; }
+.k.down, .k.on { transform: translateY(2px); box-shadow: 0 1px 0 #050505; color: #8dff8d; }
+.k.wide { flex-grow: 1.6; font-size: 11px; }
+.k.space { flex-grow: 7; }
+.k.red { color: #ffb0a4; }
+.note { color: var(--muted); font-size: 14px; }
+.note a { color: var(--accent); }
+details.note { margin: 14px 0; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px; }
+details.note summary { cursor: pointer; color: var(--ink); }
+@media (max-width: 600px) { .k { height: 40px; font-size: 12px; } .k small { font-size: 9px; } }
+</style>
+</head>
+<body>
+<header>
+  <b dir="ltr">Dragon 1982</b><span class="tag">The real machine · trial</span>
+  <a href="/lab/1982/" lang="he" hreflang="he" data-lang="he">עברית</a>
+  <a href="/en/">← Back to the app</a>
+</header>
+<main>
+  <p class="note">This is a <strong>Dragon 32 emulated at chip level</strong> (the 6809 CPU, memory and video chip), running <strong>a BASIC we wrote from scratch</strong>, without the original ROM. It is still a trial: some things are missing, and it is a little slower than the original. Click the screen and type, or use the keyboard below.</p>
+  <div class="tv"><canvas id="canvas" tabindex="0" oncontextmenu="event.preventDefault()" aria-label="Computer screen"></canvas></div>
+  <div class="kbd" id="kbd" aria-label="Dragon 32 keyboard"></div>
+  <p class="note">Try: <code>PRINT 2+3</code>, or a program: <code>10 FOR I=1 TO 10:PRINT I*I:NEXT</code> then <code>RUN</code>. To stop: <code>BREAK</code> (Esc).</p>
+  <details class="note" open><summary><strong>What works, and what's still missing</strong></summary>
+    <p><strong>Works:</strong> numbers and strings, variables and arrays, IF, FOR, GOTO, GOSUB, ON, DATA/READ, INPUT, DEF FN, the functions (INT, RND, SIN, LEFT$, MID$...), graphics (PMODE, LINE, CIRCLE, PAINT, DRAW, GET/PUT), sound (SOUND, PLAY), cassette (CSAVE/CLOAD), AUTO, DEL, STOP/CONT, TRON.</p>
+    <p><strong>Still missing:</strong> EDIT, RENUM, PRINT USING. Original 1982 program tapes don't load yet (they are stored in a different, tokenised format). Speed is still a little below the original. The app's cartridges and helper don't work here.</p>
+    <p><strong>Found a difference from the Dragon you remember?</strong> That is exactly what we're looking for. Tell us on <a href="https://github.com/gonenya-create/dragon32/issues">GitHub</a> or via the <a href="https://www.gonenyarom.co.il/about/#contact">contact page</a> (in Hebrew; writing in English is fine): what you typed, what you got, and what the original would have done.</p>
+  </details>
+  <p class="note">The emulator is <a href="https://www.6809.org.uk/xroar/">XRoar</a> by Ciaran Anscomb, licensed under GPL v3. <a href="/lab/1982/SOURCE.md">Sources and licences</a>. Our BASIC: <a href="https://github.com/gonenya-create/dragon32/tree/main/rom">github.com/gonenya-create/dragon32</a>.</p>
+</main>
+<script src="/assets/dragon/langpick.js" defer></script>
+<script>
+// XRoar (גרסת הדפדפן) קורא לפונקציות האלה כדי לעדכן תפריטים משלו. כאן אין תפריטים
+for (const f of ['ui_done_initialising', 'ui_menu_add', 'ui_menu_add_str', 'ui_menu_clear', 'ui_menu_select', 'ui_menu_select_str', 'ui_set_checkbox', 'ui_set_fullscreen', 'ui_set_html', 'ui_set_value', 'ui_update_ccr', 'ui_update_disk_info', 'ui_update_hd_filename', 'ui_update_tape_input_filename', 'ui_update_tape_playing']) window[f] = () => {};
+var Module = {
+  canvas: document.getElementById('canvas'),
+  // ה-ROM שלנו במקום ה-BASIC המקורי; kbd-translate: מה שמקלידים במחשב הוא מה שמופיע
+  arguments: ['-machine', 'dragon32', '-extbas', '/d32.rom', '-kbd-translate', '-kbd-lang', 'us', '-no-vo-colour-killer'],
+  print: () => {}, printErr: () => {},
+  preRun: [function () {
+    addRunDependency('rom');
+    fetch('/lab/1982/d32.rom').then(r => r.arrayBuffer()).then(b => { FS.writeFile('/d32.rom', new Uint8Array(b)); removeRunDependency('rom'); });
+  }]
+};
+
+// מקלדת Dragon מצוירת: שולחת אירועי מקלדת כמו מקלדת אמיתית (חשוב בטלפון)
+const ROWS = [
+  [['1','!'],['2','"'],['3','#'],['4','$'],['5','%'],['6','&'],['7',"'"],['8','('],['9',')'],['0',''],[':','*'],['-','='],['BREAK','',1]],
+  [['↑','',1],['Q'],['W'],['E'],['R'],['T'],['Y'],['U'],['I'],['O'],['P'],['@'],['CLEAR','',1]],
+  [['↓','',1],['A'],['S'],['D'],['F'],['G'],['H'],['J'],['K'],['L'],[';','+'],['ENTER','',1]],
+  [['SHIFT','',1],['Z'],['X'],['C'],['V'],['B'],['N'],['M'],[',','<'],['.','>'],['/','?'],['SHIFT','',1]],
+  [['←','',1],[' ','',2],['→','',1]]
+];
+// מקש מצויר → אירוע מקלדת של המחשב (key, code)
+const CODE = { BREAK: ['Escape', 'Escape'], CLEAR: ['Home', 'Home'], ENTER: ['Enter', 'Enter'], '↑': ['ArrowUp', 'ArrowUp'], '↓': ['ArrowDown', 'ArrowDown'], '←': ['ArrowLeft', 'ArrowLeft'], '→': ['ArrowRight', 'ArrowRight'], ' ': [' ', 'Space'], SHIFT: ['Shift', 'ShiftLeft'] };
+// סימן → המקש במקלדת מחשב רגילה (אנגלית) שמפיק אותו, ואם צריך Shift. XRoar במצב "תרגום" ממיר את התו למקשי ה-Dragon
+const HOST = { '!': ['Digit1', 1], '"': ['Quote', 1], '#': ['Digit3', 1], '$': ['Digit4', 1], '%': ['Digit5', 1], '&': ['Digit7', 1], "'": ['Quote', 0],
+  '(': ['Digit9', 1], ')': ['Digit0', 1], ':': ['Semicolon', 1], '*': ['Digit8', 1], '-': ['Minus', 0], '=': ['Equal', 0], ';': ['Semicolon', 0],
+  '+': ['Equal', 1], ',': ['Comma', 0], '<': ['Comma', 1], '.': ['Period', 0], '>': ['Period', 1], '/': ['Slash', 0], '?': ['Slash', 1], '@': ['Digit2', 1] };
+let shift = false;
+const kbd = document.getElementById('kbd');
+const canvas = document.getElementById('canvas');
+function fire(type, key, code) {
+  const e = new KeyboardEvent(type, { key, code, bubbles: true, cancelable: true });
+  canvas.dispatchEvent(e);
+}
+function press(label, alt) {
+  if (label === 'SHIFT') { shift = !shift; kbd.querySelectorAll('[data-k="SHIFT"]').forEach(b => b.classList.toggle('on', shift)); return; }
+  let key, code, needShift = false;
+  if (CODE[label]) [key, code] = CODE[label];
+  else {
+    key = shift && alt ? alt : label;
+    if (/^[A-Z]$/.test(key)) code = 'Key' + key;
+    else if (/^[0-9]$/.test(key)) code = 'Digit' + key;
+    else if (HOST[key]) { code = HOST[key][0]; needShift = !!HOST[key][1]; }
+  }
+  if (needShift) fire('keydown', 'Shift', 'ShiftLeft');
+  fire('keydown', key, code);
+  setTimeout(() => { fire('keyup', key, code); if (needShift) fire('keyup', 'Shift', 'ShiftLeft'); }, 70);
+  if (shift && label.length === 1) { shift = false; kbd.querySelectorAll('[data-k="SHIFT"]').forEach(b => b.classList.remove('on')); }
+}
+for (const row of ROWS) {
+  const r = document.createElement('div');
+  r.className = 'row';
+  for (const [label, alt = '', wide = 0] of row) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'k' + (wide === 2 ? ' space' : wide ? ' wide' : '') + (label === 'BREAK' || label === 'CLEAR' ? ' red' : '');
+    b.dataset.k = label;
+    b.innerHTML = (alt ? '<small>' + alt.replace('<', '&lt;').replace('>', '&gt;') + '</small>' : '') + '<span></span>';
+    b.querySelector('span').textContent = label === ' ' ? '' : label;
+    b.setAttribute('aria-label', label === ' ' ? 'Space' : label);
+    b.addEventListener('pointerdown', e => { e.preventDefault(); b.classList.add('down'); press(label, alt); canvas.focus({ preventScroll: true }); });
+    b.addEventListener('pointerup', () => b.classList.remove('down'));
+    b.addEventListener('pointerleave', () => b.classList.remove('down'));
+    r.appendChild(b);
+  }
+  kbd.appendChild(r);
+}
+</script>
+<script src="/lab/1982/xroar.js"></script>
+</body>
+</html>

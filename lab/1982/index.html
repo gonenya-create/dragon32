@@ -14,7 +14,8 @@ body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 'IBM 
 header { display: flex; align-items: center; gap: 12px; padding: 10px 16px; flex-wrap: wrap; }
 header b { font-size: 18px; }
 .tag { font-size: 13px; padding: 3px 10px; border-radius: 999px; background: #3a2a10; color: var(--accent); }
-header a { margin-inline-start: auto; color: var(--ink); text-decoration: none; border: 1.5px solid var(--line); border-radius: 8px; padding: 6px 12px; font-size: 14px; }
+header a:first-of-type { margin-inline-start: auto; }
+header a { color: var(--ink); text-decoration: none; border: 1.5px solid var(--line); border-radius: 8px; padding: 6px 12px; font-size: 14px; }
 main { max-width: 900px; margin: 0 auto; padding: 0 16px 24px; }
 .tv { background: linear-gradient(180deg, #4a3b2f, #241c16); border-radius: 18px; padding: 14px; }
 canvas { display: block; width: 100%; aspect-ratio: 4 / 3; height: auto; background: #000; border-radius: 10px; outline: none; image-rendering: pixelated; }
@@ -30,12 +31,15 @@ canvas { display: block; width: 100%; aspect-ratio: 4 / 3; height: auto; backgro
 .k.red { color: #ffb0a4; }
 .note { color: var(--muted); font-size: 14px; }
 .note a { color: var(--accent); }
+details.note { margin: 14px 0; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px; }
+details.note summary { cursor: pointer; color: var(--ink); }
 @media (max-width: 600px) { .k { height: 40px; font-size: 12px; } .k small { font-size: 9px; } }
 </style>
 </head>
 <body>
 <header>
   <b dir="ltr">Dragon 1982</b><span class="tag">המחשב האמיתי · ניסוי</span>
+  <a href="/en/lab/1982/" lang="en" hreflang="en" data-lang="en">English</a>
   <a href="/">← חזרה לאפליקציה</a>
 </header>
 <main>
@@ -43,8 +47,14 @@ canvas { display: block; width: 100%; aspect-ratio: 4 / 3; height: auto; backgro
   <div class="tv"><canvas id="canvas" tabindex="0" oncontextmenu="event.preventDefault()" aria-label="מסך המחשב"></canvas></div>
   <div class="kbd" id="kbd" aria-label="מקלדת Dragon 32"></div>
   <p class="note">נסו: <code dir="ltr">PRINT 2+3</code>, או תוכנית: <code dir="ltr">10 FOR I=1 TO 10:PRINT I*I:NEXT</code> ואז <code dir="ltr">RUN</code>. עצירה: <code dir="ltr">BREAK</code>.</p>
+  <details class="note" open><summary><strong>מה כבר עובד, ומה עוד חסר</strong></summary>
+    <p><strong>עובד:</strong> מספרים ומחרוזות, משתנים ומערכים, <span dir="ltr">IF, FOR, GOTO, GOSUB, ON, DATA/READ, INPUT, DEF FN</span>, הפונקציות (<span dir="ltr">INT, RND, SIN, LEFT$, MID$...</span>), גרפיקה (<span dir="ltr">PMODE, LINE, CIRCLE, PAINT, DRAW, GET/PUT</span>), צליל (<span dir="ltr">SOUND, PLAY</span>), קלטת (<span dir="ltr">CSAVE/CLOAD</span>), <span dir="ltr">AUTO, DEL, STOP/CONT, TRON</span>.</p>
+    <p><strong>עוד חסר:</strong> <span dir="ltr">EDIT, RENUM, PRINT USING</span>. קלטות של תוכניות מקוריות מ-1982 לא נטענות (הן שמורות בפורמט אחר). המהירות עדיין קצת פחות מהמקור. המחסניות והעוזר של האפליקציה לא עובדים כאן.</p>
+    <p><strong>מצאתם הבדל מה-Dragon שהכרתם?</strong> זה בדיוק מה שאנחנו מחפשים. כתבו לנו דרך <a href="https://www.gonenyarom.co.il/about/#contact">יצירת קשר</a> או ב-<a href="https://github.com/gonenya-create/dragon32/issues" dir="ltr">GitHub</a>: מה הקלדתם, מה קיבלתם, ומה היה קורה במקור.</p>
+  </details>
   <p class="note">האמולטור הוא <a href="https://www.6809.org.uk/xroar/" dir="ltr">XRoar</a> של Ciaran Anscomb, ברישיון <span dir="ltr">GPL v3</span>. <a href="./SOURCE.md">קוד המקור והרישיון</a>. ה-BASIC שלנו: <a href="https://github.com/gonenya-create/dragon32/tree/main/rom" dir="ltr">github.com/gonenya-create/dragon32</a>.</p>
 </main>
+<script src="/assets/dragon/langpick.js" defer></script>
 <script>
 // XRoar (גרסת הדפדפן) קורא לפונקציות האלה כדי לעדכן תפריטים משלו. כאן אין תפריטים
 for (const f of ['ui_done_initialising', 'ui_menu_add', 'ui_menu_add_str', 'ui_menu_clear', 'ui_menu_select', 'ui_menu_select_str', 'ui_set_checkbox', 'ui_set_fullscreen', 'ui_set_html', 'ui_set_value', 'ui_update_ccr', 'ui_update_disk_info', 'ui_update_hd_filename', 'ui_update_tape_input_filename', 'ui_update_tape_playing']) window[f] = () => {};
@@ -55,7 +65,7 @@ var Module = {
   print: () => {}, printErr: () => {},
   preRun: [function () {
     addRunDependency('rom');
-    fetch('d32.rom').then(r => r.arrayBuffer()).then(b => { FS.writeFile('/d32.rom', new Uint8Array(b)); removeRunDependency('rom'); });
+    fetch('/lab/1982/d32.rom').then(r => r.arrayBuffer()).then(b => { FS.writeFile('/d32.rom', new Uint8Array(b)); removeRunDependency('rom'); });
   }]
 };
 
@@ -114,6 +124,6 @@ for (const row of ROWS) {
   kbd.appendChild(r);
 }
 </script>
-<script src="xroar.js"></script>
+<script src="/lab/1982/xroar.js"></script>
 </body>
 </html>
