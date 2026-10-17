@@ -85,7 +85,13 @@ const CASES = [
   ['a FOR inside a GOSUB with the same variable keeps the return', ['10 FOR I=1 TO 2:GOSUB 100:NEXT:PRINT "END":END', '100 FOR I=1 TO 2:NEXT:RETURN', 'RUN'], /RUN\nEND\nOK/],
   ['string arrays', ['DIM N$(3):N$(1)="DRAGON":N$(2)=N$(1)+" 32":PRINT N$(2);LEN(N$(2))'], /\nDRAGON 32 9\nOK/],
   ['READ strings (plain and quoted) and numbers', ['10 DATA HELLO,"A,B",7', '20 READ A$,B$,C:PRINT A$;"/";B$;"/";C', 'RUN'], /RUN\nHELLO\/A,B\/ 7\nOK/],
-  ['garbage collection keeps strings in arrays', ['10 DIM A$(5):FOR I=0 TO 5:A$(I)=STRING$(5,65+I):NEXT', '20 FOR J=1 TO 400:T$=STRING$(50,"X"):NEXT', '30 FOR I=0 TO 5:PRINT A$(I);:NEXT', 'RUN'], /RUN\nAAAAABBBBBCCCCCDDDDDEEEEEFFFFF\nOK/, 40]
+  ['garbage collection keeps strings in arrays', ['10 DIM A$(5):FOR I=0 TO 5:A$(I)=STRING$(5,65+I):NEXT', '20 FOR J=1 TO 400:T$=STRING$(50,"X"):NEXT', '30 FOR I=0 TO 5:PRINT A$(I);:NEXT', 'RUN'], /RUN\nAAAAABBBBBCCCCCDDDDDEEEEEFFFFF\nOK/, 40],
+  // more.s
+  ['CLS with a colour, PRINT @ and TAB', ['CLS 3:PRINT @ 100,"HI";TAB(10);"X"'], /\/{4}HI {4}X\/+/],
+  ['STOP, CONT, then ?CN', ['10 PRINT 1:STOP:PRINT 2', '20 PRINT 3', 'RUN', 'CONT', 'CONT'], /BREAK IN 10\nOK\nCONT\n 2\n 3\nOK\nCONT\n\?CN ERROR\nOK/],
+  ['AUTO numbers the lines; an empty line ends it', ['AUTO 100,5', 'PRINT "A"', 'PRINT "B"', '', 'LIST'], /LIST\n100 PRINT "A"\n105 PRINT "B"\nOK/],
+  ['DEL a range', ['100 A', '105 B', '110 C', 'DEL 100-105', 'LIST'], /LIST\n110 C\nOK/],
+  ['POKE and PEEK', ['POKE 1024,65:PRINT PEEK(1024)'], /\n 65\nOK/]
 ];
 let fail = 0;
 for (const [name, lines, re, timeout] of CASES) {

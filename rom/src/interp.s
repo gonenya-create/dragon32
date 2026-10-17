@@ -31,6 +31,8 @@ clrvars		ldd	PROGEND
 		std	ARYEND
 		ldd	#FORBASE
 		std	FORSP
+		ldd	#0
+		std	CONTLN
 		lbsr	st2_reset	; READ מתחיל שוב מה-DATA הראשון
 		lbra	str_reset
 
@@ -194,6 +196,21 @@ kwtab		fcc	"PRINT"
 		fcc	"CLS"
 		fcb	0
 		fdb	st_cls-kwbase
+		fcc	"CONT"
+		fcb	0
+		fdb	st_cont-kwbase
+		fcc	"AUTO"
+		fcb	0
+		fdb	st_auto-kwbase
+		fcc	"DEL"
+		fcb	0
+		fdb	st_del-kwbase
+		fcc	"POKE"
+		fcb	0
+		fdb	st_poke-kwbase
+		fcc	"EXEC"
+		fcb	0
+		fdb	st_exec-kwbase
 		fcb	0
 
 ; ---------- הפקודות ----------
@@ -420,9 +437,6 @@ st_new		lbsr	newprog
 		ldd	#0
 		std	CURLN
 		lbra	st_rem
-
-st_cls		lbsr	cls
-		rts
 
 ; LIST: כל השורות
 st_list		pshs	x
@@ -746,4 +760,9 @@ m_om		fcc	"?OM ERROR"
 m_break		fcc	"BREAK"
 		fcb	0
 do_break	leau	m_break,pcr
-brk_msg		lbra	error
+; brk_msg: עצירה (BREAK או STOP) בתוך תוכנית: CONT יוכל להמשיך מכאן
+brk_msg		ldd	CURLN
+		beq	1F
+		std	CONTLN
+		stx	CONTX
+1		lbra	error2

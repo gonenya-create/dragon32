@@ -302,6 +302,9 @@ sfn_table	fcc	"LEN("
 		fcc	"INKEY$"
 		fcb	0
 		fdb	f_inkey-sfn_base
+		fcc	"PEEK("
+		fcb	0
+		fdb	f_peek-sfn_base
 		fcb	0
 
 closep		lda	#')

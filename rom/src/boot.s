@@ -51,6 +51,8 @@ reset		orcc	#$50		; בלי פסיקות
 		decb
 		bne	1B
 		lbsr	newprog
+		ldd	#0
+		std	AUTON		; AUTO כבוי
 		clr	$0340		; מצב הגרפיקה (gfx.s) יאותחל בפעם הראשונה
 		clr	LASTKEY
 		ldd	#0
@@ -62,7 +64,9 @@ reset		orcc	#$50		; בלי פסיקות
 		lbsr	puts
 		bra	main_ok
 ; הלולאה הראשית: קוראים שורה ומבצעים אותה
-main		lbsr	getline
+main		lbsr	auto_line	; AUTO: מספר השורה כבר כתוב (B = כמה תווים)
+		lbsr	getline_b
+		lbsr	auto_after
 		lbsr	execute
 main_ok		lbsr	gfx_text	; ההודעה OK תמיד על מסך הטקסט
 		lda	CURSOR+1	; אם הסמן לא בתחילת שורה (PRINT שנגמר ב-;), קודם שורה חדשה
@@ -285,9 +289,11 @@ gk_scan		lbsr	keyindex
 		puls	b,x,pc
 
 ; getline: קורא שורה למאגר LINBUF (מסתיים ב-0). ← מוחק, ENTER מסיים
-getline		pshs	b,x
+getline		clrb
+; getline_b: כמו getline, אבל B תווים כבר נמצאים ב-LINBUF (ומוצגים)
+getline_b	pshs	b,x
 		ldx	#LINBUF
-		ldb	#0
+		ldb	,s
 gl_key		lbsr	cursor_on
 		bsr	getkey
 		lbsr	cursor_off
@@ -295,6 +301,8 @@ gl_key		lbsr	cursor_on
 		beq	gl_done
 		cmpa	#8
 		beq	gl_back
+		cmpa	#3
+		beq	gl_brk
 		cmpa	#$20
 		blo	gl_key		; מקשים מיוחדים אחרים: מתעלמים בינתיים
 		cmpb	#LINMAX
@@ -314,6 +322,14 @@ gl_back		tstb
 		stx	CURSOR
 		puls	x
 		bra	gl_key
+gl_brk		; BREAK בזמן הקלדה: השורה מתבטלת, וגם AUTO
+		ldd	#0
+		std	AUTON
+		clrb
+		lda	#13
+		lbsr	putc
+		clr	,x
+		puls	b,x,pc
 gl_done		clr	b,x
 		lda	#13
 		lbsr	putc
@@ -339,6 +355,7 @@ cursor_off	pshs	a,x
 		include	"sound.s"
 		include	"stmt2.s"
 		include	"strings.s"
+		include	"more.s"
 		include	"testq.s"
 
 ; irq: 50 פעמים בשנייה. מנקים את הדגל (קריאת PIA0 B) ומקדמים את השעון

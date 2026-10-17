@@ -18,7 +18,9 @@ err_sn		leau	m_sn,pcr
 err_ov		leau	m_ov,pcr
 		bra	error
 err_div0	leau	m_div0,pcr
-error		lds	#STACK
+error		ldd	#0		; שגיאה אמיתית: אי אפשר CONT
+		std	CONTLN
+error2		lds	#STACK
 		lda	CURSOR+1
 		anda	#$1f
 		beq	1F
@@ -189,11 +191,43 @@ poparg		puls	y
 ; ---------- PRINT ----------
 ; כמו במקור: מספר מודפס עם רווח או מינוס לפניו ורווח אחריו; ; צמוד, , לעמודה הבאה (16), ובסוף שורה חדשה אלא אם נגמר ב-; או ,
 st_print	lbsr	skipsp
-		beq	pr_nl		; סוף השורה
+		lbeq	pr_nl		; סוף השורה
 		cmpa	#':
-		beq	pr_nl		; סוף הפקודה
+		lbeq	pr_nl		; סוף הפקודה
+		cmpa	#'@
+		bne	pr_item
+		; PRINT @ מקום,: מתחילים לכתוב במקום הזה במסך (0-511)
+		leax	1,x
+		lbsr	getint
+		cmpd	#511
+		lbhi	err_fc
+		addd	#SCREEN
+		std	CURSOR
+		lbsr	skipsp
+		cmpa	#',
+		lbne	pr_next
+		leax	1,x
+		lbsr	skipsp
+		lbeq	pr_done
+		cmpa	#':
+		lbeq	pr_done
 pr_item		cmpa	#';
 		beq	pr_semi
+		; TAB(n): רווחים עד העמודה n
+		leau	kw_tab,pcr
+		lbsr	match
+		bne	6F
+		lbsr	getbyte
+		lbsr	closep
+7		lda	CURSOR+1
+		anda	#$1f
+		pshs	b
+		cmpa	,s+
+		lbhs	pr_next
+		lda	#$20
+		lbsr	putc
+		bra	7B
+6		lbsr	skipsp
 		cmpa	#',
 		beq	pr_comma
 		lbsr	rexpr
@@ -240,6 +274,8 @@ pr_next		lbsr	skipsp
 pr_nl		lda	#13
 		lbsr	putc
 pr_done		rts
+kw_tab		fcc	"TAB("
+		fcb	0
 
 ; match: האם הטקסט ב-X מתחיל במילה שב-U (מסתיימת ב-0)? אם כן Z=1 ו-X אחריה
 match		pshs	x
