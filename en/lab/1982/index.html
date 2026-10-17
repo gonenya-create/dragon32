@@ -33,7 +33,7 @@ canvas { display: block; width: 100%; aspect-ratio: 4 / 3; height: auto; backgro
 .note a { color: var(--accent); }
 details.note { margin: 14px 0; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px; }
 details.note summary { cursor: pointer; color: var(--ink); }
-@media (max-width: 600px) { .k { height: 40px; font-size: 12px; } .k small { font-size: 9px; } }
+@media (max-width: 600px) { .k { height: 40px; font-size: 12px; } .k small { font-size: 9px; } .k.wide { font-size: 8px; letter-spacing: -0.3px; } }
 </style>
 </head>
 <body>
@@ -50,7 +50,7 @@ details.note summary { cursor: pointer; color: var(--ink); }
   <details class="note" open><summary><strong>What works, and what's still missing</strong></summary>
     <p><strong>Works:</strong> numbers and strings, variables and arrays, IF, FOR, GOTO, GOSUB, ON, DATA/READ, INPUT, DEF FN, the functions (INT, RND, SIN, LEFT$, MID$...), graphics (PMODE, LINE, CIRCLE, PAINT, DRAW, GET/PUT), sound (SOUND, PLAY), cassette (CSAVE/CLOAD), AUTO, DEL, STOP/CONT, TRON.</p>
     <p><strong>Still missing:</strong> EDIT, RENUM, PRINT USING. Original 1982 program tapes don't load yet (they are stored in a different, tokenised format). Speed is still a little below the original. The app's cartridges and helper don't work here.</p>
-    <p><strong>Found a difference from the Dragon you remember?</strong> That is exactly what we're looking for. Tell us on <a href="https://github.com/gonenya-create/dragon32/issues">GitHub</a> or via the <a href="https://www.gonenyarom.co.il/about/#contact">contact page</a> (in Hebrew; writing in English is fine): what you typed, what you got, and what the original would have done.</p>
+    <p><strong>Found a difference from the Dragon you remember?</strong> That is exactly what we're looking for. <a href="https://github.com/gonenya-create/dragon32/issues/new?labels=real-machine&amp;title=Difference%20from%20the%20original%3A%20&amp;body=What%20I%20typed%3A%0A%0A%0AWhat%20I%20got%3A%0A%0A%0AWhat%20the%20original%20Dragon%20would%20do%3A%0A%0A%0AComputer%20/%20phone%20and%20browser%3A%0A">Open a report on GitHub</a> (a ready form with three questions; a GitHub account is needed), or write via the <a href="https://www.gonenyarom.co.il/about/#contact">contact page</a> (in Hebrew; English is fine): what you typed, what you got, and what the original would have done.</p>
   </details>
   <p class="note">The emulator is <a href="https://www.6809.org.uk/xroar/">XRoar</a> by Ciaran Anscomb, licensed under GPL v3. <a href="/lab/1982/SOURCE.md">Sources and licences</a>. Our BASIC: <a href="https://github.com/gonenya-create/dragon32/tree/main/rom">github.com/gonenya-create/dragon32</a>.</p>
 </main>

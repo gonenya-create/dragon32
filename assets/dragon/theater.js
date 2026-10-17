@@ -39,6 +39,8 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
     + '<button type="button" class="d32-theater-kbd" aria-pressed="true">' + tr('מקלדת מצוירת', 'Drawn keyboard') + '</button>'
     + '<button type="button" class="d32-theater-click" aria-pressed="true">' + tr('צליל מקשים', 'Key clicks') + '</button>'
     + '<button type="button" class="d32-theater-only">' + tr('מסך בלבד', 'Screen only') + ' ⛶</button>'
+    // המחשב האמיתי (ניסוי): XRoar עם ה-BASIC שכתבנו, בדף נפרד
+    + '<a class="d32-lab" href="' + (EN ? '/en/lab/1982/' : '/lab/1982/') + '"><span aria-hidden="true">🧪</span> ' + tr('המחשב האמיתי', 'The real machine') + '</a>'
     + '<button type="button" class="d32-theater-exit"><span aria-hidden="true">📖</span> ' + tr('מדריך', 'Guide') + '</button>'
     // מעבר שפה: הדף השני (/ או /en/). הבחירה נשמרת (langpick.js)
     + (EN ? '<a class="d32-lang" href="/" lang="he" hreflang="he" data-lang="he">עברית</a>' : '<a class="d32-lang" href="/en/" lang="en" hreflang="en" data-lang="en">English</a>') + '</span>';
@@ -150,6 +152,12 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   showTab(tab, false);
   // מה עובר לכל לשונית בזמן המסך המלא
   panes.commands.appendChild(createCommands({ root, machine, powerOn, input }));
+  // בטלפון הפס העליון צר: הקישור למחשב האמיתי בראש לשונית "מדף"
+  const labLink = document.createElement('a');
+  labLink.className = 'd32-lab d32-lab-shelf';
+  labLink.href = EN ? '/en/lab/1982/' : '/lab/1982/';
+  labLink.innerHTML = '<span aria-hidden="true">🧪</span> ' + tr('המחשב האמיתי (ניסוי): Dragon 32 מדומה ברמת השבב', 'The real machine (trial): a Dragon 32 emulated at chip level');
+  panes.shelf.appendChild(labLink);
   const MOVE = [['.d32-share-row', 'program'], ['.d32-cartshelf', 'shelf'], ['.d32-shelf:not(.d32-cartshelf)', 'shelf']];
   const moved = [];
   function toTabs() {
