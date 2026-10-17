@@ -4,7 +4,7 @@ import { createMachine, COLORS, SG_BASE } from './machine.js';
 import { createSound } from './sound.js';
 import { createGfx } from './gfx.js';
 import { createCartRunner } from './cart.js';
-import { loadTable } from './hof.js';
+import { loadTable, loadWorld, worldTables } from './hof.js';
 import { createTheater } from './theater.js';
 import { createHelper } from './helper.js';
 import { createAI } from './ai.js';
@@ -35,8 +35,27 @@ const FULL = !!document.querySelector('.d32[data-edition="full"]');
 const SHOWN = CARTS.filter(c => FULL || c[3] !== 'full');
 const APP_URL = '/';
 
-// טבלת היכל התהילה בדף (נבנית מהשיאים שנשמרו בדפדפן הזה)
+// טבלת היכל התהילה בדף: לכל מחסנית "בעולם" (כל השחקנים, מהשרת) ו"בבית" (השיאים שנשמרו בדפדפן הזה)
+function hofList(table) {
+  const ol = document.createElement('ol');
+  ol.dir = 'ltr';
+  for (const e of table) {
+    const li = document.createElement('li');
+    const n = document.createElement('span'); n.textContent = e.n;
+    const v = document.createElement('span'); v.textContent = e.s;
+    li.append(n, v);
+    ol.appendChild(li);
+  }
+  return ol;
+}
+function hofEmpty(text) {
+  const p = document.createElement('p');
+  p.className = 'd32-hof-empty';
+  p.textContent = text;
+  return p;
+}
 function renderHof() {
+  const wt = worldTables();
   document.querySelectorAll('[data-hof]').forEach(box => {
     box.textContent = '';
     for (const [id, label] of SHOWN) {
@@ -50,24 +69,20 @@ function renderHof() {
       sub.textContent = id;
       h.append(' ', sub);
       card.appendChild(h);
-      const table = loadTable(id.toLowerCase());
-      if (!table.length) {
-        const p = document.createElement('p');
-        p.className = 'd32-hof-empty';
-        p.textContent = 'עוד אין שיאים. תהיו הראשונים.';
-        card.appendChild(p);
-      } else {
-        const ol = document.createElement('ol');
-        ol.dir = 'ltr';
-        for (const e of table) {
-          const li = document.createElement('li');
-          const n = document.createElement('span'); n.textContent = e.n;
-          const v = document.createElement('span'); v.textContent = e.s;
-          li.append(n, v);
-          ol.appendChild(li);
-        }
-        card.appendChild(ol);
-      }
+      const key = id.toLowerCase();
+      const w = document.createElement('p');
+      w.className = 'd32-hof-sub';
+      w.textContent = '🌍 בעולם';
+      card.appendChild(w);
+      if (!wt) card.appendChild(hofEmpty('ההיכל העולמי לא זמין כרגע.'));
+      else if (!(wt[key] || []).length) card.appendChild(hofEmpty('עוד אין שיאים בעולם. תהיו הראשונים.'));
+      else card.appendChild(hofList(wt[key]));
+      const b = document.createElement('p');
+      b.className = 'd32-hof-sub';
+      b.textContent = '🏠 בבית (בדפדפן הזה)';
+      card.appendChild(b);
+      const table = loadTable(key);
+      card.appendChild(table.length ? hofList(table) : hofEmpty('עוד אין שיאים. תהיו הראשונים.'));
       box.appendChild(card);
     }
   });
@@ -553,6 +568,7 @@ function mount(root) {
 
 document.querySelectorAll('.d32').forEach(mount);
 renderHof();
+loadWorld().then(renderHof);
 
 // "אז והיום" במדריך: מתחת לכל קטע קוד, "הקלד במחשב" ו"העתקה" (גונן, 17.10)
 document.querySelectorAll('.room-then .d32-code').forEach((pre, i) => {

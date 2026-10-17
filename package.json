@@ -2,8 +2,9 @@
   "name": "dragon32",
   "private": true,
   "type": "module",
-  "description": "Dragon 32 (1982) in the browser. Static app; this file only exists for the one server function in api/ (the AI helper).",
+  "description": "Dragon 32 (1982) in the browser. Static app; this file only exists for the server functions in api/ (the AI helper and the world Hall of Fame).",
   "dependencies": {
-    "@anthropic-ai/sdk": "0.135.0"
+    "@anthropic-ai/sdk": "0.135.0",
+    "@neondatabase/serverless": "1.1.0"
   }
 }

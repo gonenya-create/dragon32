@@ -3,3 +3,6 @@ node_modules
 .vercel/
 .DS_Store
 .vercel
+.agents/
+.claude/
+skills-lock.json

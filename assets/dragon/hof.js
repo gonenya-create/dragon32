@@ -19,10 +19,38 @@ export function loadTable(id) {
 function saveTable(id, table) {
   try { localStorage.setItem('d32-hof-' + id, JSON.stringify(table.slice(0, SIZE))); } catch { /* בלי טבלה */ }
 }
+// ההיכל העולמי (api/hof.js): עשרת השיאים של כל השחקנים. אם השרת לא זמין, הכול עובד כרגיל עם הטבלה של הבית
+const WORLD = 10;
+let world = null;   // { tower: [{n, s}], ... } או null כשלא נטען
+export function worldTables() { return world; }
+export async function loadWorld() {
+  try {
+    const r = await fetch('/api/hof/', { cache: 'no-store' });
+    if (!r.ok) return world;
+    const d = await r.json();
+    if (d && d.tables) world = d.tables;
+  } catch { /* בלי רשת: נשארים עם מה שיש */ }
+  return world;
+}
+async function sendWorld(id, name, score) {
+  try {
+    const r = await fetch('/api/hof/', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ game: id, name, score }) });
+    if (!r.ok) return null;
+    const d = await r.json();
+    if (d && d.tables) world = Object.assign(world || {}, d.tables);
+    return d && d.rank;
+  } catch { return null; }
+}
+function worldQualifies(id, score) {
+  if (!world) return false;
+  const t = world[id] || [];
+  return t.length < WORLD || score > t[t.length - 1].s;
+}
+
 export function qualifies(id, score) {
   if (score <= 0) return false;
   const t = loadTable(id);
-  return t.length < SIZE || score > t[t.length - 1].s;
+  return t.length < SIZE || score > t[t.length - 1].s || worldQualifies(id, score);
 }
 function lastInitials() {
   try { return (localStorage.getItem('d32-initials') || 'AAA').slice(0, 3).padEnd(3, 'A'); } catch { return 'AAA'; }
@@ -42,7 +70,11 @@ export function createEntry(id, score, title) {
     o.rank = table.findIndex(e => e.n === name && e.s === score);
     saveTable(id, table);
     o.table = table.slice(0, SIZE);
+    if (o.rank >= SIZE) o.rank = -1;   // נכנס רק לטבלה העולמית
     o.mode = 'table'; o.t = 0;
+    // גם להיכל העולמי. התשובה (המקום בעולם) מופיעה מתחת לטבלה כשהיא מגיעה
+    o.world = '...';
+    sendWorld(id, name, score).then(rank => { o.world = rank ? rank : ''; });
   }
 
   o.update = api => {
@@ -96,6 +128,7 @@ export function createEntry(id, score, title) {
         g.text(e.n, 84, y, c);
         g.text(String(e.s), W - 64, y, c, 'right');
       });
+      if (o.world) g.text(o.world === '...' ? 'WORLD RANK ...' : 'WORLD RANK #' + o.world, W / 2, H - 52, o.world !== '...' && o.world <= WORLD ? YELLOW : GREEN, 'center');
       if ((o.t >> 4) & 1 && o.t > 25) g.text('PRESS OK', W / 2, H - 38, YELLOW, 'center');
     }
   };

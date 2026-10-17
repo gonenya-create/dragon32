@@ -290,6 +290,12 @@ if (part('share link')) {
 if (part('room /dragon/')) {
   console.log('room /dragon/');
   const ctx = await browser.newContext({ viewport: { width: 390, height: 900 }, hasTouch: true, isMobile: true });
+  // ההיכל העולמי (api/hof.js) מדומה כאן: השרת המקומי של הבדיקות לא מריץ פונקציות
+  const posted = [];
+  await ctx.route('**/api/hof/', route => {
+    if (route.request().method() === 'POST') { posted.push(route.request().postDataJSON()); return route.fulfill({ json: { rank: 3, tables: { eggs: [{ n: 'ACE', s: 99 }, { n: 'GON', s: 5 }] } } }); }
+    return route.fulfill({ json: { tables: { tower: [{ n: 'TOP', s: 4200 }], jungle: [], eggs: [{ n: 'ACE', s: 99 }], castle: [] } } });
+  });
   const p = await ctx.newPage();
   p.on('pageerror', e => pageErrors.push(e.message));
   await p.goto(base.replace(/\/$/, '') + '/');
@@ -346,6 +352,8 @@ if (part('room /dragon/')) {
   await p.keyboard.press('Enter');
   await p.waitForFunction(() => !document.querySelector('#dragon-room').d32Cart.overlay, null, { timeout: 3000 });
   check('hall of fame: the page table shows GON', /GON/.test(await p.locator('[data-hof]').textContent()));
+  check('world hall of fame: the score is sent (game, 3 letters, score only)', posted.length === 1 && posted[0].game === 'eggs' && posted[0].name === 'GON' && Object.keys(posted[0]).sort().join() === 'game,name,score', JSON.stringify(posted));
+  check('world hall of fame: the guide shows "in the world" and "at home" tables', /בעולם[\s\S]*TOP[\s\S]*4200/.test(await p.locator('[data-hof]').textContent()) && /בבית/.test(await p.locator('[data-hof]').textContent()));
   // מגדל הדרקון: הליכה, סולם, קפיצה, הגעה לקלטת = שלב 2, ופגיעה של חבית = מאבדים חיים
   await pickCart(p, 'TOWER');
   await p.waitForFunction(() => document.querySelector('#dragon-room').d32Cart?.state?.mode === 'title');
