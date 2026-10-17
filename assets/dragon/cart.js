@@ -2,6 +2,7 @@
 // של אז, PAL), ומחבר מקלדת וכפתורי מגע. משחק = מודול עם { title, init(api), update(api), draw(api) }.
 import { createGfx } from './gfx.js';
 import { loadTable, qualifies, createEntry } from './hof.js';
+import { tr } from './lang.js';
 
 const STEP = 1000 / 50;
 const KEYS = {
@@ -9,7 +10,7 @@ const KEYS = {
   a: 'left', d: 'right', w: 'up', s: 'down', ' ': 'fire', Enter: 'fire', z: 'fire', x: 'fire', p: 'pause'
 };
 const PAD = [
-  ['left', '◀', 'שמאלה'], ['up', '▲', 'למעלה'], ['down', '▼', 'למטה'], ['right', '▶', 'ימינה'], ['fire', 'FIRE', 'אש / קפיצה']
+  ['left', '◀', tr('שמאלה', 'Left')], ['up', '▲', tr('למעלה', 'Up')], ['down', '▼', tr('למטה', 'Down')], ['right', '▶', tr('ימינה', 'Right')], ['fire', 'FIRE', tr('אש / קפיצה', 'Fire / jump')]
 ];
 
 export function createCartRunner(root, sound, { onEject, onScores }) {
@@ -70,19 +71,19 @@ export function createCartRunner(root, sound, { onEject, onScores }) {
   const eject = document.createElement('button');
   eject.type = 'button';
   eject.className = 'd32-eject';
-  eject.textContent = 'הוצאת המחסנית';
+  eject.textContent = tr('הוצאת המחסנית', 'Eject cartridge');
   pad.appendChild(eject);
   // הסבר בעברית למסך השם בהיכל התהילה (המסך עצמו באנגלית, כמו אז)
   const hint = document.createElement('p');
   hint.className = 'd32-hof-hint';
   hint.dir = 'rtl';
   hint.hidden = true;
-  hint.innerHTML = 'שיא חדש! בוחרים שם של 3 אותיות: <b>▲ ▼</b> מחליפים את האות המהבהבת, <b>OK</b> עובר לאות הבאה, וה-<b>OK</b> השלישי שומר את השם.';
+  hint.innerHTML = tr('שיא חדש! בוחרים שם של 3 אותיות: <b>▲ ▼</b> מחליפים את האות המהבהבת, <b>OK</b> עובר לאות הבאה, וה-<b>OK</b> השלישי שומר את השם.', 'New high score! Choose 3 letters: <b>▲ ▼</b> change the blinking letter, <b>OK</b> moves to the next one, and the third <b>OK</b> saves your name.');
   pad.appendChild(hint);
   tv.after(pad);
 
   let gen = 0, want = [];
-  const gameFire = () => game && game.fireLabel === 'JUMP' ? fireLabel('JUMP', 'קפיצה') : fireLabel('FIRE', 'אש');
+  const gameFire = () => game && game.fireLabel === 'JUMP' ? fireLabel('JUMP', tr('קפיצה', 'Jump')) : fireLabel('FIRE', tr('אש', 'Fire'));
   let game = null, state = null, raf = 0, last = 0, acc = 0, frame = 0, overlay = null, gameTitle = '';
 
   const api = {
@@ -100,7 +101,7 @@ export function createCartRunner(root, sound, { onEject, onScores }) {
     saveHigh() { /* השיאים נשמרים עכשיו דרך submitScore */ },
     // סוף משחק: אם התוצאה נכנסת לחמישייה, מבקשים שלוש אותיות ומראים את הטבלה
     // במסך השם צריך גם למעלה/למטה לבחירת אות, אז בטלפון מראים את כל הכפתורים
-    submitScore(id, score) { if (qualifies(id, score)) { overlay = createEntry(id, score, gameTitle); showButtons(PAD.map(x => x[0])); fireLabel('OK', 'אישור'); } },
+    submitScore(id, score) { if (qualifies(id, score)) { overlay = createEntry(id, score, gameTitle); showButtons(PAD.map(x => x[0])); fireLabel('OK', tr('אישור', 'OK')); } },
     get overlay() { return overlay; }
   };
 
@@ -140,7 +141,7 @@ export function createCartRunner(root, sound, { onEject, onScores }) {
   async function start(loadModule, title) {
     stop();
     root.classList.add('is-cart');
-    canvas.setAttribute('aria-label', 'מסך המשחק ' + title + '. שליטה: חצים, ורווח או FIRE לאש או לקפיצה. Esc מוציא את המחסנית.');
+    canvas.setAttribute('aria-label', tr('מסך המשחק ', 'Game screen: ') + title + tr('. שליטה: חצים, ורווח או FIRE לאש או לקפיצה. Esc מוציא את המחסנית.', '. Controls: arrows, and Space or FIRE to fire or jump. Esc ejects the cartridge.'));
     gfx.clear('#000');
     sound.tone(110, 120);
     const my = ++gen;

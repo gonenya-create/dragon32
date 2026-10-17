@@ -2,6 +2,7 @@
 // העוזר רואה את התוכנית שבזיכרון ואת השורות האחרונות במסך, מסביר מה לא עובד, ויכול להחזיר תוכנית מתוקנת
 // שנטענת למחשב בלחיצה. עד 15 שאלות ביום בדפדפן הזה; התקרה האמיתית (10 דולר בחודש) מוגדרת אצל Anthropic.
 import { rich } from './helper.js';
+import { tr, EN } from './lang.js';
 
 const PER_DAY = 15;
 const DAY_KEY = 'd32-ai-day';
@@ -13,10 +14,10 @@ function used() {
 function count() { try { localStorage.setItem(DAY_KEY, JSON.stringify({ d: today(), n: used() + 1 })); } catch { /* בלי זיכרון בדפדפן, ממשיכים */ } }
 
 const SAYS = {
-  off: 'העוזר נח כרגע, אולי נגמר התקציב החודשי שלו. בינתיים "🔍 בדיקת התוכנית" עובדת תמיד.',
-  busy: 'היו הרבה שאלות בזמן קצר. נסו שוב בעוד כמה דקות.',
-  fail: 'משהו השתבש בדרך לעוזר. נסו שוב.',
-  limit: `זה היה המקסימום להיום (${PER_DAY} שאלות). העוזר יחכה לכם מחר.`
+  off: tr('העוזר נח כרגע, אולי נגמר התקציב החודשי שלו. בינתיים "🔍 בדיקת התוכנית" עובדת תמיד.', 'The helper is resting right now, maybe its monthly budget ran out. "🔍 Check the program" always works.'),
+  busy: tr('היו הרבה שאלות בזמן קצר. נסו שוב בעוד כמה דקות.', 'Lots of questions in a short time. Try again in a few minutes.'),
+  fail: tr('משהו השתבש בדרך לעוזר. נסו שוב.', 'Something went wrong on the way to the helper. Try again.'),
+  limit: tr(`זה היה המקסימום להיום (${PER_DAY} שאלות). העוזר יחכה לכם מחר.`, `That's today's maximum (${PER_DAY} questions). The helper will be here tomorrow.`)
 };
 
 export function createAI({ root, machine, input, powerOn }) {
@@ -24,17 +25,17 @@ export function createAI({ root, machine, input, powerOn }) {
   box.className = 'd32-ai';
   box.setAttribute('aria-labelledby', 'd32-ai-title');
   box.innerHTML = `
-    <h2 id="d32-ai-title">🤖 שאלו את העוזר</h2>
-    <details class="d32-ai-note"><summary>עוזר AI (Claude) שרואה את התוכנית ואת המסך. בלי פרטים אישיים.</summary>
-      <p>הוא מסביר מה לא עובד, עונה על שאלות, ויכול לכתוב תוכנית. השאלה, התוכנית והמסך נשלחים ל-Anthropic כדי לענות. עד ${PER_DAY} שאלות ביום.</p></details>
+    <h2 id="d32-ai-title">🤖 ${tr('שאלו את העוזר', 'Ask the helper')}</h2>
+    <details class="d32-ai-note"><summary>${tr('עוזר AI (Claude) שרואה את התוכנית ואת המסך. בלי פרטים אישיים.', 'An AI helper (Claude) that sees your program and the screen. No personal details, please.')}</summary>
+      <p>${tr(`הוא מסביר מה לא עובד, עונה על שאלות, ויכול לכתוב תוכנית. השאלה, התוכנית והמסך נשלחים ל-Anthropic כדי לענות. עד ${PER_DAY} שאלות ביום.`, `It explains what isn't working, answers questions, and can write a program. The question, the program and the screen are sent to Anthropic to answer. Up to ${PER_DAY} questions a day.`)}</p></details>
     <form class="d32-ai-form">
-      <label for="d32-ai-q" class="visually-hidden">השאלה לעוזר</label>
-      <textarea id="d32-ai-q" rows="3" maxlength="600" placeholder="שאלו בעברית, למשל: למה יש שגיאה?"></textarea>
-      <button type="submit">שליחה</button>
+      <label for="d32-ai-q" class="visually-hidden">${tr('השאלה לעוזר', 'Your question')}</label>
+      <textarea id="d32-ai-q" rows="3" maxlength="600" placeholder="${tr('שאלו בעברית, למשל: למה יש שגיאה?', 'Ask anything, e.g. why is there an error?')}"></textarea>
+      <button type="submit">${tr('שליחה', 'Send')}</button>
     </form>
-    <label class="d32-ai-quick"><span class="visually-hidden">שאלה מוכנה</span><select><option value="">💬 שאלות מוכנות…</option></select></label>
+    <label class="d32-ai-quick"><span class="visually-hidden">${tr('שאלה מוכנה', 'Ready-made question')}</span><select><option value="">💬 ${tr('שאלות מוכנות…', 'Ready-made questions…')}</option></select></label>
     <div class="d32-ai-log" aria-live="polite"></div>
-    <p class="d32-legal"><a href="/accessibility/">נגישות</a> · <a href="/privacy/">פרטיות</a></p>`;
+    <p class="d32-legal"><a href="${tr('/accessibility/', '/en/accessibility/')}">${tr('נגישות', 'Accessibility')}</a> · <a href="${tr('/privacy/', '/en/privacy/')}">${tr('פרטיות', 'Privacy')}</a></p>`;
   root.querySelector('.d32-helper').after(box);
   const log = box.querySelector('.d32-ai-log');
   const form = box.querySelector('form');
@@ -42,7 +43,8 @@ export function createAI({ root, machine, input, powerOn }) {
   const send = box.querySelector('button[type="submit"]');
   const history = [];
   // שאלות מוכנות ברשימה נפתחת (שורה אחת), כדי שלתשובות יישאר מקום. בחירה שולחת מיד
-  const QUICK = ['למה יש שגיאה?', 'מה התוכנית שלי עושה?', 'תכתוב לי משחק קטן', 'איך מציירים עיגול?', 'איך משמיעים מנגינה?'];
+  const QUICK = tr(['למה יש שגיאה?', 'מה התוכנית שלי עושה?', 'תכתוב לי משחק קטן', 'איך מציירים עיגול?', 'איך משמיעים מנגינה?'],
+    ['Why is there an error?', 'What does my program do?', 'Write me a small game', 'How do I draw a circle?', 'How do I play a tune?']);
   const pick = box.querySelector('.d32-ai-quick select');
   for (const q of QUICK) pick.add(new Option(q, q));
   pick.addEventListener('change', () => {
@@ -56,7 +58,8 @@ export function createAI({ root, machine, input, powerOn }) {
     div.className = 'd32-ai-msg is-' + role;
     for (const line of String(text).split('\n')) {
       // שורת קוד (אנגלית בלבד, בלי עברית) מוצגת משמאל לימין בגופן של המחשב
-      if (line.trim() && !/[֐-׿]/.test(line) && /^[\sA-Z0-9?"'@(]/.test(line)) {
+      // באנגלית משפט רגיל מתחיל גם הוא באות גדולה: שורת קוד היא רק שורה בלי אותיות קטנות (ה-BASIC כאן באותיות גדולות בלבד)
+      if (line.trim() && !/[֐-׿]/.test(line) && /^[\sA-Z0-9?"'@(]/.test(line) && !(EN && /[a-z]/.test(line))) {
         const pre = document.createElement('pre');
         pre.dir = 'ltr';
         pre.lang = 'en';
@@ -72,10 +75,10 @@ export function createAI({ root, machine, input, powerOn }) {
       const b = document.createElement('button');
       b.type = 'button';
       b.className = 'd32-ai-load';
-      b.textContent = '⌨ לטעון את התוכנית למחשב';
+      b.textContent = '⌨ ' + tr('לטעון את התוכנית למחשב', 'Load the program into the computer');
       b.addEventListener('click', () => powerOn().then(() => {
         machine.loadText(program, 'HELPER');
-        b.textContent = '✓ נטענה. הקלידו RUN';
+        b.textContent = '✓ ' + tr('נטענה. הקלידו RUN', 'Loaded. Type RUN');
         input.focus({ preventScroll: true });
       }));
       div.appendChild(b);
@@ -88,7 +91,7 @@ export function createAI({ root, machine, input, powerOn }) {
   async function ask(question) {
     if (used() >= PER_DAY) { bubble('note', SAYS.limit); return; }
     bubble('user', question);
-    const wait = bubble('note', 'העוזר חושב…');
+    const wait = bubble('note', tr('העוזר חושב…', 'The helper is thinking…'));
     wait.classList.add('is-wait');
     send.disabled = true;
     const screen = (root.querySelector('.d32-out')?.textContent || '').split('\n').slice(-16).join('\n');

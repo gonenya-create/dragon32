@@ -4,6 +4,7 @@
 
 import { createCoder } from './coder.js';
 import { createCommands } from './commands.js';
+import { EN, tr } from './lang.js';
 
 // המקלדת: [תו, תו עם SHIFT, רוחב]. מקשים מיוחדים באותיות גדולות.
 const ROWS = [
@@ -26,24 +27,26 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   const open = document.createElement('button');
   open.type = 'button';
   open.className = 'd32-theater-open';
-  open.innerHTML = '<span aria-hidden="true">📺</span> מסך מלא, כמו בסלון של פעם';
+  open.innerHTML = '<span aria-hidden="true">📺</span> ' + tr('מסך מלא, כמו בסלון של פעם', 'Full screen, like the living room in 1982');
   tv.before(open);
 
   // פס עליון: יציאה וצליל המקשים
   const bar = document.createElement('div');
   bar.className = 'd32-theater-bar';
-  bar.innerHTML = '<span class="d32-bar-brand"><b dir="ltr">Dragon 1982</b><span class="d32-status" role="status" data-s="off">כבוי</span></span>'
-    + '<p class="d32-theater-hint">מקלידים במקלדת שלכם, או לוחצים על המקשים המצוירים. <bdi dir="ltr">Esc</bdi> הוא <bdi dir="ltr">BREAK</bdi>.</p>'
-    + '<span class="d32-theater-btns"><button type="button" class="d32-theater-code" aria-pressed="false">ארגז כלים</button>'
-    + '<button type="button" class="d32-theater-kbd" aria-pressed="true">מקלדת מצוירת</button>'
-    + '<button type="button" class="d32-theater-click" aria-pressed="true">צליל מקשים</button>'
-    + '<button type="button" class="d32-theater-only">מסך בלבד ⛶</button>'
-    + '<button type="button" class="d32-theater-exit"><span aria-hidden="true">📖</span> מדריך</button></span>';
+  bar.innerHTML = '<span class="d32-bar-brand"><b dir="ltr">Dragon 1982</b><span class="d32-status" role="status" data-s="off">' + tr('כבוי', 'Off') + '</span></span>'
+    + '<p class="d32-theater-hint">' + tr('מקלידים במקלדת שלכם, או לוחצים על המקשים המצוירים. <bdi dir="ltr">Esc</bdi> הוא <bdi dir="ltr">BREAK</bdi>.', 'Type on your own keyboard, or click the drawn keys. <bdi dir="ltr">Esc</bdi> is <bdi dir="ltr">BREAK</bdi>.') + '</p>'
+    + '<span class="d32-theater-btns"><button type="button" class="d32-theater-code" aria-pressed="false">' + tr('ארגז כלים', 'Toolbox') + '</button>'
+    + '<button type="button" class="d32-theater-kbd" aria-pressed="true">' + tr('מקלדת מצוירת', 'Drawn keyboard') + '</button>'
+    + '<button type="button" class="d32-theater-click" aria-pressed="true">' + tr('צליל מקשים', 'Key clicks') + '</button>'
+    + '<button type="button" class="d32-theater-only">' + tr('מסך בלבד', 'Screen only') + ' ⛶</button>'
+    + '<button type="button" class="d32-theater-exit"><span aria-hidden="true">📖</span> ' + tr('מדריך', 'Guide') + '</button>'
+    // מעבר שפה: הדף השני (/ או /en/). הבחירה נשמרת (langpick.js)
+    + (EN ? '<a class="d32-lang" href="/" lang="he" hreflang="he" data-lang="he">עברית</a>' : '<a class="d32-lang" href="/en/" lang="en" hreflang="en" data-lang="en">English</a>') + '</span>';
   // יציאה ממצב "מסך בלבד": כפתור קטן בפינה (גם Esc של הדפדפן יוצא ממסך מלא)
   const onlyOut = document.createElement('button');
   onlyOut.type = 'button';
   onlyOut.className = 'd32-only-out';
-  onlyOut.textContent = 'יציאה ממסך בלבד';
+  onlyOut.textContent = tr('יציאה ממסך בלבד', 'Leave screen only');
   tv.before(bar);
 
   // הצד של הטלוויזיה: רמקול, שני כפתורי סיבוב, ערוץ 36 (שם כיוונו את ה-Dragon) ונורית
@@ -64,7 +67,7 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   kbd.setAttribute('dir', 'ltr');
   kbd.lang = 'en';
   kbd.setAttribute('role', 'group');
-  kbd.setAttribute('aria-label', 'מקלדת Dragon 32');
+  kbd.setAttribute('aria-label', tr('מקלדת Dragon 32', 'Dragon 32 keyboard'));
   kbd.innerHTML = '<div class="d32-kbd-top"><span class="d32-kbd-name">DRAGON 32</span><span class="d32-kbd-led" aria-hidden="true"></span></div>';
   const keys = {};
   for (const row of ROWS) {
@@ -80,7 +83,7 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
       b.innerHTML = (shifted ? '<small></small>' : '') + '<span></span>';
       if (shifted) b.querySelector('small').textContent = shifted;
       b.querySelector('span').textContent = k in LABEL ? LABEL[k] : k;
-      b.setAttribute('aria-label', k === 'SPACE' ? 'רווח' : k);
+      b.setAttribute('aria-label', k === 'SPACE' ? tr('רווח', 'Space') : k);
       (keys[k] = keys[k] || []).push(b);
       if (shifted) (keys[shifted] = keys[shifted] || []).push(b);
       r.appendChild(b);
@@ -96,11 +99,11 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   // הפקודות המוכנות והמדפים מהדף (וחוזרים לדף ביציאה)
   // "עוזר" מופיעה רק בטלפון (במחשב העוזרים בעמודה הימנית)
   // "מקלדת" מופיעה רק בטלפון: המקלדת המצוירת של ה-Dragon במקום מקלדת האייפון (17.10)
-  const TABS = [['keys', 'מקלדת'], ['program', 'תוכנית'], ['commands', 'פקודות'], ['shelf', 'מדף'], ['help', 'עוזר']];
+  const TABS = [['keys', tr('מקלדת', 'Keyboard')], ['program', tr('תוכנית', 'Program')], ['commands', tr('פקודות', 'Commands')], ['shelf', tr('מדף', 'Shelf')], ['help', tr('עוזר', 'Helper')]];
   const tabbar = document.createElement('div');
   tabbar.className = 'd32-tabs';
   tabbar.setAttribute('role', 'tablist');
-  tabbar.setAttribute('aria-label', 'ארגז הכלים');
+  tabbar.setAttribute('aria-label', tr('ארגז הכלים', 'Toolbox'));
   const panes = {};
   for (const [id, name] of TABS) {
     const t = document.createElement('button');
@@ -120,7 +123,7 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   }
   while (coder.panel.firstChild) panes.program.appendChild(coder.panel.firstChild);
   coder.panel.removeAttribute('aria-labelledby');
-  coder.panel.setAttribute('aria-label', 'ארגז הכלים');
+  coder.panel.setAttribute('aria-label', tr('ארגז הכלים', 'Toolbox'));
   coder.panel.append(tabbar, ...Object.values(panes));
   let tab = 'program', savedTab = false, phone = false, sysKbd = false;
   try { const t = localStorage.getItem('d32-tab'); if (t) { tab = t; savedTab = true; } } catch { /* בלי זיכרון בדפדפן */ }
@@ -190,7 +193,7 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   clickBtn.addEventListener('click', () => {
     clicks = !clicks;
     clickBtn.setAttribute('aria-pressed', String(clicks));
-    clickBtn.textContent = (clicks ? '🔊' : '🔇') + ' צליל מקשים';
+    clickBtn.textContent = (clicks ? '🔊' : '🔇') + ' ' + tr('צליל מקשים', 'Key clicks');
     input.focus({ preventScroll: true });
   });
   const tick = () => { if (clicks) sound.noise(14, 0.03); };
@@ -225,7 +228,7 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   shopBtn.type = 'button';
   shopBtn.className = 'd32-theater-shop';
   shopBtn.setAttribute('aria-pressed', 'false');
-  const shopLabel = () => { shopBtn.innerHTML = shop ? '<span aria-hidden="true">⤡</span> חלון רגיל' : '<span aria-hidden="true">⤢</span> חלון גדול לכתיבה'; };
+  const shopLabel = () => { shopBtn.innerHTML = shop ? '<span aria-hidden="true">⤡</span> ' + tr('חלון רגיל', 'Normal window') : '<span aria-hidden="true">⤢</span> ' + tr('חלון גדול לכתיבה', 'Big writing window'); };
   panes.program.prepend(shopBtn);
   function setShop(on) {
     shop = on;
@@ -270,10 +273,10 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   const status = bar.querySelector('.d32-status');
   let statusTimer = 0;
   function showStatus() {
-    const s = root.classList.contains('is-off') ? ['off', 'כבוי']
-      : root.classList.contains('is-cart') ? ['cart', 'מחסנית במחשב']
-      : machine.running ? ['run', 'תוכנית רצה']
-      : ['ok', 'מוכן'];
+    const s = root.classList.contains('is-off') ? ['off', tr('כבוי', 'Off')]
+      : root.classList.contains('is-cart') ? ['cart', tr('מחסנית במחשב', 'Cartridge in')]
+      : machine.running ? ['run', tr('תוכנית רצה', 'Running')]
+      : ['ok', tr('מוכן', 'Ready')];
     if (status.dataset.s !== s[0]) { status.dataset.s = s[0]; status.textContent = s[1]; }
   }
 
@@ -429,12 +432,12 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
     const card = document.createElement('div');
     card.className = 'd32-welcome';
     card.setAttribute('role', 'dialog');
-    card.setAttribute('aria-label', 'ברוכים הבאים');
-    card.innerHTML = '<p class="d32-welcome-title">ברוכים הבאים ל-1982! מה עושים קודם?</p>'
-      + '<div class="d32-welcome-btns"><button type="button" data-w="play">🎮 לשחק במשחק</button>'
-      + '<button type="button" data-w="hello">⌨ פקודה ראשונה</button>'
-      + '<button type="button" data-w="guide">📖 מדריך קצר</button></div>'
-      + '<button type="button" class="d32-welcome-x" aria-label="סגירה">✕</button>';
+    card.setAttribute('aria-label', tr('ברוכים הבאים', 'Welcome'));
+    card.innerHTML = '<p class="d32-welcome-title">' + tr('ברוכים הבאים ל-1982! מה עושים קודם?', 'Welcome to 1982! What first?') + '</p>'
+      + '<div class="d32-welcome-btns"><button type="button" data-w="play">🎮 ' + tr('לשחק במשחק', 'Play a game') + '</button>'
+      + '<button type="button" data-w="hello">⌨ ' + tr('פקודה ראשונה', 'First command') + '</button>'
+      + '<button type="button" data-w="guide">📖 ' + tr('מדריך קצר', 'Quick guide') + '</button></div>'
+      + '<button type="button" class="d32-welcome-x" aria-label="' + tr('סגירה', 'Close') + '">✕</button>';
     tv.appendChild(card);
     // נסגר גם כשמתחילים לעבוד בלעדיו: מקלידים, או לוחצים על כל דבר אחר במחשב
     const outside = e => { if (!card.contains(e.target)) close(); };
@@ -494,7 +497,7 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   const sysBtn = document.createElement('button');
   sysBtn.type = 'button';
   sysBtn.className = 'd32-syskbd';
-  const sysLabel = () => { sysBtn.textContent = sysKbd ? '⌨ חזרה למקלדת של ה-Dragon' : '📱 להקליד במקלדת של הטלפון'; };
+  const sysLabel = () => { sysBtn.textContent = sysKbd ? '⌨ ' + tr('חזרה למקלדת של ה-Dragon', 'Back to the Dragon keyboard') : '📱 ' + tr('להקליד במקלדת של הטלפון', 'Use the phone keyboard'); };
   sysLabel();
   sysBtn.addEventListener('click', () => {
     sysKbd = !sysKbd;
@@ -507,9 +510,9 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   // מסך הפתיחה בטלפון: כמה מילים מעל המחשב הכבוי, כדי שלא יהיה רק מסך שחור (גונן, 17.10)
   const hello = document.createElement('div');
   hello.className = 'd32-hello';
-  hello.innerHTML = '<p class="d32-hello-title">ברוכים הבאים ל-1982</p>'
-    + '<p class="d32-hello-text">זה <bdi dir="ltr">Dragon 32</bdi>, המחשב הביתי שיצא בוויילס. משחקים במחסניות ובקלטות, כותבים <bdi dir="ltr">BASIC</bdi>, ושואלים את העוזר.</p>'
-    + '<p class="d32-hello-go">לוחצים על המתג, ומתחילים ↓</p>';
+  hello.innerHTML = '<p class="d32-hello-title">' + tr('ברוכים הבאים ל-1982', 'Welcome to 1982') + '</p>'
+    + '<p class="d32-hello-text">' + tr('זה <bdi dir="ltr">Dragon 32</bdi>, המחשב הביתי שיצא בוויילס. משחקים במחסניות ובקלטות, כותבים <bdi dir="ltr">BASIC</bdi>, ושואלים את העוזר.', 'This is the <bdi dir="ltr">Dragon 32</bdi>, the home computer from Wales. Play cartridges and tapes, write <bdi dir="ltr">BASIC</bdi>, and ask the helper.') + '</p>'
+    + '<p class="d32-hello-go">' + tr('לוחצים על המתג, ומתחילים ↓', 'Press the switch to start ↓') + '</p>';
   tv.before(hello);
   function enterPhone() {
     if (phone || active) return;

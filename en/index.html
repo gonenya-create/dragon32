@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dragon 1982 — the Dragon 32 in your browser</title>
+<meta name="description" content="The 1982 Dragon 32 in your browser: an old TV and the Dragon keyboard, BASIC to type and run, cassette programs and new cartridge games in the spirit of the era. Open source, works on computers and phones.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_GB">
+<meta property="og:title" content="Dragon 1982 — the Dragon 32 in your browser">
+<meta property="og:description" content="Type BASIC on a green screen, load a cassette, plug in a cartridge. A hobbyist's open-source tribute to the 1982 Dragon 32.">
+<meta property="og:url" content="https://dragon1982.com/en/">
+<link rel="canonical" href="https://dragon1982.com/en/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/">
+<link rel="alternate" hreflang="x-default" href="https://dragon1982.com/en/">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Dragon 1982">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1a1511">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;500;700&amp;family=Amatic+SC:wght@700&amp;display=swap">
+<link rel="stylesheet" href="/assets/notebook.css">
+<link rel="stylesheet" href="/assets/dragon/dragon.css">
+<script>
+// Language: someone who chose Hebrew before goes back to the Hebrew page
+(() => { let pick = null; try { pick = localStorage.getItem('d32-lang'); } catch { /* no storage */ } if (pick === 'he') location.replace('/' + location.hash); })();
+</script>
+<script>
+// האפליקציה נפתחת תמיד במחשב (מסך מלא במחשב, מסך אפליקציה בטלפון). המדריך הוא דף נפרד, בלי מחשב בתוכו.
+// מסתירים את הדף עד שהמחשב מוכן, כדי שלא יהבהב. אם משהו נתקע, אחרי 3 שניות הדף מופיע בכל מקרה
+document.documentElement.classList.add('d32-booting');
+setTimeout(() => document.documentElement.classList.remove('d32-booting'), 3000);
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="page">
+
+<header class="site-header">
+<a class="brand" href="/en/" aria-label="Dragon 1982 — home"><span class="brand-name">Dragon 1982</span><span class="brand-tag">a 1982 computer, in your browser</span></a>
+<nav class="site-nav" aria-label="Links">
+<a href="https://www.gonenyarom.co.il/">By Gonen Yarom</a>
+<a href="https://github.com/gonenya-create/dragon32">The code on GitHub</a>
+<a href="/" lang="he" hreflang="he" dir="rtl" data-lang="he">עברית</a>
+</nav>
+</header>
+
+<div class="guide-bar"><button type="button" class="guide-back"><span aria-hidden="true">🖥</span> Back to the computer</button></div>
+
+<main id="main" style="display: flex; flex-direction: column; gap: 48px;">
+
+<section class="hero" aria-labelledby="room-title">
+<div class="hero-main">
+<p class="hero-kicker">Home computer · 1982</p>
+<h1 id="room-title">The Dragon 32, in your browser</h1>
+<p class="hero-lead">The Dragon 32 came out of Wales in 1982: 32 kilobytes of memory, a keyboard that plugged into the family TV, and a cassette recorder instead of a disk drive. Here it runs in your browser. Plug in a cartridge and play, load a program from cassette, or type your own BASIC.</p>
+<p class="room-full-link">This is the guide. The computer itself opens with "Back to the computer". You can also install it as an app: on a phone, "Add to Home Screen"; on a computer, the install icon in the address bar.</p>
+<noscript><p class="d32-help">The computer needs JavaScript to work.</p></noscript>
+</div>
+</section>
+
+<section class="prose room-start" aria-labelledby="start-title">
+<h2 id="start-title">How to start</h2>
+<ol class="guide-steps">
+<li><strong>Switch it on.</strong> On a computer it powers up by itself. On a phone, tap "Power on".</li>
+<li><strong>Type and press Enter.</strong> For example <code>PRINT "HELLO"</code>. On a phone, use the Dragon's own keyboard on screen (the "Keyboard" tab), or switch to the phone keyboard.</li>
+<li><strong>Rather not type?</strong> The "Commands" tab has ready-made commands: pick one and press "Try it now".</li>
+<li><strong>To play:</strong> the "Shelf" tab has cartridges (action games) and cassettes (BASIC games).</li>
+<li><strong>To stop:</strong> the "Stop" button on the screen, or <kbd>Esc</kbd>. After a drawing, "Back to text".</li>
+<li><strong>Stuck?</strong> There is a helper you can ask, in the "Helper" tab (on a computer, in the side column).</li>
+</ol>
+</section>
+
+<div class="prose room-machine">
+<section id="dragon-room" class="d32 d32-room" data-edition="full" data-power="off" aria-labelledby="d32-title">
+  <h2 id="d32-title" class="d32-title visually-hidden">The computer</h2>
+  <div class="d32-tv">
+    <button type="button" class="d32-power"><span class="d32-power-led" aria-hidden="true"></span>Power on</button>
+    <div class="d32-screen" dir="ltr" lang="en">
+      <pre class="d32-out" aria-live="off"></pre>
+      <label class="d32-prompt"><span class="visually-hidden">Command for the computer</span><input class="d32-input" type="text" dir="ltr" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" enterkeyhint="send" maxlength="249" /></label>
+    </div>
+    <button type="button" class="d32-stop"><span class="d32-stop-run">■ Stop</span><span class="d32-stop-gfx">↩ Back to text</span></button>
+  </div>
+  <div class="d32-shelf d32-cartshelf" role="group" aria-labelledby="d32-carts-title">
+    <p id="d32-carts-title" class="d32-shelf-title">Cartridge slot: action games with graphics. Pick a cartridge and it goes into the computer</p>
+    <div class="d32-carts"></div>
+  </div>
+  <div class="d32-shelf" role="group" aria-labelledby="d32-shelf-title">
+    <p id="d32-shelf-title" class="d32-shelf-title">Cassette shelf: pick a cassette, and it loads and starts</p>
+    <div class="d32-tapes"></div>
+  </div>
+  <p class="d32-share-row"><button type="button" class="d32-share">🔗 Share the program as a link</button> <span class="d32-share-note" role="status"></span></p>
+</section>
+</div>
+
+<section class="room-mag" aria-labelledby="mag-title">
+<div class="mag-page">
+<p class="mag-kicker">TYPE-IN PROGRAM · 1983</p>
+<h2 id="mag-title" class="mag-title">DRAGON DERBY</h2>
+<p class="mag-lead">A program from a magazine. In the 1980s computer magazines printed whole programs, and kids spent hours typing them in, character by character. One tiny slip and the computer answered <code>?SN ERROR</code>. This one is our own, written in the style of the time: a little horse race. Bet on a horse and see who gets there first.</p>
+<p class="mag-lead">How: on the computer type <code>AUTO</code>, then the lines (without the numbers; <code>AUTO</code> adds them). Finish with <code>RUN</code>. Or let the computer type it for you.</p>
+<p class="mag-actions"><button type="button" class="mag-typein" data-typein="#listing-derby" data-target="#dragon-room" data-run="1">⌨ Type it in</button> <button type="button" class="mag-copy" data-copy="#listing-derby">📋 Copy</button> <span class="mag-copied" role="status"></span></p>
+<details class="mag-code">
+<summary>Show the code (18 lines)</summary>
+<pre id="listing-derby" class="mag-listing" dir="ltr" lang="en">10 CLS 6
+20 PRINT &quot;DRAGON DERBY&quot;
+30 INPUT &quot;BET ON HORSE (1-3)&quot;;B
+40 X=0:Y=0:Z=0
+50 X=X+RND(3):Y=Y+RND(3):Z=Z+RND(3)
+60 CLS 6
+70 FOR I=1 TO X:PRINT &quot;-&quot;;:NEXT I:PRINT &quot;1&quot;
+80 FOR I=1 TO Y:PRINT &quot;-&quot;;:NEXT I:PRINT &quot;2&quot;
+90 FOR I=1 TO Z:PRINT &quot;-&quot;;:NEXT I:PRINT &quot;3&quot;
+100 SOUND 60+X+Y+Z,1
+110 FOR T=1 TO 150:NEXT T
+120 IF X&lt;25 AND Y&lt;25 AND Z&lt;25 THEN 50
+130 W=1:M=X
+140 IF Y&gt;M THEN W=2:M=Y
+150 IF Z&gt;M THEN W=3
+160 PRINT &quot;HORSE&quot;;W;&quot;WINS!&quot;
+170 IF W=B THEN PRINT &quot;YOU WIN!&quot;:FOR I=1 TO 5:SOUND 150+I*20,1:NEXT I:END
+180 PRINT &quot;BETTER LUCK NEXT TIME&quot;</pre>
+<p class="mag-note">Look at line 110: <code>FOR T=1 TO 150:NEXT T</code> is a loop that does nothing but count. That was how you "waited" back then, so the horses don't run too fast.</p>
+</details>
+<p class="mag-note">You can also copy it, go back to the computer and paste (<kbd>⌘V</kbd> or <kbd>Ctrl+V</kbd>): the computer types every line by itself.</p>
+</div>
+</section>
+
+<section class="prose room-then" aria-label="Then and now">
+  <details class="d32-then" open>
+    <summary>Then and now: what I'd write to Claude today</summary>
+    <p class="d32-then-lead">Back then you had to know exactly how to write every line. Today it's enough to explain what you want.</p>
+    <div class="d32-pair">
+      <pre class="d32-code" dir="ltr" lang="en">10 PRINT "GONEN ";
+20 GOTO 10</pre>
+      <p class="d32-now">"Fill the screen with my name, over and over, until I say stop."</p>
+    </div>
+    <div class="d32-pair">
+      <pre class="d32-code" dir="ltr" lang="en">10 FOR I=1 TO 12
+20 SOUND I*20,2
+30 NEXT I</pre>
+      <p class="d32-now">"Play me a scale, from low to high."</p>
+    </div>
+    <div class="d32-pair">
+      <pre class="d32-code" dir="ltr" lang="en">30 N=RND(100):T=0
+40 INPUT "YOUR GUESS";G
+50 T=T+1
+60 IF G&lt;N THEN PRINT "HIGHER!":GOTO 40
+70 IF G&gt;N THEN PRINT "LOWER!":GOTO 40
+80 PRINT "YES! IT WAS";N</pre>
+      <p class="d32-now">"Make me a little game: the computer picks a number from 1 to 100, I guess, and it tells me to go higher or lower. At the end, tell me how many tries it took."</p>
+    </div>
+  </details>
+</section>
+
+<section class="prose room-hof" aria-labelledby="hof-title">
+<h2 id="hof-title">Hall of Fame</h2>
+<p>The high scores for each cartridge, with three initials, just like the arcade machines. <strong>World:</strong> the top ten of all players. <strong>Home:</strong> your own top five, in this browser. Only the three initials and the score are stored, nothing personal.</p>
+<div class="d32-hof" data-hof></div>
+</section>
+
+<section class="prose room-manual" aria-labelledby="manual-title">
+<h2 id="manual-title">The short manual</h2>
+<p><strong>Cassettes and cartridges.</strong> The Dragon had two ways to load a game. A cassette was slow: a BASIC program that loaded gradually, sometimes for minutes, and you could look at its code. A cartridge went into the slot on the side of the computer and worked at once. Its games were written in machine code, so they ran smoothly, with graphics and movement. The cartridges here are new games we wrote in the spirit of the games of the time.</p>
+<p><strong>With a cartridge</strong> you play with the arrow keys and Space, and on a phone with the buttons under the screen. <kbd>Esc</kbd> or "Eject cartridge" takes you back to BASIC.</p>
+<p><strong>In BASIC</strong> you type and send each line with <kbd>Enter</kbd>. This is the short version of the manual:</p>
+<h3 class="d32-manual-h">The basics</h3>
+<dl class="d32-manual">
+<div><dt dir="ltr">PRINT "HELLO"</dt><dd>Prints on the screen. Sums too: <code>PRINT 7*6</code>.</dd></div>
+<div><dt dir="ltr">10 PRINT "HI"</dt><dd>A line with a number doesn't run straight away. It is stored in the program, in number order.</dd></div>
+<div><dt dir="ltr">RUN</dt><dd>Runs the program.</dd></div>
+<div><dt dir="ltr">LIST</dt><dd>Shows the program. After loading a game, you can look at its code.</dd></div>
+<div><dt dir="ltr">AUTO</dt><dd>Numbers the lines for you: 10, 20, 30. An empty line ends it.</dd></div>
+<div><dt dir="ltr">NEW</dt><dd>Wipes the program and starts again.</dd></div>
+<div><dt dir="ltr">BREAK / Esc</dt><dd>Stops a running program. There is also a "Stop" button on the screen.</dd></div>
+<div><dt dir="ltr">CLS 3</dt><dd>Clears the screen and colours it. A number from 0 to 8.</dd></div>
+<div><dt dir="ltr">SOUND 100,4</dt><dd>A beep: the pitch, then the length.</dd></div>
+<div><dt dir="ltr">INKEY$</dt><dd>The key being pressed right now, without waiting for Enter. That's how games were written: <code>IF INKEY$="" THEN 100</code> waits for a key.</dd></div>
+</dl>
+<h3 class="d32-manual-h">Cassettes</h3>
+<dl class="d32-manual">
+<div><dt dir="ltr">CLOAD "LANDER"</dt><dd>Loads a game from cassette. With no name, "Guess the number" loads.</dd></div>
+<div><dt dir="ltr">CSAVE "SHIR"</dt><dd>Saves the program you wrote to a "cassette" in this browser. It appears on the cassette shelf, and <code>CLOAD "SHIR"</code> brings it back tomorrow too. Up to 8 letters or digits, and up to 6 cassettes.</dd></div>
+<div><dt dir="ltr">✕</dt><dd>The small button on "My cassette" deletes a cassette you saved. The first click asks "Delete?", and only the second one deletes.</dd></div>
+</dl>
+<h3 class="d32-manual-h">Programs</h3>
+<dl class="d32-manual">
+<div><dt dir="ltr">IF A&gt;5 THEN 100 ELSE 200</dt><dd>If the condition is true, do what follows <code>THEN</code>. Otherwise, what follows <code>ELSE</code>.</dd></div>
+<div><dt dir="ltr">GOSUB 100 … RETURN</dt><dd>Jumps to line 100, and <code>RETURN</code> comes back to the statement after the <code>GOSUB</code>. That's how you write a part you use several times.</dd></div>
+<div><dt dir="ltr">ON X GOTO 100,200</dt><dd>If X is 1, jumps to 100; if 2, to 200. Works with <code>GOSUB</code> too.</dd></div>
+<div><dt dir="ltr">DIM A(20)</dt><dd>A list (array) of 21 numbers: <code>A(0)</code> to <code>A(20)</code>. With <code>$</code> it's a list of words, and it can be a table too: <code>DIM B(5,5)</code>.</dd></div>
+<div><dt dir="ltr">READ A$ : DATA DOG,CAT</dt><dd><code>READ</code> takes the next value from the program's <code>DATA</code> lines, in order. <code>RESTORE</code> goes back to the start.</dd></div>
+<div><dt dir="ltr">INPUT "AGE";A</dt><dd>Asks and waits for an answer. <code>INPUT A,B</code> asks for two values separated by a comma, and if one is missing the computer asks again with <code>??</code>.</dd></div>
+<div><dt dir="ltr">LINE INPUT N$</dt><dd>Takes a whole line, commas included.</dd></div>
+<div><dt dir="ltr">DEF FNA(X)=X*X</dt><dd>A formula of your own. Then <code>PRINT FNA(3)</code> prints 9.</dd></div>
+<div><dt dir="ltr">STOP … CONT</dt><dd><code>STOP</code> halts the program midway, so you can check variables with <code>PRINT</code>. <code>CONT</code> carries on from the same place (after <code>BREAK</code> too).</dd></div>
+<div><dt dir="ltr">TRON / TROFF</dt><dd><code>TRON</code> shows each line in brackets as it runs, to find where the program goes wrong. <code>TROFF</code> turns it off.</dd></div>
+<div><dt dir="ltr">CLEAR</dt><dd>Resets all variables and lists.</dd></div>
+</dl>
+<h3 class="d32-manual-h">Fixing and tidying</h3>
+<dl class="d32-manual">
+<div><dt dir="ltr">EDIT 20</dt><dd>Brings line 20 up to the typing line. Fix it and press <kbd>Enter</kbd>.</dd></div>
+<div><dt dir="ltr">DEL 20-50</dt><dd>Deletes lines 20 to 50. Also <code>DEL 20</code> for a single line.</dd></div>
+<div><dt dir="ltr">RENUM</dt><dd>Renumbers: 10, 20, 30, and fixes every <code>GOTO</code> and <code>GOSUB</code> that points at the lines.</dd></div>
+</dl>
+<h3 class="d32-manual-h">Words and numbers</h3>
+<dl class="d32-manual">
+<div><dt dir="ltr">LEFT$  MID$  RIGHT$</dt><dd>Parts of a word. From the start: <code>LEFT$("DRAGON",3) = DRA</code>. From the middle: <code>MID$("DRAGON",2,3) = RAG</code>. From the end: <code>RIGHT$("DRAGON",2) = ON</code>.</dd></div>
+<div><dt dir="ltr">LEN  INSTR  ASC  CHR$</dt><dd>Length of a word: <code>LEN("DOG") = 3</code>. Where a letter appears: <code>INSTR("HELLO","L") = 3</code>. A letter's code: <code>ASC("A") = 65</code>, and back again: <code>CHR$(65) = A</code>.</dd></div>
+<div><dt dir="ltr">STR$  VAL  HEX$  STRING$</dt><dd>Number to word: <code>STR$(5)</code>. Word to number: <code>VAL("12") = 12</code>. In base 16: <code>HEX$(255) = FF</code>. A repeated letter: <code>STRING$(5,"*") = *****</code>.</dd></div>
+<div><dt dir="ltr">INT  RND  ABS  SGN  FIX</dt><dd>A random number from 1 to 6: <code>RND(6)</code>. Without the part after the point: <code>INT</code> and <code>FIX</code>. Without the minus: <code>ABS</code>. The sign of a number: <code>SGN</code> (1, 0 or minus 1).</dd></div>
+<div><dt dir="ltr">SQR  SIN  COS  TAN  ATN  LOG  EXP</dt><dd>Square root, trigonometry (in radians), logarithm and exponent.</dd></div>
+<div><dt dir="ltr">TIMER</dt><dd>A clock that counts 50 times a second. <code>TIMER=0</code> resets it; handy for timing a game.</dd></div>
+<div><dt dir="ltr">PRINT TAB(10);"X"</dt><dd>Starts writing at column 10.</dd></div>
+<div><dt dir="ltr">PRINT USING "##.##";A</dt><dd>Aligned numbers: <code>#</code> a digit, <code>$</code> a dollar sign, <code>,</code> thousands commas. <code>!</code> the first letter of a word.</dd></div>
+<div><dt dir="ltr">PRINT @ 240,"HI"</dt><dd>Writes at a set place on the screen. Each row is 32 places: 0 at the top corner, 32 at the start of the second row.</dd></div>
+</dl>
+<h3 class="d32-manual-h">Graphics and sound</h3>
+<dl class="d32-manual">
+<div><dt dir="ltr">PMODE 3,1 : SCREEN 1,0</dt><dd>Switches to the graphics screen (4 colours). <code>PCLS 3</code> paints all of it blue.</dd></div>
+<div><dt dir="ltr">PMODE 0 … PMODE 4</dt><dd>Levels of detail: 4 is the sharpest with 2 colours, 3 has 4 colours, and 0 to 2 are coarser.</dd></div>
+<div><dt dir="ltr">COLOR 4</dt><dd>Picks a drawing colour: 1 green, 2 yellow, 3 blue, 4 red. With <code>SCREEN 1,1</code>: buff, cyan, magenta, orange.</dd></div>
+<div><dt dir="ltr">PSET(128,96)</dt><dd>A dot. The screen is 256 by 192, and (0,0) is the top left corner.</dd></div>
+<div><dt dir="ltr">LINE(0,0)-(255,191),PSET</dt><dd>A line. With <code>,B</code> at the end: a box; with <code>,BF</code>: a filled box.</dd></div>
+<div><dt dir="ltr">CIRCLE(128,96),40</dt><dd>A circle: centre and radius.</dd></div>
+<div><dt dir="ltr">PAINT(128,96),3,4</dt><dd>Fills a closed shape: from the point outwards, in blue (3), until it meets a red line (4). That's how you fill a circle.</dd></div>
+<div><dt dir="ltr">DRAW "U20R20D20L20"</dt><dd>Draws with moves: <code>U</code> up, <code>D</code> down, <code>L</code> left, <code>R</code> right, and <code>E F G H</code> diagonally. <code>BM10,20</code> moves without drawing, <code>C2</code> changes colour, <code>S8</code> doubles the size.</dd></div>
+<div><dt dir="ltr">PPOINT(10,10)</dt><dd>Which colour is at a point. That's how a game knows you touched a wall.</dd></div>
+<div><dt dir="ltr">GET(0,0)-(15,15),S</dt><dd>Stores a square of the drawing in the list <code>S</code> (first <code>DIM S(10)</code>). <code>PUT(100,50)-(115,65),S</code> pastes it somewhere else. That's how you move a character.</dd></div>
+<div><dt dir="ltr">PCOPY 1 TO 2</dt><dd>Copies a whole graphics page. <code>PMODE 3,2</code> shows page 2.</dd></div>
+<div><dt dir="ltr">SET(10,5,3)</dt><dd>A chunky coloured block on the text screen (64 by 30). <code>RESET</code> turns it off, and <code>POINT(10,5)</code> checks which colour is there.</dd></div>
+<div><dt dir="ltr">JOYSTK(0)  JOYSTK(1)</dt><dd>The joystick: 0 to 63, up-down and left-right. On a computer with the arrow keys, and on a phone by touching the screen.</dd></div>
+<div><dt dir="ltr">PLAY "CDEFGAB"</dt><dd>Plays notes. <code>#</code> after a note raises it a semitone, <code>O3</code> a higher octave, <code>L8</code> short notes, <code>T6</code> a faster tempo, <code>P4</code> a pause.</dd></div>
+</dl>
+<p>Also allowed: <code>INPUT</code>, <code>IF … THEN</code>, <code>GOTO</code>, <code>FOR … NEXT</code>, variables like <code>A</code> or <code>N$</code>, and several statements on one line with colons. And if you type my name, it will answer.</p>
+</section>
+
+
+</main>
+
+<footer class="site-footer">
+<p>A hobbyist's tribute to the 1982 Dragon 32. Not affiliated with or endorsed by Dragon Data. The software, games and graphics here are original.</p>
+<p>Built by <a href="https://www.gonenyarom.co.il/">Gonen Yarom</a>, who grew up on this machine, with the help of AI. Open source (MIT).</p>
+<nav class="footer-links" aria-label="Footer links">
+<a href="https://github.com/gonenya-create/dragon32">The code on GitHub</a>
+<a href="https://www.gonenyarom.co.il/about/#contact">Contact (Gonen)</a>
+<a href="/en/accessibility/">Accessibility</a>
+<a href="/en/privacy/">Privacy</a>
+<span>© 2026 Gonen Yarom</span>
+</nav>
+</footer>
+
+</div>
+<script type="module" src="/assets/dragon/main.js"></script>
+<script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});</script>
+<script src="/assets/dragon/langpick.js" defer></script>
+</body>
+</html>

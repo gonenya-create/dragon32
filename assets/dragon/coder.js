@@ -1,3 +1,4 @@
+import { tr } from './lang.js';
 // כלים למתכנת (שלב ב של גרסת המחשב): חלון בצד הטלוויזיה במסך המלא, שמראה את התוכנית שבזיכרון כל הזמן.
 // לחיצה על שורה מעלה אותה לתיקון. שמירה לקובץ .bas במחשב, טעינה מקובץ, והדבקה של תוכנית ארוכה מהאינטרנט.
 // הכול בדפדפן: שום דבר לא נשלח לשרת.
@@ -18,26 +19,26 @@ export function createCoder({ root, input, machine, powerOn }) {
   panel.setAttribute('aria-labelledby', 'd32-coder-title');
   panel.innerHTML = `
     <div class="d32-coder-head">
-      <h2 id="d32-coder-title">התוכנית בזיכרון</h2>
+      <h2 id="d32-coder-title">${tr('התוכנית בזיכרון', 'Program in memory')}</h2>
       <span class="d32-coder-count" role="status"></span>
     </div>
     <div class="d32-coder-tools">
-      <button type="button" data-act="save">💾 שמירה לקובץ</button>
-      <button type="button" data-act="load">📂 טעינה מקובץ</button>
-      <button type="button" data-act="paste">📋 הדבקת תוכנית</button>
-      <button type="button" data-act="check">🔍 בדיקת התוכנית</button>
+      <button type="button" data-act="save">💾 ${tr('שמירה לקובץ', 'Save to file')}</button>
+      <button type="button" data-act="load">📂 ${tr('טעינה מקובץ', 'Load from file')}</button>
+      <button type="button" data-act="paste">📋 ${tr('הדבקת תוכנית', 'Paste a program')}</button>
+      <button type="button" data-act="check">🔍 ${tr('בדיקת התוכנית', 'Check the program')}</button>
     </div>
     <div class="d32-coder-paste" hidden>
-      <label for="d32-coder-text">מדביקים כאן תוכנית BASIC, אפילו ארוכה. אם אין לה מספרי שורות, אמספר אותן.</label>
+      <label for="d32-coder-text">${tr('מדביקים כאן תוכנית BASIC, אפילו ארוכה. אם אין לה מספרי שורות, אמספר אותן.', 'Paste a BASIC program here, even a long one. If it has no line numbers, I will number it.')}</label>
       <textarea id="d32-coder-text" dir="ltr" rows="8" spellcheck="false" autocomplete="off"></textarea>
       <div class="d32-coder-row">
-        <button type="button" data-act="paste-go" class="is-main">לטעון לזיכרון</button>
-        <button type="button" data-act="paste-cancel">ביטול</button>
+        <button type="button" data-act="paste-go" class="is-main">${tr('לטעון לזיכרון', 'Load into memory')}</button>
+        <button type="button" data-act="paste-cancel">${tr('ביטול', 'Cancel')}</button>
       </div>
     </div>
     <p class="d32-coder-note" role="status"></p>
     <ol class="d32-coder-list" dir="ltr" lang="en"></ol>
-    <p class="d32-coder-empty">אין עדיין תוכנית. כתבו שורה עם מספר, למשל <bdi dir="ltr">10 PRINT "HI"</bdi>, והיא תופיע כאן. לחיצה על שורה מעלה אותה לתיקון.</p>
+    <p class="d32-coder-empty">${tr('אין עדיין תוכנית. כתבו שורה עם מספר, למשל <bdi dir="ltr">10 PRINT "HI"</bdi>, והיא תופיע כאן. לחיצה על שורה מעלה אותה לתיקון.', 'No program yet. Type a numbered line, e.g. <bdi dir="ltr">10 PRINT "HI"</bdi>, and it will appear here. Click a line to edit it.')}</p>
     <input type="file" class="d32-coder-file" accept=".bas,.txt,text/plain" hidden>`;
 
   const list = panel.querySelector('.d32-coder-list');
@@ -69,12 +70,12 @@ export function createCoder({ root, input, machine, powerOn }) {
       const b = document.createElement('button');
       b.type = 'button';
       b.textContent = line;
-      b.title = 'לתקן את השורה';
+      b.title = tr('לתקן את השורה', 'Edit this line');
       li.appendChild(b);
       list.appendChild(li);
     }
     panel.classList.toggle('is-empty', !lines.length);
-    count.textContent = lines.length === 1 ? 'שורה אחת' : lines.length ? lines.length + ' שורות' : '';
+    count.textContent = lines.length === 1 ? tr('שורה אחת', '1 line') : lines.length ? lines.length + tr(' שורות', ' lines') : '';
   }
 
   // לחיצה על שורה: היא עולה לשורת ההקלדה, מתקנים ולוחצים Enter (כמו EDIT)
@@ -89,7 +90,7 @@ export function createCoder({ root, input, machine, powerOn }) {
 
   function save() {
     const text = machine.programText();
-    if (!text) { say('אין מה לשמור: הזיכרון ריק.'); back(); return; }
+    if (!text) { say(tr('אין מה לשמור: הזיכרון ריק.', 'Nothing to save: memory is empty.')); back(); return; }
     const d = new Date(), pad = n => String(n).padStart(2, '0');
     const name = `dragon-${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}.bas`;
     const url = URL.createObjectURL(new Blob([text + '\n'], { type: 'text/plain' }));
@@ -100,14 +101,14 @@ export function createCoder({ root, input, machine, powerOn }) {
     a.click();
     a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
-    say('נשמר בהורדות בשם ' + name + '. אפשר לטעון אותו בחזרה מתי שרוצים.');
+    say(tr('נשמר בהורדות בשם ', 'Saved to Downloads as ') + name + tr('. אפשר לטעון אותו בחזרה מתי שרוצים.', '. You can load it back any time.'));
     root.dispatchEvent(new CustomEvent('d32-kept'));
     back();
   }
 
   function load(text, label) {
     const prog = numbered(text);
-    if (!prog) { say('לא מצאתי שורות BASIC בטקסט.'); return false; }
+    if (!prog) { say(tr('לא מצאתי שורות BASIC בטקסט.', 'No BASIC lines found in that text.')); return false; }
     input.value = '';   // שורה חצי מוקלדת לא נדבקת לפקודה הבאה
     input.dispatchEvent(new Event('input'));
     powerOn().then(() => { machine.loadText(prog, label); refresh(); back(); });
@@ -118,8 +119,8 @@ export function createCoder({ root, input, machine, powerOn }) {
     const f = file.files && file.files[0];
     file.value = '';
     if (!f) return;
-    if (f.size > MAX_FILE) { say('הקובץ גדול מדי. ב-Dragon היו 32 קילובייט בסך הכול.'); return; }
-    if (load(await f.text(), tapeName(f.name))) say('נטען: ' + f.name + '. הקלידו RUN.');
+    if (f.size > MAX_FILE) { say(tr('הקובץ גדול מדי. ב-Dragon היו 32 קילובייט בסך הכול.', 'The file is too big. The Dragon only had 32 kilobytes in total.')); return; }
+    if (load(await f.text(), tapeName(f.name))) say(tr('נטען: ', 'Loaded: ') + f.name + tr('. הקלידו RUN.', '. Type RUN.'));
   });
 
   panel.addEventListener('click', e => {
@@ -131,8 +132,8 @@ export function createCoder({ root, input, machine, powerOn }) {
     else if (act === 'paste') { paste.hidden = false; area.focus(); say(''); }
     else if (act === 'paste-cancel') { paste.hidden = true; area.value = ''; back(); }
     else if (act === 'paste-go') {
-      if (area.value.length > MAX_FILE) { say('התוכנית ארוכה מדי.'); return; }
-      if (load(area.value, 'PASTE')) { paste.hidden = true; area.value = ''; say('התוכנית בזיכרון. הקלידו RUN.'); }
+      if (area.value.length > MAX_FILE) { say(tr('התוכנית ארוכה מדי.', 'The program is too long.')); return; }
+      if (load(area.value, 'PASTE')) { paste.hidden = true; area.value = ''; say(tr('התוכנית בזיכרון. הקלידו RUN.', 'The program is in memory. Type RUN.')); }
     }
   });
 

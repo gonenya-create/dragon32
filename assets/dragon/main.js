@@ -8,25 +8,26 @@ import { loadTable, loadWorld, worldTables } from './hof.js';
 import { createTheater } from './theater.js';
 import { createHelper } from './helper.js';
 import { createAI } from './ai.js';
+import { tr, EN } from './lang.js';
 
 const TAPES_URL = new URL('./tapes/', import.meta.url);
 
 // מדף הקלטות, אותו מדף בכל דף. קלטת חדשה: קובץ .bas בתיקיית tapes ושורה כאן.
 const SHELF = [
-  ['GUESS', 'נחש את המספר'],
-  ['LANDER', 'נחיתה על הירח'],
-  ['QUIZ', 'חידון חשבון'],
-  ['RPS', 'אבן, נייר, מספריים'],
-  ['CAVE', 'מערת הדרקון'],
-  ['DRAW', 'ציור על המסך']
+  ['GUESS', tr('נחש את המספר', 'Guess the number')],
+  ['LANDER', tr('נחיתה על הירח', 'Moon lander')],
+  ['QUIZ', tr('חידון חשבון', 'Maths quiz')],
+  ['RPS', tr('אבן, נייר, מספריים', 'Rock, paper, scissors')],
+  ['CAVE', tr('מערת הדרקון', 'Dragon cave')],
+  ['DRAW', tr('ציור על המסך', 'Screen drawing')]
 ];
 
 // מחסניות: משחקים גרפיים. כל אחת נטענת רק כשמכניסים אותה.
 const CARTS = [
-  ['TOWER', 'מגדל הדרקון', () => import('./carts/tower.js')],
-  ['JUNGLE', 'נדנדת הג\'ונגל', () => import('./carts/jungle.js')],
-  ['EGGS', 'ביצי הדרקון', () => import('./carts/eggs.js')],
-  ['CASTLE', 'טירת הדרקון', () => import('./carts/castle.js'), 'full']
+  ['TOWER', tr('מגדל הדרקון', 'Dragon Tower'), () => import('./carts/tower.js')],
+  ['JUNGLE', tr('נדנדת הג\'ונגל', 'Jungle Swing'), () => import('./carts/jungle.js')],
+  ['EGGS', tr('ביצי הדרקון', 'Dragon Eggs'), () => import('./carts/eggs.js')],
+  ['CASTLE', tr('טירת הדרקון', 'Dragon Castle'), () => import('./carts/castle.js'), 'full']
 ];
 const CART_SLOTS = 0;
 // המנוע יודע להיות גם גרסה בסיסית וגם המחשב המלא (data-edition="full": מסך מלא, כלים למתכנת, עוזר AI ומחסניות שיש רק שם).
@@ -72,17 +73,17 @@ function renderHof() {
       const key = id.toLowerCase();
       const w = document.createElement('p');
       w.className = 'd32-hof-sub';
-      w.textContent = '🌍 בעולם';
+      w.textContent = '🌍 ' + tr('בעולם', 'World');
       card.appendChild(w);
-      if (!wt) card.appendChild(hofEmpty('ההיכל העולמי לא זמין כרגע.'));
-      else if (!(wt[key] || []).length) card.appendChild(hofEmpty('עוד אין שיאים בעולם. תהיו הראשונים.'));
+      if (!wt) card.appendChild(hofEmpty(tr('ההיכל העולמי לא זמין כרגע.', 'The world table is not available right now.')));
+      else if (!(wt[key] || []).length) card.appendChild(hofEmpty(tr('עוד אין שיאים בעולם. תהיו הראשונים.', 'No world scores yet. Be the first.')));
       else card.appendChild(hofList(wt[key]));
       const b = document.createElement('p');
       b.className = 'd32-hof-sub';
-      b.textContent = '🏠 בבית (בדפדפן הזה)';
+      b.textContent = '🏠 ' + tr('בבית (בדפדפן הזה)', 'This browser');
       card.appendChild(b);
       const table = loadTable(key);
-      card.appendChild(table.length ? hofList(table) : hofEmpty('עוד אין שיאים. תהיו הראשונים.'));
+      card.appendChild(table.length ? hofList(table) : hofEmpty(tr('עוד אין שיאים. תהיו הראשונים.', 'No scores yet. Be the first.')));
       box.appendChild(card);
     }
   });
@@ -157,17 +158,17 @@ function renderMine(root, bind) {
     b.className = 'd32-tape d32-tape-mine';
     b.dataset.d32 = '1';
     b.dataset.lines = 'CLOAD "' + n + '"|LIST';
-    b.innerHTML = '<span class="d32-tape-label">הקלטת שלי</span><span class="d32-tape-reels" aria-hidden="true"><i></i><i></i></span><span class="d32-tape-file" dir="ltr"></span>';
+    b.innerHTML = '<span class="d32-tape-label">' + tr('הקלטת שלי', 'My tape') + '</span><span class="d32-tape-reels" aria-hidden="true"><i></i><i></i></span><span class="d32-tape-file" dir="ltr"></span>';
     b.querySelector('.d32-tape-file').textContent = n;
     const del = document.createElement('button');
     del.type = 'button';
     del.className = 'd32-tape-del';
     del.textContent = '✕';
-    del.setAttribute('aria-label', 'מחיקת הקלטת ' + n);
+    del.setAttribute('aria-label', tr('מחיקת הקלטת ', 'Delete tape ') + n);
     let armed = 0;
     del.addEventListener('click', () => {
       if (!armed) {
-        del.textContent = 'למחוק?';
+        del.textContent = tr('למחוק?', 'Delete?');
         del.classList.add('is-armed');
         armed = setTimeout(() => { armed = 0; del.textContent = '✕'; del.classList.remove('is-armed'); }, 3000);
         return;
@@ -206,7 +207,7 @@ function mount(root) {
   const gcanvas = document.createElement('canvas');
   gcanvas.className = 'd32-gcanvas';
   gcanvas.setAttribute('role', 'img');
-  gcanvas.setAttribute('aria-label', 'המסך הגרפי של התוכנית. Esc או BREAK עוצרים.');
+  gcanvas.setAttribute('aria-label', tr('המסך הגרפי של התוכנית. Esc או BREAK עוצרים.', 'The program\'s graphics screen. Esc or BREAK stops it.'));
   root.querySelector('.d32-tv').appendChild(gcanvas);
   const gfx = createGfx(gcanvas);
   gfx.clear('#13d613');
@@ -330,7 +331,7 @@ function mount(root) {
     const check = document.createElement('button');
     check.type = 'button';
     check.className = 'd32-check';
-    check.textContent = '🔍 בדיקת התוכנית';
+    check.textContent = '🔍 ' + tr('בדיקת התוכנית', 'Check the program');
     check.addEventListener('click', () => { helper.report('check'); root.querySelector('.d32-helper').scrollIntoView({ block: 'nearest', behavior: 'smooth' }); });
     shareRow.prepend(check, ' ');
   }
@@ -413,7 +414,7 @@ function mount(root) {
     const note = document.createElement('p');
     note.className = 'd32-tape-warn';
     note.setAttribute('role', 'status');
-    note.textContent = 'יש בזיכרון תוכנית שלא נשמרה, והקלטת תחליף אותה. לחיצה נוספת על הקלטת טוענת בכל זאת. כדי לשמור קודם: CSAVE "NAME", או "שמירה לקובץ" בלשונית "תוכנית".';
+    note.textContent = tr('יש בזיכרון תוכנית שלא נשמרה, והקלטת תחליף אותה. לחיצה נוספת על הקלטת טוענת בכל זאת. כדי לשמור קודם: CSAVE "NAME", או "שמירה לקובץ" בלשונית "תוכנית".', 'There is an unsaved program in memory, and the tape will replace it. Click the tape again to load it anyway. To save first: CSAVE "NAME", or "Save to file" in the Program tab.');
     b.closest('.d32-shelf').appendChild(note);
     armTimer = setTimeout(disarm, 8000);
     return false;
@@ -444,21 +445,21 @@ function mount(root) {
   shareBtn?.addEventListener('click', whenOn(async () => {
     const text = machine.programText();
     const say = msg => { if (shareNote) shareNote.textContent = msg; };
-    if (!text) { say('אין עדיין תוכנית לשתף. כתבו שורות עם מספרים (או טענו קלטת), ואז שתפו.'); return; }
-    if (text.length > SHARE_MAX) { say('התוכנית ארוכה מדי לקישור.'); return; }
-    const url = new URL('/', location.href);
+    if (!text) { say(tr('אין עדיין תוכנית לשתף. כתבו שורות עם מספרים (או טענו קלטת), ואז שתפו.', 'No program to share yet. Type numbered lines (or load a tape), then share.')); return; }
+    if (text.length > SHARE_MAX) { say(tr('התוכנית ארוכה מדי לקישור.', 'The program is too long for a link.')); return; }
+    const url = new URL(EN ? '/en/' : '/', location.href);
     url.hash = 'p=' + encodeProgram(text);
     try {
       if (navigator.share && matchMedia('(pointer: coarse)').matches) {
-        await navigator.share({ title: 'תוכנית BASIC ל-Dragon 32', text: 'כתבתי תוכנית ל-Dragon 32. פתחו והקלידו RUN:', url: url.href });
+        await navigator.share({ title: tr('תוכנית BASIC ל-Dragon 32', 'A BASIC program for the Dragon 32'), text: tr('כתבתי תוכנית ל-Dragon 32. פתחו והקלידו RUN:', 'I wrote a program for the Dragon 32. Open it and type RUN:'), url: url.href });
         say('');
       } else {
         await navigator.clipboard.writeText(url.href);
-        say('הקישור הועתק. מי שיפתח אותו יקבל את התוכנית, ויקליד RUN.');
+        say(tr('הקישור הועתק. מי שיפתח אותו יקבל את התוכנית, ויקליד RUN.', 'Link copied. Whoever opens it gets the program and types RUN.'));
       }
     } catch (e) {
       if (e && e.name === 'AbortError') return;
-      say('לא הצלחתי להעתיק. זה הקישור: ' + url.href);
+      say(tr('לא הצלחתי להעתיק. זה הקישור: ', 'Could not copy. Here is the link: ') + url.href);
     }
   }));
 
@@ -489,7 +490,7 @@ function mount(root) {
       const a = document.createElement('a');
       a.className = 'd32-cart is-more';
       a.href = APP_URL;
-      a.innerHTML = '<span class="d32-cart-label"></span><span class="d32-cart-file">במחשב המלא ←</span>';
+      a.innerHTML = '<span class="d32-cart-label"></span><span class="d32-cart-file">' + tr('במחשב המלא ←', 'In the full computer →') + '</span>';
       a.querySelector('.d32-cart-label').textContent = label;
       carts.appendChild(a);
     }
@@ -497,7 +498,7 @@ function mount(root) {
       const d = document.createElement('div');
       d.className = 'd32-cart is-empty';
       d.setAttribute('aria-hidden', 'true');
-      d.innerHTML = '<span class="d32-cart-label">בקרוב</span>';
+      d.innerHTML = '<span class="d32-cart-label">' + tr('בקרוב', 'Soon') + '</span>';
       carts.appendChild(d);
     }
   }
@@ -600,7 +601,7 @@ document.querySelectorAll('.room-then .d32-code').forEach((pre, i) => {
   pre.id = pre.id || 'then-code-' + (i + 1);
   const row = document.createElement('p');
   row.className = 'mag-actions then-actions';
-  row.innerHTML = `<button type="button" class="mag-typein" data-typein="#${pre.id}" data-target="#dragon-room" data-run="1">⌨ הקלד במחשב</button> <button type="button" class="mag-copy" data-copy="#${pre.id}">📋 העתקה</button> <span class="mag-copied" role="status"></span>`;
+  row.innerHTML = `<button type="button" class="mag-typein" data-typein="#${pre.id}" data-target="#dragon-room" data-run="1">⌨ ${tr('הקלד במחשב', 'Type it in')}</button> <button type="button" class="mag-copy" data-copy="#${pre.id}">📋 ${tr('העתקה', 'Copy')}</button> <span class="mag-copied" role="status"></span>`;
   pre.after(row);
 });
 
@@ -627,7 +628,7 @@ document.querySelectorAll('[data-copy]').forEach(b => {
     let ok = true;
     try { await navigator.clipboard.writeText(pre.textContent.trim() + '\n'); } catch { ok = false; }
     if (done) {
-      done.textContent = ok ? 'הועתק ✓ עכשיו אפשר לחזור למחשב ולהדביק.' : 'לא הצלחתי להעתיק. אפשר לפתוח את הקוד ולסמן אותו.';
+      done.textContent = ok ? tr('הועתק ✓ עכשיו אפשר לחזור למחשב ולהדביק.', 'Copied ✓ Now go back to the computer and paste.') : tr('לא הצלחתי להעתיק. אפשר לפתוח את הקוד ולסמן אותו.', 'Could not copy. Open the code and select it.');
       clearTimeout(b._t);
       b._t = setTimeout(() => { done.textContent = ''; }, 5000);
     }

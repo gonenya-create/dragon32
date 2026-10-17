@@ -31,7 +31,7 @@ let server = null;
 if (!base) { server = await serve(); base = 'http://localhost:' + server.address().port; }
 const PAGE = base.replace(/\/$/, '') + '/';   // האפליקציה היא דף אחד: המחשב המלא
 
-const browser = await chromium.launch({ channel: 'chrome' });
+const browser = await chromium.launch({ channel: 'chrome', args: ['--lang=he-IL'] });
 // אם בדיקה קורסת באמצע: סוגרים את הדפדפן לפני היציאה, כדי שלא יישאר Chrome נסתר ברקע
 const bail = async e => { console.error(e); await browser.close().catch(() => {}); if (server) server.close(); process.exit(1); };
 process.on('uncaughtException', bail);
@@ -983,6 +983,41 @@ if (part('all command cards')) {
     if (!prog) check('with empty memory, the LIST/RUN/RENUM/CSAVE cards explain there is no program yet', explained === 4, String(explained));
   }
   await p.close();
+}
+
+// הגרסה האנגלית (/en/): דפדפן באנגלית מגיע אליה לבד, אין בה עברית גלויה, והבחירה בשפה נשמרת
+if (part('english')) {
+  console.log('english');
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, locale: 'en-GB' });
+  const p = await ctx.newPage();
+  p.on('pageerror', e => pageErrors.push(e.message));
+  await p.goto(base.replace(/\/$/, '') + '/');
+  await p.waitForSelector('#dragon-room.is-ready');
+  await p.waitForTimeout(500);
+  check('an English browser lands on /en/ (lang=en, ltr)', /\/en\/$/.test(p.url()) && await p.evaluate(() => document.documentElement.lang === 'en' && document.documentElement.dir === 'ltr'), p.url());
+  const hebrew = () => p.evaluate(() => { const out = []; const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT); let n; while ((n = w.nextNode())) { const el = n.parentElement; if (!el || el.closest('[lang="he"], script, style') || !el.getClientRects().length) continue; if (/[\u0590-\u05FF]/.test(n.textContent)) out.push(n.textContent.trim().slice(0, 50)); } return out; });
+  const seen = [];
+  for (const t of ['program', 'commands', 'shelf']) { await p.locator(`.d32-tab[data-tab="${t}"]`).click(); await p.waitForTimeout(150); seen.push(...await hebrew()); }
+  await p.locator('.d32-welcome-x').click().catch(() => {});
+  await send(p, 'xyz', 400);
+  seen.push(...await hebrew());
+  check('the English computer shows no Hebrew (tabs, cards, shelf, helper, error help)', seen.length === 0, seen.join(' | '));
+  check('the error help is in English', /What happened\?/.test(await p.locator('.d32-helper').innerText()));
+  await p.locator('.d32-tab[data-tab="commands"]').click();
+  await p.locator('.d32-cmds-search input').fill('circle');
+  check('command search works with English words', (await p.locator('.d32-cmd-head:has-text("CIRCLE")').count()) === 1);
+  await p.locator('.d32-theater-exit').click();
+  await p.waitForTimeout(300);
+  const g = await hebrew();
+  check('the English guide shows no Hebrew (except the "עברית" link)', g.length === 0, g.join(' | '));
+  await p.locator('.site-nav [data-lang="he"]').click();
+  await p.waitForURL(/\/$/);
+  await p.waitForSelector('#dragon-room.is-ready');
+  check('"עברית" goes to the Hebrew app and is remembered', await p.evaluate(() => document.documentElement.lang === 'he' && localStorage.getItem('d32-lang') === 'he'));
+  await p.goto(base.replace(/\/$/, '') + '/en/');
+  await p.waitForURL(/\/$/);
+  check('a remembered Hebrew choice wins over /en/ too', await p.evaluate(() => document.documentElement.lang === 'he'));
+  await ctx.close();
 }
 
 check('no page errors', pageErrors.length === 0, pageErrors.join('\n'));

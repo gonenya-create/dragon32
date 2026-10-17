@@ -556,7 +556,7 @@ a.d32-cart.is-more:focus-visible { outline: 3px solid var(--focus); outline-offs
 }
 .d32.is-phone > :is(.d32-title, .d32-help, .d32-tip, .d32-try, .d32-then, .d32-share-row, .d32-theater-open, noscript, .d32-kbd, .d32-side) { display: none; }
 .d32.is-phone .d32-theater-bar { display: flex; align-items: center; gap: 8px; padding: 8px 2px; width: auto; }
-.d32.is-phone .d32-theater-btns > :not(.d32-theater-exit), .prose .d32.is-phone .d32-theater-hint { display: none; }
+.d32.is-phone .d32-theater-btns > :not(.d32-theater-exit, .d32-lang), .prose .d32.is-phone .d32-theater-hint { display: none; }
 .d32.is-phone .d32-bar-brand b { font-size: 17px; }
 .d32.is-phone .d32-theater-exit { padding: 6px 10px; font-size: 13px; }
 .d32.is-phone .d32-tv { flex: none; max-width: none; }
@@ -701,3 +701,12 @@ a.d32-cart.is-more:focus-visible { outline: 3px solid var(--focus); outline-offs
 .prose .d32-legal { margin: auto 0 0; padding-top: 8px; text-align: center; font-size: 13px; color: #a89a84; }
 .prose .d32-legal a { color: #c9bba5; text-decoration: underline; text-underline-offset: 2px; }
 .prose .d32-legal a:hover, .prose .d32-legal a:focus-visible { color: #efe6d2; }
+/* מעבר שפה בפס העליון של המחשב */
+.d32-lang { display: none; }
+.d32:is(.is-theater, .is-phone) .d32-lang { display: inline-flex; align-items: center; padding: 6px 12px; border: 1.5px solid #6b5d4d; border-radius: 8px; color: #efe6d2; font: 700 14px/1.2 var(--font-body); text-decoration: none; }
+.d32:is(.is-theater, .is-phone) .d32-lang:hover { border-color: #efe6d2; }
+.d32-lang:focus-visible { outline: 3px solid #f2c94c; outline-offset: 2px; }
+.d32.is-phone .d32-theater-btns > .d32-lang { display: inline-flex; padding: 6px 10px; font-size: 13px; }
+/* באנגלית (משמאל לימין) כפתור הסגירה של "מה קרה?" בצד ימין */
+html[lang="en"] .d32-helper-x { left: auto; right: 8px; }
+html[lang="en"] .d32-helper-title { padding-right: 34px; }
