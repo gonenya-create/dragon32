@@ -163,7 +163,7 @@ export function createCommands({ root, machine, powerOn, input }) {
     body.appendChild(code);
     const note = document.createElement('p');
     note.className = 'd32-cmd-note';
-    note.textContent = c.gfx ? 'אחרי הציור: Esc או BREAK מחזירים למסך הטקסט.' : c.prog ? 'עובד רק בתוך תוכנית, אז הוא נכנס לתוכנית. אחר כך RUN.' : c.danger ? 'זהירות: מוחק את התוכנית שבזיכרון.' : '';
+    note.textContent = c.gfx ? 'אחרי הציור: הכפתור "חזרה למסך הטקסט" על המסך (או Esc) מחזיר למסך הטקסט.' : c.prog ? 'עובד רק בתוך תוכנית, אז הוא נכנס לתוכנית. אחר כך RUN.' : c.danger ? 'זהירות: מוחק את התוכנית שבזיכרון.' : '';
     if (note.textContent) body.appendChild(note);
     const row = document.createElement('div');
     row.className = 'd32-cmd-row';
@@ -192,9 +192,10 @@ export function createCommands({ root, machine, powerOn, input }) {
   }
 
   // מקלידים במחשב כמו אדם (typeLines מ-main.js). קודם מדליקים, ואם רץ משהו, עוצרים אותו
-  function type(lines) {
+  // כרטיס שאינו ציור מחזיר קודם למסך הטקסט, אחרת התוצאה נכתבת מאחורי הציור ולא רואים אותה
+  function type(lines, gfx) {
     powerOn().then(() => {
-      if (machine.running) machine.brk?.();
+      if (machine.running || !gfx) machine.brk?.();
       root.d32.typeLines(lines, () => input.focus({ preventScroll: true }));
     });
   }
@@ -206,8 +207,8 @@ export function createCommands({ root, machine, powerOn, input }) {
     if (!el) return;
     const i = +el.dataset.i;
     if (e.target.closest('.d32-cmd-head')) { open = open === i ? -1 : i; render(); list.querySelector(`[data-i="${i}"] .d32-cmd-head`)?.focus(); return; }
-    if (e.target.closest('.d32-cmd-try')) type(linesOf(i, 0));
-    else if (e.target.closest('.d32-cmd-add')) { const s = nextLine(); type(linesOf(i, s).map((l, k) => (s + k * 10) + ' ' + l)); }
+    if (e.target.closest('.d32-cmd-try')) type(linesOf(i, 0), CARDS[i].gfx);
+    else if (e.target.closest('.d32-cmd-add')) { const s = nextLine(); type(linesOf(i, s).map((l, k) => (s + k * 10) + ' ' + l), CARDS[i].gfx); }
   });
   render();
   return box;

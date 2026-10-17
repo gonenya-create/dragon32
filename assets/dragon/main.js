@@ -231,7 +231,13 @@ function mount(root) {
       screen.style.background = index === undefined ? '' : COLORS[index];
       screen.classList.toggle('is-dark', isDark);
     },
-    busy(isBusy) { root.classList.toggle('is-running', isBusy); },
+    busy(isBusy) {
+      root.classList.toggle('is-running', isBusy);
+      // כפתור "עצירה" על המסך: רק כשתוכנית באמת רצה (לא בזמן טעינת קלטת)
+      let can = false;
+      try { can = isBusy && machine.running; } catch { /* המכונה עוד נבנית */ }
+      root.classList.toggle('is-stoppable', can);
+    },
     // תוכנית רצה: המסך מראה 16 שורות, ושורת ההקלדה מתכווצת (נשארת בפוקוס בשביל INKEY$)
     full(on) { root.classList.toggle('is-full', on); },
     prefill(text) { input.value = text; syncCursor(); }
@@ -270,6 +276,8 @@ function mount(root) {
   view.error = (code, lineNo, ctx) => helper.show(code, lineNo, ctx);
   // BREAK שהמשתמש לחץ בזמן שתוכנית רצה: אם הבדיקה מוצאת חשד, מסבירים מה כנראה לא עבד
   const userBreak = () => { const was = machine.running; machine.brk(); if (was) helper.report('break'); };
+  // כפתור על המסך, גם בטלפון (שם אין Esc): עוצר תוכנית שרצה, או חוזר מציור למסך הטקסט
+  root.querySelector('.d32-stop')?.addEventListener('click', () => { userBreak(); input.focus({ preventScroll: true }); });
   // כפתור "בדיקת התוכנית" ליד כפתור השיתוף
   const shareRow = root.querySelector('.d32-share-row');
   if (shareRow) {

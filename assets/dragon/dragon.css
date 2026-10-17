@@ -586,3 +586,12 @@ a.d32-cart.is-more:focus-visible { outline: 3px solid var(--focus); outline-offs
 .d32.is-phone .d32-pad-btn.is-down { background: #efe6d2; color: #1b1206; }
 .d32.is-phone .d32-pad-fire { border-color: #c2503f; color: #ff9b8a; }
 .d32.is-phone .d32-eject { background: #241e19; color: #efe6d2; border-color: #6b5d4d; }
+
+/* כפתור על המסך (17.10): "עצירה" כשתוכנית רצה, "חזרה למסך הטקסט" אחרי ציור. בטלפון אין Esc, אז זו הדרך היחידה */
+.d32-stop { display: none; position: absolute; z-index: 6; top: 22px; left: 22px; align-items: center; min-height: 36px; padding: 4px 12px; border: 1px solid rgba(255,255,255,.45); border-radius: 999px; background: rgba(15,12,10,.78); color: #fff; font: 600 14px/1.2 'IBM Plex Sans Hebrew', system-ui, sans-serif; cursor: pointer; }
+.d32-stop:hover, .d32-stop:focus-visible { background: rgba(15,12,10,.92); border-color: #fff; }
+.d32-stop span { display: none; }
+.d32.is-stoppable:not(.is-cart) .d32-stop, .d32.is-gfx:not(.is-cart):not(.is-off) .d32-stop { display: inline-flex; }
+.d32.is-stoppable .d32-stop-run { display: inline; }
+.d32.is-gfx:not(.is-stoppable) .d32-stop-gfx { display: inline; }
+@media (max-width: 640px) { .d32-stop { top: 14px; left: 14px; font-size: 13px; min-height: 34px; } }

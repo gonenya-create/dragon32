@@ -752,6 +752,25 @@ if (part('full computer /dragon/app/ (theater, coder, AI)')) {
   await p.keyboard.press('Escape');
   await p.waitForTimeout(300);
   check('Esc goes back to the text screen', !(await room.evaluate(e => e.classList.contains('is-gfx'))));
+  // אחרי ציור: כפתור "חזרה למסך הטקסט" על המסך, וכרטיס טקסט חוזר לבד למסך הטקסט (הערות גונן 17.10)
+  await p.locator('.d32-cmd-try').click();
+  await p.waitForFunction(() => document.querySelector('#dragon-room').classList.contains('is-gfx'), null, { timeout: 8000 });
+  check('after drawing, a "back to text" button shows on the screen', await p.locator('.d32-stop-gfx').isVisible());
+  await p.locator('.d32-stop').click();
+  await p.waitForTimeout(300);
+  check('the on-screen button goes back to the text screen', !(await room.evaluate(e => e.classList.contains('is-gfx'))) && !(await p.locator('.d32-stop').isVisible()));
+  await p.locator('.d32-cmd-try').click();
+  await p.waitForFunction(() => document.querySelector('#dragon-room').classList.contains('is-gfx'), null, { timeout: 8000 });
+  await p.locator('.d32-cmds-cats button:has-text("טקסט וחשבון")').click();
+  await p.locator('.d32-cmd-head:has-text("מחשבון")').click();
+  await p.locator('.d32-cmd-try').click();
+  await p.waitForFunction(() => / 42 \nOK\s*$/.test(document.querySelector('#dragon-room .d32-out').textContent), null, { timeout: 8000 });
+  check('a text card after a drawing shows its result on the text screen', !(await room.evaluate(e => e.classList.contains('is-gfx'))));
+  await p.locator('.d32-cmds-cats button:has-text("חזרות ותנועה")').click();
+  await p.locator('.d32-cmd-head:has-text("סופרים")').click();
+  await p.locator('.d32-cmd-try').click();
+  await p.waitForFunction(() => / 10 \nOK\s*$/.test(document.querySelector('#dragon-room .d32-out').textContent), null, { timeout: 8000 });
+  check('"count" card (FOR on a direct line) runs without an error', !/\?SN ERROR/.test(tail(await screenText(p), 3)), tail(await screenText(p), 3));
   await p.locator('.d32-cmds-search input').fill('צליל');
   check('search finds sound commands across categories', (await p.locator('.d32-cmd-head:has-text("צפצוף")').count()) === 1);
   await p.locator('.d32-cmds-cats button:has-text("חזרות ותנועה")').click();
@@ -828,6 +847,15 @@ if (part('full computer /dragon/app/ (theater, coder, AI)')) {
   check('phone: opens as an app (tabs at the bottom, ready-made commands first, no sideways scroll)', ph1.phone && ph1.sel === 'commands' && ph1.sw <= 390 && await ph.locator('.d32-tab[data-tab="help"]').isVisible(), JSON.stringify(ph1));
   await ph.locator('.d32-tab[data-tab="help"]').tap();
   check('phone: the AI helper is in the "עוזר" tab', await ph.locator('.d32-pane[data-pane="help"] .d32-ai').isVisible());
+  // בטלפון אין Esc: כפתור "עצירה" על המסך עוצר תוכנית שרצה
+  await ph.locator('.d32-power').tap();
+  await ph.waitForFunction(() => /OK\s*$/.test(document.querySelector('#dragon-room .d32-out').textContent), null, { timeout: 4000 });
+  for (const l of ['10 PRINT "HI ";', '20 GOTO 10', 'RUN']) { await ph.locator('#dragon-room .d32-input').fill(l); await ph.locator('#dragon-room .d32-input').press('Enter'); await ph.waitForTimeout(150); }
+  await ph.waitForTimeout(400);
+  const stopShown = await ph.locator('.d32-stop-run').isVisible();
+  await ph.locator('.d32-stop').tap();
+  await ph.waitForTimeout(400);
+  check('phone: a "stop" button on the screen stops a running program', stopShown && /BREAK IN \d+\nOK\s*$/.test(await ph.locator('#dragon-room .d32-out').textContent()), String(stopShown));
   await ph.locator('.d32-tab[data-tab="shelf"]').tap();
   await ph.locator('button.d32-cart').first().tap();
   await ph.waitForTimeout(600);
