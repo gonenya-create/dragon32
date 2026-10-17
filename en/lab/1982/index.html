@@ -54,9 +54,9 @@ details.note summary { cursor: pointer; color: var(--ink); }
   html, body { height: 100%; }
   main { max-width: none; display: grid; gap: 0 24px; align-items: start; padding-bottom: 8px;
     grid-template-columns: minmax(240px, 1fr) min(900px, calc((100vh - 370px) * 4 / 3 + 28px), calc(100vw - 600px)) minmax(240px, 1fr);
-    grid-template-rows: auto 1fr; }
+    grid-template-rows: auto 1fr; height: calc(100vh - 60px); }
   main > p.note:first-child { grid-column: 1; grid-row: 1; margin-top: 0; }
-  .info { grid-column: 1; grid-row: 2; }
+  .info { grid-column: 1; grid-row: 2; min-height: 0; max-height: 100%; overflow-y: auto; padding-inline-end: 6px; }
   .machine { grid-column: 2; grid-row: 1 / 3; }
   .shelf { grid-column: 3; grid-row: 1 / 3; margin-top: 0; max-height: calc(100vh - 70px); overflow-y: auto; padding-inline-end: 6px; }
   .tapes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -104,9 +104,14 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
   <div class="info">
   <p class="note">Try: <code>PRINT 2+3</code>, or a program: <code>10 FOR I=1 TO 10:PRINT I*I:NEXT</code> then <code>RUN</code>. To stop: <code>BREAK</code> (Esc).</p>
   <details class="note" open><summary><strong>What works, and what's still missing</strong></summary>
-    <p><strong>Works:</strong> numbers and strings, variables and arrays, IF, AND/OR/NOT, FOR, GOTO, GOSUB, ON, DATA/READ, INPUT, DEF FN, the functions (INT, RND, SIN, LEFT$, MID$...), graphics (PMODE, LINE, CIRCLE, PAINT, DRAW, GET/PUT), sound (SOUND, PLAY), cassette (CSAVE/CLOAD), AUTO, DEL, STOP/CONT, TRON.</p>
-    <p><strong>Still missing:</strong> EDIT, RENUM, PRINT USING. Original 1982 program tapes don't load yet (they are stored in a different, tokenised format). Speed is still a little below the original. The app's cartridges and helper don't work here.</p>
+    <p><strong>Works:</strong> numbers and strings, variables and arrays, IF/THEN/ELSE, AND/OR/NOT, FOR, GOTO, GOSUB, ON, DATA/READ, INPUT, DEF FN, the functions (INT, RND, SIN, LEFT$, MID$...), graphics (PMODE, LINE, CIRCLE, PAINT, DRAW, GET/PUT), sound (SOUND, PLAY), cassette (CSAVE/CLOAD), PRINT USING, EDIT, RENUM, AUTO, DEL, STOP/CONT, TRON.</p>
+    <p><strong>Still missing:</strong> Original 1982 program tapes don't load yet (they are stored in a different, tokenised format). Speed is still a little below the original. The app's cartridges and helper don't work here.</p>
     <p><strong>Found a difference from the Dragon you remember?</strong> That is exactly what we're looking for. <a href="https://github.com/gonenya-create/dragon32/issues/new?labels=real-machine&amp;title=Difference%20from%20the%20original%3A%20&amp;body=What%20I%20typed%3A%0A%0A%0AWhat%20I%20got%3A%0A%0A%0AWhat%20the%20original%20Dragon%20would%20do%3A%0A%0A%0AComputer%20/%20phone%20and%20browser%3A%0A">Open a report on GitHub</a> (a ready form with three questions; a GitHub account is needed), or write via the <a href="https://www.gonenyarom.co.il/about/#contact">contact page</a> (in Hebrew; English is fine): what you typed, what you got, and what the original would have done.</p>
+  </details>
+  <details class="note"><summary><strong>How to edit a line (EDIT)</strong></summary>
+    <p>Type <code>EDIT 20</code> and the line number appears. Now every key is a command. A number before a command repeats it, for example <code>3 D</code>.</p>
+    <p><strong>Space:</strong> one character forward · <strong>←:</strong> one back · <strong>D:</strong> delete · <strong>C:</strong> change · <strong>I:</strong> insert · <strong>X:</strong> insert at the end · <strong>H:</strong> delete the rest and insert · <strong>S and a character:</strong> jump to it · <strong>K and a character:</strong> delete up to it · <strong>L:</strong> show the line · <strong>A:</strong> undo the changes.</p>
+    <p>To leave insert mode: <strong>SHIFT+↑</strong> (on a computer keyboard: <code>_</code>). <strong>ENTER</strong> saves the line, <strong>BREAK</strong> leaves without saving.</p>
   </details>
   <p class="note">The emulator is <a href="https://www.6809.org.uk/xroar/">XRoar</a> by Ciaran Anscomb, licensed under GPL v3. <a href="/lab/1982/SOURCE.md">Sources and licences</a>. Our BASIC: <a href="https://github.com/gonenya-create/dragon32/tree/main/rom">github.com/gonenya-create/dragon32</a>.</p>
   </div>
@@ -154,7 +159,9 @@ function fire(type, key, code) {
 function press(label, alt, hold = 70) {
   if (label === 'SHIFT') { shift = !shift; kbd.querySelectorAll('[data-k="SHIFT"]').forEach(b => b.classList.toggle('on', shift)); return; }
   let key, code, needShift = false;
-  if (CODE[label]) [key, code] = CODE[label];
+  // SHIFT+↑ (יציאה ממצב הוספה ב-EDIT): ב-XRoar זה התו _
+  if (shift && label === '↑') { key = '_'; code = 'Minus'; needShift = true; }
+  else if (CODE[label]) [key, code] = CODE[label];
   else {
     key = shift && alt ? alt : label;
     if (/^[A-Z]$/.test(key)) code = 'Key' + key;
@@ -164,7 +171,7 @@ function press(label, alt, hold = 70) {
   if (needShift) fire('keydown', 'Shift', 'ShiftLeft');
   fire('keydown', key, code);
   setTimeout(() => { fire('keyup', key, code); if (needShift) fire('keyup', 'Shift', 'ShiftLeft'); }, hold);
-  if (shift && label.length === 1) { shift = false; kbd.querySelectorAll('[data-k="SHIFT"]').forEach(b => b.classList.remove('on')); }
+  if (shift && (label.length === 1 || label === '↑')) { shift = false; kbd.querySelectorAll('[data-k="SHIFT"]').forEach(b => b.classList.remove('on')); }
 }
 // מקליד מחרוזת מקש אחרי מקש (לכפתורי הקלטות). \n = ENTER
 window.d32Type = async function (text) {

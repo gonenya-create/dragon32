@@ -256,8 +256,12 @@ ki_next		incb
 		puls	a
 		beq	ki_out
 		cmpb	#16
-		bhs	ki_out
-		ldx	#SHIFTED
+		blo	1F
+		cmpa	#$5e		; SHIFT+↑ = $5F (ב-EDIT: יציאה ממצב הוספה)
+		bne	ki_out
+		inca
+		bra	ki_out
+1		ldx	#SHIFTED
 		lda	b,x
 		bra	ki_out
 ki_none		clra

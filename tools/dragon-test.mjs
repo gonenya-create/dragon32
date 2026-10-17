@@ -1077,6 +1077,16 @@ if (part('real machine lab')) {
       await del.click();
       await del.click();
       check('a saved tape can be deleted (two taps)', await m.locator('#mytapes .tape').count() === 0);
+      // הפקודות שבשבב ההרחבה (חריץ המחסנית): ELSE, RENUM, PRINT USING, ו-EDIT עם SHIFT+↑ מהמקלדת המצוירת
+      await m.evaluate(() => d32Type('NEW\n5 IF 1 THEN PRINT USING "##.#";3.14159 ELSE 7\n7 PRINT "NO"\nRENUM\nEDIT 20\nX;'));
+      await m.click('.k[data-k="SHIFT"] >> nth=0');
+      await m.dispatchEvent('.k[data-k="↑"]', 'pointerdown');
+      await m.waitForTimeout(300);
+      await m.evaluate(() => d32Type('Q\nLIST\nRUN\n'));
+      await m.waitForTimeout(2500);
+      const lines = (await m.evaluate(() => d32Screen())).filter(Boolean);
+      const shown = lines.join('');   // שורות ארוכות נשברות ב-32 תווים
+      check('real machine: ELSE, RENUM, PRINT USING and EDIT (SHIFT+↑ leaves insert mode)', shown.includes('10 IF 1 THEN PRINT USING "##.#";3.14159 ELSE 20') && lines.includes('20 PRINT "NO";') && lines.includes(' 3.1') && !shown.includes('ERROR'), lines.join(' | '));
       await m.close();
     }
     await p.close();

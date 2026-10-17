@@ -28,6 +28,9 @@ ext_dispatch	; פקודות ההרחבה: Z=1 אם הפקודה טופלה
 extkw		fcc	"RENUM"
 		fcb	0
 		fdb	st_renum-extkw
+		fcc	"EDIT"
+		fcb	0
+		fdb	st_edit-extkw
 		fcb	0
 
 ; זיכרון של ההרחבה
@@ -753,3 +756,310 @@ div10q		clra
 2		decb
 		bne	1B
 		rts
+
+; ---------- EDIT ----------
+; EDIT מספר: עורכים שורה במקום, כמו ב-1982. מספר לפני פקודה = כמה פעמים.
+;   רווח: תו קדימה   ←: תו אחורה   D: מחיקה   C: החלפה   I: הוספה (SHIFT+↑ יוצא)   X: הוספה בסוף
+;   H: מחיקת הסוף והוספה   S תו: חיפוש   K תו: מחיקה עד התו   L: הצגת השורה   A: מההתחלה
+;   ENTER: שמירה   E: שמירה בלי להציג את הסוף   BREAK: ביטול
+ED_REC		equ	$03f0		; הרשומה של השורה
+ED_L		equ	$03f2		; אורך הטקסט
+ED_P		equ	$03f3		; המקום בטקסט
+ED_N		equ	$03f4		; כמה פעמים
+ED_INS		equ	$03f5		; במצב הוספה
+EBUF		equ	LINBUF+8	; הטקסט (לפניו מקום למספר השורה)
+EDMAX		equ	LINMAX-8
+
+st_edit		lbsr	skipsp
+		cmpa	#'0
+		lblo	err_fc
+		cmpa	#'9
+		lbhi	err_fc
+		lbsr	linenum
+		lbsr	findline
+		lbne	err_ul
+		sty	ED_REC
+ed_start	; מעתיקים את השורה מהתוכנית ומציגים את המספר שלה
+		ldy	ED_REC
+		leax	4,y
+		ldu	#EBUF
+		clrb
+1		lda	,x+
+		sta	,u+
+		beq	2F
+		incb
+		bra	1B
+2		stb	ED_L
+ed_restart	clr	ED_P
+		lda	#13
+		lbsr	ed_nl
+		ldy	ED_REC
+		ldd	2,y
+		lbsr	givd_u
+		lbsr	fout
+		leau	1,u
+3		lda	,u+
+		beq	ed_cmd
+		lbsr	putc
+		bra	3B
+ed_cmd		lda	#$20
+		lbsr	putc
+ed_next		clr	ED_N
+ed_key		lbsr	ed_get
+		cmpa	#'0		; מספר חזרות
+		blo	1F
+		cmpa	#'9
+		bhi	1F
+		suba	#'0
+		pshs	a
+		lda	ED_N
+		ldb	#10
+		mul
+		addb	,s+
+		stb	ED_N
+		bra	ed_key
+1		tst	ED_N
+		bne	2F
+		inc	ED_N
+2		cmpa	#$20
+		beq	ed_space
+		cmpa	#8
+		beq	ed_left
+		cmpa	#13
+		lbeq	ed_enter
+		cmpa	#3
+		lbeq	ed_break
+		cmpa	#'D
+		beq	ed_del
+		cmpa	#'C
+		lbeq	ed_chg
+		cmpa	#'I
+		lbeq	ed_ins
+		cmpa	#'X
+		lbeq	ed_ext
+		cmpa	#'H
+		lbeq	ed_hack
+		cmpa	#'S
+		lbeq	ed_srch
+		cmpa	#'K
+		lbeq	ed_kill
+		cmpa	#'L
+		lbeq	ed_list
+		cmpa	#'A
+		lbeq	ed_start
+		cmpa	#'E
+		lbeq	ed_save
+		bra	ed_next		; מקש אחר: מתעלמים
+
+; רווח: מציגים את התו הבא וממשיכים
+ed_space	bsr	ed_fwd
+		dec	ED_N
+		bne	ed_space
+		bra	ed_next
+; ed_fwd: אם לא בסוף, מציג את התו ב-P ומתקדם
+ed_fwd		ldb	ED_P
+		cmpb	ED_L
+		bhs	1F
+		ldx	#EBUF
+		lda	b,x
+		lbsr	putc
+		inc	ED_P
+1		rts
+; ←: תו אחורה
+ed_left		lbsr	ed_back
+		dec	ED_N
+		bne	ed_left
+		lbra	ed_next
+; D: מוחקים תווים ב-P, ומציגים אותם בין \ ל-\
+ed_del		lda	#'\
+		lbsr	putc
+1		ldb	ED_P
+		cmpb	ED_L
+		bhs	2F
+		ldx	#EBUF
+		lda	b,x
+		lbsr	putc
+		lbsr	ed_cut
+		dec	ED_N
+		bne	1B
+2		lda	#'\
+		lbsr	putc
+		lbra	ed_next
+; C: מחליפים את התווים הבאים במה שמקלידים
+ed_chg		ldb	ED_P
+		cmpb	ED_L
+		bhs	2F
+		lbsr	ed_get
+		cmpa	#$20
+		blo	2F
+		ldb	ED_P
+		ldx	#EBUF
+		sta	b,x
+		lbsr	putc
+		inc	ED_P
+		dec	ED_N
+		bne	ed_chg
+2		lbra	ed_next
+; X: מציגים עד הסוף, ואז הוספה. H: מוחקים את הסוף, ואז הוספה
+ed_ext		lbsr	ed_rest
+		bra	ed_ins
+ed_hack		lda	ED_P
+		sta	ED_L
+; I: הוספה. כל תו נכנס ב-P. ← מוחק את התו שלפני. SHIFT+↑ יוצא, ENTER שומר
+ed_ins		lbsr	ed_get
+		cmpa	#$5f
+		lbeq	ed_next
+		cmpa	#13
+		beq	ed_enter
+		cmpa	#3
+		beq	ed_break
+		cmpa	#8
+		bne	1F
+		tst	ED_P
+		beq	ed_ins
+		lbsr	ed_back
+		lbsr	ed_cut
+		bra	ed_ins
+1		cmpa	#$20
+		blo	ed_ins
+		ldb	ED_L
+		cmpb	#EDMAX
+		bhs	ed_ins
+		; מזיזים את [P..L) תו אחד ימינה
+		pshs	a
+		ldx	#EBUF
+		ldb	ED_L
+		abx
+2		cmpb	ED_P
+		beq	3F
+		lda	-1,x
+		sta	,x
+		leax	-1,x
+		decb
+		bra	2B
+3		puls	a
+		sta	,x
+		lbsr	putc
+		inc	ED_P
+		inc	ED_L
+		bra	ed_ins
+; ENTER: מציגים את הסוף ושומרים. E: שומרים מיד. BREAK: יוצאים בלי לשמור
+ed_enter	lbsr	ed_rest
+ed_save		lda	#13
+		lbsr	putc
+		; "מספר טקסט" ב-LINBUF, ואז כמו שורה שהוקלדה
+		ldb	ED_L
+		ldx	#EBUF
+		clr	b,x
+		ldy	ED_REC
+		ldd	2,y
+		lbsr	givd_u
+		lbsr	fout		; U = " 10"
+		leau	1,u
+		ldx	#EBUF-1
+		lda	#$20
+		sta	,x
+1		tst	,u+		; לסוף המספר
+		bne	1B
+		leau	-1,u
+2		cmpu	#FBUF+1
+		bls	3F
+		lda	,-u
+		sta	,-x
+		bra	2B
+3		lbsr	storeline
+		bra	ed_out
+ed_break	lda	#13
+		lbsr	putc
+ed_out		leax	ed_zero,pcr	; אין עוד פקודות בשורה
+		ldd	#0
+		std	CURLN
+		rts
+ed_zero		fcb	0
+; L: מציגים את כל השורה (עם השינויים) ומתחילים מחדש מתחילתה
+ed_list		lbsr	ed_rest
+		lbra	ed_restart
+; S תו: מתקדמים עד התו (פעם N). K תו: מוחקים עד התו
+ed_srch		lbsr	ed_get
+		pshs	a
+1		lbsr	ed_fwd		; לפחות תו אחד
+2		ldb	ED_P
+		cmpb	ED_L
+		bhs	3F
+		ldx	#EBUF
+		lda	b,x
+		cmpa	,s
+		beq	4F
+		lbsr	ed_fwd
+		bra	2B
+4		dec	ED_N
+		bne	1B
+3		leas	1,s
+		lbra	ed_next
+ed_kill		lbsr	ed_get
+		pshs	a
+		lda	#'\
+		lbsr	putc
+1		ldb	ED_P
+		cmpb	ED_L
+		bhs	3F
+		ldx	#EBUF
+		lda	b,x
+		lbsr	putc
+		lbsr	ed_cut
+		ldb	ED_P
+		cmpb	ED_L
+		bhs	3F
+		lda	b,x
+		cmpa	,s
+		bne	1B
+		dec	ED_N
+		bne	1B
+3		leas	1,s
+		lda	#'\
+		lbsr	putc
+		lbra	ed_next
+
+; ed_rest: מציגים את מה שנשאר עד הסוף
+ed_rest		ldb	ED_P
+		cmpb	ED_L
+		bhs	1F
+		lbsr	ed_fwd
+		bra	ed_rest
+1		rts
+; ed_cut: מוחקים את התו ב-P
+ed_cut		pshs	b,x
+		ldx	#EBUF
+		ldb	ED_P
+		abx
+1		lda	1,x
+		sta	,x+
+		incb
+		cmpb	ED_L
+		blo	1B
+		dec	ED_L
+		puls	b,x,pc
+; ed_back: P אחורה, וגם הסמן במסך
+ed_back		tst	ED_P
+		beq	1F
+		dec	ED_P
+		pshs	x
+		ldx	CURSOR
+		leax	-1,x
+		lda	#$60
+		sta	,x
+		stx	CURSOR
+		puls	x
+1		rts
+; ed_get: מחכים למקש, עם סמן
+ed_get		lbsr	cursor_on
+		lbsr	getkey
+		lbra	cursor_off
+; ed_nl: שורה חדשה רק אם הסמן לא בתחילת שורה
+ed_nl		pshs	a
+		lda	CURSOR+1
+		anda	#$1f
+		puls	a
+		beq	1F
+		lbra	putc
+1		rts

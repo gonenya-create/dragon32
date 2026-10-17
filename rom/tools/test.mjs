@@ -118,6 +118,9 @@ const CASES = [
   ['PRINT USING signs', ['PRINT USING "+##.#";5;-5','PRINT USING "##.#-";-3.25;3'], /\n \+5\.0 -5\.0\nOK[\s\S]*\n 3\.3- 3\.0\nOK/],
   ['PRINT USING strings and repeating', ['PRINT USING "!:% %/";"HELLO";"WORLD"','PRINT USING "A=## B=##";1;2;3'], /\nH:WOR\/\nOK[\s\S]*\nA= 1 B= 2A= 3 B=\nOK/],
   ['PRINT USING errors', ['PRINT USING "X";1','PRINT USING "##";"A"','PRINT USING "!";5'], /\?FC ERROR\nOK[\s\S]*\?TM ERROR\nOK[\s\S]*\?TM ERROR\nOK/],
+  ['EDIT: X adds at the end, S finds, D deletes, I inserts', ['10 PRINT "HELLO"','EDIT 10','XAB','EDIT 10','SL2DIJJ','LIST'], /EDIT 10\n10 PRINT "HE\\LL\\JJO"AB\nOK\nLIST\n10 PRINT "HEJJO"AB\nOK/],
+  ['EDIT: count + space, SHIFT+up leaves insert, C changes, L restarts', ['10 PRINT "HELLO"','EDIT 10','6 I12_2CXYL','LIST'], /LIST\n10 PRINT 12XYELLO"\nOK/],
+  ['EDIT: H replaces the rest; missing line = ?UL', ['10 PRINT 1','EDIT 10','6 H7','RUN','EDIT 99'], /RUN\n 7\nOK[\s\S]*\?UL ERROR\nOK/],
   ['GOTO ELSE, :ELSE and ELSE in quotes', ['A=5:IF A=1 GOTO 9 ELSE PRINT "G"','IF A=5 THEN PRINT "S":ELSE PRINT "NO"','IF A=1 THEN PRINT "ELSE" ELSE PRINT "C"'], /\nG\nOK\n[\s\S]*\nS\nOK\n[\s\S]*\nC\nOK/]
 ];
 let fail = 0;
