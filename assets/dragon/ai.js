@@ -32,7 +32,7 @@ export function createAI({ root, machine, input, powerOn }) {
       <textarea id="d32-ai-q" rows="3" maxlength="600" placeholder="שאלו בעברית, למשל: למה יש שגיאה?"></textarea>
       <button type="submit">שליחה</button>
     </form>
-    <div class="d32-ai-quick" role="group" aria-label="שאלות מוכנות"></div>
+    <label class="d32-ai-quick"><span class="visually-hidden">שאלה מוכנה</span><select><option value="">💬 שאלות מוכנות…</option></select></label>
     <div class="d32-ai-log" aria-live="polite"></div>`;
   root.querySelector('.d32-helper').after(box);
   const log = box.querySelector('.d32-ai-log');
@@ -40,16 +40,15 @@ export function createAI({ root, machine, input, powerOn }) {
   const area = box.querySelector('textarea');
   const send = box.querySelector('button[type="submit"]');
   const history = [];
-  // שאלות מוכנות: לחיצה אחת, בלי להקליד
+  // שאלות מוכנות ברשימה נפתחת (שורה אחת), כדי שלתשובות יישאר מקום. בחירה שולחת מיד
   const QUICK = ['למה יש שגיאה?', 'מה התוכנית שלי עושה?', 'תכתוב לי משחק קטן', 'איך מציירים עיגול?', 'איך משמיעים מנגינה?'];
-  const quick = box.querySelector('.d32-ai-quick');
-  for (const q of QUICK) {
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.textContent = q;
-    b.addEventListener('click', () => { if (!send.disabled) ask(q); });
-    quick.appendChild(b);
-  }
+  const pick = box.querySelector('.d32-ai-quick select');
+  for (const q of QUICK) pick.add(new Option(q, q));
+  pick.addEventListener('change', () => {
+    const q = pick.value;
+    pick.value = '';
+    if (q && !send.disabled) ask(q);
+  });
 
   function bubble(role, text, program) {
     const div = document.createElement('div');

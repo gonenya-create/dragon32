@@ -654,11 +654,15 @@ a.d32-cart.is-more:focus-visible { outline: 3px solid var(--focus); outline-offs
 .d32-ai-note summary::-webkit-details-marker { display: none; }
 .d32-ai-note summary::after { content: ' ⓘ'; opacity: 0.7; }
 .prose .d32-ai-note p { margin: 6px 0 0; }
-.d32-ai-form { flex-direction: column; }
-.d32-ai-form button[type="submit"] { align-self: flex-start; min-width: 96px; }
+.d32-ai-form button[type="submit"] { align-self: stretch; min-width: 76px; }
 .d32-ai textarea { min-height: 76px; font-size: 16px; }
-.d32-ai-quick { display: flex; flex-wrap: wrap; gap: 6px; }
-.d32-ai .d32-ai-quick button { padding: 6px 10px; border-radius: 999px; font-size: 14px; font-weight: 600; }
+.d32-ai-quick { display: block; }
+.d32-ai-quick select { width: 100%; padding: 8px 10px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); font: 600 15px/1.3 var(--font-body); cursor: pointer; }
+.d32.is-theater .d32-ai-quick select, .d32.is-phone .d32-ai-quick select { background: #241e19; color: #efe6d2; border-color: #6b5d4d; }
+.d32-ai-quick select:focus-visible { outline: 3px solid var(--focus, #f2c94c); outline-offset: 2px; }
+/* תיבת השאלה והכפתור באותה שורה: עוד מקום לתשובות */
+.d32-ai-form { flex-direction: row; }
+.d32-ai textarea { min-height: 64px; }
 /* ביקור ראשון: כרטיס קטן בתחתית המסך */
 .d32-welcome { position: absolute; z-index: 7; left: 50%; bottom: calc(var(--tvw, 600px) * 0.07); transform: translateX(-60%); width: min(92%, 560px); box-sizing: border-box; padding: 14px 16px 12px; border: 1.5px solid #f2c94c; border-radius: 12px; background: rgba(20, 16, 12, 0.94); color: #efe6d2; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5); direction: rtl; text-align: center; }
 .d32-welcome-title { margin: 0 0 10px; font: 700 17px/1.4 var(--font-body); }
