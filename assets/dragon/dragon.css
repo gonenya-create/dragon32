@@ -684,3 +684,9 @@ a.d32-cart.is-more:focus-visible { outline: 3px solid var(--focus); outline-offs
 .d32-hello-title { font: 700 30px/1.2 var(--font-body); color: #f2c94c; }
 .d32-hello-text { margin-top: 10px !important; font-size: 17px; line-height: 1.6; color: #d9ccb6; }
 .d32-hello-go { margin-top: 14px !important; font-size: 15px; font-weight: 700; color: #8fe39a; }
+/* "אז והיום": הכפתורים מתחת לקוד, בצבעי הדף (גם בלילה) */
+.then-actions { margin: 8px 0 4px; }
+.then-actions .mag-typein { background: var(--ink); border-color: var(--ink); color: var(--paper); font-size: 15px; padding: 8px 14px; }
+.then-actions .mag-copy { border-color: var(--ink); color: var(--ink); font-size: 15px; padding: 8px 14px; }
+.then-actions .mag-copied { color: var(--ink); }
+.prose .d32-hof-empty { margin: 0; font: 500 15px/1.5 var(--font-body); letter-spacing: 0; color: #13d613; }   /* עברית בגופן רגיל, לא בגופן המחשב שמפזר אותיות */

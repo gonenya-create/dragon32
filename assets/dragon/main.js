@@ -54,6 +54,7 @@ function renderHof() {
       if (!table.length) {
         const p = document.createElement('p');
         p.className = 'd32-hof-empty';
+        p.className = 'd32-hof-empty';
         p.textContent = 'עוד אין שיאים. תהיו הראשונים.';
         card.appendChild(p);
       } else {
@@ -553,6 +554,15 @@ function mount(root) {
 
 document.querySelectorAll('.d32').forEach(mount);
 renderHof();
+
+// "אז והיום" במדריך: מתחת לכל קטע קוד, "הקלד במחשב" ו"העתקה" (גונן, 17.10)
+document.querySelectorAll('.room-then .d32-code').forEach((pre, i) => {
+  pre.id = pre.id || 'then-code-' + (i + 1);
+  const row = document.createElement('p');
+  row.className = 'mag-actions then-actions';
+  row.innerHTML = `<button type="button" class="mag-typein" data-typein="#${pre.id}" data-target="#dragon-room" data-run="1">⌨ הקלד במחשב</button> <button type="button" class="mag-copy" data-copy="#${pre.id}">📋 העתקה</button> <span class="mag-copied" role="status"></span>`;
+  pre.after(row);
+});
 
 // "תקליד בשבילי": כפתור ליד תוכנית מודפסת (data-typein="#מזהה-של-pre", data-target="#מזהה-של-מחשב")
 document.querySelectorAll('[data-typein]').forEach(b => {
