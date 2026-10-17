@@ -1030,6 +1030,15 @@ if (part('real machine lab')) {
     const r = await p.goto(base.replace(/\/$/, '') + path);
     await p.waitForTimeout(3500);
     check(`${path} loads with the drawn keyboard`, r.status() === 200 && (await p.locator('.kbd .k').count()) > 50 && errs.length === 0, errs.join(' | '));
+    check(`${path} has the tape shelf (7 tapes)`, (await p.locator('#tapes .tape').count()) === 7);
+    if (path === '/lab/1982/') {
+      await p.waitForFunction(() => window.d32Ready, null, { timeout: 20000 });
+      await p.click('#tapes .tape:has-text("GUESS")');
+      await p.waitForTimeout(1500);
+      check('a tape goes into the tape player and CLOAD is typed', await p.evaluate(() =>
+        document.querySelector('#tapes .tape.in small')?.textContent === 'GUESS' && /CLOAD/.test(document.getElementById('tape-status').textContent)
+        && FS.stat('/tape-guess.cas').size > 280) && errs.length === 0, errs.join(' | '));
+    }
     await p.close();
   }
 }

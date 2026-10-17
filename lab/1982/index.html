@@ -33,6 +33,14 @@ canvas { display: block; width: 100%; aspect-ratio: 4 / 3; height: auto; backgro
 .note a { color: var(--accent); }
 details.note { margin: 14px 0; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px; }
 details.note summary { cursor: pointer; color: var(--ink); }
+.shelf { margin-top: 16px; }
+.shelf h2 { font-size: 18px; margin: 0 0 4px; }
+.tapes { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-top: 8px; }
+.tape { border: 1.5px solid var(--line); border-radius: 10px; background: #1b1511; color: var(--ink); padding: 10px; font: inherit; cursor: pointer; text-align: start; display: flex; flex-direction: column; gap: 2px; }
+.tape small { color: var(--accent); font: 700 12px 'Courier New', monospace; }
+.tape.in { border-color: var(--accent); background: #3a2a10; }
+.tape:focus-visible, .k:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+#tape-status { min-height: 1.5em; color: var(--accent); }
 @media (max-width: 600px) { .k { height: 40px; font-size: 12px; } .k small { font-size: 9px; } .k.wide { font-size: 8px; letter-spacing: -0.3px; } }
 </style>
 </head>
@@ -46,9 +54,15 @@ details.note summary { cursor: pointer; color: var(--ink); }
   <p class="note">זה <strong>מחשב Dragon 32 מדומה ברמת השבב</strong> (המעבד 6809, הזיכרון והמסך), שמריץ <strong>BASIC שכתבנו מאפס</strong>, בלי ה-ROM המקורי. עדיין ניסוי: יש דברים שחסרים, וזה קצת יותר איטי מהמקור. לוחצים על המסך ומקלידים, או משתמשים במקלדת שלמטה.</p>
   <div class="tv"><canvas id="canvas" tabindex="0" oncontextmenu="event.preventDefault()" aria-label="מסך המחשב"></canvas></div>
   <div class="kbd" id="kbd" aria-label="מקלדת Dragon 32"></div>
+  <section class="shelf" aria-labelledby="shelf-title">
+    <h2 id="shelf-title">מדף הקלטות</h2>
+    <p class="note">אותן תוכניות BASIC כמו באפליקציה, הפעם על המחשב האמיתי. בוחרים קלטת, היא נכנסת לרשמקול, והמחשב מקליד <code dir="ltr">CLOAD</code>. כשמופיע <code dir="ltr">OK</code>, מקלידים <code dir="ltr">RUN</code>.</p>
+    <div class="tapes" id="tapes"></div>
+    <p class="note" id="tape-status" role="status" aria-live="polite"></p>
+  </section>
   <p class="note">נסו: <code dir="ltr">PRINT 2+3</code>, או תוכנית: <code dir="ltr">10 FOR I=1 TO 10:PRINT I*I:NEXT</code> ואז <code dir="ltr">RUN</code>. עצירה: <code dir="ltr">BREAK</code>.</p>
   <details class="note" open><summary><strong>מה כבר עובד, ומה עוד חסר</strong></summary>
-    <p><strong>עובד:</strong> מספרים ומחרוזות, משתנים ומערכים, <span dir="ltr">IF, FOR, GOTO, GOSUB, ON, DATA/READ, INPUT, DEF FN</span>, הפונקציות (<span dir="ltr">INT, RND, SIN, LEFT$, MID$...</span>), גרפיקה (<span dir="ltr">PMODE, LINE, CIRCLE, PAINT, DRAW, GET/PUT</span>), צליל (<span dir="ltr">SOUND, PLAY</span>), קלטת (<span dir="ltr">CSAVE/CLOAD</span>), <span dir="ltr">AUTO, DEL, STOP/CONT, TRON</span>.</p>
+    <p><strong>עובד:</strong> מספרים ומחרוזות, משתנים ומערכים, <span dir="ltr">IF, AND/OR/NOT, FOR, GOTO, GOSUB, ON, DATA/READ, INPUT, DEF FN</span>, הפונקציות (<span dir="ltr">INT, RND, SIN, LEFT$, MID$...</span>), גרפיקה (<span dir="ltr">PMODE, LINE, CIRCLE, PAINT, DRAW, GET/PUT</span>), צליל (<span dir="ltr">SOUND, PLAY</span>), קלטת (<span dir="ltr">CSAVE/CLOAD</span>), <span dir="ltr">AUTO, DEL, STOP/CONT, TRON</span>.</p>
     <p><strong>עוד חסר:</strong> <span dir="ltr">EDIT, RENUM, PRINT USING</span>. קלטות של תוכניות מקוריות מ-1982 לא נטענות (הן שמורות בפורמט אחר). המהירות עדיין קצת פחות מהמקור. המחסניות והעוזר של האפליקציה לא עובדים כאן.</p>
     <p><strong>מצאתם הבדל מה-Dragon שהכרתם?</strong> זה בדיוק מה שאנחנו מחפשים. אפשר <a href="https://github.com/gonenya-create/dragon32/issues/new?labels=real-machine&amp;title=%D7%94%D7%91%D7%93%D7%9C%20%D7%9E%D7%94%D7%9E%D7%A7%D7%95%D7%A8%3A%20&amp;body=%D7%9E%D7%94%20%D7%94%D7%A7%D7%9C%D7%93%D7%AA%D7%99%3A%0A%0A%0A%D7%9E%D7%94%20%D7%A7%D7%99%D7%91%D7%9C%D7%AA%D7%99%3A%0A%0A%0A%D7%9E%D7%94%20%D7%94%D7%99%D7%94%20%D7%A7%D7%95%D7%A8%D7%94%20%D7%91-Dragon%20%D7%94%D7%9E%D7%A7%D7%95%D7%A8%D7%99%3A%0A%0A%0A%D7%9E%D7%97%D7%A9%D7%91%20/%20%D7%98%D7%9C%D7%A4%D7%95%D7%9F%20%D7%95%D7%93%D7%A4%D7%93%D7%A4%D7%9F%3A%0A">לפתוח דיווח ב-GitHub</a> (טופס מוכן עם שלוש שאלות; צריך חשבון GitHub), או לכתוב לנו דרך <a href="https://www.gonenyarom.co.il/about/#contact">יצירת קשר</a>: מה הקלדתם, מה קיבלתם, ומה היה קורה במקור.</p>
   </details>
@@ -63,6 +77,7 @@ var Module = {
   // ה-ROM שלנו במקום ה-BASIC המקורי; kbd-translate: מה שמקלידים במחשב הוא מה שמופיע
   arguments: ['-machine', 'dragon32', '-extbas', '/d32.rom', '-kbd-translate', '-kbd-lang', 'us', '-no-vo-colour-killer'],
   print: () => {}, printErr: () => {},
+  onRuntimeInitialized: () => { window.d32Ready = true; },
   preRun: [function () {
     addRunDependency('rom');
     fetch('/lab/1982/d32.rom').then(r => r.arrayBuffer()).then(b => { FS.writeFile('/d32.rom', new Uint8Array(b)); removeRunDependency('rom'); });
@@ -105,6 +120,14 @@ function press(label, alt) {
   setTimeout(() => { fire('keyup', key, code); if (needShift) fire('keyup', 'Shift', 'ShiftLeft'); }, 70);
   if (shift && label.length === 1) { shift = false; kbd.querySelectorAll('[data-k="SHIFT"]').forEach(b => b.classList.remove('on')); }
 }
+// מקליד מחרוזת מקש אחרי מקש (לכפתורי הקלטות). \n = ENTER
+window.d32Type = async function (text) {
+  canvas.focus({ preventScroll: true });
+  for (const c of text) {
+    press(c === '\n' ? 'ENTER' : c);
+    await new Promise(r => setTimeout(r, 160));
+  }
+};
 for (const row of ROWS) {
   const r = document.createElement('div');
   r.className = 'row';
@@ -124,6 +147,7 @@ for (const row of ROWS) {
   kbd.appendChild(r);
 }
 </script>
+<script src="/lab/1982/shelf.js"></script>
 <script src="/lab/1982/xroar.js"></script>
 </body>
 </html>

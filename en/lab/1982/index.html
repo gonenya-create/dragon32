@@ -33,6 +33,14 @@ canvas { display: block; width: 100%; aspect-ratio: 4 / 3; height: auto; backgro
 .note a { color: var(--accent); }
 details.note { margin: 14px 0; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px; }
 details.note summary { cursor: pointer; color: var(--ink); }
+.shelf { margin-top: 16px; }
+.shelf h2 { font-size: 18px; margin: 0 0 4px; }
+.tapes { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-top: 8px; }
+.tape { border: 1.5px solid var(--line); border-radius: 10px; background: #1b1511; color: var(--ink); padding: 10px; font: inherit; cursor: pointer; text-align: start; display: flex; flex-direction: column; gap: 2px; }
+.tape small { color: var(--accent); font: 700 12px 'Courier New', monospace; }
+.tape.in { border-color: var(--accent); background: #3a2a10; }
+.tape:focus-visible, .k:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+#tape-status { min-height: 1.5em; color: var(--accent); }
 @media (max-width: 600px) { .k { height: 40px; font-size: 12px; } .k small { font-size: 9px; } .k.wide { font-size: 8px; letter-spacing: -0.3px; } }
 </style>
 </head>
@@ -46,9 +54,15 @@ details.note summary { cursor: pointer; color: var(--ink); }
   <p class="note">This is a <strong>Dragon 32 emulated at chip level</strong> (the 6809 CPU, memory and video chip), running <strong>a BASIC we wrote from scratch</strong>, without the original ROM. It is still a trial: some things are missing, and it is a little slower than the original. Click the screen and type, or use the keyboard below.</p>
   <div class="tv"><canvas id="canvas" tabindex="0" oncontextmenu="event.preventDefault()" aria-label="Computer screen"></canvas></div>
   <div class="kbd" id="kbd" aria-label="Dragon 32 keyboard"></div>
+  <section class="shelf" aria-labelledby="shelf-title">
+    <h2 id="shelf-title">Tape shelf</h2>
+    <p class="note">The same BASIC programs as in the app, this time on the real machine. Pick a tape: it goes into the tape player and the computer types <code>CLOAD</code>. When <code>OK</code> appears, type <code>RUN</code>.</p>
+    <div class="tapes" id="tapes"></div>
+    <p class="note" id="tape-status" role="status" aria-live="polite"></p>
+  </section>
   <p class="note">Try: <code>PRINT 2+3</code>, or a program: <code>10 FOR I=1 TO 10:PRINT I*I:NEXT</code> then <code>RUN</code>. To stop: <code>BREAK</code> (Esc).</p>
   <details class="note" open><summary><strong>What works, and what's still missing</strong></summary>
-    <p><strong>Works:</strong> numbers and strings, variables and arrays, IF, FOR, GOTO, GOSUB, ON, DATA/READ, INPUT, DEF FN, the functions (INT, RND, SIN, LEFT$, MID$...), graphics (PMODE, LINE, CIRCLE, PAINT, DRAW, GET/PUT), sound (SOUND, PLAY), cassette (CSAVE/CLOAD), AUTO, DEL, STOP/CONT, TRON.</p>
+    <p><strong>Works:</strong> numbers and strings, variables and arrays, IF, AND/OR/NOT, FOR, GOTO, GOSUB, ON, DATA/READ, INPUT, DEF FN, the functions (INT, RND, SIN, LEFT$, MID$...), graphics (PMODE, LINE, CIRCLE, PAINT, DRAW, GET/PUT), sound (SOUND, PLAY), cassette (CSAVE/CLOAD), AUTO, DEL, STOP/CONT, TRON.</p>
     <p><strong>Still missing:</strong> EDIT, RENUM, PRINT USING. Original 1982 program tapes don't load yet (they are stored in a different, tokenised format). Speed is still a little below the original. The app's cartridges and helper don't work here.</p>
     <p><strong>Found a difference from the Dragon you remember?</strong> That is exactly what we're looking for. <a href="https://github.com/gonenya-create/dragon32/issues/new?labels=real-machine&amp;title=Difference%20from%20the%20original%3A%20&amp;body=What%20I%20typed%3A%0A%0A%0AWhat%20I%20got%3A%0A%0A%0AWhat%20the%20original%20Dragon%20would%20do%3A%0A%0A%0AComputer%20/%20phone%20and%20browser%3A%0A">Open a report on GitHub</a> (a ready form with three questions; a GitHub account is needed), or write via the <a href="https://www.gonenyarom.co.il/about/#contact">contact page</a> (in Hebrew; English is fine): what you typed, what you got, and what the original would have done.</p>
   </details>
@@ -63,6 +77,7 @@ var Module = {
   // ה-ROM שלנו במקום ה-BASIC המקורי; kbd-translate: מה שמקלידים במחשב הוא מה שמופיע
   arguments: ['-machine', 'dragon32', '-extbas', '/d32.rom', '-kbd-translate', '-kbd-lang', 'us', '-no-vo-colour-killer'],
   print: () => {}, printErr: () => {},
+  onRuntimeInitialized: () => { window.d32Ready = true; },
   preRun: [function () {
     addRunDependency('rom');
     fetch('/lab/1982/d32.rom').then(r => r.arrayBuffer()).then(b => { FS.writeFile('/d32.rom', new Uint8Array(b)); removeRunDependency('rom'); });
@@ -105,6 +120,14 @@ function press(label, alt) {
   setTimeout(() => { fire('keyup', key, code); if (needShift) fire('keyup', 'Shift', 'ShiftLeft'); }, 70);
   if (shift && label.length === 1) { shift = false; kbd.querySelectorAll('[data-k="SHIFT"]').forEach(b => b.classList.remove('on')); }
 }
+// מקליד מחרוזת מקש אחרי מקש (לכפתורי הקלטות). \n = ENTER
+window.d32Type = async function (text) {
+  canvas.focus({ preventScroll: true });
+  for (const c of text) {
+    press(c === '\n' ? 'ENTER' : c);
+    await new Promise(r => setTimeout(r, 160));
+  }
+};
 for (const row of ROWS) {
   const r = document.createElement('div');
   r.className = 'row';
@@ -124,6 +147,7 @@ for (const row of ROWS) {
   kbd.appendChild(r);
 }
 </script>
+<script src="/lab/1982/shelf.js"></script>
 <script src="/lab/1982/xroar.js"></script>
 </body>
 </html>

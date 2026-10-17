@@ -100,7 +100,13 @@ const CASES = [
   ['DEF FN in direct mode = ?ID', ['DEF FNA(X)=X'], /\?ID ERROR\nOK/],
   ['CLS then more commands on the same line', ['CLS:SET(5,5,3):PRINT POINT(5,5)'], /^ 3\nOK/],
   ['PCLS without a colour, then ":"', ['PMODE 3,1:PCLS:PRINT 1'], /\n 1\nOK/],
-  ['PPOINT in an expression', ['PMODE 3,1:PCLS:PSET(10,10,4):PRINT PPOINT(10,10);PPOINT(11,11)'], /\n 4  1\nOK/]
+  ['PPOINT in an expression', ['PMODE 3,1:PCLS:PSET(10,10,4):PRINT PPOINT(10,10);PPOINT(11,11)'], /\n 4  1\nOK/],
+  ['AND OR NOT on numbers', ['PRINT 12 AND 10;5 OR 2;NOT 0;NOT -1;-1 AND 7'], /\n 8  7 -1  0  7\nOK/],
+  ['AND OR with comparisons', ['X=3:Y=4:PRINT X<5 AND Y>3;X=1 OR Y=4;X=1 AND Y=4'], /\n-1 -1  0\nOK/],
+  ['NOT binds looser than =', ['X=3:IF NOT X=3 THEN PRINT 1:ELSE PRINT 2', 'IF NOT X=2 THEN PRINT 5'], /\n 5\nOK/],
+  ['AND OR with strings compared', ['A$="R":PRINT A$<>"R" AND A$<>"P";A$="R" OR A$="P"'], /\n 0 -1\nOK/],
+  ['AND out of range', ['PRINT 40000 AND 1'], /\?FC ERROR\nOK/],
+  ['AND on a string', ['PRINT "A" AND 1'], /\?TM ERROR\nOK/]
 ];
 let fail = 0;
 for (const [name, lines, re, timeout] of CASES) {
