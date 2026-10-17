@@ -115,6 +115,9 @@ statement	lbsr	skipsp
 		lbra	st_print
 1		cmpa	#''
 		lbeq	st_rem
+		; קיצור דרך להשמה (A=..., AB$=...): שם ואחריו '=' (בלי סוגריים). חוסך עשרות השוואות של מילים שמורות
+		lbsr	isassign
+		lbeq	do_let
 		leau	kwtab,pcr
 st_try		tst	,u
 		beq	st_let		; לא מילה שמורה: אולי השמה
@@ -133,6 +136,39 @@ st_found	tst	,u+
 		leau	kwbase,pcr
 		jmp	d,u		; כתובת יחסית לטבלה
 st_none		rts
+
+; isassign: Z=1 אם הפקודה ב-X היא השמה פשוטה: אותיות/ספרות, אולי $, רווחים, ואז '='. TIMER= לא (זו פקודה)
+isassign	pshs	x
+		lda	,x
+		cmpa	#'A
+		blo	9F
+		cmpa	#'Z
+		bhi	9F
+		leau	kw_timer,pcr
+		lbsr	match
+		beq	9F
+1		lda	,x+
+		cmpa	#'0
+		blo	2F
+		cmpa	#'9
+		bls	1B
+		cmpa	#'A
+		blo	2F
+		cmpa	#'Z
+		bls	1B
+2		cmpa	#'$
+		bne	3F
+		lda	,x+
+3		cmpa	#$20
+		bne	4F
+		lda	,x+
+		bra	3B
+4		cmpa	#'=
+		puls	x,pc		; Z מההשוואה
+9		andcc	#$fb
+		puls	x,pc
+kw_timer	fcc	"TIMER"
+		fcb	0
 st_let		; גרפיקה? (gfx.s)
 		lbsr	gfx_dispatch
 		beq	st_none

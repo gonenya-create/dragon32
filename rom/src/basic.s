@@ -138,7 +138,10 @@ factor		clr	VALTYP
 		blo	6F
 		cmpa	#'Z
 		bhi	6F
-		; קודם פונקציית מחרוזת (strings.s), אחר כך פונקציה מספרית (funcs.s), ואם לא, משתנה
+		; קודם פונקציית מחרוזת (strings.s), אחר כך פונקציה מספרית (funcs.s), ואם לא, משתנה.
+		; קיצור: שם שאחריו אין '(' או '$' (ואינו TIMER) הוא בטוח משתנה, וחוסכים עשרות השוואות
+		lbsr	fnlike
+		bne	7F
 		lbsr	sfn_dispatch
 		beq	8F
 		lbsr	fn_dispatch
@@ -166,6 +169,25 @@ factor		clr	VALTYP
 		cmpa	#'9
 		lbhi	err_sn
 5		lbra	fin
+
+; fnlike: Z=1 אם השם ב-X יכול להיות פונקציה: אחרי האותיות/ספרות בא '(' או '$', או שזה TIMER
+fnlike		pshs	x
+		leau	kw_timer,pcr
+		lbsr	match
+		beq	3F
+1		lda	,x+
+		cmpa	#'0
+		blo	2F
+		cmpa	#'9
+		bls	1B
+		cmpa	#'A
+		blo	2F
+		cmpa	#'Z
+		bls	1B
+2		cmpa	#'(
+		beq	3F
+		cmpa	#'$
+3		puls	x,pc
 
 ; pushfac: שומרים את FAC (6 בתים) במחסנית, מתחת לכתובת החזרה
 pushfac		puls	y		; כתובת החזרה
