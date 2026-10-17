@@ -2,7 +2,9 @@
 // בדיקות ה-ROM: לכל מקרה מקלידים שורות ובודקים שהמסך מכיל את מה שצריך.
 // הרצה: rom/build.sh && node rom/tools/test.mjs
 import { execFileSync } from 'node:child_process';
-const run = (lines, secs = 0.4) => execFileSync('node', [new URL('./screen.mjs', import.meta.url).pathname, 'rom/build/d32.rom', String(secs), lines.join('|')], { encoding: 'utf8' });
+// ניסיון שני אם XRoar לא ענה (קורה לפעמים כשהמחשב עמוס)
+const once = (lines, secs) => execFileSync('node', [new URL('./screen.mjs', import.meta.url).pathname, 'rom/build/d32.rom', String(secs), lines.join('|')], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+const run = (lines, secs = 0.4) => { try { return once(lines, secs); } catch { return once(lines, secs); } };
 const CASES = [
   ['boot', [], /DRAGON 1982 BASIC 1\.0\n\(C\) 2026 GONEN YAROM\n\nOK/],
   ['PRINT 2+3', ['PRINT 2+3'], /\n 5\nOK/],
