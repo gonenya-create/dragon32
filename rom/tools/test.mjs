@@ -78,7 +78,11 @@ const CASES = [
   ['INPUT string and numbers, ?? for missing values', ['10 INPUT "NAME";N$', '20 INPUT A,B', '30 PRINT "HI ";N$;A+B', 'RUN', 'GONEN', '3', '4'], /NAME\? GONEN\n\? 3\n\?\? 4\nHI GONEN 7\nOK/],
   ['INPUT ?REDO on a word for a number', ['10 INPUT A', '20 PRINT A*2', 'RUN', 'X', '21'], /\?REDO\n\? 21\n 42\nOK/],
   ['INPUT outside a program = ?ID', ['INPUT A'], /\?ID ERROR\nOK/],
-  ['string memory is reused (300 joins)', ['10 A$="":FOR I=1 TO 300:A$=A$+"X":IF LEN(A$)>200 THEN A$=""', '20 NEXT:PRINT "DONE";LEN(A$)', 'RUN'], /DONE 99\nOK/, 30]
+  ['string memory is reused (300 joins)', ['10 A$="":FOR I=1 TO 300:A$=A$+"X":IF LEN(A$)>200 THEN A$=""', '20 NEXT:PRINT "DONE";LEN(A$)', 'RUN'], /DONE 99\nOK/, 30],
+  // שלושת המקרים שקודקס מצא (תוקנו ב-interp.s)
+  ['RUN twice re-reads DATA from the start', ['10 DATA 5', '20 READ A:PRINT A', 'RUN', 'RUN'], /RUN\n 5\nOK\nRUN\n 5\nOK/],
+  ['array target survives a new scalar on the right side', ['DIM B(2):B(0)=Z+7:PRINT B(0);Z'], /\n 7  0\nOK/],
+  ['a FOR inside a GOSUB with the same variable keeps the return', ['10 FOR I=1 TO 2:GOSUB 100:NEXT:PRINT "END":END', '100 FOR I=1 TO 2:NEXT:RETURN', 'RUN'], /RUN\nEND\nOK/]
 ];
 let fail = 0;
 for (const [name, lines, re, timeout] of CASES) {

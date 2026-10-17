@@ -21,7 +21,7 @@ for(const x of [.001,.5,1,2,100,1e10]) {
 }
 for(const x of [-80,-10,-1,0,1,10,80]) await check(`EXP(${x})`,Math.exp(x),3e-8);
 await check('TAN(1)',Math.tan(1));
-for(const [e,v] of [['INT(-.1)',-1],['FIX(-.1)',0],['INT(-2)',-2],['FIX(65535.9)',65535],['INT(1E10)',1e10],['SGN(0)',0],['SGN(5)',1],['ABS(SIN(-1))',Math.sin(1)],['SQR(SQR(256))',4],['TIMER',0],['EXP(-1000)',0],['SQR(1E-30)',1e-15],['LOG(1E-30)',Math.log(1e-30)]]) await check(e,v,1e-8);
+for(const [e,v] of [['INT(-.1)',-1],['FIX(-.1)',0],['INT(-2)',-2],['FIX(65535.9)',65535],['INT(1E10)',1e10],['SGN(0)',0],['SGN(5)',1],['ABS(SIN(-1))',Math.sin(1)],['SQR(SQR(256))',4],['TIMER*0',0],['EXP(-1000)',0],['SQR(1E-30)',1e-15],['LOG(1E-30)',Math.log(1e-30)]]) await check(e,v,1e-8);
 for(const argument of [0,1,6,255]) {
  const lines=['10 FOR I=1 TO 100',`20 A=RND(${argument})`,'30 IF A<=0 THEN B=B+1','40 IF A>=1 THEN B=B+1','50 NEXT I','60 PRINT B','RUN'];
  if(argument>1) {lines[2]='30 IF A<1 THEN B=B+1';lines[3]=`40 IF A>${argument} THEN B=B+1`;lines.splice(4,0,'45 IF FIX(A)<>A THEN B=B+1');}

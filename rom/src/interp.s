@@ -31,6 +31,7 @@ clrvars		ldd	PROGEND
 		std	ARYEND
 		ldd	#FORBASE
 		std	FORSP
+		lbsr	st2_reset	; READ מתחיל שוב מה-DATA הראשון
 		lbra	str_reset
 
 ; ---------- ביצוע שורה מהמקלדת ----------
@@ -212,19 +213,31 @@ st_stop		leau	m_break,pcr
 
 do_letkw	lbsr	skipsp
 do_let		lbsr	getvar		; U = כתובת הערך
-		lda	VNAME+1
-		pshs	a,u		; [s] = סוג המשתנה (ביט 7 = מחרוזת)
+		; יעד במערך: אם צד ימין יוצר משתנה חדש, המערכים זזים. שומרים את VARTOP ומתקנים אחר כך
+		ldy	#0
+		cmpu	VARTOP
+		blo	2F
+		ldy	VARTOP
+2		lda	VNAME+1
+		pshs	a,y,u		; [s] = סוג המשתנה (ביט 7 = מחרוזת), [s+1] = VARTOP הישן או 0
 		lda	#'=
 		lbsr	expect
 		lbsr	rexpr
-		tst	,s
+		ldy	1,s
+		beq	3F
+		ldd	VARTOP
+		subd	1,s		; כמה זזו
+		ldu	3,s
+		leau	d,u
+		stu	3,s
+3		tst	,s
 		bmi	1F
 		lbsr	neednum
-		puls	a,u
+		puls	a,y,u
 		lbra	stfac		; שומרים את FAC במשתנה
 1		lbsr	needstr
 		lbsr	str_save	; עותק בערימה (המקור יכול להיות בטקסט או זמני)
-		puls	a,u
+		puls	a,y,u
 		lda	SLEN
 		sta	,u
 		ldd	SPTR
@@ -282,15 +295,16 @@ st_for		lbsr	skipsp
 		ldu	,s
 		lbsr	stfac
 		; מוחקים לולאה קודמת עם אותו שם (וכל מה שמעליה)
-		ldy	#FORBASE
-1		cmpy	FORSP
-		bhs	2F
+		; מחפשים מלמעלה למטה, ועוצרים ברשומת GOSUB (שם 0000) כדי לא למחוק אותה
+		ldy	FORSP
+1		cmpy	#FORBASE
+		bls	2F
+		leay	-FORLEN,y
 		ldd	,y
+		beq	2F
 		cmpd	FORNAME
-		beq	3F
-		leay	FORLEN,y
-		bra	1B
-3		sty	FORSP
+		bne	1B
+		sty	FORSP
 2		ldy	FORSP
 		cmpy	#FORBASE+FORLEN*16
 		lbhs	err_om
