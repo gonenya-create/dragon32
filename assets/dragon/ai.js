@@ -33,7 +33,8 @@ export function createAI({ root, machine, input, powerOn }) {
       <button type="submit">שליחה</button>
     </form>
     <label class="d32-ai-quick"><span class="visually-hidden">שאלה מוכנה</span><select><option value="">💬 שאלות מוכנות…</option></select></label>
-    <div class="d32-ai-log" aria-live="polite"></div>`;
+    <div class="d32-ai-log" aria-live="polite"></div>
+    <p class="d32-legal"><a href="/accessibility/">נגישות</a> · <a href="/privacy/">פרטיות</a></p>`;
   root.querySelector('.d32-helper').after(box);
   const log = box.querySelector('.d32-ai-log');
   const form = box.querySelector('form');
