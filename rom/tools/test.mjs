@@ -82,7 +82,10 @@ const CASES = [
   // שלושת המקרים שקודקס מצא (תוקנו ב-interp.s)
   ['RUN twice re-reads DATA from the start', ['10 DATA 5', '20 READ A:PRINT A', 'RUN', 'RUN'], /RUN\n 5\nOK\nRUN\n 5\nOK/],
   ['array target survives a new scalar on the right side', ['DIM B(2):B(0)=Z+7:PRINT B(0);Z'], /\n 7  0\nOK/],
-  ['a FOR inside a GOSUB with the same variable keeps the return', ['10 FOR I=1 TO 2:GOSUB 100:NEXT:PRINT "END":END', '100 FOR I=1 TO 2:NEXT:RETURN', 'RUN'], /RUN\nEND\nOK/]
+  ['a FOR inside a GOSUB with the same variable keeps the return', ['10 FOR I=1 TO 2:GOSUB 100:NEXT:PRINT "END":END', '100 FOR I=1 TO 2:NEXT:RETURN', 'RUN'], /RUN\nEND\nOK/],
+  ['string arrays', ['DIM N$(3):N$(1)="DRAGON":N$(2)=N$(1)+" 32":PRINT N$(2);LEN(N$(2))'], /\nDRAGON 32 9\nOK/],
+  ['READ strings (plain and quoted) and numbers', ['10 DATA HELLO,"A,B",7', '20 READ A$,B$,C:PRINT A$;"/";B$;"/";C', 'RUN'], /RUN\nHELLO\/A,B\/ 7\nOK/],
+  ['garbage collection keeps strings in arrays', ['10 DIM A$(5):FOR I=0 TO 5:A$(I)=STRING$(5,65+I):NEXT', '20 FOR J=1 TO 400:T$=STRING$(50,"X"):NEXT', '30 FOR I=0 TO 5:PRINT A$(I);:NEXT', 'RUN'], /RUN\nAAAAABBBBBCCCCCDDDDDEEEEEFFFFF\nOK/, 40]
 ];
 let fail = 0;
 for (const [name, lines, re, timeout] of CASES) {

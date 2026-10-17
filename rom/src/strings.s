@@ -64,39 +64,53 @@ str_gc		pshs	d,x,y,u
 		ldd	#STRTOP
 		std	SPTR2		; התקרה החדשה
 		ldu	#STRTOP		; הגבול: מחפשים מחרוזות מתחתיו
-gc_pass		ldx	#0		; הרשומה עם הכתובת הגבוהה ביותר מתחת לגבול
+gc_pass		ldx	#0		; התיאור (5 בתים: אורך, כתובת) עם הכתובת הגבוהה ביותר מתחת לגבול
+		; משתנים רגילים: התיאור ב-2 בכל רשומה
 		ldy	PROGEND
 1		cmpy	VARTOP
-		bhs	3F
+		bhs	12F
 		tst	1,y
 		bpl	2F		; לא מחרוזת
-		tst	2,y
-		beq	2F		; ריקה
-		ldd	3,y		; הכתובת
-		cmpd	STRFREE
-		blo	2F		; לא בערימה (למשל בטקסט התוכנית)
-		pshs	u
-		cmpd	,s++
-		bhs	2F		; כבר טופלה
-		cmpx	#0
-		beq	4F
-		cmpd	3,x
-		bls	2F
-4		tfr	y,x
+		leay	2,y
+		lbsr	gc_cand
+		leay	-2,y
 2		leay	7,y
 		bra	1B
+12		; מערכי מחרוזות: [שם 2][אורך הרשומה 2][ממדים 1][גדלים 2 או 4][איברים של 5 בתים]
+		ldy	VARTOP
+13		cmpy	ARYEND
+		bhs	3F
+		tfr	y,d
+		addd	2,y
+		pshs	d		; סוף המערך
+		tst	1,y
+		bpl	15F
+		pshs	y
+		leay	7,y
+		lda	4-7,y
+		cmpa	#2
+		bne	14F
+		leay	2,y
+14		cmpy	2,s
+		bhs	16F
+		lbsr	gc_cand
+		leay	5,y
+		bra	14B
+16		puls	y
+15		puls	y		; למערך הבא
+		bra	13B
 3		cmpx	#0
 		beq	gc_done
 		; מזיזים את המחרוזת של הרשומה X אל מתחת לתקרה החדשה. היעד תמיד מעל המקור, אז מעתיקים מהסוף
-		ldu	3,x		; המקור
+		ldu	1,x		; המקור
 		pshs	u		; הוא גם הגבול של הסיבוב הבא
 		clra
-		ldb	2,x
+		ldb	,x
 		std	GCLEN
 		ldd	SPTR2
 		subd	GCLEN
 		std	SPTR2		; היעד
-		std	3,x
+		std	1,x
 		addd	GCLEN
 		tfr	d,y		; סוף היעד
 		tfr	u,d
@@ -114,6 +128,22 @@ gc_pass		ldx	#0		; הרשומה עם הכתובת הגבוהה ביותר מתח
 gc_done		ldd	SPTR2
 		std	STRFREE
 		puls	d,x,y,u,pc
+
+; gc_cand: התיאור ב-Y מועמד? (בערימה, מתחת לגבול U, ומעל הטוב ביותר עד עכשיו ב-X)
+gc_cand		tst	,y
+		beq	1F		; ריקה
+		ldd	1,y
+		cmpd	STRFREE
+		blo	1F		; לא בערימה
+		pshs	u
+		cmpd	,s++
+		bhs	1F		; כבר טופלה
+		cmpx	#0
+		beq	2F
+		cmpd	1,x
+		bls	1F
+2		tfr	y,x
+1		rts
 
 ; ---------- ערכים ----------
 ; str_lit: X על '"'. SLEN/SPTR = התוכן (מצביע לטקסט עצמו), X אחרי המרכאה הסוגרת

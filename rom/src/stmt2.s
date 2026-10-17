@@ -16,6 +16,7 @@ DATAL equ $03e2
 DATAIN equ $03e4
 DATAEND equ $03e5
 DATAMAG equ $03e7
+S2WANT equ $03e9             ; READ: 0 = מספר, $80 = מחרוזת
 
 ; Z=1 אם טופל; אחרת X נשמר ו-Z=0.
 st2_dispatch pshs x
@@ -183,11 +184,22 @@ s2read ldd DATAMAG
         lbeq 2F
 1       lbsr st2_reset
 2       lbsr getvar
+        lda VNAME+1             ; משתנה מחרוזת? אז קוראים פריט כמחרוזת (Claude, 17.10)
+        anda #$80
+        sta S2WANT
         pshs x,u
         lbsr s2datum
         puls x,u
-        lbsr stfac
-        lbsr skipsp
+        tst S2WANT
+        lbeq 5F
+        lbsr str_save
+        lda SLEN
+        sta ,u
+        ldd SPTR
+        std 1,u
+        lbra 6F
+5       lbsr stfac
+6       lbsr skipsp
         cmpa #',
         lbne 3F
         leax 1,x
@@ -235,6 +247,8 @@ sditem lbsr skipsp
         lbeq sdend
         cmpa #':
         lbeq sdend
+        tst S2WANT
+        lbne sdstr
         cmpa #'"
         lbeq s2tm
         clrb
@@ -261,6 +275,7 @@ sditem lbsr skipsp
         tst FACEXP
         lbeq 4F
         com FACSGN
+sdtail
 4       lbsr skipsp
         cmpa #',
         lbeq sdcomma
@@ -281,6 +296,26 @@ sdstmtend lda ,x
         lbeq sdnext
         leax 1,x
         lbra sdstmt
+; פריט מחרוזת: במירכאות, או עד פסיק / נקודתיים / סוף השורה
+sdstr  cmpa #'"
+        lbne 1F
+        lbsr str_lit
+        lbra sdtail
+1       stx SPTR
+        clrb
+2       lda ,x
+        lbeq 3F
+        cmpa #',
+        lbeq 3F
+        cmpa #':
+        lbeq 3F
+        leax 1,x
+        incb
+        lbra 2B
+3       stb SLEN
+        lda #$ff
+        sta VALTYP
+        lbra sdtail
 s2kwdata fcc "DATA"
         fcb 0
 s2kwrem fcc "REM"
@@ -310,7 +345,14 @@ s2dim  lbsr skipsp
 4       leax 1,x
         lbra 1B
 3       puls d
-        std VNAME
+        pshs a                  ; DIM A$(n): מערך מחרוזות (ביט 7 בשם, כמו ב-getvar)
+        lda ,x
+        cmpa #'$
+        puls a
+        lbne 6F
+        leax 1,x
+        orb #$80
+6       std VNAME
         lbsr skipsp
         lda #1
         lbsr arparse
