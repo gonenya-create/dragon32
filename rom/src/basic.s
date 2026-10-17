@@ -52,21 +52,31 @@ m_div0		fcc	"?/0 ERROR"
 ; ---------- ביטויים ----------
 ; push/pop של FAC למחסנית: 6 בתים
 expr		bsr	term
-ex_loop		bsr	skipsp
+ex_loop		lbsr	skipsp
 		cmpa	#'+
 		beq	ex_add
 		cmpa	#'-
 		beq	ex_sub
 		rts
 ex_add		leax	1,x
+		tst	VALTYP
+		bne	ex_cat		; מחרוזת + מחרוזת: חיבור מחרוזות
 		lbsr	pushfac
 		bsr	term
+		lbsr	neednum
 		lbsr	poparg
 		lbsr	fadd
 		bra	ex_loop
+ex_cat		lbsr	pushstr
+		bsr	term
+		lbsr	needstr
+		lbsr	str_concat
+		bra	ex_loop
 ex_sub		leax	1,x
+		lbsr	neednum
 		lbsr	pushfac
 		bsr	term
+		lbsr	neednum
 		lbsr	poparg
 		lbsr	fsub
 		bra	ex_loop
@@ -79,23 +89,29 @@ te_loop		lbsr	skipsp
 		beq	te_div
 		rts
 te_mul		leax	1,x
-		bsr	pushfac
+		lbsr	neednum
+		lbsr	pushfac
 		bsr	factor
-		bsr	poparg
+		lbsr	neednum
+		lbsr	poparg
 		lbsr	fmul
 		bra	te_loop
 te_div		leax	1,x
-		bsr	pushfac
+		lbsr	neednum
+		lbsr	pushfac
 		bsr	factor
-		bsr	poparg
+		lbsr	neednum
+		lbsr	poparg
 		lbsr	fdiv
 		bra	te_loop
 
-factor		lbsr	skipsp
+; factor: מספר, משתנה, מחרוזת במרכאות, פונקציה, סוגריים, או מינוס. VALTYP אומר אם התוצאה מחרוזת
+factor		clr	VALTYP
+		lbsr	skipsp
 		cmpa	#'(
 		bne	1F
 		leax	1,x
-		bsr	expr
+		lbsr	rexpr
 		lbsr	skipsp
 		cmpa	#')
 		lbne	err_sn
@@ -105,26 +121,42 @@ factor		lbsr	skipsp
 		bne	2F
 		leax	1,x
 		bsr	factor
+		lbsr	neednum
 		tst	FACEXP
 		beq	3F
 		com	FACSGN
 3		rts
 2		cmpa	#'+
-		bne	4F
+		bne	9F
 		leax	1,x
 		bra	factor
+9		cmpa	#'"
+		lbeq	str_lit
 4		cmpa	#'A
 		blo	6F
 		cmpa	#'Z
 		bhi	6F
-		; קודם פונקציה (funcs.s: INT, RND...), ואם לא, משתנה
-		lbsr	fn_dispatch
+		; קודם פונקציית מחרוזת (strings.s), אחר כך פונקציה מספרית (funcs.s), ואם לא, משתנה
+		lbsr	sfn_dispatch
 		beq	8F
-		pshs	y
-		lbsr	getvar		; משתנה: הערך שלו
-		lbsr	ldfac
-		puls	y,pc
+		lbsr	fn_dispatch
+		bne	7F
+		clr	VALTYP
 8		rts
+7		pshs	y
+		lbsr	getvar		; משתנה: הערך שלו
+		tst	VNAME+1
+		bmi	10F
+		lbsr	ldfac
+		clr	VALTYP
+		puls	y,pc
+10		lda	,u		; משתנה מחרוזת: האורך והכתובת
+		sta	SLEN
+		ldd	1,u
+		std	SPTR
+		lda	#$ff
+		sta	VALTYP
+		puls	y,pc
 6		cmpa	#'.
 		beq	5F
 		cmpa	#'0
@@ -164,10 +196,12 @@ pr_item		cmpa	#';
 		beq	pr_semi
 		cmpa	#',
 		beq	pr_comma
-		cmpa	#'"
-		beq	pr_str
 		lbsr	rexpr
-		lbsr	fout		; U = הטקסט
+		tst	VALTYP
+		beq	5F
+		lbsr	prtstr		; מחרוזת: כמו שהיא, בלי רווחים
+		bra	pr_next
+5		lbsr	fout		; U = הטקסט
 		tfr	u,y
 1		lda	,y+
 		beq	2F
@@ -176,14 +210,6 @@ pr_item		cmpa	#';
 2		lda	#$20
 		lbsr	putc
 		bra	pr_next
-pr_str		leax	1,x
-3		lda	,x
-		beq	pr_next
-		leax	1,x
-		cmpa	#'"
-		beq	pr_next
-		lbsr	putc
-		bra	3B
 pr_semi		leax	1,x
 		lbsr	skipsp
 		beq	pr_done
@@ -232,7 +258,8 @@ kw_print	fcc	"PRINT"
 
 ; ---------- עזרים לפקודות ----------
 ; getint: מחשב ביטוי ומחזיר מספר שלם ב-D (0 עד 65535, החלק השבור נחתך). אחרת ?FC ERROR
-getint		lbsr	expr
+getint		lbsr	rexpr
+		lbsr	neednum
 		tst	FACSGN
 		lbmi	err_fc
 		lda	FACEXP

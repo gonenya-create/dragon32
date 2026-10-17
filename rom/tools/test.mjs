@@ -32,12 +32,23 @@ const CASES = [
   ['invalid page', ['PMODE 4,0'], /\?FC ERROR\nOK/],
   ['invalid coordinate', ['PSET(0,192)'], /\?FC ERROR\nOK/],
   ['invalid colour', ['PMODE 1','PCLS 0'], /\?FC ERROR\nOK/],
-  ['graphics syntax', ['LINE(0,0)-(10,10),X'], /\?SN ERROR\nOK/]
+  ['graphics syntax', ['LINE(0,0)-(10,10),X'], /\?SN ERROR\nOK/],
+  // מחרוזות (strings.s)
+  ['string variables and +', ['A$="AB":B$=A$+"CD"+A$:PRINT B$;LEN(B$)'], /\nABCDAB 6\nOK/],
+  ['LEFT$ RIGHT$ MID$', ['B$="DRAGON 32":PRINT LEFT$(B$,3);"/";RIGHT$(B$,2);"/";MID$(B$,3,3);"/";MID$(B$,8)'], /\nDRA\/32\/AGO\/32\nOK/],
+  ['CHR$ ASC VAL STR$ STRING$', ['PRINT CHR$(65);ASC("B");VAL("12.5")*2;STR$(7);STRING$(3,"*");STRING$(2,66)'], /\nA 66  25  7\*\*\*BB\nOK/],
+  ['INSTR and string comparison', ['A$="DRAGON":PRINT INSTR(A$,"GON");INSTR(A$,"X");"A"<"B";A$="DRAGON";"AB">"A"'], /\n 4  0 -1 -1 -1\nOK/],
+  ['strings are copied on assignment', ['A$="ONE":X$=A$:A$="TWO":PRINT X$;A$'], /\nONETWO\nOK/],
+  ['type mismatch', ['PRINT 1+"A"'], /\?TM ERROR\nOK/],
+  ['INPUT string and numbers, ?? for missing values', ['10 INPUT "NAME";N$', '20 INPUT A,B', '30 PRINT "HI ";N$;A+B', 'RUN', 'GONEN', '3', '4'], /NAME\? GONEN\n\? 3\n\?\? 4\nHI GONEN 7\nOK/],
+  ['INPUT ?REDO on a word for a number', ['10 INPUT A', '20 PRINT A*2', 'RUN', 'X', '21'], /\?REDO\n\? 21\n 42\nOK/],
+  ['INPUT outside a program = ?ID', ['INPUT A'], /\?ID ERROR\nOK/],
+  ['string memory is reused (300 joins)', ['10 A$="":FOR I=1 TO 300:A$=A$+"X":IF LEN(A$)>200 THEN A$=""', '20 NEXT:PRINT "DONE";LEN(A$)', 'RUN'], /DONE 99\nOK/, 30]
 ];
 let fail = 0;
-for (const [name, lines, re] of CASES) {
+for (const [name, lines, re, timeout] of CASES) {
   let out;
-  try { out = (await runRom(lines)).screen; }
+  try { out = (await runRom(lines, timeout ? { timeout } : {})).screen; }
   catch (error) { out = error.stack; }
   const ok = re.test(out);
   if (!ok) fail++;

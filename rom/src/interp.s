@@ -31,7 +31,7 @@ clrvars		ldd	PROGEND
 		std	ARYEND
 		ldd	#FORBASE
 		std	FORSP
-		rts
+		lbra	str_reset
 
 ; ---------- ביצוע שורה מהמקלדת ----------
 execute		ldx	#LINBUF
@@ -49,6 +49,7 @@ execute		ldx	#LINBUF
 ; ---------- הרצה ----------
 ; run_stmts: X = תחילת פקודה, CURLN = הרשומה (או 0)
 run_stmts	lbsr	chkbreak
+		lbsr	str_check
 		clr	JUMPED
 		lbsr	statement
 		tst	JUMPED
@@ -153,6 +154,9 @@ kwtab		fcc	"PRINT"
 		fcc	"LET"
 		fcb	0
 		fdb	do_letkw-kwbase
+		fcc	"INPUT"
+		fcb	0
+		fdb	st_input-kwbase
 		fcc	"GOTO"
 		fcb	0
 		fdb	st_goto-kwbase
@@ -205,12 +209,24 @@ st_stop		leau	m_break,pcr
 
 do_letkw	lbsr	skipsp
 do_let		lbsr	getvar		; U = כתובת הערך
-		pshs	u
+		lda	VNAME+1
+		pshs	a,u		; [s] = סוג המשתנה (ביט 7 = מחרוזת)
 		lda	#'=
 		lbsr	expect
 		lbsr	rexpr
-		puls	u
+		tst	,s
+		bmi	1F
+		lbsr	neednum
+		puls	a,u
 		lbra	stfac		; שומרים את FAC במשתנה
+1		lbsr	needstr
+		lbsr	str_save	; עותק בערימה (המקור יכול להיות בטקסט או זמני)
+		puls	a,u
+		lda	SLEN
+		sta	,u
+		ldd	SPTR
+		std	1,u
+		rts
 
 st_goto		lbsr	getint
 		lbra	goline
@@ -245,6 +261,8 @@ kw_goto		fcc	"GOTO"
 ; FOR V = א TO ב [STEP צ]: רשומה במחסנית ה-FOR. אם כבר יש לולאה עם אותו משתנה, היא מוחלפת
 st_for		lbsr	skipsp
 		lbsr	getvar
+		tst	VNAME+1
+		lbmi	err_tm
 		ldd	VNAME
 		std	FORNAME		; ביטויים אחר כך יכולים לשנות את VNAME
 		pshs	u
@@ -564,8 +582,15 @@ getvar		lbsr	skipsp
 		puls	a
 		bra	3B
 5		puls	a
-		bra	7F
+		bra	11F
 4		clrb
+11		pshs	a
+		lda	,x
+		cmpa	#'$
+		puls	a
+		bne	7F
+		leax	1,x
+		orb	#$80		; מחרוזת
 7		std	VNAME
 		; מערך? (שם ואחריו סוגריים): stmt2.s מחזיר U = הכתובת של האיבר
 		pshs	a
@@ -651,10 +676,20 @@ rexpr		lbsr	expr
 5		tstb
 		beq	6F
 		pshs	b
+		tst	VALTYP
+		bne	12F
 		lbsr	pushfac
 		lbsr	expr
+		lbsr	neednum
 		lbsr	poparg		; ARG = השמאלי, FAC = הימני
 		lbsr	fcmp		; A: FAC מול ARG
+		bra	13F
+12		lbsr	pushstr		; השוואת מחרוזות, לפי סדר האותיות
+		lbsr	expr
+		lbsr	needstr
+		lbsr	str_cmp		; A: הימני מול השמאלי
+		clr	VALTYP
+13
 		; השמאלי מול הימני הפוך מ-FAC מול ARG
 		ldb	#2		; שווה
 		tsta

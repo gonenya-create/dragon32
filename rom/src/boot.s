@@ -250,10 +250,19 @@ ki_next		incb
 ki_none		clra
 ki_out		puls	b,x,y,pc
 
+; inkey: מקש בלי לחכות (INKEY$): מהתור, או מקש שנלחץ עכשיו. אין: A=0
+inkey		ldb	KEYQ
+		bne	gk_pop
+		lbra	keyindex
+
 ; getkey: מחכה למקש, מחזיר את התו ב-A. קודם תור הבדיקות (KEYQ), אחר כך המקלדת
 getkey		pshs	b,x
 gk_loop		ldb	KEYQ
 		beq	gk_scan
+		bsr	gk_pop
+		puls	b,x,pc
+; gk_pop: התו הראשון בתור, ומזיזים את השאר
+gk_pop		pshs	b,x
 		lda	KEYQ+1		; התו הראשון בתור, ומזיזים את השאר
 		ldx	#KEYQ+1
 1		ldb	1,x
@@ -321,6 +330,7 @@ cursor_off	pshs	a,x
 		include	"funcs.s"
 		include	"sound.s"
 		include	"stmt2.s"
+		include	"strings.s"
 		include	"testq.s"
 
 ; ---------- וקטורים ----------
