@@ -91,7 +91,13 @@ const CASES = [
   ['STOP, CONT, then ?CN', ['10 PRINT 1:STOP:PRINT 2', '20 PRINT 3', 'RUN', 'CONT', 'CONT'], /BREAK IN 10\nOK\nCONT\n 2\n 3\nOK\nCONT\n\?CN ERROR\nOK/],
   ['AUTO numbers the lines; an empty line ends it', ['AUTO 100,5', 'PRINT "A"', 'PRINT "B"', '', 'LIST'], /LIST\n100 PRINT "A"\n105 PRINT "B"\nOK/],
   ['DEL a range', ['100 A', '105 B', '110 C', 'DEL 100-105', 'LIST'], /LIST\n110 C\nOK/],
-  ['POKE and PEEK', ['POKE 1024,65:PRINT PEEK(1024)'], /\n 65\nOK/]
+  ['POKE and PEEK', ['POKE 1024,65:PRINT PEEK(1024)'], /\n 65\nOK/],
+  // fn2.s
+  ['DEF FN keeps the parameter variable', ['10 DEF FNA(X)=X*X+1', '20 X=5:PRINT FNA(3);X;FNA(X)', 'RUN'], /RUN\n 10  5  26\nOK/],
+  ['LINE INPUT takes the whole line', ['10 LINE INPUT "LINE";L$:PRINT L$', 'RUN', 'A,B "C"'], /LINEA,B "C"\nA,B "C"\nOK/],
+  ['TRON shows line numbers', ['10 A=1', '20 A=2', 'TRON:RUN'], /\[10\]\[20\]\nOK/],
+  ['CLEAR resets variables', ['X=5:CLEAR:PRINT X'], /\n 0\nOK/],
+  ['DEF FN in direct mode = ?ID', ['DEF FNA(X)=X'], /\?ID ERROR\nOK/]
 ];
 let fail = 0;
 for (const [name, lines, re, timeout] of CASES) {

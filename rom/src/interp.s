@@ -56,8 +56,10 @@ run_stmts	lbsr	chkbreak
 		clr	JUMPED
 		lbsr	statement
 		tst	JUMPED
-		bne	run_stmts
-		lbsr	skipsp
+		beq	1F
+		lbsr	trace_ln	; קפיצה לשורה (GOTO, RUN...)
+		bra	run_stmts
+1		lbsr	skipsp
 		beq	rs_eol
 		cmpa	#':
 		lbne	err_sn
@@ -70,6 +72,7 @@ rs_eol		ldy	CURLN
 		beq	ex_done		; זה הקישור 0000: סוף התוכנית
 		sty	CURLN
 		leax	4,y
+		lbsr	trace_ln
 		bra	run_stmts
 ex_done		rts
 
@@ -196,6 +199,21 @@ kwtab		fcc	"PRINT"
 		fcc	"LET"
 		fcb	0
 		fdb	do_letkw-kwbase
+		fcc	"LINE INPUT"
+		fcb	0
+		fdb	st_lineinput-kwbase
+		fcc	"DEF"
+		fcb	0
+		fdb	st_def-kwbase
+		fcc	"CLEAR"
+		fcb	0
+		fdb	st_clear-kwbase
+		fcc	"TRON"
+		fcb	0
+		fdb	st_tron-kwbase
+		fcc	"TROFF"
+		fcb	0
+		fdb	st_troff-kwbase
 		fcc	"INPUT"
 		fcb	0
 		fdb	st_input-kwbase

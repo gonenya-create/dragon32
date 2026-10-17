@@ -53,6 +53,7 @@ reset		orcc	#$50		; בלי פסיקות
 		lbsr	newprog
 		ldd	#0
 		std	AUTON		; AUTO כבוי
+		clr	TRONF
 		clr	$0340		; מצב הגרפיקה (gfx.s) יאותחל בפעם הראשונה
 		clr	LASTKEY
 		ldd	#0
@@ -285,7 +286,18 @@ gk_pop		pshs	b,x
 		puls	b,x,pc
 gk_scan		lbsr	keyindex
 		tsta
-		beq	gk_loop
+		bne	1F
+		; הסמן מהבהב: ריבוע שחור ורווח, בערך פעמיים בשנייה (לפי השעון)
+		ldx	CURSOR
+		lda	TICKS+1
+		anda	#$10
+		beq	2F
+		lda	#$60
+		bra	3F
+2		lda	#$80
+3		sta	,x
+		bra	gk_loop
+1
 		puls	b,x,pc
 
 ; getline: קורא שורה למאגר LINBUF (מסתיים ב-0). ← מוחק, ENTER מסיים
@@ -338,7 +350,7 @@ gl_done		clr	b,x
 ; הסמן: ריבוע מלא במקום הבא במסך
 cursor_on	pshs	a,x
 		ldx	CURSOR
-		lda	#$8f
+		lda	#$80		; ריבוע שחור
 		sta	,x
 		puls	a,x,pc
 cursor_off	pshs	a,x
@@ -356,6 +368,7 @@ cursor_off	pshs	a,x
 		include	"stmt2.s"
 		include	"strings.s"
 		include	"more.s"
+		include	"fn2.s"
 		include	"testq.s"
 
 ; irq: 50 פעמים בשנייה. מנקים את הדגל (קריאת PIA0 B) ומקדמים את השעון

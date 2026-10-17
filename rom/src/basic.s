@@ -140,7 +140,15 @@ factor		clr	VALTYP
 		bhi	6F
 		; קודם פונקציית מחרוזת (strings.s), אחר כך פונקציה מספרית (funcs.s), ואם לא, משתנה.
 		; קיצור: שם שאחריו אין '(' או '$' (ואינו TIMER) הוא בטוח משתנה, וחוסכים עשרות השוואות
-		lbsr	fnlike
+		ldd	,x		; FN + אות: פונקציה שהוגדרה ב-DEF FN
+		cmpd	#$464e		; "FN"
+		bne	11F
+		lda	2,x
+		cmpa	#'A
+		blo	11F
+		cmpa	#'Z
+		lbls	do_fn
+11		lbsr	fnlike
 		bne	7F
 		lbsr	sfn_dispatch
 		beq	8F
