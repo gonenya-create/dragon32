@@ -46,7 +46,8 @@ export function createCoder({ root, input, machine, powerOn }) {
   const paste = panel.querySelector('.d32-coder-paste');
   const area = panel.querySelector('textarea');
   const file = panel.querySelector('.d32-coder-file');
-  const say = msg => { note.textContent = msg; };
+  let saidAt = 0;
+  const say = msg => { note.textContent = msg; saidAt = Date.now(); };
   const back = () => input.focus({ preventScroll: true });
 
   // התוכנית מוצגת מחדש רק כשהיא משתנה
@@ -54,6 +55,12 @@ export function createCoder({ root, input, machine, powerOn }) {
   function refresh() {
     const text = machine.programText();
     if (text === shown) return;
+    // התוכנית השתנתה: הודעות ישנות ("נטען", "הקישור הועתק") כבר לא נכונות
+    if (shown !== null && Date.now() - saidAt > 2000) {
+      note.textContent = '';
+      const sn = root.querySelector('.d32-share-note');
+      if (sn) sn.textContent = '';
+    }
     shown = text;
     list.textContent = '';
     const lines = text ? text.split('\n') : [];

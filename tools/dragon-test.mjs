@@ -700,6 +700,8 @@ if (part('cartridge DRAGON CASTLE (full computer)')) {
   const st = () => p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return { mode: s.mode, paused: !!s.paused, x: s.p && s.p.x, room: s.room && s.room.name, n: s.n }; });
   check('castle shows its title', (await st()).mode === 'title');
   check('while a cartridge plays, the toolbox and helpers fold away', !(await p.locator('.d32-coder').isVisible()) && !(await p.locator('.d32-side').isVisible()));
+  const ej = await p.locator('.d32-eject').evaluate(e => Math.round(e.getBoundingClientRect().bottom));
+  check('the eject button fits in the window, not cut at the bottom', ej <= 900, String(ej));
   // מסך הפתיחה מקבל JUMP רק אחרי חצי שנייה; באתר החי טעינת המחסנית לפעמים איטית יותר
   await p.waitForFunction(() => document.querySelector('#dragon-room').d32Cart.state.t > 30);
   await p.keyboard.press('Space');
