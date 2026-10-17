@@ -19,6 +19,7 @@ KFOUND		equ	$b0
 KNEW		equ	$b1
 KROW		equ	$b2
 KCOL		equ	$b3
+TICKS		equ	$d2		; שעון: עולה ב-1 בכל תמונה (50 בשנייה), בפסיקה. TIMER קורא אותו
 KPREV		equ	$b8		; מצב המקלדת בסריקה הקודמת: 8 עמודות ($B8-$BF)
 KEYQ		equ	$0100		; תור קלט לבדיקות: [אורך][תווים]. כלי הבדיקה כותב לכאן במקום ללחוץ מקשים
 LINBUF		equ	$0200		; השורה שהוקלדה (עד 249 תווים + 0)
@@ -32,6 +33,13 @@ reset		orcc	#$50		; בלי פסיקות
 		clra
 		tfr	a,dp
 		lbsr	hw_init
+		ldd	#0
+		std	TICKS
+		; פסיקה בכל תמונה (קצה ה-FS של ה-VDG, דרך PIA0 CB1), ומאפשרים פסיקות
+		lda	PIA0+2		; מנקים דגל ישן
+		lda	#$05		; CRB: פסיקה מ-CB1 + גישה לנתונים
+		sta	PIA0+3
+		andcc	#$ef
 		lbsr	cls
 		; תור הקלט: מתחיל ממה שבטבלה testq (ריקה ב-ROM הרגיל; כלי הבדיקה בונה עותק עם שורות מוקלדות)
 		leax	testq,pcr
@@ -333,7 +341,14 @@ cursor_off	pshs	a,x
 		include	"strings.s"
 		include	"testq.s"
 
+; irq: 50 פעמים בשנייה. מנקים את הדגל (קריאת PIA0 B) ומקדמים את השעון
+irq		lda	PIA0+2
+		ldd	TICKS
+		addd	#1
+		std	TICKS
+		rti
+
 ; ---------- וקטורים ----------
 ; ה-SAM ממפה את $FFF2-$FFFF אל $BFF2-$BFFF
 		org	$bff2
-		fdb	reset,reset,reset,reset,reset,reset,reset
+		fdb	reset,reset,reset,irq,reset,reset,reset	; SWI3 SWI2 FIRQ IRQ SWI NMI RESET

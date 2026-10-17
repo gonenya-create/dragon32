@@ -151,6 +151,9 @@ kwbase
 kwtab		fcc	"PRINT"
 		fcb	0
 		fdb	st_print-kwbase
+		fcc	"TIMER"
+		fcb	0
+		fdb	st_timer-kwbase
 		fcc	"LET"
 		fcb	0
 		fdb	do_letkw-kwbase
@@ -226,6 +229,13 @@ do_let		lbsr	getvar		; U = כתובת הערך
 		sta	,u
 		ldd	SPTR
 		std	1,u
+		rts
+
+; TIMER=n: מכוונים את השעון
+st_timer	lda	#'=
+		lbsr	expect
+		lbsr	getint
+		std	TICKS
 		rts
 
 st_goto		lbsr	getint

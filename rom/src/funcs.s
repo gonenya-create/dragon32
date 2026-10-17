@@ -97,12 +97,14 @@ fn_table
  fcb 0
  fdb fn_timer-fn_base
  fcb 0
-fn_timer ldd #0
+fn_timer ldd TICKS
+ lbra givd_u
+fn_zero0 ldd #0
  lbra givd
 fn_abs clr FACSGN
  rts
 fn_sgn tst FACEXP
- beq fn_timer
+ beq fn_zero0
  ldd #1
  tst FACSGN
  bpl 1F
