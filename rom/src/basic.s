@@ -117,10 +117,14 @@ factor		lbsr	skipsp
 		blo	6F
 		cmpa	#'Z
 		bhi	6F
+		; קודם פונקציה (funcs.s: INT, RND...), ואם לא, משתנה
+		lbsr	fn_dispatch
+		beq	8F
 		pshs	y
 		lbsr	getvar		; משתנה: הערך שלו
 		lbsr	ldfac
 		puls	y,pc
+8		rts
 6		cmpa	#'.
 		beq	5F
 		cmpa	#'0

@@ -129,6 +129,9 @@ st_none		rts
 st_let		; גרפיקה? (gfx.s)
 		lbsr	gfx_dispatch
 		beq	st_none
+		; צליל? (sound.s)
+		lbsr	snd_dispatch
+		beq	st_none
 		lbsr	skipsp
 		cmpa	#'A
 		lblo	err_sn

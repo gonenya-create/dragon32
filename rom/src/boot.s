@@ -301,6 +301,8 @@ cursor_off	pshs	a,x
 		include	"basic.s"
 		include	"interp.s"
 		include	"gfx.s"
+		include	"funcs.s"
+		include	"sound.s"
 		include	"testq.s"
 
 ; ---------- וקטורים ----------
