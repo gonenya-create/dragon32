@@ -3,6 +3,7 @@
 ; כרגע: אתחול החומרה, מסך טקסט, הודעת פתיחה, ושורת קלט פשוטה.
 
 		org	$8000
+		setdp	0
 
 SCREEN		equ	$0400		; מסך הטקסט: 32 על 16
 SCREND		equ	$0600
@@ -31,10 +32,15 @@ reset		orcc	#$50		; בלי פסיקות
 		clr	LASTKEY
 		leax	banner,pcr
 		lbsr	puts
+		bra	main_ok
 ; הלולאה הראשית: קוראים שורה ומבצעים אותה
 main		lbsr	getline
 		lbsr	execute
+main_ok		leax	ok,pcr
+		lbsr	puts
 		bra	main
+ok		fcc	"OK"
+		fcb	13,0
 
 ; ---------- חומרה ----------
 hw_init
@@ -132,9 +138,7 @@ puts		lda	,x+
 banner		fcc	"DRAGON 1982 BASIC 1.0"
 		fcb	13
 		fcc	"(C) 2026 GONEN YAROM"
-		fcb	13,13
-		fcc	"OK"
-		fcb	13,0
+		fcb	13,13,0
 
 ; ---------- מקלדת ----------
 ; מטריצת המקלדת של ה-Dragon: עמודה = ביט ב-PIA0 B (פלט, 0 = נסרקת), שורה = ביט ב-PIA0 A (קלט, 0 = לחוץ)
@@ -277,17 +281,9 @@ cursor_off	pshs	a,x
 		sta	,x
 		puls	a,x,pc
 
-; ---------- ביצוע (בינתיים: רק מדפיס חזרה את השורה, כדי לבדוק את הקלט) ----------
-execute		ldx	#LINBUF
-		tst	,x
-		beq	1F
-		lbsr	puts
-		lda	#13
-		lbsr	putc
-1		leax	ok,pcr
-		lbra	puts
-ok		fcc	"OK"
-		fcb	13,0
+		include	"fp.s"
+		include	"basic.s"
+		include	"gfx.s"
 
 ; ---------- וקטורים ----------
 ; ה-SAM ממפה את $FFF2-$FFFF אל $BFF2-$BFFF
