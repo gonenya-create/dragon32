@@ -415,7 +415,7 @@ if (part('magazine type-in')) {
   await p.waitForTimeout(300);
   await p.locator('.d32-theater-exit').click();
   check('the guide has no second computer in it, and a "back to the computer" button', !(await p.locator('#dragon-room').isVisible()) && await p.locator('.guide-back').isVisible());
-  await p.locator('.mag-typein').click();
+  await p.locator('.room-mag .mag-typein').click();
   await p.waitForFunction(() => /BET ON HORSE \(1-3\)\? $/.test(document.querySelector('#dragon-room .d32-out').textContent), null, { timeout: 15000 });
   check('type-in: the listing is typed and RUN asks for a bet', true);
   const input = p.locator('#dragon-room .d32-input');

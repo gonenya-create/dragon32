@@ -54,7 +54,6 @@ function renderHof() {
       if (!table.length) {
         const p = document.createElement('p');
         p.className = 'd32-hof-empty';
-        p.className = 'd32-hof-empty';
         p.textContent = 'עוד אין שיאים. תהיו הראשונים.';
         card.appendChild(p);
       } else {
