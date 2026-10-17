@@ -94,7 +94,8 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   // ארגז הכלים: שלוש לשוניות בחלון שמשמאל. "תוכנית" היא חלון התוכנית; לשתי האחרות עוברים, בזמן המסך המלא,
   // הפקודות המוכנות והמדפים מהדף (וחוזרים לדף ביציאה)
   // "עוזר" מופיעה רק בטלפון (במחשב העוזרים בעמודה הימנית)
-  const TABS = [['program', 'תוכנית'], ['commands', 'פקודות'], ['shelf', 'מדף'], ['help', 'עוזר']];
+  // "מקלדת" מופיעה רק בטלפון: המקלדת המצוירת של ה-Dragon במקום מקלדת האייפון (17.10)
+  const TABS = [['keys', 'מקלדת'], ['program', 'תוכנית'], ['commands', 'פקודות'], ['shelf', 'מדף'], ['help', 'עוזר']];
   const tabbar = document.createElement('div');
   tabbar.className = 'd32-tabs';
   tabbar.setAttribute('role', 'tablist');
@@ -120,14 +121,16 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   coder.panel.removeAttribute('aria-labelledby');
   coder.panel.setAttribute('aria-label', 'ארגז הכלים');
   coder.panel.append(tabbar, ...Object.values(panes));
-  let tab = 'program', savedTab = false;
+  let tab = 'program', savedTab = false, phone = false, sysKbd = false;
   try { const t = localStorage.getItem('d32-tab'); if (t) { tab = t; savedTab = true; } } catch { /* בלי זיכרון בדפדפן */ }
   function showTab(id, save = true) {
     if (!panes[id]) id = 'program';
     tab = id;
     for (const b of tabbar.children) { const on = b.dataset.tab === id; b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; }
     for (const [k, p] of Object.entries(panes)) p.hidden = k !== id;
-    if (save && id !== 'help') try { localStorage.setItem('d32-tab', id); savedTab = true; } catch { /* בלי זיכרון בדפדפן */ }
+    // בלשונית המקלדת המצוירת, נגיעה במסך לא פותחת את מקלדת האייפון
+    input.inputMode = phone && id === 'keys' && !sysKbd ? 'none' : '';
+    if (save && id !== 'help' && id !== 'keys') try { localStorage.setItem('d32-tab', id); savedTab = true; } catch { /* בלי זיכרון בדפדפן */ }
   }
   tabbar.addEventListener('click', e => { const b = e.target.closest('.d32-tab'); if (b) showTab(b.dataset.tab); });
   tabbar.addEventListener('keydown', e => {
@@ -252,10 +255,14 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   // Esc של הדפדפן יוצא ממסך מלא: אז יוצאים גם ממצב "מסך בלבד"
   document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && only) setOnly(false); });
   // מחסנית נכנסת או יוצאת: מחשבים מחדש את הגודל (הכלים מתקפלים בזמן משחק)
-  let wasCart = false;
+  let wasCart = false, wasOff = root.classList.contains('is-off');
   new MutationObserver(() => {
     const c = root.classList.contains('is-cart');
     if (c !== wasCart) { wasCart = c; layout(); }
+    // בטלפון: המחשב נדלק, אז נפתחת המקלדת המצוירת
+    const off = root.classList.contains('is-off');
+    if (wasOff && !off && phone) showTab('keys', false);
+    wasOff = off;
   }).observe(root, { attributes: true, attributeFilter: ['class'] });
 
   // שורת המצב בראש המסך: מה המחשב עושה עכשיו
@@ -434,16 +441,32 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   bar.querySelector('.d32-theater-exit').addEventListener('click', () => (phone ? exitPhone() : exit()));
   addEventListener('resize', layout);
 
-  // הטלפון: אפליקציה במסך אחד. המחשב למעלה, ארבע לשוניות למטה ומגירה אחת פתוחה
-  let phone = false;
+  // הטלפון: אפליקציה במסך אחד. המחשב למעלה, לשוניות למטה ומגירה אחת פתוחה.
+  // לפני ההדלקה רואים רק את המחשב ואת מתג ההדלקה; אחרי ההדלקה נפתחת המקלדת המצוירת, ורק אז שאר הלשוניות
+  const kbdMark = document.createComment('d32-kbd');
+  const sysBtn = document.createElement('button');
+  sysBtn.type = 'button';
+  sysBtn.className = 'd32-syskbd';
+  const sysLabel = () => { sysBtn.textContent = sysKbd ? '⌨ חזרה למקלדת של ה-Dragon' : '📱 להקליד במקלדת של הטלפון'; };
+  sysLabel();
+  sysBtn.addEventListener('click', () => {
+    sysKbd = !sysKbd;
+    sysLabel();
+    root.classList.toggle('sys-kbd', sysKbd);
+    input.inputMode = sysKbd ? '' : 'none';
+    if (sysKbd) input.focus(); else input.blur();
+  });
+  panes.keys.appendChild(sysBtn);
   function enterPhone() {
     if (phone || active) return;
     left = false;
     phone = true;
     toTabs();
     helpToTab();
-    // בפעם הראשונה בטלפון מתחילים בפקודות המוכנות
-    if (!savedTab || !panes[tab]) showTab('commands');
+    kbd.before(kbdMark);
+    panes.keys.prepend(kbd);
+    // מתחילים במקלדת המצוירת (גם אחרי ההדלקה; ראו המעקב אחרי is-off)
+    showTab('keys', false);
     root.classList.add('is-phone');
     document.documentElement.classList.add('d32-theater-on');
     coder.start();
@@ -462,6 +485,9 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
     coder.stop();
     clearInterval(statusTimer);
     fromTabs();
+    kbdMark.replaceWith(kbd);
+    input.inputMode = '';
+    if (tab === 'keys') showTab('program', false);
     if (!quiet) toGuide();
   }
   // "מה קרה?" נפתח בזמן שלשונית אחרת פתוחה: עוברים ללשונית העוזר

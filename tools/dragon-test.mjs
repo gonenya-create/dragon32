@@ -890,13 +890,21 @@ if (part('full computer /dragon/app/ (theater, coder, AI)')) {
   await ph.goto(base.replace(/\/$/, '') + '/');
   await ph.waitForSelector('#dragon-room.is-ready');
   await ph.waitForTimeout(400);
-  const ph1 = await ph.evaluate(() => ({ phone: document.querySelector('#dragon-room').classList.contains('is-phone'), sel: document.querySelector('.d32-tab[aria-selected="true"]')?.dataset.tab, sw: document.documentElement.scrollWidth }));
-  check('phone: opens as an app (tabs at the bottom, ready-made commands first, no sideways scroll)', ph1.phone && ph1.sel === 'commands' && ph1.sw <= 390 && await ph.locator('.d32-tab[data-tab="help"]').isVisible(), JSON.stringify(ph1));
+  const ph1 = await ph.evaluate(() => ({ phone: document.querySelector('#dragon-room').classList.contains('is-phone'), sw: document.documentElement.scrollWidth }));
+  // פתיחה בטלפון (הערות גונן 17.10): קודם רק המחשב ומתג ההדלקה, בלי לשוניות
+  check('phone: opens as an app with only the computer and the power switch, no sideways scroll', ph1.phone && ph1.sw <= 390 && await ph.locator('.d32-power').isVisible() && !(await ph.locator('.d32-tabs').isVisible()), JSON.stringify(ph1));
+  await ph.locator('.d32-power').tap();
+  await ph.waitForFunction(() => /OK\s*$/.test(document.querySelector('#dragon-room .d32-out').textContent), null, { timeout: 4000 });
+  check('phone: after power on, the drawn Dragon keyboard and the tabs show', await ph.locator('.d32-pane[data-pane="keys"] .d32-kbd').isVisible() && await ph.locator('.d32-tab[data-tab="help"]').isVisible() && (await ph.locator('#dragon-room .d32-input').evaluate(e => e.inputMode)) === 'none');
+  for (const k of ['P', 'R', 'I', 'N', 'T', 'SPACE', '7']) await ph.locator(`.d32-key[data-k="${k}"]`).first().tap();
+  await ph.locator('.d32-key[data-k="ENTER"]').tap();
+  await ph.waitForTimeout(300);
+  check('phone: typing on the drawn keyboard works', /PRINT 7\n 7 \nOK\s*$/.test(await ph.locator('#dragon-room .d32-out').textContent()), tail(await ph.locator('#dragon-room .d32-out').textContent(), 3));
+  await ph.locator('.d32-syskbd').tap();
+  check('phone: a button switches to the phone keyboard', (await ph.locator('#dragon-room .d32-input').evaluate(e => e.inputMode)) !== 'none');
   await ph.locator('.d32-tab[data-tab="help"]').tap();
   check('phone: the AI helper is in the "עוזר" tab', await ph.locator('.d32-pane[data-pane="help"] .d32-ai').isVisible());
   // בטלפון אין Esc: כפתור "עצירה" על המסך עוצר תוכנית שרצה
-  await ph.locator('.d32-power').tap();
-  await ph.waitForFunction(() => /OK\s*$/.test(document.querySelector('#dragon-room .d32-out').textContent), null, { timeout: 4000 });
   for (const l of ['10 PRINT "HI ";', '20 GOTO 10', 'RUN']) { await ph.locator('#dragon-room .d32-input').fill(l); await ph.locator('#dragon-room .d32-input').press('Enter'); await ph.waitForTimeout(150); }
   await ph.waitForTimeout(400);
   const stopShown = await ph.locator('.d32-stop-run').isVisible();
