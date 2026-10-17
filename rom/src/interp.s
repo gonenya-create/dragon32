@@ -749,9 +749,74 @@ stfac		pshs	d
 		std	3,u
 		puls	d,pc
 
+; ---------- AND, OR, NOT ----------
+; rexpr: ביטוי מלא. סדר הקדימות כמו במקור: השוואה, אחר כך NOT, אחר כך AND, ובסוף OR.
+; הפעולות עובדות על מספרים שלמים של 16 ביט (אמת = -1 = כל הביטים דולקים)
+rexpr		bsr	andexpr
+1		lbsr	skipsp
+		cmpa	#'O
+		bne	9F
+		ldb	1,x
+		cmpb	#'R
+		bne	9F
+		leax	2,x
+		lbsr	sint
+		pshs	d
+		bsr	andexpr
+		lbsr	sint
+		ora	,s+
+		orb	,s+
+		lbsr	givd
+		bra	1B
+9		rts
+andexpr		bsr	notexpr
+1		lbsr	skipsp
+		cmpa	#'A
+		bne	9F
+		ldd	1,x
+		cmpd	#$4e44		; "ND"
+		bne	9F
+		leax	3,x
+		lbsr	sint
+		pshs	d
+		bsr	notexpr
+		lbsr	sint
+		anda	,s+
+		andb	,s+
+		lbsr	givd
+		bra	1B
+9		rts
+notexpr		lbsr	skipsp
+		cmpa	#'N
+		bne	relexpr
+		ldd	1,x
+		cmpd	#$4f54		; "OT"
+		bne	relexpr
+		leax	3,x
+		bsr	notexpr
+		lbsr	sint
+		coma
+		comb
+		lbra	givd
+; sint: FAC (מספר) למספר שלם עם סימן ב-D, -32768 עד 32767. אחרת ?FC ERROR
+sint		lbsr	neednum
+		lda	FACEXP
+		cmpa	#$90
+		lbhs	err_fc
+		lda	FACSGN
+		pshs	a
+		lbsr	qint
+		ldd	QN+2
+		tst	,s+
+		bpl	1F
+		coma
+		comb
+		addd	#1
+1		rts
+
 ; ---------- ביטוי עם השוואה ----------
-; rexpr: ביטוי [< = > <= >= <>] ביטוי. אמת = -1, שקר = 0, כמו במקור
-rexpr		lbsr	expr
+; relexpr: ביטוי [< = > <= >= <>] ביטוי. אמת = -1, שקר = 0, כמו במקור
+relexpr		lbsr	expr
 		lbsr	skipsp
 		clrb			; B: 1 = קטן, 2 = שווה, 4 = גדול
 1		cmpa	#'<
