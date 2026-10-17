@@ -310,6 +310,7 @@ if (part('room /dragon/')) {
   await p.waitForFunction(() => /OK\s*$/.test(document.querySelector('#dragon-room .d32-out').textContent), null, { timeout: 4000 });
   check('room boots', /DRAGON 1982 BASIC 1\.0\n\(C\) 2026 GONEN YAROM[\s\S]*OK\s*$/.test(await p.locator('#dragon-room .d32-out').textContent()));
   check('room shelf has 6 tapes', (await p.locator('#dragon-room .d32-tape').count()) === 6);
+  check('every tape has an "on the real machine" link', (await p.locator('#dragon-room .d32-tape-real[href^="/lab/1982/?tape="]').count()) === 6);
   const input = p.locator('#dragon-room .d32-input');
   await input.fill('print 6*7'); await input.press('Enter'); await p.waitForTimeout(250);
   check('room PRINT works', / 42 \nOK$/.test(await p.locator('#dragon-room .d32-out').textContent()));
@@ -1046,6 +1047,14 @@ if (part('real machine lab')) {
       check('a tape goes into the tape player and CLOAD is typed', await p.evaluate(() =>
         document.querySelector('#tapes .tape.in small')?.textContent === 'GUESS' && /טוען|רץ/.test(document.getElementById('tape-status').textContent)
         && FS.stat('/tape-guess.cas').size > 280) && errs.length === 0, errs.join(' | '));
+    }
+    if (path === '/lab/1982/') {
+      // מהאפליקציה: ?tape=lander טוען את הקלטת לבד
+      const q = await browser.newPage({ viewport: { width: 1000, height: 900 } });
+      await q.goto(base.replace(/\/$/, '') + path + '?tape=lander');
+      await q.waitForFunction(() => document.querySelector('#tapes .tape.in small')?.textContent === 'LANDER', null, { timeout: 30000 }).catch(() => {});
+      check('?tape=lander from the app loads that tape by itself', await q.evaluate(() => document.querySelector('#tapes .tape.in small')?.textContent === 'LANDER'));
+      await q.close();
     }
     await p.close();
   }

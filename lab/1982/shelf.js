@@ -38,6 +38,16 @@
     b.addEventListener('click', () => load(id, EN ? en : he, b));
     box.appendChild(b);
   }
+  // הגיעו מהאפליקציה עם ?tape=guess: הקלטת נטענת לבד, ברגע שהמחשב מוכן
+  const want = new URLSearchParams(location.search).get('tape');
+  const wanted = TAPES.findIndex(t => t[0] === want);
+  if (wanted >= 0) {
+    const go = setInterval(() => {
+      if (!window.d32Ready) return;
+      clearInterval(go);
+      setTimeout(() => box.children[wanted].click(), 2000);
+    }, 300);
+  }
   let busy = false;
   const wait = ms => new Promise(r => setTimeout(r, ms));
   // זיכרון המחשב המדומה נמצא בתוך הזיכרון של XRoar. מוצאים אותו פעם אחת לפי שורת הפתיחה שעל המסך
