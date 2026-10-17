@@ -152,6 +152,8 @@ factor		clr	VALTYP
 		bne	7F
 		lbsr	sfn_dispatch
 		beq	8F
+		lbsr	gfx_fn		; PPOINT, POINT (gfx.s)
+		beq	8F
 		lbsr	fn_dispatch
 		bne	7F
 		clr	VALTYP
