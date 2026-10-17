@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>פרטיות — Dragon 1982</title>
+<meta name="description" content="מה Dragon 1982 שומר, מה נשלח החוצה ומה נשאר רק בדפדפן שלכם.">
+<link rel="canonical" href="https://dragon1982.com/privacy/">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#1a1511">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;500;700&amp;family=Amatic+SC:wght@700&amp;display=swap">
+<link rel="stylesheet" href="/assets/notebook.css">
+<link rel="stylesheet" href="/assets/dragon/dragon.css">
+</head>
+<body>
+<a class="skip-link" href="#main">דילוג לתוכן</a>
+<div class="page">
+
+<header class="site-header">
+<a class="brand" href="/" aria-label="Dragon 1982 — חזרה למחשב"><span class="brand-name" dir="ltr">Dragon 1982</span><span class="brand-tag">מחשב מ-1982, בדפדפן</span></a>
+<nav class="site-nav" aria-label="קישורים">
+<a href="/">חזרה למחשב</a>
+<a href="https://github.com/gonenya-create/dragon32">הקוד ב-GitHub</a>
+</nav>
+</header>
+
+<main id="main">
+<section class="prose" aria-labelledby="privacy-title">
+<h1 id="privacy-title">פרטיות</h1>
+<p>בקצרה: אין כאן חשבון, אין שם, אין עוגיות ואין פרסומות. רוב מה שקורה נשאר בדפדפן שלכם. רק שני דברים יוצאים החוצה, ושניהם מפורטים כאן.</p>
+
+<h2>1. העוזר (Claude)</h2>
+<p>כששולחים שאלה לעוזר, נשלחים אל <bdi>Anthropic</bdi> (החברה שמפעילה את <bdi>Claude</bdi>) השאלה, התוכנית שבזיכרון, השורות האחרונות שעל המסך, וכמה שאלות ותשובות קודמות מאותה שיחה. זה הכול, כדי שהעוזר יוכל לענות. לכן לא כותבים לעוזר פרטים אישיים.</p>
+<p>אנחנו לא שומרים את השאלות. <bdi>Anthropic</bdi> לא משתמשת במידע שנשלח בדרך הזו כדי לאמן את המודלים שלה. הפרטים המלאים במדיניות שלה: <a href="https://www.anthropic.com/legal/privacy" dir="ltr">anthropic.com/legal/privacy</a>.</p>
+
+<h2>2. היכל התהילה העולמי</h2>
+<p>כשמכניסים שיא, נשמרים במאגר שלנו רק ארבעה דברים: שם המשחק, שלוש האותיות שהקלדתם, הניקוד והתאריך. הם מוצגים לכל מי שנכנס לאתר. כדאי לא להקליד ראשי תיבות שמזהים אתכם, אם אתם לא רוצים בזה.</p>
+<p>המאגר נמצא אצל <bdi>Neon</bdi>, דרך <bdi>Vercel</bdi>. שיא שתרצו למחוק? כתבו לנו, ונמחק.</p>
+
+<h2>מה נשאר רק אצלכם</h2>
+<p>הדברים האלה נשמרים בזיכרון של הדפדפן (<bdi dir="ltr">localStorage</bdi>), ולא נשלחים לשום מקום:</p>
+<ul>
+<li>היכל התהילה של הבית, והאותיות האחרונות שהקלדתם.</li>
+<li>הקלטות ששמרתם עם <bdi dir="ltr">CSAVE</bdi>.</li>
+<li>כמה שאלות שאלתם את העוזר היום (בשביל המגבלה היומית).</li>
+<li>העדפות: הלשונית האחרונה, המקלדת המצוירת פתוחה או סגורה, ושכבר ראיתם את כרטיס הפתיחה.</li>
+</ul>
+<p>ניקוי נתוני הגלישה של האתר בדפדפן מוחק את כל אלה.</p>
+<p>גם קישור לשיתוף תוכנית לא שולח אותה לשום שרת: התוכנית נמצאת בתוך הקישור עצמו (אחרי הסימן <bdi dir="ltr">#</bdi>).</p>
+
+<h2>אחסון האתר</h2>
+<p>האתר מאוחסן ב-<bdi>Vercel</bdi>. כמו בכל אתר, השרתים שלהם רושמים לזמן קצר את הבקשות שמגיעות אליהם (כולל כתובת <bdi>IP</bdi>), לצורכי תפעול ואבטחה. אנחנו משתמשים בכתובת רק כדי להגביל כמה שאלות ושיאים נשלחים בשעה, ולא שומרים אותה.</p>
+
+<h2>יצירת קשר</h2>
+<p>שאלה, בקשה למחוק שיא, או כל דבר אחר: <a href="https://www.gonenyarom.co.il/about/#contact">יצירת קשר עם גונן</a>.</p>
+<p><small>עודכן: אוקטובר 2026.</small></p>
+</section>
+</main>
+
+<footer class="site-footer">
+<p>פרויקט מחווה של חובב ל-<bdi>Dragon 32</bdi> מ-1982. לא קשור ל-<bdi>Dragon Data</bdi> ולא מורשה על ידה. התוכנה, המשחקים והגרפיקה כאן מקוריים.</p>
+<p>נבנה על ידי <a href="https://www.gonenyarom.co.il/">גונן ירום</a>, שגדל על המחשב הזה, בעזרת בינה מלאכותית. הקוד פתוח (<bdi>MIT</bdi>).</p>
+<nav class="footer-links" aria-label="קישורים בתחתית">
+<a href="https://github.com/gonenya-create/dragon32">הקוד ב-GitHub</a>
+<a href="https://www.gonenyarom.co.il/about/#contact">יצירת קשר</a>
+<a href="https://www.gonenyarom.co.il/accessibility/">נגישות</a>
+<a href="/privacy/">פרטיות</a>
+<span>© 2026 גונן ירום</span>
+</nav>
+</footer>
+
+</div>
+</body>
+</html>
