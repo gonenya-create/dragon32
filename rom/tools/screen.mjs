@@ -6,7 +6,8 @@ import net from 'node:net';
 
 const [rom = 'rom/build/d32.rom', secs = '1', typed = ''] = process.argv.slice(2);
 export const KEYQ = 0x0100;   // תור הקלט: [אורך][תווים...] (חייב להתאים ל-boot.s)
-const port = 65000 + Math.floor(Math.random() * 400);
+// פורט מחוץ לטווח הזמני של macOS (49152-65535), שם תוכנות אחרות כבר מאזינות לפעמים
+const port = 21000 + Math.floor(Math.random() * 4000);
 const xr = spawn('xroar', ['-ui', 'null', '-ao', 'null', '-machine', 'dragon32', '-extbas', rom, '-no-ratelimit', '-gdb', '-gdb-port', String(port)], { stdio: ['ignore', 'ignore', 'pipe'] });
 let err = '';
 xr.stderr.on('data', d => { err += d; });
@@ -34,10 +35,10 @@ function connect() {
     const send = c => { if (process.env.GDBLOG) console.error('>>', JSON.stringify(c)); let sum = 0; for (const ch of c) sum = (sum + ch.charCodeAt(0)) & 255; s.write('$' + c + '#' + sum.toString(16).padStart(2, '0')); };
     const reply = () => new Promise((r, j) => { waiters.push(r); setTimeout(() => j(new Error('no reply')), 4000); });
     const api = {
-      cmd: c => { const p = reply(); send(c); return p; },
+      cmd: c => { const p = reply(); send(c); return p.catch(e => { throw new Error(e.message + ' to ' + c.slice(0, 8)); }); },
       go: () => { send('c'); },                         // התשובה תגיע רק בעצירה
       // עצירה: Ctrl-C גולמי. לפעמים XRoar מפספס אותו, אז שולחים שוב כל חצי שנייה עד שעונה
-      halt: () => { const p = reply(); s.write('\x03'); const t = setInterval(() => s.write('\x03'), 500); return p.finally(() => clearInterval(t)); },
+      halt: () => { const p = reply(); s.write('\x03'); const t = setInterval(() => s.write('\x03'), 500); return p.finally(() => clearInterval(t)).catch(e => { throw new Error(e.message + ' to halt'); }); },
       close: () => s.destroy()
     };
     s.on('connect', () => ok(api));
@@ -46,7 +47,9 @@ function connect() {
 }
 
 let g = null;
-for (let i = 0; i < 60 && !g; i++) { await sleep(100); g = await connect().catch(() => null); }
+// XRoar פותח את הפורט מוקדם, אבל עונה רק אחרי שהמחשב המדומה מוכן: מחכים קצת קודם
+await sleep(700);
+for (let i = 0; i < 60 && !g; i++) { g = await connect().catch(() => null); if (!g) await sleep(100); }
 if (!g) die('cannot connect to xroar gdb\n' + err);
 try {
   await g.cmd('?');

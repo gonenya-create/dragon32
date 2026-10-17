@@ -28,7 +28,15 @@ reset		orcc	#$50		; בלי פסיקות
 		tfr	a,dp
 		lbsr	hw_init
 		lbsr	cls
-		clr	KEYQ		; תור הקלט ריק
+		; תור הקלט: מתחיל ממה שבטבלה testq (ריקה ב-ROM הרגיל; כלי הבדיקה בונה עותק עם שורות מוקלדות)
+		leax	testq,pcr
+		ldu	#KEYQ
+		ldb	,x
+		incb
+1		lda	,x+
+		sta	,u+
+		decb
+		bne	1B
 		lbsr	newprog
 		clr	$0340		; מצב הגרפיקה (gfx.s) יאותחל בפעם הראשונה
 		clr	LASTKEY
@@ -293,6 +301,7 @@ cursor_off	pshs	a,x
 		include	"basic.s"
 		include	"interp.s"
 		include	"gfx.s"
+		include	"testq.s"
 
 ; ---------- וקטורים ----------
 ; ה-SAM ממפה את $FFF2-$FFFF אל $BFF2-$BFFF
