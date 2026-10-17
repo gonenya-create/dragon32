@@ -597,3 +597,6 @@ a.d32-cart.is-more:focus-visible { outline: 3px solid var(--focus); outline-offs
 .d32.is-gfx:not(.is-stoppable) .d32-stop-gfx { display: inline; }
 @media (max-width: 640px) { .d32-stop { top: 14px; left: 14px; font-size: 13px; min-height: 34px; } }
 .d32.is-only .d32-stop { left: auto; right: 22px; }   /* במסך בלבד כפתור היציאה בפינה השמאלית */
+/* קלטת שתמחק תוכנית שלא נשמרה: לחיצה ראשונה מזהירה */
+.d32-tape.is-armed { outline: 3px solid var(--red, #d33); outline-offset: 2px; }
+.d32-tape-warn { margin: 8px 0 0; padding: 8px 10px; border: 1.5px solid var(--red, #d33); border-radius: 8px; font-size: 14px; line-height: 1.5; }

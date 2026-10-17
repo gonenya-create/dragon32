@@ -1004,6 +1004,7 @@ export function createMachine({ view, sound, loadTape, saveTape, joy }) {
         } else {
           program = parseProgram(text);
           data = null; cont = null;
+          if (view.kept) view.kept();   // תוכנית שבאה מקלטת שמורה כבר: אין מה להזהיר עליה
           print('F ' + name);
         }
         print('OK');
@@ -1238,6 +1239,7 @@ export function createMachine({ view, sound, loadTape, saveTape, joy }) {
       auto = null;
       program = parseProgram(text.split('\n').map(dragonize).join('\n'));
       data = null;
+      if (view.kept) view.kept();
       print('F ' + label);
       print('OK');
     },

@@ -739,6 +739,24 @@ if (part('full computer /dragon/app/ (theater, coder, AI)')) {
   check('folding the drawn keyboard hides it and the TV grows', !(await p.locator('.d32-kbd').isVisible()) && tvAfter > tvBefore, tvBefore + ' -> ' + tvAfter);
   await p.locator('.d32-theater-kbd').click();
   await p.waitForTimeout(150);
+  // קלטת על תוכנית שלא נשמרה: לחיצה ראשונה מזהירה, השנייה טוענת (דוח קודקס 17.10)
+  await p.locator('.d32-input').fill('NEW'); await p.locator('.d32-input').press('Enter');
+  await p.locator('.d32-input').fill('10 PRINT "MINE"'); await p.locator('.d32-input').press('Enter');
+  await p.locator('.d32-tab[data-tab="shelf"]').click();
+  await p.locator('.d32-tape:has-text("GUESS")').click();
+  await p.waitForTimeout(400);
+  check('a tape over an unsaved program warns first and does not load', await p.locator('.d32-tape-warn').isVisible() && !/CLOAD/.test(tail(await screenText(p), 3)));
+  await p.locator('.d32-tape:has-text("GUESS")').click();
+  await p.waitForFunction(() => /\?\s*$/.test(document.querySelector('#dragon-room .d32-out').textContent), null, { timeout: 10000 });
+  check('a second click loads the tape', !(await p.locator('.d32-tape-warn').count()));
+  await p.keyboard.press('Escape');
+  await p.waitForTimeout(300);
+  await p.locator('.d32-tape:has-text("LANDER")').click();
+  await p.waitForTimeout(400);
+  check('a program that came from a tape is not "unsaved": no warning', !(await p.locator('.d32-tape-warn').count()));
+  await p.waitForFunction(() => /\?\s*$/.test(document.querySelector('#dragon-room .d32-out').textContent), null, { timeout: 10000 });
+  await p.keyboard.press('Escape');
+  await p.waitForTimeout(300);
   // פקודות מוכנות: לשונית "פקודות", כרטיס נפתח, "לנסות עכשיו" מצייר, "להוסיף לתוכנית" נותן מספר שורה, וחיפוש
   await p.locator('.d32-tab[data-tab="commands"]').click();
   check('commands: drawing category shows cards', (await p.locator('.d32-cmd').count()) >= 4);

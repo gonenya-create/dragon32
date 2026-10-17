@@ -240,8 +240,13 @@ function mount(root) {
     },
     // תוכנית רצה: המסך מראה 16 שורות, ושורת ההקלדה מתכווצת (נשארת בפוקוס בשביל INKEY$)
     full(on) { root.classList.toggle('is-full', on); },
-    prefill(text) { input.value = text; syncCursor(); }
+    prefill(text) { input.value = text; syncCursor(); },
+    // התוכנית שבזיכרון שמורה (נטענה מקלטת או מקובץ, או נשמרה): טעינת קלטת לא צריכה להזהיר
+    kept() { kept = machine.programText(); }
   };
+  let kept = '';
+  root.addEventListener('d32-kept', () => { kept = machine.programText(); });
+  const unsaved = () => { const t = machine.programText(); return t !== '' && t !== kept; };
 
   // ג'ויסטיק: החיצים במקלדת (מחזיקים = קצה, עוזבים = אמצע), או נגיעה/עכבר על המסך
   const joy = { x: 31, y: 31 }, held = {};
@@ -268,6 +273,7 @@ function mount(root) {
 
   const machine = createMachine({ view, sound, loadTape, joy: () => joy, saveTape(name, text) {
     if (!saveMyTape(name, text)) return false;
+    kept = text;
     renderMine(root, bindPress);
     return true;
   } });
@@ -357,8 +363,31 @@ function mount(root) {
     }
   }
 
+  // קלטת מחליפה את התוכנית שבזיכרון. אם כתבתם משהו ולא שמרתם: לחיצה ראשונה מזהירה, השנייה טוענת
+  let armed = null, armTimer = 0;
+  function tapeGuard(b) {
+    if (!/^CLOAD/.test(b.getAttribute('data-lines') || '') || !unsaved() || armed === b) { disarm(); return true; }
+    disarm();
+    armed = b;
+    b.classList.add('is-armed');
+    const note = document.createElement('p');
+    note.className = 'd32-tape-warn';
+    note.setAttribute('role', 'status');
+    note.textContent = 'יש בזיכרון תוכנית שלא נשמרה, והקלטת תחליף אותה. לחיצה נוספת על הקלטת טוענת בכל זאת. כדי לשמור קודם: CSAVE "NAME", או "שמירה לקובץ" בלשונית "תוכנית".';
+    b.closest('.d32-shelf').appendChild(note);
+    armTimer = setTimeout(disarm, 8000);
+    return false;
+  }
+  function disarm() {
+    clearTimeout(armTimer);
+    if (armed) armed.classList.remove('is-armed');
+    armed = null;
+    root.querySelectorAll('.d32-tape-warn').forEach(n => n.remove());
+  }
+
   function bindPress(b) {
     b.addEventListener('click', whenOn(() => {
+      if (!tapeGuard(b)) return;
       stopCart();   // קלטת או BREAK בזמן משחק: קודם מוציאים את המחסנית
       if (b.getAttribute('data-d32') === 'break') userBreak();
       else machine.press(b.getAttribute('data-lines').split('|'));

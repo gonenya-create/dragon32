@@ -94,6 +94,7 @@ export function createCoder({ root, input, machine, powerOn }) {
     a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
     say('נשמר בהורדות בשם ' + name + '. אפשר לטעון אותו בחזרה מתי שרוצים.');
+    root.dispatchEvent(new CustomEvent('d32-kept'));
     back();
   }
 
