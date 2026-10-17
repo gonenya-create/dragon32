@@ -74,10 +74,10 @@ export const CARDS = [
   { cat: 'loop', he: 'מחכים רגע', en: 'FOR T', say: 'לולאה שלא עושה כלום, רק סופרת. ככה עשו "המתנה" אז.',
     fields: [['n', 'כמה לחכות', 'num', '500', 10, 5000]], code: v => [`FOR T=1 TO ${num(v.n, 10, 5000, 500)}:NEXT T`], words: 'המתנה עיכוב זמן' },
 
-  { cat: 'keep', he: 'מה יש בתוכנית', en: 'LIST', say: 'מציג את שורות התוכנית.', direct: true, fields: [], code: () => ['LIST'], words: 'רשימה הצגה' },
-  { cat: 'keep', he: 'מריצים', en: 'RUN', say: 'מריץ את התוכנית מההתחלה.', direct: true, fields: [], code: () => ['RUN'], words: 'הרצה התחלה' },
-  { cat: 'keep', he: 'מסדרים מספרים', en: 'RENUM', say: 'ממספר מחדש 10, 20, 30, ומתקן את כל הקפיצות.', direct: true, fields: [], code: () => ['RENUM'], words: 'מספור' },
-  { cat: 'keep', he: 'שומרים לקלטת', en: 'CSAVE', say: 'שומר את התוכנית על "קלטת" בדפדפן הזה. היא תופיע במדף.', direct: true,
+  { cat: 'keep', he: 'מה יש בתוכנית', en: 'LIST', say: 'מציג את שורות התוכנית.', direct: true, needsProg: true, fields: [], code: () => ['LIST'], words: 'רשימה הצגה' },
+  { cat: 'keep', he: 'מריצים', en: 'RUN', say: 'מריץ את התוכנית מההתחלה.', direct: true, needsProg: true, fields: [], code: () => ['RUN'], words: 'הרצה התחלה' },
+  { cat: 'keep', he: 'מסדרים מספרים', en: 'RENUM', say: 'ממספר מחדש 10, 20, 30, ומתקן את כל הקפיצות.', direct: true, needsProg: true, fields: [], code: () => ['RENUM'], words: 'מספור' },
+  { cat: 'keep', he: 'שומרים לקלטת', en: 'CSAVE', say: 'שומר את התוכנית על "קלטת" בדפדפן הזה. היא תופיע במדף.', direct: true, needsProg: true,
     fields: [['n', 'שם (באנגלית)', 'text', 'MYPROG']], code: v => [`CSAVE "${txt(v.n).replace(/[^A-Z0-9]/g, '').slice(0, 8) || 'MYPROG'}"`], words: 'שמירה קלטת' },
   { cat: 'keep', he: 'מוחקים הכול', en: 'NEW', say: 'מוחק את התוכנית שבזיכרון. אי אפשר לבטל!', direct: true, danger: true, fields: [], code: () => ['NEW'], words: 'מחיקה חדש' }
 ];
@@ -207,6 +207,13 @@ export function createCommands({ root, machine, powerOn, input }) {
     if (!el) return;
     const i = +el.dataset.i;
     if (e.target.closest('.d32-cmd-head')) { open = open === i ? -1 : i; render(); list.querySelector(`[data-i="${i}"] .d32-cmd-head`)?.focus(); return; }
+    // פקודה שעובדת על התוכנית (LIST, RUN, RENUM, CSAVE) כשהזיכרון ריק: מסבירים בכרטיס, במקום שגיאה על המסך
+    if (e.target.closest('.d32-cmd-try') && CARDS[i].needsProg && !machine.programText()) {
+      let warn = el.querySelector('.d32-cmd-empty');
+      if (!warn) { warn = document.createElement('p'); warn.className = 'd32-cmd-empty'; warn.setAttribute('role', 'status'); el.querySelector('.d32-cmd-row').before(warn); }
+      warn.textContent = 'אין עדיין תוכנית בזיכרון. כתבו שורות עם מספרים (למשל 10 PRINT "HI"), או לחצו "להוסיף לתוכנית" בכרטיס אחר, ואז נסו שוב.';
+      return;
+    }
     if (e.target.closest('.d32-cmd-try')) type(linesOf(i, 0), CARDS[i].gfx);
     else if (e.target.closest('.d32-cmd-add')) { const s = nextLine(); type(linesOf(i, s).map((l, k) => (s + k * 10) + ' ' + l), CARDS[i].gfx); }
   });

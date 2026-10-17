@@ -928,33 +928,40 @@ if (part('all command cards')) {
   await p.waitForSelector('#dragon-room.is-ready');
   await p.waitForFunction(() => /OK\s*$/.test(document.querySelector('#dragon-room .d32-out').textContent), null, { timeout: 5000 });
   await p.locator('.d32-welcome-x').click().catch(() => {});
-  await send(p, '10 PRINT "CARDS"', 100);   // תוכנית קטנה בזיכרון, בשביל LIST, RUN ו-CSAVE
-  await toTab(p, 'commands');
-  const cats = await p.locator('.d32-cmds-cats button').count();
-  const bad = [];
-  let tried = 0;
-  for (let c = 0; c < cats; c++) {
-    await p.locator('.d32-cmds-cats button').nth(c).click();
-    const n = await p.locator('.d32-cmd').count();
-    for (let i = 0; i < n; i++) {
-      const card = p.locator('.d32-cmd').nth(i);
-      const name = (await card.locator('.d32-cmd-head').innerText()).replace(/\s+/g, ' ');
-      await card.locator('.d32-cmd-head').click();
-      const tryBtn = card.locator('.d32-cmd-try');
-      if (!(await tryBtn.count())) continue;
-      await send(p, 'cls', 150);   // מסך נקי: בודקים רק את מה שהכרטיס הזה הדפיס
-      const before = (await p.locator('#dragon-room .d32-out').textContent()).length;
-      await tryBtn.click();
-      tried++;
-      // מחכים שהמחשב יסיים (PLAY ולולאות לוקחים זמן). תוכנית שלא נגמרת (RUN של GOTO) עוצרים
-      await p.waitForFunction(b => { const r = document.querySelector('#dragon-room'), t = r.querySelector('.d32-out').textContent; return t.length !== b && !r.classList.contains('is-running') && /OK\s*$/.test(t); }, before, { timeout: 6000 }).catch(() => p.keyboard.press('Escape'));
-      await p.waitForTimeout(250);
-      const last = await p.locator('#dragon-room .d32-out').textContent();
-      if (/\?[A-Z/]{1,2}0? ERROR/.test(last)) bad.push(name + ' → ' + last.replace(/\n/g, ' | '));
-      if (await p.locator('#dragon-room').evaluate(e => e.classList.contains('is-gfx'))) { await p.keyboard.press('Escape'); await p.waitForTimeout(150); }
+  // פעמיים: כשהזיכרון ריק (כמו גונן ב-17.10: CSAVE בלי תוכנית), ואז עם תוכנית קטנה בשביל LIST, RUN ו-CSAVE
+  for (const prog of [false, true]) {
+    await send(p, 'new', 100);
+    if (prog) await send(p, '10 PRINT "CARDS"', 100);
+    await toTab(p, 'commands');
+    const cats = await p.locator('.d32-cmds-cats button').count();
+    const bad = [];
+    let tried = 0, explained = 0;
+    for (let c = 0; c < cats; c++) {
+      await p.locator('.d32-cmds-cats button').nth(c).click();
+      const n = await p.locator('.d32-cmd').count();
+      for (let i = 0; i < n; i++) {
+        const card = p.locator('.d32-cmd').nth(i);
+        const name = (await card.locator('.d32-cmd-head').innerText()).replace(/\s+/g, ' ');
+        await card.locator('.d32-cmd-head').click();
+        const tryBtn = card.locator('.d32-cmd-try');
+        if (!(await tryBtn.count())) continue;
+        if (/NEW/.test(name) && !prog) continue;
+        await send(p, 'cls', 150);   // מסך נקי: בודקים רק את מה שהכרטיס הזה הדפיס
+        const before = (await p.locator('#dragon-room .d32-out').textContent()).length;
+        await tryBtn.click();
+        tried++;
+        // מחכים שהמחשב יסיים (PLAY ולולאות לוקחים זמן). תוכנית שלא נגמרת עוצרים. כרטיס שמסביר "אין תוכנית" לא מקליד כלום
+        await p.waitForFunction(b => { const r = document.querySelector('#dragon-room'), t = r.querySelector('.d32-out').textContent; return (t.length !== b && !r.classList.contains('is-running') && /OK\s*$/.test(t)) || !!document.querySelector('.d32-cmd-empty'); }, before, { timeout: 6000 }).catch(() => p.keyboard.press('Escape'));
+        await p.waitForTimeout(250);
+        if (await card.locator('.d32-cmd-empty').count()) explained++;
+        const last = await p.locator('#dragon-room .d32-out').textContent();
+        if (/\?[A-Z/]{1,2}0? ERROR/.test(last)) bad.push(name + ' → ' + last.replace(/\n/g, ' | '));
+        if (await p.locator('#dragon-room').evaluate(e => e.classList.contains('is-gfx'))) { await p.keyboard.press('Escape'); await p.waitForTimeout(150); }
+      }
     }
+    check(`all ${tried} "try now" cards run without an error (${prog ? 'with a program' : 'empty memory'})`, tried >= 18 && bad.length === 0, bad.join('\n') || String(tried));
+    if (!prog) check('with empty memory, the LIST/RUN/RENUM/CSAVE cards explain there is no program yet', explained === 4, String(explained));
   }
-  check(`all ${tried} "try now" cards run without an error`, tried >= 18 && bad.length === 0, bad.join('\n') || String(tried));
   await p.close();
 }
 

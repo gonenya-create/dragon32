@@ -505,6 +505,7 @@ a.d32-cart.is-more:focus-visible { outline: 3px solid var(--focus); outline-offs
 .prose .d32-cmd-say, .prose .d32-cmd-note { margin: 0; font-size: 14px; line-height: 1.5; color: #d9ccb6; }
 .prose .d32-cmd-note { color: #f2c94c; font-size: 13px; }
 .d32-cmd.is-danger .d32-cmd-note { color: #ff9b8a; }
+.prose .d32-cmd-empty { margin: 0; padding: 8px 10px; border: 1.5px solid #f2c94c; border-radius: 8px; color: #f2c94c; font-size: 14px; line-height: 1.5; }
 .d32-cmd-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 .d32-cmd-form label { display: flex; flex-direction: column; gap: 3px; font-size: 13px; color: #c9bba5; }
 .d32-cmd-form :is(input, select) {
