@@ -718,3 +718,10 @@ html[lang="en"] .d32-helper-title { padding-right: 34px; }
 .made-table thead th { font-weight: 700; color: var(--muted); font-size: 13px; }
 @media (max-width: 600px) { .made-table thead { display: none; } .made-table tr { display: block; padding: 8px 0; border-bottom: 1px solid var(--line); } .made-table th, .made-table td { display: block; border: 0; padding: 2px 0; } }
 .prose .lab-link { margin-top: 14px; padding: 10px 14px; border: 1.5px dashed var(--line); border-radius: 10px; }
+
+/* קישור למחשב האמיתי (ניסוי): בפס העליון במחשב, ובראש לשונית "מדף" בטלפון */
+.d32-lab { display: none; }
+.d32.is-theater .d32-theater-btns > .d32-lab { display: inline-flex; white-space: nowrap; align-items: center; gap: 4px; padding: 6px 12px; border: 1.5px dashed #f2c94c; border-radius: 8px; color: #f2c94c; font: 700 14px/1.2 var(--font-body); text-decoration: none; }
+.d32.is-theater .d32-theater-btns > .d32-lab:hover { background: rgba(242, 201, 76, 0.1); }
+.d32.is-phone .d32-lab-shelf { display: block; order: -1; padding: 10px 12px; border: 1.5px dashed #f2c94c; border-radius: 10px; color: #f2c94c; font: 700 14px/1.4 var(--font-body); text-decoration: none; text-align: center; }
+.d32-lab:focus-visible { outline: 3px solid #f2c94c; outline-offset: 2px; }
