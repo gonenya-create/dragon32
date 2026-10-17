@@ -3,6 +3,11 @@
   "private": true,
   "description": "Internal tools (not published: tools/ is in .vercelignore). Dragon 32 tests: npm test",
   "type": "module",
-  "scripts": { "test": "node analyze-test.mjs && node castle-reach.mjs && node dragon-test.mjs" },
-  "devDependencies": { "playwright-core": "1.48.2" }
+  "scripts": {
+    "test": "node analyze-test.mjs && node castle-reach.mjs && node dragon-test.mjs"
+  },
+  "devDependencies": {
+    "axe-core": "4.13.0",
+    "playwright-core": "1.48.2"
+  }
 }

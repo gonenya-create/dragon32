@@ -58,6 +58,7 @@ export function createAI({ root, machine, input, powerOn }) {
       if (line.trim() && !/[֐-׿]/.test(line) && /^[\sA-Z0-9?"'@(]/.test(line)) {
         const pre = document.createElement('pre');
         pre.dir = 'ltr';
+        pre.lang = 'en';
         pre.textContent = line;
         div.appendChild(pre);
       } else if (line.trim()) {

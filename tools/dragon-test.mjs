@@ -102,6 +102,10 @@ if (part('basics')) {
   check('boot screen', /DRAGON 1982 BASIC 1\.0\n\(C\) 2026 GONEN YAROM[\s\S]*OK\s*$/.test(await screenText(p)));
   await send(p, 'print 7*6');
   check('PRINT 7*6 = 42', / 42 \nOK$/.test(await screenText(p)), await screenText(p));
+  // קורא מסך: השורות החדשות מוקראות פעם אחת, באנגלית (נגישות, 17.10)
+  await p.waitForTimeout(700);
+  const said = await p.locator('#dragon-room [role="status"][aria-live="polite"][lang="en"]').textContent();
+  check('screen reader hears the new lines (42, OK)', /42/.test(said) && /OK/.test(said), said);
   await send(p, 'a$="dragon":print a$;len(a$)');
   check('strings, LEN, ":"', /DRAGON 6 \nOK$/.test(await screenText(p)));
   await send(p, 'print 1 and 2;1 or 2;not 1;-2^2');

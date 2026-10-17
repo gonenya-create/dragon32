@@ -62,6 +62,7 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   const kbd = document.createElement('div');
   kbd.className = 'd32-kbd';
   kbd.setAttribute('dir', 'ltr');
+  kbd.lang = 'en';
   kbd.setAttribute('role', 'group');
   kbd.setAttribute('aria-label', 'מקלדת Dragon 32');
   kbd.innerHTML = '<div class="d32-kbd-top"><span class="d32-kbd-name">DRAGON 32</span><span class="d32-kbd-led" aria-hidden="true"></span></div>';

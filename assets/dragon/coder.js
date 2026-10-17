@@ -36,7 +36,7 @@ export function createCoder({ root, input, machine, powerOn }) {
       </div>
     </div>
     <p class="d32-coder-note" role="status"></p>
-    <ol class="d32-coder-list" dir="ltr"></ol>
+    <ol class="d32-coder-list" dir="ltr" lang="en"></ol>
     <p class="d32-coder-empty">אין עדיין תוכנית. כתבו שורה עם מספר, למשל <bdi dir="ltr">10 PRINT "HI"</bdi>, והיא תופיע כאן. לחיצה על שורה מעלה אותה לתיקון.</p>
     <input type="file" class="d32-coder-file" accept=".bas,.txt,text/plain" hidden>`;
 

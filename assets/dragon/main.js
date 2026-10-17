@@ -217,6 +217,30 @@ function mount(root) {
     if ((e.key.length === 1 || ARROWS[e.key]) && machine.key(ARROWS[e.key] || e.key.toUpperCase())) e.preventDefault();
   }
 
+  // קורא מסך: המסך עצמו לא מוקרא כל הזמן (aria-live="off"), אבל השורות החדשות שהמחשב הדפיס
+  // מוקראות פעם אחת, בקצרה, אחרי שהוא נרגע (נגישות לפי ת"י 5568)
+  const sr = document.createElement('div');
+  sr.className = 'visually-hidden';
+  sr.setAttribute('role', 'status');
+  sr.setAttribute('aria-live', 'polite');
+  sr.lang = 'en';
+  root.appendChild(sr);
+  let srPrev = [], srNew = [], srTimer = 0;
+  function announce(rows) {
+    const cur = rows.map(r => r.replace(/[\uE000-\uE08F]/g, '').trimEnd());
+    // המסך גולל למעלה: מוצאים איפה השורות הקודמות נגמרות, וכל מה שאחריהן חדש
+    let j = Math.min(cur.length, srPrev.length);
+    while (j > 0 && cur.slice(0, j).join('\n') !== srPrev.slice(srPrev.length - j).join('\n')) j--;
+    srNew.push(...cur.slice(j).filter(Boolean));
+    srPrev = cur;
+    clearTimeout(srTimer);
+    srTimer = setTimeout(() => {
+      const say = srNew.slice(-4).join('. ');
+      srNew = [];
+      if (say && !root.classList.contains('is-gfx') && !root.classList.contains('is-cart')) sr.textContent = say;
+    }, 600);
+  }
+
   const view = {
     gfx,
     graphics(on) {
@@ -225,6 +249,7 @@ function mount(root) {
       if (on) window.addEventListener('keydown', gfxKey); else window.removeEventListener('keydown', gfxKey);
     },
     show(rows) {
+      announce(rows);
       const txt = rows.join('\n');
       if (!/[\uE000-\uE08F]/.test(txt)) { out.textContent = txt; return; }
       // SET/RESET: תו של גרפיקה גסה מצויר כריבוע עם 4 רבעים

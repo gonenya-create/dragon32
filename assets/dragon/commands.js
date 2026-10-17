@@ -160,6 +160,7 @@ export function createCommands({ root, machine, powerOn, input }) {
     const code = document.createElement('code');
     code.className = 'd32-cmd-code';
     code.dir = 'ltr';
+    code.lang = 'en';
     body.appendChild(code);
     const note = document.createElement('p');
     note.className = 'd32-cmd-note';
