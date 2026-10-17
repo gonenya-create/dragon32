@@ -99,9 +99,11 @@ function fillShelf(root) {
     b.className = 'd32-tape';
     b.dataset.d32 = '1';
     b.dataset.lines = 'CLOAD "' + file + '"|RUN';
-    b.innerHTML = '<span class="d32-tape-label"></span><span class="d32-tape-reels" aria-hidden="true"><i></i><i></i></span><span class="d32-tape-file" dir="ltr"></span>';
+    b.innerHTML = '<span class="d32-tape-label"></span><span class="d32-tape-reels" aria-hidden="true"><i></i><i></i></span><span class="d32-tape-file" dir="ltr"></span><span class="d32-made"></span>';
     b.querySelector('.d32-tape-label').textContent = label;
     b.querySelector('.d32-tape-file').textContent = file;
+    // במה נכתב: כל הקלטות הן תוכניות BASIC שכתבנו (אפשר לראות את הקוד ב-LIST)
+    b.querySelector('.d32-made').textContent = tr('BASIC · נכתב על ידינו', 'BASIC · written by us');
     box.appendChild(b);
   }
 }
@@ -472,9 +474,11 @@ function mount(root) {
       const b = document.createElement('button');
       b.type = 'button';
       b.className = 'd32-cart';
-      b.innerHTML = '<span class="d32-cart-label"></span><span class="d32-cart-file" dir="ltr"></span>';
+      b.innerHTML = '<span class="d32-cart-label"></span><span class="d32-cart-file" dir="ltr"></span><span class="d32-made"></span>';
       b.querySelector('.d32-cart-label').textContent = label;
       b.querySelector('.d32-cart-file').textContent = id;
+      // במה נכתב: המחסניות הן משחקים חדשים שכתבנו ב-JavaScript (לא שפת מכונה של ה-Dragon)
+      b.querySelector('.d32-made').textContent = tr('JavaScript · משחק חדש', 'JavaScript · new game');
       b.addEventListener('click', () => {
         machine.brk();
         input.blur();
