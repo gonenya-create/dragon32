@@ -647,3 +647,14 @@ a.d32-cart.is-more:focus-visible { outline: 3px solid var(--focus); outline-offs
 .d32.is-phone .d32-key small { font-size: 9px; }
 .d32-syskbd { align-self: center; padding: 8px 14px; border: 1.5px solid #6b5d4d; border-radius: 999px; background: transparent; color: #efe6d2; font: 600 14px/1.2 var(--font-body); cursor: pointer; }
 .d32-syskbd:focus-visible { outline: 3px solid #f2c94c; outline-offset: 2px; }
+
+/* העוזר (הערות גונן 17.10): תיבת כתיבה גדולה למעלה, הסבר בשורה אחת, שאלות מוכנות, והתשובות ממלאות את השאר */
+.d32-ai-note summary { cursor: pointer; list-style: none; }
+.d32-ai-note summary::-webkit-details-marker { display: none; }
+.d32-ai-note summary::after { content: ' ⓘ'; opacity: 0.7; }
+.prose .d32-ai-note p { margin: 6px 0 0; }
+.d32-ai-form { flex-direction: column; }
+.d32-ai-form button[type="submit"] { align-self: flex-start; min-width: 96px; }
+.d32-ai textarea { min-height: 76px; font-size: 16px; }
+.d32-ai-quick { display: flex; flex-wrap: wrap; gap: 6px; }
+.d32-ai .d32-ai-quick button { padding: 6px 10px; border-radius: 999px; font-size: 14px; font-weight: 600; }

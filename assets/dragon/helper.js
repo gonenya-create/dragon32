@@ -133,8 +133,10 @@ export function createHelper({ root, machine }) {
     const err = document.createElement('bdi');
     err.dir = 'ltr';
     err.textContent = '?' + code + ' ERROR';
-    title.append(b, err, ' = ');
-    rich(title, (NAMES[code] || 'שגיאה') + (lineNo !== undefined ? ', בשורה ' + lineNo : ''));
+    // שתי שורות, כדי שהעברית והאנגלית לא יתערבבו: "מה קרה?", ומתחת השם בעברית ואחריו השגיאה עצמה
+    title.append(b, document.createElement('br'));
+    rich(title, (NAMES[code] || 'שגיאה') + (lineNo !== undefined ? ', בשורה ' + lineNo : '') + ' ');
+    title.append('(', err, ')');
     lineBox.hidden = !line;
     lineBox.textContent = line;
     let list;

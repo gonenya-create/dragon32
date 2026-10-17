@@ -25,19 +25,31 @@ export function createAI({ root, machine, input, powerOn }) {
   box.setAttribute('aria-labelledby', 'd32-ai-title');
   box.innerHTML = `
     <h2 id="d32-ai-title">🤖 שאלו את העוזר</h2>
-    <p class="d32-ai-note">עוזר AI אמיתי (Claude). הוא רואה את התוכנית ואת המסך, מסביר מה לא עובד, ויכול לכתוב תוכנית. השאלה, התוכנית והמסך נשלחים ל-Anthropic כדי לענות, אז לא לכתוב פרטים אישיים. עד ${PER_DAY} שאלות ביום.</p>
-    <div class="d32-ai-log" aria-live="polite"></div>
+    <details class="d32-ai-note"><summary>עוזר AI (Claude) שרואה את התוכנית ואת המסך. בלי פרטים אישיים.</summary>
+      <p>הוא מסביר מה לא עובד, עונה על שאלות, ויכול לכתוב תוכנית. השאלה, התוכנית והמסך נשלחים ל-Anthropic כדי לענות. עד ${PER_DAY} שאלות ביום.</p></details>
     <form class="d32-ai-form">
       <label for="d32-ai-q" class="visually-hidden">השאלה לעוזר</label>
-      <textarea id="d32-ai-q" rows="2" maxlength="600" placeholder="למשל: רציתי שהתוכנית תדפיס 1 עד 5, למה היא מדפיסה רק 1?"></textarea>
+      <textarea id="d32-ai-q" rows="3" maxlength="600" placeholder="שאלו בעברית, למשל: למה יש שגיאה?"></textarea>
       <button type="submit">שליחה</button>
-    </form>`;
+    </form>
+    <div class="d32-ai-quick" role="group" aria-label="שאלות מוכנות"></div>
+    <div class="d32-ai-log" aria-live="polite"></div>`;
   root.querySelector('.d32-helper').after(box);
   const log = box.querySelector('.d32-ai-log');
   const form = box.querySelector('form');
   const area = box.querySelector('textarea');
   const send = box.querySelector('button[type="submit"]');
   const history = [];
+  // שאלות מוכנות: לחיצה אחת, בלי להקליד
+  const QUICK = ['למה יש שגיאה?', 'מה התוכנית שלי עושה?', 'תכתוב לי משחק קטן', 'איך מציירים עיגול?', 'איך משמיעים מנגינה?'];
+  const quick = box.querySelector('.d32-ai-quick');
+  for (const q of QUICK) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = q;
+    b.addEventListener('click', () => { if (!send.disabled) ask(q); });
+    quick.appendChild(b);
+  }
 
   function bubble(role, text, program) {
     const div = document.createElement('div');
