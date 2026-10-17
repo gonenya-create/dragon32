@@ -1031,6 +1031,14 @@ if (part('real machine lab')) {
     await p.waitForTimeout(3500);
     check(`${path} loads with the drawn keyboard`, r.status() === 200 && (await p.locator('.kbd .k').count()) > 50 && errs.length === 0, errs.join(' | '));
     check(`${path} has the tape shelf (7 tapes)`, (await p.locator('#tapes .tape').count()) === 7);
+    await p.click('#full-open');
+    await p.waitForTimeout(300);
+    check(`${path} full screen: only the computer and keyboard, nothing to scroll`, await p.evaluate(() =>
+      document.body.classList.contains('full') && !document.querySelector('.shelf').offsetParent && !document.querySelector('header').offsetParent
+      && document.documentElement.scrollHeight <= innerHeight + 1 && document.getElementById('kbd').getBoundingClientRect().bottom <= innerHeight));
+    await p.click('#full-close');
+    await p.waitForTimeout(300);
+    check(`${path} leaving full screen brings the page back`, await p.evaluate(() => !document.body.classList.contains('full') && !!document.querySelector('.shelf').offsetParent));
     if (path === '/lab/1982/') {
       await p.waitForFunction(() => window.d32Ready, null, { timeout: 20000 });
       await p.click('#tapes .tape:has-text("GUESS")');

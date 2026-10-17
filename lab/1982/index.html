@@ -14,8 +14,8 @@ body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 'IBM 
 header { display: flex; align-items: center; gap: 12px; padding: 10px 16px; flex-wrap: wrap; }
 header b { font-size: 18px; }
 .tag { font-size: 13px; padding: 3px 10px; border-radius: 999px; background: #3a2a10; color: var(--accent); }
-header a:first-of-type { margin-inline-start: auto; }
-header a { color: var(--ink); text-decoration: none; border: 1.5px solid var(--line); border-radius: 8px; padding: 6px 12px; font-size: 14px; }
+#full-open { margin-inline-start: auto; }
+header a, #full-open { color: var(--ink); text-decoration: none; border: 1.5px solid var(--line); border-radius: 8px; padding: 6px 12px; font-size: 14px; }
 main { max-width: 900px; margin: 0 auto; padding: 0 16px 24px; }
 .tv { background: linear-gradient(180deg, #4a3b2f, #241c16); border-radius: 18px; padding: 14px; }
 canvas { display: block; width: 100%; aspect-ratio: 4 / 3; height: auto; background: #000; border-radius: 10px; outline: none; image-rendering: pixelated; }
@@ -53,12 +53,20 @@ details.note summary { cursor: pointer; color: var(--ink); }
   .tapes { grid-template-columns: 1fr; }
   .info > p.note:first-child { margin-top: 0; }
 }
+#full-open { background: #3a2a10; border-color: var(--accent); color: var(--accent); cursor: pointer; font: inherit; font-size: 14px; }
+#full-close { display: none; position: fixed; top: 8px; inset-inline-end: 8px; z-index: 5; font: inherit; font-size: 14px; color: var(--ink); background: #1b1511; border: 1.5px solid var(--line); border-radius: 8px; padding: 6px 12px; cursor: pointer; opacity: .85; }
+body.full header, body.full main > p.note:first-child, body.full .shelf, body.full .info { display: none; }
+body.full #full-close { display: block; }
+body.full main { display: flex; justify-content: center; align-items: center; max-width: none; min-height: 100vh; min-height: 100dvh; padding: 44px 8px 8px; }
+body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); min-width: min(100%, 520px); }
+@media (max-width: 600px) { body.full main { align-items: start; padding: 48px 4px 4px; } body.full .tv { padding: 6px; border-radius: 10px; } }
 @media (max-width: 600px) { .k { height: 40px; font-size: 12px; } .k small { font-size: 9px; } .k.wide { font-size: 8px; letter-spacing: -0.3px; } }
 </style>
 </head>
 <body>
 <header>
   <b dir="ltr">Dragon 1982</b><span class="tag">המחשב האמיתי · ניסוי</span>
+  <button type="button" id="full-open">📺 מסך מלא</button>
   <a href="/en/lab/1982/" lang="en" hreflang="en" data-lang="en">English</a>
   <a href="/">← חזרה לאפליקציה</a>
 </header>
@@ -170,6 +178,7 @@ for (const row of ROWS) {
 }
 </script>
 <script src="/lab/1982/shelf.js"></script>
+<script src="/lab/1982/full.js"></script>
 <script src="/lab/1982/xroar.js"></script>
 </body>
 </html>
