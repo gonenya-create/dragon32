@@ -837,8 +837,9 @@ if (part('full computer /dragon/app/ (theater, coder, AI)')) {
   await p.locator('.d32-theater-shop').click();
   await p.locator('.d32-theater-only').click();
   await p.waitForTimeout(300);
-  const only = await p.evaluate(() => ({ bar: getComputedStyle(document.querySelector('.d32-theater-bar')).display, coder: getComputedStyle(document.querySelector('.d32-coder')).display, sw: document.querySelector('.d32-screen').getBoundingClientRect().width }));
-  check('screen only: no bar, no tools, the screen fills the window', only.bar === 'none' && only.coder === 'none' && only.sw > 1100, JSON.stringify(only));
+  const only = await p.evaluate(() => { const r = document.querySelector('.d32-screen').getBoundingClientRect(); return { bar: getComputedStyle(document.querySelector('.d32-theater-bar')).display, coder: getComputedStyle(document.querySelector('.d32-coder')).display, sw: r.width, l: Math.round(r.left), r: Math.round(innerWidth - r.right), t: Math.round(r.top), b: Math.round(innerHeight - r.bottom) }; });
+  // המסך כולו בתוך החלון, ממורכז, ולא גולש החוצה (הערות גונן 17.10)
+  check('screen only: no bar, no tools, the screen fills the window, whole and centred', only.bar === 'none' && only.coder === 'none' && only.sw > 1100 && only.l >= 0 && only.r >= 0 && only.t >= 0 && only.b >= 0 && Math.abs(only.l - only.r) <= 2, JSON.stringify(only));
   await p.locator('.d32-only-out').click();
   await p.waitForTimeout(200);
   check('leaving "screen only" brings the tools back', await p.locator('.d32-coder').isVisible() && await p.locator('.d32-theater-bar').isVisible());
@@ -916,6 +917,45 @@ if (part('full computer /dragon/app/ (theater, coder, AI)')) {
   await ph.waitForTimeout(600);
   check('phone: while a cartridge plays the drawer closes and the game buttons show', !(await ph.locator('.d32-coder').isVisible()) && await ph.locator('.d32-pad-btn').first().isVisible());
   await ph.close();
+}
+
+// כל כרטיסי הפקודות המוכנות: "לנסות עכשיו" רץ בלי שגיאה (הערות גונן 17.10: שלושה כרטיסים נפלו ולא תפסנו)
+if (part('all command cards')) {
+  console.log('all command cards');
+  const p = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  p.on('pageerror', e => pageErrors.push(e.message));
+  await p.goto(base.replace(/\/$/, '') + '/');
+  await p.waitForSelector('#dragon-room.is-ready');
+  await p.waitForFunction(() => /OK\s*$/.test(document.querySelector('#dragon-room .d32-out').textContent), null, { timeout: 5000 });
+  await p.locator('.d32-welcome-x').click().catch(() => {});
+  await send(p, '10 PRINT "CARDS"', 100);   // תוכנית קטנה בזיכרון, בשביל LIST, RUN ו-CSAVE
+  await toTab(p, 'commands');
+  const cats = await p.locator('.d32-cmds-cats button').count();
+  const bad = [];
+  let tried = 0;
+  for (let c = 0; c < cats; c++) {
+    await p.locator('.d32-cmds-cats button').nth(c).click();
+    const n = await p.locator('.d32-cmd').count();
+    for (let i = 0; i < n; i++) {
+      const card = p.locator('.d32-cmd').nth(i);
+      const name = (await card.locator('.d32-cmd-head').innerText()).replace(/\s+/g, ' ');
+      await card.locator('.d32-cmd-head').click();
+      const tryBtn = card.locator('.d32-cmd-try');
+      if (!(await tryBtn.count())) continue;
+      await send(p, 'cls', 150);   // מסך נקי: בודקים רק את מה שהכרטיס הזה הדפיס
+      const before = (await p.locator('#dragon-room .d32-out').textContent()).length;
+      await tryBtn.click();
+      tried++;
+      // מחכים שהמחשב יסיים (PLAY ולולאות לוקחים זמן). תוכנית שלא נגמרת (RUN של GOTO) עוצרים
+      await p.waitForFunction(b => { const r = document.querySelector('#dragon-room'), t = r.querySelector('.d32-out').textContent; return t.length !== b && !r.classList.contains('is-running') && /OK\s*$/.test(t); }, before, { timeout: 6000 }).catch(() => p.keyboard.press('Escape'));
+      await p.waitForTimeout(250);
+      const last = await p.locator('#dragon-room .d32-out').textContent();
+      if (/\?[A-Z/]{1,2}0? ERROR/.test(last)) bad.push(name + ' → ' + last.replace(/\n/g, ' | '));
+      if (await p.locator('#dragon-room').evaluate(e => e.classList.contains('is-gfx'))) { await p.keyboard.press('Escape'); await p.waitForTimeout(150); }
+    }
+  }
+  check(`all ${tried} "try now" cards run without an error`, tried >= 18 && bad.length === 0, bad.join('\n') || String(tried));
+  await p.close();
 }
 
 check('no page errors', pageErrors.length === 0, pageErrors.join('\n'));

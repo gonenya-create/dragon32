@@ -415,8 +415,44 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
     if (coding) coder.start();
     document.documentElement.classList.add('d32-theater-on');
     layout();
-    powerOn().then(() => { if (!root.classList.contains('is-cart')) input.focus({ preventScroll: true }); });
+    powerOn().then(() => { if (!root.classList.contains('is-cart')) input.focus({ preventScroll: true }); welcome(); });
     root.scrollTop = 0;
+  }
+
+  // ביקור ראשון במחשב: הצעה קצרה מה לעשות קודם (דוח הגולש העיוור, 17.10). מופיעה פעם אחת בדפדפן
+  function welcome() {
+    let seen = true;
+    try { seen = !!localStorage.getItem('d32-welcome'); } catch { /* בלי זיכרון: לא מציגים */ }
+    if (seen || /#p=/.test(location.hash) || root.querySelector('.d32-welcome')) return;
+    const card = document.createElement('div');
+    card.className = 'd32-welcome';
+    card.setAttribute('role', 'dialog');
+    card.setAttribute('aria-label', 'ברוכים הבאים');
+    card.innerHTML = '<p class="d32-welcome-title">ברוכים הבאים ל-1982! מה עושים קודם?</p>'
+      + '<div class="d32-welcome-btns"><button type="button" data-w="play">🎮 לשחק במשחק</button>'
+      + '<button type="button" data-w="hello">⌨ פקודה ראשונה</button>'
+      + '<button type="button" data-w="guide">📖 מדריך קצר</button></div>'
+      + '<button type="button" class="d32-welcome-x" aria-label="סגירה">✕</button>';
+    tv.appendChild(card);
+    const close = () => {
+      card.remove();
+      try { localStorage.setItem('d32-welcome', '1'); } catch { /* בלי זיכרון */ }
+      input.removeEventListener('keydown', close);
+    };
+    input.addEventListener('keydown', close);
+    card.addEventListener('click', e => {
+      const b = e.target.closest('button');
+      if (!b) return;
+      close();
+      const w = b.dataset.w;
+      if (w === 'play' || w === 'hello') {
+        if (!coding) codeBtn.click();
+        showTab(w === 'play' ? 'shelf' : 'commands');
+      }
+      if (w === 'hello') root.d32.typeLines(['PRINT "HELLO, 1982!"'], () => input.focus({ preventScroll: true }));
+      else if (w === 'guide') exit();
+      else input.focus({ preventScroll: true });
+    });
   }
   function exit() {
     active = false;
