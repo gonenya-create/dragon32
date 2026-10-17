@@ -106,7 +106,11 @@ const CASES = [
   ['NOT binds looser than =', ['X=3:IF NOT X=3 THEN PRINT 1:ELSE PRINT 2', 'IF NOT X=2 THEN PRINT 5'], /\n 5\nOK/],
   ['AND OR with strings compared', ['A$="R":PRINT A$<>"R" AND A$<>"P";A$="R" OR A$="P"'], /\n 0 -1\nOK/],
   ['AND out of range', ['PRINT 40000 AND 1'], /\?FC ERROR\nOK/],
-  ['AND on a string', ['PRINT "A" AND 1'], /\?TM ERROR\nOK/]
+  ['AND on a string', ['PRINT "A" AND 1'], /\?TM ERROR\nOK/],
+  ['IF THEN ELSE', ['10 FOR I=1 TO 3:IF I=2 THEN PRINT "T"; ELSE PRINT I;','20 NEXT','RUN'], /RUN\n 1 T 3\nOK/],
+  ['ELSE line number and assignment', ['10 A=5:IF A>3 THEN B=1 ELSE B=2','20 IF A<3 THEN 90 ELSE PRINT B:PRINT "E"','90 END','RUN'], /RUN\n 1\nE\nOK/],
+  ['nested IF takes the nearest ELSE', ['A=5:B=1:IF A=5 THEN IF B=2 THEN PRINT "X" ELSE PRINT "Y" ELSE PRINT "Z"','IF A=1 THEN IF B=1 THEN PRINT "X" ELSE PRINT "Y" ELSE PRINT "Z"'], /\nY\nOK[\s\S]*\nZ\nOK/],
+  ['GOTO ELSE, :ELSE and ELSE in quotes', ['A=5:IF A=1 GOTO 9 ELSE PRINT "G"','IF A=5 THEN PRINT "S":ELSE PRINT "NO"','IF A=1 THEN PRINT "ELSE" ELSE PRINT "C"'], /\nG\nOK\n[\s\S]*\nS\nOK\n[\s\S]*\nC\nOK/]
 ];
 let fail = 0;
 for (const [name, lines, re, timeout] of CASES) {

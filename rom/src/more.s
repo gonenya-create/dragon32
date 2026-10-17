@@ -6,9 +6,7 @@ AUTON		equ	$da		; 2 בתים: מספר השורה הבא ב-AUTO (0 = כבוי)
 AUTOS		equ	$dc		; 2 בתים: הקפיצה
 
 ; CLS [צבע]: בלי מספר: מסך טקסט ירוק. 0-8: ריבועים מלאים בצבע (0 = שחור)
-st_cls		lbsr	skipsp
-		beq	1F
-		cmpa	#':
+st_cls		lbsr	atend		; בלי מספר (גם לפני ELSE)
 		beq	1F
 		lbsr	getbyte
 		cmpb	#8

@@ -62,8 +62,13 @@ run_stmts	lbsr	chkbreak
 1		lbsr	skipsp
 		beq	rs_eol
 		cmpa	#':
+		beq	2F
+		leau	kw_else,pcr	; אחרי החלק של THEN מגיע ELSE: מדלגים על השאר
+		lbsr	match
 		lbne	err_sn
-		leax	1,x
+		lbsr	st_rem
+		bra	rs_eol
+2		leax	1,x
 		bra	run_stmts
 rs_eol		ldy	CURLN
 		beq	ex_done		; מצב ישיר: סיימנו
@@ -226,6 +231,9 @@ kwtab		fcc	"PRINT"
 		fcc	"IF"
 		fcb	0
 		fdb	st_if-kwbase
+		fcc	"ELSE"
+		fcb	0
+		fdb	st_rem-kwbase	; ELSE כפקודה (אחרי :) = סוף החלק של THEN
 		fcc	"FOR"
 		fcb	0
 		fdb	st_for-kwbase
@@ -337,12 +345,12 @@ st_if		lbsr	rexpr
 		lbsr	match
 		lbne	err_sn
 		tst	FACEXP
-		lbeq	st_rem
+		beq	if_false
 		lbsr	getint
 		lbra	goline
-1		tst	FACEXP		; תנאי לא נכון: מדלגים על כל השאר בשורה
-		lbeq	st_rem
-		lbsr	skipsp
+1		tst	FACEXP		; תנאי לא נכון: ממשיכים אחרי ה-ELSE, ואם אין, מדלגים על כל השאר בשורה
+		beq	if_false
+if_then		lbsr	skipsp
 		cmpa	#'0
 		blo	2F
 		cmpa	#'9
@@ -350,6 +358,48 @@ st_if		lbsr	rexpr
 		lbsr	getint		; THEN 100 = GOTO 100
 		lbra	goline
 2		lbra	statement	; THEN פקודה
+; if_false: מחפשים את ה-ELSE של ה-IF הזה. IF פנימי מוסיף עומק (ה-ELSE הבא שלו). מדלגים על מחרוזות
+if_false	clr	,-s		; העומק
+1		lda	,x
+		beq	9F		; סוף השורה: אין ELSE
+		cmpa	#'"
+		bne	3F
+2		leax	1,x
+		lda	,x
+		beq	9F
+		cmpa	#'"
+		bne	2B
+		leax	1,x
+		bra	1B
+3		lda	-1,x		; מילה רק אם לפניה אין אות
+		cmpa	#'A
+		blo	4F
+		cmpa	#'Z
+		bls	8F
+4		ldd	,x
+		cmpd	#$4946		; IF
+		bne	5F
+		inc	,s
+		leax	2,x
+		bra	1B
+5		cmpd	#$454c		; EL
+		bne	8F
+		ldd	2,x
+		cmpd	#$5345		; SE
+		bne	8F
+		leax	4,x
+		tst	,s
+		beq	6F
+		dec	,s
+		bra	1B
+6		leas	1,s
+		bra	if_then		; ELSE 100 = GOTO 100, אחרת פקודה
+8		leax	1,x
+		bra	1B
+9		leas	1,s
+		rts
+kw_else		fcc	"ELSE"
+		fcb	0
 kw_then		fcc	"THEN"
 		fcb	0
 kw_goto		fcc	"GOTO"
