@@ -871,12 +871,25 @@ export function createMachine({ view, sound, loadTape, saveTape, joy }) {
     tick();
   }
 
+  // שורה ישירה עם FOR (בלי מספר שורה): רצה כמו שורה של תוכנית, כמו במקור. המשתנים נשמרים
+  const DIRECT = -1;
+  const lineOf = n => (n === DIRECT ? undefined : n);
+  function runDirect(cmd) {
+    keys = [];
+    clearTimeout(tickTimer);
+    running = { order: [DIRECT], direct: cmd, pc: { i: 0, s: 0 }, fors: [], stack: [], pending: '', steps: 0, printed: 0, waiting: null };
+    cont = null;
+    setBusy(true);
+    tick();
+  }
+
   // keep=true (BREAK או STOP): שומרים איפה עצרנו, כדי ש-CONT ימשיך משם
   function stop(message, keep) {
     if (!running) return;
-    cont = keep ? { order: running.order, pc: running.pc, fors: running.fors, stack: running.stack } : null;
+    const direct = running.direct !== undefined;
+    cont = keep && !direct ? { order: running.order, pc: running.pc, fors: running.fors, stack: running.stack } : null;
     clearTimeout(tickTimer);   // אחרת טיימר ישן ממשיך להריץ את ההרצה הבאה פעמיים
-    if (G.on) { G.on = false; view.graphics(false); }   // כמו במקור: כשהתוכנית נעצרת, חוזרים למסך הטקסט
+    if (G.on && (!direct || message)) { G.on = false; view.graphics(false); }   // כמו במקור: כשהתוכנית נעצרת, חוזרים למסך הטקסט
     if (running.pending) { const row = running.pending; running.pending = ''; print(row); }
     running = null;
     setBusy(false);
@@ -896,22 +909,23 @@ export function createMachine({ view, sound, loadTape, saveTape, joy }) {
       if (pc.i >= running.order.length) { stop(); return; }
       const lineNo = running.order[pc.i];
       let stmts;
-      try { stmts = compileLine(program[lineNo]); } catch (e) { stop(errorText(e, lineNo)); return; }
+      try { stmts = compileLine(lineNo === DIRECT ? running.direct : program[lineNo]); } catch (e) { stop(errorText(e, lineOf(lineNo))); return; }
       if (pc.s >= stmts.length) { running.pc = { i: pc.i + 1, s: 0 }; continue; }
       if (trace && pc.s === 0) { running.pending += '[' + lineNo + ']'; render(); }
       let r;
       try {
         r = statement(stmts[pc.s], pc);
       } catch (e) {
-        stop(errorText(e, lineNo));
+        stop(errorText(e, lineOf(lineNo)));
         return;
       }
       if (!running) return;
       if (r && r.end) { stop(); return; }
-      if (r && r.stop) { running.pc = { i: pc.i, s: pc.s + 1 }; stop('BREAK IN ' + lineNo, true); return; }
+      if (r && r.stop) { running.pc = { i: pc.i, s: pc.s + 1 }; stop(lineNo === DIRECT ? 'BREAK' : 'BREAK IN ' + lineNo, true); return; }
       if (r && r.jump !== undefined) {
+        if (lineNo === DIRECT) { running.order = sortedLines(); delete running.direct; running.fors = []; }   // GOTO מתוך שורה ישירה: עוברים לתוכנית
         const idx = running.order.indexOf(r.jump);
-        if (idx < 0) { stop(errorText('UL', lineNo)); return; }
+        if (idx < 0) { stop(errorText('UL', lineOf(lineNo))); return; }
         running.pc = { i: idx, s: 0 };
       } else if (r && r.goto) {
         running.pc = { i: r.goto.i, s: r.goto.s };
@@ -920,7 +934,7 @@ export function createMachine({ view, sound, loadTape, saveTape, joy }) {
       } else {
         running.pc = { i: pc.i, s: pc.s + 1 };
       }
-      if (++running.steps > 200000) { stop(errorText('OM', lineNo)); return; }
+      if (++running.steps > 200000) { stop(errorText('OM', lineOf(lineNo))); return; }
       // PLAY: התוכנית מחכה עד שהמנגינה נגמרת
       if (r && r.pause) { tickTimer = setTimeout(tick, r.pause); return; }
     }
@@ -949,7 +963,7 @@ export function createMachine({ view, sound, loadTape, saveTape, joy }) {
     } catch (e) {
       const n = running.order[running.pc.i];
       running.waiting = null;
-      stop(errorText(e, n));
+      stop(errorText(e, lineOf(n)));
       return;
     }
     if (w.targets.length) { running.pending = '?? '; render(); return; }
@@ -1142,6 +1156,7 @@ export function createMachine({ view, sound, loadTape, saveTape, joy }) {
     if (/^(GONEN|HELLO GONEN)$/.test(cmd)) { hello(); print('OK'); return; }
     try {
       const stmts = compileLine(cmd);
+      if (stmts.some(t => /^FOR\s/.test(t))) { runDirect(cmd); return; }
       let wait = 0;
       for (let i = 0; i < stmts.length; i++) {
         const r = statement(stmts[i], { i: -1, s: i });
@@ -1198,7 +1213,7 @@ export function createMachine({ view, sound, loadTape, saveTape, joy }) {
     if (running) {
       const n = running.order[Math.min(running.pc.i, running.order.length - 1)];
       running.waiting = null;
-      stop('BREAK IN ' + n, true);
+      stop(n === DIRECT ? 'BREAK' : 'BREAK IN ' + n, true);
     } else if (G.on) { G.on = false; view.graphics(false); }   // ציור ישיר (בלי תוכנית): BREAK חוזר למסך הטקסט
   }
 

@@ -115,6 +115,13 @@ if (part('basics')) {
   check('easter egg', /HI, IT'S GONEN\.[\s\S]*SAME CURIOSITY, NEW MACHINE\.\nOK$/.test(await screenText(p)));
   await send(p, 'input a');
   check('INPUT outside a program = ?ID', /\?ID ERROR\nOK$/.test(await screenText(p)));
+  // לולאה בשורה ישירה, בלי מספר שורה (כמו במקור; הכרטיסים "סופרים", "סולם צלילים", "מחכים רגע")
+  await send(p, 'for i=1 to 10:print i;:next i', 1500);
+  check('direct FOR..NEXT on one line', / 1  2  3  4  5  6  7  8  9  10 \nOK$/.test(await screenText(p)), tail(await screenText(p), 2));
+  await send(p, 'for t=1 to 500:next t:print t', 2500);
+  check('direct FOR delay keeps variables', / 501 \nOK$/.test(await screenText(p)), tail(await screenText(p), 2));
+  await send(p, 'for i=1 to 2:print x:next j', 800);
+  check('direct NEXT wrong variable = ?NF (no line number)', /\?NF ERROR\nOK$/.test(await screenText(p)), tail(await screenText(p), 2));
   await p.close();
 }
 
