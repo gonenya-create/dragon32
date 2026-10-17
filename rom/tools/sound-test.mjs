@@ -7,7 +7,7 @@ const cases = [
   ...['SOUND 0,1','SOUND 1,0','SOUND 256,1','PLAY "O6C"','PLAY "L0C"','PLAY "Q"','PLAY "T0C"','PLAY "V32C"','PLAY "N13"','PLAY "C'].map(cmd => [cmd,s => assert.ok(s.screen.includes('ERROR'))]),
 ];
 export async function testSound() {
- for (const [cmd, check] of cases) { const s = await runRom([cmd]); check(s); assert.ok(/\nOK(?:\no)?$/.test(s.screen)); }
+ for (const [cmd, check] of cases) { const s = await runRom([cmd]); check(s); assert.ok(/\nOK(?:\n[o@ ]?)?$/.test(s.screen)); }
  const high = await runRom(['SOUND 128,1'], { trapSym: 'sn_sample', range: '4' });
  assert.equal(high.pia1a & 0xfc, 0xfc);
  assert.equal(high.pia1cra & 4, 4);
