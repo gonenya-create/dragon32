@@ -14,7 +14,12 @@ STACK		equ	$7f00
 
 ; משתנים בזיכרון (עמוד אפס של ה-DP=0)
 CURSOR		equ	$0088		; כתובת הסמן במסך (2 בתים)
-LASTKEY		equ	$008a		; המקש האחרון שנסרק (כדי לא לחזור עליו כל עוד הוא לחוץ)
+LASTKEY		equ	$008a		; (לא בשימוש)
+KFOUND		equ	$b0
+KNEW		equ	$b1
+KROW		equ	$b2
+KCOL		equ	$b3
+KPREV		equ	$b8		; מצב המקלדת בסריקה הקודמת: 8 עמודות ($B8-$BF)
 KEYQ		equ	$0100		; תור קלט לבדיקות: [אורך][תווים]. כלי הבדיקה כותב לכאן במקום ללחוץ מקשים
 LINBUF		equ	$0200		; השורה שהוקלדה (עד 249 תווים + 0)
 LINMAX		equ	249
@@ -40,6 +45,11 @@ reset		orcc	#$50		; בלי פסיקות
 		lbsr	newprog
 		clr	$0340		; מצב הגרפיקה (gfx.s) יאותחל בפעם הראשונה
 		clr	LASTKEY
+		ldd	#0
+		std	KPREV
+		std	KPREV+2
+		std	KPREV+4
+		std	KPREV+6
 		leax	banner,pcr
 		lbsr	puts
 		bra	main_ok
@@ -170,10 +180,12 @@ KEYMAP		fcc	"01234567"
 SHIFTED		fcc	"0!\"#$%&'"		; SHIFT על 0-7
 		fcc	"()*+<=>?"			; SHIFT על השורה השנייה
 
-; keyindex: סריקה מלאה שמחזירה ב-A את התו של המקש הלחוץ (עם SHIFT), או 0 אם זה אותו מקש כמו קודם
+; keyindex: סריקה מלאה. מחזיר ב-A את התו של מקש שנלחץ עכשיו (לא היה לחוץ בסריקה הקודמת), או 0.
+; משווים כל עמודה לסריקה הקודמת (KPREV), כך שמקש חדש נקלט גם כשהקודם עדיין לחוץ (הקלדה מהירה)
 keyindex	pshs	b,x,y
 		ldy	#KEYMAP
-		ldb	#0		; עמודה
+		clr	KFOUND		; 0 = אין; אחרת האינדקס בטבלה + 1
+		clrb			; עמודה
 ki_col		lda	#1
 		pshs	b
 		tstb
@@ -186,51 +198,56 @@ ki_col		lda	#1
 		puls	b
 		lda	PIA0
 		coma
-		anda	#$3f		; שורות 0-5 (מקשי תווים)
-		bne	ki_row
-		lda	PIA0
-		coma
-		anda	#$40		; שורה 6: ENTER/CLEAR/BREAK (עמודות 0-2)
-		beq	ki_next
-		cmpb	#3
-		bhs	ki_next
-		lda	#6
-		bra	ki_found
-ki_row		clr	,-s
-1		lsra
-		bcs	2F
-		inc	,s
-		bra	1B
-2		lda	,s+		; A = שורה
-ki_found	pshs	b		; A = שורה, B = עמודה. האינדקס בטבלה: שורה*8+עמודה
-		ldb	#8
-		mul			; D = שורה*8
-		addb	,s		; + עמודה
-		puls	a		; (זורקים את העמודה; B נשאר האינדקס)
-		leax	b,y
-		lda	,x		; התו
-		beq	ki_none
-		cmpa	LASTKEY
-		beq	ki_same
-		sta	LASTKEY
-		; SHIFT?
+		anda	#$7f		; השורות הלחוצות עכשיו
+		ldx	#KPREV
 		pshs	a
-		lda	#$7f
-		sta	PIA0+2
-		lda	PIA0
+		lda	b,x
+		coma
+		anda	,s		; חדש = עכשיו וגם לא קודם
+		sta	KNEW
+		puls	a
+		sta	b,x		; לסריקה הבאה
+		cmpb	#3
+		blo	3F
+		lda	KNEW		; שורה 6 היא תו רק בעמודות 0-2 (ENTER, CLEAR, BREAK). SHIFT לא
+		anda	#$3f
+		sta	KNEW
+3		tst	KFOUND
+		bne	ki_next
+		lda	KNEW
+		beq	ki_next
+		clr	KROW		; השורה הנמוכה שנלחצה
+4		lsra
+		bcs	5F
+		inc	KROW
+		bra	4B
+5		stb	KCOL
+		lda	KROW
+		ldb	#8
+		mul
+		addb	KCOL
+		incb
+		stb	KFOUND
+		ldb	KCOL
+ki_next		incb
+		cmpb	#8
+		blo	ki_col
+		ldb	KFOUND
+		beq	ki_none
+		decb
+		lda	b,y		; התו
+		beq	ki_none
+		pshs	a
+		lda	KPREV+7		; SHIFT לחוץ? (עמודה 7, שורה 6)
 		bita	#$40
 		puls	a
-		bne	ki_out
+		beq	ki_out
 		cmpb	#16
 		bhs	ki_out
 		ldx	#SHIFTED
 		lda	b,x
 		bra	ki_out
-ki_next		incb
-		cmpb	#8
-		blo	ki_col
-ki_none		clr	LASTKEY
-ki_same		clra
+ki_none		clra
 ki_out		puls	b,x,y,pc
 
 ; getkey: מחכה למקש, מחזיר את התו ב-A. קודם תור הבדיקות (KEYQ), אחר כך המקלדת
