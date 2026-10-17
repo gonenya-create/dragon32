@@ -4,6 +4,12 @@
 import { execFileSync } from 'node:child_process';
 import { runRom } from './xr.mjs';
 const CASES = [
+  ['integer functions', ['PRINT INT(-2.5);FIX(-2.5);ABS(-3);SGN(-2)'], /\n-3 -2  3 -1\nOK/],
+  ['roots', ['PRINT SQR(16);SQR(2)'], /\n 4  1\.41421356\nOK/],
+  ['trig identities', ['PRINT SIN(0);COS(0);ATN(1)*4'], /\n 0  1  3\.1415926[56]\nOK/],
+  ['log exp', ['PRINT LOG(EXP(1));EXP(0)'], /\n 1  1\nOK/],
+  ['prefix variables', ['IN=7:SQ=8:PRINT IN;SQ:INTX=9:PRINT INTX'], /\n 7  8\n 9\nOK/],
+  ...['SQR(-1)','LOG(0)','LOG(-1)','SIN(1E10)','COS(-1E20)','TAN(65536)'].map(e => [e, ['PRINT '+e], /\?FC ERROR\nOK/]),
   ['boot', [], /DRAGON 1982 BASIC 1\.0\n\(C\) 2026 GONEN YAROM\n\nOK/],
   ['PRINT 2+3', ['PRINT 2+3'], /\n 5\nOK/],
   ['? and ;', ['? 7*6;"=";6*7'], /\n 42 = 42\nOK/],
@@ -41,4 +47,8 @@ console.log(`\n${CASES.length - fail} passed, ${fail} failed`);
 try {
   execFileSync('node', [new URL('./gfx-test.mjs', import.meta.url).pathname], {stdio:'inherit'});
 } catch { fail++; }
+for (const file of ['func-test.mjs', 'sound-test.mjs', 'xr-test.mjs']) {
+  try { execFileSync('node', [new URL(file, import.meta.url).pathname], {stdio:'inherit'}); }
+  catch { fail++; }
+}
 process.exit(fail ? 1 : 0);

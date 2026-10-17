@@ -79,7 +79,9 @@ function snapshot(data) {
   };
   const rows = Array.from({ length: 16 }, (_, r) =>
     [...ram.subarray(0x400 + r * 32, 0x420 + r * 32)].map(ch).join('').replace(/\s+$/, ''));
-  return { ram, screen: rows.join('\n').replace(/\n+$/, ''), pia1b };
+  const pia = (name, side, tag) => reader(child(child(part(name, 'MC6821'), side), tag).payload).uint();
+  return { pia1a: pia('PIA1', 1, 3), pia1cra: pia('PIA1', 1, 1), pia1crb: pia('PIA1', 2, 1),
+    pia0cra: pia('PIA0', 1, 1), pia0crb: pia('PIA0', 2, 1), ram, screen: rows.join('\n').replace(/\n+$/, ''), pia1b };
 }
 
 export async function runRom(lines, opts = {}) {
