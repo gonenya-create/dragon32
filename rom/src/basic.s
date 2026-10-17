@@ -26,13 +26,28 @@ error		lds	#STACK
 		lbsr	putc
 1		tfr	u,x
 		lbsr	puts
+		; בזמן הרצה: גם מספר השורה ("?SN ERROR IN 30")
+		ldy	CURLN
+		beq	2F
+		leax	m_in,pcr
+		lbsr	puts
+		ldd	2,y
+		lbsr	prtint
+2		lda	#13
+		lbsr	putc
+		ldd	#0
+		std	CURLN
+		ldd	#FORBASE
+		std	FORSP
 		lbra	main_ok
+m_in		fcc	" IN "
+		fcb	0
 m_sn		fcc	"?SN ERROR"
-		fcb	13,0
+		fcb	0
 m_ov		fcc	"?OV ERROR"
-		fcb	13,0
+		fcb	0
 m_div0		fcc	"?/0 ERROR"
-		fcb	13,0
+		fcb	0
 
 ; ---------- ביטויים ----------
 ; push/pop של FAC למחסנית: 6 בתים
@@ -44,20 +59,20 @@ ex_loop		bsr	skipsp
 		beq	ex_sub
 		rts
 ex_add		leax	1,x
-		bsr	pushfac
+		lbsr	pushfac
 		bsr	term
 		lbsr	poparg
 		lbsr	fadd
 		bra	ex_loop
 ex_sub		leax	1,x
-		bsr	pushfac
+		lbsr	pushfac
 		bsr	term
-		bsr	poparg
+		lbsr	poparg
 		lbsr	fsub
 		bra	ex_loop
 
 term		bsr	factor
-te_loop		bsr	skipsp
+te_loop		lbsr	skipsp
 		cmpa	#'*
 		beq	te_mul
 		cmpa	#'/
@@ -98,7 +113,15 @@ factor		lbsr	skipsp
 		bne	4F
 		leax	1,x
 		bra	factor
-4		cmpa	#'.
+4		cmpa	#'A
+		blo	6F
+		cmpa	#'Z
+		bhi	6F
+		pshs	y
+		lbsr	getvar		; משתנה: הערך שלו
+		lbsr	ldfac
+		puls	y,pc
+6		cmpa	#'.
 		beq	5F
 		cmpa	#'0
 		lblo	err_sn
@@ -131,13 +154,15 @@ poparg		puls	y
 ; כמו במקור: מספר מודפס עם רווח או מינוס לפניו ורווח אחריו; ; צמוד, , לעמודה הבאה (16), ובסוף שורה חדשה אלא אם נגמר ב-; או ,
 st_print	lbsr	skipsp
 		beq	pr_nl		; סוף השורה
+		cmpa	#':
+		beq	pr_nl		; סוף הפקודה
 pr_item		cmpa	#';
 		beq	pr_semi
 		cmpa	#',
 		beq	pr_comma
 		cmpa	#'"
 		beq	pr_str
-		lbsr	expr
+		lbsr	rexpr
 		lbsr	fout		; U = הטקסט
 		tfr	u,y
 1		lda	,y+
@@ -158,6 +183,8 @@ pr_str		leax	1,x
 pr_semi		leax	1,x
 		lbsr	skipsp
 		beq	pr_done
+		cmpa	#':
+		beq	pr_done
 		bra	pr_item
 pr_comma	leax	1,x
 		; לעמודה הבאה שמתחלקת ב-16
@@ -168,8 +195,12 @@ pr_comma	leax	1,x
 		bne	4B
 		lbsr	skipsp
 		beq	pr_done
+		cmpa	#':
+		beq	pr_done
 		bra	pr_item
 pr_next		lbsr	skipsp
+		beq	pr_nl
+		cmpa	#':
 		beq	pr_nl
 		cmpa	#';
 		beq	pr_semi
@@ -179,27 +210,6 @@ pr_next		lbsr	skipsp
 pr_nl		lda	#13
 		lbsr	putc
 pr_done		rts
-
-; ---------- ביצוע שורה ----------
-execute		ldx	#LINBUF
-		lbsr	skipsp
-		beq	ex_ok
-		cmpa	#'?
-		bne	1F
-		leax	1,x
-		bra	2F
-1		leau	kw_print,pcr
-		bsr	match
-		beq	2F
-		; פקודות גרפיקה (gfx.s): מחזיר Z=1 אם הפקודה טופלה
-		lbsr	gfx_dispatch
-		lbne	err_sn
-		bra	3F
-2		lbsr	st_print
-3
-		lbsr	skipsp
-		lbne	err_sn
-ex_ok		rts
 
 ; match: האם הטקסט ב-X מתחיל במילה שב-U (מסתיימת ב-0)? אם כן Z=1 ו-X אחריה
 match		pshs	x
@@ -242,4 +252,4 @@ expect		pshs	a
 err_fc		leau	m_fc,pcr
 		lbra	error
 m_fc		fcc	"?FC ERROR"
-		fcb	13,0
+		fcb	0

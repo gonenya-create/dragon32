@@ -29,6 +29,7 @@ reset		orcc	#$50		; בלי פסיקות
 		lbsr	hw_init
 		lbsr	cls
 		clr	KEYQ		; תור הקלט ריק
+		lbsr	newprog
 		clr	LASTKEY
 		leax	banner,pcr
 		lbsr	puts
@@ -36,7 +37,12 @@ reset		orcc	#$50		; בלי פסיקות
 ; הלולאה הראשית: קוראים שורה ומבצעים אותה
 main		lbsr	getline
 		lbsr	execute
-main_ok		leax	ok,pcr
+main_ok		lda	CURSOR+1	; אם הסמן לא בתחילת שורה (PRINT שנגמר ב-;), קודם שורה חדשה
+		anda	#$1f
+		beq	1F
+		lda	#13
+		lbsr	putc
+1		leax	ok,pcr
 		lbsr	puts
 		bra	main
 ok		fcc	"OK"
@@ -283,6 +289,7 @@ cursor_off	pshs	a,x
 
 		include	"fp.s"
 		include	"basic.s"
+		include	"interp.s"
 		include	"gfx.s"
 
 ; ---------- וקטורים ----------
