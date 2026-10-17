@@ -113,10 +113,10 @@ for (const [name, lines, re, timeout] of CASES) {
 }
 console.log(`\n${CASES.length - fail} passed, ${fail} failed`);
 try {
-  execFileSync('node', [new URL('./gfx-test.mjs', import.meta.url).pathname], {stdio:'inherit'});
+  execFileSync(process.execPath, [new URL('./gfx-test.mjs', import.meta.url).pathname], {stdio:'inherit'});
 } catch { fail++; }
-for (const file of ['func-test.mjs', 'sound-test.mjs', 'xr-test.mjs']) {
-  try { execFileSync('node', [new URL(file, import.meta.url).pathname], {stdio:'inherit'}); }
+for (const file of ['func-test.mjs', 'sound-test.mjs', 'xr-test.mjs', 'tape-test.mjs']) {
+  try { execFileSync(process.execPath, [new URL(file, import.meta.url).pathname], {stdio:'inherit'}); }
   catch { fail++; }
 }
 process.exit(fail ? 1 : 0);

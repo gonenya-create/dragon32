@@ -111,6 +111,19 @@ export async function runRom(lines, opts = {}) {
       await writeFile(basicPath, basic.replace(marker,
         '\t\tlbsr\tgfx_fn\n\t\tbeq\t8F\n$1'));
     }
+    // בבדיקת BREAK מושכים את שורת המקלדת למטה רק לאחר תחילת ההעברה.
+    if (opts.tapeBreak) {
+      const path = join(src, 'tape.s');
+      const tape = await readFile(path, 'utf8');
+      if (!tape.includes('t_check pshs a')) throw new Error('Missing tape BREAK test point');
+      await writeFile(path, tape.replace('t_check pshs a', `t_check pshs a
+        clr PIA0+1
+        lda #$40
+        sta PIA0
+        lda #4
+        sta PIA0+1
+        clr PIA0`));
+    }
     const bytes = [input.length, ...input];
     const table = [];
     for (let i = 0; i < bytes.length; i += 16)
@@ -119,7 +132,9 @@ export async function runRom(lines, opts = {}) {
     await exec('asm6809', ['-B', '-o', rom, '-s', sym, 'boot.s'], { cwd: src, timeout: wallTimeout, killSignal: 'SIGKILL' });
     const symbols = new Map([...((await readFile(sym, 'utf8')).matchAll(/^(\w+)\s+equ\s+(\d+)\s*$/gm))].map(m => [m[1], Number(m[2])]));
     if (!symbols.has(trapSym)) throw new Error(`Unknown trap symbol: ${trapSym}`);
-    const args = ['-ui', 'null', '-ao', 'null', '-machine', 'dragon32', '-extbas', rom, '-no-ratelimit', '-trap', `pc=0x${symbols.get(trapSym).toString(16)}`];
+    const args = ['-no-tape-fast', '-no-tape-pad-auto', '-ui', 'null', '-ao', 'null', '-machine', 'dragon32', '-extbas', rom, '-no-ratelimit', '-trap', `pc=0x${symbols.get(trapSym).toString(16)}`];
+    if (opts.tapeLoad) args.push('-load-tape', opts.tapeLoad);
+    if (opts.tapeWrite) args.push('-tape-write', opts.tapeWrite);
     if (range !== undefined) args.push('-trap-range', String(range));
     args.push('-trap-snap', sna, '-trap-timeout', '0', '-timeout', String(timeout));
     await exec('xroar', args, { timeout: wallTimeout, killSignal: 'SIGKILL' });
