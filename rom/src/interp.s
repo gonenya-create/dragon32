@@ -4,6 +4,7 @@
 ; התוכנית בזיכרון, מ-PROGST: רשומות [קישור 2][מספר שורה 2][טקסט][0], ובסוף קישור 0000.
 ; בניסוי הזה הטקסט נשמר כמו שהוקלד (בלי קיצור למילים שמורות). המשתנים אחרי התוכנית: [שם 2][ערך 5].
 
+STRLOW		equ	$6000		; מכאן ומעלה (עד $7E00): מחרוזות. מתחת: תוכנית, משתנים ומערכים
 PROGST		equ	$1e00		; אחרי 4 עמודי הגרפיקה ($0600-$1DFF), כמו במקור
 FORBASE		equ	$7f00		; מחסנית ה-FOR (עולה מ-$7F00; מחסנית המעבד יורדת ממנו)
 FORLEN		equ	16		; [שם 2][עד 5][צעד 5][רשומה 2][טקסט 2]
@@ -15,6 +16,7 @@ LINNUM		equ	$98		; מספר שורה זמני
 VARPTR		equ	$9a		; כתובת הערך של המשתנה האחרון
 VNAME		equ	$9c		; שם המשתנה האחרון (2 תווים)
 TMPP		equ	$9e
+ARYEND		equ	$a6		; סוף המערכים (המערכים מ-VARTOP עד ARYEND; ראו stmt2.s)
 LINPTR		equ	$a0
 FORNAME		equ	$a3
 JUMPED		equ	$a2		; קפיצה (GOTO, RUN): ממשיכים מתחילת פקודה, בלי לבדוק : או סוף שורה
@@ -26,6 +28,7 @@ newprog		ldd	#0
 		std	PROGEND
 clrvars		ldd	PROGEND
 		std	VARTOP
+		std	ARYEND
 		ldd	#FORBASE
 		std	FORSP
 		rts
@@ -131,6 +134,9 @@ st_let		; גרפיקה? (gfx.s)
 		beq	st_none
 		; צליל? (sound.s)
 		lbsr	snd_dispatch
+		beq	st_none
+		; GOSUB, RETURN, ON, DATA, READ, RESTORE, DIM? (stmt2.s)
+		lbsr	st2_dispatch
 		beq	st_none
 		lbsr	skipsp
 		cmpa	#'A
@@ -308,6 +314,7 @@ st_next		ldy	FORSP
 		lbsr	getvar		; NEXT I: חייב להתאים
 		puls	y
 2		ldd	,y
+		lbeq	err_nf		; רשומת GOSUB: NEXT לא עובר אותה
 		cmpd	VNAME
 		beq	3F
 		leay	-FORLEN,y	; אולי לולאה פנימית נגמרה בלי NEXT
@@ -317,6 +324,7 @@ st_next		ldy	FORSP
 		bra	2B
 1		; NEXT בלי שם: הלולאה האחרונה
 		ldd	,y
+		lbeq	err_nf		; רשומת GOSUB
 		std	VNAME
 		pshs	x,y
 		lbsr	findvar
@@ -559,6 +567,12 @@ getvar		lbsr	skipsp
 		bra	7F
 4		clrb
 7		std	VNAME
+		; מערך? (שם ואחריו סוגריים): stmt2.s מחזיר U = הכתובת של האיבר
+		pshs	a
+		lda	,x
+		cmpa	#'(
+		puls	a
+		lbeq	arr_ref
 		pshs	x
 		bsr	findvar
 		puls	x
@@ -573,7 +587,19 @@ findvar		ldy	PROGEND
 		beq	3F
 		leay	7,y
 		bra	1B
-2		; חדש
+2		; חדש. אם יש מערכים אחרי המשתנים, מזיזים אותם 7 בתים קדימה
+		pshs	x,u
+		ldx	ARYEND
+		leau	7,x
+		cmpu	#STRLOW
+		lbhs	err_om
+		stu	ARYEND
+9		cmpx	VARTOP
+		bls	10F
+		lda	,-x
+		sta	,-u
+		bra	9B
+10		puls	x,u
 		ldd	VNAME
 		std	,y
 		ldd	#0

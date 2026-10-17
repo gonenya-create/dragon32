@@ -10,7 +10,7 @@ SCREND		equ	$0600
 PIA0		equ	$ff00		; מקלדת
 PIA1		equ	$ff20		; מצב תצוגה, צליל
 SAM		equ	$ffc0
-STACK		equ	$7f00
+STACK		equ	$7f00		; מחסנית המעבד יורדת מכאן (עד $7E00)
 
 ; משתנים בזיכרון (עמוד אפס של ה-DP=0)
 CURSOR		equ	$0088		; כתובת הסמן במסך (2 בתים)
@@ -320,6 +320,7 @@ cursor_off	pshs	a,x
 		include	"gfx.s"
 		include	"funcs.s"
 		include	"sound.s"
+		include	"stmt2.s"
 		include	"testq.s"
 
 ; ---------- וקטורים ----------
