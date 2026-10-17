@@ -464,14 +464,18 @@ function mount(root) {
 
   // הקלדה "אמיתית" של תוכנית מעיתון: אות אחרי אות בשורת ההקלדה, ו-Enter בסוף כל שורה
   let typing = null;
+  let typingDone = null;
   function typeLines(lines, done) {
     if (typing) clearTimeout(typing);
+    // הקלדה קודמת נקטעה: מודיעים לה שהסתיימה (למשל כדי שהכפתור שלה יחזור לעצמו)
+    if (typingDone) { const d = typingDone; typingDone = null; d(); }
+    typingDone = done || null;
     let li = 0, ci = 0;
     const quick = matchMedia('(prefers-reduced-motion: reduce)').matches;
     machine.press([]);
     input.focus({ preventScroll: true });
     const stepType = () => {
-      if (li >= lines.length) { typing = null; syncCursor(); done && done(); return; }
+      if (li >= lines.length) { typing = null; syncCursor(); typingDone = null; done && done(); return; }
       const line = lines[li];
       if (ci < line.length && !quick) {
         input.value = line.slice(0, ++ci);
@@ -487,7 +491,7 @@ function mount(root) {
     };
     stepType();
   }
-  root.d32 = { powerOn, typeLines, stopTyping() { if (typing) clearTimeout(typing); typing = null; } };
+  root.d32 = { powerOn, typeLines, stopTyping() { if (typing) clearTimeout(typing); typing = null; if (typingDone) { const d = typingDone; typingDone = null; d(); } } };
   input.addEventListener('keydown', e => { if (typing && e.key !== 'Escape') root.d32.stopTyping(); });
 
   // במחשב: מצב "סלון של פעם" (מסך מלא, טלוויזיה ומקלדת מצוירת). רק בחדר ה-Dragon

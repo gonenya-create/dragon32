@@ -193,10 +193,13 @@ export function createCommands({ root, machine, powerOn, input }) {
 
   // מקלידים במחשב כמו אדם (typeLines מ-main.js). קודם מדליקים, ואם רץ משהו, עוצרים אותו
   // כרטיס שאינו ציור מחזיר קודם למסך הטקסט, אחרת התוצאה נכתבת מאחורי הציור ולא רואים אותה
-  function type(lines, gfx) {
+  // בזמן שהמחשב מקליד, הכפתור אומר "מקליד…" ולא מקבל לחיצה נוספת
+  function type(lines, gfx, btn) {
+    if (btn) { btn.dataset.label = btn.textContent; btn.textContent = 'מקליד…'; btn.setAttribute('aria-busy', 'true'); btn.disabled = true; }
+    const done = () => { if (btn) { btn.textContent = btn.dataset.label; btn.removeAttribute('aria-busy'); btn.disabled = false; } input.focus({ preventScroll: true }); };
     powerOn().then(() => {
       if (machine.running || !gfx) machine.brk?.();
-      root.d32.typeLines(lines, () => input.focus({ preventScroll: true }));
+      root.d32.typeLines(lines, done);
     });
   }
 
@@ -214,8 +217,9 @@ export function createCommands({ root, machine, powerOn, input }) {
       warn.textContent = 'אין עדיין תוכנית בזיכרון. כתבו שורות עם מספרים (למשל 10 PRINT "HI"), או לחצו "להוסיף לתוכנית" בכרטיס אחר, ואז נסו שוב.';
       return;
     }
-    if (e.target.closest('.d32-cmd-try')) type(linesOf(i, 0), CARDS[i].gfx);
-    else if (e.target.closest('.d32-cmd-add')) { const s = nextLine(); type(linesOf(i, s).map((l, k) => (s + k * 10) + ' ' + l), CARDS[i].gfx); }
+    const btn = e.target.closest('.d32-cmd-try, .d32-cmd-add');
+    if (e.target.closest('.d32-cmd-try')) type(linesOf(i, 0), CARDS[i].gfx, btn);
+    else if (e.target.closest('.d32-cmd-add')) { const s = nextLine(); type(linesOf(i, s).map((l, k) => (s + k * 10) + ' ' + l), CARDS[i].gfx, btn); }
   });
   render();
   return box;

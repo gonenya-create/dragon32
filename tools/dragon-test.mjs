@@ -834,6 +834,14 @@ if (part('full computer /dragon/app/ (theater, coder, AI)')) {
   await p.locator('.d32-theater-kbd').click();
   await p.waitForTimeout(150);
   check('workshop: and closes it again', !(await p.locator('.d32-kbd').isVisible()));
+  // מסך בלבד שנפתח מתוך החלון הגדול לכתיבה: גם הוא שלם וממורכז (סבב 2 של הגולש העיוור)
+  await p.locator('.d32-theater-only').click();
+  await p.waitForTimeout(300);
+  const so = await p.evaluate(() => { const r = document.querySelector('.d32-screen').getBoundingClientRect(); return { l: Math.round(r.left), r: Math.round(innerWidth - r.right) }; });
+  check('screen only from the big writing window is whole and centred', so.l >= 0 && so.r >= 0 && Math.abs(so.l - so.r) <= 2, JSON.stringify(so));
+  await p.locator('.d32-only-out').click();
+  await p.waitForTimeout(200);
+  check('while the computer is open, the guide behind it is out of keyboard reach (inert)', await p.evaluate(() => document.querySelector('.room-mag').inert && document.querySelector('.guide-bar').inert));
   await p.locator('.d32-theater-shop').click();
   await p.locator('.d32-theater-only').click();
   await p.waitForTimeout(300);

@@ -414,6 +414,7 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
     root.classList.toggle('has-coder', coding);
     if (coding) coder.start();
     document.documentElement.classList.add('d32-theater-on');
+    guideInert(true);
     layout();
     powerOn().then(() => { if (!root.classList.contains('is-cart')) input.focus({ preventScroll: true }); welcome(); });
     root.scrollTop = 0;
@@ -434,12 +435,16 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
       + '<button type="button" data-w="guide">📖 מדריך קצר</button></div>'
       + '<button type="button" class="d32-welcome-x" aria-label="סגירה">✕</button>';
     tv.appendChild(card);
+    // נסגר גם כשמתחילים לעבוד בלעדיו: מקלידים, או לוחצים על כל דבר אחר במחשב
+    const outside = e => { if (!card.contains(e.target)) close(); };
     const close = () => {
       card.remove();
       try { localStorage.setItem('d32-welcome', '1'); } catch { /* בלי זיכרון */ }
       input.removeEventListener('keydown', close);
+      root.removeEventListener('pointerdown', outside, true);
     };
     input.addEventListener('keydown', close);
+    root.addEventListener('pointerdown', outside, true);
     card.addEventListener('click', e => {
       const b = e.target.closest('button');
       if (!b) return;
@@ -468,8 +473,13 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
     document.documentElement.classList.remove('d32-theater-on');
     toGuide();
   }
+  // כשהמחשב פתוח, המדריך שמאחוריו לא נגיש למקלדת ולקורא מסך (inert); כשחוזרים למדריך הוא חוזר
+  function guideInert(on) {
+    document.querySelectorAll('.page > :not(main), main > :not(.room-machine)').forEach(el => { el.inert = on; });
+  }
   // יציאה מהמחשב: המדריך, מלמעלה, והפוקוס על "חזרה למחשב"
   function toGuide() {
+    guideInert(false);
     scrollTo(0, 0);
     document.querySelector('.guide-back')?.focus({ preventScroll: true });
   }
@@ -493,6 +503,13 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
     if (sysKbd) input.focus(); else input.blur();
   });
   panes.keys.appendChild(sysBtn);
+  // מסך הפתיחה בטלפון: כמה מילים מעל המחשב הכבוי, כדי שלא יהיה רק מסך שחור (גונן, 17.10)
+  const hello = document.createElement('div');
+  hello.className = 'd32-hello';
+  hello.innerHTML = '<p class="d32-hello-title">ברוכים הבאים ל-1982</p>'
+    + '<p class="d32-hello-text">זה <bdi dir="ltr">Dragon 32</bdi>, המחשב הביתי שיצא בוויילס. משחקים במחסניות ובקלטות, כותבים <bdi dir="ltr">BASIC</bdi>, ושואלים את העוזר.</p>'
+    + '<p class="d32-hello-go">לוחצים על המתג, ומתחילים ↓</p>';
+  tv.before(hello);
   function enterPhone() {
     if (phone || active) return;
     left = false;
@@ -505,6 +522,7 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
     showTab('keys', false);
     root.classList.add('is-phone');
     document.documentElement.classList.add('d32-theater-on');
+    guideInert(true);
     coder.start();
     showStatus();
     clearInterval(statusTimer);
@@ -524,7 +542,7 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
     kbdMark.replaceWith(kbd);
     input.inputMode = '';
     if (tab === 'keys') showTab('program', false);
-    if (!quiet) toGuide();
+    if (!quiet) toGuide(); else guideInert(false);
   }
   // "מה קרה?" נפתח בזמן שלשונית אחרת פתוחה: עוברים ללשונית העוזר
   const helperBox = root.querySelector('.d32-helper');

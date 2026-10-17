@@ -583,8 +583,8 @@ a.d32-cart.is-more:focus-visible { outline: 3px solid var(--focus); outline-offs
 .d32.is-phone .d32-ai-msg.is-assistant { border-color: #4a3d31; }
 .prose .d32.is-phone :is(.d32-ai-note, .d32-ai h2, .d32-helper-title), .d32.is-phone .d32-ai-msg.is-note { color: #e1d5c1; }
 /* משחק מחסנית בטלפון: כפתורים כהים וגדולים, שממלאים את המקום שהמגירה פינתה */
-.d32.is-phone.is-cart .d32-pad { flex: 1; align-content: center; margin-top: 16px; }
-.d32.is-phone .d32-pad-btn { min-height: 76px; background: #2a2119; color: #efe6d2; border-color: #4a3d31; }
+.d32.is-phone.is-cart .d32-pad { flex: 1; align-content: flex-start; margin-top: 14px; }
+.d32.is-phone .d32-pad-btn { min-height: 96px; background: #2a2119; color: #efe6d2; border-color: #4a3d31; }
 .d32.is-phone .d32-pad-btn.is-down { background: #efe6d2; color: #1b1206; }
 .d32.is-phone .d32-pad-fire { border-color: #c2503f; color: #ff9b8a; }
 .d32.is-phone .d32-eject { background: #241e19; color: #efe6d2; border-color: #6b5d4d; }
@@ -667,3 +667,16 @@ a.d32-cart.is-more:focus-visible { outline: 3px solid var(--focus); outline-offs
 .d32-welcome-btns button:hover, .d32-welcome-btns button:focus-visible { border-color: #f2c94c; outline: none; }
 .d32-welcome-x { position: absolute; top: 6px; left: 8px; border: 0; background: none; color: #c9bba5; font-size: 16px; cursor: pointer; }
 .d32.is-only .d32-welcome, .d32.is-cart .d32-welcome { display: none; }
+
+/* מסך בלבד שנפתח מהחלון הגדול לכתיבה: בלי השוליים של הסדנה (סבב 2 של הגולש העיוור) */
+.d32.is-theater.is-shop.is-only { padding: 0; }
+/* כרטיס "לנסות עכשיו" בזמן שהמחשב מקליד */
+.d32-cmd-try[aria-busy="true"] { opacity: 0.7; cursor: progress; }
+/* מסך הפתיחה בטלפון: ברוכים הבאים, מעל המחשב הכבוי */
+.d32-hello { display: none; }
+.d32.is-phone.is-off .d32-hello { display: block; margin-top: auto; padding: 0 8px 18px; text-align: center; color: #efe6d2; }
+.d32.is-phone.is-off .d32-tv { margin-top: 0; margin-bottom: auto; }
+.d32-hello p { margin: 0; }
+.d32-hello-title { font: 700 30px/1.2 var(--font-body); color: #f2c94c; }
+.d32-hello-text { margin-top: 10px !important; font-size: 17px; line-height: 1.6; color: #d9ccb6; }
+.d32-hello-go { margin-top: 14px !important; font-size: 15px; font-weight: 700; color: #8fe39a; }

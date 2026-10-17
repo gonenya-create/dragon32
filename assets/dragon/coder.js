@@ -74,7 +74,7 @@ export function createCoder({ root, input, machine, powerOn }) {
       list.appendChild(li);
     }
     panel.classList.toggle('is-empty', !lines.length);
-    count.textContent = lines.length ? lines.length + ' שורות' : '';
+    count.textContent = lines.length === 1 ? 'שורה אחת' : lines.length ? lines.length + ' שורות' : '';
   }
 
   // לחיצה על שורה: היא עולה לשורת ההקלדה, מתקנים ולוחצים Enter (כמו EDIT)
