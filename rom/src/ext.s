@@ -274,3 +274,482 @@ rnkw		fcc	"GOTO"
 		fcc	"RESTORE"
 		fcb	0
 		fcb	0
+
+; ---------- PRINT USING ----------
+; PRINT USING "תבנית"; ביטוי [; ביטוי]...  שדות בתבנית:
+;   מספרים: # ספרה, . נקודה, , פסיקים בין אלפים, ** מילוי בכוכביות, $$ דולר צמוד, + בהתחלה או בסוף (סימן),
+;   - בסוף (מינוס אחרי המספר). מחרוזות: ! התו הראשון, % % רוחב קבוע. כל השאר נכתב כמו שהוא.
+;   התבנית חוזרת מההתחלה אם יש יותר ביטויים משדות. מספר שלא נכנס: % ואז המספר.
+PU_P		equ	$03f0		; המקום בתבנית
+PU_E		equ	$03f2		; סוף התבנית
+PU_W		equ	$03f4		; כמה מקומות לפני הנקודה
+PU_D		equ	$03f5		; ספרות אחרי הנקודה ($FF = בלי נקודה)
+PU_F		equ	$03f6		; 1 פסיקים, 2 כוכביות, 4 דולר, 8 + בהתחלה, 16 + בסוף, 32 - בסוף
+PU_N		equ	$03f7		; כמה ספרות
+PU_SG		equ	$03f8		; המספר שלילי
+PU_WR		equ	$03f9		; כבר חזרנו להתחלת התבנית
+PU_IP		equ	$03fa		; ספרות לפני הנקודה
+PU_FAC		equ	$03ea		; עותק של המספר (6 בתים)
+PU_S		equ	$03fb		; תחילת התבנית
+
+pr_using	lbsr	rexpr
+		lbsr	needstr
+		ldb	SLEN
+		lbeq	err_fc
+		ldu	SPTR
+		stu	PU_P
+		stu	PU_S
+		clra
+		leau	d,u
+		stu	PU_E
+		; תבנית בלי שום שדה: ?FC ERROR (לפני שכותבים משהו)
+		ldu	PU_S
+2		cmpu	PU_E
+		lbeq	err_fc
+		lbsr	pu_isfield
+		beq	3F
+		leau	1,u
+		bra	2B
+3		lbsr	skipsp
+		cmpa	#';
+		beq	1F
+		cmpa	#',
+		lbne	err_sn
+1		leax	1,x
+pu_item		lbsr	rexpr
+		pshs	x
+		bsr	pu_lit		; טקסט עד השדה הבא
+		ldu	PU_P
+		lda	,u
+		tst	VALTYP
+		bne	pu_str
+		cmpa	#'!
+		lbeq	err_tm
+		cmpa	#'%
+		lbeq	err_tm
+		lbsr	pu_num
+		bra	2F
+pu_str		cmpa	#'!
+		beq	3F
+		cmpa	#'%
+		lbne	err_tm
+		lbsr	pu_pct
+		bra	2F
+3		leau	1,u		; ! = התו הראשון
+		stu	PU_P
+		lda	#$20
+		tst	SLEN
+		beq	4F
+		lda	[SPTR]
+4		lbsr	putc
+2		puls	x
+		lbsr	atend
+		beq	pu_nl
+		cmpa	#';
+		beq	5F
+		cmpa	#',
+		lbne	err_sn
+5		leax	1,x
+		lbsr	atend
+		bne	pu_item
+		bsr	pu_tail		; ; בסוף: בלי שורה חדשה
+		rts
+pu_nl		bsr	pu_tail
+		lda	#13
+		lbra	putc
+
+; pu_tail: הטקסט שאחרי השדה האחרון, עד השדה הבא או סוף התבנית
+pu_tail		ldu	PU_P
+1		cmpu	PU_E
+		beq	9F
+		bsr	pu_isfield
+		beq	9F
+		lda	,u+
+		lbsr	putc
+		bra	1B
+9		rts
+
+; pu_lit: כותב טקסט מהתבנית עד תחילת שדה (חוזר להתחלה בסוף התבנית). בלי שום שדה: ?FC ERROR
+pu_lit		clr	PU_WR
+		ldu	PU_P
+1		cmpu	PU_E
+		bne	2F
+		tst	PU_WR
+		lbne	err_fc
+		inc	PU_WR
+		ldu	PU_S		; חוזרים להתחלת התבנית
+		bra	1B
+2		bsr	pu_isfield
+		beq	9F
+		lda	,u+
+		lbsr	putc
+		bra	1B
+9		stu	PU_P
+		rts
+
+; pu_isfield: Z=1 אם בכתובת U מתחיל שדה
+pu_isfield	pshs	a,b
+		lda	,u
+		ldb	#0
+		pshs	u
+		leau	1,u
+		cmpu	PU_E
+		puls	u
+		beq	1F
+		ldb	1,u		; התו הבא (0 בסוף התבנית)
+1		cmpa	#'#
+		beq	8F
+		cmpa	#'!
+		beq	8F
+		cmpa	#'%
+		beq	5F
+		cmpa	#'.
+		bne	2F
+		cmpb	#'#
+		bra	9F
+2		cmpa	#'*
+		bne	3F
+		cmpb	#'*
+		bra	9F
+3		cmpa	#'$
+		bne	4F
+		cmpb	#'$
+		bra	9F
+4		cmpa	#'+
+		bne	9F		; Z=0
+		cmpb	#'#
+		beq	8F
+		cmpb	#'.
+		beq	8F
+		cmpb	#'$
+		beq	8F
+		cmpb	#'*
+		bra	9F
+5		; % ואחריו רק רווחים ו-% סוגר
+		pshs	u
+6		leau	1,u
+		cmpu	PU_E
+		beq	10F
+		lda	,u
+		cmpa	#$20
+		beq	6B
+		cmpa	#'%
+		bra	7F
+10		andcc	#$fb		; אין % סוגר
+7		puls	u
+		bra	9F
+8		orcc	#$04
+9		puls	a,b,pc
+
+; pu_pct: % % : המחרוזת ברוחב קבוע (חותכים או מוסיפים רווחים)
+pu_pct		ldb	#1
+1		leau	1,u
+		incb
+		lda	,u
+		cmpa	#'%
+		bne	1B
+		leau	1,u
+		stu	PU_P
+		ldu	SPTR
+		lda	SLEN
+2		tstb
+		beq	9F
+		pshs	a
+		lda	#$20
+		tst	,s
+		beq	3F
+		dec	,s
+		lda	,u+
+3		lbsr	putc
+		puls	a
+		decb
+		bra	2B
+9		rts
+
+; pu_num: המספר שב-FAC, לפי השדה שב-U
+pu_num		clr	PU_W
+		clr	PU_F
+		lda	#$ff
+		sta	PU_D
+		lda	,u
+		cmpa	#'+
+		bne	1F
+		lda	#8
+		sta	PU_F
+		inc	PU_W
+		leau	1,u
+1		ldd	,u
+		cmpd	#$2a2a		; **
+		bne	2F
+		lda	PU_F
+		ora	#2
+		sta	PU_F
+		inc	PU_W
+		inc	PU_W
+		leau	2,u
+		lda	,u
+		cmpa	#'$
+		bne	3F
+		lda	PU_F
+		ora	#4
+		sta	PU_F
+		inc	PU_W
+		leau	1,u
+		bra	3F
+2		cmpd	#$2424		; $$
+		bne	3F
+		lda	PU_F
+		ora	#4
+		sta	PU_F
+		inc	PU_W
+		inc	PU_W
+		leau	2,u
+3		cmpu	PU_E
+		beq	6F
+		lda	,u
+		cmpa	#'#
+		beq	4F
+		cmpa	#',
+		bne	5F
+		lda	PU_F
+		ora	#1
+		sta	PU_F
+4		inc	PU_W
+		leau	1,u
+		bra	3B
+5		cmpa	#'.
+		bne	6F
+		clr	PU_D
+		leau	1,u
+7		cmpu	PU_E
+		beq	6F
+		lda	,u
+		cmpa	#'#
+		bne	6F
+		inc	PU_D
+		leau	1,u
+		bra	7B
+6		lda	PU_F		; + או - בסוף (אם אין + בהתחלה)
+		bita	#8
+		bne	8F
+		cmpu	PU_E
+		beq	8F
+		lda	,u
+		ldb	#16
+		cmpa	#'+
+		beq	10F
+		ldb	#32
+		cmpa	#'-
+		bne	8F
+10		orb	PU_F
+		stb	PU_F
+		leau	1,u
+8		stu	PU_P
+		; עותק של המספר (למקרה שלא נכנס), ואז ערך מוחלט כפול 10 בחזקת מספר הספרות אחרי הנקודה, ועיגול
+		ldd	FACEXP
+		std	PU_FAC
+		ldd	FACEXP+2
+		std	PU_FAC+2
+		ldd	FACEXP+4
+		std	PU_FAC+4
+		lda	FACSGN
+		sta	PU_SG
+		clr	FACSGN
+		ldb	PU_D
+		cmpb	#$ff
+		beq	2F
+1		tstb
+		beq	2F
+		pshs	b
+		lbsr	fmul10
+		puls	b
+		decb
+		bra	1B
+2		leau	c_half,pcr
+		lbsr	ldarg
+		lbsr	fadd
+		lda	FACEXP
+		cmpa	#$a0
+		lbhi	pu_over
+		lbsr	qint
+		; הספרות, מהסוף להתחלה, ב-FBUF
+		ldx	#FBUF+24
+		clr	PU_N
+3		lbsr	div10q
+		adda	#'0
+		sta	,-x
+		inc	PU_N
+		ldd	QN
+		bne	3B
+		ldd	QN+2
+		bne	3B
+		; לפחות ספרה אחת לכל מקום אחרי הנקודה
+		ldb	PU_D
+		cmpb	#$ff
+		bne	4F
+		clrb
+4		pshs	b
+5		lda	PU_N
+		cmpa	,s
+		bhs	6F
+		lda	#'0
+		sta	,-x
+		inc	PU_N
+		bra	5B
+6		lda	PU_N
+		suba	,s+
+		bne	7F
+		tst	PU_W		; אין ספרות שלמות: 0 לפני הנקודה, אם יש מקום
+		beq	7F
+		lda	#'0
+		sta	,-x
+		inc	PU_N
+		lda	#1
+7		sta	PU_IP
+		; האורך: ספרות + פסיקים + דולר + סימן
+		ldb	PU_IP
+		lda	PU_F
+		bita	#1
+		beq	11F
+		lda	PU_IP
+12		suba	#3		; פסיק אחרי כל 3 ספרות (חוץ מהראשונות)
+		bls	11F
+		incb
+		bra	12B
+11		lda	PU_F
+		bita	#4
+		beq	13F
+		incb
+13		lbsr	pu_signin
+		beq	14F
+		incb
+14		; ריפוד: W - האורך. שלילי: % ובלי ריפוד
+		pshs	b
+		lda	PU_W
+		suba	,s+
+		bge	15F
+		lda	#'%
+		lbsr	putc
+		clra
+15		ldb	#$20
+		pshs	a
+		lda	PU_F
+		bita	#2
+		puls	a
+		beq	16F
+		ldb	#'*
+16		tsta
+		beq	17F
+		exg	a,b
+		lbsr	putc
+		exg	a,b
+		deca
+		bra	16B
+17		bsr	pu_signin
+		beq	18F
+		lbsr	putc
+18		lda	PU_F
+		bita	#4
+		beq	19F
+		lda	#'$
+		lbsr	putc
+19		ldb	PU_IP		; הספרות השלמות, עם פסיקים
+20		tstb
+		beq	22F
+		lda	,x+
+		lbsr	putc
+		decb
+		beq	22F
+		lda	PU_F
+		bita	#1
+		beq	20B
+		tfr	b,a
+21		suba	#3
+		bhi	21B
+		bne	20B
+		lda	#',
+		lbsr	putc
+		bra	20B
+22		ldb	PU_D		; הנקודה והספרות שאחריה
+		cmpb	#$ff
+		beq	24F
+		lda	#'.
+		lbsr	putc
+23		tstb
+		beq	24F
+		lda	,x+
+		lbsr	putc
+		decb
+		bra	23B
+24		lda	PU_F		; סימן בסוף
+		bita	#16
+		beq	25F
+		lda	#'+
+		tst	PU_SG
+		bpl	26F
+		lda	#'-
+		bra	26F
+25		bita	#32
+		beq	27F
+		lda	#$20
+		tst	PU_SG
+		bpl	26F
+		lda	#'-
+26		lbsr	putc
+27		rts
+
+; pu_signin: Z=0 ו-A = הסימן אם כותבים סימן לפני המספר (+ בהתחלה, או מינוס בלי סימן בסוף)
+pu_signin	lda	PU_F
+		bita	#8
+		bne	2F
+		bita	#48
+		bne	1F
+		tst	PU_SG
+		bpl	1F
+		lda	#'-
+		andcc	#$fb
+		rts
+1		orcc	#$04
+		rts
+2		lda	#'+
+		tst	PU_SG
+		bpl	3F
+		lda	#'-
+3		andcc	#$fb
+		rts
+
+; pu_over: מספר גדול מדי לשדה: % ואז המספר כרגיל
+pu_over		ldd	PU_FAC
+		std	FACEXP
+		ldd	PU_FAC+2
+		std	FACEXP+2
+		ldd	PU_FAC+4
+		std	FACEXP+4
+		lda	#'%
+		lbsr	putc
+		lbsr	fout
+		lda	,u
+		cmpa	#$20
+		bne	1F
+		leau	1,u		; בלי הרווח של מספר חיובי
+1		lda	,u+
+		beq	2F
+		lbsr	putc
+		bra	1B
+2		rts
+
+; div10q: QN (32 ביט) = QN / 10, ו-A = השארית
+div10q		clra
+		ldb	#32
+1		lsl	QN+3
+		rol	QN+2
+		rol	QN+1
+		rol	QN
+		rola
+		cmpa	#10
+		blo	2F
+		suba	#10
+		inc	QN+3
+2		decb
+		bne	1B
+		rts

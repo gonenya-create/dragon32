@@ -113,6 +113,11 @@ const CASES = [
   ['RENUM fixes GOTO GOSUB THEN ELSE ON RESTORE, not REM', ['1 REM GOTO 5','5 PRINT 1;:GOSUB 30','7 IF X=0 THEN 20 ELSE 5','20 ON 1 GOTO 30,5','30 RESTORE 5:X=1:RETURN','RENUM','LIST'], /LIST\n10 REM GOTO 5\n20 PRINT 1;:GOSUB 50\n30 IF X=0 THEN 40 ELSE 20\n40 ON 1 GOTO 50,20\n50 RESTORE 20:X=1:RETURN\nOK/],
   ['RENUM start, from line, step; program still runs', ['1 PRINT 1;','2 GOTO 3','3 PRINT 3;:GOTO 999','RENUM 100,2,5','LIST','RUN'], /LIST\n1 PRINT 1;\n100 GOTO 105\n105 PRINT 3;:GOTO 999\nOK\nRUN\n 1  3\n\?UL ERROR IN 105/],
   ['RENUM that would mix the order = ?FC', ['1 PRINT 1','2 PRINT 2','RENUM 1,2','RENUM 5,,0','LIST'], /\?FC ERROR[\s\S]*\?FC ERROR\nOK\nLIST\n1 PRINT 1\n2 PRINT 2\nOK/],
+  ['PRINT USING digits, rounding, too big', ['PRINT USING "###.##";3.14159;-2.5;1234.5'], /\n  3\.14 -2\.50%1234\.50\nOK/],
+  ['PRINT USING commas, stars, dollar', ['PRINT USING "**$##,###.##";1234.5','PRINT USING "$$##.##";7.5'], /\n\*\*\*\$1,234\.50\nOK[\s\S]*\n  \$7\.50\nOK/],
+  ['PRINT USING signs', ['PRINT USING "+##.#";5;-5','PRINT USING "##.#-";-3.25;3'], /\n \+5\.0 -5\.0\nOK[\s\S]*\n 3\.3- 3\.0\nOK/],
+  ['PRINT USING strings and repeating', ['PRINT USING "!:% %/";"HELLO";"WORLD"','PRINT USING "A=## B=##";1;2;3'], /\nH:WOR\/\nOK[\s\S]*\nA= 1 B= 2A= 3 B=\nOK/],
+  ['PRINT USING errors', ['PRINT USING "X";1','PRINT USING "##";"A"','PRINT USING "!";5'], /\?FC ERROR\nOK[\s\S]*\?TM ERROR\nOK[\s\S]*\?TM ERROR\nOK/],
   ['GOTO ELSE, :ELSE and ELSE in quotes', ['A=5:IF A=1 GOTO 9 ELSE PRINT "G"','IF A=5 THEN PRINT "S":ELSE PRINT "NO"','IF A=1 THEN PRINT "ELSE" ELSE PRINT "C"'], /\nG\nOK\n[\s\S]*\nS\nOK\n[\s\S]*\nC\nOK/]
 ];
 let fail = 0;

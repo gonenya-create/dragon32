@@ -224,6 +224,10 @@ poparg		puls	y
 ; כמו במקור: מספר מודפס עם רווח או מינוס לפניו ורווח אחריו; ; צמוד, , לעמודה הבאה (16), ובסוף שורה חדשה אלא אם נגמר ב-; או ,
 st_print	lbsr	atend		; סוף הפקודה (סוף שורה, : או ELSE)
 		lbeq	pr_nl
+		leau	kw_using,pcr	; PRINT USING: בשבב ההרחבה
+		lbsr	match
+		lbeq	pr_using
+		lda	,x
 		cmpa	#'@
 		bne	pr_item
 		; PRINT @ מקום,: מתחילים לכתוב במקום הזה במסך (0-511)
@@ -297,6 +301,8 @@ pr_nl		lda	#13
 		lbsr	putc
 pr_done		rts
 kw_tab		fcc	"TAB("
+		fcb	0
+kw_using	fcc	"USING"
 		fcb	0
 
 ; atend: סוף פקודה? Z=1 בסוף השורה, ב-: או ב-ELSE (בלי להתקדם). A = התו
