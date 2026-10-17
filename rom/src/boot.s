@@ -36,7 +36,8 @@ reset		orcc	#$50		; בלי פסיקות
 ; הלולאה הראשית: קוראים שורה ומבצעים אותה
 main		lbsr	getline
 		lbsr	execute
-main_ok		leax	ok,pcr
+main_ok		lbsr	gfx_text
+		leax	ok,pcr
 		lbsr	puts
 		bra	main
 ok		fcc	"OK"

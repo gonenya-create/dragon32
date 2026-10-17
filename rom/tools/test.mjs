@@ -11,6 +11,12 @@ const CASES = [
   ['fractions', ['PRINT 10/4;-5;.5'], /\n 2\.5 -5  \.5\nOK/],
   ['big and small numbers', ['PRINT 1E10;0.001;123456789'], /\n 1E\+10  1E-03  123456789\nOK/],
   ['division by zero', ['PRINT 2/0'], /\?\/0 ERROR\nOK/],
+  ['graphics expression and PRINT coexist', ['PMODE 2+2,1','PCLS 0','PSET(2*4,12/2)','PRINT 6*7'], /\n 42\nOK/],
+  ['invalid mode', ['PMODE 5'], /\?FC ERROR\nOK/],
+  ['invalid page', ['PMODE 4,0'], /\?FC ERROR\nOK/],
+  ['invalid coordinate', ['PSET(0,192)'], /\?FC ERROR\nOK/],
+  ['invalid colour', ['PMODE 1','PCLS 0'], /\?FC ERROR\nOK/],
+  ['graphics syntax', ['LINE(0,0)-(10,10),X'], /\?SN ERROR\nOK/],
   ['syntax error', ['XYZ'], /XYZ\n\?SN ERROR\nOK/]
 ];
 let fail = 0;
@@ -21,4 +27,7 @@ for (const [name, lines, re] of CASES) {
   console.log((ok ? '  ✓ ' : '  ✗ ') + name + (ok ? '' : '\n' + out.split('\n').map(l => '      | ' + l).join('\n')));
 }
 console.log(`\n${CASES.length - fail} passed, ${fail} failed`);
+try {
+  execFileSync('node', [new URL('./gfx-test.mjs', import.meta.url).pathname], {stdio:'inherit'});
+} catch { fail++; }
 process.exit(fail ? 1 : 0);
