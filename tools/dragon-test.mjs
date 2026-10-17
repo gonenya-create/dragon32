@@ -787,6 +787,13 @@ if (part('full computer /dragon/app/ (theater, coder, AI)')) {
   await p.waitForTimeout(150);
   const shopW = await p.locator('.d32-coder').evaluate(e => e.getBoundingClientRect().width);
   check('workshop: the program window is wide and the drawn keyboard is hidden', shopW > cwNormal + 100 && !(await p.locator('.d32-kbd').isVisible()), cwNormal + ' -> ' + shopW);
+  await p.locator('.d32-theater-kbd').click();
+  await p.waitForTimeout(150);
+  const kb = await p.locator('.d32-kbd').evaluate(e => { const r = e.getBoundingClientRect(); return { v: r.height > 0 && getComputedStyle(e).display !== 'none', bottom: Math.round(r.bottom) }; });
+  check('workshop: the drawn-keyboard button opens the keyboard there too, inside the window', kb.v && kb.bottom <= 900, JSON.stringify(kb));
+  await p.locator('.d32-theater-kbd').click();
+  await p.waitForTimeout(150);
+  check('workshop: and closes it again', !(await p.locator('.d32-kbd').isVisible()));
   await p.locator('.d32-theater-shop').click();
   await p.locator('.d32-theater-only').click();
   await p.waitForTimeout(300);

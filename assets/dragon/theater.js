@@ -203,7 +203,17 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
     try { localStorage.setItem('d32-kbd', on ? 'on' : 'off'); } catch { /* בלי זיכרון בדפדפן */ }
     layout();
   }
-  kbdBtn.addEventListener('click', () => { setKbd(!showKbd); input.focus({ preventScroll: true }); });
+  // בסדנה המקלדת סגורה כברירת מחדל, אבל הכפתור פותח אותה (בלי לשנות את הבחירה במצב הרגיל)
+  let shopKbd = false;
+  kbdBtn.addEventListener('click', () => {
+    if (shop) {
+      shopKbd = !shopKbd;
+      root.classList.toggle('shop-kbd', shopKbd);
+      kbdBtn.setAttribute('aria-pressed', String(shopKbd));
+      layout();
+    } else setKbd(!showKbd);
+    input.focus({ preventScroll: true });
+  });
 
   // סדנה: מצב לכתיבת תוכניות. אותו מחשב, בתצוגה אחרת
   let shop = false, only = false;
@@ -212,6 +222,9 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
     shop = !shop;
     shopBtn.setAttribute('aria-pressed', String(shop));
     root.classList.toggle('is-shop', shop);
+    shopKbd = false;
+    root.classList.remove('shop-kbd');
+    kbdBtn.setAttribute('aria-pressed', String(shop ? false : showKbd));
     if (shop) { coding = true; root.classList.add('has-coder'); codeBtn.setAttribute('aria-pressed', 'true'); coder.start(); showTab('program'); }
     layout();
     input.focus({ preventScroll: true });
@@ -256,6 +269,7 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
       // רק המסך, ביחס 4:3, על כל החלון. --tvw מחושב כך שהמסך (79% מהטלוויזיה) ממלא את החלון
       const sw = Math.min(innerWidth, innerHeight * 4 / 3);
       root.style.setProperty('--tvw', sw / 0.79 + 'px');
+      root.style.setProperty('--sw', sw + 'px');   // רוחב המסך עצמו: בלי מסגרת העץ, אז הוא בדיוק ברוחב הזה
       root.style.setProperty('--fs', Math.min((sw - 28) / 19.6, (sw * 0.75 - 24) / (16 * 1.12)) + 'px');
       return;
     }
@@ -263,7 +277,7 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
       // סדנה: חלון התוכנית רחב משמאל, העוזרים מימין, והטלוויזיה קטנה ביניהם, בלי מקלדת מצוירת
       const cw = Math.min(400, Math.max(280, innerWidth * 0.2));
       const ww = Math.max(420, innerWidth * 0.4);
-      const w = Math.max(360, Math.min(innerWidth - ww - cw - 96, (innerHeight - bar.offsetHeight - 60) / 0.7));
+      const w = Math.max(360, Math.min(innerWidth - ww - cw - 96, (innerHeight - bar.offsetHeight - 60) / (shopKbd ? 1.0 : 0.7)));
       root.classList.remove('coder-over');
       root.style.setProperty('--cw', cw + 'px');
       root.style.setProperty('--ww', ww + 'px');
