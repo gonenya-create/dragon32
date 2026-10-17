@@ -1055,6 +1055,29 @@ if (part('real machine lab')) {
       await q.waitForFunction(() => document.querySelector('#tapes .tape.in small')?.textContent === 'LANDER', null, { timeout: 30000 }).catch(() => {});
       check('?tape=lander from the app loads that tape by itself', await q.evaluate(() => document.querySelector('#tapes .tape.in small')?.textContent === 'LANDER'));
       await q.close();
+      // הקלטות שלי: CSAVE מקליט ושומר בדפדפן, ואחרי טעינה מחדש CLOAD מוצא את התוכנית
+      const m = await browser.newPage({ viewport: { width: 1000, height: 900 } });
+      const merrs = [];
+      m.on('pageerror', e => merrs.push(e.message));
+      await m.goto(base.replace(/\/$/, '') + path);
+      await m.waitForFunction(() => window.d32Ready, null, { timeout: 20000 });
+      await m.waitForTimeout(2000);
+      await m.evaluate(() => d32Type('10 PRINT "SAVED"\nCSAVE "MYPROG"\n'));
+      await m.waitForFunction(() => [...document.querySelectorAll('#mytapes .tape small')].some(e => e.textContent === 'MYPROG'), null, { timeout: 20000 }).catch(() => {});
+      check('CSAVE on the real machine puts the program on "my tapes"', await m.locator('#mytapes .tape small:text-is("MYPROG")').count() === 1);
+      await m.reload();
+      await m.waitForFunction(() => window.d32Ready, null, { timeout: 20000 });
+      await m.waitForTimeout(4000);
+      await m.evaluate(() => d32Type('CLOAD "MYPROG"\n'));
+      await m.waitForFunction(() => (d32Screen() || []).includes('F MYPROG') && (d32Screen() || []).slice(-3).includes('OK'), null, { timeout: 20000 }).catch(() => {});
+      await m.evaluate(() => d32Type('LIST\n'));
+      await m.waitForTimeout(1500);
+      check('after a reload, CLOAD "MYPROG" loads it back', (await m.evaluate(() => d32Screen())).includes('10 PRINT "SAVED"') && merrs.length === 0, (await m.evaluate(() => d32Screen())).filter(Boolean).join(' | ') + merrs.join(' | '));
+      const del = m.locator('#mytapes .mytape .mini').nth(1);
+      await del.click();
+      await del.click();
+      check('a saved tape can be deleted (two taps)', await m.locator('#mytapes .tape').count() === 0);
+      await m.close();
     }
     await p.close();
   }
