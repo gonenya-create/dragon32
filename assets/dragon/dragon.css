@@ -42,7 +42,7 @@
 .d32-sg { display: inline-block; width: 1ch; height: 1.35em; vertical-align: top; }
 /* הקלטות שלי: עטיפה עם כפתור מחיקה קטן בפינה */
 .d32-tape-wrap { position: relative; display: grid; }
-/* מתחת לכל קלטת: קישור לאותה קלטת במחשב האמיתי */
+/* מתחת לכל קלטת: קישור לאותה קלטת במכונת ה-Dragon */
 .d32-tape-box { display: grid; gap: 4px; align-content: start; }
 .d32-tape-real { font-size: 12px; line-height: 1.3; text-align: center; color: #fff7c7; background: #2b2f3a; border-radius: 6px; text-decoration: none; padding: 5px 4px; box-shadow: 0 2px 5px var(--shadow); }
 .d32-tape-real:hover { color: #f2c94c; }

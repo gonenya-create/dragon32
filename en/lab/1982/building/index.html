@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dragon 1982 — what we are building now</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;700&amp;display=swap">
+<style>
+:root { --bg: #0e0b09; --ink: #efe6d2; --muted: #c9bba5; --line: #4a3d31; --accent: #f2c94c; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.65 'IBM Plex Sans Hebrew', system-ui, sans-serif; }
+header { display: flex; align-items: center; gap: 12px; padding: 10px 16px; flex-wrap: wrap; }
+header b { font-size: 18px; }
+.tag { font-size: 13px; padding: 3px 10px; border-radius: 999px; background: #3a2a10; color: var(--accent); }
+header a:first-of-type { margin-inline-start: auto; }
+header a { color: var(--ink); text-decoration: none; border: 1.5px solid var(--line); border-radius: 8px; padding: 6px 12px; font-size: 14px; }
+main { max-width: 720px; margin: 0 auto; padding: 8px 16px 40px; }
+h1 { font-size: 26px; margin: 12px 0 8px; }
+h2 { font-size: 19px; margin: 26px 0 6px; color: var(--accent); }
+p, li { color: var(--ink); }
+ul { padding-inline-start: 22px; margin: 6px 0; }
+li { margin: 4px 0; }
+.muted { color: var(--muted); }
+a { color: var(--accent); }
+code { font-family: 'Courier New', monospace; }
+a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<header>
+  <b dir="ltr">Dragon 1982</b><span class="tag">The Dragon machine · being built</span>
+  <a href="/lab/1982/building/" lang="he" hreflang="he" data-lang="he">עברית</a>
+  <a href="/en/lab/1982/">← To the Dragon machine</a>
+</header>
+<main>
+<h1>What we are building now</h1>
+<p>The Dragon machine is a Dragon 32 whose chips are emulated in your browser: the 6809 CPU, memory, video and cassette. The original ROM belongs to its rights holders, so it runs a BASIC we wrote ourselves.</p>
+
+<h2>The goal</h2>
+<p>A machine that behaves like the original Dragon 32, outside and inside: programs are stored in memory as they were in 1982, and original software and tapes run on it.</p>
+
+<h2>What there is today</h2>
+<ul>
+  <li>The Dragon's chips, through the XRoar emulator.</li>
+  <li>Our BASIC with most of the commands, including graphics and sound.</li>
+  <li>Tapes: loading, saving your own programs, and downloading them as a file.</li>
+</ul>
+
+<h2>What is still missing</h2>
+<ul>
+  <li><strong>The inside:</strong> our BASIC stores programs and lays out memory differently from the original. That is why original 1982 tapes and machine-code software do not run on it yet.</li>
+  <li><strong>Some commands,</strong> including the power sign <code>^</code>, <code>JOYSTK</code>, <code>PCLEAR</code> and <code>CLOADM</code>.</li>
+</ul>
+
+<h2>How we are building it</h2>
+<ul>
+  <li><strong>The core:</strong> a new BASIC core, based on the BASIC that Microsoft published as open source (MIT licence).</li>
+  <li><strong>The Dragon's additions:</strong> written from the books published at the time.</li>
+  <li><strong>Testing:</strong> everything is checked against what the books describe.</li>
+</ul>
+<p class="muted">This is a hobby project with no timetable. Meanwhile the current machine keeps working as it is.</p>
+
+<h2>Do you have a real Dragon?</h2>
+<p>If you find a difference from the original, we would love to hear about it. You can write to us through the <a href="https://www.gonenyarom.co.il/about/#contact">contact page</a>.</p>
+</main>
+<script src="/assets/dragon/langpick.js" defer></script>
+</body>
+</html>

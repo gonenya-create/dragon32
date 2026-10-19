@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dragon 1982 — מה אנחנו בונים עכשיו</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;700&amp;display=swap">
+<style>
+:root { --bg: #0e0b09; --ink: #efe6d2; --muted: #c9bba5; --line: #4a3d31; --accent: #f2c94c; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.65 'IBM Plex Sans Hebrew', system-ui, sans-serif; }
+header { display: flex; align-items: center; gap: 12px; padding: 10px 16px; flex-wrap: wrap; }
+header b { font-size: 18px; }
+.tag { font-size: 13px; padding: 3px 10px; border-radius: 999px; background: #3a2a10; color: var(--accent); }
+header a:first-of-type { margin-inline-start: auto; }
+header a { color: var(--ink); text-decoration: none; border: 1.5px solid var(--line); border-radius: 8px; padding: 6px 12px; font-size: 14px; }
+main { max-width: 720px; margin: 0 auto; padding: 8px 16px 40px; }
+h1 { font-size: 26px; margin: 12px 0 8px; }
+h2 { font-size: 19px; margin: 26px 0 6px; color: var(--accent); }
+p, li { color: var(--ink); }
+ul { padding-inline-start: 22px; margin: 6px 0; }
+li { margin: 4px 0; }
+.muted { color: var(--muted); }
+a { color: var(--accent); }
+code { font-family: 'Courier New', monospace; }
+a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<header>
+  <b dir="ltr">Dragon 1982</b><span class="tag">מכונת ה-Dragon · בבנייה</span>
+  <a href="/en/lab/1982/building/" lang="en" hreflang="en" data-lang="en">English</a>
+  <a href="/lab/1982/">← למכונת ה-Dragon</a>
+</header>
+<main>
+<h1>מה אנחנו בונים עכשיו</h1>
+<p>מכונת ה-<bdi>Dragon</bdi> היא <bdi>Dragon 32</bdi> שהשבבים שלו מדומים בדפדפן: המעבד 6809, הזיכרון, המסך והקלטת. ה-ROM המקורי שייך לבעלי הזכויות, ולכן רץ עליה <bdi>BASIC</bdi> שכתבנו בעצמנו.</p>
+
+<h2>המטרה</h2>
+<p>מכונה שמתנהגת כמו ה-<bdi>Dragon 32</bdi> המקורי, גם מבחוץ וגם מבפנים: תוכניות נשמרות בזיכרון כמו ב-1982, ותוכנות וקלטות מקוריות רצות עליה.</p>
+
+<h2>מה יש היום</h2>
+<ul>
+  <li>השבבים של ה-<bdi>Dragon</bdi>, דרך האמולטור <bdi>XRoar</bdi>.</li>
+  <li><bdi>BASIC</bdi> שלנו עם רוב הפקודות, כולל גרפיקה וצליל.</li>
+  <li>קלטות: טעינה, שמירה של תוכניות שלכם, והורדה כקובץ.</li>
+</ul>
+
+<h2>מה עוד חסר</h2>
+<ul>
+  <li><strong>הבנייה מבפנים:</strong> ה-<bdi>BASIC</bdi> שלנו שומר תוכניות ומסדר את הזיכרון אחרת מהמקור. לכן קלטות מקוריות מ-1982 ותוכנות בשפת מכונה עוד לא רצות עליו.</li>
+  <li><strong>חלק מהפקודות,</strong> ובהן סימן החזקה <code dir="ltr">^</code>, <code dir="ltr">JOYSTK</code>, <code dir="ltr">PCLEAR</code> ו-<code dir="ltr">CLOADM</code>.</li>
+</ul>
+
+<h2>איך אנחנו בונים</h2>
+<ul>
+  <li><strong>הבסיס:</strong> לב חדש ל-<bdi>BASIC</bdi>, על בסיס ה-<bdi>BASIC</bdi> ש-<bdi>Microsoft</bdi> פרסמה כקוד פתוח (רישיון <bdi>MIT</bdi>).</li>
+  <li><strong>התוספות של ה-<bdi>Dragon</bdi>:</strong> נכתבות לפי הספרים שפורסמו אז.</li>
+  <li><strong>בדיקות:</strong> כל דבר נבדק מול מה שהספרים מתארים.</li>
+</ul>
+<p class="muted">זה פרויקט של חובב, בלי לוח זמנים. בינתיים המכונה הנוכחית ממשיכה לעבוד כמו שהיא.</p>
+
+<h2>יש לכם <bdi>Dragon</bdi> אמיתי?</h2>
+<p>אם מצאתם הבדל מהמקור, נשמח לשמוע. אפשר לכתוב לנו דרך <a href="https://www.gonenyarom.co.il/about/#contact">יצירת קשר</a>.</p>
+</main>
+<script src="/assets/dragon/langpick.js" defer></script>
+</body>
+</html>
