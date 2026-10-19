@@ -110,21 +110,65 @@ main		lbsr	getline
 		bhi	1F
 		lbsr	storeline	; שורה עם מספר: נשמרת, בלי OK (כמו במקור)
 		bra	main
-1		lbsr	crunch		; פקודה ישירה: מכווצים ומבצעים
-		ldx	#CRB
-		lbsr	skipsp
-		cmpa	#$95		; LIST
+1		lbsr	crunch		; פקודה ישירה: מכווצים ומבצעים (mit: MAIN, CRDONE)
+		clr	,u+		; אחרי השורה: קישור 0000, כמו סוף תוכנית
+		clr	,u+
+		ldx	#CRB-1
+		stx	TXTPTR
+		ldd	#$ffff
+		std	CURLIN
+		lds	#STACKINI
+		clr	,-s		; סמן תחתית למחסנית ה-FOR
+		lbra	gone
+
+; endcon: סוף התוכנית או סוף השורה הישירה (mit: ENDCON)
+endcon		lds	#STACKINI
+		lbra	main_ok
+
+; ---------- שגיאות (mit: ERROR) ----------
+err_sn		ldd	#'S*256+'N
+		bra	error
+err_ov		ldd	#'O*256+'V
+		bra	error
+err_fc		ldd	#'F*256+'C
+		bra	error
+err_tm		ldd	#'T*256+'M
+		bra	error
+err_nf		ldd	#'N*256+'F
+		bra	error
+err_ul		ldd	#'U*256+'L
+		bra	error
+err_dv0		ldd	#'/*256+'0
+error		lds	#STACKINI
+		pshs	d
+		lda	CURSOR+1
+		anda	#$1f
 		beq	1F
-		cmpa	#$97		; NEW
-		beq	2F
-		leax	m_sn,pcr
+		lda	#13
+		lbsr	putc
+1		lda	#'?
+		lbsr	putc
+		puls	d
+		lbsr	putc
+		tfr	b,a
+		lbsr	putc
+		leax	m_err,pcr
 		lbsr	puts
-		bra	main_ok
-1		leax	1,x
-		lbsr	do_list
-		bra	main_ok
-2		lbsr	scrtch
-		bra	main_ok
+		ldd	CURLIN
+		cmpd	#$ffff
+		beq	2F
+		leax	m_in,pcr
+		lbsr	puts
+		lbsr	prnum
+2		lda	#13
+		lbsr	putc
+		leax	m_ok,pcr
+		lbsr	puts
+		lbra	main
+m_err		fcc	" ERROR"
+		fcb	0
+m_in		fcc	" IN "
+		fcb	0
 
 ; ---------- שמירת שורה (mit: MAIN1/NODEL/STOLOP, m6502.asm:1567-1641) ----------
 storeline	lbsr	linget		; D = מספר השורה
@@ -680,6 +724,8 @@ fntab		fcs	"SGN"
 		fcs	"USR"
 		fcb	0
 
+		include	"mitfp.s"
+		include	"mitrun.s"
 		include	"io.s"
 		include	"testq.s"
 

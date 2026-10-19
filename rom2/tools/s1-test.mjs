@@ -58,5 +58,25 @@ await check('LIST range and single line', ['10 PRINT 1', '20 PRINT 2', '30 PRINT
 await check('NEW: empty program, pointers reset', ['10 PRINT 1', 'NEW', 'LIST'], r =>
   w(r, 0x1e01) === 0 && w(r, 0x1b) === 0x1e03 || `link ${w(r, 0x1e01).toString(16)} VARTAB ${w(r, 0x1b).toString(16)}`);
 
+console.log('stage 1b: expressions, numbers, variables, FOR/NEXT');
+const screenHas = re => r => re.test(r.screen.replace(/\n@$/, '')) || r.screen.split('\n').slice(-6).join(' | ');
+await check('PRINT 2+3', ['PRINT 2+3'], screenHas(/PRINT 2\+3\n 5\nOK$/));
+await check('number output: fractions, negatives, leading point (L-PRINT style)', ['PRINT 10/4;-5;.5'], screenHas(/\n 2\.5 -5  \.5\nOK$/));
+await check('number output: 9 digits, E notation up', ['PRINT 1E10;1/3;123456789'], screenHas(/\n 1E\+10  \.333333333  123456789\nOK$/));
+await check('number output: E notation at 1E9 and small', ['PRINT 1E9;-1.5E-5;.01;.001'], screenHas(/\n 1E\+09 -1\.5E-05  \.01  1E-03\nOK$/));
+await check('precedence and brackets, left to right', ['PRINT -2*3;2-3-4;8/2/2;(1+2)*3;2*3+4*5'], screenHas(/\n-6 -5  2  9  26\nOK$/));
+await check('relations give -1 / 0 (> = < <= <>)', ['PRINT 3>2;3=2;2<=2;1<>1'], screenHas(/\n-1  0 -1  0\nOK$/));
+await check('AND OR NOT on integers; -32768 is accepted (reader)', ['PRINT -32768 AND 1;12 AND 10;5 OR 2;NOT 0'], screenHas(/\n 0  8  7 -1\nOK$/));
+await check('INT ABS SGN', ['PRINT INT(-2.5);ABS(-3);SGN(-4)'], screenHas(/\n-3  3 -1\nOK$/));
+await check('variables: 2 letters count, unassigned reads 0', ['ABCD=7:ABEF=9:PRINT ABCD;ZZ'], screenHas(/\n 9  0\nOK$/));
+await check('variable record: [name 2][value 5] at VARTAB, ARYTAB after it (5 = 83 20 00 00 00)', ['A=5'], r => {
+  const v = w(r, 0x1b); const rec = [...r.ram.subarray(v, v + 7)];
+  return (same(rec, [0x41, 0x00, 0x83, 0x20, 0x00, 0x00, 0x00]) === true && w(r, 0x1d) === v + 7 && w(r, 0x1f) === v + 7) || same(rec, [0x41, 0x00, 0x83, 0x20, 0x00, 0x00, 0x00]) + ` ARYTAB ${w(r, 0x1d).toString(16)}`;
+});
+await check('reading an unassigned variable does not create it (reader)', ['PRINT QQ'], r => w(r, 0x1d) === w(r, 0x1b) || `VARTAB ${w(r, 0x1b).toString(16)} ARYTAB ${w(r, 0x1d).toString(16)}`);
+await check('FOR/NEXT with STEP -1, nested, NEXT J,I; GOTO', ['10 FOR I=3 TO 1 STEP -1:FOR J=1 TO 2:PRINT I*10+J;:NEXT J,I', '20 GOTO 40', '30 PRINT "BAD"', '40 PRINT "END"', 'RUN'], screenHas(/RUN\n 31  32  21  22  11  12 END\nOK$/));
+await check('errors: ?/0 ?UL ?NF', ['PRINT 1/0', 'GOTO 99', 'NEXT'], screenHas(/\?\/0 ERROR\nOK\nGOTO 99\n\?UL ERROR\nOK\nNEXT\n\?NF ERROR\nOK$/));
+await check('errors: ?OV ?SN, and IN line inside a program', ['PRINT 1E38*10', 'PRINT 2+', '10 PRINT 1/0', 'RUN'], screenHas(/\n\?OV ERROR\nOK\nPRINT 2\+\n\?SN ERROR\nOK\n10 PRINT 1\/0\nRUN\n\?\/0 ERROR IN 10\nOK$/));
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
