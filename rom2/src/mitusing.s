@@ -1,13 +1,14 @@
 ; Dragon 1982 BASIC — שלב 3, חלק 2: PRINT USING. לפי הקורא: docs/DRAGON-SPEC-USING.md. נכתב מאפס.
+; המשתנים באזור העבודה המשותף $CF-$DD, כמו במקור (USSCNT $D3, USDPTR $D5, USFLG $D7...). לא ב-$DE-$E9: שם ההגדרות של PLAY ו-DRAW
 
-USDSC		equ	$e0		; 2 בתים: מתאר התבנית (קוראים ממנו כל פעם: איסוף מחרוזות יכול להזיז אותה)
-USPOS		equ	$e2		; המקום בתבנית
-USANY		equ	$e3		; במחזור הזה נצרך ערך?
-USEND		equ	$e4		; 0: יש עוד ערכים. 1: הרשימה נגמרה בלי מפריד. 2: עם ; או ,
-USL		equ	$e5		; השדה המספרי: המקומות לפני הנקודה (כולל + מוביל, ** $$ **$ ופסיקים)
-USD		equ	$e6		; ספרות אחרי הנקודה ($FF: אין נקודה)
-USFLG		equ	$e7		; 1 פסיקים, 2 כוכביות, 4 דולר, 8 + מוביל, $10 + נגרר, $20 - נגרר, $40 מעריך
-USW		equ	$e8		; רוחב שדה מחרוזת / עזר
+USDSC		equ	$d5		; 2 בתים: מתאר התבנית (קוראים ממנו כל פעם: איסוף מחרוזות יכול להזיז אותה)
+USPOS		equ	$d3		; המקום בתבנית
+USANY		equ	$da		; במחזור הזה נצרך ערך?
+USEND		equ	$db		; 0: יש עוד ערכים. 1: הרשימה נגמרה בלי מפריד. 2: עם ; או ,
+USL		equ	$d9		; השדה המספרי: המקומות לפני הנקודה (כולל + מוביל, ** $$ **$ ופסיקים)
+USD		equ	$d8		; ספרות אחרי הנקודה ($FF: אין נקודה)
+USFLG		equ	$d7		; 1 פסיקים, 2 כוכביות, 4 דולר, 8 + מוביל, $10 + נגרר, $20 - נגרר, $40 מעריך
+USW		equ	$dc		; רוחב שדה מחרוזת / עזר
 
 ; usstart: אחרי PRINT, כש-A = $CD (USING)
 usstart		lbsr	chrget
@@ -124,7 +125,7 @@ us_field	lda	,x
 		orcc	#1
 		rts
 1		cmpa	#'%
-		lbne	us_nf
+		bne	us_nf
 		ldb	USPOS		; %, רווחים, %
 		pshs	b
 		ldy	USDSC
@@ -167,7 +168,7 @@ us_peek		pshs	b,x
 1		clra
 		puls	b,x,pc
 ; us_isst: A = התו ב-USPOS+B. C=1 אם מכאן מתחיל שדה מספרי: #, .#, **, $$
-us_isst		lbsr	us_peek
+us_isst		bsr	us_peek
 		cmpa	#'#
 		beq	8F
 		cmpa	#'.
@@ -178,13 +179,13 @@ us_isst		lbsr	us_peek
 		bne	9F
 3		pshs	a
 		incb
-		lbsr	us_peek
+		bsr	us_peek
 		decb
 		cmpa	,s+
 		beq	8F
 		bra	9F
 2		incb
-		lbsr	us_peek
+		bsr	us_peek
 		decb
 		cmpa	#'#
 		beq	8F
@@ -203,19 +204,19 @@ us_nf		ldb	USPOS
 		lda	#$ff
 		sta	USD
 		clrb
-		lbsr	us_peek
+		bsr	us_peek
 		cmpa	#'+
 		bne	1F
 		incb			; + מוביל: רק אם אחריו מתחיל שדה
-		lbsr	us_isst
+		bsr	us_isst
 		lbcc	us_no
 		lda	#8
 		sta	USFLG
 		bsr	us_adv
 		clrb
-1		lbsr	us_isst
+1		bsr	us_isst
 		lbcc	us_no
-		lbsr	us_peek
+		bsr	us_peek
 		cmpa	#'*
 		bne	2F
 		bsr	us_adv		; **
@@ -224,7 +225,7 @@ us_nf		ldb	USPOS
 		ora	#2
 		sta	USFLG
 		clrb
-		lbsr	us_peek
+		bsr	us_peek
 		cmpa	#'$
 		bne	3F
 		bsr	us_adv		; **$
@@ -297,12 +298,12 @@ us_no		puls	b
 		rts
 
 ; ---------- השדה המספרי (קורא: docs/DRAGON-SPEC-USING.md, השלמה: ההמרה) ----------
-USE		equ	$e9		; המעריך העשרוני e
-USSG		equ	LINBUF+240	; תו הסימן המוביל / הנגרר
-USP		equ	LINBUF+241	; כמה ספרות לפני הנקודה (עם סימן)
-USN		equ	LINBUF+242	; N במעריכי
-USX		equ	LINBUF+243	; המעריך להדפסה
-USF		equ	LINBUF+244	; תו המילוי (רווח או *)
+USE		equ	$dd		; המעריך העשרוני e
+USSG		equ	$cf	; תו הסימן המוביל / הנגרר
+USP		equ	$d0	; כמה ספרות לפני הנקודה (עם סימן)
+USN		equ	$d1	; N במעריכי
+USX		equ	$d2	; המעריך להדפסה
+USF		equ	$d4	; תו המילוי (רווח או *)
 USDG		equ	LINBUF		; תשע הספרות
 UST		equ	LINBUF+16	; החלק השלם (עם פסיקים)
 USO		equ	LINBUF+64	; הפלט שלפני הנקודה
@@ -330,7 +331,7 @@ us_num		ldb	USL		; שדה רחב מ-17 (עם הנקודה): ?FC
 2		sta	USSG
 		clr	FACSGN
 		bitb	#$40
-		lbne	us_exp
+		bne	us_exp
 		leax	nzmil,pcr	; מיליארד ומעלה: % וההמרה הרגילה (הסימן כבר הוסר)
 		lbsr	fcomp
 		cmpa	#$ff
@@ -341,7 +342,7 @@ us_num		ldb	USL		; שדה רחב מ-17 (עם הנקודה): ?FC
 		ldx	#FBUFFR
 		lbra	puts
 3		lbsr	us_norm
-		lbsr	us_dd		; B = D
+		bsr	us_dd		; B = D
 		lda	USE		; e<0: עוד max(0,-D-e) חלוקות בעשר, אחת-אחת
 		bpl	5F
 		nega
@@ -360,8 +361,8 @@ us_num		ldb	USL		; שדה רחב מ-17 (עם הנקודה): ?FC
 		sta	USP
 		lbra	us_out
 
-us_exp		lbsr	us_norm		; מעריכי (אפס: e=0)
-		lbsr	us_dd
+us_exp		bsr	us_norm		; מעריכי (אפס: e=0)
+		bsr	us_dd
 		pshs	b
 		lda	USL
 		adda	,s+		; N = L+D-s (s=1 בסימן מוביל)
@@ -380,7 +381,7 @@ us_exp		lbsr	us_norm		; מעריכי (אפס: e=0)
 		bne	2B
 3		lda	FACEXP		; אפס? המעריך 0
 		pshs	a
-		lbsr	us_dig
+		bsr	us_dig
 		lda	USL		; הנקודה אחרי L-s+max(9-N,0)
 		ldb	USFLG
 		bitb	#$30
@@ -508,7 +509,7 @@ us_out		ldy	#UST
 		bne	22F
 		lda	#',
 		sta	,y+
-22		lbsr	us_digi
+22		bsr	us_digi
 		sta	,y+
 		incb
 		bra	2B
@@ -651,8 +652,8 @@ us_fit		lda	,x+		; מה שלפני הנקודה
 8		tfr	b,a
 		cmpa	#$20
 		beq	81F
-		lbra	putc
-81		lbra	putc
+		bra	putc
+81		bra	putc
 9		rts
 ; us_cnt: Y-X מול L (C/Z לפי cmp: bls = נכנס)
 us_cnt		pshs	x

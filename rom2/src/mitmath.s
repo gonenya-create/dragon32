@@ -22,7 +22,7 @@ polyx		stx	POLYPT
 		ldx	#TEMPF1
 		lbsr	fmult		; x^2
 		ldx	POLYPT
-		lbsr	poly
+		bsr	poly
 		ldx	#TEMPF1
 		lbra	fmult
 ; poly: X = הטבלה: [מעלה][מקדמים של 5 בתים, הגבוה ראשון]. שיטת הורנר
@@ -60,7 +60,7 @@ log		lbsr	sign
 		leax	fone,pcr
 		lbsr	fsub
 		leax	logcn2,pcr
-		lbsr	polyx
+		bsr	polyx
 		leax	neghlf,pcr
 		lbsr	fadd
 		puls	a
@@ -75,7 +75,7 @@ fn_sqr		lbsr	chknum
 		leax	fhalf,pcr
 		lbsr	movfm
 fpwrt		tst	FACEXP
-		lbeq	exp		; מעריך 0: 1, גם 0^0 (קורא)
+		beq	exp		; מעריך 0: 1, גם 0^0 (קורא)
 		tst	ARGEXP
 		bne	1F
 		tst	FACSGN		; בסיס 0: מעריך שלילי ?/0 (קורא), אחרת 0
@@ -99,7 +99,7 @@ fpwrt		tst	FACEXP
 		lbsr	log
 		ldx	#TEMPF3
 		lbsr	fmult
-		lbsr	exp
+		bsr	exp
 		puls	a,b
 		lsrb			; אי-זוגי: התוצאה שלילית
 		lbcs	negop
@@ -189,14 +189,14 @@ fn_tan		lbsr	chknum
 		ldx	#TEMPF1
 		lbsr	movmf
 		clr	TANSGN
-		lbsr	sin
+		bsr	sin
 		ldx	#TEMPF3
 		lbsr	movmf
 		ldx	#TEMPF1
 		lbsr	movfm
 		clr	FACSGN
 		lda	TANSGN
-		lbsr	cosc
+		bsr	cosc
 		tst	FACEXP		; קוסינוס 0: ?OV (קורא)
 		lbeq	err_ov
 		ldx	#TEMPF3

@@ -73,7 +73,7 @@ sgxy		lbsr	frmevl
 ; תא טקסט: נהיה גרפי עם הנקודה הזאת בלבד; c=0 שם = ירוק. ')' נבדק לפני הכתיבה
 set_st		lda	#'(
 		lbsr	synchk
-		lbsr	sgxy
+		bsr	sgxy
 		pshs	x
 		lda	#',
 		lbsr	synchk

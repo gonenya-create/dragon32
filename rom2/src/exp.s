@@ -151,7 +151,7 @@ main		lbsr	getline
 		lbra	gone		; המחסנית נשארת: רשומות FOR/GOSUB שמורות עד CONT (mit)
 
 ; endcon: סוף התוכנית או סוף השורה הישירה (mit: ENDCON). המחסנית לא מתאפסת
-endcon		lbra	main_ok
+endcon		bra	main_ok
 
 ; ---------- שגיאות (mit: ERROR) ----------
 err_sn		ldd	#'S*256+'N
@@ -241,9 +241,9 @@ storel2					; EDIT נכנס כאן: LINNUM מוכן, X = הטקסט
 		addd	#4		; קישור + מספר + טקסט + 0
 		pshs	d		; האורך
 		ldd	LINNUM
-		lbsr	fndlin		; Y = השורה (C=1 אם קיימת)
+		bsr	fndlin		; Y = השורה (C=1 אם קיימת)
 		bcc	1F
-		lbsr	dellin		; קיימת: קודם מוחקים
+		bsr	dellin		; קיימת: קודם מוחקים
 1		tst	CRB
 		beq	9F		; רק מספר: רק מחיקה
 		; מזיזים את [Y..VARTAB) למעלה באורך השורה (mit: BLTU)
@@ -271,8 +271,8 @@ storel2					; EDIT נכנס כאן: LINNUM מוכן, X = הטקסט
 		sta	,u+
 		bne	4B
 9		leas	2,s
-		lbsr	lnkprg
-		lbra	runc
+		bsr	lnkprg
+		bra	runc
 
 ; dellin: מוחק את השורה ב-Y (mit: m6502.asm:1571-1608)
 dellin		pshs	d,x,y,u
@@ -346,9 +346,9 @@ crunch		ldu	#CRB
 cr_lp		lda	,x
 		lbeq	cr_end
 		cmpa	#$20		; רווח נשמר (קורא)
-		lbeq	cr_put
+		beq	cr_put
 		cmpa	#'"
-		lbeq	cr_str
+		beq	cr_str
 		tst	CRMODE		; אחרי DATA: הכול כמו שהוא, עד : שמחוץ למרכאות
 		beq	1F
 		cmpa	#':
@@ -370,7 +370,7 @@ cr_lp		lda	,x
 		blo	cr_kw
 		cmpa	#';
 		bls	cr_put
-cr_kw		lbsr	kwmatch		; מילה שמורה? C=1, B = הטוקן, KPRE = $FF לפונקציה
+cr_kw		bsr	kwmatch		; מילה שמורה? C=1, B = הטוקן, KPRE = $FF לפונקציה
 		bcc	cr_name
 		tst	KPRE
 		beq	4F
@@ -402,7 +402,7 @@ cr_name		lda	,x		; לא מילה שמורה. אות: שם, וכל האותיות
 		cmpa	#'9
 		bls	7B
 		cmpa	#'A
-		lblo	cr_lp
+		blo	cr_lp
 		cmpa	#'Z
 		bls	7B
 		lbra	cr_lp
@@ -503,7 +503,7 @@ do_list		bsr	lrange
 		lbsr	putc
 		leax	4,y
 		pshs	y
-		lbsr	prline
+		bsr	prline
 		lda	#13
 		lbsr	putc
 		puls	y
@@ -533,7 +533,7 @@ prline		clr	CRMODE		; כאן: בתוך מרכאות
 		bpl	5F
 		tfr	a,b
 		leay	stmtab,pcr
-4		lbsr	prword
+4		bsr	prword
 		bra	1B
 5		cmpa	#'"
 		bne	6F

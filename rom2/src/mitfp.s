@@ -106,7 +106,7 @@ round		lda	FACEXP
 		beq	9F
 		lsl	FACOV
 		bcc	9F
-incrnd		lbsr	incfac
+incrnd		bsr	incfac
 		bne	9F
 		bra	rndshf		; C=1 עדיין (inc לא נוגע ב-C)
 9		rts
@@ -169,7 +169,7 @@ normal		clrb
 ; הנרמול ב-Dragon, ולכן גם כפל, חילוק וחיבור; ב-mit הבית נשמר בלי עיגול)
 nround		tst	FACOV
 		bpl	1F
-		lbsr	incfac
+		bsr	incfac
 		bne	1F
 		lda	#$80		; 1.111… + 1 = 10.000…
 		sta	FACHO
@@ -238,7 +238,7 @@ faddt		tst	FACEXP
 		clr	OLDOV
 		tfr	a,b
 		ldx	#FACEXP
-		lbsr	shiftr
+		bsr	shiftr
 		ldu	#FACEXP		; U = המוזז (הקטן), Y = הגדול
 		ldy	#ARGEXP
 		bra	4F
@@ -246,7 +246,7 @@ faddt		tst	FACEXP
 		clr	FACOV
 		tfr	a,b
 		ldx	#ARGEXP
-		lbsr	shiftr
+		bsr	shiftr
 		bra	5F
 3		clr	FACOV		; בלי הזזה
 5		ldu	#ARGEXP
@@ -302,7 +302,7 @@ fsubit		lda	OLDOV		; סימנים שונים: הגדול פחות הקטן
 fmult		lbsr	conupk
 fmultt		tst	FACEXP
 		beq	9F
-		lbsr	muldiv
+		bsr	muldiv
 		clr	RESHO
 		clr	RESMOH
 		clr	RESMO
@@ -317,7 +317,7 @@ fmultt		tst	FACEXP
 		bsr	mltply
 		lda	FACHO
 		bsr	mltpl1
-		lbra	movfr
+		bra	movfr
 9		rts
 mltply		bne	mltpl1
 		lda	RESLO		; בית אפס: רק הזזה של בית
@@ -635,7 +635,7 @@ fin_dig		tst	DPTFLG
 		lbsr	mul10
 		puls	a
 		suba	#'0
-		lbsr	finlog
+		bsr	finlog
 		lbsr	chrget
 		bra	fin_lp
 fin_e		cmpa	#'E

@@ -392,7 +392,7 @@ def		cmpa	#$ff		; DEF USRn=
 		lbeq	defusr
 		cmpa	#$be		; FN
 		lbne	err_sn
-		lbsr	errdir
+		bsr	errdir
 		bsr	getfnm
 		lda	#'(
 		lbsr	synchk

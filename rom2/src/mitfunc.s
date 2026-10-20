@@ -515,7 +515,7 @@ defusr		ldx	TXTPTR
 
 ; ---------- POINT(x,y): מסך הטקסט (קורא + ה-VDG) ----------
 ; x 0-63, y 0-31. תא שאינו גרפי: -1. נקודה כבויה: 0. דולקת: הצבע 1-8
-fn_point	lbsr	sgxy
+fn_point	bsr	sgxy
 		pshs	x
 		lda	#')
 		lbsr	synchk

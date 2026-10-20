@@ -249,7 +249,7 @@ rl_ref		lbsr	skipsp
 		bra	5B
 7		tfr	y,x		; X = Q
 		puls	d		; הערך הישן
-		lbsr	rn_map
+		bsr	rn_map
 		bcs	8F
 		bsr	rn_ul
 8		lbsr	numtxt		; הספרות ב-LINBUF, B = כמה
@@ -272,7 +272,7 @@ rl_ref		lbsr	skipsp
 		cmpa	#',
 		lbne	rl_scan
 		leax	1,x
-		lbra	rl_ref
+		bra	rl_ref
 ; rn_ul: "UL x IN y" (D = x)
 rn_ul		pshs	d,x
 		leax	m_ul,pcr
@@ -400,7 +400,7 @@ EDFLG		equ	$d8		; 1: הפלט של LIST הולך למאגר
 EDPTR		equ	$d9		; 2 בתים: לאן כותבים במאגר
 EDPOS		equ	$db		; המקום בשורה
 EDCNT		equ	$dc		; המונה שלפני פקודה
-EDNUM		equ	$dd		; 2 בתים: מספר השורה
+EDNUM		equ	$d1		; 2 בתים: מספר השורה (לא $DE: שם OCTAVE של PLAY)
 
 ; lout: התו של LIST למסך, או למאגר (עד 249 תווים)
 lout		tst	EDFLG
@@ -431,15 +431,15 @@ ed_load		ldd	EDNUM
 		leax	4,y
 		lbsr	prline
 		clr	EDFLG
-		lbsr	ed_num		; "n " והשורה כולה, ושורה חדשה
+		bsr	ed_num		; "n " והשורה כולה, ושורה חדשה
 		clr	EDPOS
 		lbsr	ed_rest
 		lda	#13
 		lbsr	putc
-ed_head		lbsr	ed_num		; שוב "n ", והעריכה מתחילה בתו הראשון
+ed_head		bsr	ed_num		; שוב "n ", והעריכה מתחילה בתו הראשון
 		clr	EDPOS
 ed_cmd		clr	EDCNT
-ed_key		lbsr	ed_get
+ed_key		bsr	ed_get
 		cmpa	#'0		; ספרות: המונה (מודולו 256, בלי הד)
 		blo	1F
 		cmpa	#'9
@@ -529,7 +529,7 @@ ed_adv		ldb	EDPOS
 		rts
 8		orcc	#1
 		rts
-ed_rest		lbsr	ed_adv
+ed_rest		bsr	ed_adv
 		bcc	ed_rest
 		rts
 ; ed_del: מוחקים את התו שבמקום (בלי הדפסה). C=1 אם בסוף
@@ -558,21 +558,21 @@ ed_char		pshs	x
 1		orcc	#1
 		puls	x,pc
 
-ed_sp		lbsr	ed_n		; רווח: n תווים קדימה, מודפסים
+ed_sp		bsr	ed_n		; רווח: n תווים קדימה, מודפסים
 1		pshs	b
-		lbsr	ed_adv
+		bsr	ed_adv
 		puls	b
 		decb
 		bne	1B
 		rts
-ed_d		lbsr	ed_n		; D: מוחקים n תווים
+ed_d		bsr	ed_n		; D: מוחקים n תווים
 1		pshs	b
-		lbsr	ed_del
+		bsr	ed_del
 		puls	b
 		decb
 		bne	1B
 		rts
-ed_x		lbsr	ed_rest		; X: לסוף, והוספה
+ed_x		bsr	ed_rest		; X: לסוף, והוספה
 		bra	ed_ins
 ed_h		lda	EDPOS		; H: מוחקים עד הסוף, והוספה
 		sta	EDLEN
@@ -587,7 +587,7 @@ ed_ins		lbsr	ed_get
 		lda	EDPOS
 		beq	ed_ins
 		dec	EDPOS
-		lbsr	ed_del
+		bsr	ed_del
 		lda	#8
 		lbsr	putc
 		bra	ed_ins

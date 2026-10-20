@@ -42,10 +42,10 @@ chrgot		ldx	TXTPTR
 
 ; synchk: התו הנוכחי חייב להיות A. אחרת ?SN. אחר כך מתקדמים
 synchk		pshs	a
-		lbsr	chrgot
+		bsr	chrgot
 		cmpa	,s+
 		lbne	err_sn
-		lbra	chrget
+		bra	chrget
 
 ; ---------- לולאת הפקודות (mit: NEWSTT 2138, GONE 2165) ----------
 ; TXTPTR מצביע על התו שלפני הפקודה הבאה. 0 = סוף שורה: הקישור שאחריו אומר מה הלאה
@@ -61,7 +61,7 @@ newstt		lbsr	brkchk		; BREAK? (mit: ISCNTC)
 		leax	4,x
 		stx	TXTPTR
 		lbsr	trace		; TRON: [n] (קורא)
-gone		lbsr	chrget
+gone		bsr	chrget
 		bsr	gone3
 		bra	newstt
 2		cmpa	#':
@@ -185,7 +185,7 @@ run		lbsr	runc
 		lbsr	chrgot
 		beq	1F
 		lbcs	err_sn		; RUN "שם": עם הקלטת, בהמשך
-		lbsr	goto1
+		bsr	goto1
 		lbra	newstt
 1		ldx	TXTTAB
 		leax	-1,x
@@ -213,7 +213,7 @@ gosub1					; כתובת החזרה של הפקודה נשארת מתחת לרש�
 		lbra	newstt
 1		lbsr	chrget
 ; goto1: TXTPTR על מספר השורה. שורה גדולה מהנוכחית: מחפשים מהשורה הבאה; אחרת מההתחלה (mit: GOTO)
-goto1		lbsr	lineget
+goto1		bsr	lineget
 		cmpd	CURLIN
 		bls	2F		; גם במצב ישיר (CURLIN = $FFFF): מההתחלה
 		ldy	TXTPTR		; סוף השורה הנוכחית
@@ -318,8 +318,8 @@ pr_lp		cmpa	#';
 		beq	3F
 		lbsr	strprt		; מחרוזת
 		lbsr	chrgot
-		lbeq	pr_cr
-		lbra	pr_lp
+		beq	pr_cr
+		bra	pr_lp
 3		lbsr	fout
 		ldx	#FBUFFR
 1		lda	,x+
@@ -380,7 +380,7 @@ for		lbsr	let		; המשתנה מקבל את ערך ההתחלה
 		puls	a
 		sta	TEMPSGN
 		; הסוף של פקודת ה-FOR: מכאן ממשיכים אחרי כל NEXT
-		lbsr	stmend		; X = המקום
+		bsr	stmend		; X = המקום
 		; בונים את הרשומה: דוחפים מהסוף להתחלה
 		pshs	x		; [16-17] הטקסט
 		ldd	CURLIN
@@ -451,10 +451,10 @@ nx_one		ldd	#0
 		lbsr	chrgot
 		beq	1F
 		ldb	#1		; לא יוצרים
-		lbsr	ptrget
+		bsr	ptrget
 		ldd	VARPNT
 		std	FORPNT
-1		lbsr	fndfor
+1		bsr	fndfor
 		lbne	err_nf
 		leas	,x		; S = הרשומה (מה שמעליה נמחק)
 		ldx	1,s		; המשתנה += הצעד
@@ -854,12 +854,12 @@ fndsp		fcb	$80,0
 		fcb	$a1,2
 		fdb	fn_usr-fndsp
 		fcb	0
-fn_sgn		lbsr	chknum
+fn_sgn		bsr	chknum
 		lbsr	sign
 		lbra	float
-fn_int		lbsr	chknum
+fn_int		bsr	chknum
 		lbra	fint
-fn_abs		lbsr	chknum
+fn_abs		bsr	chknum
 		clr	FACSGN
 		rts
 chknum		tst	VALTYP
@@ -884,12 +884,12 @@ fn_right	bsr	strarg
 		puls	a
 		lbra	substr
 fn_mid		lbsr	frmevl
-		lbsr	frestr0
+		bsr	frestr0
 		pshs	x		; המתאר
 		lda	#',
 		lbsr	synchk
 		lbsr	frmevl
-		lbsr	conint
+		bsr	conint
 		tstb
 		lbeq	err_fc		; אין מקום 0
 		decb
@@ -900,7 +900,7 @@ fn_mid		lbsr	frmevl
 		bne	1F
 		lbsr	chrget
 		lbsr	frmevl
-		lbsr	conint
+		bsr	conint
 1		pshs	b
 		lda	#')
 		lbsr	synchk
@@ -927,7 +927,7 @@ strarg		lbsr	frmevl
 		lda	#',
 		lbsr	synchk
 		lbsr	frmevl
-		lbsr	conint
+		bsr	conint
 		pshs	b
 		lda	#')
 		lbsr	synchk

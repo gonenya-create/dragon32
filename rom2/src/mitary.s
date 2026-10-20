@@ -60,7 +60,7 @@ ary		cmpb	#2		; רק DIM נחשב "DIM"; קריאה רגילה יוצרת מער
 		lda	4,x
 		cmpa	ARYCNT
 		lbne	err_bs		; מספר ממדים אחר: ?BS
-		lbra	getdef
+		bra	getdef
 ; ary_new: בונים רשומה ב-STREND (mit: NOTFDD)
 ary_new		stx	ARYREC
 		ldd	VARNAM
@@ -81,7 +81,7 @@ ary_new		stx	ARYREC
 		addd	#1
 5		std	,y++
 		leax	2,x
-		lbsr	mulcur		; CURTOL *= D
+		bsr	mulcur		; CURTOL *= D
 		dec	,s
 		bne	4B
 		leas	1,s
@@ -121,7 +121,7 @@ getdef		stx	ARYREC
 		lbhs	err_bs		; גדול מדי: ?BS
 		std	IDXTMP
 		ldd	,y++
-		lbsr	mulcur		; CURTOL = CURTOL*גודל + אינדקס
+		bsr	mulcur		; CURTOL = CURTOL*גודל + אינדקס
 		ldd	CURTOL
 		addd	IDXTMP
 		std	CURTOL

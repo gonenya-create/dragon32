@@ -54,7 +54,7 @@ strlt2		stx	DSCTMP+2
 		blo	putnew		; בתוך התוכנית: בלי העתקה
 4		tfr	b,a
 		stx	STRNG1
-		lbsr	strspa		; מקום, והכתובת ב-DSCTMP+2
+		bsr	strspa		; מקום, והכתובת ב-DSCTMP+2
 		ldx	STRNG1
 		lbsr	movstr
 ; putnew: המתאר שב-DSCTMP → מתאר זמני, ו-FAC מצביע עליו (mit: PUTNEW)
@@ -102,7 +102,7 @@ getspa		pshs	a
 2		tst	GARBFL		; כבר אספנו: אין מקום
 		lbne	err_os
 		inc	GARBFL
-		lbsr	garba2
+		bsr	garba2
 		bra	1B
 GARBFL		equ	$07
 
@@ -261,21 +261,21 @@ cat		ldx	ARGMO		; השמאלית
 		ldx	STRNG1		; מעתיקים את השמאלית
 		lda	,x
 		ldx	2,x
-		lbsr	movstr
+		bsr	movstr
 		ldx	DSCPNT		; ואת הימנית, ומשחררים אותה
-		lbsr	fretmp
+		bsr	fretmp
 		lbsr	movstr
 		ldx	STRNG1
-		lbsr	fretmp
+		bsr	fretmp
 		lbra	putnew
 
 ; strcmp: השוואת מחרוזות. ARG = השמאלית, FAC = הימנית. A = 1 אם הימנית גדולה, 0 שוות, $FF אם קטנה
 ; (כמו fcomp: הסימן של FAC פחות ARG) (mit: STRCMP 3557)
-strcmp		lbsr	frefac		; הימנית: A = אורך, X = כתובת
+strcmp		bsr	frefac		; הימנית: A = אורך, X = כתובת
 		sta	DSCTMP
 		stx	DSCTMP+2
 		ldx	ARGMO
-		lbsr	fretmp		; השמאלית
+		bsr	fretmp		; השמאלית
 		stx	STRNG1
 		ldu	DSCTMP+2	; U = הימנית, X = השמאלית
 		ldb	DSCTMP		; B = אורך הימנית, A = אורך השמאלית
