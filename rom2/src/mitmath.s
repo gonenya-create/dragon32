@@ -1,8 +1,8 @@
 ; Dragon 1982 BASIC — שלב 2, חלק 5א: פונקציות חשבון ו-^.
 ; תרגום ל-6809 של BASIC-M6502 (mit: LOG 5235, SQR/FPWRT 6105, EXP 6246, POLYX/POLY 6293, SIN/COS/TAN 6404, ATN 6544).
 ; הקורא (docs/DRAGON-SPEC-FUNCTIONS.md): אותן שיטות ואותם מקדמים בחמשת הבתים. הבדלים של ה-Dragon:
-;   0^שלילי נותן ?/0 (ב-mit: 0); TAN עם קוסינוס מחושב 0 נותן ?OV (ב-mit: ?/0).
-; פתוח: הטיפול בבית הדיוק הנוסף ב-EXP שונה ב-Dragon, ולא תואר; כאן כמו ב-mit.
+;   0^שלילי נותן ?/0 (ב-mit: 0); TAN עם קוסינוס מחושב 0 נותן ?OV (ב-mit: ?/0);
+;   EXP בלי התוספת של 80 לבית הנוסף (קורא, דוח העיגול).
 ;
 ; Portions translated from Microsoft BASIC-M6502, Copyright (c) Microsoft Corporation, MIT License.
 
@@ -108,13 +108,8 @@ fpwrt		tst	FACEXP
 ; ---------- EXP (mit: EXP) ----------
 fn_exp		lbsr	chknum
 exp		leax	logeb2,pcr	; x*log2(e)
-		lbsr	fmult
-		lda	FACOV
-		adda	#$50
-		bcc	1F
-		lbsr	incrnd
-1		sta	OLDOV
-		ldd	FACEXP		; FAC → ARG בלי עיגול (mit: MOVEF)
+		lbsr	fmult		; ב-Dragon: מעוגל כרגיל, ואז מפרידים (קורא; ב-mit מוסיפים 80 לבית הנוסף)
+		ldd	FACEXP		; FAC → ARG
 		std	ARGEXP
 		ldd	FACMOH
 		std	ARGMOH
@@ -144,8 +139,7 @@ exp		leax	logeb2,pcr	; x*log2(e)
 		sta	,u+
 		decb
 		bne	3B
-		lda	OLDOV
-		sta	FACOV
+		clr	FACOV
 		lbsr	fsubt		; int(y) - y
 		lbsr	negop		; y - int(y)
 		leax	expcon,pcr

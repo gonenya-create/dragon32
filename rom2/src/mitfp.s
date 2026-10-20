@@ -67,9 +67,8 @@ movfm		ldd	3,x
 		lda	,x
 		sta	FACEXP
 		rts
-; movmf: FAC → מספר ארוז ב-X (אחרי עיגול)
-movmf		lbsr	round
-		lda	FACEXP
+; movmf: FAC → מספר ארוז ב-X. ב-Dragon בלי עיגול כאן: כל פעולה כבר מעגלת (קורא; ב-mit מעגלים כאן)
+movmf		lda	FACEXP
 		sta	,x
 		lda	FACSGN
 		ora	#$7f
@@ -92,9 +91,8 @@ movfa		ldd	ARGEXP
 		sta	FACSGN
 		clr	FACOV
 		rts
-; movaf: FAC → ARG (אחרי עיגול)
-movaf		lbsr	round
-		ldd	FACEXP
+; movaf: FAC → ARG. ב-Dragon בלי עיגול נוסף (קורא)
+movaf		ldd	FACEXP
 		std	ARGEXP
 		ldd	FACMOH
 		std	ARGMOH
@@ -167,6 +165,17 @@ normal		clrb
 		suba	,s+
 		bls	zerofc		; המעריך נגמר
 		sta	FACEXP
+; nround: עיגול לפי ביט 7 של הבית הנוסף (חצי למעלה, בערך המוחלט), והבית מתאפס (קורא: כך מסתיים
+; הנרמול ב-Dragon, ולכן גם כפל, חילוק וחיבור; ב-mit הבית נשמר בלי עיגול)
+nround		tst	FACOV
+		bpl	1F
+		lbsr	incfac
+		bne	1F
+		lda	#$80		; 1.111… + 1 = 10.000…
+		sta	FACHO
+		inc	FACEXP
+		lbeq	err_ov
+1		clr	FACOV
 		rts
 zerofc		clra
 		sta	FACEXP
@@ -259,7 +268,16 @@ faddt		tst	FACEXP
 		lda	FACHO
 		adca	ARGHO
 		sta	FACHO
-		lbcs	rndshf		; גלישה: עוד סיבית אחת ימינה
+		lbcc	nround		; ב-Dragon החיבור מעגל בסוף (קורא)
+		lbsr	rndshf		; גלישה: עוד סיבית אחת ימינה. הסיבית שנפלה קובעת את העיגול,
+		tst	FACOV		; והבית הנוסף לא מתאפס במסלול הזה (קורא)
+		bpl	9F
+		lbsr	incfac
+		bne	9F
+		lda	#$80
+		sta	FACHO
+		inc	FACEXP
+		lbeq	err_ov
 9		rts
 fsubit		lda	OLDOV		; סימנים שונים: הגדול פחות הקטן
 		suba	FACOV
@@ -289,7 +307,7 @@ fmultt		tst	FACEXP
 		clr	RESMOH
 		clr	RESMO
 		clr	RESLO
-		lda	FACOV
+		clra			; ב-Dragon הבית הנוסף לא נכנס לכפל (קורא; ב-mit כן)
 		bsr	mltply
 		lda	FACLO
 		bsr	mltply
@@ -368,8 +386,7 @@ movfr		lda	RESHO
 ; ---------- חילוק (mit: FDIVT 5393, DIVIDE 5410) ----------
 fdiv		lbsr	conupk
 fdivt		tst	FACEXP
-		lbeq	err_dv0
-		lbsr	round
+		lbeq	err_dv0		; ב-Dragon בלי עיגול בכניסה; המנה מתעגלת בסוף (קורא)
 		lda	ARGEXP
 		bne	1F
 		lbra	zerofc
@@ -713,8 +730,8 @@ fout		ldy	#FBUFFR
 4		sta	DECCNT
 fout4		leax	nz9999,pcr
 		lbsr	fcomp
-		beq	bigges
-		bpl	fout9		; גדול מדי: חלקי 10
+		cmpa	#1
+		beq	fout9		; גדול מהגבול העליון: חלקי 10 (ב-Dragon שוויון לא נחשב, קורא)
 fout3		leax	nz0999,pcr
 		lbsr	fcomp
 		beq	fout38
