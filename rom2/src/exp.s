@@ -233,6 +233,7 @@ m_in		fcc	" IN "
 ; ---------- שמירת שורה (mit: MAIN1/NODEL/STOLOP, m6502.asm:1567-1641) ----------
 storeline	lbsr	linget		; D = מספר השורה
 		std	LINNUM
+storel2					; EDIT נכנס כאן: LINNUM מוכן, X = הטקסט
 		lbsr	skipsp		; רווחים אחרי המספר לא נשמרים (mit: CHRGET מדלג עליהם)
 		lbsr	crunch		; X = הטקסט → CRB; U = הסוף (אחרי ה-0)
 		tfr	u,d
@@ -537,7 +538,7 @@ prline		clr	CRMODE		; כאן: בתוך מרכאות
 5		cmpa	#'"
 		bne	6F
 		com	CRMODE
-6		lbsr	putc
+6		lbsr	lout
 		bra	1B
 9		rts
 
@@ -553,7 +554,7 @@ prword		pshs	x
 3		lda	,y+
 		pshs	a
 		anda	#$7f
-		lbsr	putc
+		lbsr	lout
 		puls	a
 		tsta
 		bpl	3B

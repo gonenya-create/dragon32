@@ -264,5 +264,21 @@ await check('RENUM: a missing target stays, "UL x IN y" with the new line number
   /RENUM 100\nUL 99 IN 100\nOK\nLIST\n100 GOTO 99\n110 GOTO 100\nOK$/.test(r.screen.replace(/\n@$/, '')) || r.screen.split('\n').slice(-7).join(' | '));
 await check('RENUM: ?FC for step 0, overlap with lines below the start, past 63999; ?SN for a number over 63999', ['10 PRINT 1', '20 PRINT 2', 'RENUM ,,0', 'RENUM 5,20', 'RENUM 63995,0,5', 'RENUM 64000'], r =>
   (r.screen.match(/\?FC ERROR/g) || []).length === 3 && /RENUM 64000\n\?SN ERROR\nOK$/.test(r.screen.replace(/\n@$/, '')) || r.screen.split('\n').slice(-10).join(' | '));
+const editCase = (keys, want) => check(`EDIT: "${keys}" → ${want}`, ['10 PRINT "HELLO"', 'EDIT 10', keys, 'LIST'], r =>
+  r.screen.replace(/\n@$/, '').endsWith(`LIST\n${want}\nOK`) || r.screen.split('\n').slice(-6).join(' | '));
+await check('EDIT n: the whole line, then "n " again on a new line', ['10 PRINT "HELLO"', 'EDIT 10', 'Q'], r =>
+  /EDIT 10\n10 PRINT "HELLO"\n10\nOK$/.test(r.screen.replace(/\n@$/, '')) || r.screen.split('\n').slice(-5).join(' | '));
+await editCase('7 IXX_', '10 PRINT "XXHELLO"');
+await editCase('SL2D', '10 PRINT "HEO"');
+await editCase('XWORLD', '10 PRINT "HELLO"WORLD');
+await editCase('6 HA"', '10 PRINT A"');
+await editCase('8 3CABC', '10 PRINT "HABCO"');
+await editCase('2SLKL', '10 PRINT "HEL');
+await editCase('6 DA', '10 PRINT "HELLO"');
+await check('EDIT: K then Q leaves the line unchanged (no save), OK', ['10 PRINT "HELLO"', 'EDIT 10', 'KHQ', 'LIST'], r => /\nOK\n\nLIST\n10 PRINT "HELLO"\nOK$/.test(r.screen.replace(/\n@$/, '')) || r.screen.split('\n').slice(-6).join(' | '));
+await check('EDIT: E saves without printing the rest; no OK after saving', ['10 PRINT "HELLO"', 'EDIT 10', '6 DE'], r => /EDIT 10\n10 PRINT "HELLO"\n10 PRINT$/.test(r.screen.replace(/[\n@]+$/, '')) || r.screen.split('\n').slice(-4).join(' | '));
+await check('EDIT with no number = line 0 (?UL); line missing ?UL; extra text ?SN', ['10 PRINT 1', 'EDIT', 'EDIT 20', 'EDIT 10 X'], r =>
+  (r.screen.match(/\?UL ERROR/g) || []).length === 2 && /EDIT 10 X\n\?SN ERROR\nOK$/.test(r.screen.replace(/\n@$/, '')) || r.screen.split('\n').slice(-8).join(' | '));
+await check('EDIT saves like a typed line: variables cleared', ['10 PRINT A', 'A=5', 'EDIT 10', '', 'PRINT A'], outLines(' 0'));
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

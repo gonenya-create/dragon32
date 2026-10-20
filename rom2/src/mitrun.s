@@ -155,6 +155,8 @@ stmdsp		fcb	$80
 		fdb	exec-stmdsp
 		fcb	$a6
 		fdb	del_st-stmdsp
+		fcb	$a7
+		fdb	edit_st-stmdsp
 		fcb	$a8
 		fdb	tron-stmdsp
 		fcb	$a9
