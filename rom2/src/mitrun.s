@@ -152,9 +152,9 @@ stmtbl
 		fdb	color_st		; $B0 COLOR
 		fdb	err_sn		; $B1 CIRCLE
 		fdb	err_sn		; $B2 PAINT
-		fdb	err_sn		; $B3 GET
-		fdb	err_sn		; $B4 PUT
-		fdb	err_sn		; $B5 DRAW
+		fdb	get_st		; $B3 GET
+		fdb	put_st		; $B4 PUT
+		fdb	draw_st		; $B5 DRAW
 		fdb	pcopy_st		; $B6 PCOPY
 		fdb	pmode_st		; $B7 PMODE
 		fdb	err_sn		; $B8 PLAY
