@@ -619,7 +619,7 @@ export function createMachine({ view, sound, loadTape, saveTape, joy }) {
     return c;
   }
   // כמו ב-Dragon האמיתי: מילת פקודה מזוהה בכל מקום מחוץ למרכאות, גם בלי רווחים (FORI=1TO9, READA, IFA=1THENPRINTA).
-  // מוסיפים רק את הרווחים שהמפענח שלנו צריך. כמו במקור, גם שם משתנה שמסתתרת בו מילה (SCORE = SC OR E) מתפרק.
+  // מוסיפים רק את הרווחים שהמפענח שלנו צריך. מילה נבדקת רק במקום שבו מתחיל שם, ולכן SCORE נשאר משתנה.
   const WORDS = ['FOR','GO','REM','ELSE','IF','DATA','PRINT','ON','INPUT','END','NEXT','DIM','READ','LET','RUN','RESTORE','RETURN','STOP',
     'POKE','CONT','LIST','CLEAR','NEW','CLOAD','CSAVE','OPEN','CLOSE','LLIST','SET','RESET','CLS','MOTOR','SOUND','AUDIO','EXEC','SKIPF',
     'DEL','EDIT','TRON','TROFF','DEF','LINE','PCLS','PSET','PRESET','SCREEN','PCLEAR','COLOR','CIRCLE','PAINT','GET','PUT','DRAW','PCOPY',
@@ -646,9 +646,9 @@ export function createMachine({ view, sound, loadTape, saveTape, joy }) {
           if (w !== 'FN' && !w.endsWith('(') && /[A-Z0-9.]/.test(src[i] || '')) out += ' ';
           continue;
         }
-        // שם משתנה: אותיות וספרות, עד מילת הפקודה הבאה
+        // שם משתנה: כמו במקור, כל האותיות והספרות שאחרי האות הראשונה שייכות לשם, גם אם מסתתרת בהן מילה
         let j = i + 1;
-        while (j < src.length && /[A-Z0-9]/.test(src[j]) && !WORDS.some(k => src.startsWith(k, j))) j++;
+        while (j < src.length && /[A-Z0-9]/.test(src[j])) j++;
         if (src[j] === '$') j++;
         out += src.slice(i, j); i = j;
         continue;

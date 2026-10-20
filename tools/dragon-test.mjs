@@ -703,9 +703,8 @@ if (part('GO TO and the "מה קרה?" helper')) {
   for (const l of ['NEW', '10 FORI=1TO3:READA$,B:PRINTA$;B;:NEXTI', '20 IFB=3THENPRINT"END"ELSEPRINT"NO"', '30 DATAX,1,"Y:Z",2', '40 DATAW,3', '50 X=5:IFX>2ANDX<9THENGOSUB70', '60 END', '70 PRINTLEFT$("ABC",2);CHR$(65):RETURN']) await say(l, 60);
   await say('RUN', 700);
   check('keywords work with no spaces (FORI=1TO3, READA$, IF..THEN..ELSE, DATAW, AND)', /X 1 Y:Z 2 W 3 END\nABA\nOK$/.test(await out()), (await out()).slice(-60));
-  await say('NEW', 60); await say('10 SCORE=1', 60); await say('RUN', 300);
-  check('a name that hides a keyword splits like on the real Dragon (SCORE = SC OR E)', /\?SN ERROR IN 10\nOK$/.test(await out()), (await out()).slice(-40));
-  await say('NEW', 60);
+  await say('NEW', 60); await say('10 SCORE=5:XAND=SCORE+1:PRINTXAND', 60); await say('RUN', 300);
+  check('a keyword inside a name stays part of the name, like on the real Dragon (SCORE, XAND)', / 6 \nOK$/.test(await out()), (await out()).slice(-40));
   const helper = p.locator('#dragon-room .d32-helper');
   check('helper hidden while there is no error', !(await helper.isVisible()));
   await say('NEW', 60); await say('10 PRNT "HI"', 60); await say('RUN', 400);
