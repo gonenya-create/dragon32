@@ -127,19 +127,19 @@ stmtbl
 		fdb	clear		; $96 CLEAR
 		fdb	new_st		; $97 NEW
 		fdb	def		; $98 DEF
-		fdb	err_sn		; $99 CLOAD
-		fdb	err_sn		; $9A CSAVE
+		fdb	cload_st	; $99 CLOAD
+		fdb	csave_st	; $9A CSAVE
 		fdb	err_sn		; $9B OPEN
 		fdb	err_sn		; $9C CLOSE
 		fdb	err_sn		; $9D LLIST
 		fdb	set_st		; $9E SET
 		fdb	reset_st		; $9F RESET
 		fdb	cls_st		; $A0 CLS
-		fdb	err_sn		; $A1 MOTOR
+		fdb	motor_st	; $A1 MOTOR
 		fdb	sound_st	; $A2 SOUND
 		fdb	audio_st	; $A3 AUDIO
 		fdb	exec		; $A4 EXEC
-		fdb	err_sn		; $A5 SKIPF
+		fdb	skipf_st	; $A5 SKIPF
 		fdb	del_st		; $A6 DEL
 		fdb	edit_st		; $A7 EDIT
 		fdb	tron		; $A8 TRON

@@ -51,8 +51,8 @@ KQPTR		equ	$f8		; רק לבדיקות: המקש הבא בתור המוקלד (ה
 KQCNT		equ	$fa		; כמה מקשים נשארו, 2 בתים (באזור הפנוי $EA-$FF, קורא)
 LINBUF		equ	$02dd		; מאגר השורה (קורא: BUF ב-$02DD)
 LINMAX		equ	249
-CRB		equ	$01da		; הניסוי בלבד: השורה המכווצת, בחוצץ הקלטת (255 בתים). במקור הכיווץ נעשה
-					; בתוך המאגר; בשלב הקלטת עוברים לשיטה הזו
+CRB		equ	$02dc		; השורה המכווצת: במקום, בתוך מאגר השורה, בית אחד לפני הקלט (קורא: קלטת 11).
+					; הגרש (1 → 2 בתים) קורה פעם אחת לכל היותר, ובית הפתיחה מספיק
 STACKINI	equ	$7f36		; ספר: STKTOP אחרי ההדלקה
 
 ; ---------- הכניסות הקבועות ב-$8000 (docs/DRAGON-SPEC-INTERFACES.md 3ג, DRAGON-SPEC-TAPE.md 1.10) ----------
@@ -88,6 +88,8 @@ swinit		orcc	#$50
 		leax	,x
 		bne	1B
 		clr	,-s		; סמן תחתית למחסנית ה-FOR/GOSUB (קורא: ב-STKTOP-1)
+		lda	#$39		; קורא (קלטת 11): $02D9 לא אפס, קישור דמה לפני מספר השורה
+		sta	$02d9
 		leax	chrtpl,pcr	; קריאת התו ל-RAM ($9F-$AA)
 		ldu	#chrget
 		ldb	#12
@@ -230,6 +232,12 @@ err_dn		ldd	#'D*256+'N
 err_no		ldd	#'N*256+'O
 		bra	error
 err_dv0		ldd	#'/*256+'0
+		bra	error
+err_ao		ldd	#'A*256+'O
+		bra	error
+err_io		ldd	#'I*256+'O
+		bra	error
+err_fm		ldd	#'F*256+'M
 		bra	error
 err_sn		ldd	#'S*256+'N
 error		lds	STKTOP		; mit: STKINI — מחסנית, זמניים, ואין המשך
@@ -810,6 +818,7 @@ fntab		fcs	"SGN"
 		include	"mitdraw.s"
 		include	"mitsnd.s"
 		include	"mittape.s"
+		include	"mitfile.s"
 		include	"io.s"
 		include	"testq.s"
 

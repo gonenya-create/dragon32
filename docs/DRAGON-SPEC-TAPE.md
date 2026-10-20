@@ -597,3 +597,83 @@ Error texts (2 bytes each) are in the shared table.
 6. INPUT #-1 on a line that is a single quote character (C-11, 5th line): not traced in full.
 7. That the DAC feeds the cassette output connector regardless of the sound-source select is hardware knowledge, not from this source.
 8. Cycle extras at byte boundaries assume the original layout: the BASIC-level block writer calls the byte writer through the $8000 jump table, and the leader writer calls it directly. A different layout changes only those 26–46-cycle stretches.
+
+---
+
+## 11. Follow-up: line buffer and crunch (writer's question)
+
+### 11.0 Memory layout from the tape buffer up to the line buffer
+
+| Addr | Size | Use |
+|---|---|---|
+| $01D1 | 1 | filename length |
+| $01D2–$01D9 | 8 | filename |
+| $01DA–$02D8 | 255 | tape buffer (header / block data) |
+| $02D9 | 1 | a byte that is always non-zero. Cold start sets it non-zero (the start-up code writes the RTS opcode value $39 there) and nothing else writes it. It works as a fake non-zero link byte (see 11.3). |
+| $02DA–$02DB | 2 | line number of the line being entered (big-endian) |
+| $02DC | 1 | one byte just before the line buffer. **Crunch output starts here.** INPUT also puts a comma or zero here as a terminator before the data. |
+| $02DD–$03D8 | 252 | line buffer: 250 + 2 spare bytes for the trailing zero link |
+| $03D9 | 1 | one byte below the number-to-text buffer, used as a string-build start |
+| $03DA–$03E9 | 16 | number-to-text conversion buffer |
+
+So the crunched line **never touches the tape buffer** ($01DA–$02D8). The tape buffer and the line buffer don't overlap.
+
+### 11.1 Where crunch reads and writes
+
+- **Input:** crunch reads from wherever the text pointer is. Typed lines are collected at $02DD onward (at most 249 characters), with a zero at the end.
+  - Direct-mode line: the main loop points the text pointer one byte before the buffer ($02DC), then fetches one character. That skips leading spaces, so crunch starts at the first non-space character at or after $02DD.
+  - Numbered line: the line-number digits are read first, so crunch starts right after them (spaces after the number are kept as text).
+- **Output:** always starts at **$02DC**, one byte **before** the line buffer. So it's done in place in the same buffer, with the output running one byte behind where the input starts.
+- **Why that's enough:** almost every change makes the text shorter or keeps it the same length:
+  - a keyword becomes a 1-byte token (or 2 bytes for a function);
+  - ELSE (4 characters) becomes colon + ELSE token (2 bytes);
+  - "?" becomes a 1-byte PRINT token;
+  - numbers, ":", ";", spaces, quoted strings, DATA text and REM text are copied byte for byte.
+
+  The only change that adds a byte is the apostrophe (a remark): 1 character becomes colon + remark token (2 bytes). After it, the rest of the line is copied unchanged, so this happens at most once per line. The output therefore never gets ahead of the next unread input character. There's no other trick.
+- **End of output:** after the line's zero, two more zeros are added. They look like a zero link, so a direct line acts as the end of the program.
+
+### 11.2 Where a direct line starts running
+
+After crunching, the text pointer is set to **$02DB**. The first character fetch moves it to $02DC, the first crunched byte, and the statement runs from there. Crunch also hands back a length in B (11.3). The direct-mode path doesn't use it.
+
+### 11.3 Storing a numbered line
+
+- The line number goes into $02DA–$02DB before crunching.
+- Crunch returns a length = (address after the two extra zeros) − $02DA. That equals 4 + the crunched text including its end zero, i.e. 2 link bytes + 2 line-number bytes + text. This fits in one byte; the maximum is 255 (11.5). The length is kept in a one-byte counter.
+- If the line already exists, it's deleted first.
+- If the first crunched byte ($02DC) is zero (just a number), nothing is inserted: typing only a line number deletes that line.
+- Otherwise room is made at the insert point by moving the rest of the program up by that length (with the usual out-of-memory check). Then the bytes are copied **starting at $02D8**, until the insert point plus that length is reached:
+  - first $02D8 and $02D9, as a dummy link (its high byte is the last tape-buffer byte, its low byte the always-non-zero byte);
+  - then the line number at $02DA–$02DB;
+  - then the crunched text from $02DC, up to and including its end zero.
+- After the copy: end-of-program is updated, variables are cleared (as RUN would), and **all links are rebuilt** by scanning for each line's end zero. So the dummy link is overwritten. Its only job is to be non-zero during the rebuild.
+
+So $02D8 (the tape buffer's last byte) is **read** during line storage, but its value doesn't matter. Nothing is written there.
+
+### 11.4 Other users of the tape buffer $01DA–$02D8
+
+Searching the whole source, the only users are:
+- cassette I/O: header build/read, block data, the character buffer for open files;
+- the filename reader: a name longer than 8 characters spills into $01DA onward, at most up to $02D0;
+- DLOAD/DLOADM: host blocks of 128 bytes are read into $01DA–$0259;
+- (D64 only) the 64K-mode boot routine copies a small loader into $01DA and runs it there.
+
+INPUT, LINE INPUT, EDIT, PRINT USING and the string functions do **not** use it:
+- INPUT and LINE INPUT use the line buffer at $02DD (hence "illegal direct" for INPUT and LINE INPUT);
+- EDIT decrunches into the line buffer and re-enters through crunch with the text pointer at $02DD;
+- number output and HEX$ use $03D9–$03E9;
+- strings use string space. A string whose text lies below $03D9 (e.g. a literal in the line buffer) is copied into string space when it becomes a value.
+
+The temporary stack used while the machine resets starts at $03D7, inside the line buffer, not the tape buffer.
+
+Consequence for CSAVE/CLOAD typed in direct mode:
+- The statement text is at $02DC onward, and the tape code uses only $01D1–$02D8, so they never clash.
+- The filename string is evaluated (and copied to string space) before the header is built or read.
+
+### 11.5 Maximum lengths
+
+- Typed or read lines are capped at **249 characters** (extra characters are ignored), plus the end zero.
+- Crunched text is at most 249 + 1 (one apostrophe) = **250 bytes + end zero + 2 zeros**. That's 253 bytes from $02DC to $03D8 — exactly the end of the line buffer (250 + 2 spare). The returned length is then at most 255.
+- So the original **can't overflow**. There's no "too long after crunch" error and no truncation after crunch; the 249-character input cap is the only limit.
+- A program line can't hold more than that. (The decruncher used by LIST/EDIT has its own buffer-full stop.)

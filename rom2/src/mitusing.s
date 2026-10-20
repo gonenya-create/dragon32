@@ -85,7 +85,7 @@ us_ok		tst	USEND
 		tsta
 		bne	us_str
 		lbsr	chknum
-		lbsr	us_num
+		lbsr	us_numw
 ; us_sep: אחרי ערך: סוף פקודה, ; או ,. אחרת ?SN
 us_sep		jsr	<chrgot
 		beq	3F		; נגמרה בלי מפריד: 1
@@ -229,9 +229,16 @@ USP		equ	$d0	; כמה ספרות לפני הנקודה (עם סימן)
 USN		equ	$d1	; מונה (במחרוזת: האורך. במעריכי: N-9. בשבר: הספרות)
 USX		equ	$d2	; המעריך להדפסה
 USF		equ	$d4	; תו המילוי (רווח או *)
-USDG		equ	LINBUF		; תשע הספרות
-UST		equ	LINBUF+16	; החלק שלפני הנקודה (שני תאים לפניו: הסימן וה-$)
+USBASE		equ	$fc		; 2 בתים: מקום העבודה במחסנית (הכתובת $FC-$FD פנויה גם במקור)
+; מקום העבודה: 9 הספרות בהתחלה, והחלק שלפני הנקודה מ-+16 (שלושה תאים לפניו: %, הסימן וה-$).
+; במחסנית, כי מאגר השורה מחזיק עכשיו את השורה שרצה (קורא: קלטת 11)
+USSZ		equ	48
 
+us_numw		leas	-USSZ,s
+		sts	USBASE
+		bsr	us_num
+		leas	USSZ,s
+		rts
 us_num		lda	USD		; שדה רחב מ-17 (עם הנקודה): ?FC
 		inca
 		adda	USL
@@ -330,14 +337,15 @@ us_exp		bsr	us_norm		; מעריכי (אפס: e=0)
 ; us_dg: חצי (בחיבור של ה-Dragon), החלק השלם, ותשע ספרות עם אפסים מובילים ב-USDG
 us_dg		lbsr	faddh
 		lbsr	qint
-		ldy	#USDG
+		ldy	USBASE
 		ldx	#foutbl
 1		lbsr	fdig
 		stb	,y+
 		cmpx	#foutbl+36	; תשע החזקות
 		blo	1B
 ; us_out: מהספרות לפלט: החלק השלם (פסיקים), מילוי, סימן ו-$, התאמה לרוחב (%), נקודה, שבר, מעריך, סימן נגרר
-us_out		ldy	#UST
+us_out		ldy	USBASE
+		leay	16,y
 		ldb	USP		; i = 0 .. P-1. אין ספרות לפני הנקודה: i = P-1 בלבד ("0")
 		decb
 		bmi	2F
@@ -361,7 +369,8 @@ us_out		ldy	#UST
 22		bsr	us_digi
 		bra	2B
 3		clr	,y		; Y = הסוף (0 אחריו)
-		ldu	#UST		; אפסים ופסיקים מובילים → מילוי, חוץ מהתו האחרון
+		ldu	USBASE
+		leau	16,u		; אפסים ופסיקים מובילים → מילוי, חוץ מהתו האחרון
 		lda	USF
 		sta	-1,u
 		sta	-2,u
@@ -374,7 +383,8 @@ us_out		ldy	#UST
 		bne	5F
 41		sta	,u+
 		bra	4B
-5		ldx	#UST		; לפני הספרה הראשונה (U): $ צף, ולפניו הסימן. X = ההתחלה
+5		ldx	USBASE
+		leax	16,x		; לפני הספרה הראשונה (U): $ צף, ולפניו הסימן. X = ההתחלה
 		ldb	USFLG
 		bitb	#4
 		beq	6F
@@ -411,7 +421,7 @@ us_ft		tfr	y,d		; התאמה לרוחב L. B = האורך
 us_digi		lda	#'0
 		cmpb	#9
 		bhs	1F
-		ldu	#USDG
+		ldu	USBASE
 		lda	b,u
 1		sta	,y+
 		incb
