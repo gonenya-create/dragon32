@@ -72,15 +72,15 @@ FFC0                  SAM             equ     $ffc0
 8022 A7C0                             sta     ,u+
 8024 5A                               decb
 8025 26F9                             bne     1B
-8027 1729F7                           lbsr    hw_init         ; DP כבר 0 מההדלקה (והקוד לא משנה אותו)
+8027 172852                           lbsr    hw_init         ; DP כבר 0 מההדלקה (והקוד לא משנה אותו)
 802A B6FF02                           lda     PIA0+2
 802D 8605                             lda     #$05
 802F B7FF03                           sta     PIA0+3
 8032 1CEF                             andcc   #$ef
 8034 8632                             lda     #50
 8036 978F                             sta     CBLCNT
-8038 172A2D                           lbsr    cls
-803B 308D2BC1                         leax    testq,pcr       ; תור הבדיקות
+8038 172888                           lbsr    cls
+803B 308D2A1C                         leax    testq,pcr       ; תור הבדיקות
 803F EC81                             ldd     ,x++
 8041 DDFA                             std     KQCNT
 8043 9FF8                             stx     KQPTR
@@ -120,7 +120,7 @@ FFC0                  SAM             equ     $ffc0
 808D                  endcon
 808D 8D36             main_ok         bsr     condcr
 808F 308D0407                         leax    m_ok,pcr
-8093 172A39           mo_puts         lbsr    puts
+8093 172894           mo_puts         lbsr    puts
 8096 17039E           main            lbsr    getline
 8099 25F2                             bcs     main_ok         ; BREAK
 809B 8E02DD                           ldx     #LINBUF
@@ -154,11 +154,11 @@ FFC0                  SAM             equ     $ffc0
 80CF 270B                             beq     prcr
 80D1 4A                               deca
 80D2 308D0098                         leax    m_in,pcr
-80D6 1729F6                           lbsr    puts
+80D6 172851                           lbsr    puts
 80D9 170307                           lbsr    prnum
                       ; prcr: שורה חדשה
 80DC 860D             prcr            lda     #13
-80DE 162997                           lbra    putc
+80DE 1627F2                           lbra    putc
                       
                       ; ---------- שגיאות (mit: ERROR) ----------
 80E1 CC4F56           err_ov          ldd     #'O*256+'V
@@ -208,10 +208,10 @@ FFC0                  SAM             equ     $ffc0
 8150 863F                             lda     #'?
 8152 3402                             pshs    a               ; "?XY"
 8154 30E4                             leax    ,s
-8156 172976                           lbsr    puts
+8156 1727D1                           lbsr    puts
 8159 3263                             leas    3,s
 815B 308C09                           leax    m_err,pcr
-815E 17296E                           lbsr    puts
+815E 1727C9                           lbsr    puts
 8161 17FF68                           lbsr    prin
 8164 16FF26                           lbra    main_ok
 8167 204552524F52     m_err           fcc     " ERROR"
@@ -503,7 +503,7 @@ FFC0                  SAM             equ     $ffc0
 8377 2217                             bhi     9F
 8379 8D68                             bsr     prnum           ; מספר השורה
 837B 8620                             lda     #$20
-837D 1726F8                           lbsr    putc
+837D 172553                           lbsr    putc
 8380 3024                             leax    4,y
 8382 3420                             pshs    y
 8384 8D0B                             bsr     prline
@@ -543,14 +543,14 @@ FFC0                  SAM             equ     $ffc0
 83C7 20F7                             bra     7B
 83C9 A6A4             8               lda     ,y              ; lout שומר על X ועל Y
 83CB 847F                             anda    #$7f
-83CD 171FA9                           lbsr    lout
+83CD 171F7A                           lbsr    lout
 83D0 A6A0                             lda     ,y+
 83D2 2AF5                             bpl     8B
 83D4 20BE                             bra     1B
 83D6 8122             5               cmpa    #'"
 83D8 2603                             bne     6F
 83DA 7303F8                           com     CRMODE
-83DD 171F99           6               lbsr    lout
+83DD 171F6A           6               lbsr    lout
 83E0 20B2                             bra     1B
 83E2 39               9               rts
                       
@@ -560,7 +560,7 @@ FFC0                  SAM             equ     $ffc0
 83E3 3416             prnum           pshs    d,x             ; D כמספר עשרוני בלי אפסים מובילים
 83E5 8D08                             bsr     numtxt
 83E7 8E03DA                           ldx     #FBUFFR
-83EA 1726E2                           lbsr    puts
+83EA 17253D                           lbsr    puts
 83ED 3596                             puls    d,x,pc
                       ; numtxt: D → ספרות עשרוניות ב-FBUFFR (מסתיים ב-0, בלי אפסים מובילים). B = כמה (גם RENUM)
 83EF 3450             numtxt          pshs    x,u
@@ -597,7 +597,7 @@ FFC0                  SAM             equ     $ffc0
                       ; getline: שורה ל-LINBUF (מסתיים ב-0). ← מוחק, ENTER מסיים, BREAK: C=1. (שלנו, עם מצביע ולא B,X)
 8437 3414             getline         pshs    b,x
 8439 8E02DD           gl_new          ldx     #LINBUF
-843C 17277D           gl_key          lbsr    getkey          ; הסמן מהבהב בתוך getkey (קורא)
+843C 1725D8           gl_key          lbsr    getkey          ; הסמן מהבהב בתוך getkey (קורא)
 843F 810D                             cmpa    #13
 8441 2731                             beq     gl_done
 8443 8108                             cmpa    #8
@@ -606,7 +606,7 @@ FFC0                  SAM             equ     $ffc0
 8449 2726                             beq     gl_brk
 844B 810C                             cmpa    #12             ; CLEAR: מסך נקי, השורה מתחילה מחדש, בלי ההנחיה (קורא)
 844D 2607                             bne     1F
-844F 172616                           lbsr    cls
+844F 172471                           lbsr    cls
 8452 0F87                             clr     IKEYIM
 8454 20E3                             bra     gl_new
 8456                  1
@@ -615,7 +615,7 @@ FFC0                  SAM             equ     $ffc0
 845A 8C03D6                           cmpx    #LINBUF+LINMAX
 845D 24DD                             bhs     gl_key
 845F A780                             sta     ,x+
-8461 172614           2               lbsr    putc
+8461 17246F           2               lbsr    putc
 8464 20D6                             bra     gl_key
 8466 8C02DD           gl_back         cmpx    #LINBUF
 8469 27D1                             beq     gl_key
@@ -1513,7 +1513,7 @@ FFC0                  SAM             equ     $ffc0
 8B70 DD68                             std     CURLIN
 8B72 3004                             leax    4,x
 8B74 9FA6                             stx     TXTPTR
-8B76 171529                           lbsr    trace           ; TRON: [n] (קורא)
+8B76 1714FA                           lbsr    trace           ; TRON: [n] (קורא)
 8B79 9D9F             gone            jsr     <chrget
 8B7B 8D09                             bsr     gone3
 8B7D 20DE                             bra     newstt
@@ -1574,19 +1574,19 @@ FFC0                  SAM             equ     $ffc0
 8BEE 8140                             fdb     err_sn          ; $9B OPEN
 8BF0 8140                             fdb     err_sn          ; $9C CLOSE
 8BF2 8140                             fdb     err_sn          ; $9D LLIST
-8BF4 A036                             fdb     set_st          ; $9E SET
-8BF6 A07E                             fdb     reset_st                ; $9F RESET
+8BF4 A024                             fdb     set_st          ; $9E SET
+8BF6 A053                             fdb     reset_st                ; $9F RESET
 8BF8 9FAC                             fdb     cls_st          ; $A0 CLS
 8BFA 8140                             fdb     err_sn          ; $A1 MOTOR
 8BFC 8140                             fdb     err_sn          ; $A2 SOUND
 8BFE 8140                             fdb     err_sn          ; $A3 AUDIO
 8C00 984E                             fdb     exec            ; $A4 EXEC
 8C02 8140                             fdb     err_sn          ; $A5 SKIPF
-8C04 A0C8                             fdb     del_st          ; $A6 DEL
-8C06 A391                             fdb     edit_st         ; $A7 EDIT
-8C08 A09A                             fdb     tron            ; $A8 TRON
-8C0A A09F                             fdb     troff           ; $A9 TROFF
-8C0C A104                             fdb     line_st         ; $AA LINE
+8C04 A099                             fdb     del_st          ; $A6 DEL
+8C06 A362                             fdb     edit_st         ; $A7 EDIT
+8C08 A06B                             fdb     tron            ; $A8 TRON
+8C0A A070                             fdb     troff           ; $A9 TROFF
+8C0C A0D5                             fdb     line_st         ; $AA LINE
 8C0E 8140                             fdb     err_sn          ; $AB PCLS
 8C10 8140                             fdb     err_sn          ; $AC PSET
 8C12 8140                             fdb     err_sn          ; $AD PRESET
@@ -1602,7 +1602,7 @@ FFC0                  SAM             equ     $ffc0
 8C26 8140                             fdb     err_sn          ; $B7 PMODE
 8C28 8140                             fdb     err_sn          ; $B8 PLAY
 8C2A 8140                             fdb     err_sn          ; $B9 DLOAD
-8C2C A153                             fdb     renum           ; $BA RENUM
+8C2C A124                             fdb     renum           ; $BA RENUM
                       
 8C2E 9EA6             rem             ldx     TXTPTR          ; עד סוף השורה
 8C30 6D80             1               tst     ,x+
@@ -1724,7 +1724,7 @@ FFC0                  SAM             equ     $ffc0
 8D13 39                               rts
 8D14 2778             prlist          beq     pr_cr
 8D16 81CD                             cmpa    #$cd            ; PRINT USING (קורא)
-8D18 1027183E                         lbeq    usstart
+8D18 1027180F                         lbeq    usstart
 8D1C 8140                             cmpa    #'@             ; PRINT @n (קורא): 0-511, אחרת ?FC; אחריו פסיק אם יש המשך, וסוף = שורה חדשה
 8D1E 2624                             bne     pr_lp
 8D20 9D9F                             jsr     <chrget
@@ -1739,7 +1739,7 @@ FFC0                  SAM             equ     $ffc0
 8D39 17FE0F                           lbsr    chkcom
 8D3C 2750                             beq     pr_cr
 8D3E 81CD                             cmpa    #$cd            ; PRINT @n,USING
-8D40 10271816                         lbeq    usstart
+8D40 102717E7                         lbeq    usstart
 8D44 813B             pr_lp           cmpa    #';
 8D46 2724                             beq     pr_semi
 8D48 812C                             cmpa    #',
@@ -1751,9 +1751,9 @@ FFC0                  SAM             equ     $ffc0
 8D56 200E                             bra     4F
 8D58 17FCA2           3               lbsr    fout
 8D5B 8E03DA                           ldx     #FBUFFR
-8D5E 171D6E                           lbsr    puts
+8D5E 171BC9                           lbsr    puts
 8D61 8620                             lda     #$20            ; רווח אחרי מספר
-8D63 171D12                           lbsr    putc
+8D63 171B6D                           lbsr    putc
 8D66 9DA5             4               jsr     <chrgot
 8D68 2724                             beq     pr_cr
 8D6A 20D8                             bra     pr_lp
@@ -1764,18 +1764,18 @@ FFC0                  SAM             equ     $ffc0
 8D73 8510                             bita    #$10
 8D75 260D                             bne     2F
 8D77 8620             1               lda     #$20
-8D79 171CFC                           lbsr    putc
+8D79 171B57                           lbsr    putc
 8D7C 9689                             lda     CURSOR+1
 8D7E 850F                             bita    #$0f
 8D80 26F5                             bne     1B
 8D82 2005                             bra     3F
 8D84 860D             2               lda     #13
-8D86 171CEF                           lbsr    putc
+8D86 171B4A                           lbsr    putc
 8D89 9D9F             3               jsr     <chrget
 8D8B 26B7                             bne     pr_lp
 8D8D 39                               rts
 8D8E 860D             pr_cr           lda     #13
-8D90 161CE5                           lbra    putc
+8D90 161B40                           lbra    putc
                       
                       ; ---------- FOR / NEXT (mit: FOR 2081, NEXT 3110) ----------
                       ; רשומה במחסנית, מהכתובת הנמוכה: $80, כתובת המשתנה (2), הצעד (5), סימן הצעד (1), העד (5),
@@ -2442,7 +2442,7 @@ FFC0                  SAM             equ     $ffc0
 927A 5D                               tstb
 927B 2708                             beq     9F
 927D A680             1               lda     ,x+
-927F 1717F6                           lbsr    putc            ; שומר על B ו-X
+927F 171651                           lbsr    putc            ; שומר על B ו-X
 9282 5A                               decb
 9283 26F8                             bne     1B
 9285 39               9               rts
@@ -3049,7 +3049,7 @@ FFC0                  SAM             equ     $ffc0
 96A9 0D09                             tst     INPFLG          ; הנתונים נגמרו
 96AB 10260084                         lbne    datlop          ; READ: ה-DATA הבא
 96AF 863F                             lda     #'?             ; INPUT: "??" ועוד שורה
-96B1 1713C4                           lbsr    putc
+96B1 17121F                           lbsr    putc
 96B4 17009A                           lbsr    qinlin
 96B7 8E02DC                           ldx     #BUFMIN
 96BA 9FA6                             stx     TXTPTR
@@ -3097,7 +3097,7 @@ FFC0                  SAM             equ     $ffc0
 9710 6D9F0035         1               tst     [INPPTR]        ; INPUT: נשאר עוד משהו בשורה?
 9714 2706                             beq     9F
 9716 308C59                           leax    m_extra,pcr
-9719 1713B3                           lbsr    puts
+9719 17120E                           lbsr    puts
 971C 39               9               rts
                       ; נתון שלא מתאים: ב-READ ?SN בשורת ה-DATA; ב-INPUT מבקשים שוב את כל הפקודה
 971D 0D09             trmnok          tst     INPFLG
@@ -3106,7 +3106,7 @@ FFC0                  SAM             equ     $ffc0
 9723 DD68                             std     CURLIN
 9725 16EA18                           lbra    err_sn
 9728 308C40           1               leax    m_redo,pcr
-972B 1713A1                           lbsr    puts
+972B 1711FC                           lbsr    puts
 972E 9E2F                             ldx     TXTBEG
 9730 9FA6                             stx     TXTPTR
 9732 39                               rts                     ; newstt מריץ את הפקודה מחדש
@@ -3126,9 +3126,9 @@ FFC0                  SAM             equ     $ffc0
 974E 16FF6B                           lbra    datbk1
                       ; qinlin: "? " ושורה מהמקלדת. BREAK: עוצרים, ו-CONT חוזר ל-INPUT
 9751 863F             qinlin          lda     #'?
-9753 171322                           lbsr    putc
+9753 17117D                           lbsr    putc
 9756 8620                             lda     #$20
-9758 17131D                           lbsr    putc
+9758 171178                           lbsr    putc
 975B 17ECD9                           lbsr    getline
 975E 2501                             bcs     1F
 9760 39                               rts
@@ -3162,7 +3162,7 @@ FFC0                  SAM             equ     $ffc0
 97A0 1024E8E9                         lbcc    endcon
 97A4 17E91E                           lbsr    condcr
 97A7 308C0A                           leax    m_brk,pcr
-97AA 171322                           lbsr    puts
+97AA 17117D                           lbsr    puts
 97AD 17E91C                           lbsr    prin
 97B0 16E8DA                           lbra    endcon
 97B3 39               9               rts
@@ -3184,14 +3184,14 @@ FFC0                  SAM             equ     $ffc0
 97D5 A69F00F8                         lda     [KQPTR]
 97D9 8103                             cmpa    #3
 97DB 261C                             bne     9F
-97DD 1713E6                           lbsr    gk_pop
+97DD 171241                           lbsr    gk_pop
 97E0 2018                             bra     2F
 97E2 7FFF02           1               clr     PIA0+2
 97E5 B6FF00                           lda     PIA0
 97E8 43                               coma
 97E9 847F                             anda    #$7f
 97EB 270C                             beq     9F
-97ED 171330                           lbsr    keyindex
+97ED 17118B                           lbsr    keyindex
 97F0 8103                             cmpa    #3
 97F2 2706                             beq     2F
 97F4 4D                               tsta
@@ -4001,9 +4001,9 @@ FFC0                  SAM             equ     $ffc0
 9EB0 9668                             lda     CURLIN          ; תור הבדיקות רק בזמן שתוכנית רצה (כמו BREAK); אחרת המקלדת
 9EB2 4C                               inca                    ; $FFxx רק במצב ישיר
 9EB3 2605                             bne     0F
-9EB5 170C68                           lbsr    keyindex
+9EB5 170AC3                           lbsr    keyindex
 9EB8 2003                             bra     1F
-9EBA 170CF8           0               lbsr    inkey
+9EBA 170B53           0               lbsr    inkey
 9EBD 0F87             1               clr     IKEYIM
 9EBF 9753                             sta     FACLO
 9EC1 3402                             pshs    a
@@ -4119,7 +4119,7 @@ FFC0                  SAM             equ     $ffc0
                       
                       ; ---------- POINT(x,y): מסך הטקסט (קורא + ה-VDG) ----------
                       ; x 0-63, y 0-31. תא שאינו גרפי: -1. נקודה כבויה: 0. דולקת: הצבע 1-8
-9F88 8D6F             fn_point        bsr     sgxy
+9F88 8D6A             fn_point        bsr     sgxy
 9F8A 3410                             pshs    x
 9F8C 17EBB8                           lbsr    chkrp
 9F8F 3510                             puls    x
@@ -4144,126 +4144,99 @@ FFC0                  SAM             equ     $ffc0
                       
                       ; CLS: בלי מספר: רווחים ($60). 0-8: ממלאים בצבע (0 = $80, אחרת $8F + 16*(n-1)).
                       ; 9-255: רווחים ושורה משלנו (במקור: הודעה של מיקרוסופט; גונן, 20.10: "The Dragon machine 2026"), ושתי שורות חדשות
-9FAC 2725             cls_st          beq     3F
-9FAE 17F1F7                           lbsr    evbyte
-9FB1 C108                             cmpb    #8
-9FB3 2221                             bhi     4F
-9FB5 8680                             lda     #$80
-9FB7 5D                               tstb
-9FB8 2709                             beq     1F
-9FBA 5A                               decb
-9FBB 58                               lslb
-9FBC 58                               lslb
-9FBD 58                               lslb
-9FBE 58                               lslb
-9FBF CA8F                             orb     #$8f
-9FC1 1F98                             tfr     b,a
-9FC3 8E0400           1               ldx     #SCREEN
-9FC6 A780             2               sta     ,x+
-9FC8 8C0600                           cmpx    #SCREND
-9FCB 25F9                             blo     2B
-9FCD 8E0400                           ldx     #SCREEN
-9FD0 9F88                             stx     CURSOR
-9FD2 39                               rts
-9FD3 160A92           3               lbra    cls
-9FD6 170A8F           4               lbsr    cls
-9FD9 308C03                           leax    m_cls,pcr
-9FDC 160AF0                           lbra    puts
-9FDF 5448452044524147 m_cls           fcc     "THE DRAGON MACHINE 2026"
+9FAC 10270913         cls_st          lbeq    cls
+9FB0 17F1F5                           lbsr    evbyte
+9FB3 3404                             pshs    b               ; קודם רווחים
+9FB5 17090B                           lbsr    cls
+9FB8 3504                             puls    b
+9FBA C108                             cmpb    #8
+9FBC 2213                             bhi     4F
+9FBE 8610                             lda     #16             ; הצבע: 16n+$7F, ול-0: $80
+9FC0 3D                               mul
+9FC1 CB7F                             addb    #$7f
+9FC3 2B01                             bmi     1F
+9FC5 5C                               incb
+9FC6 8E0400           1               ldx     #SCREEN         ; cls משאיר את X בסוף המסך
+9FC9 E780             2               stb     ,x+
+9FCB 8C0600                           cmpx    #SCREND
+9FCE 25F9                             blo     2B
+9FD0 39                               rts
+9FD1 308C03           4               leax    m_cls,pcr
+9FD4 160953                           lbra    puts
+9FD7 5448452044524147 m_cls           fcc     "THE DRAGON MACHINE 2026"
      4F4E204D41434849
      4E452032303236
-9FF6 0D0D00                           fcb     13,13,0
+9FEE 0D0D00                           fcb     13,13,0
                       
                       ; sgxy: x,y עד לפני ')' → X = כתובת התא, CELL = מסכת הנקודה. x 0-63, y 0-31, אחרת ?FC
                       ; המסכה: 8 למעלה-שמאל, 4 למעלה-ימין, 2 למטה-שמאל, 1 למטה-ימין. התא: $0400 + 32*(y/2) + x/2
-9FF9 17F1AC           sgxy            lbsr    evbyte
-9FFC C13F                             cmpb    #63
-9FFE 1022E0E4                         lbhi    err_fc
-A002 3404                             pshs    b
-A004 17EB44                           lbsr    chkcom
-A007 17F19E                           lbsr    evbyte
-A00A C11F                             cmpb    #31
-A00C 1022E0D6                         lbhi    err_fc
-A010 3404                             pshs    b               ; [0] = y, [1] = x
-A012 8608                             lda     #8
-A014 E661                             ldb     1,s
-A016 54                               lsrb
-A017 2401                             bcc     1F
-A019 44                               lsra
-A01A E6E4             1               ldb     ,s
-A01C 54                               lsrb
-A01D 2402                             bcc     2F
-A01F 44                               lsra
-A020 44                               lsra
-A021 9786             2               sta     CELL
-A023 3506                             puls    a,b             ; A = y, B = x
-A025 44                               lsra
-A026 54                               lsrb
-A027 3404                             pshs    b
-A029 C620                             ldb     #32
-A02B 3D                               mul
-A02C EBE0                             addb    ,s+
-A02E 8900                             adca    #0
-A030 C30400                           addd    #SCREEN
-A033 1F01                             tfr     d,x
-A035 39                               rts
+9FF1 17EB5B           sgxyp           lbsr    chklp           ; SET/RESET: '(' לפני
+9FF4 17F1B1           sgxy            lbsr    evbyte
+9FF7 C13F                             cmpb    #63
+9FF9 1022E0E9                         lbhi    err_fc
+9FFD 3404                             pshs    b               ; x
+9FFF 17EB49                           lbsr    chkcom
+A002 17F1A3                           lbsr    evbyte
+A005 C11F                             cmpb    #31
+A007 1022E0DB                         lbhi    err_fc
+A00B 8608                             lda     #8              ; B = y
+A00D 54                               lsrb                    ; y אי-זוגי: השורה התחתונה
+A00E 2402                             bcc     1F
+A010 44                               lsra
+A011 44                               lsra
+A012 64E4             1               lsr     ,s              ; x אי-זוגי: ימין
+A014 2401                             bcc     2F
+A016 44                               lsra
+A017 9786             2               sta     CELL
+A019 8620                             lda     #32             ; 32*(y/2) + x/2 (בלי נשא: x/2 עד 31)
+A01B 3D                               mul
+A01C EBE0                             addb    ,s+
+A01E C30400                           addd    #SCREEN
+A021 1F01                             tfr     d,x
+A023 39                               rts
                       
                       ; SET(x,y,c): c 0-8 חובה. תא גרפי: הנקודות הדולקות נשארות, והצבע (אם c לא 0) לכל התא.
                       ; תא טקסט: נהיה גרפי עם הנקודה הזאת בלבד; c=0 שם = ירוק. ')' נבדק לפני הכתיבה
-A036 17EB16           set_st          lbsr    chklp
-A039 8DBE                             bsr     sgxy
-A03B 3410                             pshs    x
-A03D 17EB0B                           lbsr    chkcom
-A040 17F165                           lbsr    evbyte
-A043 C108                             cmpb    #8
-A045 1022E09D                         lbhi    err_fc
-A049 3404                             pshs    b
-A04B 17EAF9                           lbsr    chkrp
-A04E 3504                             puls    b
-A050 3510                             puls    x
-A052 A684                             lda     ,x
-A054 2B09                             bmi     1F
-A056 9686                             lda     CELL            ; תא טקסט
-A058 8A80                             ora     #$80
-A05A 5D                               tstb
-A05B 271E                             beq     3F
-A05D 2013                             bra     2F
-A05F 840F             1               anda    #$0f            ; תא גרפי: הנקודות שדולקות
-A061 9A86                             ora     CELL
-A063 8A80                             ora     #$80
-A065 5D                               tstb
-A066 260A                             bne     2F
-A068 3402                             pshs    a               ; צבע 0: הצבע של התא נשאר
-A06A A684                             lda     ,x
-A06C 8470                             anda    #$70
-A06E AAE0                             ora     ,s+
-A070 2009                             bra     3F
-A072 5A               2               decb                    ; הצבע פחות 1 בביטים 4-6
-A073 58                               lslb
-A074 58                               lslb
-A075 58                               lslb
-A076 58                               lslb
-A077 3404                             pshs    b
-A079 AAE0                             ora     ,s+
-A07B A784             3               sta     ,x
-A07D 39                               rts
+A024 8DCB             set_st          bsr     sgxyp
+A026 3410                             pshs    x
+A028 17EB20                           lbsr    chkcom
+A02B 17F17A                           lbsr    evbyte
+A02E C108                             cmpb    #8
+A030 1022E0B2                         lbhi    err_fc
+A034 3404                             pshs    b
+A036 17EB0E                           lbsr    chkrp
+A039 3514                             puls    b,x
+A03B A684                             lda     ,x
+A03D 2B02                             bmi     1F
+A03F 8680                             lda     #$80            ; תא טקסט: כמו תא גרפי ריק
+A041 5D               1               tstb
+A042 270B                             beq     2F              ; צבע 0: הצבע של התא נשאר
+A044 848F                             anda    #$8f            ; הצבע פחות 1 בביטים 4-6
+A046 5A                               decb
+A047 58                               lslb
+A048 58                               lslb
+A049 58                               lslb
+A04A 58                               lslb
+A04B 3404                             pshs    b
+A04D AAE0                             ora     ,s+
+A04F 9A86             2               ora     CELL
+A051 2015                             bra     rs_st
                       
                       ; RESET(x,y): תא גרפי: רק הנקודה כבה, הצבע נשאר (המסכה ב-CELL נשארת הפוכה, כמו במקור).
                       ; תא טקסט: $80 (גרפי, הכול כבוי)
-A07E 17EACE           reset_st        lbsr    chklp
-A081 17FF75                           lbsr    sgxy
-A084 3410                             pshs    x
-A086 17EABE                           lbsr    chkrp
-A089 3510                             puls    x
-A08B A684                             lda     ,x
-A08D 2B04                             bmi     1F
-A08F 8680                             lda     #$80
-A091 2004                             bra     2F
-A093 0386             1               com     CELL
-A095 9486                             anda    CELL
-A097 A784             2               sta     ,x
-A099 39                               rts
-A09A                                  include "mitedit.s"
+A053 8D9C             reset_st        bsr     sgxyp
+A055 3410                             pshs    x
+A057 17EAED                           lbsr    chkrp
+A05A 3510                             puls    x
+A05C A684                             lda     ,x
+A05E 2B04                             bmi     1F
+A060 8680                             lda     #$80
+A062 2004                             bra     rs_st
+A064 0386             1               com     CELL
+A066 9486                             anda    CELL
+A068 A784             rs_st           sta     ,x
+A06A 39                               rts
+A06B                                  include "mitedit.s"
                       ; Dragon 1982 BASIC — שלב 3, חלק 2: כלי עריכה. TRON/TROFF, DEL, LINE INPUT, RENUM.
                       ; הכול לפי הקורא: docs/DRAGON-SPEC-EDIT.md. נכתב מאפס.
                       
@@ -4274,359 +4247,359 @@ A09A                                  include "mitedit.s"
 00D5                  RNNEW           equ     $d5             ; המספר החדש הראשון
                       
                       ; ---------- TRON / TROFF ----------
-A09A 864F             tron            lda     #$4f
-A09C 97AF                             sta     TRCFLG
-A09E 39                               rts
-A09F 0FAF             troff           clr     TRCFLG
-A0A1 39                               rts
+A06B 864F             tron            lda     #$4f
+A06D 97AF                             sta     TRCFLG
+A06F 39                               rts
+A070 0FAF             troff           clr     TRCFLG
+A072 39                               rts
                       ; trace: בכניסה לשורה בתוכנית: [n] בלי רווחים (קורא)
-A0A2 0DAF             trace           tst     TRCFLG
-A0A4 2713                             beq     9F
-A0A6 3406                             pshs    d
-A0A8 865B                             lda     #'[
-A0AA 1709CB                           lbsr    putc
-A0AD DC68                             ldd     CURLIN
-A0AF 17E331                           lbsr    prnum
-A0B2 865D                             lda     #']
-A0B4 1709C1                           lbsr    putc
-A0B7 3506                             puls    d
-A0B9 39               9               rts
+A073 0DAF             trace           tst     TRCFLG
+A075 2713                             beq     9F
+A077 3406                             pshs    d
+A079 865B                             lda     #'[
+A07B 170855                           lbsr    putc
+A07E DC68                             ldd     CURLIN
+A080 17E360                           lbsr    prnum
+A083 865D                             lda     #']
+A085 17084B                           lbsr    putc
+A088 3506                             puls    d
+A08A 39               9               rts
                       
                       ; ---------- סיום של DEL / RENUM / EDIT: משתנים מתאפסים, מחסנית חדשה, ו-OK ----------
-A0BA 17E15C           edfin           lbsr    lnkprg
-A0BD 17E175                           lbsr    runc
-A0C0 10DE21                           lds     STKTOP
-A0C3 6FE2                             clr     ,-s
-A0C5 16DFC5                           lbra    main_ok
+A08B 17E18B           edfin           lbsr    lnkprg
+A08E 17E1A4                           lbsr    runc
+A091 10DE21                           lds     STKTOP
+A094 6FE2                             clr     ,-s
+A096 16DFF4                           lbra    main_ok
                       
                       ; ---------- DEL ----------
                       ; DEL n, n-m, -m, n-, -. בלי כלום: ?FC. שורות שלא קיימות: בלי שגיאה (קורא)
-A0C8 1027E01A         del_st          lbeq    err_fc
-A0CC 9EA6                             ldx     TXTPTR
-A0CE 17E269                           lbsr    lrange
-A0D1 3406                             pshs    d
-A0D3 17E17C                           lbsr    skipsp          ; אחרי הטווח: רק סוף פקודה
-A0D6 2706                             beq     1F
-A0D8 813A                             cmpa    #':
-A0DA 1026E062                         lbne    err_sn
-A0DE 3506             1               puls    d
-A0E0 17E11D                           lbsr    fndlin          ; Y = השורה הראשונה במחיקה
-A0E3 1F21                             tfr     y,x
-A0E5 EC84             2               ldd     ,x              ; X = הראשונה שלא נמחקת
-A0E7 270C                             beq     3F
-A0E9 EC02                             ldd     2,x
-A0EB 10B303FA                         cmpd    LEND
-A0EF 2204                             bhi     3F
-A0F1 AE84                             ldx     ,x
-A0F3 20F0                             bra     2B
-A0F5 9C1B             3               cmpx    VARTAB          ; מזיזים את [X..VARTAB) ל-Y
-A0F7 2406                             bhs     4F
-A0F9 A680                             lda     ,x+
-A0FB A7A0                             sta     ,y+
-A0FD 20F6                             bra     3B
-A0FF 109F1B           4               sty     VARTAB
-A102 20B6                             bra     edfin
+A099 1027E049         del_st          lbeq    err_fc
+A09D 9EA6                             ldx     TXTPTR
+A09F 17E298                           lbsr    lrange
+A0A2 3406                             pshs    d
+A0A4 17E1AB                           lbsr    skipsp          ; אחרי הטווח: רק סוף פקודה
+A0A7 2706                             beq     1F
+A0A9 813A                             cmpa    #':
+A0AB 1026E091                         lbne    err_sn
+A0AF 3506             1               puls    d
+A0B1 17E14C                           lbsr    fndlin          ; Y = השורה הראשונה במחיקה
+A0B4 1F21                             tfr     y,x
+A0B6 EC84             2               ldd     ,x              ; X = הראשונה שלא נמחקת
+A0B8 270C                             beq     3F
+A0BA EC02                             ldd     2,x
+A0BC 10B303FA                         cmpd    LEND
+A0C0 2204                             bhi     3F
+A0C2 AE84                             ldx     ,x
+A0C4 20F0                             bra     2B
+A0C6 9C1B             3               cmpx    VARTAB          ; מזיזים את [X..VARTAB) ל-Y
+A0C8 2406                             bhs     4F
+A0CA A680                             lda     ,x+
+A0CC A7A0                             sta     ,y+
+A0CE 20F6                             bra     3B
+A0D0 109F1B           4               sty     VARTAB
+A0D3 20B6                             bra     edfin
                       
                       ; ---------- LINE INPUT ["הנחיה";] משתנה$ ----------
                       ; בלי "?" ובלי רווח. במצב ישיר: ?ID. כל השורה נשמרת (פסיקים, מירכאות, רווחים). משתנה מספרי: ?TM אחרי הקלט
-A104 8189             line_st         cmpa    #$89            ; INPUT
-A106 1026E036                         lbne    err_sn          ; LINE של הגרפיקה: בחלק 3
-A10A 17F6F3                           lbsr    errdir
-A10D 9D9F                             jsr     <chrget
-A10F 8122                             cmpa    #'"
-A111 2613                             bne     1F
-A113 9EA6                             ldx     TXTPTR
-A115 3001                             leax    1,x
-A117 17F0F0                           lbsr    strlit
-A11A 9E64                             ldx     STRNG2
-A11C 9FA6                             stx     TXTPTR
-A11E 863B                             lda     #';
-A120 17EA2E                           lbsr    synchk
-A123 17F150                           lbsr    strprt
-A126 0F87             1               clr     IKEYIM
-A128 17E30C                           lbsr    getline
-A12B 240B                             bcc     2F
-A12D 3262                             leas    2,s             ; BREAK: עצירה, ו-CONT חוזר לפקודה (קורא)
-A12F 9E2F                             ldx     TXTBEG
-A131 9FA6                             stx     TXTPTR
-A133 1A01                             orcc    #1
-A135 16F656                           lbra    stpend
-A138 5F               2               clrb
-A139 17ED40                           lbsr    ptrget
-A13C 0D06                             tst     VALTYP
-A13E 1027DFA9                         lbeq    err_tm
-A142 DC39                             ldd     VARPNT
-A144 DD3B                             std     FORPNT
-A146 0F01                             clr     CHARAC          ; רק 0 מסיים
-A148 0F02                             clr     ENDCHR
-A14A 8E02DD                           ldx     #LINBUF
-A14D 17F0C0                           lbsr    strlt2
-A150 16EB81                           lbra    letasg
+A0D5 8189             line_st         cmpa    #$89            ; INPUT
+A0D7 1026E065                         lbne    err_sn          ; LINE של הגרפיקה: בחלק 3
+A0DB 17F722                           lbsr    errdir
+A0DE 9D9F                             jsr     <chrget
+A0E0 8122                             cmpa    #'"
+A0E2 2613                             bne     1F
+A0E4 9EA6                             ldx     TXTPTR
+A0E6 3001                             leax    1,x
+A0E8 17F11F                           lbsr    strlit
+A0EB 9E64                             ldx     STRNG2
+A0ED 9FA6                             stx     TXTPTR
+A0EF 863B                             lda     #';
+A0F1 17EA5D                           lbsr    synchk
+A0F4 17F17F                           lbsr    strprt
+A0F7 0F87             1               clr     IKEYIM
+A0F9 17E33B                           lbsr    getline
+A0FC 240B                             bcc     2F
+A0FE 3262                             leas    2,s             ; BREAK: עצירה, ו-CONT חוזר לפקודה (קורא)
+A100 9E2F                             ldx     TXTBEG
+A102 9FA6                             stx     TXTPTR
+A104 1A01                             orcc    #1
+A106 16F685                           lbra    stpend
+A109 5F               2               clrb
+A10A 17ED6F                           lbsr    ptrget
+A10D 0D06                             tst     VALTYP
+A10F 1027DFD8                         lbeq    err_tm
+A113 DC39                             ldd     VARPNT
+A115 DD3B                             std     FORPNT
+A117 0F01                             clr     CHARAC          ; רק 0 מסיים
+A119 0F02                             clr     ENDCHR
+A11B 8E02DD                           ldx     #LINBUF
+A11E 17F0EF                           lbsr    strlt2
+A121 16EBB0                           lbra    letasg
                       
                       ; ---------- RENUM [חדש][,[סף][,צעד]] ----------
                       ; ברירות מחדל 10, 0, 10 (קורא). הסדר: ניקוי משתנים, פרמטרים, בדיקות (?FC), הפניות, מספרי השורות, OK.
                       ; הפניות: אחרי GOTO/GO TO, GOSUB/GO SUB, THEN, ELSE, ורשימות עם פסיקים. בכל התוכנית.
                       ; הפניה לשורה שאין: נשארת, ומודפס "UL x IN y" (y = המספר החדש של השורה המפנה)
-A153 17E0DF           renum           lbsr    runc
-A156 CC000A                           ldd     #10
-A159 DDD5                             std     RNNEW
-A15B DDCF                             std     RNSTEP
-A15D 4F                               clra
-A15E 5F                               clrb
-A15F DDD1                             std     RNOLD
-A161 9EA6                             ldx     TXTPTR
-A163 8D3A                             bsr     isend
-A165 2752                             beq     rn_go
-A167 812C                             cmpa    #',
-A169 2708                             beq     1F
-A16B 8D3A                             bsr     rn_num
-A16D DDD5                             std     RNNEW
-A16F 8D2E                             bsr     isend
-A171 2746                             beq     rn_go
-A173 812C             1               cmpa    #',
-A175 1026DFC7                         lbne    err_sn
-A179 3001                             leax    1,x
-A17B 8D22                             bsr     isend
-A17D 273A                             beq     rn_go
-A17F 812C                             cmpa    #',
-A181 2708                             beq     2F
-A183 8D22                             bsr     rn_num
-A185 DDD1                             std     RNOLD
-A187 8D16                             bsr     isend
-A189 272E                             beq     rn_go
-A18B 812C             2               cmpa    #',
-A18D 1026DFAF                         lbne    err_sn
-A191 3001                             leax    1,x
-A193 8D12                             bsr     rn_num
-A195 DDCF                             std     RNSTEP
-A197 8D06                             bsr     isend
-A199 1026DFA3                         lbne    err_sn
-A19D 201A                             bra     rn_go
+A124 17E10E           renum           lbsr    runc
+A127 CC000A                           ldd     #10
+A12A DDD5                             std     RNNEW
+A12C DDCF                             std     RNSTEP
+A12E 4F                               clra
+A12F 5F                               clrb
+A130 DDD1                             std     RNOLD
+A132 9EA6                             ldx     TXTPTR
+A134 8D3A                             bsr     isend
+A136 2752                             beq     rn_go
+A138 812C                             cmpa    #',
+A13A 2708                             beq     1F
+A13C 8D3A                             bsr     rn_num
+A13E DDD5                             std     RNNEW
+A140 8D2E                             bsr     isend
+A142 2746                             beq     rn_go
+A144 812C             1               cmpa    #',
+A146 1026DFF6                         lbne    err_sn
+A14A 3001                             leax    1,x
+A14C 8D22                             bsr     isend
+A14E 273A                             beq     rn_go
+A150 812C                             cmpa    #',
+A152 2708                             beq     2F
+A154 8D22                             bsr     rn_num
+A156 DDD1                             std     RNOLD
+A158 8D16                             bsr     isend
+A15A 272E                             beq     rn_go
+A15C 812C             2               cmpa    #',
+A15E 1026DFDE                         lbne    err_sn
+A162 3001                             leax    1,x
+A164 8D12                             bsr     rn_num
+A166 DDCF                             std     RNSTEP
+A168 8D06                             bsr     isend
+A16A 1026DFD2                         lbne    err_sn
+A16E 201A                             bra     rn_go
                       ; isend: Z=1 בסוף פקודה (0 או נקודתיים), A = התו
-A19F 17E0B0           isend           lbsr    skipsp
-A1A2 2702                             beq     9F
-A1A4 813A                             cmpa    #':
-A1A6 39               9               rts
+A170 17E0DF           isend           lbsr    skipsp
+A173 2702                             beq     9F
+A175 813A                             cmpa    #':
+A177 39               9               rts
                       ; rn_num: מספר שורה (חייבת להיות ספרה, אחרת ?SN)
-A1A7 17E0A8           rn_num          lbsr    skipsp
-A1AA 8130                             cmpa    #'0
-A1AC 1025DF90                         lblo    err_sn
-A1B0 8139                             cmpa    #'9
-A1B2 1022DF8A                         lbhi    err_sn
-A1B6 16DFBA                           lbra    linget
+A178 17E0D7           rn_num          lbsr    skipsp
+A17B 8130                             cmpa    #'0
+A17D 1025DFBF                         lblo    err_sn
+A181 8139                             cmpa    #'9
+A183 1022DFB9                         lbhi    err_sn
+A187 16DFE9                           lbra    linget
                       
-A1B9 DCCF             rn_go           ldd     RNSTEP
-A1BB 1027DF27                         lbeq    err_fc
-A1BF CCFFFF                           ldd     #$ffff          ; השורה הגבוהה שמתחת לסף ($FFFF: אין)
-A1C2 3406                             pshs    d
-A1C4 108E0000                         ldy     #0              ; כמה שורות ממוספרות (Y: ל-LEAU אין דגל Z)
-A1C8 9E19                             ldx     TXTTAB
-A1CA EC84             1               ldd     ,x
-A1CC 2713                             beq     3F
-A1CE EC02                             ldd     2,x
-A1D0 1093D1                           cmpd    RNOLD
-A1D3 2406                             bhs     2F
-A1D5 EDE4                             std     ,s
-A1D7 AE84                             ldx     ,x
-A1D9 20EF                             bra     1B
-A1DB 3121             2               leay    1,y
-A1DD AE84                             ldx     ,x
-A1DF 20E9                             bra     1B
-A1E1 3506             3               puls    d
-A1E3 1083FFFF                         cmpd    #$ffff
-A1E7 2707                             beq     4F
-A1E9 1093D5                           cmpd    RNNEW           ; החדש חייב להיות מעל מה שלא זז
-A1EC 1024DEF6                         lbhs    err_fc
-A1F0 108C0000         4               cmpy    #0
-A1F4 2716                             beq     6F
-A1F6 DCD5                             ldd     RNNEW
-A1F8 313F             5               leay    -1,y
-A1FA 2708                             beq     51F
-A1FC D3CF                             addd    RNSTEP
-A1FE 1025DEE4                         lbcs    err_fc
-A202 20F4                             bra     5B
-A204 1083F9FF         51              cmpd    #63999
-A208 1022DEDA                         lbhi    err_fc
-A20C 9E19             6               ldx     TXTTAB          ; ההפניות. הולכים לפי ה-0 שבסוף כל שורה (הקישורים מתיישנים כשהטקסט זז)
-A20E EC84             rl_line         ldd     ,x
-A210 10270143                         lbeq    rl_hdr
-A214 9FD3                             stx     RNPTR
-A216 3004                             leax    4,x
-A218 A680             rl_scan         lda     ,x+
-A21A 27F2                             beq     rl_line
-A21C 81FF                             cmpa    #$ff            ; פונקציה: הבית הבא הוא חלק ממנה
-A21E 2604                             bne     1F
-A220 3001                             leax    1,x
-A222 20F4                             bra     rl_scan
-A224 8122             1               cmpa    #'"
-A226 260A                             bne     2F
-A228 A680             11              lda     ,x+
-A22A 27E2                             beq     rl_line
-A22C 8122                             cmpa    #'"
-A22E 26F8                             bne     11B
-A230 20E6                             bra     rl_scan
-A232 81BF             2               cmpa    #$bf            ; THEN
-A234 2715                             beq     rl_ref
-A236 8184                             cmpa    #$84            ; ELSE
-A238 2711                             beq     rl_ref
-A23A 8181                             cmpa    #$81            ; GO, ואחריו TO או SUB (אולי עם רווחים)
-A23C 26DA                             bne     rl_scan
-A23E 17E011                           lbsr    skipsp
-A241 81BC                             cmpa    #$bc
-A243 2704                             beq     3F
-A245 81BD                             cmpa    #$bd
-A247 26CF                             bne     rl_scan
-A249 3001             3               leax    1,x
-A24B 17E004           rl_ref          lbsr    skipsp
-A24E 8130                             cmpa    #'0
-A250 25C6                             blo     rl_scan
-A252 8139                             cmpa    #'9
-A254 22C2                             bhi     rl_scan
-A256 3410                             pshs    x               ; P = הספרה הראשונה
-A258 4F                               clra
-A259 5F                               clrb
-A25A 3406                             pshs    d               ; הערך
-A25C 1F12                             tfr     x,y             ; Q = אחרי הספרה האחרונה
-A25E A684             5               lda     ,x
-A260 8120                             cmpa    #$20            ; רווח בתוך המספר: נעלם (קורא)
-A262 2724                             beq     6F
-A264 8130                             cmpa    #'0
-A266 2524                             blo     7F
-A268 8139                             cmpa    #'9
-A26A 2220                             bhi     7F
-A26C 8030                             suba    #'0
-A26E 3402                             pshs    a
-A270 EC61                             ldd     1,s
-A272 58                               lslb
-A273 49                               rola
-A274 ED61                             std     1,s
-A276 58                               lslb
-A277 49                               rola
-A278 58                               lslb
-A279 49                               rola
-A27A E361                             addd    1,s
-A27C EBE0                             addb    ,s+
-A27E 8900                             adca    #0
-A280 EDE4                             std     ,s
-A282 3001                             leax    1,x
-A284 1F12                             tfr     x,y
-A286 20D6                             bra     5B
-A288 3001             6               leax    1,x
-A28A 20D2                             bra     5B
-A28C 1F21             7               tfr     y,x             ; X = Q
-A28E 3506                             puls    d               ; הערך הישן
-A290 8D59                             bsr     rn_map
-A292 2502                             bcs     8F
-A294 8D2D                             bsr     rn_ul
-A296 17E156           8               lbsr    numtxt          ; הספרות ב-LINBUF, B = כמה
-A299 3404                             pshs    b
-A29B 1F10                             tfr     x,d
-A29D A361                             subd    1,s             ; האורך הישן: Q-P
-A29F 3406                             pshs    d
-A2A1 4F                               clra
-A2A2 E662                             ldb     2,s
-A2A4 A3E1                             subd    ,s++            ; ההפרש
-A2A6 8D78                             bsr     rn_shift
-A2A8 3504                             puls    b
-A2AA 3510                             puls    x               ; P
-A2AC CE03DA                           ldu     #FBUFFR
-A2AF A6C0             9               lda     ,u+
-A2B1 A780                             sta     ,x+
-A2B3 5A                               decb
-A2B4 26F9                             bne     9B
-A2B6 17DF99                           lbsr    skipsp
-A2B9 812C                             cmpa    #',
-A2BB 1026FF59                         lbne    rl_scan
-A2BF 3001                             leax    1,x
-A2C1 2088                             bra     rl_ref
+A18A DCCF             rn_go           ldd     RNSTEP
+A18C 1027DF56                         lbeq    err_fc
+A190 CCFFFF                           ldd     #$ffff          ; השורה הגבוהה שמתחת לסף ($FFFF: אין)
+A193 3406                             pshs    d
+A195 108E0000                         ldy     #0              ; כמה שורות ממוספרות (Y: ל-LEAU אין דגל Z)
+A199 9E19                             ldx     TXTTAB
+A19B EC84             1               ldd     ,x
+A19D 2713                             beq     3F
+A19F EC02                             ldd     2,x
+A1A1 1093D1                           cmpd    RNOLD
+A1A4 2406                             bhs     2F
+A1A6 EDE4                             std     ,s
+A1A8 AE84                             ldx     ,x
+A1AA 20EF                             bra     1B
+A1AC 3121             2               leay    1,y
+A1AE AE84                             ldx     ,x
+A1B0 20E9                             bra     1B
+A1B2 3506             3               puls    d
+A1B4 1083FFFF                         cmpd    #$ffff
+A1B8 2707                             beq     4F
+A1BA 1093D5                           cmpd    RNNEW           ; החדש חייב להיות מעל מה שלא זז
+A1BD 1024DF25                         lbhs    err_fc
+A1C1 108C0000         4               cmpy    #0
+A1C5 2716                             beq     6F
+A1C7 DCD5                             ldd     RNNEW
+A1C9 313F             5               leay    -1,y
+A1CB 2708                             beq     51F
+A1CD D3CF                             addd    RNSTEP
+A1CF 1025DF13                         lbcs    err_fc
+A1D3 20F4                             bra     5B
+A1D5 1083F9FF         51              cmpd    #63999
+A1D9 1022DF09                         lbhi    err_fc
+A1DD 9E19             6               ldx     TXTTAB          ; ההפניות. הולכים לפי ה-0 שבסוף כל שורה (הקישורים מתיישנים כשהטקסט זז)
+A1DF EC84             rl_line         ldd     ,x
+A1E1 10270143                         lbeq    rl_hdr
+A1E5 9FD3                             stx     RNPTR
+A1E7 3004                             leax    4,x
+A1E9 A680             rl_scan         lda     ,x+
+A1EB 27F2                             beq     rl_line
+A1ED 81FF                             cmpa    #$ff            ; פונקציה: הבית הבא הוא חלק ממנה
+A1EF 2604                             bne     1F
+A1F1 3001                             leax    1,x
+A1F3 20F4                             bra     rl_scan
+A1F5 8122             1               cmpa    #'"
+A1F7 260A                             bne     2F
+A1F9 A680             11              lda     ,x+
+A1FB 27E2                             beq     rl_line
+A1FD 8122                             cmpa    #'"
+A1FF 26F8                             bne     11B
+A201 20E6                             bra     rl_scan
+A203 81BF             2               cmpa    #$bf            ; THEN
+A205 2715                             beq     rl_ref
+A207 8184                             cmpa    #$84            ; ELSE
+A209 2711                             beq     rl_ref
+A20B 8181                             cmpa    #$81            ; GO, ואחריו TO או SUB (אולי עם רווחים)
+A20D 26DA                             bne     rl_scan
+A20F 17E040                           lbsr    skipsp
+A212 81BC                             cmpa    #$bc
+A214 2704                             beq     3F
+A216 81BD                             cmpa    #$bd
+A218 26CF                             bne     rl_scan
+A21A 3001             3               leax    1,x
+A21C 17E033           rl_ref          lbsr    skipsp
+A21F 8130                             cmpa    #'0
+A221 25C6                             blo     rl_scan
+A223 8139                             cmpa    #'9
+A225 22C2                             bhi     rl_scan
+A227 3410                             pshs    x               ; P = הספרה הראשונה
+A229 4F                               clra
+A22A 5F                               clrb
+A22B 3406                             pshs    d               ; הערך
+A22D 1F12                             tfr     x,y             ; Q = אחרי הספרה האחרונה
+A22F A684             5               lda     ,x
+A231 8120                             cmpa    #$20            ; רווח בתוך המספר: נעלם (קורא)
+A233 2724                             beq     6F
+A235 8130                             cmpa    #'0
+A237 2524                             blo     7F
+A239 8139                             cmpa    #'9
+A23B 2220                             bhi     7F
+A23D 8030                             suba    #'0
+A23F 3402                             pshs    a
+A241 EC61                             ldd     1,s
+A243 58                               lslb
+A244 49                               rola
+A245 ED61                             std     1,s
+A247 58                               lslb
+A248 49                               rola
+A249 58                               lslb
+A24A 49                               rola
+A24B E361                             addd    1,s
+A24D EBE0                             addb    ,s+
+A24F 8900                             adca    #0
+A251 EDE4                             std     ,s
+A253 3001                             leax    1,x
+A255 1F12                             tfr     x,y
+A257 20D6                             bra     5B
+A259 3001             6               leax    1,x
+A25B 20D2                             bra     5B
+A25D 1F21             7               tfr     y,x             ; X = Q
+A25F 3506                             puls    d               ; הערך הישן
+A261 8D59                             bsr     rn_map
+A263 2502                             bcs     8F
+A265 8D2D                             bsr     rn_ul
+A267 17E185           8               lbsr    numtxt          ; הספרות ב-LINBUF, B = כמה
+A26A 3404                             pshs    b
+A26C 1F10                             tfr     x,d
+A26E A361                             subd    1,s             ; האורך הישן: Q-P
+A270 3406                             pshs    d
+A272 4F                               clra
+A273 E662                             ldb     2,s
+A275 A3E1                             subd    ,s++            ; ההפרש
+A277 8D78                             bsr     rn_shift
+A279 3504                             puls    b
+A27B 3510                             puls    x               ; P
+A27D CE03DA                           ldu     #FBUFFR
+A280 A6C0             9               lda     ,u+
+A282 A780                             sta     ,x+
+A284 5A                               decb
+A285 26F9                             bne     9B
+A287 17DFC8                           lbsr    skipsp
+A28A 812C                             cmpa    #',
+A28C 1026FF59                         lbne    rl_scan
+A290 3001                             leax    1,x
+A292 2088                             bra     rl_ref
                       ; rn_ul: "UL x IN y" (D = x)
-A2C3 3416             rn_ul           pshs    d,x
-A2C5 308C1F                           leax    m_ul,pcr
-A2C8 170804                           lbsr    puts            ; puts משנה את A
-A2CB ECE4                             ldd     ,s
-A2CD 17E113                           lbsr    prnum
-A2D0 308DDE9A                         leax    m_in,pcr
-A2D4 1707F8                           lbsr    puts
-A2D7 9ED3                             ldx     RNPTR
-A2D9 EC02                             ldd     2,x
-A2DB 8D0E                             bsr     rn_map
-A2DD 17E103                           lbsr    prnum
-A2E0 860D                             lda     #13
-A2E2 170793                           lbsr    putc
-A2E5 3596                             puls    d,x,pc
-A2E7 554C20           m_ul            fcc     "UL "
-A2EA 00                               fcb     0
+A294 3416             rn_ul           pshs    d,x
+A296 308C1F                           leax    m_ul,pcr
+A299 17068E                           lbsr    puts            ; puts משנה את A
+A29C ECE4                             ldd     ,s
+A29E 17E142                           lbsr    prnum
+A2A1 308DDEC9                         leax    m_in,pcr
+A2A5 170682                           lbsr    puts
+A2A8 9ED3                             ldx     RNPTR
+A2AA EC02                             ldd     2,x
+A2AC 8D0E                             bsr     rn_map
+A2AE 17E132                           lbsr    prnum
+A2B1 860D                             lda     #13
+A2B3 17061D                           lbsr    putc
+A2B6 3596                             puls    d,x,pc
+A2B8 554C20           m_ul            fcc     "UL "
+A2BB 00                               fcb     0
                       ; rn_map: D = מספר ישן → D = החדש, C=1 אם השורה קיימת (אחרת D לא משתנה)
-A2EB 3456             rn_map          pshs    d,x,u
-A2ED 9E19                             ldx     TXTTAB
-A2EF DED5                             ldu     RNNEW
-A2F1 EC84             1               ldd     ,x
-A2F3 2727                             beq     8F
-A2F5 EC02                             ldd     2,x
-A2F7 10A3E4                           cmpd    ,s
-A2FA 2713                             beq     5F
-A2FC 1093D1                           cmpd    RNOLD
-A2FF 2506                             blo     2F
-A301 1F30                             tfr     u,d
-A303 D3CF                             addd    RNSTEP
-A305 1F03                             tfr     d,u
-A307 3004             2               leax    4,x
-A309 6D80             3               tst     ,x+
-A30B 26FC                             bne     3B
-A30D 20E2                             bra     1B
-A30F 1093D1           5               cmpd    RNOLD
-A312 2502                             blo     6F
-A314 1F30                             tfr     u,d
-A316 EDE4             6               std     ,s
-A318 1A01                             orcc    #1
-A31A 35D6                             puls    d,x,u,pc
-A31C 1CFE             8               andcc   #$fe
-A31E 35D6                             puls    d,x,u,pc
+A2BC 3456             rn_map          pshs    d,x,u
+A2BE 9E19                             ldx     TXTTAB
+A2C0 DED5                             ldu     RNNEW
+A2C2 EC84             1               ldd     ,x
+A2C4 2727                             beq     8F
+A2C6 EC02                             ldd     2,x
+A2C8 10A3E4                           cmpd    ,s
+A2CB 2713                             beq     5F
+A2CD 1093D1                           cmpd    RNOLD
+A2D0 2506                             blo     2F
+A2D2 1F30                             tfr     u,d
+A2D4 D3CF                             addd    RNSTEP
+A2D6 1F03                             tfr     d,u
+A2D8 3004             2               leax    4,x
+A2DA 6D80             3               tst     ,x+
+A2DC 26FC                             bne     3B
+A2DE 20E2                             bra     1B
+A2E0 1093D1           5               cmpd    RNOLD
+A2E3 2502                             blo     6F
+A2E5 1F30                             tfr     u,d
+A2E7 EDE4             6               std     ,s
+A2E9 1A01                             orcc    #1
+A2EB 35D6                             puls    d,x,u,pc
+A2ED 1CFE             8               andcc   #$fe
+A2EF 35D6                             puls    d,x,u,pc
                       ; rn_shift: מזיזים את [X..VARTAB) ב-D בתים (עם סימן). למעלה: ?OM אם אין מקום
-A320 3416             rn_shift        pshs    d,x
-A322 ECE4                             ldd     ,s
-A324 272F                             beq     9F
-A326 2B19                             bmi     5F
-A328 D31B                             addd    VARTAB
-A32A 17F23F                           lbsr    reason
-A32D 9E1B                             ldx     VARTAB
-A32F DC1B                             ldd     VARTAB
-A331 E3E4                             addd    ,s
-A333 1F03                             tfr     d,u
-A335 DD1B                             std     VARTAB
-A337 AC62             1               cmpx    2,s
-A339 231A                             bls     9F
-A33B A682                             lda     ,-x
-A33D A7C2                             sta     ,-u
-A33F 20F6                             bra     1B
-A341 AE62             5               ldx     2,s
-A343 1F10                             tfr     x,d
-A345 E3E4                             addd    ,s
-A347 1F03                             tfr     d,u
-A349 9C1B             2               cmpx    VARTAB
-A34B 2406                             bhs     3F
-A34D A680                             lda     ,x+
-A34F A7C0                             sta     ,u+
-A351 20F6                             bra     2B
-A353 DF1B             3               stu     VARTAB
-A355 3596             9               puls    d,x,pc
+A2F1 3416             rn_shift        pshs    d,x
+A2F3 ECE4                             ldd     ,s
+A2F5 272F                             beq     9F
+A2F7 2B19                             bmi     5F
+A2F9 D31B                             addd    VARTAB
+A2FB 17F26E                           lbsr    reason
+A2FE 9E1B                             ldx     VARTAB
+A300 DC1B                             ldd     VARTAB
+A302 E3E4                             addd    ,s
+A304 1F03                             tfr     d,u
+A306 DD1B                             std     VARTAB
+A308 AC62             1               cmpx    2,s
+A30A 231A                             bls     9F
+A30C A682                             lda     ,-x
+A30E A7C2                             sta     ,-u
+A310 20F6                             bra     1B
+A312 AE62             5               ldx     2,s
+A314 1F10                             tfr     x,d
+A316 E3E4                             addd    ,s
+A318 1F03                             tfr     d,u
+A31A 9C1B             2               cmpx    VARTAB
+A31C 2406                             bhs     3F
+A31E A680                             lda     ,x+
+A320 A7C0                             sta     ,u+
+A322 20F6                             bra     2B
+A324 DF1B             3               stu     VARTAB
+A326 3596             9               puls    d,x,pc
                       ; rl_hdr: מספרי השורות עצמן
-A357 9E19             rl_hdr          ldx     TXTTAB
-A359 DED5                             ldu     RNNEW
-A35B EC84             1               ldd     ,x
-A35D 2717                             beq     9F
-A35F EC02                             ldd     2,x
-A361 1093D1                           cmpd    RNOLD
-A364 2508                             blo     2F
-A366 EF02                             stu     2,x
-A368 1F30                             tfr     u,d
-A36A D3CF                             addd    RNSTEP
-A36C 1F03                             tfr     d,u
-A36E 3004             2               leax    4,x
-A370 6D80             3               tst     ,x+
-A372 26FC                             bne     3B
-A374 20E5                             bra     1B
-A376 16FD41           9               lbra    edfin
+A328 9E19             rl_hdr          ldx     TXTTAB
+A32A DED5                             ldu     RNNEW
+A32C EC84             1               ldd     ,x
+A32E 2717                             beq     9F
+A330 EC02                             ldd     2,x
+A332 1093D1                           cmpd    RNOLD
+A335 2508                             blo     2F
+A337 EF02                             stu     2,x
+A339 1F30                             tfr     u,d
+A33B D3CF                             addd    RNSTEP
+A33D 1F03                             tfr     d,u
+A33F 3004             2               leax    4,x
+A341 6D80             3               tst     ,x+
+A343 26FC                             bne     3B
+A345 20E5                             bra     1B
+A347 16FD41           9               lbra    edfin
                       
                       ; ---------- EDIT n (קורא: docs/DRAGON-SPEC-EDIT.md, סעיף 1) ----------
 00D7                  EDLEN           equ     $d7             ; קורא: האורך
@@ -4638,241 +4611,241 @@ A376 16FD41           9               lbra    edfin
 00D1                  EDNUM           equ     $d1             ; 2 בתים: מספר השורה (לא $DE: שם OCTAVE של PLAY)
                       
                       ; lout: התו של LIST למסך, או למאגר (עד 249 תווים)
-A379 0DD8             lout            tst     EDFLG
-A37B 102706F9                         lbeq    putc
-A37F 3414                             pshs    b,x
-A381 D6D7                             ldb     EDLEN
-A383 C1F9                             cmpb    #249
-A385 2408                             bhs     1F
-A387 9ED9                             ldx     EDPTR
-A389 A780                             sta     ,x+
-A38B 9FD9                             stx     EDPTR
-A38D 0CD7                             inc     EDLEN
-A38F 3594             1               puls    b,x,pc
+A34A 0DD8             lout            tst     EDFLG
+A34C 10270583                         lbeq    putc
+A350 3414                             pshs    b,x
+A352 D6D7                             ldb     EDLEN
+A354 C1F9                             cmpb    #249
+A356 2408                             bhs     1F
+A358 9ED9                             ldx     EDPTR
+A35A A780                             sta     ,x+
+A35C 9FD9                             stx     EDPTR
+A35E 0CD7                             inc     EDLEN
+A360 3594             1               puls    b,x,pc
                       
                       ; בלי מספר: שורה 0. אחרי המספר רק סוף פקודה (?SN). אין שורה: ?UL. גם בתוך תוכנית (יוצאים ממנה)
-A391 9EA6             edit_st         ldx     TXTPTR
-A393 17DDDD                           lbsr    linget
-A396 DDD1                             std     EDNUM
-A398 17FE04                           lbsr    isend
-A39B 1026DDA1                         lbne    err_sn
-A39F DCD1             ed_load         ldd     EDNUM
-A3A1 17DE5C                           lbsr    fndlin
-A3A4 1024DD4D                         lbcc    err_ul
-A3A8 8E02DD                           ldx     #LINBUF         ; פותחים את השורה לטקסט, במאגר
-A3AB 9FD9                             stx     EDPTR
-A3AD 0FD7                             clr     EDLEN
-A3AF 0CD8                             inc     EDFLG
-A3B1 3024                             leax    4,y
-A3B3 17DFDB                           lbsr    prline
-A3B6 0FD8                             clr     EDFLG
-A3B8 8D61                             bsr     ed_num          ; "n " והשורה כולה, ושורה חדשה
-A3BA 0FDB                             clr     EDPOS
-A3BC 1700AD                           lbsr    ed_rest
-A3BF 860D                             lda     #13
-A3C1 1706B4                           lbsr    putc
-A3C4 8D55             ed_head         bsr     ed_num          ; שוב "n ", והעריכה מתחילה בתו הראשון
-A3C6 0FDB                             clr     EDPOS
-A3C8 0FDC             ed_cmd          clr     EDCNT
-A3CA 8D59             ed_key          bsr     ed_get
-A3CC 8030                             suba    #'0             ; ספרות: המונה (מודולו 256, בלי הד)
-A3CE 8109                             cmpa    #9
-A3D0 220D                             bhi     1F
-A3D2 3402                             pshs    a
-A3D4 96DC                             lda     EDCNT
-A3D6 C60A                             ldb     #10
-A3D8 3D                               mul
-A3D9 EBE0                             addb    ,s+
-A3DB D7DC                             stb     EDCNT
-A3DD 20EB                             bra     ed_key
-A3DF 8B30             1               adda    #'0             ; הפקודה
-A3E1 308C1A                           leax    ed_keys,pcr
-A3E4 5F                               clrb
-A3E5 6D84             2               tst     ,x
-A3E7 27DF                             beq     ed_cmd          ; לא מוכרת: כלום
-A3E9 A180                             cmpa    ,x+
-A3EB 2703                             beq     3F
-A3ED 5C                               incb
-A3EE 20F5                             bra     2B
-A3F0 308C1A           3               leax    ed_offs,pcr
-A3F3 E685                             ldb     b,x
-A3F5 308D00B9                         leax    ed_sp,pcr
-A3F9 3A                               abx
-A3FA AD84                             jsr     ,x
-A3FC 20CA                             bra     ed_cmd
-A3FE 20444958484C4145 ed_keys         fcc     " DIXHLAE"
-A406 0D                               fcb     13
-A407 534B43                           fcc     "SKC"
-A40A 08                               fcb     8
-A40B 51                               fcc     "Q"
-A40C 00                               fcb     0
-A40D 00052E262A6B757F ed_offs         fcb     ed_sp-ed_sp,ed_d-ed_sp,ed_ins-ed_sp,ed_x-ed_sp,ed_h-ed_sp,ed_l-ed_sp,ed_a-ed_sp,ed_e-ed_sp
-A415 7C14190F0A9B                     fcb     ed_ent-ed_sp,ed_s-ed_sp,ed_k-ed_sp,ed_c-ed_sp,ed_bs-ed_sp,ed_q-ed_sp
+A362 9EA6             edit_st         ldx     TXTPTR
+A364 17DE0C                           lbsr    linget
+A367 DDD1                             std     EDNUM
+A369 17FE04                           lbsr    isend
+A36C 1026DDD0                         lbne    err_sn
+A370 DCD1             ed_load         ldd     EDNUM
+A372 17DE8B                           lbsr    fndlin
+A375 1024DD7C                         lbcc    err_ul
+A379 8E02DD                           ldx     #LINBUF         ; פותחים את השורה לטקסט, במאגר
+A37C 9FD9                             stx     EDPTR
+A37E 0FD7                             clr     EDLEN
+A380 0CD8                             inc     EDFLG
+A382 3024                             leax    4,y
+A384 17E00A                           lbsr    prline
+A387 0FD8                             clr     EDFLG
+A389 8D61                             bsr     ed_num          ; "n " והשורה כולה, ושורה חדשה
+A38B 0FDB                             clr     EDPOS
+A38D 1700AD                           lbsr    ed_rest
+A390 860D                             lda     #13
+A392 17053E                           lbsr    putc
+A395 8D55             ed_head         bsr     ed_num          ; שוב "n ", והעריכה מתחילה בתו הראשון
+A397 0FDB                             clr     EDPOS
+A399 0FDC             ed_cmd          clr     EDCNT
+A39B 8D59             ed_key          bsr     ed_get
+A39D 8030                             suba    #'0             ; ספרות: המונה (מודולו 256, בלי הד)
+A39F 8109                             cmpa    #9
+A3A1 220D                             bhi     1F
+A3A3 3402                             pshs    a
+A3A5 96DC                             lda     EDCNT
+A3A7 C60A                             ldb     #10
+A3A9 3D                               mul
+A3AA EBE0                             addb    ,s+
+A3AC D7DC                             stb     EDCNT
+A3AE 20EB                             bra     ed_key
+A3B0 8B30             1               adda    #'0             ; הפקודה
+A3B2 308C1A                           leax    ed_keys,pcr
+A3B5 5F                               clrb
+A3B6 6D84             2               tst     ,x
+A3B8 27DF                             beq     ed_cmd          ; לא מוכרת: כלום
+A3BA A180                             cmpa    ,x+
+A3BC 2703                             beq     3F
+A3BE 5C                               incb
+A3BF 20F5                             bra     2B
+A3C1 308C1A           3               leax    ed_offs,pcr
+A3C4 E685                             ldb     b,x
+A3C6 308D00B9                         leax    ed_sp,pcr
+A3CA 3A                               abx
+A3CB AD84                             jsr     ,x
+A3CD 20CA                             bra     ed_cmd
+A3CF 20444958484C4145 ed_keys         fcc     " DIXHLAE"
+A3D7 0D                               fcb     13
+A3D8 534B43                           fcc     "SKC"
+A3DB 08                               fcb     8
+A3DC 51                               fcc     "Q"
+A3DD 00                               fcb     0
+A3DE 00052E262A6B757F ed_offs         fcb     ed_sp-ed_sp,ed_d-ed_sp,ed_ins-ed_sp,ed_x-ed_sp,ed_h-ed_sp,ed_l-ed_sp,ed_a-ed_sp,ed_e-ed_sp
+A3E6 7C14190F0A9B                     fcb     ed_ent-ed_sp,ed_s-ed_sp,ed_k-ed_sp,ed_c-ed_sp,ed_bs-ed_sp,ed_q-ed_sp
                       
-A41B DCD1             ed_num          ldd     EDNUM
-A41D 17DFC3                           lbsr    prnum
-A420 8620                             lda     #$20
-A422 160653                           lbra    putc
+A3EC DCD1             ed_num          ldd     EDNUM
+A3EE 17DFF2                           lbsr    prnum
+A3F1 8620                             lda     #$20
+A3F3 1604DD                           lbra    putc
                       ; ed_get: מקש לעורך. BREAK לא נחשב; SHIFT+↑ ($5F) = בריחה ($1B). רק $20-$7E, ENTER, בריחה, ←
-A425 170794           ed_get          lbsr    getkey
-A428 815F                             cmpa    #$5f
-A42A 2603                             bne     1F
-A42C 861B                             lda     #$1b
-A42E 39                               rts
-A42F 810D             1               cmpa    #13
-A431 270C                             beq     9F
-A433 8108                             cmpa    #8
-A435 2708                             beq     9F
-A437 8120                             cmpa    #$20
-A439 25EA                             blo     ed_get
-A43B 817E                             cmpa    #$7e
-A43D 22E6                             bhi     ed_get
-A43F 39               9               rts
+A3F6 17061E           ed_get          lbsr    getkey
+A3F9 815F                             cmpa    #$5f
+A3FB 2603                             bne     1F
+A3FD 861B                             lda     #$1b
+A3FF 39                               rts
+A400 810D             1               cmpa    #13
+A402 270C                             beq     9F
+A404 8108                             cmpa    #8
+A406 2708                             beq     9F
+A408 8120                             cmpa    #$20
+A40A 25EA                             blo     ed_get
+A40C 817E                             cmpa    #$7e
+A40E 22E6                             bhi     ed_get
+A410 39               9               rts
                       ; ed_px: X = התו שבמקום, B = המקום; "bhs" = בסוף
-A440 8E02DD           ed_px           ldx     #LINBUF
-A443 D6DB                             ldb     EDPOS
-A445 3A                               abx
-A446 D1D7                             cmpb    EDLEN
-A448 39                               rts
-A449 1A01             ed_end          orcc    #1
-A44B 39                               rts
+A411 8E02DD           ed_px           ldx     #LINBUF
+A414 D6DB                             ldb     EDPOS
+A416 3A                               abx
+A417 D1D7                             cmpb    EDLEN
+A419 39                               rts
+A41A 1A01             ed_end          orcc    #1
+A41C 39                               rts
                       ; ed_adv: מדפיסים את התו שבמקום ומתקדמים. C=1 אם כבר בסוף
-A44C 8DF2             ed_adv          bsr     ed_px
-A44E 24F9                             bhs     ed_end
-A450 A684                             lda     ,x
-A452 170623                           lbsr    putc
-A455 0CDB                             inc     EDPOS
-A457 1CFE                             andcc   #$fe
-A459 39                               rts
+A41D 8DF2             ed_adv          bsr     ed_px
+A41F 24F9                             bhs     ed_end
+A421 A684                             lda     ,x
+A423 1704AD                           lbsr    putc
+A426 0CDB                             inc     EDPOS
+A428 1CFE                             andcc   #$fe
+A42A 39                               rts
                       ; ed_del: מוחקים את התו שבמקום (בלי הדפסה). C=1 אם בסוף
-A45A 8DE4             ed_del          bsr     ed_px
-A45C 24EB                             bhs     ed_end
-A45E A601             1               lda     1,x
-A460 A780                             sta     ,x+
-A462 5C                               incb
-A463 D1D7                             cmpb    EDLEN
-A465 25F7                             blo     1B
-A467 0AD7                             dec     EDLEN
-A469 1CFE                             andcc   #$fe
-A46B 39                               rts
-A46C 8DDE             ed_rest         bsr     ed_adv
-A46E 24FC                             bcc     ed_rest
-A470 39                               rts
+A42B 8DE4             ed_del          bsr     ed_px
+A42D 24EB                             bhs     ed_end
+A42F A601             1               lda     1,x
+A431 A780                             sta     ,x+
+A433 5C                               incb
+A434 D1D7                             cmpb    EDLEN
+A436 25F7                             blo     1B
+A438 0AD7                             dec     EDLEN
+A43A 1CFE                             andcc   #$fe
+A43C 39                               rts
+A43D 8DDE             ed_rest         bsr     ed_adv
+A43F 24FC                             bcc     ed_rest
+A441 39                               rts
                       ; ed_loop: השגרה ב-U, n פעמים (המונה; 0 = 1). C=1 מהשגרה: עוצרים
-A471 D6DC             ed_loop         ldb     EDCNT
-A473 2601                             bne     1F
-A475 5C                               incb
-A476 3444             1               pshs    b,u
-A478 ADC4                             jsr     ,u
-A47A 3544                             puls    b,u
-A47C 2503                             bcs     9F
-A47E 5A                               decb
-A47F 26F5                             bne     1B
-A481 39               9               rts
+A442 D6DC             ed_loop         ldb     EDCNT
+A444 2601                             bne     1F
+A446 5C                               incb
+A447 3444             1               pshs    b,u
+A449 ADC4                             jsr     ,u
+A44B 3544                             puls    b,u
+A44D 2503                             bcs     9F
+A44F 5A                               decb
+A450 26F5                             bne     1B
+A452 39               9               rts
                       ; ed_bk: תא אחד אחורה, בלי למחוק מהמאגר (במסך התא נמחק). C=1 בהתחלה
-A482 96DB             ed_bk           lda     EDPOS
-A484 27C3                             beq     ed_end
-A486 0ADB                             dec     EDPOS
-A488 8608                             lda     #8
-A48A 1705EB                           lbsr    putc
-A48D 1CFE                             andcc   #$fe
-A48F 39                               rts
+A453 96DB             ed_bk           lda     EDPOS
+A455 27C3                             beq     ed_end
+A457 0ADB                             dec     EDPOS
+A459 8608                             lda     #8
+A45B 170475                           lbsr    putc
+A45E 1CFE                             andcc   #$fe
+A460 39                               rts
                       ; ed_sk1: S/K: פעולה אחת (Y: הדפסה או מחיקה), ועוד עד לפני התו EDCH. C=1 בסוף
-A490 ADA4             ed_sk1          jsr     ,y
-A492 250E                             bcs     9F
-A494 8DAA             1               bsr     ed_px
-A496 24B1                             bhs     ed_end
-A498 A684                             lda     ,x
-A49A 91DD                             cmpa    EDCH
-A49C 2704                             beq     9F
-A49E ADA4                             jsr     ,y
-A4A0 20F2                             bra     1B
-A4A2 39               9               rts
+A461 ADA4             ed_sk1          jsr     ,y
+A463 250E                             bcs     9F
+A465 8DAA             1               bsr     ed_px
+A467 24B1                             bhs     ed_end
+A469 A684                             lda     ,x
+A46B 91DD                             cmpa    EDCH
+A46D 2704                             beq     9F
+A46F ADA4                             jsr     ,y
+A471 20F2                             bra     1B
+A473 39               9               rts
                       ; ed_c1: C: תו חדש במקום הקיים (ENTER, בריחה ו-← לא נחשבים); לא מאריך
-A4A3 8D9B             ed_c1           bsr     ed_px
-A4A5 24A2                             bhs     ed_end
-A4A7 17FF7B           1               lbsr    ed_get
-A4AA 8120                             cmpa    #$20
-A4AC 25F9                             blo     1B
-A4AE A784                             sta     ,x
-A4B0 209A                             bra     ed_adv
+A474 8D9B             ed_c1           bsr     ed_px
+A476 24A2                             bhs     ed_end
+A478 17FF7B           1               lbsr    ed_get
+A47B 8120                             cmpa    #$20
+A47D 25F9                             blo     1B
+A47F A784                             sta     ,x
+A481 209A                             bra     ed_adv
                       
-A4B2 338C97           ed_sp           leau    ed_adv,pcr      ; רווח: n תווים קדימה, מודפסים
-A4B5 20BA                             bra     ed_loop
-A4B7 338CA0           ed_d            leau    ed_del,pcr      ; D: מוחקים n תווים
-A4BA 20B5                             bra     ed_loop
-A4BC 338CC3           ed_bs           leau    ed_bk,pcr       ; ←: n אחורה
-A4BF 20B0                             bra     ed_loop
-A4C1 338CDF           ed_c            leau    ed_c1,pcr       ; C: n תווים חדשים
-A4C4 20AB                             bra     ed_loop
-A4C6 318C83           ed_s            leay    ed_adv,pcr      ; S c: עד לפני המופע ה-n של c אחרי המקום
-A4C9 2003                             bra     1F
-A4CB 318C8C           ed_k            leay    ed_del,pcr      ; K c: מוחקים עד לפני המופע ה-n של c (אין: עד הסוף)
-A4CE 17FF54           1               lbsr    ed_get
-A4D1 97DD                             sta     EDCH
-A4D3 338CBA                           leau    ed_sk1,pcr
-A4D6 2099                             bra     ed_loop
-A4D8 8D92             ed_x            bsr     ed_rest         ; X: לסוף, והוספה
-A4DA 2004                             bra     ed_ins
-A4DC 96DB             ed_h            lda     EDPOS           ; H: מוחקים עד הסוף, והוספה
-A4DE 97D7                             sta     EDLEN
+A483 338C97           ed_sp           leau    ed_adv,pcr      ; רווח: n תווים קדימה, מודפסים
+A486 20BA                             bra     ed_loop
+A488 338CA0           ed_d            leau    ed_del,pcr      ; D: מוחקים n תווים
+A48B 20B5                             bra     ed_loop
+A48D 338CC3           ed_bs           leau    ed_bk,pcr       ; ←: n אחורה
+A490 20B0                             bra     ed_loop
+A492 338CDF           ed_c            leau    ed_c1,pcr       ; C: n תווים חדשים
+A495 20AB                             bra     ed_loop
+A497 318C83           ed_s            leay    ed_adv,pcr      ; S c: עד לפני המופע ה-n של c אחרי המקום
+A49A 2003                             bra     1F
+A49C 318C8C           ed_k            leay    ed_del,pcr      ; K c: מוחקים עד לפני המופע ה-n של c (אין: עד הסוף)
+A49F 17FF54           1               lbsr    ed_get
+A4A2 97DD                             sta     EDCH
+A4A4 338CBA                           leau    ed_sk1,pcr
+A4A7 2099                             bra     ed_loop
+A4A9 8D92             ed_x            bsr     ed_rest         ; X: לסוף, והוספה
+A4AB 2004                             bra     ed_ins
+A4AD 96DB             ed_h            lda     EDPOS           ; H: מוחקים עד הסוף, והוספה
+A4AF 97D7                             sta     EDLEN
                       ; ed_ins: הוספה. ENTER: היתר, שורה חדשה, שמירה. בריחה: חזרה לפקודות. ←: מוחקים את התו שלפני
-A4E0 17FF42           ed_ins          lbsr    ed_get
-A4E3 810D                             cmpa    #13
-A4E5 2747                             beq     ed_ent
-A4E7 811B                             cmpa    #$1b
-A4E9 2731                             beq     9F
-A4EB 8108                             cmpa    #8
-A4ED 2609                             bne     2F
-A4EF 8D91                             bsr     ed_bk
-A4F1 25ED                             bcs     ed_ins
-A4F3 17FF64                           lbsr    ed_del
-A4F6 20E8                             bra     ed_ins
-A4F8 D6D7             2               ldb     EDLEN           ; עד 250 תווים (קורא)
-A4FA C1FA                             cmpb    #250
-A4FC 24E2                             bhs     ed_ins
-A4FE 8E02DD                           ldx     #LINBUF         ; מזיזים ימינה, מהסוף עד המקום
-A501 3A                               abx
-A502 3402                             pshs    a
-A504 D1DB             3               cmpb    EDPOS
-A506 2307                             bls     4F
-A508 A682                             lda     ,-x
-A50A A701                             sta     1,x
-A50C 5A                               decb
-A50D 20F5                             bra     3B
-A50F 3502             4               puls    a
-A511 A784                             sta     ,x
-A513 0CD7                             inc     EDLEN
-A515 0CDB                             inc     EDPOS
-A517 17055E                           lbsr    putc
-A51A 20C4                             bra     ed_ins
-A51C 39               9               rts
-A51D 17FF4C           ed_l            lbsr    ed_rest         ; L: היתר, שורה חדשה, "n " ומההתחלה (השינויים נשמרים)
-A520 8D33                             bsr     ed_cr
-A522 3262                             leas    2,s
-A524 16FE9D                           lbra    ed_head
-A527 8D2C             ed_a            bsr     ed_cr           ; A: מבטלים את השינויים וטוענים מחדש
-A529 3262                             leas    2,s
-A52B 16FE71                           lbra    ed_load
-A52E 17FF3B           ed_ent          lbsr    ed_rest         ; ENTER: היתר, שורה חדשה, שמירה
-A531 8D22             ed_e            bsr     ed_cr           ; E: שמירה בלי להדפיס את היתר
-A533 D6D7                             ldb     EDLEN           ; שומרים כמו שורה שהוקלדה: מכווצים, מחליפים, משתנים מתאפסים
-A535 8E02DD                           ldx     #LINBUF
-A538 3A                               abx
-A539 6F84                             clr     ,x
-A53B 8E02DD                           ldx     #LINBUF
-A53E DCD1                             ldd     EDNUM
-A540 DD2B                             std     LINNUM
-A542 17DC5E                           lbsr    storel2
-A545 10DE21                           lds     STKTOP
-A548 6FE2                             clr     ,-s
-A54A 16DB49                           lbra    main            ; בלי OK (קורא)
-A54D 10DE21           ed_q            lds     STKTOP          ; Q: יציאה בלי שמירה
-A550 6FE2                             clr     ,-s
-A552 16DB38                           lbra    main_ok
-A555 860D             ed_cr           lda     #13
-A557 16051E                           lbra    putc
-A55A                                  include "mitusing.s"
+A4B1 17FF42           ed_ins          lbsr    ed_get
+A4B4 810D                             cmpa    #13
+A4B6 2747                             beq     ed_ent
+A4B8 811B                             cmpa    #$1b
+A4BA 2731                             beq     9F
+A4BC 8108                             cmpa    #8
+A4BE 2609                             bne     2F
+A4C0 8D91                             bsr     ed_bk
+A4C2 25ED                             bcs     ed_ins
+A4C4 17FF64                           lbsr    ed_del
+A4C7 20E8                             bra     ed_ins
+A4C9 D6D7             2               ldb     EDLEN           ; עד 250 תווים (קורא)
+A4CB C1FA                             cmpb    #250
+A4CD 24E2                             bhs     ed_ins
+A4CF 8E02DD                           ldx     #LINBUF         ; מזיזים ימינה, מהסוף עד המקום
+A4D2 3A                               abx
+A4D3 3402                             pshs    a
+A4D5 D1DB             3               cmpb    EDPOS
+A4D7 2307                             bls     4F
+A4D9 A682                             lda     ,-x
+A4DB A701                             sta     1,x
+A4DD 5A                               decb
+A4DE 20F5                             bra     3B
+A4E0 3502             4               puls    a
+A4E2 A784                             sta     ,x
+A4E4 0CD7                             inc     EDLEN
+A4E6 0CDB                             inc     EDPOS
+A4E8 1703E8                           lbsr    putc
+A4EB 20C4                             bra     ed_ins
+A4ED 39               9               rts
+A4EE 17FF4C           ed_l            lbsr    ed_rest         ; L: היתר, שורה חדשה, "n " ומההתחלה (השינויים נשמרים)
+A4F1 8D33                             bsr     ed_cr
+A4F3 3262                             leas    2,s
+A4F5 16FE9D                           lbra    ed_head
+A4F8 8D2C             ed_a            bsr     ed_cr           ; A: מבטלים את השינויים וטוענים מחדש
+A4FA 3262                             leas    2,s
+A4FC 16FE71                           lbra    ed_load
+A4FF 17FF3B           ed_ent          lbsr    ed_rest         ; ENTER: היתר, שורה חדשה, שמירה
+A502 8D22             ed_e            bsr     ed_cr           ; E: שמירה בלי להדפיס את היתר
+A504 D6D7                             ldb     EDLEN           ; שומרים כמו שורה שהוקלדה: מכווצים, מחליפים, משתנים מתאפסים
+A506 8E02DD                           ldx     #LINBUF
+A509 3A                               abx
+A50A 6F84                             clr     ,x
+A50C 8E02DD                           ldx     #LINBUF
+A50F DCD1                             ldd     EDNUM
+A511 DD2B                             std     LINNUM
+A513 17DC8D                           lbsr    storel2
+A516 10DE21                           lds     STKTOP
+A519 6FE2                             clr     ,-s
+A51B 16DB78                           lbra    main            ; בלי OK (קורא)
+A51E 10DE21           ed_q            lds     STKTOP          ; Q: יציאה בלי שמירה
+A521 6FE2                             clr     ,-s
+A523 16DB67                           lbra    main_ok
+A526 860D             ed_cr           lda     #13
+A528 1603A8                           lbra    putc
+A52B                                  include "mitusing.s"
                       ; Dragon 1982 BASIC — שלב 3, חלק 2: PRINT USING. לפי הקורא: docs/DRAGON-SPEC-USING.md. נכתב מאפס.
                       ; המשתנים באזור העבודה המשותף $CF-$DD, כמו במקור (USSCNT $D3, USDPTR $D5, USFLG $D7...). לא ב-$DE-$E9: שם ההגדרות של PLAY ו-DRAW
                       
@@ -4883,866 +4856,699 @@ A55A                                  include "mitusing.s"
 00D9                  USL             equ     $d9             ; השדה המספרי: המקומות לפני הנקודה (כולל + מוביל, ** $$ **$ ופסיקים)
 00D8                  USD             equ     $d8             ; ספרות אחרי הנקודה ($FF: אין נקודה)
 00D7                  USFLG           equ     $d7             ; 1 פסיקים, 2 כוכביות, 4 דולר, 8 + מוביל, $10 + נגרר, $20 - נגרר, $40 מעריך
-00DC                  USW             equ     $dc             ; רוחב שדה מחרוזת / עזר
+00DC                  USW             equ     $dc             ; רוחב שדה מחרוזת (! = 1)
 00CF                  USEPT           equ     $cf             ; 2 בתים, רק בזמן הסריקה: סוף התבנית (חופף ל-USSG/USP, שמשמשים אחר כך)
                       
                       ; usstart: אחרי PRINT, כש-A = $CD (USING)
-A55A 9D9F             usstart         jsr     <chrget
-A55C 17E9CE                           lbsr    frmevl
-A55F 0D06                             tst     VALTYP
-A561 1027DB86                         lbeq    err_tm          ; התבנית חייבת להיות מחרוזת
-A565 9E52                             ldx     FACMO
-A567 9FD5                             stx     USDSC
-A569 863B                             lda     #';
-A56B 17E5E3                           lbsr    synchk
-A56E 9ED5                             ldx     USDSC
-A570 6D84                             tst     ,x
-A572 1027DB70                         lbeq    err_fc          ; תבנית ריקה
-A576 0FDB                             clr     USEND
-A578 9DA5                             jsr     <chrgot         ; אין ערכים בכלל?
-A57A 2602                             bne     us_cyc
-A57C 0CDB                             inc     USEND
-A57E 0FD3             us_cyc          clr     USPOS
-A580 0FDA                             clr     USANY
-A582 9ED5             us_scan         ldx     USDSC           ; USEPT = סוף התבנית, X = התו הנוכחי (מחדש כל פעם: איסוף מחרוזות)
-A584 E684                             ldb     ,x
-A586 AE02                             ldx     2,x
-A588 3410                             pshs    x
-A58A 3A                               abx
-A58B 9FCF                             stx     USEPT
-A58D 3510                             puls    x
-A58F D6D3                             ldb     USPOS
-A591 3A                               abx
-A592 9CCF                             cmpx    USEPT
-A594 10240097                         lbhs    us_eof
-A598 1700B0                           lbsr    us_field        ; שדה? C=1: כן (A = סוג: 0 מספר, 1 !, 2 %)
-A59B 2509                             bcs     us_fld
-A59D A684                             lda     ,x              ; תו רגיל
-A59F 1704D6                           lbsr    putc
-A5A2 0CD3                             inc     USPOS
-A5A4 20DC                             bra     us_scan
-A5A6 0DDB             us_fld          tst     USEND           ; אין עוד ערכים: השדה לא מודפס, ושורה חדשה (קורא: גם אחרי מפריד)
-A5A8 1026008B                         lbne    us_cr
-A5AC 3402                             pshs    a
-A5AE 17E97C                           lbsr    frmevl
-A5B1 3502                             puls    a
-A5B3 0CDA                             inc     USANY
-A5B5 4D                               tsta
-A5B6 260B                             bne     us_str
-A5B8 0D06                             tst     VALTYP
-A5BA 1026DB2D                         lbne    err_tm
-A5BE 1701B5                           lbsr    us_num
-A5C1 204A                             bra     us_sep
-A5C3 0D06             us_str          tst     VALTYP
-A5C5 1027DB22                         lbeq    err_tm
-A5C9 3402                             pshs    a
-A5CB 17ED04                           lbsr    frestr          ; A = האורך, X = התווים
-A5CE 3504                             puls    b
-A5D0 C101                             cmpb    #1
-A5D2 2611                             bne     2F
-A5D4 4D                               tsta                    ; !: התו הראשון, או רווח
-A5D5 2707                             beq     1F
-A5D7 A684                             lda     ,x
-A5D9 17049C                           lbsr    putc
-A5DC 202F                             bra     us_sep
-A5DE 8620             1               lda     #$20
-A5E0 170495                           lbsr    putc
-A5E3 2028                             bra     us_sep
-A5E5 D6DC             2               ldb     USW             ; %..%: התחלה עד הרוחב, ורווחים מימין
-A5E7 3404                             pshs    b
-A5E9 6DE4             3               tst     ,s
-A5EB 271E                             beq     5F
-A5ED 4D                               tsta
-A5EE 270E                             beq     4F
-A5F0 3402                             pshs    a
-A5F2 A680                             lda     ,x+
-A5F4 170481                           lbsr    putc
-A5F7 3502                             puls    a
-A5F9 4A                               deca
-A5FA 6AE4                             dec     ,s
-A5FC 20EB                             bra     3B
-A5FE E6E4             4               ldb     ,s              ; חסרים 129 ומעלה: לא משלימים (קורא: בדיקת המונה במקור)
-A600 2B09                             bmi     5F
-A602 8620             41              lda     #$20
-A604 170471                           lbsr    putc
-A607 6AE4                             dec     ,s
-A609 26F7                             bne     41B
-A60B 3261             5               leas    1,s
+A52B 9D9F             usstart         jsr     <chrget
+A52D 17E9FD                           lbsr    frmevl
+A530 17EC6C                           lbsr    frestr0         ; התבנית חייבת להיות מחרוזת
+A533 9FD5                             stx     USDSC
+A535 863B                             lda     #';
+A537 17E617                           lbsr    synchk
+A53A 9ED5                             ldx     USDSC
+A53C 6D84                             tst     ,x
+A53E 1027DBA4                         lbeq    err_fc          ; תבנית ריקה
+A542 0FDB                             clr     USEND
+A544 9DA5                             jsr     <chrgot         ; אין ערכים בכלל?
+A546 261B                             bne     us_cyc
+A548 0CDB                             inc     USEND
+A54A 2017                             bra     us_cyc
+A54C 96DB             us_eof          lda     USEND           ; סוף התבנית
+A54E 270D                             beq     1F
+A550 44                               lsra
+A551 2605                             bne     9F              ; נגמרה במפריד: בלי שורה חדשה
+A553 860D             us_cr           lda     #13
+A555 17037B                           lbsr    putc
+A558 9ED5             9               ldx     USDSC           ; משחררים את התבנית
+A55A 16ED98                           lbra    fretms
+A55D 0DDA             1               tst     USANY           ; עוד ערכים: מתחילים שוב, אם במחזור נצרך משהו (אחרת ?FC)
+A55F 1027DB83                         lbeq    err_fc
+A563 0FD3             us_cyc          clr     USPOS
+A565 0FDA                             clr     USANY
+A567 DED5             us_scan         ldu     USDSC           ; USEPT = סוף התבנית, X = התו הנוכחי (מחדש כל פעם: איסוף מחרוזות)
+A569 AE42                             ldx     2,u
+A56B E6C4                             ldb     ,u
+A56D 3A                               abx
+A56E 9FCF                             stx     USEPT
+A570 AE42                             ldx     2,u
+A572 D6D3                             ldb     USPOS
+A574 3A                               abx
+A575 9CCF                             cmpx    USEPT
+A577 24D3                             bhs     us_eof
+                      ; שדה? (U = המתאר עד us_ok). כן: us_ok, A = הסוג (0 מספר), X אחריו. לא: us_lit, X לא זז
+A579 A684                             lda     ,x
+A57B C601                             ldb     #1              ; !: מחרוזת ברוחב 1
+A57D 8121                             cmpa    #'!
+A57F 2722                             beq     4F
+A581 8125                             cmpa    #'%             ; %, רווחים, %: הרוחב = הרווחים ועוד 2
+A583 2678                             bne     us_nf
+A585 3410                             pshs    x
+A587 5C                               incb
+A588 3001             2               leax    1,x
+A58A 1700B5                           lbsr    us_ch
+A58D 8125                             cmpa    #'%
+A58F 2710                             beq     3F
+A591 5C                               incb
+A592 8120                             cmpa    #$20
+A594 27F2                             beq     2B
+A596 3510             us_no           puls    x               ; לא שדה (גם % בלי % סוגר)
+A598 A684             us_lit          lda     ,x              ; תו רגיל
+A59A 170336                           lbsr    putc
+A59D 0CD3                             inc     USPOS
+A59F 20C6                             bra     us_scan
+A5A1 3262             3               leas    2,s
+A5A3 3001             4               leax    1,x
+A5A5 D7DC                             stb     USW             ; A = ! או %: לא 0 (סוג מחרוזת)
+                      ; us_ok: נמצא שדה. אין עוד ערכים: השדה לא מודפס, ושורה חדשה (קורא: גם אחרי מפריד)
+A5A7 0DDB             us_ok           tst     USEND
+A5A9 26A8                             bne     us_cr
+A5AB 3402                             pshs    a               ; הסוג (הבית הזה במחסנית בזמן הביטוי, כמו קודם)
+A5AD 1F10                             tfr     x,d             ; USPOS = X פחות תחילת התבנית
+A5AF A342                             subd    2,u
+A5B1 D7D3                             stb     USPOS
+A5B3 17E977                           lbsr    frmevl
+A5B6 3502                             puls    a
+A5B8 0CDA                             inc     USANY
+A5BA 4D                               tsta
+A5BB 261E                             bne     us_str
+A5BD 17EB5A                           lbsr    chknum
+A5C0 1700FB                           lbsr    us_num
                       ; us_sep: אחרי ערך: סוף פקודה, ; או ,. אחרת ?SN
-A60D 9DA5             us_sep          jsr     <chrgot
-A60F 2607                             bne     1F
-A611 8601                             lda     #1              ; נגמרה בלי מפריד
-A613 97DB                             sta     USEND
-A615 16FF6A                           lbra    us_scan
-A618 813B             1               cmpa    #';
-A61A 2706                             beq     2F
-A61C 812C                             cmpa    #',
-A61E 1026DB1E                         lbne    err_sn
-A622 9D9F             2               jsr     <chrget
-A624 1026FF5A                         lbne    us_scan         ; עוד ערך
-A628 8602                             lda     #2
-A62A 97DB                             sta     USEND
-A62C 16FF53                           lbra    us_scan
-A62F 96DB             us_eof          lda     USEND           ; סוף התבנית
-A631 270F                             beq     1F
-A633 8102                             cmpa    #2
-A635 2705                             beq     9F              ; נגמרה במפריד: בלי שורה חדשה
-A637 860D             us_cr           lda     #13
-A639 17043C                           lbsr    putc
-A63C 9ED5             9               ldx     USDSC           ; משחררים את התבנית
-A63E 17ECB4                           lbsr    fretms
-A641 39                               rts
-A642 0DDA             1               tst     USANY           ; עוד ערכים: מתחילים שוב, אם במחזור נצרך משהו (אחרת ?FC)
-A644 1027DA9E                         lbeq    err_fc
-A648 16FF33                           lbra    us_cyc
+A5C3 9DA5             us_sep          jsr     <chrgot
+A5C5 2710                             beq     3F              ; נגמרה בלי מפריד: 1
+A5C7 813B                             cmpa    #';
+A5C9 2706                             beq     2F
+A5CB 812C                             cmpa    #',
+A5CD 1026DB6F                         lbne    err_sn
+A5D1 9D9F             2               jsr     <chrget
+A5D3 2692                             bne     us_scan         ; עוד ערך
+A5D5 0CDB                             inc     USEND           ; נגמרה במפריד: 2
+A5D7 0CDB             3               inc     USEND
+A5D9 208C                             bra     us_scan
                       
-                      ; us_field: X = התו בתבנית. שדה? C=1, A = הסוג, USPOS אחריו. אחרת C=0 ו-X לא זז
-A64B A684             us_field        lda     ,x
-A64D 8121                             cmpa    #'!
-A64F 2606                             bne     1F
-A651 3001                             leax    1,x
-A653 8601                             lda     #1
-A655 2026                             bra     us_ok
-A657 8125             1               cmpa    #'%             ; %, רווחים, %: הרוחב = הרווחים ועוד 2
-A659 2661                             bne     us_nf
-A65B 3410                             pshs    x
-A65D C602                             ldb     #2
-A65F 3001             2               leax    1,x
-A661 9CCF                             cmpx    USEPT
-A663 240B                             bhs     3F
-A665 A684                             lda     ,x
-A667 8125                             cmpa    #'%
-A669 270A                             beq     4F
-A66B 5C                               incb
-A66C 8120                             cmpa    #$20
-A66E 27EF                             beq     2B
-A670 3510             3               puls    x               ; אין % סוגר: % רגיל
-A672 1CFE                             andcc   #$fe
-A674 39                               rts
-A675 3262             4               leas    2,s
-A677 3001                             leax    1,x
-A679 D7DC                             stb     USW
-A67B 8602                             lda     #2
-A67D 3402             us_ok           pshs    a               ; USPOS = X פחות תחילת התבנית
-A67F 1F10                             tfr     x,d
-A681 DED5                             ldu     USDSC
-A683 A342                             subd    2,u
-A685 D7D3                             stb     USPOS
-A687 3502                             puls    a
-A689 1A01                             orcc    #1
-A68B 39                               rts
-                      ; us_ch: A = התו ב-X (0 אחרי הסוף)
-A68C 4F               us_ch           clra
-A68D 9CCF                             cmpx    USEPT
-A68F 2402                             bhs     1F
-A691 A684                             lda     ,x
-A693 39               1               rts
-                      ; us_isst: C=1 אם ב-X מתחיל שדה מספרי: #, .#, **, $$
-A694 8DF6             us_isst         bsr     us_ch
-A696 8123                             cmpa    #'#
-A698 271F                             beq     8F
-A69A C623                             ldb     #'#
-A69C 812E                             cmpa    #'.
-A69E 270A                             beq     1F
-A6A0 1F89                             tfr     a,b
-A6A2 812A                             cmpa    #'*
-A6A4 2704                             beq     1F
-A6A6 8124                             cmpa    #'$
-A6A8 260C                             bne     9F
-A6AA 3001             1               leax    1,x
-A6AC 8DDE                             bsr     us_ch
-A6AE 301F                             leax    -1,x
-A6B0 3404                             pshs    b
-A6B2 A1E0                             cmpa    ,s+
-A6B4 2703                             beq     8F
-A6B6 1CFE             9               andcc   #$fe
-A6B8 39                               rts
-A6B9 1A01             8               orcc    #1
-A6BB 39                               rts
+A5DB 17ECF4           us_str          lbsr    frestr          ; A = האורך, X = התווים
+A5DE 97D1                             sta     USN
+A5E0 D6DC                             ldb     USW             ; התחלה עד הרוחב, ורווחים מימין
+A5E2 0DD1             1               tst     USN
+A5E4 270A                             beq     2F
+A5E6 0AD1                             dec     USN
+A5E8 A680                             lda     ,x+
+A5EA 1702E6                           lbsr    putc
+A5ED 5A                               decb
+A5EE 26F2                             bne     1B
+A5F0 5D               2               tstb                    ; חסרים 129 ומעלה: לא משלימים (קורא: בדיקת המונה במקור)
+A5F1 2FD0                             ble     us_sep
+A5F3 8620                             lda     #$20
+A5F5 1702DB           3               lbsr    putc
+A5F8 5A                               decb
+A5F9 26FA                             bne     3B
+A5FB 20C6                             bra     us_sep
+                      
                       ; us_nf: שדה מספרי (קורא, סעיף 2): [+] [** / $$ / **$] [# ,]... [. #...] [^^^^] [+ / -]
-A6BC 3410             us_nf           pshs    x
-A6BE 0FD9                             clr     USL
-A6C0 0FD7                             clr     USFLG
-A6C2 86FF                             lda     #$ff
-A6C4 97D8                             sta     USD
-A6C6 8DC4                             bsr     us_ch
-A6C8 812B                             cmpa    #'+             ; + מוביל: רק אם אחריו מתחיל שדה
-A6CA 2610                             bne     1F
-A6CC 3001                             leax    1,x
-A6CE 8DC4                             bsr     us_isst
-A6D0 10240092                         lbcc    us_no
-A6D4 8608                             lda     #8
-A6D6 97D7                             sta     USFLG
-A6D8 0CD9                             inc     USL
-A6DA 2006                             bra     11F
-A6DC 8DB6             1               bsr     us_isst
-A6DE 10240084                         lbcc    us_no
-A6E2 8DA8             11              bsr     us_ch
-A6E4 812A                             cmpa    #'*
-A6E6 2614                             bne     2F
-A6E8 8602                             lda     #2              ; **
-A6EA 8D7F                             bsr     us_pre2
-A6EC 8D9E                             bsr     us_ch
-A6EE 8124                             cmpa    #'$
-A6F0 2612                             bne     3F
-A6F2 3001                             leax    1,x             ; **$
-A6F4 0CD9                             inc     USL
-A6F6 8604                             lda     #4
-A6F8 8D77                             bsr     us_orf
-A6FA 2008                             bra     3F
-A6FC 8124             2               cmpa    #'$
-A6FE 2604                             bne     3F
-A700 8604                             lda     #4              ; $$
-A702 8D67                             bsr     us_pre2
-A704 8D86             3               bsr     us_ch           ; לפני הנקודה: # ופסיקים
-A706 8123                             cmpa    #'#
-A708 2708                             beq     31F
-A70A 812C                             cmpa    #',
-A70C 260A                             bne     5F
-A70E 8601                             lda     #1
-A710 8D5F                             bsr     us_orf
-A712 0CD9             31              inc     USL
-A714 3001                             leax    1,x
-A716 20EC                             bra     3B
-A718 812E             5               cmpa    #'.
-A71A 260F                             bne     7F
-A71C 0FD8                             clr     USD
-A71E 3001             6               leax    1,x
-A720 17FF69                           lbsr    us_ch
-A723 8123                             cmpa    #'#
-A725 2604                             bne     7F
-A727 0CD8                             inc     USD
-A729 20F3                             bra     6B
-A72B C604             7               ldb     #4              ; ^^^^
-A72D 3410                             pshs    x
-A72F 17FF5A           8               lbsr    us_ch
-A732 815E                             cmpa    #'^
-A734 260D                             bne     81F
-A736 3001                             leax    1,x
-A738 5A                               decb
-A739 26F4                             bne     8B
-A73B 3262                             leas    2,s
-A73D 8640                             lda     #$40
-A73F 8D30                             bsr     us_orf
-A741 2002                             bra     82F
-A743 3510             81              puls    x
-A745 96D7             82              lda     USFLG           ; סימן נגרר: רק בלי + מוביל
-A747 8508                             bita    #8
-A749 2615                             bne     us_yes
-A74B 17FF3E                           lbsr    us_ch
-A74E C610                             ldb     #$10
-A750 812B                             cmpa    #'+
-A752 2706                             beq     83F
-A754 C620                             ldb     #$20
-A756 812D                             cmpa    #'-
-A758 2606                             bne     us_yes
-A75A 3001             83              leax    1,x
-A75C 1F98                             tfr     b,a
-A75E 8D11                             bsr     us_orf
-A760 3262             us_yes          leas    2,s
-A762 4F                               clra                    ; סוג 0: מספר
-A763 16FF17                           lbra    us_ok
-A766 3510             us_no           puls    x
-A768 1CFE                             andcc   #$fe
-A76A 39                               rts
-A76B 3002             us_pre2         leax    2,x             ; תחילית של שני תווים
-A76D 0CD9                             inc     USL
-A76F 0CD9                             inc     USL
-A771 9AD7             us_orf          ora     USFLG
-A773 97D7                             sta     USFLG
-A775 39                               rts
+A5FD 3410             us_nf           pshs    x
+A5FF 0FD7                             clr     USFLG
+A601 CCFF00                           ldd     #$ff00          ; USD = $FF, USL = 0
+A604 DDD8                             std     USD
+A606 8D3A                             bsr     us_ch
+A608 812B                             cmpa    #'+             ; + מוביל: רק אם אחריו מתחיל שדה
+A60A 2604                             bne     1F
+A60C 8608                             lda     #8
+A60E 8D5D                             bsr     us_pre1
+A610 8D38             1               bsr     us_isst
+A612 2682                             bne     us_no
+A614 8D2C                             bsr     us_ch
+A616 812A                             cmpa    #'*
+A618 260E                             bne     2F
+A61A 8602                             lda     #2              ; **
+A61C 8D4D                             bsr     us_pre2
+A61E 8D22                             bsr     us_ch
+A620 8124                             cmpa    #'$
+A622 260C                             bne     3F
+A624 301F                             leax    -1,x            ; **$: כמו $$ מהכוכבית השנייה, בלי לספור אותה שוב
+A626 0AD9                             dec     USL
+A628 8124             2               cmpa    #'$
+A62A 2604                             bne     3F
+A62C 8604                             lda     #4              ; $$
+A62E 8D3B                             bsr     us_pre2
+A630 8D10             3               bsr     us_ch           ; לפני הנקודה: # ופסיקים
+A632 8123                             cmpa    #'#
+A634 2704                             beq     31F
+A636 812C                             cmpa    #',
+A638 263C                             bne     5F
+A63A 802B             31              suba    #'+             ; פסיק: 1, #: 0
+A63C 8401                             anda    #1
+A63E 8D2D                             bsr     us_pre1
+A640 20EE                             bra     3B
+                      
+                      ; us_ch: A = התו ב-X (0 אחרי הסוף)
+A642 4F               us_ch           clra
+A643 9CCF                             cmpx    USEPT
+A645 2402                             bhs     1F
+A647 A684                             lda     ,x
+A649 39               1               rts
+                      ; us_isst: Z=1 אם ב-X מתחיל שדה מספרי: #, .#, **, $$
+A64A 8DF6             us_isst         bsr     us_ch
+A64C 8123                             cmpa    #'#
+A64E 271A                             beq     9F
+A650 C623                             ldb     #'#
+A652 812E                             cmpa    #'.
+A654 270A                             beq     1F
+A656 1F89                             tfr     a,b
+A658 812A                             cmpa    #'*
+A65A 2704                             beq     1F
+A65C 8124                             cmpa    #'$
+A65E 260A                             bne     9F
+A660 3001             1               leax    1,x
+A662 8DDE                             bsr     us_ch
+A664 301F                             leax    -1,x
+A666 3404                             pshs    b
+A668 A1E0                             cmpa    ,s+
+A66A 39               9               rts
+A66B 8D00             us_pre2         bsr     us_pre1         ; תחילית של שני תווים
+A66D 3001             us_pre1         leax    1,x             ; תו אחד בשדה
+A66F 0CD9                             inc     USL
+A671 9AD7             us_orf          ora     USFLG
+A673 97D7                             sta     USFLG
+A675 39                               rts
+                      
+A676 812E             5               cmpa    #'.
+A678 260E                             bne     7F
+A67A 0FD8                             clr     USD
+A67C 3001             6               leax    1,x
+A67E 8DC2                             bsr     us_ch
+A680 8123                             cmpa    #'#
+A682 2604                             bne     7F
+A684 0CD8                             inc     USD
+A686 20F4                             bra     6B
+A688 C604             7               ldb     #4              ; ^^^^
+A68A 3410                             pshs    x
+A68C 8DB4             8               bsr     us_ch
+A68E 815E                             cmpa    #'^
+A690 260B                             bne     81F
+A692 3001                             leax    1,x
+A694 5A                               decb
+A695 26F5                             bne     8B
+A697 8640                             lda     #$40
+A699 8DD6                             bsr     us_orf
+A69B AFE4                             stx     ,s
+A69D 3510             81              puls    x
+A69F 96D7                             lda     USFLG           ; סימן נגרר: רק בלי + מוביל
+A6A1 8508                             bita    #8
+A6A3 2613                             bne     us_yes
+A6A5 8D9B                             bsr     us_ch
+A6A7 C610                             ldb     #$10
+A6A9 812B                             cmpa    #'+
+A6AB 2705                             beq     83F
+A6AD 58                               aslb
+A6AE 812D                             cmpa    #'-
+A6B0 2606                             bne     us_yes
+A6B2 3001             83              leax    1,x
+A6B4 1F98                             tfr     b,a
+A6B6 8DB9                             bsr     us_orf
+A6B8 3262             us_yes          leas    2,s
+A6BA 4F                               clra                    ; סוג 0: מספר
+A6BB 16FEE9                           lbra    us_ok
                       
                       ; ---------- השדה המספרי (קורא: docs/DRAGON-SPEC-USING.md, השלמה: ההמרה) ----------
 00DD                  USE             equ     $dd             ; המעריך העשרוני e
 00CF                  USSG            equ     $cf     ; תו הסימן המוביל / הנגרר
 00D0                  USP             equ     $d0     ; כמה ספרות לפני הנקודה (עם סימן)
-00D1                  USN             equ     $d1     ; N במעריכי
+00D1                  USN             equ     $d1     ; מונה (במחרוזת: האורך. במעריכי: N-9. בשבר: הספרות)
 00D2                  USX             equ     $d2     ; המעריך להדפסה
 00D4                  USF             equ     $d4     ; תו המילוי (רווח או *)
 02DD                  USDG            equ     LINBUF          ; תשע הספרות
-02ED                  UST             equ     LINBUF+16       ; החלק השלם (עם פסיקים)
-031D                  USO             equ     LINBUF+64       ; הפלט שלפני הנקודה
+02ED                  UST             equ     LINBUF+16       ; החלק שלפני הנקודה (שני תאים לפניו: הסימן וה-$)
                       
-A776 D6D9             us_num          ldb     USL             ; שדה רחב מ-17 (עם הנקודה): ?FC
-A778 96D8                             lda     USD
-A77A 4C                               inca
-A77B 3402                             pshs    a
-A77D EBE0                             addb    ,s+
-A77F C111                             cmpb    #17
-A781 1022D961                         lbhi    err_fc
-A785 8620                             lda     #$20            ; המילוי
-A787 D6D7                             ldb     USFLG
-A789 C502                             bitb    #2
-A78B 2702                             beq     1F
-A78D 862A                             lda     #'*
-A78F 97D4             1               sta     USF
-A791 862D                             lda     #'-             ; הסימן, לפני כל חישוב (קורא)
-A793 0D54                             tst     FACSGN
-A795 2B08                             bmi     2F
-A797 862B                             lda     #'+
-A799 C518                             bitb    #$18
-A79B 2602                             bne     2F
-A79D 96D4                             lda     USF
-A79F 97CF             2               sta     USSG
-A7A1 0F54                             clr     FACSGN
-A7A3 C540                             bitb    #$40
-A7A5 2641                             bne     us_exp
-A7A7 308DE339                         leax    nzmil,pcr       ; מיליארד ומעלה: % וההמרה הרגילה (הסימן כבר הוסר)
-A7AB 17E1E0                           lbsr    fcomp
-A7AE 81FF                             cmpa    #$ff
-A7B0 270E                             beq     3F
-A7B2 8625                             lda     #'%
-A7B4 1702C1                           lbsr    putc
-A7B7 17E243                           lbsr    fout
-A7BA 8E03DA                           ldx     #FBUFFR
-A7BD 16030F                           lbra    puts
-A7C0 170080           3               lbsr    us_norm
-A7C3 8D76                             bsr     us_dd           ; B = D
-A7C5 96DD                             lda     USE             ; e<0: עוד max(0,-D-e) חלוקות בעשר, אחת-אחת
-A7C7 2A13                             bpl     5F
-A7C9 40                               nega
-A7CA 3404                             pshs    b
-A7CC A0E0                             suba    ,s+
-A7CE 2F0C                             ble     5F
-A7D0 3402             4               pshs    a
-A7D2 17E0EC                           lbsr    div10
-A7D5 0CDD                             inc     USE
-A7D7 3502                             puls    a
-A7D9 4A                               deca
-A7DA 26F4                             bne     4B
-A7DC 1700A4           5               lbsr    us_dig
-A7DF 96DD                             lda     USE             ; הנקודה אחרי 9+e ספרות
-A7E1 8B09                             adda    #9
-A7E3 97D0                             sta     USP
-A7E5 1600C8                           lbra    us_out
-                      
-A7E8 8D59             us_exp          bsr     us_norm         ; מעריכי (אפס: e=0)
-A7EA 8D4F                             bsr     us_dd
-A7EC 3404                             pshs    b
-A7EE 96D9                             lda     USL
-A7F0 ABE0                             adda    ,s+             ; N = L+D-s (s=1 בסימן מוביל)
-A7F2 D6D7                             ldb     USFLG
-A7F4 C530                             bitb    #$30
-A7F6 2601                             bne     1F
-A7F8 4A                               deca
-A7F9 97D1             1               sta     USN
-A7FB 8009                             suba    #9
-A7FD 2C0B                             bge     3F
-A7FF 40                               nega                    ; N<9: 9-N חלוקות (e לא משתנה)
-A800 3402             2               pshs    a
-A802 17E0BC                           lbsr    div10
-A805 3502                             puls    a
-A807 4A                               deca
-A808 26F6                             bne     2B
-A80A 964F             3               lda     FACEXP          ; אפס? המעריך 0
-A80C 3402                             pshs    a
-A80E 8D73                             bsr     us_dig
-A810 96D9                             lda     USL             ; הנקודה אחרי L-s+max(9-N,0)
-A812 D6D7                             ldb     USFLG
-A814 C530                             bitb    #$30
-A816 2601                             bne     4F
-A818 4A                               deca
-A819 C609             4               ldb     #9
-A81B D0D1                             subb    USN
-A81D 2B04                             bmi     5F
-A81F 3404                             pshs    b
-A821 ABE0                             adda    ,s+
-A823 97D0             5               sta     USP
-A825 96DD                             lda     USE             ; המעריך: e+9-L+s
-A827 8B09                             adda    #9
-A829 90D9                             suba    USL
-A82B D6D7                             ldb     USFLG
-A82D C530                             bitb    #$30
-A82F 2601                             bne     6F
-A831 4C                               inca
-A832 6DE0             6               tst     ,s+
-A834 2601                             bne     7F
-A836 4F                               clra
-A837 97D2             7               sta     USX
-A839 2075                             bra     us_out
+A6BE 96D8             us_num          lda     USD             ; שדה רחב מ-17 (עם הנקודה): ?FC
+A6C0 4C                               inca
+A6C1 9BD9                             adda    USL
+A6C3 8111                             cmpa    #17
+A6C5 1022DA1D                         lbhi    err_fc
+A6C9 8620                             lda     #$20            ; המילוי
+A6CB D6D7                             ldb     USFLG
+A6CD C502                             bitb    #2
+A6CF 2702                             beq     1F
+A6D1 862A                             lda     #'*
+A6D3 97D4             1               sta     USF             ; הסימן, לפני כל חישוב (קורא): מילוי, + (מוביל או נגרר), - בשלילי
+A6D5 C518                             bitb    #$18
+A6D7 2702                             beq     11F
+A6D9 862B                             lda     #'+
+A6DB 0D54             11              tst     FACSGN
+A6DD 2A02                             bpl     2F
+A6DF 862D                             lda     #'-
+A6E1 97CF             2               sta     USSG
+A6E3 0F54                             clr     FACSGN
+A6E5 C540                             bitb    #$40
+A6E7 266A                             bne     us_exp
+A6E9 8E8AE4                           ldx     #nzmil  ; מיליארד ומעלה: % וההמרה הרגילה (הסימן כבר הוסר)
+A6EC 17E29F                           lbsr    fcomp
+A6EF 2B0E                             bmi     3F
+A6F1 8625                             lda     #'%
+A6F3 1701DD                           lbsr    putc
+A6F6 17E304                           lbsr    fout
+A6F9 8E03DA                           ldx     #FBUFFR
+A6FC 16022B                           lbra    puts
+A6FF 8D1B             3               bsr     us_norm
+A701 8D13             4               bsr     us_dd           ; e+D<0: עוד חלוקה בעשר
+A703 DBDD                             addb    USE
+A705 2A07                             bpl     5F
+A707 17E1B7                           lbsr    div10
+A70A 0CDD                             inc     USE
+A70C 20F3                             bra     4B
+A70E 96DD             5               lda     USE             ; הנקודה אחרי 9+e ספרות
+A710 8B09                             adda    #9
+A712 97D0                             sta     USP
+A714 206A                             bra     us_dg
                       
                       ; us_dd: B = D (0 בלי נקודה)
-A83B D6D8             us_dd           ldb     USD
-A83D C1FF                             cmpb    #$ff
-A83F 2601                             bne     1F
-A841 5F                               clrb
-A842 39               1               rts
+A716 D6D8             us_dd           ldb     USD
+A718 2A01                             bpl     1F
+A71A 5F                               clrb
+A71B 39               1               rts
                       ; us_norm: FAC חיובי → בין הגבולות (99999999.90625, 999999999.25], USE = e. אפס: e=0
-A843 0FDD             us_norm         clr     USE
-A845 964F                             lda     FACEXP
-A847 2739                             beq     9F
-A849 964F             1               lda     FACEXP          ; קטן מ-1: כפול מיליארד
-A84B 8180                             cmpa    #$80
-A84D 220F                             bhi     2F
-A84F 308DE291                         leax    nzmil,pcr
-A853 17DF6C                           lbsr    fmult
-A856 96DD                             lda     USE
-A858 8009                             suba    #9
-A85A 97DD                             sta     USE
-A85C 20EB                             bra     1B
-A85E 308DE287         2               leax    nz9999,pcr      ; מעל העליון: חלקי 10
-A862 17E129                           lbsr    fcomp
-A865 8101                             cmpa    #1
-A867 2607                             bne     3F
-A869 17E055                           lbsr    div10
-A86C 0CDD                             inc     USE
-A86E 20EE                             bra     2B
-A870 308DE27A         3               leax    nz0999,pcr      ; עד התחתון (כולל): כפול 10
-A874 17E117                           lbsr    fcomp
-A877 8101                             cmpa    #1
-A879 2707                             beq     9F
-A87B 17E02B                           lbsr    mul10
-A87E 0ADD                             dec     USE
-A880 20EE                             bra     3B
-A882 39               9               rts
-                      ; us_dig: חצי (בחיבור של ה-Dragon), החלק השלם, ותשע ספרות עם אפסים מובילים ב-USDG
-A883 17DE16           us_dig          lbsr    faddh
-A886 17E129                           lbsr    qint
-A889 108E02DD                         ldy     #USDG
-A88D 308DE268                         leax    foutbl,pcr
-A891 17E224           1               lbsr    fdig
-A894 E7A0                             stb     ,y+
-A896 108C02E6                         cmpy    #USDG+9
-A89A 25F5                             blo     1B
-A89C 39                               rts
-                      ; us_digi: A = הספרה במקום B (עם סימן): מחוץ ל-0..8 = '0'
-A89D 8630             us_digi         lda     #'0
-A89F 5D                               tstb
-A8A0 2B0D                             bmi     1F
-A8A2 C109                             cmpb    #9
-A8A4 2409                             bhs     1F
-A8A6 3410                             pshs    x
-A8A8 8E02DD                           ldx     #USDG
-A8AB A685                             lda     b,x
-A8AD 3510                             puls    x
-A8AF 39               1               rts
+A71C 0FDD             us_norm         clr     USE
+A71E 964F             1               lda     FACEXP          ; קטן מ-1: כפול מיליארד
+A720 2730                             beq     9F
+A722 8180                             cmpa    #$80
+A724 220E                             bhi     2F
+A726 8E8AE4                           ldx     #nzmil
+A729 17E096                           lbsr    fmult
+A72C 96DD                             lda     USE
+A72E 8009                             suba    #9
+A730 97DD                             sta     USE
+A732 20EA                             bra     1B
+A734 8E8AE9           2               ldx     #nz9999 ; מעל העליון: חלקי 10
+A737 17E254                           lbsr    fcomp
+A73A 2F07                             ble     3F
+A73C 17E182                           lbsr    div10
+A73F 0CDD                             inc     USE
+A741 20F1                             bra     2B
+A743 8E8AEE           3               ldx     #nz0999 ; עד התחתון (כולל): כפול 10
+A746 17E245                           lbsr    fcomp
+A749 2E07                             bgt     9F
+A74B 17E15B                           lbsr    mul10
+A74E 0ADD                             dec     USE
+A750 20F1                             bra     3B
+A752 39               9               rts
+                      
+A753 8DC7             us_exp          bsr     us_norm         ; מעריכי (אפס: e=0)
+A755 96D9                             lda     USL             ; LS = L-s (s=1 בסימן מוביל)
+A757 D6D7                             ldb     USFLG
+A759 C530                             bitb    #$30
+A75B 2601                             bne     1F
+A75D 4A                               deca
+A75E 97D0             1               sta     USP             ; הנקודה אחרי LS+max(9-N,0)
+A760 40                               nega                    ; המעריך: e+9-LS
+A761 9BDD                             adda    USE
+A763 8B09                             adda    #9
+A765 97D2                             sta     USX
+A767 8DAD                             bsr     us_dd           ; N = LS+D
+A769 DBD0                             addb    USP
+A76B C009                             subb    #9
+A76D 2C0B                             bge     3F
+A76F D7D1                             stb     USN             ; N<9: 9-N חלוקות (e לא משתנה)
+A771 17E14D           2               lbsr    div10
+A774 0CD0                             inc     USP
+A776 0CD1                             inc     USN
+A778 26F7                             bne     2B
+A77A 964F             3               lda     FACEXP          ; אפס? המעריך 0
+A77C 2602                             bne     us_dg
+A77E 0FD2                             clr     USX
+                      ; us_dg: חצי (בחיבור של ה-Dragon), החלק השלם, ותשע ספרות עם אפסים מובילים ב-USDG
+A780 17DF19           us_dg           lbsr    faddh
+A783 17E22C                           lbsr    qint
+A786 108E02DD                         ldy     #USDG
+A78A 8E8AF9                           ldx     #foutbl
+A78D 17E328           1               lbsr    fdig
+A790 E7A0                             stb     ,y+
+A792 8C8B1D                           cmpx    #foutbl+36      ; תשע החזקות
+A795 25F6                             blo     1B
                       ; us_out: מהספרות לפלט: החלק השלם (פסיקים), מילוי, סימן ו-$, התאמה לרוחב (%), נקודה, שבר, מעריך, סימן נגרר
-A8B0 108E02ED         us_out          ldy     #UST
-A8B4 D6D0                             ldb     USP
-A8B6 2E06                             bgt     1F
-A8B8 8630                             lda     #'0             ; אין ספרות לפני הנקודה: "0"
-A8BA A7A0                             sta     ,y+
-A8BC 2027                             bra     3F
-A8BE 5F               1               clrb                    ; i = 0 .. P-1
-A8BF D1D0             2               cmpb    USP
-A8C1 2C22                             bge     3F
-A8C3 96D7                             lda     USFLG           ; פסיק לפני ספרה כשנשארו כפולה של 3 (לא במעריכי)
-A8C5 8441                             anda    #$41
-A8C7 8101                             cmpa    #1
-A8C9 2613                             bne     22F
-A8CB 5D                               tstb
-A8CC 2710                             beq     22F
-A8CE 3404                             pshs    b
-A8D0 96D0                             lda     USP
-A8D2 A0E0                             suba    ,s+
-A8D4 8003             21              suba    #3
-A8D6 22FC                             bhi     21B
-A8D8 2604                             bne     22F
-A8DA 862C                             lda     #',
-A8DC A7A0                             sta     ,y+
-A8DE 8DBD             22              bsr     us_digi
-A8E0 A7A0                             sta     ,y+
-A8E2 5C                               incb
-A8E3 20DA                             bra     2B
-A8E5 3420             3               pshs    y               ; ,s = הסוף
-A8E7 8E02ED                           ldx     #UST            ; אפסים ופסיקים מובילים → מילוי; אם הכול: האחרון חוזר ל-0
-A8EA ACE4             4               cmpx    ,s
-A8EC 2410                             bhs     5F
-A8EE A684                             lda     ,x
-A8F0 8130                             cmpa    #'0
-A8F2 2704                             beq     41F
-A8F4 812C                             cmpa    #',
-A8F6 260A                             bne     6F
-A8F8 96D4             41              lda     USF
-A8FA A780                             sta     ,x+
-A8FC 20EC                             bra     4B
-A8FE 8630             5               lda     #'0
-A900 A782                             sta     ,-x
-A902 3410             6               pshs    x               ; ,s = הספרה הראשונה, 2,s = הסוף
-A904 108E031D                         ldy     #USO
-A908 CE02ED                           ldu     #UST
-A90B 11A3E4           7               cmpu    ,s              ; המילוי
-A90E 2406                             bhs     8F
-A910 A6C0                             lda     ,u+
-A912 A7A0                             sta     ,y+
-A914 20F5                             bra     7B
-A916 96D7             8               lda     USFLG
-A918 8530                             bita    #$30
-A91A 2604                             bne     9F              ; סימן נגרר: לא כאן
-A91C 96CF                             lda     USSG
-A91E A7A0                             sta     ,y+
-A920 96D7             9               lda     USFLG           ; $ צף
-A922 8504                             bita    #4
-A924 2704                             beq     10F
-A926 8624                             lda     #'$
-A928 A7A0                             sta     ,y+
-A92A 11A362           10              cmpu    2,s
-A92D 2406                             bhs     11F
-A92F A6C0                             lda     ,u+
-A931 A7A0                             sta     ,y+
-A933 20F5                             bra     10B
-A935 3264             11              leas    4,s
-A937 8E031D                           ldx     #USO            ; התאמה לרוחב L
-A93A 1700D3           12              lbsr    us_cnt
-A93D 234C                             bls     us_fit
-A93F A684                             lda     ,x              ; מסירים מילוי מוביל
-A941 8120                             cmpa    #$20
-A943 2704                             beq     13F
-A945 812A                             cmpa    #'*
-A947 2604                             bne     14F
-A949 3001             13              leax    1,x
-A94B 20ED                             bra     12B
-A94D D6D8             14              ldb     USD             ; אפס לפני נקודה וספרת שבר: מסירים, הסימן וה-$ נשארים
-A94F 5C                               incb
-A950 2734                             beq     us_pct
-A952 5A                               decb
-A953 2731                             beq     us_pct
-A955 A63F                             lda     -1,y
-A957 8130                             cmpa    #'0
-A959 262B                             bne     us_pct
-A95B 333F                             leau    -1,y
-A95D 3410                             pshs    x
-A95F 11A3E4                           cmpu    ,s
-A962 2715                             beq     16F
-A964 A65F                             lda     -1,u
-A966 8130                             cmpa    #'0
-A968 2504                             blo     15F
-A96A 8139                             cmpa    #'9
-A96C 2316                             bls     17F
-A96E A65F             15              lda     -1,u
-A970 A7C4                             sta     ,u
-A972 335F                             leau    -1,u
-A974 11A3E4                           cmpu    ,s
-A977 22F5                             bhi     15B
-A979 3510             16              puls    x
-A97B 3001                             leax    1,x
-A97D 170090                           lbsr    us_cnt
-A980 2309                             bls     us_fit
-A982 2002                             bra     us_pct
-A984 3510             17              puls    x
-A986 8625             us_pct          lda     #'%             ; עדיין רחב: % לפני
-A988 1700ED                           lbsr    putc
-A98B A680             us_fit          lda     ,x+             ; מה שלפני הנקודה
-A98D 1700E8                           lbsr    putc
-A990 3410                             pshs    x
-A992 10ACE1                           cmpy    ,s++
-A995 22F4                             bhi     us_fit
-A997 D6D8                             ldb     USD             ; נקודה ו-D ספרות שבר
-A999 C1FF                             cmpb    #$ff
-A99B 271A                             beq     2F
-A99D 862E                             lda     #'.
-A99F 1700D6                           lbsr    putc
-A9A2 3404                             pshs    b
-A9A4 D6D0                             ldb     USP
-A9A6 6DE4             1               tst     ,s
-A9A8 270B                             beq     11F
-A9AA 17FEF0                           lbsr    us_digi
-A9AD 1700C8                           lbsr    putc
-A9B0 5C                               incb
-A9B1 6AE4                             dec     ,s
-A9B3 20F1                             bra     1B
-A9B5 3261             11              leas    1,s
-A9B7 96D7             2               lda     USFLG           ; מעריך: E, סימן, שתי ספרות
-A9B9 8540                             bita    #$40
-A9BB 272C                             beq     4F
-A9BD 8645                             lda     #'E
-A9BF 1700B6                           lbsr    putc
-A9C2 C62B                             ldb     #'+
-A9C4 96D2                             lda     USX
-A9C6 2A03                             bpl     3F
-A9C8 40                               nega
-A9C9 C62D                             ldb     #'-
-A9CB 3402             3               pshs    a
-A9CD 1F98                             tfr     b,a
-A9CF 1700A6                           lbsr    putc
-A9D2 3502                             puls    a
-A9D4 C62F                             ldb     #'0-1
-A9D6 5C               31              incb
-A9D7 800A                             suba    #10
-A9D9 24FB                             bcc     31B
-A9DB 8B3A                             adda    #'0+10
-A9DD 3402                             pshs    a
-A9DF 1F98                             tfr     b,a
-A9E1 170094                           lbsr    putc
-A9E4 3502                             puls    a
-A9E6 17008F                           lbsr    putc
-A9E9 96D7             4               lda     USFLG           ; סימן נגרר
-A9EB 8530                             bita    #$30
-A9ED 2720                             beq     9F
-A9EF D6CF                             ldb     USSG
-A9F1 C12D                             cmpb    #'-
-A9F3 2710                             beq     8F
-A9F5 8510                             bita    #$10
-A9F7 260A                             bne     6F
-A9F9 96D7                             lda     USFLG           ; - נגרר בחיובי: רווח (בכוכביות: כלום, קורא)
-A9FB 8502                             bita    #2
-A9FD 2610                             bne     9F
-A9FF 8620                             lda     #$20
-AA01 2002                             bra     8F
-AA03 C62B             6               ldb     #'+
-AA05 1F98             8               tfr     b,a
-AA07 8120                             cmpa    #$20
-AA09 2702                             beq     81F
-AA0B 206B                             bra     putc
-AA0D 2069             81              bra     putc
-AA0F 39               9               rts
-                      ; us_cnt: Y-X מול L (C/Z לפי cmp: bls = נכנס)
-AA10 3410             us_cnt          pshs    x
-AA12 1F20                             tfr     y,d
-AA14 A3E1                             subd    ,s++
-AA16 4D                               tsta
-AA17 2603                             bne     1F
-AA19 D1D9                             cmpb    USL
-AA1B 39                               rts
-AA1C 8601             1               lda     #1              ; יותר מ-255: לא נכנס
-AA1E 8100                             cmpa    #0
-AA20 39                               rts
-AA21                                  include "io.s"
+A797 108E02ED         us_out          ldy     #UST
+A79B D6D0                             ldb     USP             ; i = 0 .. P-1. אין ספרות לפני הנקודה: i = P-1 בלבד ("0")
+A79D 5A                               decb
+A79E 2B01                             bmi     2F
+A7A0 5F                               clrb
+A7A1 D1D0             2               cmpb    USP
+A7A3 2C1E                             bge     3F
+A7A5 96D7                             lda     USFLG           ; פסיק לפני ספרה כשנשארו כפולה של 3 (לא במעריכי)
+A7A7 8441                             anda    #$41
+A7A9 4A                               deca
+A7AA 2613                             bne     22F
+A7AC 5D                               tstb
+A7AD 2710                             beq     22F
+A7AF 3404                             pshs    b
+A7B1 96D0                             lda     USP
+A7B3 A0E0                             suba    ,s+
+A7B5 8003             21              suba    #3
+A7B7 22FC                             bhi     21B
+A7B9 2604                             bne     22F
+A7BB 862C                             lda     #',
+A7BD A7A0                             sta     ,y+
+A7BF 8D61             22              bsr     us_digi
+A7C1 20DE                             bra     2B
+A7C3 6FA4             3               clr     ,y              ; Y = הסוף (0 אחריו)
+A7C5 CE02ED                           ldu     #UST            ; אפסים ופסיקים מובילים → מילוי, חוץ מהתו האחרון
+A7C8 96D4                             lda     USF
+A7CA A75F                             sta     -1,u
+A7CC A75E                             sta     -2,u
+A7CE 6D41             4               tst     1,u
+A7D0 270E                             beq     5F
+A7D2 E6C4                             ldb     ,u
+A7D4 C130                             cmpb    #'0
+A7D6 2704                             beq     41F
+A7D8 C12C                             cmpb    #',
+A7DA 2604                             bne     5F
+A7DC A7C0             41              sta     ,u+
+A7DE 20EE                             bra     4B
+A7E0 8E02ED           5               ldx     #UST            ; לפני הספרה הראשונה (U): $ צף, ולפניו הסימן. X = ההתחלה
+A7E3 D6D7                             ldb     USFLG
+A7E5 C504                             bitb    #4
+A7E7 2706                             beq     6F
+A7E9 8624                             lda     #'$
+A7EB A7C2                             sta     ,-u
+A7ED 301F                             leax    -1,x
+A7EF C530             6               bitb    #$30
+A7F1 2606                             bne     us_ft           ; סימן נגרר: לא כאן
+A7F3 96CF                             lda     USSG
+A7F5 A7C2                             sta     ,-u
+A7F7 301F                             leax    -1,x
+A7F9 1F20             us_ft           tfr     y,d             ; התאמה לרוחב L. B = האורך
+A7FB 3410                             pshs    x
+A7FD A3E1                             subd    ,s++
+A7FF D1D9                             cmpb    USL
+A801 2332                             bls     us_fit
+A803 A684                             lda     ,x              ; מסירים מילוי מוביל (רווח או *: רק תו המילוי יכול להופיע)
+A805 91D4                             cmpa    USF
+A807 2604                             bne     8F
+A809 3001                             leax    1,x
+A80B 20EC                             bra     us_ft
+A80D 96D8             8               lda     USD             ; אפס לפני נקודה וספרת שבר: מסירים, הסימן וה-$ נשארים
+A80F 4A                               deca
+A810 2B1F                             bmi     us_pct
+A812 A63F                             lda     -1,y
+A814 8130                             cmpa    #'0
+A816 2619                             bne     us_pct
+A818 A63E                             lda     -2,y            ; לפניו ספרה: לא (שאר התווים האפשריים קטנים מ-'0')
+A81A 8130                             cmpa    #'0
+A81C 2413                             bhs     us_pct
+A81E 313F                             leay    -1,y
+A820 20D7                             bra     us_ft
+                      ; us_digi: הספרה במקום B לתור ב-Y, ו-B עולה. מחוץ ל-0..8 = '0' (X נשאר)
+A822 8630             us_digi         lda     #'0
+A824 C109                             cmpb    #9
+A826 2405                             bhs     1F
+A828 CE02DD                           ldu     #USDG
+A82B A6C5                             lda     b,u
+A82D A7A0             1               sta     ,y+
+A82F 5C                               incb
+A830 39                               rts
+A831 8625             us_pct          lda     #'%             ; עדיין רחב: % לפני
+A833 A782                             sta     ,-x
+                      ; us_fit: מוסיפים לתור: נקודה ו-D ספרות שבר, מעריך (E, סימן, שתי ספרות), סימן נגרר. ואז הכול למסך
+A835 D6D8             us_fit          ldb     USD
+A837 2B10                             bmi     3F
+A839 862E                             lda     #'.
+A83B A7A0                             sta     ,y+
+A83D D7D1                             stb     USN
+A83F D6D0                             ldb     USP
+A841 0AD1             2               dec     USN
+A843 2B04                             bmi     3F
+A845 8DDB                             bsr     us_digi
+A847 20F8                             bra     2B
+A849 96D7             3               lda     USFLG
+A84B 8540                             bita    #$40
+A84D 271A                             beq     5F
+A84F 8645                             lda     #'E
+A851 A7A0                             sta     ,y+
+A853 862B                             lda     #'+
+A855 D6D2                             ldb     USX
+A857 2A03                             bpl     4F
+A859 50                               negb
+A85A 862D                             lda     #'-
+A85C A7A0             4               sta     ,y+
+A85E 862F                             lda     #'0-1
+A860 4C               41              inca
+A861 C00A                             subb    #10
+A863 24FB                             bcc     41B
+A865 CB3A                             addb    #'0+10
+A867 EDA1                             std     ,y++            ; עשרות ואחדות
+A869 96D7             5               lda     USFLG           ; סימן נגרר. - נגרר בחיובי: רווח (בכוכביות: כלום, קורא)
+A86B 8530                             bita    #$30
+A86D 2708                             beq     6F
+A86F 96CF                             lda     USSG
+A871 812A                             cmpa    #'*
+A873 2702                             beq     6F
+A875 A7A0                             sta     ,y+
+A877 6FA4             6               clr     ,y
+A879 1600AE                           lbra    puts
+A87C                                  include "io.s"
                       ; Dragon 1982 BASIC — ניסוי שלב 1: חומרה, מסך ומקלדת.
                       ; מועתק מ-rom/src/boot.s (קוד שלנו, נכתב מאפס), בלי חלקי המפרש. משתני העבודה הוזזו לאזור $03EA-$03FC,
                       ; שהספרים מסמנים כפנוי, כדי לא לדרוך על הכתובות הקבועות של ה-Dragon.
-AA21                  hw_init
+A87C                  hw_init
                                       ; PIA0: A = שורות המקלדת (קלט), B = עמודות (פלט)
-AA21 8EFF00                           ldx     #PIA0
-AA24 C604                             ldb     #$04            ; CR: גישה לנתונים
-AA26 6F01                             clr     1,x             ; CRA: גישה ל-DDR
-AA28 6F84                             clr     ,x              ; DDRA: הכול קלט
-AA2A E701                             stb     1,x             ; CRA: חזרה לנתונים
-AA2C 6F03                             clr     3,x
-AA2E 86FF                             lda     #$ff
-AA30 A702                             sta     2,x             ; DDRB: הכול פלט
-AA32 E703                             stb     3,x
+A87C 8EFF00                           ldx     #PIA0
+A87F C604                             ldb     #$04            ; CR: גישה לנתונים
+A881 6F01                             clr     1,x             ; CRA: גישה ל-DDR
+A883 6F84                             clr     ,x              ; DDRA: הכול קלט
+A885 E701                             stb     1,x             ; CRA: חזרה לנתונים
+A887 6F03                             clr     3,x
+A889 86FF                             lda     #$ff
+A88B A702                             sta     2,x             ; DDRB: הכול פלט
+A88D E703                             stb     3,x
                                       ; PIA1: A = ה-DAC בביטים 2-7, ומדפסת בביט 1 (פלט); ביט 0 קלט הקלטת
-AA34 8EFF20                           ldx     #PIA1
-AA37 6F01                             clr     1,x
-AA39 86FE                             lda     #$fe
-AA3B A784                             sta     ,x
-AA3D E701                             stb     1,x
+A88F 8EFF20                           ldx     #PIA1
+A892 6F01                             clr     1,x
+A894 86FE                             lda     #$fe
+A896 A784                             sta     ,x
+A898 E701                             stb     1,x
                                       ; PIA1: B = מצב ה-VDG (ביטים 3-7 פלט)
-AA3F 6F03                             clr     3,x
-AA41 86F8                             lda     #$f8
-AA43 A702                             sta     2,x
-AA45 E703                             stb     3,x
+A89A 6F03                             clr     3,x
+A89C 86F8                             lda     #$f8
+A89E A702                             sta     2,x
+A8A0 E703                             stb     3,x
                                       ; ממשיכים ב-txtmode: מצב טקסט, ערכת צבעים 0; SAM: מצב 0, המסך ב-$0400
                       ; txtmode: מצב טקסט (קורא: SAMALP). ב-$FF22 נשארים 3 הביטים התחתונים; SAM: מצב 0, המסך ב-$0400
-AA47 3412             txtmode         pshs    a,x
-AA49 B6FF22                           lda     PIA1+2
-AA4C 8407                             anda    #$07
-AA4E B7FF22                           sta     PIA1+2
-AA51 8EFFD4                           ldx     #SAM+20 ; לפי הסדר שבמקור: $FFD2 $FFD0 $FFCE $FFCC $FFCA $FFC9 $FFC6 $FFC4 $FFC2 $FFC0
-AA54 301E             1               leax    -2,x
-AA56 8CFFC8                           cmpx    #SAM+8          ; במקום F1=0 ($FFC8): F1=1 ($FFC9)
-AA59 2604                             bne     2F
-AA5B A701                             sta     1,x
-AA5D 2002                             bra     3F
-AA5F A784             2               sta     ,x
-AA61 8CFFC0           3               cmpx    #SAM
-AA64 26EE                             bne     1B
-AA66 3592                             puls    a,x,pc
+A8A2 3412             txtmode         pshs    a,x
+A8A4 B6FF22                           lda     PIA1+2
+A8A7 8407                             anda    #$07
+A8A9 B7FF22                           sta     PIA1+2
+A8AC 8EFFD4                           ldx     #SAM+20 ; לפי הסדר שבמקור: $FFD2 $FFD0 $FFCE $FFCC $FFCA $FFC9 $FFC6 $FFC4 $FFC2 $FFC0
+A8AF 301E             1               leax    -2,x
+A8B1 8CFFC8                           cmpx    #SAM+8          ; במקום F1=0 ($FFC8): F1=1 ($FFC9)
+A8B4 2604                             bne     2F
+A8B6 A701                             sta     1,x
+A8B8 2002                             bra     3F
+A8BA A784             2               sta     ,x
+A8BC 8CFFC0           3               cmpx    #SAM
+A8BF 26EE                             bne     1B
+A8C1 3592                             puls    a,x,pc
                       ; ---------- מסך ----------
-AA68 8E0400           cls             ldx     #SCREEN
+A8C3 8E0400           cls             ldx     #SCREEN
                       ; clrto: הסמן ב-X, ומשם עד סוף המסך רווחים (גם scroll)
-AA6B 9F88             clrto           stx     CURSOR
-AA6D CC6060                           ldd     #$6060          ; רווח (ירוק)
-AA70 ED81             1               std     ,x++
-AA72 8C0600                           cmpx    #SCREND
-AA75 25F9                             blo     1B
-AA77 39                               rts
+A8C6 9F88             clrto           stx     CURSOR
+A8C8 CC6060                           ldd     #$6060          ; רווח (ירוק)
+A8CB ED81             1               std     ,x++
+A8CD 8C0600                           cmpx    #SCREND
+A8D0 25F9                             blo     1B
+A8D2 39                               rts
                       
                       ; putc: התו ב-A למסך במקום הסמן (קורא: docs/DRAGON-SPEC-SCREEN.md, סעיף 3)
                       ; קודם חוזרים למצב טקסט (SAMALP). $20-$3F → $60-$7F; $40-$5F ו-$80-$FF כמו שהם; $60-$7F → $00-$1F (הפוך).
                       ; 13: רווחים עד סוף השורה (כולל התא הנוכחי) ושורה חדשה. 8: תא אחד אחורה ורווח. שאר תווי הבקרה: כלום
-AA78 3416             putc            pshs    a,b,x
-AA7A 8DCB                             bsr     txtmode
-AA7C 9E88                             ldx     CURSOR
-AA7E 810D                             cmpa    #13
-AA80 2732                             beq     pc_cr
-AA82 8108                             cmpa    #8
-AA84 273C                             beq     pc_bs
-AA86 8120                             cmpa    #$20
-AA88 2543                             blo     putc_done
-AA8A 8140                             cmpa    #$40
-AA8C 250A                             blo     1F
-AA8E 8160                             cmpa    #$60
-AA90 2508                             blo     2F
-AA92 8180                             cmpa    #$80
-AA94 2404                             bhs     2F
-AA96 8B60                             adda    #$60            ; $60-$7F: יחד עם ה-$40 שאחריו, פחות $60
-AA98 8B40             1               adda    #$40
-AA9A A780             2               sta     ,x+
-AA9C 9F88             pc_adv          stx     CURSOR
-AA9E 8C0600                           cmpx    #SCREND
-AAA1 252A                             blo     putc_done
+A8D3 3416             putc            pshs    a,b,x
+A8D5 8DCB                             bsr     txtmode
+A8D7 9E88                             ldx     CURSOR
+A8D9 810D                             cmpa    #13
+A8DB 2732                             beq     pc_cr
+A8DD 8108                             cmpa    #8
+A8DF 273C                             beq     pc_bs
+A8E1 8120                             cmpa    #$20
+A8E3 2543                             blo     putc_done
+A8E5 8140                             cmpa    #$40
+A8E7 250A                             blo     1F
+A8E9 8160                             cmpa    #$60
+A8EB 2508                             blo     2F
+A8ED 8180                             cmpa    #$80
+A8EF 2404                             bhs     2F
+A8F1 8B60                             adda    #$60            ; $60-$7F: יחד עם ה-$40 שאחריו, פחות $60
+A8F3 8B40             1               adda    #$40
+A8F5 A780             2               sta     ,x+
+A8F7 9F88             pc_adv          stx     CURSOR
+A8F9 8C0600                           cmpx    #SCREND
+A8FC 252A                             blo     putc_done
                                       ; גלילה: כל השורות עולות אחת, והאחרונה מתנקה
-AAA3 8E0400                           ldx     #SCREEN
-AAA6 EC8820           4               ldd     32,x
-AAA9 ED81                             std     ,x++
-AAAB 8C05E0                           cmpx    #SCREND-32
-AAAE 25F6                             blo     4B
-AAB0 8DB9                             bsr     clrto
-AAB2 2019                             bra     putc_done
-AAB4 D689             pc_cr           ldb     CURSOR+1        ; כמה תאים עד סוף השורה (1-32)
-AAB6 CAE0                             orb     #$e0            ; 32 פחות העמודה
-AAB8 50                               negb
-AAB9 8660                             lda     #$60
-AABB A780             3               sta     ,x+
-AABD 5A                               decb
-AABE 26FB                             bne     3B
-AAC0 20DA                             bra     pc_adv
-AAC2 8C0400           pc_bs           cmpx    #SCREEN
-AAC5 2706                             beq     putc_done
-AAC7 8660                             lda     #$60
-AAC9 A782                             sta     ,-x
-AACB 9F88                             stx     CURSOR
-AACD 3596             putc_done       puls    a,b,x,pc
+A8FE 8E0400                           ldx     #SCREEN
+A901 EC8820           4               ldd     32,x
+A904 ED81                             std     ,x++
+A906 8C05E0                           cmpx    #SCREND-32
+A909 25F6                             blo     4B
+A90B 8DB9                             bsr     clrto
+A90D 2019                             bra     putc_done
+A90F D689             pc_cr           ldb     CURSOR+1        ; כמה תאים עד סוף השורה (1-32)
+A911 CAE0                             orb     #$e0            ; 32 פחות העמודה
+A913 50                               negb
+A914 8660                             lda     #$60
+A916 A780             3               sta     ,x+
+A918 5A                               decb
+A919 26FB                             bne     3B
+A91B 20DA                             bra     pc_adv
+A91D 8C0400           pc_bs           cmpx    #SCREEN
+A920 2706                             beq     putc_done
+A922 8660                             lda     #$60
+A924 A782                             sta     ,-x
+A926 9F88                             stx     CURSOR
+A928 3596             putc_done       puls    a,b,x,pc
                       
                       ; puts: מחרוזת ב-X שמסתיימת ב-0
-AACF A680             puts            lda     ,x+
-AAD1 2704                             beq     1F
-AAD3 8DA3                             bsr     putc
-AAD5 20F8                             bra     puts
-AAD7 39               1               rts
+A92A A680             puts            lda     ,x+
+A92C 2704                             beq     1F
+A92E 8DA3                             bsr     putc
+A930 20F8                             bra     puts
+A932 39               1               rts
                       
                       
                       ; ---------- מקלדת ----------
                       ; מטריצת המקלדת של ה-Dragon: עמודה = ביט ב-PIA0 B (פלט, 0 = נסרקת), שורה = ביט ב-PIA0 A (קלט, 0 = לחוץ)
                       ; שורה 0: 0-7, שורה 1: 8 9 : ; , - . /, שורה 2: @ A-G, שורה 3: H-O, שורה 4: P-W,
                       ; שורה 5: X Y Z ↑ ↓ ← → רווח, שורה 6: ENTER CLEAR BREAK, ו-SHIFT בעמודה 7
-AAD8 3031323334353637 KEYMAP          fcc     "01234567"
-AAE0 38393A3B2C2D2E2F                 fcc     "89:;,-./"
-AAE8 4041424344454647                 fcc     "@ABCDEFG"
-AAF0 48494A4B4C4D4E4F                 fcc     "HIJKLMNO"
-AAF8 5051525354555657                 fcc     "PQRSTUVW"
-AB00 58595A5E0A080920                 fcb     'X,'Y,'Z,$5e,$0a,$08,$09,$20
-AB08 0D0C030000000000                 fcb     13,12,3,0,0,0,0,0
-AB10 3021222324252627 SHIFTED         fcc     "0!\"#$%&'"             ; SHIFT על 0-7
-AB18 28292A2B3C3D3E3F                 fcc     "()*+<=>?"                      ; SHIFT על השורה השנייה
+A933 3031323334353637 KEYMAP          fcc     "01234567"
+A93B 38393A3B2C2D2E2F                 fcc     "89:;,-./"
+A943 4041424344454647                 fcc     "@ABCDEFG"
+A94B 48494A4B4C4D4E4F                 fcc     "HIJKLMNO"
+A953 5051525354555657                 fcc     "PQRSTUVW"
+A95B 58595A5E0A080920                 fcb     'X,'Y,'Z,$5e,$0a,$08,$09,$20
+A963 0D0C030000000000                 fcb     13,12,3,0,0,0,0,0
+A96B 3021222324252627 SHIFTED         fcc     "0!\"#$%&'"             ; SHIFT על 0-7
+A973 28292A2B3C3D3E3F                 fcc     "()*+<=>?"                      ; SHIFT על השורה השנייה
                       
                       ; keyindex: סריקה מלאה. מחזיר ב-A את התו של מקש שנלחץ עכשיו (לא היה לחוץ בסריקה הקודמת), או 0.
                       ; משווים כל עמודה לסריקה הקודמת (KPREV), כך שמקש חדש נקלט גם כשהקודם עדיין לחוץ (הקלדה מהירה)
-AB20 3434             keyindex        pshs    b,x,y
-AB22 108EAAD8                         ldy     #KEYMAP
-AB26 7F03F2                           clr     KFOUND          ; 0 = אין; אחרת האינדקס בטבלה + 1
-AB29 5F                               clrb                    ; עמודה
-AB2A 8601             ki_col          lda     #1
-AB2C 3404                             pshs    b
-AB2E 5D                               tstb
-AB2F 2704                             beq     2F
-AB31 48               1               lsla
-AB32 5A                               decb
-AB33 26FC                             bne     1B
-AB35 43               2               coma
-AB36 B7FF02                           sta     PIA0+2
-AB39 3504                             puls    b
-AB3B B6FF00                           lda     PIA0
-AB3E 43                               coma
-AB3F 847F                             anda    #$7f            ; השורות הלחוצות עכשיו
-AB41 8E03EA                           ldx     #KPREV
-AB44 3402                             pshs    a
-AB46 A685                             lda     b,x
-AB48 43                               coma
-AB49 A4E4                             anda    ,s              ; חדש = עכשיו וגם לא קודם
-AB4B B703F3                           sta     KNEW
-AB4E 3502                             puls    a
-AB50 A785                             sta     b,x             ; לסריקה הבאה
-AB52 C103                             cmpb    #3
-AB54 2508                             blo     3F
-AB56 B603F3                           lda     KNEW            ; שורה 6 היא תו רק בעמודות 0-2 (ENTER, CLEAR, BREAK). SHIFT לא
-AB59 843F                             anda    #$3f
-AB5B B703F3                           sta     KNEW
-AB5E 7D03F2           3               tst     KFOUND
-AB61 2623                             bne     ki_next
-AB63 B603F3                           lda     KNEW
-AB66 271E                             beq     ki_next
-AB68 7F03F4                           clr     KROW            ; השורה הנמוכה שנלחצה
-AB6B 44               4               lsra
-AB6C 2505                             bcs     5F
-AB6E 7C03F4                           inc     KROW
-AB71 20F8                             bra     4B
-AB73 F703F5           5               stb     KCOL
-AB76 B603F4                           lda     KROW
-AB79 C608                             ldb     #8
-AB7B 3D                               mul
-AB7C FB03F5                           addb    KCOL
-AB7F 5C                               incb
-AB80 F703F2                           stb     KFOUND
-AB83 F603F5                           ldb     KCOL
-AB86 5C               ki_next         incb
-AB87 C108                             cmpb    #8
-AB89 259F                             blo     ki_col
-AB8B F603F2                           ldb     KFOUND
-AB8E 2722                             beq     ki_none
-AB90 5A                               decb
-AB91 A6A5                             lda     b,y             ; התו
-AB93 271D                             beq     ki_none
-AB95 3402                             pshs    a
-AB97 B603F1                           lda     KPREV+7         ; SHIFT לחוץ? (עמודה 7, שורה 6)
-AB9A 8540                             bita    #$40
-AB9C 3502                             puls    a
-AB9E 2713                             beq     ki_out
-ABA0 C110                             cmpb    #16
-ABA2 2507                             blo     1F
-ABA4 815E                             cmpa    #$5e            ; SHIFT+↑ = $5F (ב-EDIT: יציאה ממצב הוספה)
-ABA6 260B                             bne     ki_out
-ABA8 4C                               inca
-ABA9 2008                             bra     ki_out
-ABAB 8EAB10           1               ldx     #SHIFTED
-ABAE A685                             lda     b,x
-ABB0 2001                             bra     ki_out
-ABB2 4F               ki_none         clra
-ABB3 35B4             ki_out          puls    b,x,y,pc
+A97B 3434             keyindex        pshs    b,x,y
+A97D 108EA933                         ldy     #KEYMAP
+A981 7F03F2                           clr     KFOUND          ; 0 = אין; אחרת האינדקס בטבלה + 1
+A984 5F                               clrb                    ; עמודה
+A985 8601             ki_col          lda     #1
+A987 3404                             pshs    b
+A989 5D                               tstb
+A98A 2704                             beq     2F
+A98C 48               1               lsla
+A98D 5A                               decb
+A98E 26FC                             bne     1B
+A990 43               2               coma
+A991 B7FF02                           sta     PIA0+2
+A994 3504                             puls    b
+A996 B6FF00                           lda     PIA0
+A999 43                               coma
+A99A 847F                             anda    #$7f            ; השורות הלחוצות עכשיו
+A99C 8E03EA                           ldx     #KPREV
+A99F 3402                             pshs    a
+A9A1 A685                             lda     b,x
+A9A3 43                               coma
+A9A4 A4E4                             anda    ,s              ; חדש = עכשיו וגם לא קודם
+A9A6 B703F3                           sta     KNEW
+A9A9 3502                             puls    a
+A9AB A785                             sta     b,x             ; לסריקה הבאה
+A9AD C103                             cmpb    #3
+A9AF 2508                             blo     3F
+A9B1 B603F3                           lda     KNEW            ; שורה 6 היא תו רק בעמודות 0-2 (ENTER, CLEAR, BREAK). SHIFT לא
+A9B4 843F                             anda    #$3f
+A9B6 B703F3                           sta     KNEW
+A9B9 7D03F2           3               tst     KFOUND
+A9BC 2623                             bne     ki_next
+A9BE B603F3                           lda     KNEW
+A9C1 271E                             beq     ki_next
+A9C3 7F03F4                           clr     KROW            ; השורה הנמוכה שנלחצה
+A9C6 44               4               lsra
+A9C7 2505                             bcs     5F
+A9C9 7C03F4                           inc     KROW
+A9CC 20F8                             bra     4B
+A9CE F703F5           5               stb     KCOL
+A9D1 B603F4                           lda     KROW
+A9D4 C608                             ldb     #8
+A9D6 3D                               mul
+A9D7 FB03F5                           addb    KCOL
+A9DA 5C                               incb
+A9DB F703F2                           stb     KFOUND
+A9DE F603F5                           ldb     KCOL
+A9E1 5C               ki_next         incb
+A9E2 C108                             cmpb    #8
+A9E4 259F                             blo     ki_col
+A9E6 F603F2                           ldb     KFOUND
+A9E9 2722                             beq     ki_none
+A9EB 5A                               decb
+A9EC A6A5                             lda     b,y             ; התו
+A9EE 271D                             beq     ki_none
+A9F0 3402                             pshs    a
+A9F2 B603F1                           lda     KPREV+7         ; SHIFT לחוץ? (עמודה 7, שורה 6)
+A9F5 8540                             bita    #$40
+A9F7 3502                             puls    a
+A9F9 2713                             beq     ki_out
+A9FB C110                             cmpb    #16
+A9FD 2507                             blo     1F
+A9FF 815E                             cmpa    #$5e            ; SHIFT+↑ = $5F (ב-EDIT: יציאה ממצב הוספה)
+AA01 260B                             bne     ki_out
+AA03 4C                               inca
+AA04 2008                             bra     ki_out
+AA06 8EA96B           1               ldx     #SHIFTED
+AA09 A685                             lda     b,x
+AA0B 2001                             bra     ki_out
+AA0D 4F               ki_none         clra
+AA0E 35B4             ki_out          puls    b,x,y,pc
                       
                       ; inkey: מקש בלי לחכות (INKEY$): מהתור, או מקש שנלחץ עכשיו. אין: A=0
-ABB5 DCFA             inkey           ldd     KQCNT
-ABB7 260D                             bne     gk_pop
-ABB9 16FF64                           lbra    keyindex
+AA10 DCFA             inkey           ldd     KQCNT
+AA12 260D                             bne     gk_pop
+AA14 16FF64                           lbra    keyindex
                       
                       ; getkey: מחכה למקש, מחזיר את התו ב-A. קודם תור הבדיקות (KEYQ), אחר כך המקלדת
-ABBC 3414             getkey          pshs    b,x
-ABBE DCFA             gk_loop         ldd     KQCNT
-ABC0 2714                             beq     gk_scan
-ABC2 8D02                             bsr     gk_pop
-ABC4 2017                             bra     gk_got
+AA17 3414             getkey          pshs    b,x
+AA19 DCFA             gk_loop         ldd     KQCNT
+AA1B 2714                             beq     gk_scan
+AA1D 8D02                             bsr     gk_pop
+AA1F 2017                             bra     gk_got
                       ; gk_pop: התו הבא בתור
-ABC6 3414             gk_pop          pshs    b,x
-ABC8 9EFA                             ldx     KQCNT
-ABCA 301F                             leax    -1,x
-ABCC 9FFA                             stx     KQCNT
-ABCE 9EF8                             ldx     KQPTR
-ABD0 A680                             lda     ,x+
-ABD2 9FF8                             stx     KQPTR
-ABD4 3594                             puls    b,x,pc
+AA21 3414             gk_pop          pshs    b,x
+AA23 9EFA                             ldx     KQCNT
+AA25 301F                             leax    -1,x
+AA27 9FFA                             stx     KQCNT
+AA29 9EF8                             ldx     KQPTR
+AA2B A680                             lda     ,x+
+AA2D 9FF8                             stx     KQPTR
+AA2F 3594                             puls    b,x,pc
                       ; לולאת ההמתנה (קורא): הבהוב (עם השהיה), סריקה, ושוב. מקש: $60 בתא הסמן, ורק אז הוא חוזר
-ABD6 8D0D             gk_scan         bsr     blink
-ABD8 17FF45                           lbsr    keyindex        ; Z לפי A
-ABDB 27E1                             beq     gk_loop
-ABDD 9E88             gk_got          ldx     CURSOR
-ABDF C660                             ldb     #$60
-ABE1 E784                             stb     ,x
-ABE3 3594                             puls    b,x,pc
+AA31 8D0D             gk_scan         bsr     blink
+AA33 17FF45                           lbsr    keyindex        ; Z לפי A
+AA36 27E1                             beq     gk_loop
+AA38 9E88             gk_got          ldx     CURSOR
+AA3A C660                             ldb     #$60
+AA3C E784                             stb     ,x
+AA3E 3594                             puls    b,x,pc
                       ; blink (קורא): CBLCNT יורד; ב-0: ביט $40 בתא הסמן מתהפך, והמונה חוזר ל-50. אחר כך השהיה: 1118 סיבובים של 8 מחזורים
-ABE5 3412             blink           pshs    a,x
-ABE7 0A8F                             dec     CBLCNT
-ABE9 260C                             bne     1F
-ABEB 9E88                             ldx     CURSOR
-ABED A684                             lda     ,x
-ABEF 8840                             eora    #$40
-ABF1 A784                             sta     ,x
-ABF3 8632                             lda     #50
-ABF5 978F                             sta     CBLCNT
-ABF7 8E045E           1               ldx     #$045e
-ABFA 301F             2               leax    -1,x
-ABFC 26FC                             bne     2B
-ABFE 3592                             puls    a,x,pc
-AC00                                  include "testq.s"
-AC00 00               testq           fcb     0
+AA40 3412             blink           pshs    a,x
+AA42 0A8F                             dec     CBLCNT
+AA44 260C                             bne     1F
+AA46 9E88                             ldx     CURSOR
+AA48 A684                             lda     ,x
+AA4A 8840                             eora    #$40
+AA4C A784                             sta     ,x
+AA4E 8632                             lda     #50
+AA50 978F                             sta     CBLCNT
+AA52 8E045E           1               ldx     #$045e
+AA55 301F             2               leax    -1,x
+AA57 26FC                             bne     2B
+AA59 3592                             puls    a,x,pc
+AA5B                                  include "testq.s"
+AA5B 00               testq           fcb     0
                       
-AC01 B6FF02           irq             lda     PIA0+2
-AC04 BE0112                           ldx     TICKS
-AC07 3001                             leax    1,x
-AC09 BF0112                           stx     TICKS
-AC0C 3B                               rti
+AA5C B6FF02           irq             lda     PIA0+2
+AA5F BE0112                           ldx     TICKS
+AA62 3001                             leax    1,x
+AA64 BF0112                           stx     TICKS
+AA67 3B                               rti
                       
 BFF2                                  org     $bff2
-BFF2 800080008000AC01                 fdb     reset,reset,reset,irq,reset,reset,reset
+BFF2 800080008000AA5C                 fdb     reset,reset,reset,irq,reset,reset,reset
      800080008000
