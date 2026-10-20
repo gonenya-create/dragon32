@@ -11,7 +11,7 @@ SCRBAS		equ	$bc		; קורא: הבית הגבוה של בסיס הדפים, $06
 ; ---------- CLEAR [n[,m]] ----------
 clear		beq	clr_go		; בלי מספרים: רק ניקוי
 		lbsr	frmevl
-		lbsr	getadr		; n: 0-65535
+		bsr	getadr		; n: 0-65535
 		pshs	d
 		ldd	MEMSIZ
 		pshs	d		; [0] = MEMSIZ החדש, [2] = n
@@ -19,7 +19,7 @@ clear		beq	clr_go		; בלי מספרים: רק ניקוי
 		beq	1F
 		lbsr	chkcom
 		lbsr	frmevl
-		lbsr	getadr
+		bsr	getadr
 		subd	#1		; MEMSIZ = m-1 (קורא)
 		bcs	mem_om		; m = 0
 		cmpd	ENDMEM		; מעל ה-RAM

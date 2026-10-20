@@ -26,66 +26,16 @@ trace		tst	TRCFLG
 		puls	d
 9		rts
 
-; ---------- סיום של DEL / RENUM / EDIT: משתנים מתאפסים, מחסנית חדשה, ו-OK ----------
-edfin		lbsr	lnkprg
-		lbsr	runc
-		lds	STKTOP
-		clr	,-s
-		lbra	main_ok
-
-; ---------- DEL ----------
-; DEL n, n-m, -m, n-, -. בלי כלום: ?FC. שורות שלא קיימות: בלי שגיאה (קורא)
-del_st		lbeq	err_fc
-		ldx	TXTPTR
-		lbsr	lrange
-		pshs	d
-		lbsr	skipsp		; אחרי הטווח: רק סוף פקודה
-		beq	1F
-		cmpa	#':
-		lbne	err_sn
-1		puls	d
-		lbsr	fndlin		; Y = השורה הראשונה במחיקה
-		tfr	y,x
-2		ldd	,x		; X = הראשונה שלא נמחקת
-		beq	3F
-		ldd	2,x
-		cmpd	LEND
-		bhi	3F
-		ldx	,x
-		bra	2B
-3		cmpx	VARTAB		; מזיזים את [X..VARTAB) ל-Y
-		bhs	4F
-		lda	,x+
-		sta	,y+
-		bra	3B
-4		sty	VARTAB
-		bra	edfin
-
 ; ---------- LINE INPUT ["הנחיה";] משתנה$ ----------
 ; בלי "?" ובלי רווח. במצב ישיר: ?ID. כל השורה נשמרת (פסיקים, מירכאות, רווחים). משתנה מספרי: ?TM אחרי הקלט
 line_st		cmpa	#$89		; INPUT
 		lbne	err_sn		; LINE של הגרפיקה: בחלק 3
-		lbsr	errdir
 		jsr	<chrget
-		cmpa	#'"
-		bne	1F
-		ldx	TXTPTR
-		leax	1,x
-		lbsr	strlit
-		ldx	STRNG2
-		stx	TXTPTR
-		lda	#';
-		lbsr	synchk
-		lbsr	strprt
-1		clr	IKEYIM
+		lbsr	errdir		; ?ID, וההנחיה
+		clr	IKEYIM
 		lbsr	getline
-		bcc	2F
-		leas	2,s		; BREAK: עצירה, ו-CONT חוזר לפקודה (קורא)
-		ldx	TXTBEG
-		stx	TXTPTR
-		orcc	#1
-		lbra	stpend
-2		clrb
+		lbcs	inbrk		; BREAK (C=1): עצירה, ו-CONT חוזר לפקודה (קורא)
+		clrb
 		lbsr	ptrget
 		tst	VALTYP
 		lbeq	err_tm
@@ -97,6 +47,42 @@ line_st		cmpa	#$89		; INPUT
 		lbsr	strlt2
 		lbra	letasg
 
+; ---------- DEL ----------
+; DEL n, n-m, -m, n-, -. בלי כלום: ?FC. שורות שלא קיימות: בלי שגיאה (קורא)
+del_st		lbeq	err_fc
+		ldx	TXTPTR
+		lbsr	lrange
+		pshs	d
+		bsr	isend		; אחרי הטווח: רק סוף פקודה
+		bne	rn_sn
+		puls	d
+		lbsr	fndlin		; U = השורה הראשונה במחיקה
+		tfr	y,u
+		ldd	LEND		; X = הראשונה שלא נמחקת: מחפשים מ-U את LEND, ואם יש — זו שאחריה
+		lbsr	fndlnc
+		bcc	1F
+		ldy	,y
+1		tfr	y,x
+		lbsr	rn_down		; מזיזים את [X..VARTAB) ל-U
+; ---------- סיום של DEL / RENUM / EDIT: משתנים מתאפסים, מחסנית חדשה, ו-OK ----------
+edfin		lbsr	lnkprg
+		lbsr	runc
+edok		lds	STKTOP
+		clr	,-s
+		lbra	main_ok
+; isend: Z=1 בסוף פקודה (0 או נקודתיים), A = התו
+isend		lbsr	skipsp
+		beq	9F
+		cmpa	#':
+9		rts
+; rn_num: מספר שורה (חייבת להיות ספרה, אחרת ?SN)
+rn_num		lbsr	skipsp
+		suba	#'0
+		cmpa	#9
+		bhi	rn_sn
+		lbra	linget
+rn_sn		lbra	err_sn
+
 ; ---------- RENUM [חדש][,[סף][,צעד]] ----------
 ; ברירות מחדל 10, 0, 10 (קורא). הסדר: ניקוי משתנים, פרמטרים, בדיקות (?FC), הפניות, מספרי השורות, OK.
 ; הפניות: אחרי GOTO/GO TO, GOSUB/GO SUB, THEN, ELSE, ורשימות עם פסיקים. בכל התוכנית.
@@ -105,164 +91,83 @@ renum		lbsr	runc
 		ldd	#10
 		std	RNNEW
 		std	RNSTEP
-		clra
-		clrb
-		std	RNOLD
+		clr	RNOLD
+		clr	RNOLD+1
 		ldx	TXTPTR
-		bsr	isend
-		beq	rn_go
-		cmpa	#',
-		beq	1F
-		bsr	rn_num
-		std	RNNEW
-		bsr	isend
-		beq	rn_go
-1		cmpa	#',
-		lbne	err_sn
-		leax	1,x
-		bsr	isend
+		ldy	#RNNEW		; קודם החדש, ואחריו הסף (Y: גם לא 0 בשביל rn_map)
+1		bsr	isend
 		beq	rn_go
 		cmpa	#',
 		beq	2F
 		bsr	rn_num
-		std	RNOLD
+		std	,y
 		bsr	isend
 		beq	rn_go
-2		cmpa	#',
-		lbne	err_sn
-		leax	1,x
-		bsr	rn_num
+		cmpa	#',
+		bne	rn_sn
+2		leax	1,x
+		leay	-4,y
+		cmpy	#RNOLD
+		beq	1B
+		bsr	rn_num		; אחרי שני פסיקים: הצעד חובה
 		std	RNSTEP
 		bsr	isend
-		lbne	err_sn
-		bra	rn_go
-; isend: Z=1 בסוף פקודה (0 או נקודתיים), A = התו
-isend		lbsr	skipsp
-		beq	9F
-		cmpa	#':
-9		rts
-; rn_num: מספר שורה (חייבת להיות ספרה, אחרת ?SN)
-rn_num		lbsr	skipsp
-		cmpa	#'0
-		lblo	err_sn
-		cmpa	#'9
-		lbhi	err_sn
-		lbra	linget
-
-rn_go		ldd	RNSTEP
-		lbeq	err_fc
-		ldd	#$ffff		; השורה הגבוהה שמתחת לסף ($FFFF: אין)
-		pshs	d
-		ldy	#0		; כמה שורות ממוספרות (Y: ל-LEAU אין דגל Z)
-		ldx	TXTTAB
-1		ldd	,x
-		beq	3F
-		ldd	2,x
-		cmpd	RNOLD
-		bhs	2F
-		std	,s
-		ldx	,x
-		bra	1B
-2		leay	1,y
-		ldx	,x
-		bra	1B
-3		puls	d
-		cmpd	#$ffff
-		beq	4F
-		cmpd	RNNEW		; החדש חייב להיות מעל מה שלא זז
-		lbhs	err_fc
-4		cmpy	#0
-		beq	6F
-		ldd	RNNEW
-5		leay	-1,y
-		beq	51F
-		addd	RNSTEP
-		lbcs	err_fc
-		bra	5B
-51		cmpd	#63999
-		lbhi	err_fc
-6		ldx	TXTTAB		; ההפניות. הולכים לפי ה-0 שבסוף כל שורה (הקישורים מתיישנים כשהטקסט זז)
+		bne	rn_sn
+rn_go		ldd	#$ffff		; הבדיקות: מעבר על כל השורות (אין שורה $FFFF), בלי לשנות
+		lbsr	rn_map
+		ldx	TXTTAB		; ההפניות. הולכים לפי ה-0 שבסוף כל שורה (הקישורים מתיישנים כשהטקסט זז)
 rl_line		ldd	,x
-		lbeq	rl_hdr
+		beq	rl_hdr
 		stx	RNPTR
 		leax	4,x
-rl_scan		lda	,x+
+rl_scan		lbsr	tkget		; בלי מרכאות ובלי הבית שאחרי $FF
 		beq	rl_line
-		cmpa	#$ff		; פונקציה: הבית הבא הוא חלק ממנה
-		bne	1F
-		leax	1,x
-		bra	rl_scan
-1		cmpa	#'"
-		bne	2F
-11		lda	,x+
-		beq	rl_line
-		cmpa	#'"
-		bne	11B
-		bra	rl_scan
-2		cmpa	#$bf		; THEN
+		cmpa	#$bf		; THEN
 		beq	rl_ref
 		cmpa	#$84		; ELSE
 		beq	rl_ref
 		cmpa	#$81		; GO, ואחריו TO או SUB (אולי עם רווחים)
 		bne	rl_scan
 		lbsr	skipsp
-		cmpa	#$bc
-		beq	3F
-		cmpa	#$bd
-		bne	rl_scan
-3		leax	1,x
+		suba	#$bc
+		cmpa	#1
+		bhi	rl_scan
+		leax	1,x
 rl_ref		lbsr	skipsp
-		cmpa	#'0
-		blo	rl_scan
-		cmpa	#'9
+		suba	#'0
+		cmpa	#9
 		bhi	rl_scan
 		pshs	x		; P = הספרה הראשונה
-		clra
-		clrb
-		pshs	d		; הערך
-		tfr	x,y		; Q = אחרי הספרה האחרונה
-5		lda	,x
+		ldu	#0		; הערך (מודולו 65536)
+5		lda	,x+
 		cmpa	#$20		; רווח בתוך המספר: נעלם (קורא)
-		beq	6F
-		cmpa	#'0
-		blo	7F
-		cmpa	#'9
-		bhi	7F
+		beq	5B
 		suba	#'0
+		cmpa	#9
+		bhi	7F
+		tfr	x,y		; Q = אחרי הספרה האחרונה
 		pshs	a
-		ldd	1,s
-		lslb
-		rola
-		std	1,s
+		tfr	u,d		; U = U*10 + הספרה
 		lslb
 		rola
 		lslb
 		rola
-		addd	1,s
-		addb	,s+
-		adca	#0
-		std	,s
-		leax	1,x
-		tfr	x,y
+		leau	d,u
+		tfr	u,d
+		leau	d,u
+		puls	a
+		leau	a,u
 		bra	5B
-6		leax	1,x
-		bra	5B
-7		tfr	y,x		; X = Q
-		puls	d		; הערך הישן
-		bsr	rn_map
-		bcs	8F
-		bsr	rn_ul
-8		lbsr	numtxt		; הספרות ב-LINBUF, B = כמה
+7		tfr	u,d		; הערך הישן → החדש (Y = Q, לא 0)
+		bsr	rn_mapu
+		tfr	y,x		; X = Q
+		lbsr	numtxt		; הספרות ב-FBUFFR, D = B = כמה
 		pshs	b
-		tfr	x,d
-		subd	1,s		; האורך הישן: Q-P
-		pshs	d
-		clra
-		ldb	2,s
-		subd	,s++		; ההפרש
+		addd	1,s		; כמה + P
+		pshs	x
+		subd	,s++		; ההפרש: כמה - (Q-P)
 		bsr	rn_shift
-		puls	b
-		puls	x		; P
+		puls	b,x		; כמה, ו-X = P
 		ldu	#FBUFFR
 9		lda	,u+
 		sta	,x+
@@ -270,97 +175,100 @@ rl_ref		lbsr	skipsp
 		bne	9B
 		lbsr	skipsp
 		cmpa	#',
-		lbne	rl_scan
+		bne	rl_scan
 		leax	1,x
 		bra	rl_ref
-; rn_ul: "UL x IN y" (D = x)
-rn_ul		pshs	d,x
-		leax	m_ul,pcr
+; rl_hdr: מספרי השורות עצמן (D = 0)
+rl_hdr		tfr	d,y		; Y = 0: rn_map כותב את המספרים החדשים
+		coma
+		comb
+		bsr	rn_map
+		lbra	edfin
+; rn_mapu: כמו rn_map; שורה שאין: מודפס "UL x IN y"
+rn_mapu		bsr	rn_map
+		bcs	9F
+		pshs	d
+		ldx	#m_ul
 		lbsr	puts		; puts משנה את A
 		ldd	,s
 		lbsr	prnum
-		leax	m_in,pcr
+		ldx	#m_in
 		lbsr	puts
 		ldx	RNPTR
 		ldd	2,x
 		bsr	rn_map
 		lbsr	prnum
-		lda	#13
-		lbsr	putc
-		puls	d,x,pc
+		lbsr	ed_cr
+		puls	d
+9		rts
 m_ul		fcc	"UL "
 		fcb	0
-; rn_map: D = מספר ישן → D = החדש, C=1 אם השורה קיימת (אחרת D לא משתנה)
-rn_map		pshs	d,x,u
-		ldx	TXTTAB
-		ldu	RNNEW
-1		ldd	,x
-		beq	8F
-		ldd	2,x
-		cmpd	,s
-		beq	5F
-		cmpd	RNOLD
-		blo	2F
-		tfr	u,d
-		addd	RNSTEP
-		tfr	d,u
-2		leax	4,x
-3		tst	,x+
-		bne	3B
-		bra	1B
-5		cmpd	RNOLD
-		blo	6F
-		tfr	u,d
-6		std	,s
-		orcc	#1
-		puls	d,x,u,pc
-8		andcc	#$fe
-		puls	d,x,u,pc
-; rn_shift: מזיזים את [X..VARTAB) ב-D בתים (עם סימן). למעלה: ?OM אם אין מקום
+; rn_shift: מזיזים את [X..VARTAB) ב-D בתים (עם סימן; הדגלים לפי D). למעלה: ?OM אם אין מקום
 rn_shift	pshs	d,x
-		ldd	,s
 		beq	9F
+		leau	d,x
 		bmi	5F
 		addd	VARTAB
+		tfr	d,u
 		lbsr	reason
 		ldx	VARTAB
-		ldd	VARTAB
-		addd	,s
-		tfr	d,u
-		std	VARTAB
+		stu	VARTAB
 1		cmpx	2,s
 		bls	9F
 		lda	,-x
 		sta	,-u
 		bra	1B
-5		ldx	2,s
-		tfr	x,d
-		addd	,s
-		tfr	d,u
-2		cmpx	VARTAB
+5		bsr	rn_down
+9		puls	d,x,pc
+; rn_down: מזיזים את [X..VARTAB) ל-U (למטה), ו-VARTAB = הסוף החדש
+rn_down		cmpx	VARTAB
 		bhs	3F
 		lda	,x+
 		sta	,u+
-		bra	2B
+		bra	rn_down
 3		stu	VARTAB
-9		puls	d,x,pc
-; rl_hdr: מספרי השורות עצמן
-rl_hdr		ldx	TXTTAB
-		ldu	RNNEW
+		rts
+; rn_map: D = מספר ישן → D = החדש, C=1 אם השורה קיימת (אחרת D לא משתנה). משנה את X ו-U.
+; בדרך גם הבדיקות (?FC): שורה מתחת לסף חייבת להיות מתחת לחדש הראשון, ומספר חדש עד 63999.
+; Y = 0: גם כותבים את המספרים החדשים בשורות
+rn_map		pshs	d
+		ldd	RNSTEP		; צעד 0: ?FC (נבדק כבר בקריאה הראשונה)
+		beq	rn_fc
+		ldx	TXTTAB
+		ldu	RNNEW		; המספר החדש הבא (מעל 63999 אחרי גלישה)
 1		ldd	,x
-		beq	9F
+		beq	8F
 		ldd	2,x
 		cmpd	RNOLD
-		blo	2F
+		blo	3F
+		cmpd	,s		; ממוספרת מחדש: החדש
+		beq	5F
+		cmpu	#63999
+		bhi	rn_fc
+		leay	,y
+		bne	2F
 		stu	2,x
-		tfr	u,d
+2		tfr	u,d
 		addd	RNSTEP
-		tfr	d,u
-2		leax	4,x
-3		tst	,x+
-		bne	3B
+		bcc	21F
+		ora	#$fa		; גלישה: מעל 63999
+21		tfr	d,u
+		bra	4F
+3		cmpd	,s		; מתחת לסף: נשאר
+		beq	6F
+		cmpd	RNNEW
+		bhs	rn_fc
+4		leax	4,x
+41		tst	,x+
+		bne	41B
 		bra	1B
-9		lbra	edfin
+5		tfr	u,d
+6		std	,s
+		coma			; C=1
+		puls	d,pc
+8		clra			; C=0
+		puls	d,pc
+rn_fc		lbra	err_fc
 
 ; ---------- EDIT n (קורא: docs/DRAGON-SPEC-EDIT.md, סעיף 1) ----------
 EDLEN		equ	$d7		; קורא: האורך
@@ -601,8 +509,6 @@ ed_e		bsr	ed_cr		; E: שמירה בלי להדפיס את היתר
 		lds	STKTOP
 		clr	,-s
 		lbra	main		; בלי OK (קורא)
-ed_q		lds	STKTOP		; Q: יציאה בלי שמירה
-		clr	,-s
-		lbra	main_ok
+ed_q		lbra	edok		; Q: יציאה בלי שמירה
 ed_cr		lda	#13
 		lbra	putc
