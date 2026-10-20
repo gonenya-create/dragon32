@@ -46,10 +46,12 @@ KPRE		equ	$03f9		; קידומת המילה שנמצאה: 0 פקודה, $FF פו�
 LEND		equ	$03fa		; 2 בתים: סוף טווח LIST
 LASTKEY		equ	$03fc
 
-KEYQ		equ	$7a00		; רק לבדיקות: תור מקשים מוקלדים. בניסוי מחוץ לאזורים הקבועים של ה-Dragon
+KQPTR		equ	$f8		; רק לבדיקות: המקש הבא בתור המוקלד (התור עצמו ב-ROM, testq)
+KQCNT		equ	$fa		; כמה מקשים נשארו (2 הבתים ו-1 באזור הפנוי $EA-$FF, קורא)
 LINBUF		equ	$02dd		; מאגר השורה (קורא: BUF ב-$02DD)
 LINMAX		equ	249
-CRB		equ	$7b00		; הניסוי בלבד: השורה המכווצת. במקור הכיווץ נעשה בתוך המאגר
+CRB		equ	$01da		; הניסוי בלבד: השורה המכווצת, בחוצץ הקלטת (255 בתים). במקור הכיווץ נעשה
+					; בתוך המאגר; בשלב הקלטת עוברים לשיטה הזו
 STACKINI	equ	$7f36		; ספר: STKTOP אחרי ההדלקה
 
 ; ---------- הפעלה ----------
@@ -69,13 +71,9 @@ reset		orcc	#$50
 		andcc	#$ef
 		lbsr	cls
 		leax	testq,pcr	; תור הבדיקות
-		ldu	#KEYQ
-		ldb	,x
-		incb
-1		lda	,x+
-		sta	,u+
-		decb
-		bne	1B
+		ldb	,x+
+		stb	KQCNT
+		stx	KQPTR
 		ldd	#0
 		std	KPREV
 		std	KPREV+2
@@ -90,6 +88,12 @@ reset		orcc	#$50
 		std	FRETOP
 		ldd	#$7f36
 		std	STKTOP
+		ldd	#$7ffe		; קורא: גבול ה-RAM
+		std	ENDMEM
+		ldd	#$0c00		; קורא: מצב הגרפיקה בהדלקה — PMODE 0, דף 1, דפים מ-$0600
+		std	SCTOP
+		lda	#$06
+		sta	SCRBAS
 		ldd	#TEMPST
 		std	TEMPPT
 		leax	execrts,pcr	; EXEC בלי כתובת אחרי ההדלקה: אצלנו חוזר מיד (ב-Dragon: פתוח)
@@ -114,7 +118,7 @@ main		lbsr	getline
 		cmpa	#'9
 		bhi	1F
 		lbsr	storeline	; שורה עם מספר: נשמרת, בלי OK (כמו במקור)
-		lds	#STACKINI	; עריכה מנקה את המחסנית (mit: CLEARC/STKINI)
+		lds	STKTOP		; עריכה מנקה את המחסנית (mit: CLEARC/STKINI)
 		clr	,-s
 		bra	main
 1		lbsr	crunch		; פקודה ישירה: מכווצים ומבצעים (mit: MAIN, CRDONE)
@@ -165,7 +169,7 @@ err_cn		ldd	#'C*256+'N
 err_uf		ldd	#'U*256+'F
 		bra	error
 err_dv0		ldd	#'/*256+'0
-error		lds	#STACKINI	; mit: STKINI — מחסנית, זמניים, ואין המשך
+error		lds	STKTOP		; mit: STKINI — מחסנית, זמניים, ואין המשך
 		clr	,-s
 		ldx	#TEMPST
 		stx	TEMPPT
@@ -221,6 +225,9 @@ storeline	lbsr	linget		; D = מספר השורה
 		ldx	VARTAB
 		ldd	VARTAB
 		addd	,s
+		pshs	d,x		; יש מקום? אחרת ?OM לפני שמזיזים משהו (mit: REASON)
+		lbsr	reason
+		puls	d,x
 		tfr	d,u
 		std	VARTAB
 		sty	LOWTR
@@ -770,6 +777,7 @@ fntab		fcs	"SGN"
 		include	"mitstr.s"
 		include	"mitary.s"
 		include	"mitctl.s"
+		include	"mitmem.s"
 		include	"io.s"
 		include	"testq.s"
 

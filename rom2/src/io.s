@@ -183,26 +183,23 @@ ki_none		clra
 ki_out		puls	b,x,y,pc
 
 ; inkey: מקש בלי לחכות (INKEY$): מהתור, או מקש שנלחץ עכשיו. אין: A=0
-inkey		ldb	KEYQ
+inkey		ldb	KQCNT
 		bne	gk_pop
 		lbra	keyindex
 
 ; getkey: מחכה למקש, מחזיר את התו ב-A. קודם תור הבדיקות (KEYQ), אחר כך המקלדת
 getkey		pshs	b,x
-gk_loop		ldb	KEYQ
+gk_loop		ldb	KQCNT
 		beq	gk_scan
 		bsr	gk_pop
 		puls	b,x,pc
-; gk_pop: התו הראשון בתור, ומזיזים את השאר
-gk_pop		pshs	b,x
-		lda	KEYQ+1		; התו הראשון בתור, ומזיזים את השאר
-		ldx	#KEYQ+1
-1		ldb	1,x
-		stb	,x+
-		cmpx	#KEYQ+250
-		blo	1B
-		dec	KEYQ
-		puls	b,x,pc
+; gk_pop: התו הבא בתור
+gk_pop		pshs	x
+		ldx	KQPTR
+		lda	,x+
+		stx	KQPTR
+		dec	KQCNT
+		puls	x,pc
 gk_scan		lbsr	keyindex
 		tsta
 		bne	1F

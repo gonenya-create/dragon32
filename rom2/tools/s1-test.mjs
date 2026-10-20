@@ -137,5 +137,26 @@ await check('DEF FN (L-DEF-01); the parameter keeps its value outside; FN inside
 await check('FN never defined: ?UF; DEF in direct mode: ?ID', ['PRINT FNZ(1)', 'DEF FNA(X)=1'], screenHas(/\n\?UF ERROR\nOK\nDEF FNA\(X\)=1\n\?ID ERROR\nOK$/));
 await check('RUN line: starts there and clears variables (L-RUN-01)', ['10 PRINT "BAD"', '20 IF A=0 THEN PRINT "A"', 'A=7', 'RUN 20'], screenHas(/RUN 20\nA\nOK$/));
 
+console.log('stage 2 part 4: memory');
+await check('CLEAR clears values (L-CLEAR-01), and goes on to the next statement', ['10 A$="X":A=7:CLEAR:IF A=0 AND A$="" THEN PRINT "A"', 'RUN'], screenHas(/RUN\nA\nOK$/));
+await check('CLEAR 200,30000: MEMSIZ=$752F, STKTOP=$7467, FRETOP=$752F (reader, D64 values L-MEM-01)', ['CLEAR 200,30000'], r =>
+  (w(r, 0x27) === 0x752f && w(r, 0x21) === 0x7467 && w(r, 0x23) === 0x752f) || `MEMSIZ ${w(r, 0x27).toString(16)} STKTOP ${w(r, 0x21).toString(16)} FRETOP ${w(r, 0x23).toString(16)}`);
+await check('CLEAR n keeps MEMSIZ; string space is exactly n bytes (10 fit, 11 give ?OS)', ['CLEAR 10:A$="1234567890"', 'B$="X"+"Y"', 'CLEAR 10:A$="12345678901"'], r =>
+  (w(r, 0x27) === 0x7ffe && w(r, 0x21) === 0x7ffe - 10 && /\nB\$="X"\+"Y"\n\?OS ERROR\nOK\nCLEAR 10:A\$="12345678901"\n\?OS ERROR\nOK$/.test(r.screen.replace(/\n@$/, ''))) || `STKTOP ${w(r, 0x21).toString(16)} ` + r.screen.split('\n').slice(-5).join(' | '));
+await check('CLEAR too big: ?OM, nothing changes', ['CLEAR 40000', 'CLEAR 32700', 'CLEAR 200,32768'], r =>
+  (w(r, 0x21) === 0x7f36 && w(r, 0x27) === 0x7ffe && /\nCLEAR 40000\n\?OM ERROR\nOK\nCLEAR 32700\n\?OM ERROR\nOK\nCLEAR 200,32768\n\?OM ERROR\nOK$/.test(r.screen.replace(/\n@$/, ''))) || `STKTOP ${w(r, 0x21).toString(16)} ` + r.screen.split('\n').slice(-6).join(' | '));
+await check('the stack moves with CLEAR: GOSUB frame right under the new STKTOP, zero at STKTOP-1', ['10 CLEAR 1000:GOSUB 20', '20 STOP', 'RUN'], r => {
+  const t = 0x7ffe - 1000; const f = [...r.ram.subarray(t - 6, t)];
+  return (f[0] === 0xbd && f[2] === 10 && f[5] === 0) || `STKTOP ${w(r, 0x21).toString(16)} frame ${hex(f)}`;
+});
+await check('PCLEAR 1 / 8: program moves to $0C01 / $3601 with a zero before it, LIST and RUN still work (book + reader)', ['10 PRINT "HI";', '20 GOTO 40', '30 PRINT "BAD"', '40 PRINT "!"', 'PCLEAR 1', 'RUN', 'PCLEAR 8', 'RUN'], r =>
+  (w(r, 0x19) === 0x3601 && r.ram[0x3600] === 0 && w(r, 0x1b) > 0x3601 && w(r, 0x3601) > 0x3601 && /PCLEAR 1\nOK\nRUN\nHI!\nOK\nPCLEAR 8\nOK\nRUN\nHI!\nOK$/.test(r.screen.replace(/\n@$/, ''))) || `TXTTAB ${w(r, 0x19).toString(16)} ` + r.screen.split('\n').slice(-8).join(' | '));
+await check('PCLEAR inside a program: moves, clears variables, goes on (L-PCLEAR-01 without PMODE)', ['10 A=77', '20 PRINT 256*PEEK(25)+PEEK(26)', '30 PCLEAR 5', '40 PRINT "CONTINUED";A', '50 PRINT 256*PEEK(25)+PEEK(26)', 'RUN'], screenHas(/RUN\n 7681\nCONTINUED 0\n 9217\nOK$/));
+await check('memory full: a new variable gives ?OM and STREND stays under the stack', ['CLEAR 24963', 'A=1:B=1:C=1:D=1:E=1:F=1:G=1:H=1:I=1:J=1:K=1'], r =>
+  (/\?OM ERROR\nOK$/.test(r.screen.replace(/\n@$/, '')) && w(r, 0x1f) + 58 < 0x1e7b) || `STREND ${w(r, 0x1f).toString(16)} ` + r.screen.split('\n').slice(-3).join(' | '));
+await check('memory full: a long program line gives ?OM and is not stored', ['CLEAR 24963', '10 REM ' + 'X'.repeat(100), 'LIST'], r =>
+  (/\n\?OM ERROR\nOK\nLIST\nOK$/.test(r.screen.replace(/\n@$/, '')) && w(r, 0x1e01) === 0) || r.screen.split('\n').slice(-5).join(' | '));
+await check('PCLEAR 0 / 9: ?FC', ['PCLEAR 0', 'PCLEAR 9'], screenHas(/PCLEAR 0\n\?FC ERROR\nOK\nPCLEAR 9\n\?FC ERROR\nOK$/));
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

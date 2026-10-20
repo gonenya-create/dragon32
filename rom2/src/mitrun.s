@@ -128,12 +128,16 @@ stmdsp		fcb	$80
 		fdb	cont-stmdsp
 		fcb	$95
 		fdb	list_st-stmdsp
+		fcb	$96
+		fdb	clear-stmdsp
 		fcb	$97
 		fdb	new_st-stmdsp
 		fcb	$98
 		fdb	def-stmdsp
 		fcb	$a4
 		fdb	exec-stmdsp
+		fcb	$af
+		fdb	pclear-stmdsp
 		fcb	0
 
 rem		ldx	TXTPTR		; עד סוף השורה
@@ -147,7 +151,7 @@ rem		ldx	TXTPTR		; עד סוף השורה
 ; RUN [שורה]: משתנים מתאפסים, ומתחילים מהשורה הראשונה (TXTPTR = TXTTAB-1, האפס שב-$1E00) או מהשורה שצוינה
 ; (mit: RUN — CLEARC ואז GOTO)
 run		lbsr	runc
-		lds	#STACKINI
+		lds	STKTOP
 		clr	,-s		; סמן תחתית למחסנית ה-FOR (mit: STKINI)
 		lbsr	chrgot
 		beq	1F
@@ -205,7 +209,7 @@ list_st		ldx	TXTPTR		; LIST: אותה שגרה כמו במצב ישיר
 		lbsr	do_list
 		lbra	rem
 new_st		lbsr	scrtch
-		lds	#STACKINI
+		lds	STKTOP
 		clr	,-s
 		lbra	endcon
 
@@ -485,6 +489,10 @@ ptrget		pshs	b
 		rts
 7		ldx	STREND		; יוצרים: מזיזים את המערכים 7 בתים למעלה
 		leay	7,x
+		pshs	x,y		; יש מקום? (mit: REASON)
+		tfr	y,d
+		lbsr	reason
+		puls	x,y
 		sty	STREND
 8		cmpx	ARYTAB
 		bls	9F

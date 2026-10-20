@@ -311,12 +311,12 @@ cont		bne	9B
 		std	CURLIN
 		rts
 ; brkchk: בין פקודות. BREAK עוצר; מקש אחר נשמר בשביל INKEY$. קודם בדיקה מהירה: אף מקש לא לחוץ
-brkchk		ldb	KEYQ		; תור הבדיקות: רק BREAK שעומד ראשון, ורק כשתוכנית רצה (כדי לבדוק
+brkchk		ldb	KQCNT		; תור הבדיקות: רק BREAK שעומד ראשון, ורק כשתוכנית רצה (כדי לבדוק
 		beq	1F		; BREAK גם ב-INPUT, אחרי RUN שהוקלד מראש)
 		ldd	CURLIN
 		cmpd	#$ffff
 		beq	9F
-		lda	KEYQ+1
+		lda	[KQPTR]
 		cmpa	#3
 		bne	9F
 		lbsr	gk_pop
