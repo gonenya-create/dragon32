@@ -526,3 +526,109 @@ Token-table entries and dispatch addresses are extra.
 - **BREAK message:** whether the line reported after BREAK at the end of SOUND is the SOUND line or the next one. It's raised at the start of the next statement, and I believe it names the line just finished.
 - **Arrays in "=name;" and "X name;":** the normal name parser is used, so an array element like `=A(1);` may evaluate the subscript from the PLAY string. I didn't trace that path.
 - **RUN "file":** whether RUN with a file name reaches the defaults routine depends on RUN's RAM hook (the DOS). Plain RUN always does.
+
+---
+
+## 9. Follow-up answers (writer's questions)
+
+### 9.1 How a note is aborted
+
+**Where the caller's position is recorded:**
+- **No RAM address is used.** The note routine keeps the position in the CPU's **U register**.
+- Just before the note starts, U is set to point at the stack slot holding the return address to the routine that called the note. That caller is the command dispatcher for a note, or the P handler for a pause.
+- Nothing else in RAM holds this value. The tone loops never touch U.
+- When the field interrupt arrives, the CPU saves the full register set, so the saved U sits inside the interrupt frame. The frame order from the lowest address up is CC, A, B, DP, X (2 bytes), Y (2), U (2), PC (2).
+
+**What the interrupt handler does when the count expires:**
+1. It sets the count $E3–$E4 to 0.
+2. It removes the saved CC byte from the frame and keeps it.
+3. It loads the stack pointer from the saved U value in the frame. This throws away the rest of the frame and every intermediate return address, so the stack now points at the caller's return address.
+4. It takes the **CC from the interrupt frame**, clears only bit 7 (the "entire state saved" flag), and pushes that one byte just below the return address.
+5. It executes a return-from-interrupt. Because bit 7 is now clear, the CPU restores only CC and PC. PC is the caller's return address.
+
+**State when the caller resumes:**
+- **IRQ is unmasked.** The saved CC had I = 0, because the interrupt could only be taken with I clear. F is as it was, normally 0.
+- The arithmetic flags are whatever they were when the interrupt hit. Neither caller depends on them: both continue unconditionally.
+- A, B, X, Y and U are left as the handler had them, which is garbage. Neither caller relies on them.
+- DP is 0, because the handler set DP to 0 on entry and DP isn't restored. BASIC's normal DP is 0 anyway.
+
+### 9.2 Dot-count arithmetic
+
+- The dot count ($E5) is **8-bit**. Each dot increments it, wrapping 255 → 0.
+- **k = 0:** a separate path gives exactly 255. There's no multiply.
+- **k ≥ 1, in this order:**
+  1. An **8-bit** add: (k + 2) mod 256.
+  2. An unsigned 8×8 multiply by 255, giving a 16-bit result.
+  3. A **16-bit** logical shift right by 1.
+- The result is the 16-bit start count.
+
+| k | (k+2) mod 256 | Start count |
+|---|---|---|
+| 0 | – | 255 |
+| 1 | 3 | 382 |
+| 2 | 4 | 510 |
+| 3 | 5 | 637 |
+| 100 | 102 | 13005 |
+| 253 | 255 | 32512 |
+| 254 | 0 | **0** |
+| 255 | 1 | 127 |
+| 256 (wraps to 0) | – | 255 |
+
+**What a start count of 0 does:** the interrupt treats a 0 count as "no note playing" and never ends the note. The tone would sound forever, until reset.
+
+**In practice k ≥ 254 can't be reached:**
+- Dots are counted only from the string that holds the L command. The dot scan stops at the end of the current string; it doesn't continue into the enclosing X level.
+- A string is at most 255 characters. "L" plus one digit leaves room for at most 253 dots, and spaces use up characters too.
+- So the real maximum is k = 253, giving 32512.
+
+### 9.3 Variable lookup in "=name;" and "X name;"
+
+- Both use the interpreter's **expression-side lookup**: the one the expression evaluator uses for a plain variable reference.
+- In the general name search, the "not found" branch checks who called it. When the caller is that expression-side path, it returns a pointer to a shared two-byte zero constant in low RAM ($8A–$8B).
+  - That zero reads as numeric 0 (exponent byte 0), or as an empty string (length byte 0).
+  - **The variable table isn't touched. A missing simple variable leaves no trace.**
+- The only side effects are in the parser's own scratch area, where the parsed name is held.
+- Exception, which I haven't traced through PLAY: if the name is followed by "(", the array path is taken instead. A missing array may then be auto-dimensioned, as normal BASIC does for an undeclared array.
+- **DRAW's "=name;" and "X name;"** call the very same shared name-reading routine, so the behaviour is identical: no creation, missing means 0 or empty.
+- For X with a missing string, the zero constant is treated as an empty string, so it returns at once. Releasing the "temporary" is harmless, because that address isn't a temporary string.
+
+### 9.4 Order of work inside a note
+
+**For a note (letter or number):**
+1. The 0–11 note index is checked and pushed on the stack. If it's out of range you get ?FC, and nothing below happens.
+2. The step **L × T is computed and stored to $D5–$D6**. For a pause it's P × T.
+3. **U is set** to the caller-return position (9.1).
+4. The octave is examined, the table entry is located, and the note index is popped off the stack.
+5. The start count is computed from the dot count (9.2) and **stored to $E3–$E4** with a single 16-bit store, high byte first. One instruction, so an interrupt can't split it.
+6. The **first waveform write** follows immediately: the centre value $7C to $FF20.
+
+Nothing else happens between these steps: no DAC write, and no change to sound enable or the select lines. Sound enable and the DAC selection were set once, at the start of the PLAY statement.
+
+Any field interrupt that arrives before step 5 sees the count still 0. It treats that as "no note" and only services the SOUND countdown, which is normally 0. So a note's countdown starts with the first interrupt after step 5.
+
+**For a pause:**
+1. The current volume bytes and dot count are saved on the stack.
+2. Both volume bytes are set to $7C and the dot count is set to 0.
+3. Index 0 (C) is pushed.
+4. Then it's the same as steps 2–6 above.
+5. After the pause returns, the volume bytes and dot count are restored.
+
+### 9.5 The field interrupt in detail
+
+**Order in every field interrupt:**
+1. Check the field flag. If it isn't set, return.
+2. Read $FF02 to clear the flag.
+3. **Increment TIMER.**
+4. Set DP to 0.
+5. Check the PLAY count.
+
+**Confirmed: TIMER is already incremented for that field** before the PLAY step runs, including in the interrupt where the PLAY count expires.
+
+**What happens at step 5:**
+- **If the count is non-zero:** the step is subtracted.
+  - If the count is still above 0, return.
+  - Otherwise do the abort of 9.1.
+  - In either case **the SOUND countdown isn't looked at in that interrupt.**
+- **If the count is zero when the interrupt is entered:** the SOUND countdown ($8D–$8E) is decremented if it's non-zero, then return.
+
+So the SOUND countdown never moves while a PLAY note or pause is sounding, and that includes the interrupt in which the note ends.

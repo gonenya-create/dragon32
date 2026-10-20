@@ -157,7 +157,7 @@ stmtbl
 		fdb	draw_st		; $B5 DRAW
 		fdb	pcopy_st		; $B6 PCOPY
 		fdb	pmode_st		; $B7 PMODE
-		fdb	err_sn		; $B8 PLAY
+		fdb	play_st		; $B8 PLAY
 		fdb	err_sn		; $B9 DLOAD
 		fdb	renum		; $BA RENUM
 

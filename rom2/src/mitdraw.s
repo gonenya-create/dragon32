@@ -56,7 +56,7 @@ dvar		bsr	dgetf
 1		bsr	dgetf
 		cmpa	#';
 		bne	1B
-		clrb
+		ldb	#1		; כמו בביטוי: משתנה שלא קיים לא נוצר (0 או מחרוזת ריקה; קורא: צליל 9.3)
 		lbsr	ptrget
 		puls	x
 		stx	TXTPTR

@@ -25,7 +25,8 @@ GANGLE		equ	$e8		; DRAW: הזווית 0-3
 GSCALE		equ	$e9		; DRAW: קנה המידה 0-62
 
 ; gfxrun: בהדלקה ובכל RUN (קורא 0.2): הנקודה האחרונה (128,96), זווית וקנה מידה 0
-gfxrun		ldd	#128
+gfxrun		lbsr	plyini		; ברירות PLAY (קורא: צליל 0.2)
+		ldd	#128
 		std	GLX
 		ldb	#96
 		std	GLY

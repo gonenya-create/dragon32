@@ -1,55 +1,9 @@
 // בדיקות הצליל (שלב 3 חלק 4) מול המודל שנכתב מהמפרט (sndmodel.mjs).
 // הרצה: node rom2/tools/snd-test.mjs
 // הגל נמדד מיומן הריצה של XRoar (-trace -trace-timing): כל כתיבה ל-$FF20 והזמן שלה במחזורי מעבד.
-import { execFile } from 'node:child_process';
-import { promisify } from 'node:util';
-import { cp, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { runRom } from './xr2.mjs';
+import { traceDac } from './sndtrace.mjs';
 import { soundWave, soundPeriod, soundFields, soundArgOk } from './sndmodel.mjs';
-
-const exec = promisify(execFile);
-const source = fileURLToPath(new URL('../src/', import.meta.url));
-
-// traceDac: מריץ את השורות, ומתחיל יומן כשהמעבד מגיע ל-startSym. מחזיר את הכתיבות ל-$FF20:
-// { v, t } (t במחזורים), ולכל מרווח בין כתיבות כמה מחזורים היו בתוך פסיקת השדה
-export async function traceDac(lines, startSym, seconds = 1) {
-  const dir = await mkdtemp(join(tmpdir(), 'dragon32-snd-'));
-  try {
-    const src = join(dir, 'src'), rom = join(dir, 't.rom'), sym = join(dir, 't.sym'), log = join(dir, 'trace.txt');
-    await cp(source, src, { recursive: true });
-    const input = Buffer.from(lines.map(l => l + '\r').join(''), 'ascii');
-    const bytes = [input.length >> 8, input.length & 255, ...input];
-    const table = [];
-    for (let i = 0; i < bytes.length; i += 16) table.push(`${i ? '' : 'testq'}\tfcb\t${bytes.slice(i, i + 16).join(',')}`);
-    await writeFile(join(src, 'testq.s'), table.join('\n') + '\n');
-    await exec('asm6809', ['-B', '-o', rom, '-s', sym, 'exp.s'], { cwd: src });
-    const m = (await readFile(sym, 'utf8')).match(new RegExp(`^${startSym}\\s+equ\\s+(\\d+)`, 'm'));
-    if (!m) throw new Error(`Unknown symbol ${startSym}`);
-    const pc = Number(m[1]).toString(16);
-    await exec('sh', ['-c', `xroar -ui null -ao null -machine dragon32 -extbas ${rom} -no-ratelimit -trap pc=0x${pc} -trap-trace -trace-timing -timeout ${seconds} > ${log} 2>&1`],
-      { timeout: 120000, maxBuffer: 1 << 20 });
-    const text = await readFile(log, 'utf8');
-    const writes = [];
-    let t = 0, inIrq = false, irqCycles = 0, irqs = 0;
-    for (const line of text.split('\n')) {
-      const mm = line.match(/^([0-9a-f]{4})\| \S+\s+(.*?)\s+(?:cc=.*)?dt=(\d+)/);
-      if (!mm) continue;
-      const c = Number(mm[3]) / 16;
-      t += c;
-      if (mm[2].startsWith('[IRQ]')) { inIrq = true; irqs++; }
-      if (inIrq) irqCycles += c;
-      if (inIrq && mm[2].startsWith('RTI')) inIrq = false;
-      const st = line.match(/STA\s+\$ff20\s+cc=\S+ a=([0-9a-f]{2})/);
-      if (st) { writes.push({ v: parseInt(st[1], 16), t, irq: irqCycles }); irqCycles = 0; }
-    }
-    return { writes, irqs };
-  } finally {
-    await rm(dir, { recursive: true, force: true });
-  }
-}
 
 let pass = 0, fail = 0;
 const ok = (name, cond, info = '') => {

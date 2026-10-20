@@ -774,14 +774,30 @@ fntab		fcs	"SGN"
 		include	"io.s"
 		include	"testq.s"
 
-; פסיקת השדה (קורא: צליל 4): רק כשהדגל ב-$FF03 דולק. TIMER, ואחריו המשך של SOUND
+; פסיקת השדה (קורא: צליל 4, 9.5): רק כשהדגל ב-$FF03 דולק. TIMER, ואחריו התו של PLAY, ורק אם אין תו: SOUND
 irq		lda	PIA0+3
 		bpl	9F
 		lda	PIA0+2
 		ldx	TICKS
 		leax	1,x
 		stx	TICKS
-		ldx	SNDTMR
+		ldd	PLYTMR
+		beq	5F
+		subd	PSTEP
+		bls	6F
+		std	PLYTMR
+		rti
+; התו נגמר (קורא 9.1): חוזרים ישר למי שקרא לתו. U השמור במסגרת מצביע על כתובת החזרה; ה-CC מהמסגרת,
+; בלי ביט 7, כך ש-RTI מחזיר רק CC ו-PC (והפסיקות פתוחות)
+6		clra
+		clrb
+		std	PLYTMR
+		lda	,s
+		anda	#$7f
+		lds	8,s
+		pshs	a
+		rti
+5		ldx	SNDTMR
 		beq	9F
 		leax	-1,x
 		stx	SNDTMR
