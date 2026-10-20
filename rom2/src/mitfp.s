@@ -57,9 +57,8 @@ conupk		ldd	3,x
 ; movfm: המספר הארוז ב-X → FAC
 movfm		ldd	3,x
 		std	FACMO
-		lda	2,x
-		sta	FACMOH
-		lda	1,x
+		ldd	1,x
+		stb	FACMOH
 		sta	FACSGN
 		ora	#$80
 		sta	FACHO
@@ -85,10 +84,8 @@ movfa		ldd	ARGEXP
 		std	FACEXP
 		ldd	ARGMOH
 		std	FACMOH
-		lda	ARGLO
-		sta	FACLO
-		lda	ARGSGN
-		sta	FACSGN
+		ldd	ARGLO		; ARGLO ו-ARGSGN צמודים, כמו FACLO ו-FACSGN
+		std	FACLO
 		clr	FACOV
 		rts
 ; movaf: FAC → ARG. ב-Dragon בלי עיגול נוסף (קורא)
@@ -140,7 +137,7 @@ negfch		com	FACHO
 normal		clrb
 1		lda	FACHO
 		bne	3F
-		lda	FACMOH		; בית שלם בבת אחת
+		lda	FACMOH		; בית שלם בבת אחת (B = המונה: לא לגעת)
 		sta	FACHO
 		lda	FACMO
 		sta	FACMOH
@@ -188,7 +185,7 @@ shiftr		cmpb	#8
 		blo	2F
 		lda	4,x
 		sta	FACOV
-		lda	3,x
+		lda	3,x		; (B = המונה: לא לגעת)
 		sta	4,x
 		lda	2,x
 		sta	3,x
@@ -256,18 +253,14 @@ faddt		tst	FACEXP
 		lda	FACOV		; סימנים שווים: מחברים
 		adda	OLDOV
 		sta	FACOV
-		lda	FACLO
-		adca	ARGLO
-		sta	FACLO
-		lda	FACMO
+		ldd	FACMO
+		adcb	ARGLO
 		adca	ARGMO
-		sta	FACMO
-		lda	FACMOH
-		adca	ARGMOH
-		sta	FACMOH
-		lda	FACHO
+		std	FACMO
+		ldd	FACHO
+		adcb	ARGMOH
 		adca	ARGHO
-		sta	FACHO
+		std	FACHO
 		lbcc	nround		; ב-Dragon החיבור מעגל בסוף (קורא)
 		lbsr	rndshf		; גלישה: עוד סיבית אחת ימינה. הסיבית שנפלה קובעת את העיגול,
 		tst	FACOV		; והבית הנוסף לא מתאפס במסלול הזה (קורא)
@@ -282,18 +275,14 @@ faddt		tst	FACEXP
 fsubit		lda	OLDOV		; סימנים שונים: הגדול פחות הקטן
 		suba	FACOV
 		sta	FACOV
-		lda	4,y
-		sbca	4,u
-		sta	FACLO
-		lda	3,y
+		ldd	3,y
+		sbcb	4,u
 		sbca	3,u
-		sta	FACMO
-		lda	2,y
-		sbca	2,u
-		sta	FACMOH
-		lda	1,y
+		std	FACMO
+		ldd	1,y
+		sbcb	2,u
 		sbca	1,u
-		sta	FACHO
+		std	FACHO
 		lbcc	normal
 		lbsr	negfac		; יצא שלילי
 		lbra	normal
@@ -303,11 +292,10 @@ fmult		lbsr	conupk
 fmultt		tst	FACEXP
 		beq	9F
 		bsr	muldiv
-		clr	RESHO
-		clr	RESMOH
-		clr	RESMO
-		clr	RESLO
-		clra			; ב-Dragon הבית הנוסף לא נכנס לכפל (קורא; ב-mit כן)
+		clra
+		clrb
+		std	RESHO
+		std	RESMO			; ב-Dragon הבית הנוסף לא נכנס לכפל (קורא; ב-mit כן)
 		bsr	mltply
 		lda	FACLO
 		bsr	mltply
@@ -334,18 +322,13 @@ mltpl1		lsra
 		ora	#$80		; סמן: הלולאה נגמרת כשהוא יוצא
 1		bcc	2F
 		pshs	a
-		lda	RESLO
-		adda	ARGLO
-		sta	RESLO
-		lda	RESMO
-		adca	ARGMO
-		sta	RESMO
-		lda	RESMOH
-		adca	ARGMOH
-		sta	RESMOH
-		lda	RESHO
+		ldd	RESMO
+		addd	ARGMO
+		std	RESMO
+		ldd	RESHO
+		adcb	ARGMOH
 		adca	ARGHO
-		sta	RESHO
+		std	RESHO
 		puls	a
 2		ror	RESHO
 		ror	RESMOH
@@ -373,14 +356,10 @@ muldiv		lda	ARGEXP
 		rts
 8		leas	2,s
 		lbra	zerofc
-movfr		lda	RESHO
-		sta	FACHO
-		lda	RESMOH
-		sta	FACMOH
-		lda	RESMO
-		sta	FACMO
-		lda	RESLO
-		sta	FACLO
+movfr		ldd	RESHO
+		std	FACHO
+		ldd	RESMO
+		std	FACMO
 		lbra	normal
 
 ; ---------- חילוק (mit: FDIVT 5393, DIVIDE 5410) ----------
@@ -440,18 +419,13 @@ shfarg		lsl	ARGLO
 		bmi	dvcmp
 		bra	savq
 divsub		pshs	a
-		lda	ARGLO
-		suba	FACLO
-		sta	ARGLO
-		lda	ARGMO
-		sbca	FACMO
-		sta	ARGMO
-		lda	ARGMOH
-		sbca	FACMOH
-		sta	ARGMOH
-		lda	ARGHO
+		ldd	ARGMO
+		subd	FACMO
+		std	ARGMO
+		ldd	ARGHO
+		sbcb	FACMOH
 		sbca	FACHO
-		sta	ARGHO
+		std	ARGHO
 		puls	a
 		bra	shfarg
 divnrm		lsla
