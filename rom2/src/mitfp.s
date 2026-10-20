@@ -223,8 +223,8 @@ fsubt		com	FACSGN
 ; faddt: FAC = ARG + FAC
 faddt		tst	FACEXP
 		lbeq	movfa		; FAC=0: התוצאה ARG
-		lda	FACOV
-		sta	OLDOV
+		clr	FACOV		; ב-Dragon הבית הנוסף הקודם לא נכנס לחיבור (קורא; ב-mit נשמר ב-OLDOV)
+		clr	OLDOV
 		clr	BITS
 		lda	ARGEXP
 		beq	9F		; ARG=0: התוצאה FAC

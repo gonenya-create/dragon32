@@ -1024,8 +1024,8 @@ FFC0                  SAM             equ     $ffc0
                       ; faddt: FAC = ARG + FAC
 884A 0D4F             faddt           tst     FACEXP
 884C 1027FEFF                         lbeq    movfa           ; FAC=0: התוצאה ARG
-8850 9663                             lda     FACOV
-8852 B703FD                           sta     OLDOV
+8850 0F63                             clr     FACOV           ; ב-Dragon הבית הנוסף הקודם לא נכנס לחיבור (קורא; ב-mit נשמר ב-OLDOV)
+8852 7F03FD                           clr     OLDOV
 8855 0F5B                             clr     BITS
 8857 965C                             lda     ARGEXP
 8859 2775                             beq     9F              ; ARG=0: התוצאה FAC
