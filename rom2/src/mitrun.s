@@ -85,95 +85,77 @@ gone3		beq	9F		; פקודה ריקה
 		cmpa	#$98		; MID$ כפקודה (קורא)
 		lbeq	midst
 		lbra	err_sn
-1
-		leau	stmdsp,pcr
-1		ldb	,u
-		beq	3F
-		cmpa	,u
-		beq	2F
-		leau	3,u
-		bra	1B
-2		ldd	1,u
-		leau	stmdsp,pcr
-		leau	d,u
+1		cmpa	#$ba
+		bhi	3F
+		suba	#$80
+		lsla
+		leau	stmtbl,pcr
+		ldu	a,u
 		pshs	u
 		jmp	<chrget		; קופצים לפקודה (דרך ה-RTS של chrget), A = התו שאחרי המילה
 3		lbra	err_sn
 9		rts
-; טבלת הפקודות של הניסוי: טוקן, כתובת יחסית
-stmdsp		fcb	$80
-		fdb	for-stmdsp
-		fcb	$81
-		fdb	go-stmdsp
-		fcb	$82
-		fdb	rem-stmdsp
-		fcb	$83
-		fdb	rem-stmdsp
-		fcb	$84		; ELSE שמגיעים אליו בריצה: סוף ענף האמת, מדלגים על השורה
-		fdb	rem-stmdsp
-		fcb	$85
-		fdb	if-stmdsp
-		fcb	$86
-		fdb	data-stmdsp
-		fcb	$87
-		fdb	print-stmdsp
-		fcb	$88
-		fdb	on-stmdsp
-		fcb	$89
-		fdb	input-stmdsp
-		fcb	$8a
-		fdb	end-stmdsp
-		fcb	$8b
-		fdb	next-stmdsp
-		fcb	$8c
-		fdb	dim-stmdsp
-		fcb	$8d
-		fdb	read-stmdsp
-		fcb	$8e
-		fdb	let-stmdsp
-		fcb	$8f
-		fdb	run-stmdsp
-		fcb	$90
-		fdb	restore-stmdsp
-		fcb	$91
-		fdb	return-stmdsp
-		fcb	$92
-		fdb	stop-stmdsp
-		fcb	$93
-		fdb	poke-stmdsp
-		fcb	$94
-		fdb	cont-stmdsp
-		fcb	$95
-		fdb	list_st-stmdsp
-		fcb	$96
-		fdb	clear-stmdsp
-		fcb	$97
-		fdb	new_st-stmdsp
-		fcb	$98
-		fdb	def-stmdsp
-		fcb	$9e
-		fdb	set_st-stmdsp
-		fcb	$9f
-		fdb	reset_st-stmdsp
-		fcb	$a0
-		fdb	cls_st-stmdsp
-		fcb	$a4
-		fdb	exec-stmdsp
-		fcb	$a6
-		fdb	del_st-stmdsp
-		fcb	$a7
-		fdb	edit_st-stmdsp
-		fcb	$a8
-		fdb	tron-stmdsp
-		fcb	$a9
-		fdb	troff-stmdsp
-		fcb	$aa
-		fdb	line_st-stmdsp
-		fcb	$ba
-		fdb	renum-stmdsp
-		fcb	$af
-		fdb	pclear-stmdsp
-		fcb	0
+; טבלת הפקודות לפי הטוקן ($80-$BA), כתובת לכל אחת. עוד לא בנויה: ?SN
+stmtbl
+		fdb	for		; $80 FOR
+		fdb	go		; $81 GO
+		fdb	rem		; $82 REM
+		fdb	rem		; $83 '
+		fdb	rem		; $84 ELSE
+		fdb	if		; $85 IF
+		fdb	data		; $86 DATA
+		fdb	print		; $87 PRINT
+		fdb	on		; $88 ON
+		fdb	input		; $89 INPUT
+		fdb	end		; $8A END
+		fdb	next		; $8B NEXT
+		fdb	dim		; $8C DIM
+		fdb	read		; $8D READ
+		fdb	let		; $8E LET
+		fdb	run		; $8F RUN
+		fdb	restore		; $90 RESTORE
+		fdb	return		; $91 RETURN
+		fdb	stop		; $92 STOP
+		fdb	poke		; $93 POKE
+		fdb	cont		; $94 CONT
+		fdb	list_st		; $95 LIST
+		fdb	clear		; $96 CLEAR
+		fdb	new_st		; $97 NEW
+		fdb	def		; $98 DEF
+		fdb	err_sn		; $99 CLOAD
+		fdb	err_sn		; $9A CSAVE
+		fdb	err_sn		; $9B OPEN
+		fdb	err_sn		; $9C CLOSE
+		fdb	err_sn		; $9D LLIST
+		fdb	set_st		; $9E SET
+		fdb	reset_st		; $9F RESET
+		fdb	cls_st		; $A0 CLS
+		fdb	err_sn		; $A1 MOTOR
+		fdb	err_sn		; $A2 SOUND
+		fdb	err_sn		; $A3 AUDIO
+		fdb	exec		; $A4 EXEC
+		fdb	err_sn		; $A5 SKIPF
+		fdb	del_st		; $A6 DEL
+		fdb	edit_st		; $A7 EDIT
+		fdb	tron		; $A8 TRON
+		fdb	troff		; $A9 TROFF
+		fdb	line_st		; $AA LINE
+		fdb	err_sn		; $AB PCLS
+		fdb	err_sn		; $AC PSET
+		fdb	err_sn		; $AD PRESET
+		fdb	err_sn		; $AE SCREEN
+		fdb	pclear		; $AF PCLEAR
+		fdb	err_sn		; $B0 COLOR
+		fdb	err_sn		; $B1 CIRCLE
+		fdb	err_sn		; $B2 PAINT
+		fdb	err_sn		; $B3 GET
+		fdb	err_sn		; $B4 PUT
+		fdb	err_sn		; $B5 DRAW
+		fdb	err_sn		; $B6 PCOPY
+		fdb	err_sn		; $B7 PMODE
+		fdb	err_sn		; $B8 PLAY
+		fdb	err_sn		; $B9 DLOAD
+		fdb	renum		; $BA RENUM
 
 rem		ldx	TXTPTR		; עד סוף השורה
 1		lda	,x
@@ -752,18 +734,21 @@ eval		clr	VALTYP
 		lda	1,x
 		leax	1,x
 		stx	TXTPTR
-		leau	fndsp,pcr
-41		ldb	,u
-		lbeq	err_sn
-		cmpa	,u
-		beq	42F
-		leau	4,u
-		bra	41B
-42		ldd	2,u
-		leax	fndsp,pcr
-		leax	d,x
-		pshs	x		; הכתובת
-		lda	1,u		; 0: ארגומנט אחד בסוגריים; 1: השגרה קוראת בעצמה אחרי '('; 2: בלי סוגריים
+		cmpa	#$a1
+		lbhi	err_sn
+		suba	#$80
+		lsla
+		leau	fntbl,pcr
+		ldx	a,u		; ביטים 14-15: הסוג; השאר: הכתובת פחות $8000
+		tfr	x,d
+		anda	#$3f
+		ora	#$80
+		pshs	d		; הכתובת
+		tfr	x,d
+		rola
+		rola
+		rola
+		anda	#3		; 0: ארגומנט אחד בסוגריים; 1: השגרה קוראת בעצמה אחרי '('; 2: בלי סוגריים
 		pshs	a
 		jsr	<chrget
 		puls	b
@@ -794,72 +779,42 @@ eval		clr	VALTYP
 		stx	FACMO		; מחרוזת: FAC מצביע על המתאר שבמשתנה (mit: ISVRET)
 		rts
 
-; טבלת הפונקציות: טוקן, סוג, כתובת יחסית
-fndsp		fcb	$80,0
-		fdb	fn_sgn-fndsp
-		fcb	$81,0
-		fdb	fn_int-fndsp
-		fcb	$82,0
-		fdb	fn_abs-fndsp
-		fcb	$83,0
-		fdb	fn_pos-fndsp
-		fcb	$84,0
-		fdb	fn_rnd-fndsp
-		fcb	$85,0
-		fdb	fn_sqr-fndsp
-		fcb	$86,0
-		fdb	fn_log-fndsp
-		fcb	$87,0
-		fdb	fn_exp-fndsp
-		fcb	$88,0
-		fdb	fn_sin-fndsp
-		fcb	$89,0
-		fdb	fn_cos-fndsp
-		fcb	$8a,0
-		fdb	fn_tan-fndsp
-		fcb	$8b,0
-		fdb	fn_atn-fndsp
-		fcb	$8c,0
-		fdb	fn_peek-fndsp
-		fcb	$8d,0
-		fdb	fn_len-fndsp
-		fcb	$8e,0
-		fdb	fn_str-fndsp
-		fcb	$8f,0
-		fdb	fn_val-fndsp
-		fcb	$90,0
-		fdb	fn_asc-fndsp
-		fcb	$91,0
-		fdb	fn_chr-fndsp
-		fcb	$93,0
-		fdb	fn_joy-fndsp
-		fcb	$94,0
-		fdb	fn_fix-fndsp
-		fcb	$95,0
-		fdb	fn_hex-fndsp
-		fcb	$96,1
-		fdb	fn_left-fndsp
-		fcb	$97,1
-		fdb	fn_right-fndsp
-		fcb	$98,1
-		fdb	fn_mid-fndsp
-		fcb	$99,1
-		fdb	fn_point-fndsp
-		fcb	$9a,2
-		fdb	fn_inkey-fndsp
-		fcb	$9b,2
-		fdb	fn_mem-fndsp
-		fcb	$9c,1
-		fdb	fn_varptr-fndsp
-		fcb	$9d,1
-		fdb	fn_instr-fndsp
-		fcb	$9e,2
-		fdb	fn_timer-fndsp
-		fcb	$a0,1
-		fdb	fn_strng-fndsp
-		fcb	$a1,2
-		fdb	fn_usr-fndsp
-		fcb	0
+; טבלת הפונקציות לפי הטוקן ($80-$A1): הכתובת פחות $8000, והסוג בשני הביטים העליונים. עוד לא בנויה: ?SN
+fntbl
+		fdb	fn_sgn-$8000+0*$4000	; $80 SGN
+		fdb	fn_int-$8000+0*$4000	; $81 INT
+		fdb	fn_abs-$8000+0*$4000	; $82 ABS
+		fdb	fn_pos-$8000+0*$4000	; $83 POS
+		fdb	fn_rnd-$8000+0*$4000	; $84 RND
+		fdb	fn_sqr-$8000+0*$4000	; $85 SQR
+		fdb	fn_log-$8000+0*$4000	; $86 LOG
+		fdb	fn_exp-$8000+0*$4000	; $87 EXP
+		fdb	fn_sin-$8000+0*$4000	; $88 SIN
+		fdb	fn_cos-$8000+0*$4000	; $89 COS
+		fdb	fn_tan-$8000+0*$4000	; $8A TAN
+		fdb	fn_atn-$8000+0*$4000	; $8B ATN
+		fdb	fn_peek-$8000+0*$4000	; $8C PEEK
+		fdb	fn_len-$8000+0*$4000	; $8D LEN
+		fdb	fn_str-$8000+0*$4000	; $8E STR$
+		fdb	fn_val-$8000+0*$4000	; $8F VAL
+		fdb	fn_asc-$8000+0*$4000	; $90 ASC
+		fdb	fn_chr-$8000+0*$4000	; $91 CHR$
+		fdb	err_sn-$8000+2*$4000	; $92 EOF
+		fdb	fn_joy-$8000+0*$4000	; $93 JOYSTK
+		fdb	fn_fix-$8000+0*$4000	; $94 FIX
+		fdb	fn_hex-$8000+0*$4000	; $95 HEX$
+		fdb	fn_left-$8000+1*$4000	; $96 LEFT$
+		fdb	fn_right-$8000+1*$4000	; $97 RIGHT$
+		fdb	fn_mid-$8000+1*$4000	; $98 MID$
+		fdb	fn_point-$8000+1*$4000	; $99 POINT
+		fdb	fn_inkey-$8000+2*$4000	; $9A INKEY$
+		fdb	fn_mem-$8000+2*$4000	; $9B MEM
+		fdb	fn_varptr-$8000+1*$4000	; $9C VARPTR
+		fdb	fn_instr-$8000+1*$4000	; $9D INSTR
+		fdb	fn_timer-$8000+2*$4000	; $9E TIMER
+		fdb	err_sn-$8000+2*$4000	; $9F PPOINT
+		fdb	fn_strng-$8000+1*$4000	; $A0 STRING$
+		fdb	fn_usr-$8000+2*$4000	; $A1 USR
 fn_sgn		bsr	chknum
 		lbsr	sign
 		lbra	float
