@@ -279,6 +279,9 @@ await check('EDIT: K then Q leaves the line unchanged (no save), OK', ['10 PRINT
 await check('EDIT: E saves without printing the rest; no OK after saving', ['10 PRINT "HELLO"', 'EDIT 10', '6 DE'], r => /EDIT 10\n10 PRINT "HELLO"\n10 PRINT$/.test(r.screen.replace(/[\n@]+$/, '')) || r.screen.split('\n').slice(-4).join(' | '));
 await check('EDIT with no number = line 0 (?UL); line missing ?UL; extra text ?SN', ['10 PRINT 1', 'EDIT', 'EDIT 20', 'EDIT 10 X'], r =>
   (r.screen.match(/\?UL ERROR/g) || []).length === 2 && /EDIT 10 X\n\?SN ERROR\nOK$/.test(r.screen.replace(/\n@$/, '')) || r.screen.split('\n').slice(-8).join(' | '));
+await check('EDIT on a line longer than 128 characters (positions past 127)', ['10 REM ' + 'A'.repeat(130) + 'BCD', 'EDIT 10', '135 IZ_'], r => {
+  const t = String.fromCharCode(...[...r.ram.subarray(0x1e05, 0x1e05 + 140)].filter(b => b >= 32 && b < 127));
+  return t.endsWith('BZCD') || t.slice(-10); });
 await check('EDIT saves like a typed line: variables cleared', ['10 PRINT A', 'A=5', 'EDIT 10', '', 'PRINT A'], outLines(' 0'));
 
 console.log('stage 3 part 2: PRINT USING (reader: docs/DRAGON-SPEC-USING.md; 27 source predictions + the 24 L-USING tests + edges)');

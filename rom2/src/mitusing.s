@@ -9,6 +9,7 @@ USL		equ	$d9		; השדה המספרי: המקומות לפני הנקודה (כ�
 USD		equ	$d8		; ספרות אחרי הנקודה ($FF: אין נקודה)
 USFLG		equ	$d7		; 1 פסיקים, 2 כוכביות, 4 דולר, 8 + מוביל, $10 + נגרר, $20 - נגרר, $40 מעריך
 USW		equ	$dc		; רוחב שדה מחרוזת / עזר
+USEPT		equ	$cf		; 2 בתים, רק בזמן הסריקה: סוף התבנית (חופף ל-USSG/USP, שמשמשים אחר כך)
 
 ; usstart: אחרי PRINT, כש-A = $CD (USING)
 usstart		jsr	<chrget
@@ -28,16 +29,20 @@ usstart		jsr	<chrget
 		inc	USEND
 us_cyc		clr	USPOS
 		clr	USANY
-us_scan		ldx	USDSC
-		ldb	USPOS
-		cmpb	,x
-		lbhs	us_eof
+us_scan		ldx	USDSC		; USEPT = סוף התבנית, X = התו הנוכחי (מחדש כל פעם: איסוף מחרוזות)
+		ldb	,x
 		ldx	2,x
-		abx			; X = התו הנוכחי
+		pshs	x
+		abx
+		stx	USEPT
+		puls	x
+		ldb	USPOS
+		abx
+		cmpx	USEPT
+		lbhs	us_eof
 		lbsr	us_field	; שדה? C=1: כן (A = סוג: 0 מספר, 1 !, 2 %)
 		bcs	us_fld
-		clrb			; תו רגיל (us_field לא הזיז את USPOS)
-		lbsr	us_peek
+		lda	,x		; תו רגיל
 		lbsr	putc
 		inc	USPOS
 		bra	us_scan
@@ -116,185 +121,160 @@ us_cr		lda	#13
 		lbeq	err_fc
 		lbra	us_cyc
 
-; us_field: X = התו בתבנית. שדה? C=1, A = הסוג, USPOS מתקדם אחריו. אחרת C=0
+; us_field: X = התו בתבנית. שדה? C=1, A = הסוג, USPOS אחריו. אחרת C=0 ו-X לא זז
 us_field	lda	,x
 		cmpa	#'!
 		bne	1F
-		inc	USPOS
-		lda	#1
-		orcc	#1
-		rts
-1		cmpa	#'%
-		bne	us_nf
-		ldb	USPOS		; %, רווחים, %
-		pshs	b
-		ldy	USDSC
-		ldb	#2
-2		inc	USPOS
-		pshs	b
-		ldb	USPOS
-		cmpb	,y
-		puls	b
-		bhs	3F		; אין % סוגר: % רגיל
-		lda	1,x
 		leax	1,x
-		cmpa	#$20
-		bne	4F
+		lda	#1
+		bra	us_ok
+1		cmpa	#'%		; %, רווחים, %: הרוחב = הרווחים ועוד 2
+		bne	us_nf
+		pshs	x
+		ldb	#2
+2		leax	1,x
+		cmpx	USEPT
+		bhs	3F
+		lda	,x
+		cmpa	#'%
+		beq	4F
 		incb
-		bra	2B
-4		cmpa	#'%
-		bne	3F
-		inc	USPOS
-		stb	USW
-		leas	1,s
-		lda	#2
-		orcc	#1
-		rts
-3		puls	b		; לא שדה: חוזרים
-		stb	USPOS
+		cmpa	#$20
+		beq	2B
+3		puls	x		; אין % סוגר: % רגיל
 		andcc	#$fe
 		rts
-
-; us_peek: A = התו ב-USPOS+B (0 אחרי הסוף)
-us_peek		pshs	b,x
-		addb	USPOS
-		ldx	USDSC
-		cmpb	,x
+4		leas	2,s
+		leax	1,x
+		stb	USW
+		lda	#2
+us_ok		pshs	a		; USPOS = X פחות תחילת התבנית
+		tfr	x,d
+		ldu	USDSC
+		subd	2,u
+		stb	USPOS
+		puls	a
+		orcc	#1
+		rts
+; us_ch: A = התו ב-X (0 אחרי הסוף)
+us_ch		clra
+		cmpx	USEPT
 		bhs	1F
-		ldx	2,x
-		abx
 		lda	,x
-		puls	b,x,pc
-1		clra
-		puls	b,x,pc
-; us_isst: A = התו ב-USPOS+B. C=1 אם מכאן מתחיל שדה מספרי: #, .#, **, $$
-us_isst		bsr	us_peek
+1		rts
+; us_isst: C=1 אם ב-X מתחיל שדה מספרי: #, .#, **, $$
+us_isst		bsr	us_ch
 		cmpa	#'#
 		beq	8F
+		ldb	#'#
 		cmpa	#'.
-		beq	2F
+		beq	1F
+		tfr	a,b
 		cmpa	#'*
-		beq	3F
+		beq	1F
 		cmpa	#'$
 		bne	9F
-3		pshs	a
-		incb
-		bsr	us_peek
-		decb
+1		leax	1,x
+		bsr	us_ch
+		leax	-1,x
+		pshs	b
 		cmpa	,s+
-		beq	8F
-		bra	9F
-2		incb
-		bsr	us_peek
-		decb
-		cmpa	#'#
 		beq	8F
 9		andcc	#$fe
 		rts
 8		orcc	#1
 		rts
-us_adv		inc	USPOS
-		inc	USL
-		rts
 ; us_nf: שדה מספרי (קורא, סעיף 2): [+] [** / $$ / **$] [# ,]... [. #...] [^^^^] [+ / -]
-us_nf		ldb	USPOS
-		pshs	b
+us_nf		pshs	x
 		clr	USL
 		clr	USFLG
 		lda	#$ff
 		sta	USD
-		clrb
-		bsr	us_peek
-		cmpa	#'+
+		bsr	us_ch
+		cmpa	#'+		; + מוביל: רק אם אחריו מתחיל שדה
 		bne	1F
-		incb			; + מוביל: רק אם אחריו מתחיל שדה
+		leax	1,x
 		bsr	us_isst
 		lbcc	us_no
 		lda	#8
 		sta	USFLG
-		bsr	us_adv
-		clrb
+		inc	USL
+		bra	11F
 1		bsr	us_isst
 		lbcc	us_no
-		bsr	us_peek
+11		bsr	us_ch
 		cmpa	#'*
 		bne	2F
-		bsr	us_adv		; **
-		bsr	us_adv
-		lda	USFLG
-		ora	#2
-		sta	USFLG
-		clrb
-		bsr	us_peek
+		lda	#2		; **
+		bsr	us_pre2
+		bsr	us_ch
 		cmpa	#'$
 		bne	3F
-		bsr	us_adv		; **$
-		bra	21F
+		leax	1,x		; **$
+		inc	USL
+		lda	#4
+		bsr	us_orf
+		bra	3F
 2		cmpa	#'$
 		bne	3F
-		bsr	us_adv		; $$
-		bsr	us_adv
-21		lda	USFLG
-		ora	#4
-		sta	USFLG
-3		clrb			; לפני הנקודה: # ופסיקים
-		lbsr	us_peek
+		lda	#4		; $$
+		bsr	us_pre2
+3		bsr	us_ch		; לפני הנקודה: # ופסיקים
 		cmpa	#'#
-		bne	4F
-		bsr	us_adv
-		bra	3B
-4		cmpa	#',
+		beq	31F
+		cmpa	#',
 		bne	5F
-		bsr	us_adv
-		lda	USFLG
-		ora	#1
-		sta	USFLG
+		lda	#1
+		bsr	us_orf
+31		inc	USL
+		leax	1,x
 		bra	3B
 5		cmpa	#'.
 		bne	7F
-		inc	USPOS
 		clr	USD
-6		clrb
-		lbsr	us_peek
+6		leax	1,x
+		lbsr	us_ch
 		cmpa	#'#
 		bne	7F
-		inc	USPOS
 		inc	USD
 		bra	6B
-7		ldb	#3		; ^^^^
-8		lbsr	us_peek
+7		ldb	#4		; ^^^^
+		pshs	x
+8		lbsr	us_ch
 		cmpa	#'^
 		bne	81F
+		leax	1,x
 		decb
-		bpl	8B
-		lda	USPOS
-		adda	#4
-		sta	USPOS
-		lda	USFLG
-		ora	#$40
-		sta	USFLG
-81		lda	USFLG		; סימן נגרר: רק בלי + מוביל
+		bne	8B
+		leas	2,s
+		lda	#$40
+		bsr	us_orf
+		bra	82F
+81		puls	x
+82		lda	USFLG		; סימן נגרר: רק בלי + מוביל
 		bita	#8
 		bne	us_yes
-		clrb
-		lbsr	us_peek
+		lbsr	us_ch
+		ldb	#$10
 		cmpa	#'+
-		bne	82F
-		lda	#$10
-		bra	83F
-82		cmpa	#'-
+		beq	83F
+		ldb	#$20
+		cmpa	#'-
 		bne	us_yes
-		lda	#$20
-83		ora	USFLG
-		sta	USFLG
-		inc	USPOS
-us_yes		leas	1,s
+83		leax	1,x
+		tfr	b,a
+		bsr	us_orf
+us_yes		leas	2,s
 		clra			; סוג 0: מספר
-		orcc	#1
-		rts
-us_no		puls	b
-		stb	USPOS
+		lbra	us_ok
+us_no		puls	x
 		andcc	#$fe
+		rts
+us_pre2		leax	2,x		; תחילית של שני תווים
+		inc	USL
+		inc	USL
+us_orf		ora	USFLG
+		sta	USFLG
 		rts
 
 ; ---------- השדה המספרי (קורא: docs/DRAGON-SPEC-USING.md, השלמה: ההמרה) ----------

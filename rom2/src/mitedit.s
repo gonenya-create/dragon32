@@ -400,6 +400,7 @@ EDFLG		equ	$d8		; 1: הפלט של LIST הולך למאגר
 EDPTR		equ	$d9		; 2 בתים: לאן כותבים במאגר
 EDPOS		equ	$db		; המקום בשורה
 EDCNT		equ	$dc		; המונה שלפני פקודה
+EDCH		equ	$dd		; התו של S / K
 EDNUM		equ	$d1		; 2 בתים: מספר השורה (לא $DE: שם OCTAVE של PLAY)
 
 ; lout: התו של LIST למסך, או למאגר (עד 249 תווים)
@@ -440,11 +441,9 @@ ed_head		bsr	ed_num		; שוב "n ", והעריכה מתחילה בתו הראש�
 		clr	EDPOS
 ed_cmd		clr	EDCNT
 ed_key		bsr	ed_get
-		cmpa	#'0		; ספרות: המונה (מודולו 256, בלי הד)
-		blo	1F
-		cmpa	#'9
+		suba	#'0		; ספרות: המונה (מודולו 256, בלי הד)
+		cmpa	#9
 		bhi	1F
-		suba	#'0
 		pshs	a
 		lda	EDCNT
 		ldb	#10
@@ -452,46 +451,29 @@ ed_key		bsr	ed_get
 		addb	,s+
 		stb	EDCNT
 		bra	ed_key
-1		leax	ed_tab,pcr	; הפקודה
-2		ldb	,x
+1		adda	#'0		; הפקודה
+		leax	ed_keys,pcr
+		clrb
+2		tst	,x
 		beq	ed_cmd		; לא מוכרת: כלום
-		cmpa	,x
+		cmpa	,x+
 		beq	3F
-		leax	3,x
+		incb
 		bra	2B
-3		ldd	1,x
-		leax	ed_tab,pcr
-		jsr	d,x
+3		leax	ed_offs,pcr
+		ldb	b,x
+		leax	ed_sp,pcr
+		abx
+		jsr	,x
 		bra	ed_cmd
-ed_tab		fcb	$20
-		fdb	ed_sp-ed_tab
-		fcb	'D
-		fdb	ed_d-ed_tab
-		fcb	'I
-		fdb	ed_ins-ed_tab
-		fcb	'X
-		fdb	ed_x-ed_tab
-		fcb	'H
-		fdb	ed_h-ed_tab
-		fcb	'L
-		fdb	ed_l-ed_tab
-		fcb	'A
-		fdb	ed_a-ed_tab
-		fcb	'E
-		fdb	ed_e-ed_tab
+ed_keys		fcc	" DIXHLAE"
 		fcb	13
-		fdb	ed_ent-ed_tab
-		fcb	'S
-		fdb	ed_s-ed_tab
-		fcb	'K
-		fdb	ed_k-ed_tab
-		fcb	'C
-		fdb	ed_c-ed_tab
+		fcc	"SKC"
 		fcb	8
-		fdb	ed_bs-ed_tab
-		fcb	'Q
-		fdb	ed_q-ed_tab
+		fcc	"Q"
 		fcb	0
+ed_offs		fcb	ed_sp-ed_sp,ed_d-ed_sp,ed_ins-ed_sp,ed_x-ed_sp,ed_h-ed_sp,ed_l-ed_sp,ed_a-ed_sp,ed_e-ed_sp
+		fcb	ed_ent-ed_sp,ed_s-ed_sp,ed_k-ed_sp,ed_c-ed_sp,ed_bs-ed_sp,ed_q-ed_sp
 
 ed_num		ldd	EDNUM
 		lbsr	prnum
@@ -512,32 +494,25 @@ ed_get		lbsr	getkey
 		cmpa	#$7e
 		bhi	ed_get
 9		rts
-; ed_n: B = המונה, 0 = 1
-ed_n		ldb	EDCNT
-		bne	1F
-		incb
-1		rts
-; ed_adv: מדפיסים את התו שבמקום ומתקדמים. C=1 אם כבר בסוף
-ed_adv		ldb	EDPOS
+; ed_px: X = התו שבמקום, B = המקום; "bhs" = בסוף
+ed_px		ldx	#LINBUF
+		ldb	EDPOS
+		abx
 		cmpb	EDLEN
-		bhs	8F
-		ldx	#LINBUF
-		lda	b,x
+		rts
+ed_end		orcc	#1
+		rts
+; ed_adv: מדפיסים את התו שבמקום ומתקדמים. C=1 אם כבר בסוף
+ed_adv		bsr	ed_px
+		bhs	ed_end
+		lda	,x
 		lbsr	putc
 		inc	EDPOS
 		andcc	#$fe
 		rts
-8		orcc	#1
-		rts
-ed_rest		bsr	ed_adv
-		bcc	ed_rest
-		rts
 ; ed_del: מוחקים את התו שבמקום (בלי הדפסה). C=1 אם בסוף
-ed_del		ldb	EDPOS
-		cmpb	EDLEN
-		bhs	8B
-		ldx	#LINBUF
-		abx
+ed_del		bsr	ed_px
+		bhs	ed_end
 1		lda	1,x
 		sta	,x+
 		incb
@@ -546,32 +521,63 @@ ed_del		ldb	EDPOS
 		dec	EDLEN
 		andcc	#$fe
 		rts
-; ed_char: B = התו שבמקום (C=1 אם בסוף)
-ed_char		pshs	x
-		ldb	EDPOS
-		cmpb	EDLEN
-		bhs	1F
-		ldx	#LINBUF
-		ldb	b,x
+ed_rest		bsr	ed_adv
+		bcc	ed_rest
+		rts
+; ed_loop: השגרה ב-U, n פעמים (המונה; 0 = 1). C=1 מהשגרה: עוצרים
+ed_loop		ldb	EDCNT
+		bne	1F
+		incb
+1		pshs	b,u
+		jsr	,u
+		puls	b,u
+		bcs	9F
+		decb
+		bne	1B
+9		rts
+; ed_bk: תא אחד אחורה, בלי למחוק מהמאגר (במסך התא נמחק). C=1 בהתחלה
+ed_bk		lda	EDPOS
+		beq	ed_end
+		dec	EDPOS
+		lda	#8
+		lbsr	putc
 		andcc	#$fe
-		puls	x,pc
-1		orcc	#1
-		puls	x,pc
+		rts
+; ed_sk1: S/K: פעולה אחת (Y: הדפסה או מחיקה), ועוד עד לפני התו EDCH. C=1 בסוף
+ed_sk1		jsr	,y
+		bcs	9F
+1		bsr	ed_px
+		bhs	ed_end
+		lda	,x
+		cmpa	EDCH
+		beq	9F
+		jsr	,y
+		bra	1B
+9		rts
+; ed_c1: C: תו חדש במקום הקיים (ENTER, בריחה ו-← לא נחשבים); לא מאריך
+ed_c1		bsr	ed_px
+		bhs	ed_end
+1		lbsr	ed_get
+		cmpa	#$20
+		blo	1B
+		sta	,x
+		bra	ed_adv
 
-ed_sp		bsr	ed_n		; רווח: n תווים קדימה, מודפסים
-1		pshs	b
-		bsr	ed_adv
-		puls	b
-		decb
-		bne	1B
-		rts
-ed_d		bsr	ed_n		; D: מוחקים n תווים
-1		pshs	b
-		bsr	ed_del
-		puls	b
-		decb
-		bne	1B
-		rts
+ed_sp		leau	ed_adv,pcr	; רווח: n תווים קדימה, מודפסים
+		bra	ed_loop
+ed_d		leau	ed_del,pcr	; D: מוחקים n תווים
+		bra	ed_loop
+ed_bs		leau	ed_bk,pcr	; ←: n אחורה
+		bra	ed_loop
+ed_c		leau	ed_c1,pcr	; C: n תווים חדשים
+		bra	ed_loop
+ed_s		leay	ed_adv,pcr	; S c: עד לפני המופע ה-n של c אחרי המקום
+		bra	1F
+ed_k		leay	ed_del,pcr	; K c: מוחקים עד לפני המופע ה-n של c (אין: עד הסוף)
+1		lbsr	ed_get
+		sta	EDCH
+		leau	ed_sk1,pcr
+		bra	ed_loop
 ed_x		bsr	ed_rest		; X: לסוף, והוספה
 		bra	ed_ins
 ed_h		lda	EDPOS		; H: מוחקים עד הסוף, והוספה
@@ -584,12 +590,9 @@ ed_ins		lbsr	ed_get
 		beq	9F
 		cmpa	#8
 		bne	2F
-		lda	EDPOS
-		beq	ed_ins
-		dec	EDPOS
-		bsr	ed_del
-		lda	#8
-		lbsr	putc
+		bsr	ed_bk
+		bcs	ed_ins
+		lbsr	ed_del
 		bra	ed_ins
 2		ldb	EDLEN		; עד 250 תווים (קורא)
 		cmpb	#250
@@ -598,34 +601,32 @@ ed_ins		lbsr	ed_get
 		abx
 		pshs	a
 3		cmpb	EDPOS
-		bls	31F
-		lda	-1,x
-		sta	,x
-		leax	-1,x
+		bls	4F
+		lda	,-x
+		sta	1,x
 		decb
 		bra	3B
-31		puls	a
-4		sta	,x
+4		puls	a
+		sta	,x
 		inc	EDLEN
 		inc	EDPOS
 		lbsr	putc
 		bra	ed_ins
 9		rts
 ed_l		lbsr	ed_rest		; L: היתר, שורה חדשה, "n " ומההתחלה (השינויים נשמרים)
-		lda	#13
-		lbsr	putc
+		bsr	ed_cr
 		leas	2,s
 		lbra	ed_head
-ed_a		lda	#13		; A: מבטלים את השינויים וטוענים מחדש
-		lbsr	putc
+ed_a		bsr	ed_cr		; A: מבטלים את השינויים וטוענים מחדש
 		leas	2,s
 		lbra	ed_load
 ed_ent		lbsr	ed_rest		; ENTER: היתר, שורה חדשה, שמירה
-ed_e		lda	#13		; E: שמירה בלי להדפיס את היתר
-		lbsr	putc
+ed_e		bsr	ed_cr		; E: שמירה בלי להדפיס את היתר
 		ldb	EDLEN		; שומרים כמו שורה שהוקלדה: מכווצים, מחליפים, משתנים מתאפסים
 		ldx	#LINBUF
-		clr	b,x
+		abx
+		clr	,x
+		ldx	#LINBUF
 		ldd	EDNUM
 		std	LINNUM
 		lbsr	storel2
@@ -635,60 +636,5 @@ ed_e		lda	#13		; E: שמירה בלי להדפיס את היתר
 ed_q		lds	STKTOP		; Q: יציאה בלי שמירה
 		clr	,-s
 		lbra	main_ok
-ed_s		lbsr	ed_get		; S c: עד לפני המופע ה-n של c אחרי המקום
-		pshs	a
-		lbsr	ed_n
-1		pshs	b
-		lbsr	ed_adv
-		bcs	3F
-2		lbsr	ed_char
-		bcs	3F
-		cmpb	1,s
-		beq	3F
-		lbsr	ed_adv
-		bra	2B
-3		puls	b
-		decb
-		bne	1B
-		puls	a,pc
-ed_k		lbsr	ed_get		; K c: מוחקים עד לפני המופע ה-n של c (אין: עד הסוף)
-		pshs	a
-		lbsr	ed_n
-1		pshs	b
-		lbsr	ed_del
-		bcs	3F
-2		lbsr	ed_char
-		bcs	3F
-		cmpb	1,s
-		beq	3F
-		lbsr	ed_del
-		bra	2B
-3		puls	b
-		decb
-		bne	1B
-		puls	a,pc
-ed_c		lbsr	ed_n		; C: n תווים חדשים במקום הקיימים; לא מאריך
-1		pshs	b
-		lbsr	ed_char
-		bcs	3F
-2		lbsr	ed_get
-		cmpa	#$20		; ENTER, בריחה ו-← לא נחשבים כאן
-		blo	2B
-		ldb	EDPOS
-		ldx	#LINBUF
-		sta	b,x
-		lbsr	ed_adv
-		puls	b
-		decb
-		bne	1B
-		rts
-3		puls	b,pc
-ed_bs		lbsr	ed_n		; ←: n תווים אחורה, בלי למחוק מהמאגר (במסך התא נמחק)
-1		lda	EDPOS
-		beq	9F
-		dec	EDPOS
-		lda	#8
-		lbsr	putc
-		decb
-		bne	1B
-9		rts
+ed_cr		lda	#13
+		lbra	putc
