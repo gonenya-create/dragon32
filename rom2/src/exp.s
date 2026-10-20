@@ -140,6 +140,12 @@ err_nf		ldd	#'N*256+'F
 		bra	error
 err_ul		ldd	#'U*256+'L
 		bra	error
+err_bs		ldd	#'B*256+'S
+		bra	error
+err_dd		ldd	#'D*256+'D
+		bra	error
+err_om		ldd	#'O*256+'M
+		bra	error
 err_st		ldd	#'S*256+'T
 		bra	error
 err_os		ldd	#'O*256+'S
@@ -735,6 +741,7 @@ fntab		fcs	"SGN"
 		include	"mitfp.s"
 		include	"mitrun.s"
 		include	"mitstr.s"
+		include	"mitary.s"
 		include	"io.s"
 		include	"testq.s"
 

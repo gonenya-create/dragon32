@@ -96,6 +96,8 @@ stmdsp		fcb	$80
 		fdb	end-stmdsp
 		fcb	$8b
 		fdb	next-stmdsp
+		fcb	$8c
+		fdb	dim-stmdsp
 		fcb	$8e
 		fdb	let-stmdsp
 		fcb	$8f
@@ -394,7 +396,12 @@ ptrget		pshs	b
 		sta	VARNAM+1
 		com	VALTYP
 		lbsr	chrget
-11		ldx	VARTAB
+11		lda	,x		; ( = מערך (mit: ISARY)
+		cmpa	#'(
+		bne	12F
+		puls	b
+		lbra	ary
+12		ldx	VARTAB
 4		cmpx	ARYTAB
 		beq	5F
 		ldd	,x

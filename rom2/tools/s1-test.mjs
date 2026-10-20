@@ -91,5 +91,16 @@ await check('literal in a program line stays in the program (no copy)', ['10 A$=
 await check('garbage collection keeps live strings; ?OS when really full (200 bytes)', ['10 B$="KEEP":FOR I=1 TO 300:A$="ABCDEFGHIJ"+"KLMNOP":NEXT', '20 PRINT A$;B$', '30 C$="":FOR I=1 TO 300:C$=C$+"Z":NEXT', 'RUN'], screenHas(/\nABCDEFGHIJKLMNOPKEEP\n\?OS ERROR IN 30\nOK$/));
 await check('type mismatch', ['A=1:A$="X":PRINT A+A$'], screenHas(/\?TM ERROR\nOK$/));
 
+console.log('stage 2 part 2: arrays');
+await check('DIM, two dimensions, zero start', ['DIM A(3),B(2,4):A(3)=7:B(2,4)=9:PRINT A(3)*2;B(2,4);A(0)'], screenHas(/\n 14  9  0\nOK$/));
+await check('auto DIM 0-10, ?BS past 10, ?FC negative, ?DD twice', ['C(10)=5:PRINT C(10)', 'PRINT C(11)', 'PRINT C(-1)', 'DIM C(2)'], screenHas(/\n 5\nOK\nPRINT C\(11\)\n\?BS ERROR\nOK\nPRINT C\(-1\)\n\?FC ERROR\nOK\nDIM C\(2\)\n\?DD ERROR\nOK$/));
+await check('string arrays', ['DIM S$(2):S$(1)="HI":PRINT S$(1);S$(0);"/"'], screenHas(/\nHI\/\nOK$/));
+await check('array record = reader test 5: sizes 4,3,2 (last first), length 131, offsets 5/10/30', ['DIM A(1,2,3)', 'A(1,0,0)=1:A(0,1,0)=2:A(0,0,1)=3'], r => {
+  const at = w(r, 0x1d), base = at + 11;
+  const head = same([...r.ram.subarray(at, at + 11)], [0x41, 0, 0, 131, 3, 0, 4, 0, 3, 0, 2]);
+  return (head === true && r.ram[base + 5] === 0x81 && r.ram[base + 10] === 0x82 && r.ram[base + 30] === 0x82 && r.ram[base + 31] === 0x40) || head;
+});
+await check('array index inside an index', ['B(1)=3:A(B(1))=8:PRINT A(3)'], screenHas(/\n 8\nOK$/));
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
