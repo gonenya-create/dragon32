@@ -280,5 +280,26 @@ await check('EDIT: E saves without printing the rest; no OK after saving', ['10 
 await check('EDIT with no number = line 0 (?UL); line missing ?UL; extra text ?SN', ['10 PRINT 1', 'EDIT', 'EDIT 20', 'EDIT 10 X'], r =>
   (r.screen.match(/\?UL ERROR/g) || []).length === 2 && /EDIT 10 X\n\?SN ERROR\nOK$/.test(r.screen.replace(/\n@$/, '')) || r.screen.split('\n').slice(-8).join(' | '));
 await check('EDIT saves like a typed line: variables cleared', ['10 PRINT A', 'A=5', 'EDIT 10', '', 'PRINT A'], outLines(' 0'));
+
+console.log('stage 3 part 2: PRINT USING (reader: docs/DRAGON-SPEC-USING.md; 27 source predictions + the 24 L-USING tests + edges)');
+{
+  const { readFileSync } = await import('node:fs');
+  const cases = JSON.parse(readFileSync(new URL('./using.json', import.meta.url), 'utf8'));
+  const dec = b => { const c = b & 0x3f; const a = String.fromCharCode(c < 0x20 ? c + 0x40 : c); return b & 0x40 ? a : a.toLowerCase(); };
+  const bad = [];
+  for (const [cmd, want] of cases) {
+    const r = await runRom(['CLS', cmd], { timeout: 5 });
+    const rows = Array.from({ length: 16 }, (_, k) => [...r.ram.subarray(0x400 + 32 * k, 0x420 + 32 * k)].map(dec).join(''));
+    const c0 = rows.findIndex(x => x.startsWith(cmd.slice(0, 10)));
+    const n = c0 + Math.ceil(cmd.length / 32);
+    const w = want.split('\n').map(x => x.startsWith('?') ? x + ' ERROR' : x);
+    const got = rows.slice(n, n + w.length);
+    // exact bytes for the first line: trailing spaces count when the wanted text ends with spaces
+    const ok = got.every((g, k) => k === 0 && !w[k].startsWith('?') ? g.startsWith(w[k]) && g.slice(w[k].length).trim() === '' : g.trimEnd() === w[k]);
+    if (!ok) bad.push(`${cmd} → ${JSON.stringify(got.map(x => x.trimEnd()))} / want ${JSON.stringify(w)}`);
+  }
+  if (!bad.length) { pass++; console.log(`  ✓ PRINT USING: all ${cases.length} cases`); }
+  else { fail++; console.log('  ✗ PRINT USING\n      ' + bad.join('\n      ')); }
+}
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

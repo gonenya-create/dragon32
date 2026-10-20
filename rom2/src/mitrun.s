@@ -290,7 +290,9 @@ letasg		ldx	FORPNT
 ; כמו במקור: הפקודה קוראת לטיפול ברשימה (עוד רמה במחסנית; MEM תלוי בה — קורא)
 print		bsr	prlist
 		rts
-prlist		beq	pr_cr
+prlist		lbeq	pr_cr
+		cmpa	#$cd		; PRINT USING (קורא)
+		lbeq	usstart
 		cmpa	#'@		; PRINT @n (קורא): 0-511, אחרת ?FC; אחריו פסיק אם יש המשך, וסוף = שורה חדשה
 		bne	pr_lp
 		lbsr	chrget
@@ -305,6 +307,8 @@ prlist		beq	pr_cr
 		lda	#',
 		lbsr	synchk
 		beq	pr_cr
+		cmpa	#$cd		; PRINT @n,USING
+		lbeq	usstart
 pr_lp		cmpa	#';
 		beq	pr_semi
 		cmpa	#',

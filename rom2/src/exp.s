@@ -805,6 +805,7 @@ fntab		fcs	"SGN"
 		include	"mitfunc.s"
 		include	"mitscr.s"
 		include	"mitedit.s"
+		include	"mitusing.s"
 		include	"io.s"
 		include	"testq.s"
 
