@@ -767,6 +767,7 @@ fntab		fcs	"SGN"
 		include	"mitusing.s"
 		include	"mitgfx.s"
 		include	"mitcirc.s"
+		include	"mitdraw.s"
 		include	"io.s"
 		include	"testq.s"
 

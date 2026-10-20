@@ -353,7 +353,8 @@ samset		lsra
 ; ---------- LINE [@][(x1,y1)]-(x2,y2),PSET|PRESET[,B|,BF] (קורא 8) ----------
 ; נכנסים מ-line_st (LINE INPUT שם). הנקודה הראשונה: ברירת המחדל היא האחרונה.
 ; הנקודה האחרונה מתעדכנת לפני הבדיקה של PSET/PRESET
-gline_st	cmpa	#'(
+; g2pt: "[@][(x1,y1)]-(x2,y2)" → GX/GY ו-GX2/GY2 (לפני ההקטנה). גם GET/PUT (קורא 12)
+g2pt		cmpa	#'(
 		beq	1F
 		cmpa	#$c4		; -
 		beq	1F
@@ -371,7 +372,8 @@ gline_st	cmpa	#'(
 2		lda	#$c4
 		lbsr	synchk
 		ldu	#GX2
-		lbsr	gpar
+		lbra	gpar
+gline_st	bsr	g2pt
 		ldd	GX2
 		std	GLX
 		ldd	GY2

@@ -6,7 +6,7 @@ import { Gfx } from './gfxmodel.mjs';
 let pass = 0, fail = 0;
 const ok = (name, good, detail) => { if (good) { pass++; console.log('  ✓ ' + name); } else { fail++; console.log('  ✗ ' + name + (detail ? '\n      ' + detail : '')); } };
 let seed = +(process.env.SEED || 1982);
-const rnd = n => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed % n; };
+const rnd = n => { seed = (Math.imul(seed, 1103515245) + 12345) & 0x7fffffff; return seed % n; };
 const tail = r => r.screen.split('\n').filter(l => l && l !== '@').slice(-3).join(' | ');
 
 // מריצים פקודות ב-ROM ובמודל, ומשווים את הזיכרון בטווח
