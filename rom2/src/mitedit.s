@@ -33,7 +33,7 @@ line_st		cmpa	#$89		; INPUT
 		jsr	<chrget
 		lbsr	errdir		; ?ID, וההנחיה
 		clr	IKEYIM
-		lbsr	getline
+		lbsr	devgetln	; מקלדת או קלטת (קורא: קלטת 3.11)
 		lbcs	inbrk		; BREAK (C=1): עצירה, ו-CONT חוזר לפקודה (קורא)
 		clrb
 		lbsr	ptrget
@@ -45,7 +45,9 @@ line_st		cmpa	#$89		; INPUT
 		clr	ENDCHR
 		ldx	#LINBUF
 		lbsr	strlt2
-		lbra	letasg
+		lbsr	letasg
+		clr	DEVNUM
+		rts
 
 ; ---------- DEL ----------
 ; DEL n, n-m, -m, n-, -. בלי כלום: ?FC. שורות שלא קיימות: בלי שגיאה (קורא)
@@ -281,7 +283,7 @@ EDNUM		equ	$d1		; 2 בתים: מספר השורה (לא $DE: שם OCTAVE של PL
 
 ; lout: התו של LIST למסך, או למאגר (עד 249 תווים)
 lout		tst	EDFLG
-		lbeq	putc
+		lbeq	chrout
 		pshs	b,x
 		ldb	EDLEN
 		cmpb	#249

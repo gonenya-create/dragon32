@@ -220,9 +220,12 @@ stop		orcc	#1		; BREAK (orcc/andcc לא משנים את Z)
 		fcb	$10,$21		; lbrn: מדלגים על ה-andcc
 end		andcc	#$fe
 		bne	9F		; משהו אחרי STOP / END: ?SN ב-newstt
+		bcs	stpdrop
+		lbsr	tclose		; END סוגר את הקבצים (STOP לא; קורא: קלטת 6). C=0 אחרי clr
 stpdrop		leas	2,s		; בלי החזרה ל-gone
 ; stpend: TXTPTR = המקום להמשך. C=1: הודעת BREAK. המחסנית (FOR/GOSUB) נשמרת עד CONT
 stpend		pshs	cc
+		clr	DEVNUM		; STOP, END, BREAK: חזרה למסך
 		lda	CURLIN
 		inca
 		beq	2F		; במצב ישיר אין מה להמשיך
@@ -253,7 +256,12 @@ errdir		lda	CURLIN
 		inca
 		lbeq	err_id
 prompt		jsr	<chrgot
-		cmpa	#'"
+		cmpa	#'#		; INPUT #התקן, (קורא: קלטת 3.11)
+		bne	1F
+		lbsr	getdev
+		lbsr	chkin
+		lbsr	chkcom
+1		cmpa	#'"
 		bne	9F
 		ldx	TXTPTR
 		leax	1,x
@@ -266,8 +274,8 @@ prompt		jsr	<chrgot
 9		rts
 ; qinlin: "? " ושורה מהמקלדת. BREAK: עוצרים, ו-CONT חוזר ל-INPUT
 qinlin		ldx	#m_qs
-qinlx		lbsr	puts
-		lbsr	getline
+qinlx		lbsr	puts		; לקלטת שפתוחה לקריאה: נזרק
+		lbsr	devgetln
 		bcs	1F
 		rts
 1		leas	2,s		; qinlin
@@ -287,6 +295,8 @@ input		bsr	errdir		; לא במצב ישיר: ?ID; ואחר כך ההנחיה
 		lda	#',
 		sta	BUFMIN
 		bsr	qinlin
+		tst	DEVNUM		; מהקלטת: גם שורה ריקה היא נתון
+		bne	2F
 		tst	LINBUF
 		bne	2F
 		; ENTER בלי כלום: התוכנית נעצרת בשקט, ו-CONT חוזר ל-INPUT (mit: STPEND)
@@ -333,6 +343,10 @@ datbk1		jsr	<chrget
 		cmpa	#'"
 		beq	1F
 		ldd	#':*256+',
+		tst	DEVNUM		; מהקלטת: מחרוזת בלי מרכאות עד סוף השורה
+		beq	2F
+		clra
+		clrb
 		bra	2F
 1		tfr	a,b
 		leax	1,x
@@ -363,16 +377,20 @@ varend		ldx	INPPTR
 		stx	DATPTR		; READ: ממשיכים מכאן בפעם הבאה
 9		rts
 1		tst	,x		; INPUT: נשאר עוד משהו בשורה?
-		beq	9B
+		beq	2F
 		ldx	#m_extra
-		lbra	puts
+		lbsr	puts
+2		clr	DEVNUM		; בסוף INPUT: חזרה למסך
+		rts
 ; נתון שלא מתאים: ב-READ ?SN בשורת ה-DATA; ב-INPUT מבקשים שוב את כל הפקודה
 trmnok		tst	INPFLG
 		beq	1F
 		ldd	DATLIN
 		std	CURLIN
 		lbra	err_sn
-1		ldx	TXTBEG		; newstt מריץ את הפקודה מחדש
+1		tst	DEVNUM		; לא מהמקלדת: ?FD במקום ?REDO
+		lbne	err_fd
+		ldx	TXTBEG		; newstt מריץ את הפקודה מחדש
 		stx	TXTPTR
 		ldx	#m_redo
 		lbra	puts

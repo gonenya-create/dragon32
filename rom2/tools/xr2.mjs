@@ -91,7 +91,7 @@ export async function runRom(lines, opts = {}) {
   if (!Array.isArray(lines) || lines.some(line => typeof line !== 'string' || /[^\x03\x0c\x20-\x7e]/.test(line)))
     throw new Error('ROM input must be an array of printable ASCII lines (\\x03 = BREAK, \\x0c = CLEAR)');
   const input = Buffer.from(lines.map(line => line + '\r').join(''), 'ascii');
-  if (input.length > 4096) throw new Error(`ROM input is ${input.length} bytes; maximum is 4096 bytes including CRs`);
+  if (input.length > 8192) throw new Error(`ROM input is ${input.length} bytes; maximum is 8192 bytes including CRs (cartridge at $C000)`);
   const { trapSym = 'gk_scan', range, timeout = 5, wallTimeout = 20000 } = opts;
   if (!Number.isFinite(timeout) || timeout <= 0 || !Number.isFinite(wallTimeout) || wallTimeout <= 0)
     throw new Error('Timeouts must be positive finite numbers');
@@ -127,15 +127,15 @@ export async function runRom(lines, opts = {}) {
         sta PIA0+1
         clr PIA0`));
     }
-    const bytes = [input.length >> 8, input.length & 255, ...input];
-    const table = [];
-    for (let i = 0; i < bytes.length; i += 16)
-      table.push(`${i === 0 ? 'testq' : ''}\tfcb\t${bytes.slice(i, i + 16).join(',')}`);
-    await writeFile(join(src, 'testq.s'), table.join('\n') + '\n');
+    // התור המוקלד: במחסנית ב-$C000 (ה-ROM מלא), וב-ROM רק האורך והכתובת
+    const cart = join(dir, 'testq.rom');
+    await writeFile(cart, Buffer.concat([input, Buffer.alloc(8192 - input.length)]));   // 8K מלאים (קובץ קטן משתקף)
+    await writeFile(join(src, 'testq.s'), `testq\t\tfdb\t${input.length},$c000\n`);
     await exec('asm6809', ['-B', '-o', rom, '-s', sym, 'exp.s'], { cwd: src, timeout: wallTimeout, killSignal: 'SIGKILL' });
     const symbols = new Map([...((await readFile(sym, 'utf8')).matchAll(/^(\w+)\s+equ\s+(\d+)\s*$/gm))].map(m => [m[1], Number(m[2])]));
     if (!symbols.has(trapSym)) throw new Error(`Unknown trap symbol: ${trapSym}`);
     const args = ['-no-tape-fast', '-no-tape-pad-auto', '-ui', 'null', '-ao', 'null', '-machine', 'dragon32', '-extbas', rom, '-no-ratelimit', '-trap', `pc=0x${symbols.get(trapSym).toString(16)}`];
+    args.push('-cart', 'testq', '-cart-type', 'rom', '-cart-rom', cart, '-no-cart-autorun');
     if (opts.tapeLoad) args.push('-load-tape', opts.tapeLoad);
     if (opts.xroarArgs) args.push(...opts.xroarArgs);   // הגדרות נוספות ל-XRoar (למשל -tape-ao-rate)
     if (opts.tapeWrite) args.push('-tape-write', opts.tapeWrite);

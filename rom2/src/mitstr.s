@@ -94,7 +94,7 @@ strprt		bsr	frefac
 		tstb
 		beq	9F
 1		lda	,x+
-		lbsr	putc		; שומר על B ו-X
+		lbsr	chrout		; שומר על B ו-X
 		decb
 		bne	1B
 9		rts

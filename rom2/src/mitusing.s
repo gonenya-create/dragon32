@@ -31,7 +31,7 @@ us_eof		lda	USEND		; סוף התבנית
 		lsra
 		bne	9F		; נגמרה במפריד: בלי שורה חדשה
 us_cr		lda	#13
-		lbsr	putc
+		lbsr	chrout
 9		ldx	USDSC		; משחררים את התבנית
 		lbra	fretms
 1		tst	USANY		; עוד ערכים: מתחילים שוב, אם במחזור נצרך משהו (אחרת ?FC)
@@ -66,7 +66,7 @@ us_scan		ldu	USDSC		; USEPT = סוף התבנית, X = התו הנוכחי (מח
 		beq	2B
 us_no		puls	x		; לא שדה (גם % בלי % סוגר)
 us_lit		lda	,x		; תו רגיל
-		lbsr	putc
+		lbsr	chrout
 		inc	USPOS
 		bra	us_scan
 3		leas	2,s
@@ -106,13 +106,13 @@ us_str		lbsr	frestr		; A = האורך, X = התווים
 		beq	2F
 		dec	USN
 		lda	,x+
-		lbsr	putc
+		lbsr	chrout
 		decb
 		bne	1B
 2		tstb			; חסרים 129 ומעלה: לא משלימים (קורא: בדיקת המונה במקור)
 		ble	us_sep
 		lda	#$20
-3		lbsr	putc
+3		lbsr	chrout
 		decb
 		bne	3B
 		bra	us_sep
@@ -264,7 +264,7 @@ us_num		lda	USD		; שדה רחב מ-17 (עם הנקודה): ?FC
 		lbsr	fcomp
 		bmi	3F
 		lda	#'%
-		lbsr	putc
+		lbsr	chrout
 		lbsr	fout
 		ldx	#FBUFFR
 		lbra	puts

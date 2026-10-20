@@ -41,8 +41,6 @@ txtmode		pshs	a,x
 3		cmpx	#SAM
 		bne	1B
 		puls	a,x,pc
-; chrout: תו ל-$A002. בינתיים רק המסך; ההתקנים (קלטת, מדפסת) בצעד 3
-chrout		equ	putc
 ; noserv: המדפסת (בהמשך) וכניסות התקשורת שאין ב-Dragon 32
 noserv		rts
 ; ---------- מסך ----------
@@ -103,9 +101,9 @@ pc_bs		cmpx	#SCREEN
 putc_done	puls	a,b,x,pc
 
 ; puts: מחרוזת ב-X שמסתיימת ב-0
-puts		lda	,x+
+puts		lda	,x+		; להתקן שב-DEVNUM
 		beq	1F
-		bsr	putc
+		lbsr	chrout
 		bra	puts
 1		rts
 
@@ -196,7 +194,8 @@ ki_next		incb
 		lda	b,x
 		bra	ki_out
 ki_none		clra
-ki_out		puls	b,x,y,pc
+ki_out		tsta			; Z לפי התו (בלי SHIFT ה-Z נשאר מבדיקת ה-SHIFT: מקש רגיל נראה כמו "אין")
+		puls	b,x,y,pc
 
 ; inkey: מקש בלי לחכות (INKEY$): מהתור, או מקש שנלחץ עכשיו. אין: A=0
 inkey		ldd	KQCNT

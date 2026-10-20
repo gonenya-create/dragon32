@@ -129,8 +129,8 @@ stmtbl
 		fdb	def		; $98 DEF
 		fdb	cload_st	; $99 CLOAD
 		fdb	csave_st	; $9A CSAVE
-		fdb	err_sn		; $9B OPEN
-		fdb	err_sn		; $9C CLOSE
+		fdb	open_st		; $9B OPEN
+		fdb	close_st	; $9C CLOSE
 		fdb	err_sn		; $9D LLIST
 		fdb	set_st		; $9E SET
 		fdb	reset_st		; $9F RESET
@@ -172,6 +172,7 @@ rem		ldx	TXTPTR		; עד סוף השורה
 ; RUN [שורה]: משתנים מתאפסים, ומתחילים מהשורה הראשונה (TXTPTR = TXTTAB-1, האפס שב-$1E00) או מהשורה שצוינה
 ; (mit: RUN — CLEARC ואז GOTO)
 run		lbsr	gfxrun		; הנקודה האחרונה, זווית וקנה מידה של DRAW (קורא 0.2)
+		lbsr	tclose		; הקבצים נסגרים (קורא: קלטת 6)
 		lbsr	runc
 		lds	STKTOP
 		clr	,-s		; סמן תחתית למחסנית ה-FOR (mit: STKINI)
@@ -280,8 +281,18 @@ letasg		ldx	FORPNT
 ; ---------- PRINT (mit: PRINT 2669), בניסוי: מספרים, מחרוזות במרכאות, ; ו-, ----------
 ; כמו במקור: הפקודה קוראת לטיפול ברשימה (עוד רמה במחסנית; MEM תלוי בה — קורא)
 print		bsr	prlist
+		clr	DEVNUM		; בסוף PRINT: חזרה למסך
 		rts
-prlist		beq	pr_cr
+prlist		lbeq	pr_cr
+		cmpa	#'#		; PRINT #התקן[,רשימה] (קורא: קלטת 3.10)
+		bne	1F
+		lbsr	getdev
+		lbsr	chkout
+		jsr	<chrgot
+		lbeq	pr_cr
+		lbsr	chkcom
+		lbeq	pr_cr
+1
 		cmpa	#$cd		; PRINT USING (קורא)
 		lbeq	usstart
 		cmpa	#'@		; PRINT @n (קורא): 0-511, אחרת ?FC; אחריו פסיק אם יש המשך, וסוף = שורה חדשה
@@ -311,30 +322,41 @@ pr_lp		cmpa	#';
 3		lbsr	fout
 		ldx	#FBUFFR
 		lbsr	puts
+		lbsr	istape		; לקלטת: בלי רווח אחרי מספר
+		beq	4F
 		lda	#$20		; רווח אחרי מספר
-		lbsr	putc
-4		jsr	<chrgot
+		lbsr	chrout
+4		lbsr	istape		; לקלטת: CR אחרי כל פריט, וזה גם הסוף
+		bne	5F
+		lda	#13
+		lbsr	chrout
+		jsr	<chrgot
+		bne	pr_lp
+		rts
+5		jsr	<chrgot
 		beq	pr_cr
 		bra	pr_lp
 pr_semi		jsr	<chrget
 		bne	pr_lp
 		rts			; ; בסוף: בלי שורה חדשה
-pr_comma	lda	CURSOR+1	; פסיק: מעמודות 0-15 רווחים עד 16; מ-16-31 שורה חדשה (קורא: מפרט המסך)
+pr_comma	lbsr	istape		; לקלטת: פסיק לא מוציא כלום
+		beq	3F
+		lda	CURSOR+1	; פסיק: מעמודות 0-15 רווחים עד 16; מ-16-31 שורה חדשה (קורא: מפרט המסך)
 		bita	#$10
 		bne	2F
 1		lda	#$20
-		lbsr	putc
+		lbsr	chrout
 		lda	CURSOR+1
 		bita	#$0f
 		bne	1B
 		bra	3F
 2		lda	#13
-		lbsr	putc
+		lbsr	chrout
 3		jsr	<chrget
 		bne	pr_lp
 		rts
 pr_cr		lda	#13
-		lbra	putc
+		lbra	chrout
 
 ; ---------- FOR / NEXT (mit: FOR 2081, NEXT 3110) ----------
 ; רשומה במחסנית, מהכתובת הנמוכה: $80, כתובת המשתנה (2), הצעד (5), סימן הצעד (1), העד (5),
@@ -760,7 +782,7 @@ fntbl
 		fdb	fn_val-$8000+0*$4000	; $8F VAL
 		fdb	fn_asc-$8000+0*$4000	; $90 ASC
 		fdb	fn_chr-$8000+0*$4000	; $91 CHR$
-		fdb	err_sn-$8000+2*$4000	; $92 EOF
+		fdb	fn_eof-$8000+0*$4000	; $92 EOF
 		fdb	fn_joy-$8000+0*$4000	; $93 JOYSTK
 		fdb	fn_fix-$8000+0*$4000	; $94 FIX
 		fdb	fn_hex-$8000+0*$4000	; $95 HEX$

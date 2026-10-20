@@ -109,9 +109,10 @@ swinit		orcc	#$50
 		decb
 		bne	1B
 		lbsr	cls
-		leax	testq,pcr	; תור הבדיקות
-		ldd	,x++
+		leax	testq,pcr	; תור הבדיקות: אורך וכתובת. ב-ROM האמיתי 0; בבדיקות התור במחסנית ב-$C000
+		ldd	,x
 		std	KQCNT
+		ldx	2,x
 		stx	KQPTR
 		; מצב ההדלקה (ספר): תוכנית ב-$1E01, אפס ב-$1E00, גבולות הזיכרון והמחרוזות
 		; (FRETOP ו-TEMPPT: נקבעים ב-scrtch/runc)
@@ -192,7 +193,7 @@ prin		ldd	CURLIN
 		lbsr	prnum
 ; prcr: שורה חדשה
 prcr		lda	#13
-		lbra	putc
+		lbra	chrout
 
 ; ---------- שגיאות (mit: ERROR) ----------
 err_ov		ldd	#'O*256+'V
@@ -239,8 +240,15 @@ err_io		ldd	#'I*256+'O
 		bra	error
 err_fm		ldd	#'F*256+'M
 		bra	error
+err_ie		ldd	#'I*256+'E
+		bra	error
+err_ds		ldd	#'D*256+'S
+		bra	error
+err_fd		ldd	#'F*256+'D
+		bra	error
 err_sn		ldd	#'S*256+'N
 error		lds	STKTOP		; mit: STKINI — מחסנית, זמניים, ואין המשך
+		clr	DEVNUM		; כל שגיאה: חזרה למסך (קורא: קלטת 4.3)
 		clr	,-s
 		pshs	d		; שתי האותיות, ואחריהן ה-0 של הסמן: מחרוזת במחסנית
 		lbsr	sndoff		; כל שגיאה: הצליל והמנוע כבויים (קורא: צליל 1.1)
@@ -537,7 +545,7 @@ lnum		lbsr	skipsp
 		orcc	#1
 9		rts
 do_list		bsr	lrange
-		lbsr	fndlin
+dlist2		lbsr	fndlin		; D = השורה הראשונה, LEND = האחרונה (CSAVE ,A נכנס כאן)
 3		ldd	,y
 		beq	9F
 		ldd	2,y
@@ -545,7 +553,7 @@ do_list		bsr	lrange
 		bhi	9F
 		bsr	prnum		; מספר השורה
 		lda	#$20
-		lbsr	putc
+		lbsr	chrout
 		leax	4,y
 		pshs	y
 		bsr	prline
@@ -796,7 +804,6 @@ fntab		fcs	"SGN"
 		include	"mitstr.s"
 		include	"mitary.s"
 		include	"mitctl.s"
-		include	"mitmem.s"
 		include	"mitmath.s"
 		include	"mitfunc.s"
 
@@ -810,6 +817,7 @@ fntab		fcs	"SGN"
 		fdb	tblkwr		; $A008 כתיבת בלוק
 		fdb	$8012		; $A00A ג'ויסטיקים
 		fdb	$801b		; $A00C מבוא קלטת (כמו במקור: דרך הכניסה)
+		include	"mitmem.s"		; אחרי הטבלה: הקוד שלפניה צריך להיכנס עד $A000
 		include	"mitscr.s"
 		include	"mitedit.s"
 		include	"mitusing.s"
