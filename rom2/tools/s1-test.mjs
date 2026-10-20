@@ -78,5 +78,18 @@ await check('FOR/NEXT with STEP -1, nested, NEXT J,I; GOTO', ['10 FOR I=3 TO 1 S
 await check('errors: ?/0 ?UL ?NF', ['PRINT 1/0', 'GOTO 99', 'NEXT'], screenHas(/\?\/0 ERROR\nOK\nGOTO 99\n\?UL ERROR\nOK\nNEXT\n\?NF ERROR\nOK$/));
 await check('errors: ?OV ?SN, and IN line inside a program', ['PRINT 1E38*10', 'PRINT 2+', '10 PRINT 1/0', 'RUN'], screenHas(/\n\?OV ERROR\nOK\nPRINT 2\+\n\?SN ERROR\nOK\n10 PRINT 1\/0\nRUN\n\?\/0 ERROR IN 10\nOK$/));
 
+console.log('stage 2 part 1: strings');
+await check('string variables, + , LEN', ['A$="HELLO":B$=A$+" WORLD"', 'PRINT A$;B$;LEN(B$)'], screenHas(/\nHELLOHELLO WORLD 11\nOK$/));
+await check('LEFT$ RIGHT$ MID$', ['B$="HELLO WORLD"', 'PRINT LEFT$(B$,3);"/";RIGHT$(B$,5);"/";MID$(B$,7,3);"/";MID$(B$,9)'], screenHas(/\nHEL\/WORLD\/WOR\/RLD\nOK$/));
+await check('string compare, CHR$, ASC', ['PRINT "AB"<"AC";"B">"AB";"A"="A";CHR$(65);ASC("Z")'], screenHas(/\n-1 -1 -1 A 90\nOK$/));
+await check('string descriptor in the variable: [len][?][addr 2][?]; temps at $01A9 freed', ['A$="XY"'], r => {
+  const v = w(r, 0x1b); return (r.ram[v] === 0x41 && r.ram[v + 1] === 0x80 && r.ram[v + 2] === 2 && w(r, 0x0b) === 0x1a9) || `rec ${hex([...r.ram.subarray(v, v + 7)])} TEMPPT ${w(r, 0x0b).toString(16)}`;
+});
+await check('literal in a program line stays in the program (no copy)', ['10 A$="XY"', 'RUN'], r => {
+  const v = w(r, 0x1b); const a = w(r, v + 4); return (a > 0x1e01 && a < w(r, 0x1b)) || `addr ${a.toString(16)}`;
+});
+await check('garbage collection keeps live strings; ?OS when really full (200 bytes)', ['10 B$="KEEP":FOR I=1 TO 300:A$="ABCDEFGHIJ"+"KLMNOP":NEXT', '20 PRINT A$;B$', '30 C$="":FOR I=1 TO 300:C$=C$+"Z":NEXT', 'RUN'], screenHas(/\nABCDEFGHIJKLMNOPKEEP\n\?OS ERROR IN 30\nOK$/));
+await check('type mismatch', ['A=1:A$="X":PRINT A+A$'], screenHas(/\?TM ERROR\nOK$/));
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

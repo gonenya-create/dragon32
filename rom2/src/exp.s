@@ -46,10 +46,10 @@ KPRE		equ	$03f9		; קידומת המילה שנמצאה: 0 פקודה, $FF פו�
 LEND		equ	$03fa		; 2 בתים: סוף טווח LIST
 LASTKEY		equ	$03fc
 
-KEYQ		equ	$7d00		; רק לבדיקות: תור מקשים מוקלדים. בניסוי מחוץ לאזורים הקבועים של ה-Dragon
+KEYQ		equ	$7a00		; רק לבדיקות: תור מקשים מוקלדים. בניסוי מחוץ לאזורים הקבועים של ה-Dragon
 LINBUF		equ	$02dd		; מאגר השורה (קורא: BUF ב-$02DD)
 LINMAX		equ	249
-CRB		equ	$7c00		; הניסוי בלבד: השורה המכווצת. במקור הכיווץ נעשה בתוך המאגר
+CRB		equ	$7b00		; הניסוי בלבד: השורה המכווצת. במקור הכיווץ נעשה בתוך המאגר
 STACKINI	equ	$7f36		; ספר: STKTOP אחרי ההדלקה
 
 ; ---------- הפעלה ----------
@@ -89,6 +89,8 @@ reset		orcc	#$50
 		std	FRETOP
 		ldd	#$7f36
 		std	STKTOP
+		ldd	#TEMPST
+		std	TEMPPT
 		lbsr	scrtch
 		leax	banner,pcr
 		lbsr	puts
@@ -137,6 +139,12 @@ err_tm		ldd	#'T*256+'M
 err_nf		ldd	#'N*256+'F
 		bra	error
 err_ul		ldd	#'U*256+'L
+		bra	error
+err_st		ldd	#'S*256+'T
+		bra	error
+err_os		ldd	#'O*256+'S
+		bra	error
+err_ls		ldd	#'L*256+'S
 		bra	error
 err_dv0		ldd	#'/*256+'0
 error		lds	#STACKINI
@@ -726,6 +734,7 @@ fntab		fcs	"SGN"
 
 		include	"mitfp.s"
 		include	"mitrun.s"
+		include	"mitstr.s"
 		include	"io.s"
 		include	"testq.s"
 
