@@ -26,13 +26,12 @@ polyx		stx	POLYPT
 		ldx	#TEMPF1
 		lbra	fmult
 ; poly: X = הטבלה: [מעלה][מקדמים של 5 בתים, הגבוה ראשון]. שיטת הורנר
-poly		stx	POLYPT
+poly		lda	,x+
+		sta	DEGREE
+		stx	POLYPT
 		ldx	#TEMPF2
 		lbsr	movmf
 		ldx	POLYPT
-		lda	,x+
-		sta	DEGREE
-		stx	POLYPT
 1		lbsr	fmult		; בפעם הראשונה: המקדם הראשון
 		ldx	POLYPT
 		leax	5,x
@@ -46,33 +45,32 @@ poly		stx	POLYPT
 ; ---------- LOG (mit: LOG) ----------
 fn_log		lbsr	chknum
 log		lbsr	sign
-		lbeq	err_fc		; אפס
-		lbmi	err_fc		; שלילי
+		lble	err_fc		; אפס או שלילי
 		lda	FACEXP		; המעריך בלי ההטיה
 		suba	#$80
 		pshs	a
 		lda	#$80		; המנטיסה בין חצי לאחד
 		sta	FACEXP
-		leax	sqrhlf,pcr	; (f-√½)/(f+√½) = 1 - √2/(f+√½)
+		ldx	#sqrhlf	; (f-√½)/(f+√½) = 1 - √2/(f+√½)
 		lbsr	fadd
-		leax	sqrtwo,pcr
+		ldx	#sqrtwo
 		lbsr	fdiv
-		leax	fone,pcr
+		ldx	#fone
 		lbsr	fsub
-		leax	logcn2,pcr
+		ldx	#logcn2
 		bsr	polyx
-		leax	neghlf,pcr
+		ldx	#neghlf
 		lbsr	fadd
 		puls	a
 		lbsr	finlog		; ועוד המעריך
-		leax	log2c,pcr	; כפול ln 2
+		ldx	#log2c	; כפול ln 2
 		lbra	fmult
 
 ; ---------- SQR ו-^ (mit: SQR, FPWRT) ----------
 ; ^: ARG = הבסיס, FAC = המעריך
 fn_sqr		lbsr	chknum
 		lbsr	movaf
-		leax	fhalf,pcr
+		ldx	#fhalf
 		lbsr	movfm
 fpwrt		tst	FACEXP
 		beq	exp		; מעריך 0: 1, גם 0^0 (קורא)
@@ -96,7 +94,7 @@ fpwrt		tst	FACEXP
 		lbsr	movfa		; FAC = הבסיס, עם הסימן ב-A (mit: MOVFA1)
 		lda	,s
 		sta	FACSGN
-		lbsr	log
+		bsr	log
 		ldx	#TEMPF3
 		lbsr	fmult
 		bsr	exp
@@ -107,14 +105,9 @@ fpwrt		tst	FACEXP
 
 ; ---------- EXP (mit: EXP) ----------
 fn_exp		lbsr	chknum
-exp		leax	logeb2,pcr	; x*log2(e)
+exp		ldx	#logeb2	; x*log2(e)
 		lbsr	fmult		; ב-Dragon: מעוגל כרגיל, ואז מפרידים (קורא; ב-mit מוסיפים 80 לבית הנוסף)
-		ldd	FACEXP		; FAC → ARG
-		std	ARGEXP
-		ldd	FACMOH
-		std	ARGMOH
-		ldd	FACLO
-		std	ARGLO
+		lbsr	movaf		; ARG = y
 		clr	FACOV
 		lda	FACEXP
 		cmpa	#$88		; |y| >= 128: גדול מדי
@@ -128,21 +121,8 @@ exp		leax	logeb2,pcr	; x*log2(e)
 		beq	6B
 		deca
 		pshs	a		; קנה המידה
-		ldx	#FACEXP		; מחליפים בין FAC ל-ARG (6 בתים)
-		ldu	#ARGEXP
-		ldb	#6
-3		lda	,x
-		pshs	a
-		lda	,u
-		sta	,x+
-		puls	a
-		sta	,u+
-		decb
-		bne	3B
-		clr	FACOV
-		lbsr	fsubt		; int(y) - y
-		lbsr	negop		; y - int(y)
-		leax	expcon,pcr
+		lbsr	fsubt		; y - int(y)
+		ldx	#expcon
 		lbsr	poly		; 2^שבר
 		clr	ARISGN
 		puls	a
@@ -151,12 +131,12 @@ exp		leax	logeb2,pcr	; x*log2(e)
 
 ; ---------- SIN / COS / TAN (mit: SIN, COS, TAN) ----------
 fn_cos		lbsr	chknum
-		leax	pi2,pcr		; cos x = sin(x+π/2)
+		ldx	#pi2		; cos x = sin(x+π/2)
 		lbsr	fadd
 		bra	sin
 fn_sin		lbsr	chknum
 sin		lbsr	movaf
-		leax	twopi,pcr	; x/2π
+		ldx	#twopi	; x/2π
 		lbsr	movfm
 		lda	ARGSGN
 		sta	ARISGN
@@ -165,7 +145,7 @@ sin		lbsr	movaf
 		lbsr	fint
 		clr	ARISGN
 		lbsr	fsubt		; רק השבר
-		leax	fr4,pcr
+		ldx	#fr4
 		lbsr	fsub		; 1/4 - השבר
 		lda	FACSGN
 		pshs	a
@@ -175,13 +155,12 @@ sin		lbsr	movaf
 		bmi	sin2
 		com	TANSGN		; רביע 2 ו-3
 sin1		lbsr	negop
-sin2		leax	fr4,pcr
+sin2		ldx	#fr4
 		lbsr	fadd
-		puls	a
-		tsta
+		lda	,s+
 		bpl	1F
 		lbsr	negop
-1		leax	sincon,pcr
+1		ldx	#sincon
 		lbra	polyx
 cosc		pshs	a		; הקוסינוס של הזווית המצומצמת (polyx השאיר אותה ב-TEMPF1)
 		bra	sin1
@@ -212,17 +191,16 @@ fn_atn		lbsr	chknum
 		pshs	a
 		cmpa	#$81		; 1 ומעלה: 1/x
 		blo	2F
-		leax	fone,pcr
+		ldx	#fone
 		lbsr	fdiv
-2		leax	atncon,pcr
+2		ldx	#atncon
 		lbsr	polyx
 		puls	a
 		cmpa	#$81
 		blo	3F
-		leax	pi2,pcr		; π/2 - atn(1/x)
+		ldx	#pi2		; π/2 - atn(1/x)
 		lbsr	fsub
-3		puls	a
-		tsta
+3		lda	,s+
 		lbmi	negop
 		rts
 

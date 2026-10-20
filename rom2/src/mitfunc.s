@@ -25,66 +25,47 @@ fn_rnd		lbsr	chknum
 		bsr	rnd_adv
 		ldx	#TEMPF1
 		lbsr	fmult
-		leax	fone,pcr
+		ldx	#fone
 		lbsr	fadd
 		lbra	fint
 rnd_seed	ldd	FACHO
 		std	RNDX
 		ldd	FACMO
 		std	RNDX+2
-rnd_adv		ldx	#RACC		; המכפלה המלאה, 8 בתים, הגבוה ראשון
-		ldb	#8
-1		clr	,x+
-		decb
-		bne	1B
-		clr	,-s		; i
-2		clr	,-s		; j
-3		ldx	#RNDX+3		; a_i (מהנמוך)
-		ldb	1,s
-		negb
-		lda	b,x
-		leax	rndmul+3,pcr	; b_j
-		ldb	,s
-		negb
-		ldb	b,x
+rnd_adv		clra			; המכפלה המלאה, 8 בתים, הגבוה ראשון: שורה לכל בית של המצב
+		clrb
+		std	RACC+4
+		std	RACC+6
+		ldy	#RNDX+4
+		ldx	#RACC+8
+1		leay	-1,y		; a_i (מהנמוך)
+		clr	,-s		; הנשא
+		leau	rndmul+4,pcr
+2		lda	,y
+		ldb	,-u		; b_j
 		mul
-		pshs	d
-		ldb	2,s		; המקום: i+j
-		addb	3,s
-		negb
-		ldu	#RACC+7
-		leau	b,u
-		puls	d
-		addd	-1,u
-		std	-1,u
-		bcc	5F
-		leau	-2,u		; נשא
-4		cmpu	#RACC
-		blo	5F
-		inc	,u
-		bne	5F
-		leau	-1,u
-		bra	4B
-5		inc	,s
-		lda	,s
-		cmpa	#4
-		bne	3B
-		leas	1,s
-		inc	,s
-		lda	,s
-		cmpa	#4
+		addb	,-x		; ועוד מה שכבר שם ועוד הנשא
+		adca	#0
+		addb	,s
+		adca	#0
+		stb	,x
+		sta	,s
+		cmpu	#rndmul
 		bne	2B
-		leas	1,s
-		ldd	RACC+6		; + 95446411
-		addd	rndadd+2,pcr
+		puls	b
+		stb	,-x
+		leax	4,x		; השורה הבאה: מקום אחד גבוה יותר
+		cmpx	#RACC+4
+		bne	1B
+		ldd	RACC+6		; + 95446411 (קורא)
+		addd	#$658b
 		std	RNDX+2
+		std	FACMO
 		ldd	RACC+4
-		adcb	rndadd+1,pcr
-		adca	rndadd,pcr
+		adcb	#$b0
+		adca	#$05
 		std	RNDX
 		std	FACHO		; השבר
-		ldd	RNDX+2
-		std	FACMO
 		lda	RACC+2		; בית הדיוק
 		sta	FACOV
 		lda	#$80
@@ -92,7 +73,6 @@ rnd_adv		ldx	#RACC		; המכפלה המלאה, 8 בתים, הגבוה ראשון
 		clr	FACSGN
 		lbra	normal
 rndmul		fdb	$40e6,$4dab	; 1088834987 (קורא)
-rndadd		fdb	$05b0,$658b	; 95446411 (קורא)
 
 ; ---------- FIX: קיטום לכיוון אפס (קורא) ----------
 fn_fix		lbsr	chknum
@@ -103,10 +83,6 @@ fn_fix		lbsr	chknum
 		lbra	negop
 
 ; ---------- STR$, VAL, HEX$, &H/&O ----------
-fn_str		lbsr	chknum		; כמו ההדפסה: רווח או מינוס בהתחלה, בלי רווח בסוף (mit: STR)
-		lbsr	fout
-		ldx	#FBUFFR
-		lbra	strlit
 ; VAL: המספר שבתחילת המחרוזת. אפס זמני אחרי המחרוזת, ו-TXTPTR עליה (mit: VAL)
 fn_val		lbsr	frestr
 		clr	VALTYP
@@ -116,32 +92,28 @@ fn_val		lbsr	frestr
 		clra
 		leau	d,x		; הבית שאחרי
 		ldb	,u
-		pshs	b,u
+		ldy	TXTPTR
+		pshs	b,y,u
 		clr	,u
-		ldd	TXTPTR
-		pshs	d
 		leax	-1,x
 		stx	TXTPTR
 		jsr	<chrget
 		bsr	finx
-		puls	d
-		std	TXTPTR
-		puls	b,u
+		puls	b,y,u
+		sty	TXTPTR
 		stb	,u
 		rts
 ; finx: מספר מהטקסט, כולל &H / &O / & בהתחלה (קורא)
 finx		cmpa	#'&
 		lbne	fin
 ; radix: &H = בסיס 16, &O או & = בסיס 8. שלם בלי סימן של 16 ביט; גלישה: ?OV (קורא)
-radix		ldd	#0
-		pshs	d
+radix		ldx	#0
 		ldb	#8
-		pshs	b		; [0] = הבסיס, [1-2] = הערך
+		pshs	b,x		; [0] = הבסיס, [1-2] = הערך
 		jsr	<chrget
 		cmpa	#'H
 		bne	1F
-		ldb	#16
-		stb	,s
+		lsl	,s		; בסיס 16
 		bra	2F
 1		cmpa	#'O
 		bne	3F
@@ -150,77 +122,64 @@ radix		ldd	#0
 		blo	9F
 		cmpa	#9
 		bls	4F
-		ldb	,s		; אות: רק A-F בבסיס 16
-		cmpb	#16
-		bne	9F
-		adda	#'0
-		cmpa	#'A
+		suba	#7		; אות: רק A-F, ורק בבסיס 16
+		cmpa	#10
 		blo	9F
-		cmpa	#'F
-		bhi	9F
-		suba	#'A-10
-		bra	5F
-4		ldb	,s		; בבסיס 8: 9 נותן ?SN, ו-8 מתקבל (קורא)
-		cmpb	#8
-		bne	5F
-		cmpa	#8
+		cmpa	,s
+		bhs	9F		; אות כשרה ממשיכה: 10-15 < 16
+4		cmpa	,s		; בבסיס 8: 9 נותן ?SN, ו-8 מתקבל (קורא)
 		lbhi	err_sn
-5		pshs	a
-		ldb	#3
-		lda	1,s
-		cmpa	#16
-		bne	6F
-		incb
-6		lsl	3,s
-		rol	2,s
-		lbcs	err_ov
-		decb
+		ldb	,s		; כפול הבסיס: 3 או 4 הזזות
+6		lsl	2,s
+		rol	1,s
+		bcs	8F
+		lsrb
+		cmpb	#1
 		bne	6B
-		puls	b
+		tfr	a,b
 		clra
 		addd	1,s
-		lbcs	err_ov
+		bcs	8F
 		std	1,s
 		jsr	<chrget
 		bra	3B
+8		lbra	err_ov
 9		leas	1,s
 		puls	d
 		lbra	givu
 ; HEX$: 0-65535 בלי השבר. אותיות גדולות, בלי אפסים מובילים; 0 = "0" (קורא)
 fn_hex		lbsr	getadr
-		pshs	d
 		ldx	#FBUFFR
+		pshs	d
 		ldb	#4
-		pshs	b
-		clr	,-s		; [0] = כבר התחלנו, [1] = מונה, [2-3] = הערך
-1		lda	2,s
-		lsra
-		lsra
-		lsra
-		lsra
+		pshs	b		; [0] = מונה, [1-2] = הערך
+1		clra			; הספרה הבאה ל-A
 		ldb	#4
-2		lsl	3,s
-		rol	2,s
+2		lsl	2,s
+		rol	1,s
+		rola
 		decb
 		bne	2B
 		tsta
 		bne	3F
-		tst	,s
+		cmpx	#FBUFFR		; כבר התחלנו?
 		bne	3F
-		ldb	1,s
-		cmpb	#1
+		ldb	,s
+		decb
 		bne	4F		; אפס מוביל: מדלגים (חוץ מהספרה האחרונה)
-3		inc	,s
-		adda	#'0
+3		adda	#'0
 		cmpa	#'9
 		bls	5F
 		adda	#7
 5		sta	,x+
-4		dec	1,s
+4		dec	,s
 		bne	1B
 		clr	,x
-		leas	4,s
-		ldx	#FBUFFR
+		leas	3,s
+		bra	strfb
+fn_str		lbsr	chknum		; כמו ההדפסה: רווח או מינוס בהתחלה, בלי רווח בסוף (mit: STR)
+		lbsr	fout
+strfb		ldx	#FBUFFR
 		lbra	strlit
 
 ; ---------- INSTR([p,]s$,t$) (קורא) ----------
@@ -232,16 +191,15 @@ IT_TL		equ	$ef
 fn_instr	lbsr	frmevl
 		ldb	#1		; בלי מקום: מ-1
 		tst	VALTYP
+		pshs	b
 		bne	1F
 		lbsr	conint
 		tstb
 		lbeq	err_fc
-		pshs	b
+		stb	,s
 		lbsr	chkcom
 		lbsr	frmevl
-		puls	b
-1		pshs	b
-		lbsr	frestr0		; s$
+1		lbsr	frestr0		; s$
 		pshs	x
 		lbsr	chkcom
 		lbsr	frmevl
@@ -303,11 +261,10 @@ fn_strng	lbsr	evbyte
 2		pshs	b
 		lbsr	chkrp
 		lda	1,s
-		lbsr	strspa
+		lbsr	strspa		; X = המקום, A = n
 		puls	b
 		leas	1,s
-		ldx	DSCTMP+2
-		lda	DSCTMP
+		tsta
 		beq	4F
 3		stb	,x+
 		deca
@@ -319,15 +276,14 @@ fn_pos		lbsr	chknum
 		lbsr	ayint		; INT, בין -32768 ל-32767
 		ldd	FACMO
 		beq	1F
-		cmpd	#-2
-		beq	2F
-		cmpd	#-1		; קלטת: בשלב הקלטת
+		addd	#1		; -1 קלטת: בשלב הקלטת
 		lbeq	err_no
-		lbra	err_dn
+		addd	#1		; -2 מדפסת
+		lbne	err_dn
+		ldb	LPTPOS
+		bra	3F
 1		ldb	CURSOR+1	; המסך: העמודה 0-31
 		andb	#$1f
-		bra	3F
-2		ldb	LPTPOS		; מדפסת
 3		lbra	givb
 fn_mem		tfr	s,d		; S בכניסה פחות STREND, בלי סימן (קורא)
 		subd	STREND
@@ -348,47 +304,47 @@ fn_timer	ldd	TICKS
 ; TIMER=n (פקודה): 0-65535, בלי השבר
 timset		jsr	<chrget		; אחרי $FF
 		jsr	<chrget		; אחרי $9E
-		lda	#$cb		; =
-		lbsr	synchk
-		lbsr	frmevl
-		lbsr	getadr
+		bsr	eqadr
 		std	TICKS
 		rts
+; eqadr: '=' ואחריו כתובת 0-65535 ב-D
+eqadr		lda	#$cb		; =
+		lbsr	synchk
+		lbsr	frmevl
+		lbra	getadr
 
 ; ---------- INKEY$ (קורא) ----------
 ; המקש השמור ב-$87 (נשמר בין פקודות), אחרת סריקה. $87 מתאפס. אין מקש: מחרוזת ריקה
 fn_inkey	lda	IKEYIM
 		bne	1F
-		ldd	CURLIN		; תור הבדיקות רק בזמן שתוכנית רצה (כמו BREAK); אחרת המקלדת
-		cmpd	#$ffff
+		lda	CURLIN		; תור הבדיקות רק בזמן שתוכנית רצה (כמו BREAK); אחרת המקלדת
+		inca			; $FFxx רק במצב ישיר
 		bne	0F
 		lbsr	keyindex
 		bra	1F
 0		lbsr	inkey
 1		clr	IKEYIM
 		sta	FACLO
-		tsta
-		beq	2F
 		pshs	a
+		beq	2F		; אין מקש: ריקה
 		lda	#1
-		lbsr	strspa
-		puls	a
-		sta	[DSCTMP+2]
-		lbra	putnew
-2		lbsr	strspa		; A = 0: ריקה
-		lbra	putnew
+2		lbsr	strspa		; X = המקום, A = האורך
+		puls	b
+		tsta
+		beq	3F
+		stb	,x
+3		lbra	putnew
 
 ; ---------- JOYSTK(n) (קורא + ספר) ----------
 ; 0 מרענן את ארבע הדגימות ($015A-$015D, בסדר 3,2,1,0); 1-3 מחזירים את השמורה
 fn_joy		lbsr	conint
 		cmpb	#3
 		lbhi	err_fc
-		pshs	b
 		tstb
 		bne	1F
 		bsr	joyrd
-1		puls	b
-		ldx	#JOYVAL
+		clrb
+1		ldx	#JOYVAL
 		ldb	b,x
 		lbra	givb
 ; joyrd (קורא): לכל ערוץ, 3 עד 0: הבורר (ביט 3 ב-$FF01 = ביט 0 של הערוץ, ב-$FF03 = ביט 1), ואז מדידה:
@@ -396,32 +352,25 @@ fn_joy		lbsr	conint
 ; (64 עד 2), והתוצאה חלקי 4 = 0-63. אם היא שונה מהערך השמור של הערוץ, מודדים שוב, עד 10 פעמים בסך הכול.
 ; אין שחזור: הבורר נשאר על ערוץ 0, וה-DAC על הניסיון האחרון שנכתב
 joyrd		ldb	#3
-1		pshs	b
-		lda	PIA0+1		; ביט 0 של הערוץ → CA2
+1		lda	#10		; [0] = ניסיונות, [1] = הערוץ
+		pshs	a,b
+		ldx	#PIA0+1		; ביט 0 של הערוץ → CA2 ($FF01), ביט 1 → CB2 ($FF03)
+2		lda	,x
+		ora	#$38		; ביטים 4-5 דולקים, וביט 3 = ביט הערוץ
+		lsrb
+		bcs	3F
 		anda	#$f7
-		ora	#$30
-		bitb	#1
-		beq	2F
-		ora	#$08
-2		sta	PIA0+1
-		lda	PIA0+3		; ביט 1 → CB2
-		anda	#$f7
-		ora	#$30
-		bitb	#2
-		beq	3F
-		ora	#$08
-3		sta	PIA0+3
-		lda	#10		; ניסיונות
-		pshs	a
+3		sta	,x++
+		cmpx	#PIA0+5
+		bne	2B
 4		ldd	#$8040		; A = הקירוב, B = הצעד
 5		sta	PIA1		; הניסיון ל-DAC
 		pshs	b
 		tst	PIA0
-		bmi	6F		; המוט מעל ה-DAC: מוסיפים
-		suba	,s+
-		bra	7F
+		bmi	6F		; המוט מעל ה-DAC: מוסיפים, אחרת מורידים
+		neg	,s
 6		adda	,s+
-7		lsrb
+		lsrb
 		cmpb	#1
 		bne	5B
 		lsra			; 0-63
@@ -433,8 +382,7 @@ joyrd		ldb	#3
 		dec	,s
 		bne	4B
 8		sta	b,x
-		leas	1,s
-		puls	b
+		puls	a,b
 		decb
 		bpl	1B
 		rts
@@ -442,36 +390,35 @@ joyrd		ldb	#3
 ; ---------- USR0-USR9, DEF USR (קורא) ----------
 ; ספרה אחת אחרי USR (בלעדיה 0). מספר: A=0, X=$004F (FAC). מחרוזת: A=$FF, X=המתאר (משוחרר).
 ; ב-Dragon 32 צורת המילה שונה מ-Dragon 64 (David Linsley, 20.10): פתוח, נבדוק במחשב אמיתי
-fn_usr		clrb
-		cmpa	#'0
-		blo	1F
-		cmpa	#'9
-		bhi	1F
-		suba	#'0
-		pshs	a
-		jsr	<chrget
-		puls	b
-1		pshs	b
+fn_usr		bsr	usrdig
+		pshs	b
 		lbsr	chklp
 		lbsr	frmevl
 		lbsr	chkrp
 		puls	b
-		lslb
 		ldx	USTBAD
 		abx
 		ldu	,x		; הכתובת
-		pshs	u
 		tst	VALTYP
 		bne	2F
 		ldx	#FACEXP
 		clra
-		jmp	[,s++]		; השגרה חוזרת ב-RTS ישר למי שקרא לפונקציה
+		jmp	,u		; השגרה חוזרת ב-RTS ישר למי שקרא לפונקציה
 2		ldx	FACMO
-		pshs	x
 		lbsr	fretms
-		puls	x
+		ldx	FACMO
 		lda	#$ff
-		jmp	[,s++]
+		jmp	,u
+; usrdig: ספרה אופציונלית אחרי USR → B = פעמיים הספרה, המקום בטבלה (בלעדיה 0)
+usrdig		suba	#'0
+		cmpa	#9
+		bhi	1F
+		lsla
+		pshs	a
+		jsr	<chrget
+		puls	b,pc
+1		clrb
+		rts
 ; defusr: אחרי DEF, כש-TXTPTR על ה-$FF של USR
 defusr		ldx	TXTPTR
 		lda	1,x
@@ -479,23 +426,11 @@ defusr		ldx	TXTPTR
 		lbne	err_sn
 		jsr	<chrget
 		jsr	<chrget
-		clrb
-		cmpa	#'0
-		blo	1F
-		cmpa	#'9
-		bhi	1F
-		suba	#'0
-		pshs	a
-		jsr	<chrget
-		puls	b
-1		pshs	b
-		lda	#$cb		; =
-		lbsr	synchk
-		lbsr	frmevl
-		lbsr	getadr
+		bsr	usrdig
+		pshs	b
+		lbsr	eqadr
 		tfr	d,u
 		puls	b
-		lslb
 		ldx	USTBAD
 		abx
 		stu	,x
@@ -507,8 +442,7 @@ fn_point	bsr	sgxy
 		pshs	x
 		lbsr	chkrp
 		puls	x
-		clr	VALTYP
-		ldb	,x
+		ldb	,x		; VALTYP כבר 0 (evbyte)
 		bmi	3F
 		ldd	#-1		; לא גרפי
 		lbra	givd
