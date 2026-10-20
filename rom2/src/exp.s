@@ -98,6 +98,11 @@ reset		orcc	#$50
 		sta	SCTOP		; $0C00 (הבית התחתון כבר 0)
 		lsra
 		sta	SCRBAS		; $06
+		sta	GSTART		; הדף הנוכחי: $0600 (קורא 0.2)
+		ldd	#$0310		; כתיבה 3, 16 בתים בשורה (הרקע 0: ה-RAM נוקה)
+		sta	GFORE
+		stb	GROWB
+		lbsr	gfxrun
 		ldd	#$804f		; קורא: זרע ה-RND, 80 4F C7 52 59
 		std	$0115
 		ldd	#$c752
@@ -760,6 +765,7 @@ fntab		fcs	"SGN"
 		include	"mitscr.s"
 		include	"mitedit.s"
 		include	"mitusing.s"
+		include	"mitgfx.s"
 		include	"io.s"
 		include	"testq.s"
 

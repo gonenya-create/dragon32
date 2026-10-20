@@ -29,7 +29,7 @@ trace		tst	TRCFLG
 ; ---------- LINE INPUT ["הנחיה";] משתנה$ ----------
 ; בלי "?" ובלי רווח. במצב ישיר: ?ID. כל השורה נשמרת (פסיקים, מירכאות, רווחים). משתנה מספרי: ?TM אחרי הקלט
 line_st		cmpa	#$89		; INPUT
-		lbne	err_sn		; LINE של הגרפיקה: בחלק 3
+		lbne	gline_st	; LINE של הגרפיקה
 		jsr	<chrget
 		lbsr	errdir		; ?ID, וההנחיה
 		clr	IKEYIM

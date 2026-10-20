@@ -144,19 +144,19 @@ stmtbl
 		fdb	tron		; $A8 TRON
 		fdb	troff		; $A9 TROFF
 		fdb	line_st		; $AA LINE
-		fdb	err_sn		; $AB PCLS
-		fdb	err_sn		; $AC PSET
-		fdb	err_sn		; $AD PRESET
-		fdb	err_sn		; $AE SCREEN
+		fdb	pcls_st		; $AB PCLS
+		fdb	pset_st		; $AC PSET
+		fdb	preset_st		; $AD PRESET
+		fdb	screen_st		; $AE SCREEN
 		fdb	pclear		; $AF PCLEAR
-		fdb	err_sn		; $B0 COLOR
+		fdb	color_st		; $B0 COLOR
 		fdb	err_sn		; $B1 CIRCLE
 		fdb	err_sn		; $B2 PAINT
 		fdb	err_sn		; $B3 GET
 		fdb	err_sn		; $B4 PUT
 		fdb	err_sn		; $B5 DRAW
-		fdb	err_sn		; $B6 PCOPY
-		fdb	err_sn		; $B7 PMODE
+		fdb	pcopy_st		; $B6 PCOPY
+		fdb	pmode_st		; $B7 PMODE
 		fdb	err_sn		; $B8 PLAY
 		fdb	err_sn		; $B9 DLOAD
 		fdb	renum		; $BA RENUM
@@ -170,7 +170,8 @@ rem		ldx	TXTPTR		; עד סוף השורה
 
 ; RUN [שורה]: משתנים מתאפסים, ומתחילים מהשורה הראשונה (TXTPTR = TXTTAB-1, האפס שב-$1E00) או מהשורה שצוינה
 ; (mit: RUN — CLEARC ואז GOTO)
-run		lbsr	runc
+run		lbsr	gfxrun		; הנקודה האחרונה, זווית וקנה מידה של DRAW (קורא 0.2)
+		lbsr	runc
 		lds	STKTOP
 		clr	,-s		; סמן תחתית למחסנית ה-FOR (mit: STKINI)
 		jsr	<chrgot
@@ -225,7 +226,7 @@ lineget		ldx	TXTPTR
 
 list_st		ldx	TXTPTR		; LIST: אותה שגרה כמו במצב ישיר
 		lbsr	do_list
-		bra	rem
+		lbra	rem
 new_st		lbsr	scrtch
 		lds	STKTOP
 		clr	,-s
@@ -771,7 +772,7 @@ fntbl
 		fdb	fn_varptr-$8000+1*$4000	; $9C VARPTR
 		fdb	fn_instr-$8000+1*$4000	; $9D INSTR
 		fdb	fn_timer-$8000+2*$4000	; $9E TIMER
-		fdb	err_sn-$8000+2*$4000	; $9F PPOINT
+		fdb	fn_ppoint-$8000+1*$4000	; $9F PPOINT
 		fdb	fn_strng-$8000+1*$4000	; $A0 STRING$
 		fdb	fn_usr-$8000+2*$4000	; $A1 USR
 fn_sgn		bsr	chknum

@@ -80,7 +80,10 @@ function snapshot(data) {
   const rows = Array.from({ length: 16 }, (_, r) =>
     [...ram.subarray(0x400 + r * 32, 0x420 + r * 32)].map(ch).join('').replace(/\s+$/, ''));
   const pia = (name, side, tag) => reader(child(child(part(name, 'MC6821'), side), tag).payload).uint();
-  return { pia1a: pia('PIA1', 1, 3), pia1cra: pia('PIA1', 1, 1), pia1crb: pia('PIA1', 2, 1),
+  // SAM: הערך של 16 הביטים (V0-V2, F0-F6, P, R0-R1, M0-M1, TY), אם נמצא בתמונה
+  let sam;
+  try { const s = part('SAM', 'SN74LS783'); sam = s.children.map(c => c.tag + ':' + c.payload.toString('hex') + (c.children.length ? '{' + c.children.map(d => d.tag + ':' + d.payload.toString('hex')).join(',') + '}' : '')); } catch (e) { sam = String(e); }
+  return { sam, pia1a: pia('PIA1', 1, 3), pia1cra: pia('PIA1', 1, 1), pia1crb: pia('PIA1', 2, 1),
     pia0cra: pia('PIA0', 1, 1), pia0crb: pia('PIA0', 2, 1), ram, screen: rows.join('\n').replace(/\n+$/, ''), pia1b };
 }
 
