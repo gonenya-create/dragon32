@@ -55,10 +55,33 @@ CRB		equ	$01da		; הניסוי בלבד: השורה המכווצת, בחוצץ �
 					; בתוך המאגר; בשלב הקלטת עוברים לשיטה הזו
 STACKINI	equ	$7f36		; ספר: STKTOP אחרי ההדלקה
 
+; ---------- הכניסות הקבועות ב-$8000 (docs/DRAGON-SPEC-INTERFACES.md 3ג, DRAGON-SPEC-TAPE.md 1.10) ----------
+		jmp	hw_init		; $8000 אתחול חומרה (חוזר דרך Y)
+		jmp	swinit		; $8003 אתחול תוכנה
+		jmp	inkey		; $8006 מקלדת
+		jmp	blink		; $8009 הבהוב הסמן
+		jmp	putc		; $800C פלט למסך
+		jmp	noserv		; $800F פלט למדפסת (בהמשך)
+		jmp	joyrd		; $8012 ג'ויסטיקים
+		jmp	tmoton		; $8015 מנוע דולק
+		jmp	motoff		; $8018 מנוע כבוי
+		jmp	tleader		; $801B מבוא קלטת
+twslot		jmp	twbyte		; $801E בית לקלטת
+		jmp	tsync		; $8021 סנכרון קריאה
+		jmp	trbyte		; $8024 בית מהקלטת
+		jmp	trbit		; $8027 ביט מהקלטת
+		jmp	noserv		; $802A-$8030 תקשורת: אין ב-Dragon 32
+		jmp	noserv
+		jmp	noserv
+
 ; ---------- הפעלה ----------
 reset		orcc	#$50
 		sta	SAM+26
 		sta	SAM+29
+		lds	#STACKINI
+		leay	swinit,pcr
+		lbra	hw_init
+swinit		orcc	#$50
 		lds	#STACKINI
 		ldx	#$0400		; ניקוי ראשון של $0000-$03FF (קורא: "הניקוי הראשוני")
 1		clr	,-x
@@ -72,13 +95,17 @@ reset		orcc	#$50
 		sta	,u+
 		decb
 		bne	1B
-		lbsr	hw_init		; DP כבר 0 מההדלקה (והקוד לא משנה אותו)
 		lda	PIA0+2
 		lda	#$35		; פסיקת השדה; CB2 (SEL2) נשאר פלט נמוך (קורא: צליל 0.3)
 		sta	PIA0+3
 		andcc	#$ef
-		lda	#50
-		sta	CBLCNT
+		leax	tdefs,pcr	; הסמן והקלטת: מטבלה ל-$8F-$96 (קורא: קלטת 0.3)
+		ldu	#CBLCNT
+		ldb	#8
+1		lda	,x+
+		sta	,u+
+		decb
+		bne	1B
 		lbsr	cls
 		leax	testq,pcr	; תור הבדיקות
 		ldd	,x++
@@ -764,6 +791,17 @@ fntab		fcs	"SGN"
 		include	"mitmem.s"
 		include	"mitmath.s"
 		include	"mitfunc.s"
+
+; ---------- שבעת המצביעים ב-$A000 (docs/DRAGON-SPEC-INTERFACES.md 3ב, DRAGON-SPEC-TAPE.md 1.10) ----------
+; הקוד שלפני הטבלה חייב להיגמר לפני $A000 (אחרת האסמבלר נותן שגיאה). המקום שנשאר פנוי מתמלא ב-$FF
+		fill	$ff,$a000-*
+		fdb	$8006		; $A000 מקלדת (דרך הכניסה הקבועה)
+		fdb	chrout		; $A002 תו להתקן שב-$6F
+		fdb	$8021		; $A004 סנכרון קלטת (כמו במקור: דרך הכניסה)
+		fdb	tblkrd		; $A006 קריאת בלוק
+		fdb	tblkwr		; $A008 כתיבת בלוק
+		fdb	$8012		; $A00A ג'ויסטיקים
+		fdb	$801b		; $A00C מבוא קלטת (כמו במקור: דרך הכניסה)
 		include	"mitscr.s"
 		include	"mitedit.s"
 		include	"mitusing.s"
@@ -771,6 +809,7 @@ fntab		fcs	"SGN"
 		include	"mitcirc.s"
 		include	"mitdraw.s"
 		include	"mitsnd.s"
+		include	"mittape.s"
 		include	"io.s"
 		include	"testq.s"
 

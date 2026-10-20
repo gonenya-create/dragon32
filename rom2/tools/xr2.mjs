@@ -137,6 +137,7 @@ export async function runRom(lines, opts = {}) {
     if (!symbols.has(trapSym)) throw new Error(`Unknown trap symbol: ${trapSym}`);
     const args = ['-no-tape-fast', '-no-tape-pad-auto', '-ui', 'null', '-ao', 'null', '-machine', 'dragon32', '-extbas', rom, '-no-ratelimit', '-trap', `pc=0x${symbols.get(trapSym).toString(16)}`];
     if (opts.tapeLoad) args.push('-load-tape', opts.tapeLoad);
+    if (opts.xroarArgs) args.push(...opts.xroarArgs);   // הגדרות נוספות ל-XRoar (למשל -tape-ao-rate)
     if (opts.tapeWrite) args.push('-tape-write', opts.tapeWrite);
     if (range !== undefined) args.push('-trap-range', String(range));
     args.push('-trap-snap', sna, '-trap-timeout', '0', '-timeout', String(timeout));

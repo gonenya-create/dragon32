@@ -33,12 +33,6 @@ sndoff		ldb	PIA1+3
 		andb	#$f7
 1		stb	PIA1+3
 		rts
-; motoff: מנוע הקלטת כבוי ($FF21 ביט 3), והפסיקות פתוחות (קורא 3, 1.1: גם בכל שגיאה)
-motoff		lda	PIA1+1
-		anda	#$f7
-		sta	PIA1+1
-		andcc	#$af
-		rts
 
 ; evnzb: ביטוי → B בין 1 ל-255. שלילי, 0 או מעל 255: ?FC. השבר נחתך (קורא 1.1)
 evnzb		lbsr	evbyte
@@ -92,7 +86,7 @@ audio_st	pshs	a		; המילה שאחרי AUDIO נקראת קודם
 		cmpa	#$88		; ON
 		lbne	err_sn
 		lda	#1		; כניסת הקלטת
-		lbsr	sndsel
+		bsr	sndsel
 		bra	sndon
 
 ; ---------- PLAY מחרוזת (קורא 2, 9) ----------

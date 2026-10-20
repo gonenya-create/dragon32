@@ -24,7 +24,8 @@ hw_init
 		lda	#$f8
 		sta	2,x
 		stb	3,x
-		; ממשיכים ב-txtmode: מצב טקסט, ערכת צבעים 0; SAM: מצב 0, המסך ב-$0400
+		bsr	txtmode		; מצב טקסט, ערכת צבעים 0; SAM: מצב 0, המסך ב-$0400
+		jmp	,y		; חוזרים דרך Y (קורא: ממשקים, הכניסה ב-$8000)
 ; txtmode: מצב טקסט (קורא: SAMALP). ב-$FF22 נשארים 3 הביטים התחתונים; SAM: מצב 0, המסך ב-$0400
 txtmode		pshs	a,x
 		lda	PIA1+2
@@ -40,6 +41,10 @@ txtmode		pshs	a,x
 3		cmpx	#SAM
 		bne	1B
 		puls	a,x,pc
+; chrout: תו ל-$A002. בינתיים רק המסך; ההתקנים (קלטת, מדפסת) בצעד 3
+chrout		equ	putc
+; noserv: המדפסת (בהמשך) וכניסות התקשורת שאין ב-Dragon 32
+noserv		rts
 ; ---------- מסך ----------
 cls		ldx	#SCREEN
 ; clrto: הסמן ב-X, ומשם עד סוף המסך רווחים (גם scroll)

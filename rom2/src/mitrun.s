@@ -59,7 +59,8 @@ synchk		pshs	a
 
 ; ---------- לולאת הפקודות (mit: NEWSTT 2138, GONE 2165) ----------
 ; TXTPTR מצביע על התו שלפני הפקודה הבאה. 0 = סוף שורה: הקישור שאחריו אומר מה הלאה
-newstt		lbsr	brkchk		; BREAK? (mit: ISCNTC)
+newstt		andcc	#$af		; הפסיקות פתוחות בתחילת כל פקודה (קורא: קלטת 5, צליל 1.2)
+		lbsr	brkchk		; BREAK? (mit: ISCNTC)
 		ldx	TXTPTR
 		stx	TXTBEG		; תחילת הפקודה: לשם חוזרים אחרי קלט שגוי ב-INPUT (קורא: TXTBEG)
 		lda	,x
