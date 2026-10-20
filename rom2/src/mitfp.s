@@ -607,7 +607,7 @@ fin		clr	FACEXP
 		clr	TENEXP
 		clr	EXPSGN
 		clr	SGNFLG
-		lbsr	chrgot
+		jsr	<chrgot
 		cmpa	#'-		; סימן בהתחלה: רק בקלט וב-DATA (בביטוי הוא טוקן) (mit: FIN)
 		beq	1F
 		cmpa	#$c4
@@ -618,15 +618,15 @@ fin		clr	FACEXP
 		beq	3F
 		cmpa	#$c3
 		bne	fin_lp0
-3		lbsr	chrget
-fin_lp0		lbsr	chrgot
+3		jsr	<chrget
+fin_lp0		jsr	<chrgot
 fin_lp		bcc	fin_dig		; ספרה
 		cmpa	#'.
 		bne	fin_e
 		tst	DPTFLG
 		bne	fin_end		; נקודה שנייה: סוף
 		com	DPTFLG
-		lbsr	chrget
+		jsr	<chrget
 		bra	fin_lp
 fin_dig		tst	DPTFLG
 		beq	1F
@@ -636,11 +636,11 @@ fin_dig		tst	DPTFLG
 		puls	a
 		suba	#'0
 		bsr	finlog
-		lbsr	chrget
+		jsr	<chrget
 		bra	fin_lp
 fin_e		cmpa	#'E
 		bne	fin_end
-		lbsr	chrget
+		jsr	<chrget
 		bcc	fin_ed		; ספרה
 		cmpa	#$c4		; - (טוקן)
 		beq	1F
@@ -652,7 +652,7 @@ fin_e		cmpa	#'E
 		beq	2F
 		bra	fin_end
 1		com	EXPSGN
-2		lbsr	chrget
+2		jsr	<chrget
 		bcs	fin_end
 fin_ed		ldb	TENEXP		; המעריך כפול 10 ועוד הספרה
 		cmpb	#10
@@ -668,7 +668,7 @@ fin_ed		ldb	TENEXP		; המעריך כפול 10 ועוד הספרה
 		pshs	a
 		addb	,s+
 4		stb	TENEXP
-		lbsr	chrget
+		jsr	<chrget
 		bcc	fin_ed
 fin_end		lda	TENEXP
 		tst	EXPSGN
@@ -767,37 +767,13 @@ bigges		lbsr	qint
 7		leax	foutbl,pcr	; תשע הספרות של המספר השלם
 		lda	#9
 		sta	NDIG
-8		clrb
-9		lda	FACLO		; כמה פעמים אפשר להחסיר את החזקה
-		suba	3,x
-		pshs	a
-		lda	FACMO
-		sbca	2,x
-		pshs	a
-		lda	FACMOH
-		sbca	1,x
-		pshs	a
-		lda	FACHO
-		sbca	,x
-		bcs	10F
-		sta	FACHO
-		puls	a
-		sta	FACMOH
-		puls	a
-		sta	FACMO
-		puls	a
-		sta	FACLO
-		incb
-		bra	9B
-10		leas	3,s
-		addb	#'0
+8		bsr	fdig
 		stb	,y+
 		dec	DECCNT
 		bne	11F
 		lda	#'.
 		sta	,y+
-11		leax	4,x
-		dec	NDIG
+11		dec	NDIG
 		bne	8B
 12		lda	,-y		; אפסים בסוף לא מוצגים, וגם נקודה שנשארה לבד
 		cmpa	#'0
@@ -824,6 +800,26 @@ bigges		lbsr	qint
 		sta	,y+
 15		clr	,y
 		rts
+
+; fdig: הספרה הבאה של המספר השלם FACHO..FACLO: כמה פעמים החזקה ב-X נכנסת (והיא מוחסרת).
+; B = הספרה כתו, X עובר לחזקה הבאה (גם FOUT וגם PRINT USING)
+fdig		lda	#'0
+		pshs	a
+1		ldd	FACMO
+		subd	2,x
+		pshs	d
+		ldd	FACHO
+		sbcb	1,x
+		sbca	,x
+		bcs	2F
+		std	FACHO
+		puls	d
+		std	FACMO
+		inc	,s
+		bra	1B
+2		leas	2,s
+		leax	4,x
+		puls	b,pc
 
 ; ---------- קבועים ----------
 fone		fcb	$81,$00,$00,$00,$00	; 1

@@ -15,7 +15,7 @@ clear		beq	clr_go		; בלי מספרים: רק ניקוי
 		pshs	d
 		ldd	MEMSIZ
 		pshs	d		; [0] = MEMSIZ החדש, [2] = n
-		lbsr	chrgot
+		jsr	<chrgot
 		beq	1F
 		lda	#',
 		lbsr	synchk

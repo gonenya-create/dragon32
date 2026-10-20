@@ -65,6 +65,13 @@ reset		orcc	#$50
 		cmpx	#$0400
 		blo	1B
 		clr	,-s		; סמן תחתית למחסנית ה-FOR/GOSUB (קורא: ב-STKTOP-1)
+		leax	chrtpl,pcr	; קריאת התו ל-RAM ($9F-$AA)
+		ldu	#chrget
+		ldb	#12
+1		lda	,x+
+		sta	,u+
+		decb
+		bne	1B
 		clra
 		tfr	a,dp
 		lbsr	hw_init

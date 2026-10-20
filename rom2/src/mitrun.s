@@ -14,17 +14,23 @@ OPMASK		equ	$3f
 CURLIN		equ	$68
 TXTPTR		equ	$a6
 
-; ---------- קריאת תו (mit: CHRGET 961) ----------
-; chrget: מתקדמים תו אחד. chrgot: התו הנוכחי. מדלגים על רווחים.
-; A = התו. Z=1 בסוף פקודה (0 או :). C=0 אם ספרה
-chrget		ldx	TXTPTR
-		leax	1,x
-		stx	TXTPTR
-chrgot		ldx	TXTPTR
-		lda	,x
+; ---------- קריאת תו (mit: CHRGET 961; ה-Dragon: ב-RAM, $9F-$AA — קורא: מפרט הזיכרון) ----------
+; chrget ($9F): מתקדמים תו אחד. chrgot ($A5): התו הנוכחי. TXTPTR ($A6) הוא האופרנד של ה-LDA שם.
+; 12 הבתים מועתקים ל-RAM בהדלקה; ההמשך כאן ב-ROM. מדלגים על רווחים.
+; A = התו, X = TXTPTR. Z=1 בסוף פקודה (0 או :). C=0 אם ספרה
+chrget		equ	$9f
+chrgot		equ	$a5
+chrtpl		fcb	$0c,$a7		; inc <$A7
+		fcb	$26,$02		; bne $A5
+		fcb	$0c,$a6		; inc <$A6
+		fcb	$b6,0,0		; lda >TXTPTR
+		fcb	$7e		; jmp chrest
+		fdb	chrest
+chrest		ldx	TXTPTR
 		cmpa	#$20
-		beq	chrget
-		cmpa	#':
+		bne	3F
+		jmp	<chrget
+3		cmpa	#':
 		beq	1F
 		tsta
 		beq	1F
@@ -42,10 +48,10 @@ chrgot		ldx	TXTPTR
 
 ; synchk: התו הנוכחי חייב להיות A. אחרת ?SN. אחר כך מתקדמים
 synchk		pshs	a
-		bsr	chrgot
+		jsr	<chrgot
 		cmpa	,s+
 		lbne	err_sn
-		bra	chrget
+		jmp	<chrget
 
 ; ---------- לולאת הפקודות (mit: NEWSTT 2138, GONE 2165) ----------
 ; TXTPTR מצביע על התו שלפני הפקודה הבאה. 0 = סוף שורה: הקישור שאחריו אומר מה הלאה
@@ -61,7 +67,7 @@ newstt		lbsr	brkchk		; BREAK? (mit: ISCNTC)
 		leax	4,x
 		stx	TXTPTR
 		lbsr	trace		; TRON: [n] (קורא)
-gone		bsr	chrget
+gone		jsr	<chrget
 		bsr	gone3
 		bra	newstt
 2		cmpa	#':
@@ -91,7 +97,7 @@ gone3		beq	9F		; פקודה ריקה
 		leau	stmdsp,pcr
 		leau	d,u
 		pshs	u
-		lbra	chrget		; קופצים לפקודה (דרך ה-RTS של chrget), A = התו שאחרי המילה
+		jmp	<chrget		; קופצים לפקודה (דרך ה-RTS של chrget), A = התו שאחרי המילה
 3		lbra	err_sn
 9		rts
 ; טבלת הפקודות של הניסוי: טוקן, כתובת יחסית
@@ -182,7 +188,7 @@ rem		ldx	TXTPTR		; עד סוף השורה
 run		lbsr	runc
 		lds	STKTOP
 		clr	,-s		; סמן תחתית למחסנית ה-FOR (mit: STKINI)
-		lbsr	chrgot
+		jsr	<chrgot
 		beq	1F
 		lbcs	err_sn		; RUN "שם": עם הקלטת, בהמשך
 		bsr	goto1
@@ -197,7 +203,7 @@ go		cmpa	#$bc		; TO
 		beq	1F
 		cmpa	#$bd		; SUB
 		lbne	err_sn
-		lbsr	chrget
+		jsr	<chrget
 ; gosub1: TXTPTR על מספר השורה. רשומה של 5 בתים, מהכתובת הנמוכה: $BD, השורה הקוראת, המקום בטקסט —
 ; לפני מספר השורה; RETURN חוזר לשם ומדלג עד סוף הפקודה (קורא)
 gosub1					; כתובת החזרה של הפקודה נשארת מתחת לרשומה, כמו במקור (קורא: 7 בתים)
@@ -211,7 +217,7 @@ gosub1					; כתובת החזרה של הפקודה נשארת מתחת לרש�
 		pshs	a
 		bsr	goto1
 		lbra	newstt
-1		lbsr	chrget
+1		jsr	<chrget
 ; goto1: TXTPTR על מספר השורה. שורה גדולה מהנוכחית: מחפשים מהשורה הבאה; אחרת מההתחלה (mit: GOTO)
 goto1		bsr	lineget
 		cmpd	CURLIN
@@ -231,7 +237,7 @@ lineget		ldx	TXTPTR
 		lbsr	linget
 		stx	TXTPTR
 		pshs	d
-		lbsr	chrgot
+		jsr	<chrgot
 		puls	d,pc
 
 list_st		ldx	TXTPTR		; LIST: אותה שגרה כמו במצב ישיר
@@ -295,14 +301,14 @@ prlist		lbeq	pr_cr
 		lbeq	usstart
 		cmpa	#'@		; PRINT @n (קורא): 0-511, אחרת ?FC; אחריו פסיק אם יש המשך, וסוף = שורה חדשה
 		bne	pr_lp
-		lbsr	chrget
+		jsr	<chrget
 		lbsr	frmevl
 		lbsr	getadr
 		cmpd	#511
 		lbhi	err_fc
 		addd	#SCREEN
 		std	CURSOR
-		lbsr	chrgot
+		jsr	<chrgot
 		beq	pr_cr
 		lda	#',
 		lbsr	synchk
@@ -317,7 +323,7 @@ pr_lp		cmpa	#';
 		tst	VALTYP
 		beq	3F
 		lbsr	strprt		; מחרוזת
-		lbsr	chrgot
+		jsr	<chrgot
 		beq	pr_cr
 		bra	pr_lp
 3		lbsr	fout
@@ -328,10 +334,10 @@ pr_lp		cmpa	#';
 		bra	1B
 2		lda	#$20		; רווח אחרי מספר
 		lbsr	putc
-		lbsr	chrgot
+		jsr	<chrgot
 		beq	pr_cr
 		bra	pr_lp
-pr_semi		lbsr	chrget
+pr_semi		jsr	<chrget
 		bne	pr_lp
 		rts			; ; בסוף: בלי שורה חדשה
 pr_comma	lda	CURSOR+1	; לעמודה הבאה שמתחלקת ב-16
@@ -343,7 +349,7 @@ pr_comma	lda	CURSOR+1	; לעמודה הבאה שמתחלקת ב-16
 		lda	CURSOR+1
 		anda	#$0f
 		bne	pr_comma
-		lbsr	chrget
+		jsr	<chrget
 		bne	pr_lp
 		rts
 pr_cr		lda	#13
@@ -368,10 +374,10 @@ for		lbsr	let		; המשתנה מקבל את ערך ההתחלה
 		lbsr	movmf
 		leax	fone,pcr	; צעד ברירת מחדל 1
 		lbsr	movfm
-		lbsr	chrgot
+		jsr	<chrgot
 		cmpa	#$c1		; STEP
 		bne	3F
-		lbsr	chrget
+		jsr	<chrget
 		lbsr	frmevl
 3		lbsr	sign
 		pshs	a		; סימן הצעד (זמני)
@@ -448,7 +454,7 @@ fndfor		leax	2,s
 next		leas	2,s
 nx_one		ldd	#0
 		std	FORPNT
-		lbsr	chrgot
+		jsr	<chrgot
 		beq	1F
 		ldb	#1		; לא יוצרים
 		bsr	ptrget
@@ -473,10 +479,10 @@ nx_one		ldd	#0
 		stx	TXTPTR
 		lbra	newstt
 2		leas	18,s		; הלולאה נגמרה
-		lbsr	chrgot
+		jsr	<chrgot
 		cmpa	#',
 		bne	3F
-		lbsr	chrget
+		jsr	<chrget
 		bra	nx_one
 3		lbra	newstt
 
@@ -484,21 +490,21 @@ nx_one		ldd	#0
 ; משתנה פשוט: [שם 2][ערך 5] בין VARTAB ל-ARYTAB. B=1: לא יוצרים (קריאה בביטוי מחזירה 0)
 ptrget		pshs	b
 		clr	VALTYP
-		lbsr	chrgot
+		jsr	<chrgot
 		cmpa	#'A
 		lblo	err_sn
 		cmpa	#'Z
 		lbhi	err_sn
 		sta	VARNAM
 		clr	VARNAM+1
-		lbsr	chrget
+		jsr	<chrget
 		bcc	1F		; ספרה
 		cmpa	#'A
 		blo	3F
 		cmpa	#'Z
 		bhi	3F
 1		sta	VARNAM+1
-2		lbsr	chrget		; שאר האותיות והספרות לא נחשבות
+2		jsr	<chrget		; שאר האותיות והספרות לא נחשבות
 		bcc	2B
 		cmpa	#'A
 		blo	3F
@@ -510,7 +516,7 @@ ptrget		pshs	b
 		ora	#$80
 		sta	VARNAM+1
 		com	VALTYP
-		lbsr	chrget
+		jsr	<chrget
 11		lda	SUBFLG		; ביט 6: שם של DEF FN — ביט 7 בתו הראשון (mit: GETFNM)
 		bita	#$40
 		beq	13F
@@ -574,7 +580,7 @@ fexpr		pshs	b		; הקדימות המינימלית
 fe_lp		clr	OPMASK
 		ldx	TXTPTR
 		stx	RELSAV
-		lbsr	chrgot
+		jsr	<chrgot
 1		cmpa	#$ca		; > = < : בונים מסכה (mit: LOPREL)
 		blo	3F
 		cmpa	#$cc
@@ -593,7 +599,7 @@ fe_lp		clr	OPMASK
 		puls	a
 		lbls	err_sn
 		stb	OPMASK
-		lbsr	chrget
+		jsr	<chrget
 		bra	1B
 3		ldb	OPMASK
 		beq	4F
@@ -621,7 +627,7 @@ fe_lp		clr	OPMASK
 		ldd	1,x
 		leau	optab,pcr
 		leau	d,u
-		lbsr	chrget		; מדלגים על הסימן
+		jsr	<chrget		; מדלגים על הסימן
 		puls	b
 ; שומרים את הצד השמאלי, מחשבים את הימני, ומפעילים. ב-Dragon בלי עיגול לפני השמירה (קורא; ב-mit יש)
 7		pshs	u
@@ -694,7 +700,7 @@ optab		fcb	121
 
 ; eval: איבר אחד → FAC
 eval		clr	VALTYP
-		lbsr	chrgot
+		jsr	<chrgot
 		lbcc	fin		; מספר
 		cmpa	#'.
 		lbeq	fin
@@ -702,7 +708,7 @@ eval		clr	VALTYP
 		lbeq	radix
 		cmpa	#$c4		; - חד-מקומי: קדימות 125
 		bne	1F
-		lbsr	chrget
+		jsr	<chrget
 		ldb	#125
 		pshs	b		; בית בקרה שלא בשימוש (קורא: עומק המחסנית כמו במקור)
 		lbsr	fexpr
@@ -710,11 +716,11 @@ eval		clr	VALTYP
 		lbra	negop
 1		cmpa	#$c3		; +
 		bne	2F
-		lbsr	chrget
+		jsr	<chrget
 		bra	eval
 2		cmpa	#$c0		; NOT: קדימות 90
 		bne	3F
-		lbsr	chrget
+		jsr	<chrget
 		ldb	#90
 		pshs	b		; בית בקרה שלא בשימוש (קורא)
 		lbsr	fexpr
@@ -736,7 +742,7 @@ eval		clr	VALTYP
 		lbeq	fndoer
 		cmpa	#'(
 		bne	4F
-		lbsr	chrget
+		jsr	<chrget
 		lbsr	frmevl
 		lda	#')
 		lbra	synchk
@@ -759,7 +765,7 @@ eval		clr	VALTYP
 		pshs	x		; הכתובת
 		lda	1,u		; 0: ארגומנט אחד בסוגריים; 1: השגרה קוראת בעצמה אחרי '('; 2: בלי סוגריים
 		pshs	a
-		lbsr	chrget
+		jsr	<chrget
 		puls	b
 		cmpb	#2
 		beq	43F		; A = התו שאחרי המילה
@@ -895,10 +901,10 @@ fn_mid		lbsr	frmevl
 		decb
 		pshs	b		; ההתחלה
 		ldb	#255		; ברירת מחדל: עד הסוף
-		lbsr	chrgot
+		jsr	<chrgot
 		cmpa	#',
 		bne	1F
-		lbsr	chrget
+		jsr	<chrget
 		lbsr	frmevl
 		bsr	conint
 1		pshs	b

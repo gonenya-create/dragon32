@@ -343,8 +343,8 @@ substr		pshs	a,b,x
 ; היעד שלא בשטח המחרוזות (למשל בתוך התוכנית) מועתק לשם קודם, כולו. n=0: ?FC לפני צד ימין.
 ; n גדול מהאורך: ?FC אחרי צד ימין. מוחלפים min(m, אורך B$, מה שנשאר מ-n); האורך של A$ לא משתנה.
 ; m=0 עם B$ לא ריק: מועתקים 256 בתים, כמו במקור (קורא: מונה שיורד אחרי ההעתקה הראשונה)
-midst		lbsr	chrget		; אחרי $FF
-		lbsr	chrget		; אחרי $98
+midst		jsr	<chrget		; אחרי $FF
+		jsr	<chrget		; אחרי $98
 		lda	#'(
 		lbsr	synchk
 		clrb			; יוצרים משתנה אם אין
@@ -375,10 +375,10 @@ midst		lbsr	chrget		; אחרי $FF
 		lbeq	err_fc		; אין מקום 0
 		pshs	b		; ההתחלה
 		ldb	#255		; ברירת מחדל
-		lbsr	chrgot
+		jsr	<chrgot
 		cmpa	#',
 		bne	3F
-		lbsr	chrget
+		jsr	<chrget
 		lbsr	frmevl
 		lbsr	conint
 3		pshs	b		; כמה

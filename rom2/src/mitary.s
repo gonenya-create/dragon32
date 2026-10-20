@@ -20,7 +20,7 @@ ary		cmpb	#2		; רק DIM נחשב "DIM"; קריאה רגילה יוצרת מער
 		pshs	a,b,x		; [0]=VALTYP [1]=DIM? [2-3]=VARNAM
 		clrb
 		pshs	b		; מספר הממדים, למעלה
-1		lbsr	chrget		; אחרי ( או ,
+1		jsr	<chrget		; אחרי ( או ,
 		lbsr	frmevl		; האינדקס (אינדקס בתוך אינדקס: רקורסיה)
 		lbsr	chknum
 		lbsr	ayint
@@ -32,7 +32,7 @@ ary		cmpb	#2		; רק DIM נחשב "DIM"; קריאה רגילה יוצרת מער
 		pshs	x		; האינדקס נכנס מתחת למונה
 		inca
 		pshs	a
-		lbsr	chrgot
+		jsr	<chrgot
 		cmpa	#',
 		beq	1B
 		lda	#')
@@ -184,9 +184,9 @@ reason		addd	#58
 ; DIM שם(גדלים)[,שם(גדלים)...] (mit: DIM)
 dim		ldb	#2
 		lbsr	ptrget
-		lbsr	chrgot
+		jsr	<chrgot
 		cmpa	#',
 		bne	1F
-		lbsr	chrget
+		jsr	<chrget
 		bra	dim
 1		rts

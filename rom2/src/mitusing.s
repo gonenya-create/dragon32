@@ -11,7 +11,7 @@ USFLG		equ	$d7		; 1 פסיקים, 2 כוכביות, 4 דולר, 8 + מוביל, 
 USW		equ	$dc		; רוחב שדה מחרוזת / עזר
 
 ; usstart: אחרי PRINT, כש-A = $CD (USING)
-usstart		lbsr	chrget
+usstart		jsr	<chrget
 		lbsr	frmevl
 		tst	VALTYP
 		lbeq	err_tm		; התבנית חייבת להיות מחרוזת
@@ -23,7 +23,7 @@ usstart		lbsr	chrget
 		tst	,x
 		lbeq	err_fc		; תבנית ריקה
 		clr	USEND
-		lbsr	chrgot		; אין ערכים בכלל?
+		jsr	<chrgot		; אין ערכים בכלל?
 		bne	us_cyc
 		inc	USEND
 us_cyc		clr	USPOS
@@ -89,7 +89,7 @@ us_str		tst	VALTYP
 		bne	41B
 5		leas	1,s
 ; us_sep: אחרי ערך: סוף פקודה, ; או ,. אחרת ?SN
-us_sep		lbsr	chrgot
+us_sep		jsr	<chrgot
 		bne	1F
 		lda	#1		; נגמרה בלי מפריד
 		sta	USEND
@@ -98,7 +98,7 @@ us_sep		lbsr	chrgot
 		beq	2F
 		cmpa	#',
 		lbne	err_sn
-2		lbsr	chrget
+2		jsr	<chrget
 		lbne	us_scan		; עוד ערך
 		lda	#2
 		sta	USEND
@@ -445,32 +445,8 @@ us_dig		lbsr	faddh
 		lbsr	qint
 		ldy	#USDG
 		leax	foutbl,pcr
-1		clrb
-2		lda	FACLO
-		suba	3,x
-		pshs	a
-		lda	FACMO
-		sbca	2,x
-		pshs	a
-		lda	FACMOH
-		sbca	1,x
-		pshs	a
-		lda	FACHO
-		sbca	,x
-		bcs	3F
-		sta	FACHO
-		puls	a
-		sta	FACMOH
-		puls	a
-		sta	FACMO
-		puls	a
-		sta	FACLO
-		incb
-		bra	2B
-3		leas	3,s
-		addb	#'0
+1		lbsr	fdig
 		stb	,y+
-		leax	4,x
 		cmpy	#USDG+9
 		blo	1B
 		rts

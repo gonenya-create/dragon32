@@ -122,7 +122,7 @@ fn_val		lbsr	frestr
 		pshs	d
 		leax	-1,x
 		stx	TXTPTR
-		lbsr	chrget
+		jsr	<chrget
 		bsr	finx
 		puls	d
 		std	TXTPTR
@@ -137,7 +137,7 @@ radix		ldd	#0
 		pshs	d
 		ldb	#8
 		pshs	b		; [0] = הבסיס, [1-2] = הערך
-		lbsr	chrget
+		jsr	<chrget
 		cmpa	#'H
 		bne	1F
 		ldb	#16
@@ -145,7 +145,7 @@ radix		ldd	#0
 		bra	2F
 1		cmpa	#'O
 		bne	3F
-2		lbsr	chrget
+2		jsr	<chrget
 3		suba	#'0
 		blo	9F
 		cmpa	#9
@@ -181,7 +181,7 @@ radix		ldd	#0
 		addd	1,s
 		lbcs	err_ov
 		std	1,s
-		lbsr	chrget
+		jsr	<chrget
 		bra	3B
 9		leas	1,s
 		puls	d
@@ -355,8 +355,8 @@ fn_varptr	ldd	STREND		; משתנה שלא היה: נוצר, ואז ?FC (קורא
 fn_timer	ldd	TICKS
 		lbra	givu
 ; TIMER=n (פקודה): 0-65535, בלי השבר
-timset		lbsr	chrget		; אחרי $FF
-		lbsr	chrget		; אחרי $9E
+timset		jsr	<chrget		; אחרי $FF
+		jsr	<chrget		; אחרי $9E
 		lda	#$cb		; =
 		lbsr	synchk
 		lbsr	frmevl
@@ -459,7 +459,7 @@ fn_usr		clrb
 		bhi	1F
 		suba	#'0
 		pshs	a
-		lbsr	chrget
+		jsr	<chrget
 		puls	b
 1		pshs	b
 		lda	#'(
@@ -489,8 +489,8 @@ defusr		ldx	TXTPTR
 		lda	1,x
 		cmpa	#$a1
 		lbne	err_sn
-		lbsr	chrget
-		lbsr	chrget
+		jsr	<chrget
+		jsr	<chrget
 		clrb
 		cmpa	#'0
 		blo	1F
@@ -498,7 +498,7 @@ defusr		ldx	TXTPTR
 		bhi	1F
 		suba	#'0
 		pshs	a
-		lbsr	chrget
+		jsr	<chrget
 		puls	b
 1		pshs	b
 		lda	#$cb		; =

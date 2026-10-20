@@ -26,14 +26,14 @@ BUFMIN		equ	LINBUF-1	; קורא: INPUT כותב כאן פסיק
 ; ---------- IF ... THEN / GOTO ... ELSE (mit: IF) ----------
 if		lbsr	frmevl
 		lbsr	chknum		; תנאי של מחרוזת: ?TM (ב-Dragon: פתוח)
-		lbsr	chrgot
+		jsr	<chrgot
 		cmpa	#$81		; IF X GO TO / GO SUB: בלי THEN
 		beq	1F
 		lda	#$bf		; THEN
 		lbsr	synchk
 1		tst	FACEXP		; 0 = שקר, כל השאר אמת
 		beq	if_no
-if_do		lbsr	chrgot
+if_do		jsr	<chrgot
 		lbcc	goto1		; מספר: GOTO
 		lbra	gone3		; פקודה
 ; שקר: מחפשים ELSE באותה רמה — כל IF בדרך מוסיף רמה, וכל ELSE סוגר אחת. אין: מדלגים על השורה
@@ -59,7 +59,7 @@ if_no		clr	IFCNT
 		bra	1B
 4		leax	-1,x		; TXTPTR = ה-ELSE, וממשיכים כמו אחרי THEN
 		stx	TXTPTR
-		lbsr	chrget
+		jsr	<chrget
 		bra	if_do
 5		lda	,x+
 		beq	8F
@@ -74,10 +74,10 @@ if_no		clr	IFCNT
 on		lbsr	frmevl
 		lbsr	conint		; B = 0-255
 		pshs	b
-		lbsr	chrgot
+		jsr	<chrgot
 		cmpa	#$81		; GO
 		lbne	err_sn
-		lbsr	chrget
+		jsr	<chrget
 		cmpa	#$bc		; TO
 		beq	1F
 		cmpa	#$bd		; SUB
@@ -85,14 +85,14 @@ on		lbsr	frmevl
 1		pshs	a		; [0] = TO/SUB, [1] = n
 2		dec	1,s
 		bne	3F
-		lbsr	chrget		; זה המספר שנבחר
+		jsr	<chrget		; זה המספר שנבחר
 		puls	a,b
 		cmpa	#$bc
 		lbeq	goto1
 		lbra	gosub1
-3		lbsr	chrget		; מדלגים על מספר
+3		jsr	<chrget		; מדלגים על מספר
 		lbsr	lineget
-		lbsr	chrgot
+		jsr	<chrgot
 		cmpa	#',
 		beq	2B
 		leas	2,s		; אין כזה ברשימה (או 0): ממשיכים אחרי הפקודה
@@ -135,7 +135,7 @@ read		ldx	DATPTR
 		sta	INPFLG
 		bra	inloop0
 input		lbsr	errdir		; לא במצב ישיר: ?ID
-		lbsr	chrgot
+		jsr	<chrgot
 		cmpa	#'"		; הנחיה: "טקסט";
 		bne	1F
 		ldx	TXTPTR
@@ -168,7 +168,7 @@ inloop		clrb			; המשתנה (נוצר אם אין)
 		std	VARTXT
 		ldx	INPPTR
 		stx	TXTPTR
-		lbsr	chrgot
+		jsr	<chrgot
 		bne	datbk1
 		tst	INPFLG		; הנתונים נגמרו
 		lbne	datlop		; READ: ה-DATA הבא
@@ -177,7 +177,7 @@ inloop		clrb			; המשתנה (נוצר אם אין)
 		lbsr	qinlin
 		ldx	#BUFMIN
 		stx	TXTPTR
-datbk1		lbsr	chrget
+datbk1		jsr	<chrget
 		tst	VALTYP
 		bpl	numins
 		; מחרוזת: במרכאות — עד המרכאות. בלי — עד פסיק או נקודתיים
@@ -201,7 +201,7 @@ datbk1		lbsr	chrget
 numins		lbsr	fin
 		ldx	FORPNT
 		lbsr	movmf
-strdn2		lbsr	chrgot		; אחרי הנתון: רק סוף או פסיק
+strdn2		jsr	<chrgot		; אחרי הנתון: רק סוף או פסיק
 		beq	trmok
 		cmpa	#',
 		bne	trmnok
@@ -209,7 +209,7 @@ trmok		ldd	TXTPTR
 		std	INPPTR
 		ldd	VARTXT
 		std	TXTPTR
-		lbsr	chrgot
+		jsr	<chrgot
 		beq	varend
 		lda	#',
 		lbsr	synchk
@@ -245,7 +245,7 @@ datlop		lbsr	data
 		std	DATLIN
 		leax	4,x
 		stx	TXTPTR
-1		lbsr	chrget
+1		jsr	<chrget
 		cmpa	#$86		; DATA
 		bne	datlop
 		lbra	datbk1
@@ -453,7 +453,7 @@ fndoer		bsr	getfnm
 		lbsr	movmf
 		lbsr	frmevl
 		lbsr	chknum
-		lbsr	chrgot
+		jsr	<chrgot
 		lbne	err_sn
 		puls	x
 		stx	TXTPTR

@@ -66,7 +66,7 @@ del_st		lbeq	err_fc
 line_st		cmpa	#$89		; INPUT
 		lbne	err_sn		; LINE של הגרפיקה: בחלק 3
 		lbsr	errdir
-		lbsr	chrget
+		jsr	<chrget
 		cmpa	#'"
 		bne	1F
 		ldx	TXTPTR
