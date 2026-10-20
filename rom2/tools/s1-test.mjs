@@ -245,5 +245,24 @@ await check('SET/RESET/POINT (reader): colour per cell, colour 0 keeps it, RESET
 await check('SET/RESET errors: x 64 or y 32 ?FC, colour 9 ?FC, colour missing ?SN', ['SET(64,0,1)', 'SET(0,32,1)', 'SET(0,0,9)', 'SET(0,0)'], r => (r.screen.match(/\?FC ERROR/g) || []).length === 3 && /\?SN ERROR\nOK$/.test(r.screen.replace(/\n@$/, '')) || r.screen.split('\n').slice(-8).join(' | '));
 await check('CLEAR key while typing: the screen is cleared and the line starts again (reader)', ['PRINT 1\fPRINT 2'], r => /^PRINT 2\n 2\nOK/.test(r.screen) || r.screen.split('\n').slice(0, 3).join(' | '));
 await check('cursor blink counter CBLCNT ($8F) = 50 at power-on (reader)', [], r => r.ram[0x8f] === 50 || 'CBLCNT ' + r.ram[0x8f]);
+
+console.log('stage 3 part 2: editing tools (reader: docs/DRAGON-SPEC-EDIT.md)');
+await check('TRON: [n] at each program line entered, no spaces, not again after a colon; flag $AF = $4F; TROFF: 0', ['10 PRINT "A";', '20 PRINT "B";:PRINT "C";', '30 GOTO 50', '40 PRINT "X"', '50 END', 'TRON', 'RUN', 'TROFF', 'RUN'], r =>
+  /RUN\n\[10\]A\[20\]BC\[30\]\[50\]\nOK\nTROFF\nOK\nRUN\nABC\nOK$/.test(r.screen.replace(/\n@$/, '')) && r.ram[0xaf] === 0 || r.screen.split('\n').slice(-8).join(' | '));
+await check('TRON survives RUN and NEW (reader)', ['TRON', 'NEW', '10 PRINT 1', 'RUN'], r => r.ram[0xaf] === 0x4f && /RUN\n\[10\] 1\nOK$/.test(r.screen.replace(/\n@$/, '')) || r.screen.split('\n').slice(-4).join(' | '));
+await check('DEL n-m, -m, n-, missing lines are fine; DEL alone: ?FC', ['10 PRINT 1', '20 PRINT 2', '30 PRINT 3', '40 PRINT 4', '50 PRINT 5', 'DEL 20-30', 'DEL 5', 'DEL -10', 'DEL 50-', 'LIST', 'DEL'], r =>
+  /DEL 50-\nOK\nLIST\n40 PRINT 4\nOK\nDEL\n\?FC ERROR\nOK$/.test(r.screen.replace(/\n@$/, '')) || r.screen.split('\n').slice(-7).join(' | '));
+await check('DEL inside a program: deletes, stops, OK (the rest of the line is not run)', ['10 PRINT 1:DEL 30:PRINT 2', '30 REM', 'RUN', 'LIST'], r =>
+  /RUN\n 1\nOK\nLIST\n10 PRINT 1:DEL 30:PRINT 2\nOK$/.test(r.screen.replace(/\n@$/, '')) || r.screen.split('\n').slice(-6).join(' | '));
+await check('LINE INPUT: prompt without "?", the whole line kept (spaces, commas, quotes, colon)', ['10 LINE INPUT "NAME";A$', '20 PRINT "[";A$;"]"', 'RUN', '  HI, "YOU":X'], r =>
+  /RUN\nNAME  HI, "YOU":X\n\[  HI, "YOU":X\]\nOK$/.test(r.screen.replace(/\n@$/, '')) || r.screen.split('\n').slice(-4).join(' | '));
+await check('LINE INPUT: direct mode ?ID; numeric variable ?TM after the input', ['LINE INPUT A$', '10 LINE INPUT A', 'RUN', 'X'], r =>
+  /LINE INPUT A\$\n\?ID ERROR/.test(r.screen) && /RUN\nX\n\?TM ERROR IN 10\nOK$/.test(r.screen.replace(/\n@$/, '')) || r.screen.split('\n').slice(-6).join(' | '));
+await check('RENUM: GOTO, GOSUB, THEN, ELSE, ON lists, GO TO with spaces inside the number; text grows; the program still runs', ['10 IF X=0 THEN 30 ELSE 20', '20 GOSUB 40:ON X-1 GOTO 10,20:END', '30 X=1:GO TO 1 0', '40 PRINT "OK!";X:RETURN', 'RENUM 1000,0,1000', 'LIST', 'RUN'], r =>
+  /LIST\n1000 IF X=0 THEN 3000 ELSE 2000\n2000 GOSUB 4000:ON X-1 GOTO 1000\n,2000:END\n3000 X=1:GO TO 1000\n4000 PRINT "OK!";X:RETURN\nOK\nRUN\nOK! 1\nOK$/.test(r.screen.replace(/\n@$/, '')) || r.screen.split('\n').slice(-9).join(' | '));
+await check('RENUM: a missing target stays, "UL x IN y" with the new line number', ['10 GOTO 99', '20 GOTO 10', 'RENUM 100', 'LIST'], r =>
+  /RENUM 100\nUL 99 IN 100\nOK\nLIST\n100 GOTO 99\n110 GOTO 100\nOK$/.test(r.screen.replace(/\n@$/, '')) || r.screen.split('\n').slice(-7).join(' | '));
+await check('RENUM: ?FC for step 0, overlap with lines below the start, past 63999; ?SN for a number over 63999', ['10 PRINT 1', '20 PRINT 2', 'RENUM ,,0', 'RENUM 5,20', 'RENUM 63995,0,5', 'RENUM 64000'], r =>
+  (r.screen.match(/\?FC ERROR/g) || []).length === 3 && /RENUM 64000\n\?SN ERROR\nOK$/.test(r.screen.replace(/\n@$/, '')) || r.screen.split('\n').slice(-10).join(' | '));
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

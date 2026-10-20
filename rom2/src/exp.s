@@ -462,7 +462,8 @@ km_no		puls	x
 		rts
 
 ; ---------- LIST [מ][-[עד]] (mit: LIST, m6502.asm:1975) ----------
-do_list		lbsr	skipsp
+; lrange: טווח שורות מ-X: [n][-[m]]. D = ההתחלה (0 אם אין), LEND = הסוף ($FFFF אם אין; מספר בודד: הוא עצמו)
+lrange		lbsr	skipsp
 		ldd	#0
 		pshs	d		; מ
 		ldd	#$ffff
@@ -488,7 +489,8 @@ do_list		lbsr	skipsp
 		bhi	2F
 		lbsr	linget
 		std	LEND
-2		puls	d
+2		puls	d,pc
+do_list		bsr	lrange
 		lbsr	fndlin
 3		ldd	,y
 		beq	9F
@@ -578,6 +580,8 @@ linget		ldd	#0
 		suba	#'0
 		pshs	a
 		ldd	1,s
+		cmpd	#6399		; מעל 63999: ?SN (קורא: קורא מספרי השורות)
+		lbhi	err_sn
 		lslb
 		rola
 		std	1,s		; *2
@@ -799,6 +803,7 @@ fntab		fcs	"SGN"
 		include	"mitmath.s"
 		include	"mitfunc.s"
 		include	"mitscr.s"
+		include	"mitedit.s"
 		include	"io.s"
 		include	"testq.s"
 

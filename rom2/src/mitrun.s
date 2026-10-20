@@ -60,6 +60,7 @@ newstt		lbsr	brkchk		; BREAK? (mit: ISCNTC)
 		std	CURLIN
 		leax	4,x
 		stx	TXTPTR
+		lbsr	trace		; TRON: [n] (קורא)
 gone		lbsr	chrget
 		bsr	gone3
 		bra	newstt
@@ -152,6 +153,16 @@ stmdsp		fcb	$80
 		fdb	cls_st-stmdsp
 		fcb	$a4
 		fdb	exec-stmdsp
+		fcb	$a6
+		fdb	del_st-stmdsp
+		fcb	$a8
+		fdb	tron-stmdsp
+		fcb	$a9
+		fdb	troff-stmdsp
+		fcb	$aa
+		fdb	line_st-stmdsp
+		fcb	$ba
+		fdb	renum-stmdsp
 		fcb	$af
 		fdb	pclear-stmdsp
 		fcb	0
