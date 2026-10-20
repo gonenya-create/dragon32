@@ -305,15 +305,13 @@ pr_lp		cmpa	#';
 		tst	VALTYP
 		beq	3F
 		lbsr	strprt		; מחרוזת
-		jsr	<chrgot
-		beq	pr_cr
-		bra	pr_lp
+		bra	4F
 3		lbsr	fout
 		ldx	#FBUFFR
 		lbsr	puts
 		lda	#$20		; רווח אחרי מספר
 		lbsr	putc
-		jsr	<chrgot
+4		jsr	<chrgot
 		beq	pr_cr
 		bra	pr_lp
 pr_semi		jsr	<chrget
@@ -732,11 +730,7 @@ eval		clr	VALTYP
 		lbsr	chkrp
 43		jsr	[,s++]		; קוראים לשגרה וחוזרים דרכה, כמו משגר הפונקציות במקור (MEM תלוי בעומק — קורא)
 		rts
-5		cmpa	#'A
-		lblo	err_sn
-		cmpa	#'Z
-		lbhi	err_sn
-		ldb	#1		; משתנה: בלי ליצור
+5		ldb	#1		; משתנה: בלי ליצור (ptrget בודק שזו אות: ?SN)
 		lbsr	ptrget
 		ldx	VARPNT
 		tst	VALTYP
