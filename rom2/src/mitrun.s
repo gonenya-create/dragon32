@@ -69,6 +69,14 @@ gone		lbsr	chrget
 gone3		beq	9F		; פקודה ריקה
 		tsta
 		lbpl	let		; לא מילה שמורה: השמה
+		cmpa	#$ff		; פונקציה בתחילת פקודה: TIMER= (קורא)
+		bne	1F
+		ldx	TXTPTR
+		lda	1,x
+		cmpa	#$9e
+		lbeq	timset
+		lbra	err_sn
+1
 		leau	stmdsp,pcr
 1		ldb	,u
 		beq	3F
@@ -559,8 +567,6 @@ fe_lp		clr	OPMASK
 		lblo	9F
 		cmpa	#$c9
 		lbhi	9F
-		cmpa	#$c7		; ^: לא בניסוי
-		lbeq	err_sn
 		suba	#$c3
 		ldb	#3
 		mul
@@ -635,7 +641,7 @@ optab		fcb	121
 		fcb	123
 		fdb	fdivt-optab
 		fcb	127
-		fdb	0
+		fdb	fpwrt-optab
 		fcb	80
 		fdb	andop-optab
 		fcb	70
@@ -647,6 +653,8 @@ eval		clr	VALTYP
 		lbcc	fin		; מספר
 		cmpa	#'.
 		lbeq	fin
+		cmpa	#'&		; &H / &O / & (קורא)
+		lbeq	radix
 		cmpa	#$c4		; - חד-מקומי: קדימות 125
 		bne	1F
 		lbsr	chrget
@@ -700,9 +708,13 @@ eval		clr	VALTYP
 		leax	fndsp,pcr
 		leax	d,x
 		pshs	x		; הכתובת
-		lda	1,u		; 0: ארגומנט אחד בסוגריים; 1: השגרה קוראת בעצמה
+		lda	1,u		; 0: ארגומנט אחד בסוגריים; 1: השגרה קוראת בעצמה אחרי '('; 2: בלי סוגריים
 		pshs	a
 		lbsr	chrget
+		puls	b
+		cmpb	#2
+		beq	43F		; A = התו שאחרי המילה
+		pshs	b
 		lda	#'(
 		lbsr	synchk
 		puls	a
@@ -731,20 +743,64 @@ fndsp		fcb	$80,0
 		fdb	fn_int-fndsp
 		fcb	$82,0
 		fdb	fn_abs-fndsp
+		fcb	$83,0
+		fdb	fn_pos-fndsp
+		fcb	$84,0
+		fdb	fn_rnd-fndsp
+		fcb	$85,0
+		fdb	fn_sqr-fndsp
+		fcb	$86,0
+		fdb	fn_log-fndsp
+		fcb	$87,0
+		fdb	fn_exp-fndsp
+		fcb	$88,0
+		fdb	fn_sin-fndsp
+		fcb	$89,0
+		fdb	fn_cos-fndsp
+		fcb	$8a,0
+		fdb	fn_tan-fndsp
+		fcb	$8b,0
+		fdb	fn_atn-fndsp
 		fcb	$8c,0
 		fdb	fn_peek-fndsp
 		fcb	$8d,0
 		fdb	fn_len-fndsp
+		fcb	$8e,0
+		fdb	fn_str-fndsp
+		fcb	$8f,0
+		fdb	fn_val-fndsp
 		fcb	$90,0
 		fdb	fn_asc-fndsp
 		fcb	$91,0
 		fdb	fn_chr-fndsp
+		fcb	$93,0
+		fdb	fn_joy-fndsp
+		fcb	$94,0
+		fdb	fn_fix-fndsp
+		fcb	$95,0
+		fdb	fn_hex-fndsp
 		fcb	$96,1
 		fdb	fn_left-fndsp
 		fcb	$97,1
 		fdb	fn_right-fndsp
 		fcb	$98,1
 		fdb	fn_mid-fndsp
+		fcb	$99,1
+		fdb	fn_point-fndsp
+		fcb	$9a,2
+		fdb	fn_inkey-fndsp
+		fcb	$9b,2
+		fdb	fn_mem-fndsp
+		fcb	$9c,1
+		fdb	fn_varptr-fndsp
+		fcb	$9d,1
+		fdb	fn_instr-fndsp
+		fcb	$9e,2
+		fdb	fn_timer-fndsp
+		fcb	$a0,1
+		fdb	fn_strng-fndsp
+		fcb	$a1,2
+		fdb	fn_usr-fndsp
 		fcb	0
 fn_sgn		lbsr	chknum
 		lbsr	sign

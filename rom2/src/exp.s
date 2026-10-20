@@ -47,7 +47,7 @@ LEND		equ	$03fa		; 2 בתים: סוף טווח LIST
 LASTKEY		equ	$03fc
 
 KQPTR		equ	$f8		; רק לבדיקות: המקש הבא בתור המוקלד (התור עצמו ב-ROM, testq)
-KQCNT		equ	$fa		; כמה מקשים נשארו (2 הבתים ו-1 באזור הפנוי $EA-$FF, קורא)
+KQCNT		equ	$fa		; כמה מקשים נשארו, 2 בתים (באזור הפנוי $EA-$FF, קורא)
 LINBUF		equ	$02dd		; מאגר השורה (קורא: BUF ב-$02DD)
 LINMAX		equ	249
 CRB		equ	$01da		; הניסוי בלבד: השורה המכווצת, בחוצץ הקלטת (255 בתים). במקור הכיווץ נעשה
@@ -59,6 +59,10 @@ reset		orcc	#$50
 		sta	SAM+26
 		sta	SAM+29
 		lds	#STACKINI
+		ldx	#0		; ניקוי ראשון של $0000-$03FF (קורא: "הניקוי הראשוני")
+1		clr	,x+
+		cmpx	#$0400
+		blo	1B
 		clr	,-s		; סמן תחתית למחסנית ה-FOR/GOSUB (קורא: ב-STKTOP-1)
 		clra
 		tfr	a,dp
@@ -71,8 +75,8 @@ reset		orcc	#$50
 		andcc	#$ef
 		lbsr	cls
 		leax	testq,pcr	; תור הבדיקות
-		ldb	,x+
-		stb	KQCNT
+		ldd	,x++
+		std	KQCNT
 		stx	KQPTR
 		ldd	#0
 		std	KPREV
@@ -96,6 +100,19 @@ reset		orcc	#$50
 		sta	SCRBAS
 		ldd	#TEMPST
 		std	TEMPPT
+		ldd	#$804f		; קורא: זרע ה-RND, 80 4F C7 52 59
+		std	$0115
+		ldd	#$c752
+		std	$0117
+		lda	#$59
+		sta	$0119
+		ldd	#USRTAB		; קורא: טבלת USR, עשר כתובות שמובילות ל-?FC
+		std	USTBAD
+		ldx	#USRTAB
+		leau	err_fc,pcr
+1		stu	,x++
+		cmpx	#USRTAB+20
+		blo	1B
 		leax	execrts,pcr	; EXEC בלי כתובת אחרי ההדלקה: אצלנו חוזר מיד (ב-Dragon: פתוח)
 		stx	EXECJP
 		lbsr	scrtch
@@ -167,6 +184,10 @@ err_id		ldd	#'I*256+'D
 err_cn		ldd	#'C*256+'N
 		bra	error
 err_uf		ldd	#'U*256+'F
+		bra	error
+err_dn		ldd	#'D*256+'N
+		bra	error
+err_no		ldd	#'N*256+'O
 		bra	error
 err_dv0		ldd	#'/*256+'0
 error		lds	STKTOP		; mit: STKINI — מחסנית, זמניים, ואין המשך
@@ -778,6 +799,8 @@ fntab		fcs	"SGN"
 		include	"mitary.s"
 		include	"mitctl.s"
 		include	"mitmem.s"
+		include	"mitmath.s"
+		include	"mitfunc.s"
 		include	"io.s"
 		include	"testq.s"
 

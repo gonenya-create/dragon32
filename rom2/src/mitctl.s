@@ -311,7 +311,7 @@ cont		bne	9B
 		std	CURLIN
 		rts
 ; brkchk: בין פקודות. BREAK עוצר; מקש אחר נשמר בשביל INKEY$. קודם בדיקה מהירה: אף מקש לא לחוץ
-brkchk		ldb	KQCNT		; תור הבדיקות: רק BREAK שעומד ראשון, ורק כשתוכנית רצה (כדי לבדוק
+brkchk		ldd	KQCNT		; תור הבדיקות: רק BREAK שעומד ראשון, ורק כשתוכנית רצה (כדי לבדוק
 		beq	1F		; BREAK גם ב-INPUT, אחרי RUN שהוקלד מראש)
 		ldd	CURLIN
 		cmpd	#$ffff
@@ -388,7 +388,9 @@ execrts		rts
 ; ---------- DEF FN (mit: DEF, GETFNM, FNDOER) ----------
 ; הפונקציה נשמרת כמשתנה ששמו עם ביט 7 בתו הראשון: [המקום בטקסט 2][הפרמטר 2][0]
 ; (המבנה ב-Dragon: פתוח; כאן כמו ב-mit)
-def		cmpa	#$be		; FN (DEF USR: בהמשך)
+def		cmpa	#$ff		; DEF USRn=
+		lbeq	defusr
+		cmpa	#$be		; FN
 		lbne	err_sn
 		lbsr	errdir
 		bsr	getfnm

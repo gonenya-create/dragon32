@@ -12,6 +12,12 @@ hw_init
 		sta	PIA0+2		; DDRB: הכול פלט
 		lda	#$04
 		sta	PIA0+3
+		; PIA1: A = ה-DAC בביטים 2-7, ומדפסת בביט 1 (פלט); ביט 0 קלט הקלטת
+		clr	PIA1+1
+		lda	#$fe
+		sta	PIA1
+		lda	#$04
+		sta	PIA1+1
 		; PIA1: B = מצב ה-VDG (ביטים 3-7 פלט)
 		clr	PIA1+3
 		lda	#$f8
@@ -183,23 +189,25 @@ ki_none		clra
 ki_out		puls	b,x,y,pc
 
 ; inkey: מקש בלי לחכות (INKEY$): מהתור, או מקש שנלחץ עכשיו. אין: A=0
-inkey		ldb	KQCNT
+inkey		ldd	KQCNT
 		bne	gk_pop
 		lbra	keyindex
 
 ; getkey: מחכה למקש, מחזיר את התו ב-A. קודם תור הבדיקות (KEYQ), אחר כך המקלדת
 getkey		pshs	b,x
-gk_loop		ldb	KQCNT
+gk_loop		ldd	KQCNT
 		beq	gk_scan
 		bsr	gk_pop
 		puls	b,x,pc
 ; gk_pop: התו הבא בתור
-gk_pop		pshs	x
+gk_pop		pshs	b,x
+		ldd	KQCNT
+		subd	#1
+		std	KQCNT
 		ldx	KQPTR
 		lda	,x+
 		stx	KQPTR
-		dec	KQCNT
-		puls	x,pc
+		puls	b,x,pc
 gk_scan		lbsr	keyindex
 		tsta
 		bne	1F

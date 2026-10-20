@@ -108,7 +108,7 @@ round		lda	FACEXP
 		beq	9F
 		lsl	FACOV
 		bcc	9F
-		lbsr	incfac
+incrnd		lbsr	incfac
 		bne	9F
 		bra	rndshf		; C=1 עדיין (inc לא נוגע ב-C)
 9		rts
@@ -557,6 +557,8 @@ fint		lda	FACEXP
 		lda	FACSGN
 		pshs	a
 		bsr	qint
+		ldb	FACLO		; הבית הנמוך: הזוגיות, בשביל ^ (mit: INTEGR)
+		stb	INTEGR
 		clr	FACOV
 		lda	#160
 		sta	FACEXP

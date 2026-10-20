@@ -88,7 +88,7 @@ export async function runRom(lines, opts = {}) {
   if (!Array.isArray(lines) || lines.some(line => typeof line !== 'string' || /[^\x03\x20-\x7e]/.test(line)))
     throw new Error('ROM input must be an array of printable ASCII lines (\\x03 = BREAK)');
   const input = Buffer.from(lines.map(line => line + '\r').join(''), 'ascii');
-  if (input.length > 255) throw new Error(`ROM input is ${input.length} bytes; maximum is 255 bytes including CRs`);
+  if (input.length > 4096) throw new Error(`ROM input is ${input.length} bytes; maximum is 4096 bytes including CRs`);
   const { trapSym = 'gk_scan', range, timeout = 5, wallTimeout = 20000 } = opts;
   if (!Number.isFinite(timeout) || timeout <= 0 || !Number.isFinite(wallTimeout) || wallTimeout <= 0)
     throw new Error('Timeouts must be positive finite numbers');
@@ -124,7 +124,7 @@ export async function runRom(lines, opts = {}) {
         sta PIA0+1
         clr PIA0`));
     }
-    const bytes = [input.length, ...input];
+    const bytes = [input.length >> 8, input.length & 255, ...input];
     const table = [];
     for (let i = 0; i < bytes.length; i += 16)
       table.push(`${i === 0 ? 'testq' : ''}\tfcb\t${bytes.slice(i, i + 16).join(',')}`);
