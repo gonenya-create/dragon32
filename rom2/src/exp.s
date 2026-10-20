@@ -75,8 +75,6 @@ reset		orcc	#$50
 		clra
 		tfr	a,dp
 		lbsr	hw_init
-		ldd	#0
-		std	TICKS
 		lda	PIA0+2
 		lda	#$05
 		sta	PIA0+3
@@ -88,11 +86,6 @@ reset		orcc	#$50
 		ldd	,x++
 		std	KQCNT
 		stx	KQPTR
-		ldd	#0
-		std	KPREV
-		std	KPREV+2
-		std	KPREV+4
-		std	KPREV+6
 		; מצב ההדלקה (ספר): תוכנית ב-$1E01, אפס ב-$1E00, גבולות הזיכרון והמחרוזות
 		clr	$1e00
 		ldd	#$1e01
@@ -128,12 +121,8 @@ reset		orcc	#$50
 		lbsr	scrtch
 		leax	banner,pcr
 		lbsr	puts
-main_ok		lda	CURSOR+1
-		anda	#$1f
-		beq	1F
-		lda	#13
-		lbsr	putc
-1		leax	m_ok,pcr
+main_ok		bsr	condcr
+		leax	m_ok,pcr
 		lbsr	puts
 main		lbsr	getline
 		bcs	main_ok		; BREAK
@@ -159,6 +148,22 @@ main		lbsr	getline
 
 ; endcon: סוף התוכנית או סוף השורה הישירה (mit: ENDCON). המחסנית לא מתאפסת
 endcon		bra	main_ok
+; condcr: שורה חדשה אם הסמן לא בעמודה 0
+condcr		lda	CURSOR+1
+		anda	#$1f
+		beq	1F
+		lda	#13
+		lbra	putc
+1		rts
+; prin: " IN n" אם בתוכנית, ושורה חדשה
+prin		ldd	CURLIN
+		cmpd	#$ffff
+		beq	2F
+		leax	m_in,pcr
+		lbsr	puts
+		lbsr	prnum
+2		lda	#13
+		lbra	putc
 
 ; ---------- שגיאות (mit: ERROR) ----------
 err_sn		ldd	#'S*256+'N
@@ -208,12 +213,8 @@ error		lds	STKTOP		; mit: STKINI — מחסנית, זמניים, ואין המש
 		stx	OLDTXT
 		clr	SUBFLG
 		pshs	d
-		lda	CURSOR+1
-		anda	#$1f
-		beq	1F
-		lda	#13
-		lbsr	putc
-1		lda	#'?
+		lbsr	condcr
+		lda	#'?
 		lbsr	putc
 		puls	d
 		lbsr	putc
@@ -221,17 +222,8 @@ error		lds	STKTOP		; mit: STKINI — מחסנית, זמניים, ואין המש
 		lbsr	putc
 		leax	m_err,pcr
 		lbsr	puts
-		ldd	CURLIN
-		cmpd	#$ffff
-		beq	2F
-		leax	m_in,pcr
-		lbsr	puts
-		lbsr	prnum
-2		lda	#13
-		lbsr	putc
-		leax	m_ok,pcr
-		lbsr	puts
-		lbra	main
+		lbsr	prin
+		lbra	main_ok
 m_err		fcc	" ERROR"
 		fcb	0
 m_in		fcc	" IN "

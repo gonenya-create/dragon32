@@ -282,21 +282,10 @@ stpend		pshs	cc
 		stx	OLDTXT
 2		puls	cc
 		lbcc	endcon
-		lda	CURSOR+1
-		anda	#$1f
-		beq	3F
-		lda	#13
-		lbsr	putc
-3		leax	m_brk,pcr
+		lbsr	condcr
+		leax	m_brk,pcr
 		lbsr	puts
-		ldd	CURLIN
-		cmpd	#$ffff
-		beq	4F
-		leax	m_in,pcr
-		lbsr	puts
-		lbsr	prnum
-4		lda	#13
-		lbsr	putc
+		lbsr	prin
 		lbra	endcon
 9		rts
 m_brk		fcc	"BREAK"
