@@ -135,8 +135,8 @@ stmtbl
 		fdb	reset_st		; $9F RESET
 		fdb	cls_st		; $A0 CLS
 		fdb	err_sn		; $A1 MOTOR
-		fdb	err_sn		; $A2 SOUND
-		fdb	err_sn		; $A3 AUDIO
+		fdb	sound_st	; $A2 SOUND
+		fdb	audio_st	; $A3 AUDIO
 		fdb	exec		; $A4 EXEC
 		fdb	err_sn		; $A5 SKIPF
 		fdb	del_st		; $A6 DEL

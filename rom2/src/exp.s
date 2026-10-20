@@ -74,7 +74,7 @@ reset		orcc	#$50
 		bne	1B
 		lbsr	hw_init		; DP כבר 0 מההדלקה (והקוד לא משנה אותו)
 		lda	PIA0+2
-		lda	#$05
+		lda	#$35		; פסיקת השדה; CB2 (SEL2) נשאר פלט נמוך (קורא: צליל 0.3)
 		sta	PIA0+3
 		andcc	#$ef
 		lda	#50
@@ -208,6 +208,8 @@ err_sn		ldd	#'S*256+'N
 error		lds	STKTOP		; mit: STKINI — מחסנית, זמניים, ואין המשך
 		clr	,-s
 		pshs	d		; שתי האותיות, ואחריהן ה-0 של הסמן: מחרוזת במחסנית
+		lbsr	sndoff		; כל שגיאה: הצליל והמנוע כבויים (קורא: צליל 1.1)
+		lbsr	motoff
 		lbsr	rcsub
 		lbsr	condcr
 		lda	#'?
@@ -768,14 +770,22 @@ fntab		fcs	"SGN"
 		include	"mitgfx.s"
 		include	"mitcirc.s"
 		include	"mitdraw.s"
+		include	"mitsnd.s"
 		include	"io.s"
 		include	"testq.s"
 
-irq		lda	PIA0+2
+; פסיקת השדה (קורא: צליל 4): רק כשהדגל ב-$FF03 דולק. TIMER, ואחריו המשך של SOUND
+irq		lda	PIA0+3
+		bpl	9F
+		lda	PIA0+2
 		ldx	TICKS
 		leax	1,x
 		stx	TICKS
-		rti
+		ldx	SNDTMR
+		beq	9F
+		leax	-1,x
+		stx	SNDTMR
+9		rti
 
 		org	$bff2
 		fdb	reset,reset,reset,irq,reset,reset,reset
