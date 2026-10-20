@@ -57,6 +57,7 @@ reset		orcc	#$50
 		sta	SAM+26
 		sta	SAM+29
 		lds	#STACKINI
+		clr	,-s		; סמן תחתית למחסנית ה-FOR/GOSUB (קורא: ב-STKTOP-1)
 		clra
 		tfr	a,dp
 		lbsr	hw_init
@@ -91,6 +92,8 @@ reset		orcc	#$50
 		std	STKTOP
 		ldd	#TEMPST
 		std	TEMPPT
+		leax	execrts,pcr	; EXEC בלי כתובת אחרי ההדלקה: אצלנו חוזר מיד (ב-Dragon: פתוח)
+		stx	EXECJP
 		lbsr	scrtch
 		leax	banner,pcr
 		lbsr	puts
@@ -111,6 +114,8 @@ main		lbsr	getline
 		cmpa	#'9
 		bhi	1F
 		lbsr	storeline	; שורה עם מספר: נשמרת, בלי OK (כמו במקור)
+		lds	#STACKINI	; עריכה מנקה את המחסנית (mit: CLEARC/STKINI)
+		clr	,-s
 		bra	main
 1		lbsr	crunch		; פקודה ישירה: מכווצים ומבצעים (mit: MAIN, CRDONE)
 		clr	,u+		; אחרי השורה: קישור 0000, כמו סוף תוכנית
@@ -119,13 +124,10 @@ main		lbsr	getline
 		stx	TXTPTR
 		ldd	#$ffff
 		std	CURLIN
-		lds	#STACKINI
-		clr	,-s		; סמן תחתית למחסנית ה-FOR
-		lbra	gone
+		lbra	gone		; המחסנית נשארת: רשומות FOR/GOSUB שמורות עד CONT (mit)
 
-; endcon: סוף התוכנית או סוף השורה הישירה (mit: ENDCON)
-endcon		lds	#STACKINI
-		lbra	main_ok
+; endcon: סוף התוכנית או סוף השורה הישירה (mit: ENDCON). המחסנית לא מתאפסת
+endcon		lbra	main_ok
 
 ; ---------- שגיאות (mit: ERROR) ----------
 err_sn		ldd	#'S*256+'N
@@ -152,8 +154,24 @@ err_os		ldd	#'O*256+'S
 		bra	error
 err_ls		ldd	#'L*256+'S
 		bra	error
+err_rg		ldd	#'R*256+'G
+		bra	error
+err_od		ldd	#'O*256+'D
+		bra	error
+err_id		ldd	#'I*256+'D
+		bra	error
+err_cn		ldd	#'C*256+'N
+		bra	error
+err_uf		ldd	#'U*256+'F
+		bra	error
 err_dv0		ldd	#'/*256+'0
-error		lds	#STACKINI
+error		lds	#STACKINI	; mit: STKINI — מחסנית, זמניים, ואין המשך
+		clr	,-s
+		ldx	#TEMPST
+		stx	TEMPPT
+		ldx	#0
+		stx	OLDTXT
+		clr	SUBFLG
 		pshs	d
 		lda	CURSOR+1
 		anda	#$1f
@@ -239,6 +257,7 @@ dellin		pshs	d,x,y,u
 ; fndlin: מחפש את השורה D. Y = הרשומה שלה או הראשונה שגדולה ממנה (או סמן הסוף). C=1 אם נמצאה
 ; (mit: FNDLIN, m6502.asm:1879)
 fndlin		ldy	TXTTAB
+fndlnc
 1		pshs	d
 		ldd	,y
 		puls	d
@@ -278,6 +297,14 @@ runc		ldd	MEMSIZ
 		ldd	VARTAB
 		std	ARYTAB
 		std	STREND
+		ldd	TXTTAB		; RESTORE
+		subd	#1
+		std	DATPTR
+		ldd	#TEMPST
+		std	TEMPPT
+		ldd	#0		; אין המשך
+		std	OLDTXT
+		clr	SUBFLG
 		rts
 
 ; ---------- כיווץ (mit: CRUNCH, m6502.asm:1785; כללי ה-Dragon: קורא + ספר) ----------
@@ -742,6 +769,7 @@ fntab		fcs	"SGN"
 		include	"mitrun.s"
 		include	"mitstr.s"
 		include	"mitary.s"
+		include	"mitctl.s"
 		include	"io.s"
 		include	"testq.s"
 

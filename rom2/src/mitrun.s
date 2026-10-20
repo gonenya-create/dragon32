@@ -49,7 +49,9 @@ synchk		pshs	a
 
 ; ---------- לולאת הפקודות (mit: NEWSTT 2138, GONE 2165) ----------
 ; TXTPTR מצביע על התו שלפני הפקודה הבאה. 0 = סוף שורה: הקישור שאחריו אומר מה הלאה
-newstt		ldx	TXTPTR
+newstt		lbsr	brkchk		; BREAK? (mit: ISCNTC)
+		ldx	TXTPTR
+		stx	TXTBEG		; תחילת הפקודה: לשם חוזרים אחרי קלט שגוי ב-INPUT (קורא: TXTBEG)
 		lda	,x
 		bne	2F
 		ldd	1,x		; הקישור
@@ -90,22 +92,48 @@ stmdsp		fcb	$80
 		fdb	rem-stmdsp
 		fcb	$83
 		fdb	rem-stmdsp
+		fcb	$84		; ELSE שמגיעים אליו בריצה: סוף ענף האמת, מדלגים על השורה
+		fdb	rem-stmdsp
+		fcb	$85
+		fdb	if-stmdsp
+		fcb	$86
+		fdb	data-stmdsp
 		fcb	$87
 		fdb	print-stmdsp
+		fcb	$88
+		fdb	on-stmdsp
+		fcb	$89
+		fdb	input-stmdsp
 		fcb	$8a
 		fdb	end-stmdsp
 		fcb	$8b
 		fdb	next-stmdsp
 		fcb	$8c
 		fdb	dim-stmdsp
+		fcb	$8d
+		fdb	read-stmdsp
 		fcb	$8e
 		fdb	let-stmdsp
 		fcb	$8f
 		fdb	run-stmdsp
+		fcb	$90
+		fdb	restore-stmdsp
+		fcb	$91
+		fdb	return-stmdsp
+		fcb	$92
+		fdb	stop-stmdsp
+		fcb	$93
+		fdb	poke-stmdsp
+		fcb	$94
+		fdb	cont-stmdsp
 		fcb	$95
 		fdb	list_st-stmdsp
 		fcb	$97
 		fdb	new_st-stmdsp
+		fcb	$98
+		fdb	def-stmdsp
+		fcb	$a4
+		fdb	exec-stmdsp
 		fcb	0
 
 rem		ldx	TXTPTR		; עד סוף השורה
@@ -116,24 +144,52 @@ rem		ldx	TXTPTR		; עד סוף השורה
 2		stx	TXTPTR
 		rts
 
-end		lbra	endcon
-
-; RUN: משתנים מתאפסים, ומתחילים מהשורה הראשונה (TXTPTR = TXTTAB-1, האפס שב-$1E00)
+; RUN [שורה]: משתנים מתאפסים, ומתחילים מהשורה הראשונה (TXTPTR = TXTTAB-1, האפס שב-$1E00) או מהשורה שצוינה
+; (mit: RUN — CLEARC ואז GOTO)
 run		lbsr	runc
 		lds	#STACKINI
 		clr	,-s		; סמן תחתית למחסנית ה-FOR (mit: STKINI)
-		ldx	TXTTAB
+		lbsr	chrgot
+		beq	1F
+		lbcs	err_sn		; RUN "שם": עם הקלטת, בהמשך
+		lbsr	goto1
+		lbra	newstt
+1		ldx	TXTTAB
 		leax	-1,x
 		stx	TXTPTR
 		lbra	newstt
 
-; GO TO / GO SUB (mit: GOTO 2391). בניסוי רק GOTO
+; GO TO / GO SUB (mit: GOTO 2391, GOSUB 2373)
 go		cmpa	#$bc		; TO
+		beq	1F
+		cmpa	#$bd		; SUB
 		lbne	err_sn
 		lbsr	chrget
-		lbsr	lineget
-		lbsr	fndlin
-		lbcc	err_ul
+; gosub1: TXTPTR על מספר השורה. רשומה של 5 בתים, מהכתובת הנמוכה: $BD, השורה הקוראת, המקום בטקסט —
+; לפני מספר השורה; RETURN חוזר לשם ומדלג עד סוף הפקודה (קורא)
+gosub1		leas	2,s		; בלי החזרה ל-gone: הרשומה נכנסת מתחתיה
+		ldb	#5
+		lbsr	getstk
+		ldx	TXTPTR
+		pshs	x
+		ldx	CURLIN
+		pshs	x
+		lda	#$bd
+		pshs	a
+		bsr	goto1
+		lbra	newstt
+1		lbsr	chrget
+; goto1: TXTPTR על מספר השורה. שורה גדולה מהנוכחית: מחפשים מהשורה הבאה; אחרת מההתחלה (mit: GOTO)
+goto1		lbsr	lineget
+		cmpd	CURLIN
+		bls	2F		; גם במצב ישיר (CURLIN = $FFFF): מההתחלה
+		ldy	TXTPTR		; סוף השורה הנוכחית
+3		tst	,y+
+		bne	3B
+		lbsr	fndlnc
+		bra	4F
+2		lbsr	fndlin
+4		lbcc	err_ul
 		leay	-1,y		; TXTPTR = הבית שלפני השורה (ה-0 של השורה הקודמת)
 		sty	TXTPTR
 		rts
@@ -149,6 +205,8 @@ list_st		ldx	TXTPTR		; LIST: אותה שגרה כמו במצב ישיר
 		lbsr	do_list
 		lbra	rem
 new_st		lbsr	scrtch
+		lds	#STACKINI
+		clr	,-s
 		lbra	endcon
 
 ; ---------- LET (mit: LET 2540) ----------
@@ -164,8 +222,9 @@ let		ldb	#0		; יוצרים משתנה אם אין
 		puls	a
 		cmpa	VALTYP
 		lbne	err_tm
-		ldx	FORPNT
-		tsta
+; letasg: FAC → המשתנה ש-FORPNT מצביע עליו (גם READ ו-INPUT) (mit: INPCOM)
+letasg		ldx	FORPNT
+		tst	VALTYP
 		lbeq	movmf
 ; מחרוזת: מעתיקים אותה לשטח המחרוזות אם היא לא שם ולא בתוך התוכנית (mit: GETSPT/COPY)
 		ldx	FACMO
@@ -246,7 +305,9 @@ for		lbsr	let		; המשתנה מקבל את ערך ההתחלה
 		lbsr	fndfor		; אותו משתנה כבר בלולאה? מוחקים אותה ומה שמעליה
 		bne	2F
 		leas	18,x		; X = הרשומה
-2		lda	#$bc		; TO
+2		ldb	#18
+		lbsr	getstk
+		lda	#$bc		; TO
 		lbsr	synchk
 		lbsr	frmevl		; העד
 		ldx	#TEMPLIM
@@ -396,7 +457,15 @@ ptrget		pshs	b
 		sta	VARNAM+1
 		com	VALTYP
 		lbsr	chrget
-11		lda	,x		; ( = מערך (mit: ISARY)
+11		lda	SUBFLG		; ביט 6: שם של DEF FN — ביט 7 בתו הראשון (mit: GETFNM)
+		bita	#$40
+		beq	13F
+		lda	VARNAM
+		ora	#$80
+		sta	VARNAM
+13		tst	SUBFLG		; ביט 7: בלי מערכים (הפרמטר והשם של DEF FN)
+		bmi	12F
+		lda	[TXTPTR]	; ( = מערך (mit: ISARY)
 		cmpa	#'(
 		bne	12F
 		puls	b
@@ -598,7 +667,9 @@ eval		clr	VALTYP
 		ldx	STRNG2
 		stx	TXTPTR
 		rts
-31		cmpa	#'(
+31		cmpa	#$be		; FN
+		lbeq	fndoer
+		cmpa	#'(
 		bne	4F
 		lbsr	chrget
 		lbsr	frmevl
@@ -652,6 +723,8 @@ fndsp		fcb	$80,0
 		fdb	fn_int-fndsp
 		fcb	$82,0
 		fdb	fn_abs-fndsp
+		fcb	$8c,0
+		fdb	fn_peek-fndsp
 		fcb	$8d,0
 		fdb	fn_len-fndsp
 		fcb	$90,0

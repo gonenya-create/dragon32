@@ -591,6 +591,18 @@ fin		clr	FACEXP
 		clr	EXPSGN
 		clr	SGNFLG
 		lbsr	chrgot
+		cmpa	#'-		; סימן בהתחלה: רק בקלט וב-DATA (בביטוי הוא טוקן) (mit: FIN)
+		beq	1F
+		cmpa	#$c4
+		bne	2F
+1		com	SGNFLG
+		bra	3F
+2		cmpa	#'+
+		beq	3F
+		cmpa	#$c3
+		bne	fin_lp0
+3		lbsr	chrget
+fin_lp0		lbsr	chrgot
 fin_lp		bcc	fin_dig		; ספרה
 		cmpa	#'.
 		bne	fin_e
@@ -659,7 +671,9 @@ fin_end		lda	TENEXP
 		puls	a
 		deca
 		bne	7B
-8		rts
+8		tst	SGNFLG
+		lbne	negop
+		rts
 ; finlog: FAC = FAC + הספרה ב-A
 finlog		pshs	a
 		lbsr	movaf

@@ -24,17 +24,27 @@ GCADR		equ	$ee		; פנימי: הכתובת שלו
 INDEX		equ	$f0		; פנימי: כתובת המחרוזת אחרי frestr
 
 ; strlit: מחרוזת במרכאות. X = התו הראשון אחרי המרכאות. בונה מתאר זמני (FAC), ו-STRNG2 = התו שאחרי.
-; מחרוזת שבתוך התוכנית נשארת שם; אחרת (שורה ישירה) מועתקת לשטח המחרוזות (mit: STRLT2/STRCP)
-strlit		stx	DSCTMP+2
+; strlt2: אותו דבר, אבל המחרוזת נגמרת ב-0, ב-CHARAC או ב-ENDCHR (READ/INPUT). אם נגמרה במרכאות, מדלגים עליהן.
+; מחרוזת שבתוך התוכנית נשארת שם; אחרת (שורה ישירה, שורת קלט) מועתקת לשטח המחרוזות (mit: STRLT2/STRCP)
+CHARAC		equ	$01		; קורא: מפריד מחרוזת
+ENDCHR		equ	$02
+strlit		lda	#'"
+		sta	CHARAC
+		sta	ENDCHR
+strlt2		stx	DSCTMP+2
 		clrb
 1		lda	,x
 		beq	3F
-		cmpa	#'"
+		cmpa	CHARAC
+		beq	2F
+		cmpa	ENDCHR
 		beq	2F
 		leax	1,x
 		incb
 		bra	1B
-2		leax	1,x		; מדלגים על המרכאות הסוגרות
+2		cmpa	#'"
+		bne	3F
+		leax	1,x		; מדלגים על המרכאות הסוגרות
 3		stx	STRNG2
 		stb	DSCTMP
 		ldx	DSCTMP+2

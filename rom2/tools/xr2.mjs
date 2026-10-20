@@ -85,8 +85,8 @@ function snapshot(data) {
 }
 
 export async function runRom(lines, opts = {}) {
-  if (!Array.isArray(lines) || lines.some(line => typeof line !== 'string' || /[^\x20-\x7e]/.test(line)))
-    throw new Error('ROM input must be an array of printable ASCII lines');
+  if (!Array.isArray(lines) || lines.some(line => typeof line !== 'string' || /[^\x03\x20-\x7e]/.test(line)))
+    throw new Error('ROM input must be an array of printable ASCII lines (\\x03 = BREAK)');
   const input = Buffer.from(lines.map(line => line + '\r').join(''), 'ascii');
   if (input.length > 255) throw new Error(`ROM input is ${input.length} bytes; maximum is 255 bytes including CRs`);
   const { trapSym = 'gk_scan', range, timeout = 5, wallTimeout = 20000 } = opts;

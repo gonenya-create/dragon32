@@ -102,5 +102,40 @@ await check('array record = reader test 5: sizes 4,3,2 (last first), length 131,
 });
 await check('array index inside an index', ['B(1)=3:A(B(1))=8:PRINT A(3)'], screenHas(/\n 8\nOK$/));
 
+console.log('stage 2 part 3: control statements');
+await check('IF/ELSE (catalogue L-IF-01, L-ELSE-01), false IF skips the line, IF n THEN line (L-FLOW-06/07)',
+  ['10 IF 0 THEN PRINT "BAD" ELSE PRINT "A";', '20 IF -2 THEN PRINT "B"; ELSE PRINT "BAD"', '30 IF 0 THEN PRINT "BAD":PRINT "BAD"', '40 IF 1 THEN 60', '50 PRINT "BAD"', '60 IF 1 GOTO 80', '70 PRINT "BAD"', '80 PRINT "C"', 'RUN'], screenHas(/RUN\nABC\nOK$/));
+await check('nested ELSE pairs with the nearest IF (L-FLOW-08: ours, open on hardware)', ['10 IF 1 THEN IF 0 THEN PRINT "A"; ELSE PRINT "B"; ELSE PRINT "C";', '20 IF 0 THEN IF 1 THEN PRINT "A"; ELSE PRINT "B"; ELSE PRINT "C";', 'RUN'], screenHas(/RUN\nBC\nOK$/));
+await check('ELSE inside quotes or SQR/RND tokens is not an ELSE', ['IF 0 THEN PRINT "ELSE":A=SQR(4)+RND(1) ELSE PRINT "Y"'], screenHas(/\nY\nOK$/));
+await check('GOSUB/RETURN (L-RETURN-01), GO SUB with a space (L-FLOW-05), nested', ['10 GOSUB 30:PRINT "B";:GO SUB 40:PRINT "D":END', '30 PRINT "A";:RETURN', '40 GOSUB 30:PRINT "C";:RETURN', 'RUN'], screenHas(/RUN\nABACD\nOK$/));
+await check('GOSUB frame = 5 bytes on the stack: BD, calling line, text pointer at the line number (reader)', ['10 GOSUB 100', '100 STOP', 'RUN'], r => {
+  const f = [...r.ram.subarray(0x7f30, 0x7f36)]; const tp = f[3] * 256 + f[4];
+  return (f[0] === 0xbd && f[1] === 0 && f[2] === 10 && f[5] === 0 && r.ram[tp] === 0x31 && r.ram[tp - 1] === 0x20 && r.ram[tp - 2] === 0xbd) || `frame ${hex(f)} text@${tp.toString(16)}=${r.ram[tp]?.toString(16)}`;
+});
+await check('RETURN without GOSUB: ?RG; RETURN drops FOR loops opened inside the subroutine', ['10 GOSUB 30:PRINT "B":RETURN', '30 FOR I=1 TO 5:RETURN', 'RUN'], screenHas(/RUN\nB\n\?RG ERROR IN 10\nOK$/));
+await check('ON GOTO (L-ON-01), ON 0 and past the list fall through (L-FLOW-09), ON GOSUB (L-FLOW-10)',
+  ['10 ON 2 GOTO 30,40', '20 END', '30 PRINT "BAD":END', '40 ON 0 GOTO 30:ON 3 GOTO 30,30:ON 2 GOSUB 60,70:PRINT "B":END', '60 PRINT "BAD":RETURN', '70 PRINT "A";:RETURN', 'RUN'], screenHas(/RUN\nAB\nOK$/));
+await check('DATA/READ: quotes keep : and , (L-DATA-01), READ moves on (L-READ-01), RESTORE (L-RESTORE-01)',
+  ['10 DATA "A:B","C,D"', '20 READ A$,B$:PRINT A$;"/";B$', '30 DATA "E",F', '40 READ C$:READ D$:PRINT C$;D$;:RESTORE:READ E$:PRINT E$', 'RUN'], screenHas(/RUN\nA:B\/C,D\nEFA:B\nOK$/));
+await check('READ numbers across lines and statements, signs, unquoted strings', ['10 DATA 1,-2.5', '20 PRINT "X";:DATA +3,HELLO WORLD', '30 READ A,B,C,D$:PRINT A;B;C;D$', 'RUN'], screenHas(/RUN\nX 1 -2\.5  3 HELLO WORLD\nOK$/));
+await check('READ past the end: ?OD; text read as a number: ?SN in the DATA line', ['10 DATA 1', '20 READ A,B', 'RUN', '20 READ A$:READ A', '30 DATA X', 'RUN'], screenHas(/\?OD ERROR IN 20\nOK\n20 READ A\$:READ A\n30 DATA X\nRUN\n\?SN ERROR IN 30\nOK$/));
+await check('INPUT with a prompt and two values (L-INPUT-01 values)', ['10 INPUT "X";A$,B$', '20 PRINT "[";A$;"][";B$;"]"', 'RUN', 'A,B'], screenHas(/RUN\nX\? A,B\n\[A\]\[B\]\nOK$/));
+await check('INPUT: number, ?? for more, ?REDO, ?EXTRA IGNORED (messages: mit, open on hardware)', ['10 INPUT A,B', '20 PRINT A+B', '30 INPUT C:PRINT C', 'RUN', '1', 'X', '2,3', '4,5'], screenHas(/RUN\n\? 1\n\?\? X\n\?REDO\n\? 2,3\n 5\n\? 4,5\n\?EXTRA IGNORED\n 4\nOK$/));
+await check('INPUT in direct mode: ?ID', ['INPUT A'], screenHas(/INPUT A\n\?ID ERROR\nOK$/));
+await check('STOP prints BREAK IN line; CONT goes on, variables kept', ['10 A$="A":STOP:PRINT A$', 'RUN', 'CONT'], screenHas(/RUN\nBREAK IN 10\nOK\nCONT\nA\nOK$/));
+await check('CONT inside a FOR loop and a GOSUB (the stack survives)', ['10 GOSUB 20:PRINT "E":END', '20 FOR I=1 TO 3:PRINT I;:STOP:NEXT:RETURN', 'RUN', 'CONT', 'CONT', 'CONT'], screenHas(/ 1\nBREAK IN 20\nOK\nCONT\n 2\nBREAK IN 20\nOK\nCONT\n 3\nBREAK IN 20\nOK\nCONT\nE\nOK$/));
+await check('?CN at power-on and after an error', ['CONT', '10 STOP', 'RUN', 'PRINT 1/0', 'CONT'], screenHas(/\nCONT\n\?CN ERROR\nOK\n10 STOP\nRUN\nBREAK IN 10\nOK\nPRINT 1\/0\n\?\/0 ERROR\nOK\nCONT\n\?CN ERROR\nOK$/));
+await check('a direct command between STOP and CONT is fine', ['10 STOP:PRINT "A"', 'RUN', 'PRINT 2', 'CONT'], screenHas(/\nPRINT 2\n 2\nOK\nCONT\nA\nOK$/));
+await check('?CN after editing a line and after NEW', ['10 STOP:PRINT "A"', 'RUN', '20 REM', 'CONT', 'RUN', 'NEW', 'CONT'], screenHas(/RUN\nBREAK IN 10\nOK\n20 REM\nCONT\n\?CN ERROR\nOK\nRUN\nBREAK IN 10\nOK\nNEW\nOK\nCONT\n\?CN ERROR\nOK$/));
+await check('BREAK key between statements: BREAK IN line, CONT goes on', ['10 INPUT A', '20 PRINT A*2', 'RUN', '5', '\x03', 'CONT'], screenHas(/\n\? 5\nBREAK IN 10\nOK\n\nCONT\n 10\nOK$/));
+await check('BREAK key at an INPUT prompt: BREAK IN line, CONT asks again', ['10 INPUT A', '20 PRINT A*2', 'RUN', '\x03CONT', '7'], screenHas(/RUN\n\?\nBREAK IN 10\nOK\nCONT\n\? 7\n 14\nOK$/));
+await check('END stops quietly; END in the middle of a line', ['10 PRINT "A":END:PRINT "B"', 'RUN'], screenHas(/RUN\nA\nOK$/));
+await check('POKE/PEEK (L-POKE-01: $0600 = A5), ?FC for a negative address or a value over 255', ['POKE 1536,165:IF PEEK(1536)=165 THEN PRINT "A"', 'PRINT PEEK(-1)', 'POKE 1536,256'], r =>
+  (r.ram[0x600] === 0xa5 && /\nA\nOK\nPRINT PEEK\(-1\)\n\?FC ERROR\nOK\nPOKE 1536,256\n\?FC ERROR\nOK$/.test(r.screen.replace(/\n@$/, ''))) || `$0600=${r.ram[0x600].toString(16)} ` + r.screen.split('\n').slice(-6).join(' | '));
+await check('EXEC runs machine code that returns with RTS', ['POKE 1536,57:EXEC 1536:PRINT "A"'], screenHas(/\nA\nOK$/));
+await check('DEF FN (L-DEF-01); the parameter keeps its value outside; FN inside FN', ['10 DEF FNA(X)=X+1', '20 DEF FNB(X)=FNA(X)*Y', '30 X=5:Y=2:IF FNA(2)=3 THEN PRINT "A";FNB(4);X', 'RUN'], screenHas(/RUN\nA 10  5\nOK$/));
+await check('FN never defined: ?UF; DEF in direct mode: ?ID', ['PRINT FNZ(1)', 'DEF FNA(X)=1'], screenHas(/\n\?UF ERROR\nOK\nDEF FNA\(X\)=1\n\?ID ERROR\nOK$/));
+await check('RUN line: starts there and clears variables (L-RUN-01)', ['10 PRINT "BAD"', '20 IF A=0 THEN PRINT "A"', 'A=7', 'RUN 20'], screenHas(/RUN 20\nA\nOK$/));
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
