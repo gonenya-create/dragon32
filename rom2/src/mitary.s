@@ -12,26 +12,20 @@ CURTOL		equ	$f4		; פנימי: ההיסט המצטבר
 ARYREC		equ	$f6		; פנימי: הרשומה
 
 ; ary: נקרא מ-ptrget כש-TXTPTR על '('. VARNAM ו-VALTYP כבר מוכנים. B: 0 = רגיל, 2 = DIM
-ary		cmpb	#2		; רק DIM נחשב "DIM"; קריאה רגילה יוצרת מערך אוטומטי
-		beq	0F
-		clrb
-0		lda	VALTYP
+ary		andb	#2		; רק DIM (2) נחשב "DIM"; 0 ו-1: קריאה רגילה יוצרת מערך אוטומטי
+		lda	VALTYP
 		ldx	VARNAM
 		pshs	a,b,x		; [0]=VALTYP [1]=DIM? [2-3]=VARNAM
-		clrb
-		pshs	b		; מספר הממדים, למעלה
+		clr	,-s		; מספר הממדים, למעלה
 1		jsr	<chrget		; אחרי ( או ,
 		lbsr	frmevl		; האינדקס (אינדקס בתוך אינדקס: רקורסיה)
 		lbsr	chknum
 		lbsr	ayint
-		ldd	FACMO
+		ldx	FACMO
 		lbmi	err_fc		; אינדקס שלילי
-		std	IDXTMP
 		puls	a
-		ldx	IDXTMP
-		pshs	x		; האינדקס נכנס מתחת למונה
 		inca
-		pshs	a
+		pshs	a,x		; האינדקס נכנס מתחת למונה
 		jsr	<chrgot
 		cmpa	#',
 		beq	1B
@@ -40,6 +34,7 @@ ary		cmpb	#2		; רק DIM נחשב "DIM"; קריאה רגילה יוצרת מער
 		sta	ARYCNT
 		lsla			; הבלוק נמצא מתחת לאינדקסים
 		leau	a,s
+		stu	IDXTMP		; סוף האינדקסים
 		ldd	2,u
 		std	VARNAM
 		lda	,u
@@ -58,134 +53,107 @@ ary		cmpb	#2		; רק DIM נחשב "DIM"; קריאה רגילה יוצרת מער
 		lbne	err_dd
 		lda	4,x
 		cmpa	ARYCNT
-		lbne	err_bs		; מספר ממדים אחר: ?BS
-		bra	getdef
+		beq	getdef
+ary_bs		lbra	err_bs		; מספר ממדים אחר: ?BS
 ; ary_new: בונים רשומה ב-STREND (mit: NOTFDD)
 ary_new		stx	ARYREC
 		ldd	VARNAM
 		std	,x
-		lda	ARYCNT
-		sta	4,x
 		leay	5,x		; הגדלים
 		ldd	#5		; התוצאה: גודל איבר כפול מכפלת הגדלים
 		std	CURTOL
 		ldb	ARYCNT
-		pshs	b
-		leax	,s		; X = מצביע לאינדקסים (מעל המונה הזמני)
-		leax	1,x
-4		ldd	#11		; ברירת מחדל
-		tst	1,u
-		beq	5F
-		ldd	,x		; DIM: האינדקס ועוד 1
+		stb	4,x
+		leax	,s		; X = האינדקסים, עד הבלוק (U)
+4		ldd	,x++		; DIM: האינדקס ועוד 1
 		addd	#1
+		tst	1,u
+		bne	5F
+		ldd	#11		; ברירת מחדל
 5		std	,y++
-		leax	2,x
 		bsr	mulcur		; CURTOL *= D
-		dec	,s
+		cmpx	IDXTMP
 		bne	4B
-		leas	1,s
 		; סוף הרשומה = Y + CURTOL. חייב להשאיר מקום למחסנית (mit: REASON)
 		tfr	y,d
 		addd	CURTOL
-		lbcs	err_om
+		bcs	ary_om
 		pshs	d
-		lbsr	reason
+		bsr	reason
 		puls	d
 		std	STREND
-		leax	,y		; מאפסים את האיברים
-6		cmpx	STREND
-		bhs	7F
-		clr	,x+
-		bra	6B
-7		ldx	ARYREC		; האורך הכולל
-		ldd	STREND
-		subd	ARYREC
+		subd	ARYREC		; האורך הכולל
+		ldx	ARYREC
 		std	2,x
+6		clr	,y+		; מאפסים את האיברים (תמיד יש לפחות 5 בתים)
+		cmpy	STREND
+		blo	6B
 		tst	1,u
 		beq	getdef		; לא DIM: עכשיו ניגשים לאיבר
-		lda	ARYCNT		; DIM: מוציאים את האינדקסים, וזהו
-		lsla
-		leas	a,s
-		leas	4,s		; הבלוק
+		leas	4,u		; DIM: מוציאים את האינדקסים ואת הבלוק, וזהו
 		rts
 ; getdef: X = הרשומה. ההיסט לפי האינדקסים שבמחסנית: האחרון ראשון (mit: GETDEF/INLPNM)
-getdef		stx	ARYREC
-		ldd	#0
-		std	CURTOL
+getdef		clr	CURTOL
+		clr	CURTOL+1
 		leay	5,x		; הגדלים, באותו סדר
-		ldb	ARYCNT
-		pshs	b
-1		ldd	1,s		; האינדקס (מתחת למונה)
+		leax	,s		; X = האינדקסים
+1		ldd	,x++		; האינדקס
 		cmpd	,y
-		lbhs	err_bs		; גדול מדי: ?BS
-		std	IDXTMP
+		bhs	ary_bs		; גדול מדי: ?BS
 		ldd	,y++
 		bsr	mulcur		; CURTOL = CURTOL*גודל + אינדקס
-		ldd	CURTOL
-		addd	IDXTMP
+		addd	-2,x
 		std	CURTOL
-		puls	b		; מוציאים את האינדקס
-		leas	2,s
-		pshs	b
-		dec	,s
+		cmpx	IDXTMP
 		bne	1B
-		leas	1,s
-		ldd	CURTOL		; כפול 5
-		lslb
+		lslb			; כפול 5
 		rola
 		lslb
 		rola
 		addd	CURTOL
 		leax	d,y		; Y = אחרי הגדלים = האיבר הראשון
 		stx	VARPNT
-		leas	4,s		; הבלוק
+		leas	4,u		; האינדקסים והבלוק
 		rts
-; mulcur: CURTOL = CURTOL * D (16 ביט, גלישה: ?OM)
-mulcur		pshs	d
+ary_om		lbra	err_om
+; mulcur: CURTOL = CURTOL * D, וגם D = התוצאה (16 ביט, גלישה: ?OM). X, Y, U לא משתנים
+; אחד הבתים הגבוהים חייב להיות 0, ואז יש רק מכפלה "צולבת" אחת
+mulcur		pshs	d		; [0] = גבוה, [1] = נמוך
+		lda	CURTOL
+		beq	1F
+		tst	,s
+		bne	ary_om		; שניהם מעל 255
+		ldb	1,s		; גבוה*נמוך
+		bra	2F
+1		lda	CURTOL+1	; נמוך*גבוה
+		ldb	,s
+2		mul
+		tsta
+		bne	ary_om
+		stb	,s
 		lda	CURTOL+1
 		ldb	1,s
 		mul			; נמוך*נמוך
-		pshs	d
-		lda	CURTOL
-		ldb	3,s
-		mul			; גבוה*נמוך
-		tsta
-		lbne	err_om
-		addb	,s
-		lbcs	err_om
-		stb	,s
-		lda	CURTOL+1
-		ldb	2,s
-		mul			; נמוך*גבוה
-		tsta
-		lbne	err_om
-		addb	,s
-		lbcs	err_om
-		stb	,s
-		lda	CURTOL
-		ldb	2,s
-		mul			; גבוה*גבוה
-		cmpd	#0
-		lbne	err_om
-		puls	d
+		adda	,s
+		bcs	ary_om
 		std	CURTOL
-		puls	d,pc
+		leas	2,s
+		rts
 ; reason: D = כתובת חדשה לסוף האזור. חייבים להישאר 58 בתים מתחת למחסנית (קורא: הרזרבה), אחרת ?OM
-reason		addd	#58
-		lbcs	err_om
+; (S אחרי pshs, פחות 4 של כתובות החזרה, מול D+58: כמו S מול D+62)
+reason		addd	#62
+		bcs	ary_om
 		pshs	d
 		tfr	s,d
-		subd	#4		; כתובות החזרה
 		cmpd	,s++
-		lbls	err_om
+		bls	ary_om
 		rts
 
 ; DIM שם(גדלים)[,שם(גדלים)...] (mit: DIM)
+1		jsr	<chrget
 dim		ldb	#2
 		lbsr	ptrget
 		jsr	<chrgot
 		cmpa	#',
-		bne	1F
-		jsr	<chrget
-		bra	dim
-1		rts
+		beq	1B
+		rts

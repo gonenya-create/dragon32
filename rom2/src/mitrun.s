@@ -225,7 +225,7 @@ lineget		ldx	TXTPTR
 
 list_st		ldx	TXTPTR		; LIST: אותה שגרה כמו במצב ישיר
 		lbsr	do_list
-		lbra	rem
+		bra	rem
 new_st		lbsr	scrtch
 		lds	STKTOP
 		clr	,-s
@@ -341,7 +341,7 @@ for		lbsr	let		; המשתנה מקבל את ערך ההתחלה
 		ldd	VARPNT
 		std	FORPNT
 		leas	2,s		; בלי החזרה ל-gone: הרשומה נכנסת מתחתיה (mit: NOTOL)
-		lbsr	fndfor		; אותו משתנה כבר בלולאה? מוחקים אותה ומה שמעליה
+		bsr	fndfor		; אותו משתנה כבר בלולאה? מוחקים אותה ומה שמעליה
 		bne	2F
 		leas	18,x		; X = הרשומה
 2		ldb	#18
@@ -569,13 +569,13 @@ fe_lp		clr	OPMASK
 		bhi	5F
 		ldx	RELSAV		; לא עכשיו: מחזירים את הסימנים לטקסט
 		stx	TXTPTR
-		lbra	9F
+		bra	9F
 5		ldu	#dorel
 		bra	7F
 4		cmpa	#$c3		; + - * / ^ AND OR
-		lblo	9F
+		blo	9F
 		cmpa	#$c9
-		lbhi	9F
+		bhi	9F
 		suba	#$c3
 		ldb	#3
 		mul
@@ -600,7 +600,7 @@ fe_lp		clr	OPMASK
 		pshs	y,x,a
 		lda	FACEXP
 		pshs	a
-		lbsr	fexpr		; הצד הימני, עם הקדימות של הסימן
+		bsr	fexpr		; הצד הימני, עם הקדימות של הסימן
 		puls	a
 		sta	ARGEXP
 		puls	a,x,y

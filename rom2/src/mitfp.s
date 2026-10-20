@@ -375,7 +375,7 @@ fdivt		tst	FACEXP
 		ldb	ARGEXP
 		subd	,s++
 		addd	#128
-		lble	8F
+		ble	8F
 		cmpd	#255
 		lbgt	err_ov
 		incb

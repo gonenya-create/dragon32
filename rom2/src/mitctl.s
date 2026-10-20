@@ -322,7 +322,7 @@ brkchk		ldd	KQCNT		; תור הבדיקות: רק BREAK שעומד ראשון, ו
 9		rts
 2		leas	2,s		; בלי החזרה ל-newstt
 		orcc	#1
-		lbra	stpend
+		bra	stpend
 
 ; errdir: במצב ישיר: ?ID (mit: ERRDIR)
 errdir		ldd	CURLIN

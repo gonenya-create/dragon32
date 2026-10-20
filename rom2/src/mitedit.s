@@ -260,7 +260,7 @@ rl_ref		lbsr	skipsp
 		clra
 		ldb	2,s
 		subd	,s++		; ההפרש
-		lbsr	rn_shift
+		bsr	rn_shift
 		puls	b
 		puls	x		; P
 		ldu	#FBUFFR
