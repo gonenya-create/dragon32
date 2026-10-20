@@ -32,6 +32,7 @@ FRETOP		equ	$23
 MEMSIZ		equ	$27
 LINNUM		equ	$2b		; מספר שורה (קורא: שימוש במקור)
 CURSOR		equ	$88		; כתובת הסמן (ספר)
+CBLCNT		equ	$8f		; מונה ההבהוב של הסמן (קורא: 50 בהדלקה)
 TICKS		equ	$0112		; TIMER (ספר: Inside)
 
 ; ---------- משתני הניסוי, באזור שהספרים מסמנים כפנוי ----------
@@ -73,6 +74,8 @@ reset		orcc	#$50
 		lda	#$05
 		sta	PIA0+3
 		andcc	#$ef
+		lda	#50
+		sta	CBLCNT
 		lbsr	cls
 		leax	testq,pcr	; תור הבדיקות
 		ldd	,x++
@@ -621,15 +624,20 @@ pow10		fdb	10000,1000,100,10,1,0
 ; getline: שורה ל-LINBUF (מסתיים ב-0). ← מוחק, ENTER מסיים, BREAK: C=1. (שלנו, עם מצביע ולא B,X)
 getline		pshs	b,x
 		ldx	#LINBUF
-gl_key		lbsr	cursor_on
-		lbsr	getkey
-		lbsr	cursor_off
+gl_key		lbsr	getkey		; הסמן מהבהב בתוך getkey (קורא)
 		cmpa	#13
 		beq	gl_done
 		cmpa	#8
 		beq	gl_back
 		cmpa	#3
 		beq	gl_brk
+		cmpa	#12		; CLEAR: מסך נקי, השורה מתחילה מחדש, בלי ההנחיה (קורא)
+		bne	1F
+		lbsr	cls
+		clr	IKEYIM
+		ldx	#LINBUF
+		bra	gl_key
+1
 		cmpa	#$20
 		blo	gl_key
 		cmpx	#LINBUF+LINMAX
@@ -658,17 +666,6 @@ gl_done		clr	,x
 		lbsr	putc
 		andcc	#$fe
 		puls	b,x,pc
-cursor_on	pshs	a,x
-		ldx	CURSOR
-		lda	#$80
-		sta	,x
-		puls	a,x,pc
-cursor_off	pshs	a,x
-		ldx	CURSOR
-		lda	#$60
-		sta	,x
-		puls	a,x,pc
-
 m_ok		fcc	"OK"
 		fcb	13,0
 m_sn		fcc	"?SN ERROR"
@@ -801,6 +798,7 @@ fntab		fcs	"SGN"
 		include	"mitmem.s"
 		include	"mitmath.s"
 		include	"mitfunc.s"
+		include	"mitscr.s"
 		include	"io.s"
 		include	"testq.s"
 

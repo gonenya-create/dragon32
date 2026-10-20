@@ -515,41 +515,11 @@ defusr		ldx	TXTPTR
 
 ; ---------- POINT(x,y): מסך הטקסט (קורא + ה-VDG) ----------
 ; x 0-63, y 0-31. תא שאינו גרפי: -1. נקודה כבויה: 0. דולקת: הצבע 1-8
-fn_point	lbsr	frmevl
-		lbsr	conint
-		cmpb	#63
-		lbhi	err_fc
-		pshs	b
-		lda	#',
-		lbsr	synchk
-		lbsr	frmevl
-		lbsr	conint
-		cmpb	#31
-		lbhi	err_fc
-		pshs	b		; [0] = y, [1] = x
+fn_point	lbsr	sgxy
+		pshs	x
 		lda	#')
 		lbsr	synchk
-		lda	#8		; המסכה: 8 למעלה-שמאל, 4 למעלה-ימין, 2 למטה-שמאל, 1 למטה-ימין
-		ldb	1,s
-		lsrb
-		bcc	1F
-		lsra
-1		ldb	,s
-		lsrb
-		bcc	2F
-		lsra
-		lsra
-2		sta	CELL
-		puls	a,b		; A = y, B = x
-		lsra			; השורה: (y/2)*32
-		lsrb			; העמודה: x/2
-		pshs	b
-		ldb	#32
-		mul
-		addb	,s+
-		adca	#0
-		addd	#SCREEN
-		tfr	d,x
+		puls	x
 		clr	VALTYP
 		ldb	,x
 		bmi	3F

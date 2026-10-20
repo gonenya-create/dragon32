@@ -226,5 +226,24 @@ await check('MEM inside expressions (reader: stack frames as in the original): 1
 await check('MEM inside FOR = 24825 (reader)', ['10 FOR I=1 TO 1:PRINT MEM:NEXT', 'RUN'], outLines(' 24825'));
 await check('MEM inside GOSUB = 24841 (reader: record 5 + return address 2)', ['10 GOSUB 20:END', '20 PRINT MEM:RETURN', 'RUN'], outLines(' 24841'));
 await check('after RETURN the stack is balanced: 24871 - 23 program bytes = 24848', ['10 GOSUB 20:PRINT MEM:END', '20 RETURN', 'RUN'], outLines(' 24848'));
+
+console.log('stage 3 part 1: text screen (reader: docs/DRAGON-SPEC-SCREEN.md)');
+await check('CLS: all 512 cells $60, cursor $0400 (CURADR $88)', ['10 CLS:A=PEEK(136)*256+PEEK(137)', '20 PRINT A', 'RUN'], r => {
+  for (let a = 0x420; a < 0x600; a++) if (r.ram[a] !== 0x60 && a >= 0x440) return `cell ${a.toString(16)} = ${r.ram[a].toString(16)}`;
+  return /^ 1024\nOK/.test(r.screen.replace(/\n@$/, '')) || r.screen.split('\n').slice(0, 3).join(' | ');
+});
+await check('CLS 0 / 3 / 8 fill $80 / $AF / $FF', ['10 CLS 0:A=PEEK(1500):CLS 3:B=PEEK(1500):CLS 8:C=PEEK(1500)', '20 CLS:PRINT A;B;C', 'RUN'], outLines(' 128  175  255'));
+await check('CLS 9-255: our line "THE DRAGON MACHINE 2026" (Gonen, 20.10; the original prints a Microsoft notice), two new lines, cursor $0440', ['10 CLS 9:A=PEEK(136)*256+PEEK(137)', '20 PRINT A', 'RUN'], r =>
+  /^THE DRAGON MACHINE 2026\n\n 1088\nOK/.test(r.screen) || r.screen.split('\n').slice(0, 4).join(' | '));
+await check('CLS 256 and CLS -1: ?FC; CLS "A": ?TM', ['CLS 256', 'CLS -1', 'CLS "A"'], r => (r.screen.match(/\?FC ERROR/g) || []).length === 2 && /\?TM ERROR/.test(r.screen) || r.screen.split('\n').slice(-7).join(' | '));
+await check('characters (reader): lower case → $00-$1F (inverse), control codes ignored, CHR$(8) steps back and blanks, $80-$FF as is', ['CLS:PRINT CHR$(97);CHR$(1);"AB";CHR$(8);"C";CHR$(143)'], r =>
+  same([...r.ram.subarray(0x400, 0x406)], [0x01, 0x41, 0x43, 0x8f, 0x60, 0x60]));
+await check('CR blanks the rest of the line from the cursor on (here: the CR before OK, column 4 is not 0)', ['POKE 1059,65:POKE 1060,65:PRINT @36,"";'], r => (r.ram[0x423] === 0x41 && r.ram[0x424] === 0x60) || 'cells ' + r.ram[0x423].toString(16) + ' ' + r.ram[0x424].toString(16));
+await check('PRINT @n: cell 0-511 (@100,"Q" → $0464); @512 and @-1: ?FC', ['PRINT @100,"Q";', 'PRINT @512,1', 'PRINT @-1'], r =>
+  r.ram[0x464] === 0x51 && (r.screen.match(/\?FC ERROR/g) || []).length === 2 || `cell ${r.ram[0x464].toString(16)} | ` + r.screen.split('\n').slice(-5).join(' | '));
+await check('SET/RESET/POINT (reader): colour per cell, colour 0 keeps it, RESET keeps the colour, text cell: RESET → $80, POINT -1/0/colour', ['SET(0,0,3):SET(1,1,0):A=POINT(0,0):B=POINT(1,1):C=POINT(1,0)', 'RESET(0,0):D=PEEK(1024):RESET(4,4):E=PEEK(1090)', 'SET(8,8,0):F=PEEK(1156):G=POINT(20,20)', 'PRINT A;B;C;D;E;F;G'], outLines(' 3  3  0  161  128  136 -1'));
+await check('SET/RESET errors: x 64 or y 32 ?FC, colour 9 ?FC, colour missing ?SN', ['SET(64,0,1)', 'SET(0,32,1)', 'SET(0,0,9)', 'SET(0,0)'], r => (r.screen.match(/\?FC ERROR/g) || []).length === 3 && /\?SN ERROR\nOK$/.test(r.screen.replace(/\n@$/, '')) || r.screen.split('\n').slice(-8).join(' | '));
+await check('CLEAR key while typing: the screen is cleared and the line starts again (reader)', ['PRINT 1\fPRINT 2'], r => /^PRINT 2\n 2\nOK/.test(r.screen) || r.screen.split('\n').slice(0, 3).join(' | '));
+await check('cursor blink counter CBLCNT ($8F) = 50 at power-on (reader)', [], r => r.ram[0x8f] === 50 || 'CBLCNT ' + r.ram[0x8f]);
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

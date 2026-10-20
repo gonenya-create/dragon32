@@ -144,6 +144,12 @@ stmdsp		fcb	$80
 		fdb	new_st-stmdsp
 		fcb	$98
 		fdb	def-stmdsp
+		fcb	$9e
+		fdb	set_st-stmdsp
+		fcb	$9f
+		fdb	reset_st-stmdsp
+		fcb	$a0
+		fdb	cls_st-stmdsp
 		fcb	$a4
 		fdb	exec-stmdsp
 		fcb	$af
@@ -272,6 +278,20 @@ letasg		ldx	FORPNT
 print		bsr	prlist
 		rts
 prlist		beq	pr_cr
+		cmpa	#'@		; PRINT @n (קורא): 0-511, אחרת ?FC; אחריו פסיק אם יש המשך, וסוף = שורה חדשה
+		bne	pr_lp
+		lbsr	chrget
+		lbsr	frmevl
+		lbsr	getadr
+		cmpd	#511
+		lbhi	err_fc
+		addd	#SCREEN
+		std	CURSOR
+		lbsr	chrgot
+		beq	pr_cr
+		lda	#',
+		lbsr	synchk
+		beq	pr_cr
 pr_lp		cmpa	#';
 		beq	pr_semi
 		cmpa	#',

@@ -48,35 +48,66 @@ cls		ldx	#SCREEN
 		stx	CURSOR
 		rts
 
-; putc: התו ב-A (ASCII) למסך במקום הסמן. 13 = שורה חדשה
+; putc: התו ב-A למסך במקום הסמן (קורא: docs/DRAGON-SPEC-SCREEN.md, סעיף 3)
+; קודם חוזרים למצב טקסט (SAMALP). $20-$3F → $60-$7F; $40-$5F ו-$80-$FF כמו שהם; $60-$7F → $00-$1F (הפוך).
+; 13: רווחים עד סוף השורה (כולל התא הנוכחי) ושורה חדשה. 8: תא אחד אחורה ורווח. שאר תווי הבקרה: כלום
 putc		pshs	a,b,x
+		bsr	txtmode
+		ldx	CURSOR
 		cmpa	#13
-		beq	newline
+		beq	pc_cr
+		cmpa	#8
+		beq	pc_bs
+		cmpa	#$20
+		blo	putc_done
 		cmpa	#$40
 		bhs	1F
-		adda	#$40		; ASCII $20-$3F → קוד VDG $60-$7F
+		adda	#$40
 		bra	2F
 1		cmpa	#$60
 		blo	2F
 		cmpa	#$80
 		bhs	2F
-		suba	#$20		; אותיות קטנות → גדולות
-2		ldx	CURSOR
-		sta	,x+
-		stx	CURSOR
+		suba	#$60
+2		sta	,x+
+pc_adv		stx	CURSOR
 		cmpx	#SCREND
 		blo	putc_done
-		lbsr	scroll
+		bsr	scroll
 		bra	putc_done
-newline		ldd	CURSOR
-		addd	#32
-		andb	#$e0
-		std	CURSOR
-		cmpd	#SCREND
-		blo	putc_done
-		lbsr	scroll
+pc_cr		ldb	CURSOR+1	; כמה תאים עד סוף השורה (1-32)
+		andb	#$1f
+		negb
+		addb	#32
+		lda	#$60
+3		sta	,x+
+		decb
+		bne	3B
+		bra	pc_adv
+pc_bs		cmpx	#SCREEN
+		beq	putc_done
+		lda	#$60
+		sta	,-x
+		stx	CURSOR
 putc_done	puls	a,b,x,pc
 
+; txtmode: מצב טקסט (קורא: SAMALP). ב-$FF22 נשארים 3 הביטים התחתונים; SAM: מצב 0, המסך ב-$0400
+txtmode		pshs	a,x
+		lda	PIA1+2
+		anda	#$07
+		sta	PIA1+2
+		ldx	#SAM		; לפי הסדר: $FFD2 $FFD0 $FFCE $FFCC $FFCA $FFC9 $FFC6 $FFC4 $FFC2 $FFC0
+		sta	18,x
+		sta	16,x
+		sta	14,x
+		sta	12,x
+		sta	10,x
+		sta	9,x
+		sta	6,x
+		sta	4,x
+		sta	2,x
+		sta	,x
+		puls	a,x,pc
 ; scroll: כל השורות עולות אחת, והאחרונה מתנקה
 scroll		pshs	d,x
 		ldx	#SCREEN
@@ -95,7 +126,7 @@ scroll		pshs	d,x
 ; puts: מחרוזת ב-X שמסתיימת ב-0
 puts		lda	,x+
 		beq	1F
-		bsr	putc
+		lbsr	putc
 		bra	puts
 1		rts
 
@@ -198,7 +229,7 @@ getkey		pshs	b,x
 gk_loop		ldd	KQCNT
 		beq	gk_scan
 		bsr	gk_pop
-		puls	b,x,pc
+		bra	gk_got
 ; gk_pop: התו הבא בתור
 gk_pop		pshs	b,x
 		ldd	KQCNT
@@ -208,18 +239,26 @@ gk_pop		pshs	b,x
 		lda	,x+
 		stx	KQPTR
 		puls	b,x,pc
-gk_scan		lbsr	keyindex
+; לולאת ההמתנה (קורא): הבהוב (עם השהיה), סריקה, ושוב. מקש: $60 בתא הסמן, ורק אז הוא חוזר
+gk_scan		bsr	blink
+		lbsr	keyindex
 		tsta
-		bne	1F
-		; הסמן מהבהב: ריבוע שחור ורווח, בערך פעמיים בשנייה (לפי השעון)
-		ldx	CURSOR
-		lda	TICKS+1
-		anda	#$10
-		beq	2F
-		lda	#$60
-		bra	3F
-2		lda	#$80
-3		sta	,x
-		bra	gk_loop
-1
+		beq	gk_loop
+gk_got		ldx	CURSOR
+		ldb	#$60
+		stb	,x
 		puls	b,x,pc
+; blink (קורא): CBLCNT יורד; ב-0: ביט $40 בתא הסמן מתהפך, והמונה חוזר ל-50. אחר כך השהיה: 1118 סיבובים של 8 מחזורים
+blink		pshs	a,x
+		dec	CBLCNT
+		bne	1F
+		ldx	CURSOR
+		lda	,x
+		eora	#$40
+		sta	,x
+		lda	#50
+		sta	CBLCNT
+1		ldx	#$045e
+2		leax	-1,x
+		bne	2B
+		puls	a,x,pc
