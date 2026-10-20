@@ -237,20 +237,17 @@ fn_instr	lbsr	frmevl
 		tstb
 		lbeq	err_fc
 		pshs	b
-		lda	#',
-		lbsr	synchk
+		lbsr	chkcom
 		lbsr	frmevl
 		puls	b
 1		pshs	b
 		lbsr	frestr0		; s$
 		pshs	x
-		lda	#',
-		lbsr	synchk
+		lbsr	chkcom
 		lbsr	frmevl
 		lbsr	frestr0		; t$
 		pshs	x
-		lda	#')
-		lbsr	synchk
+		lbsr	chkrp
 		puls	x		; משחררים: קודם t$, אחר כך s$
 		lbsr	fretmp
 		sta	IT_TL
@@ -288,15 +285,12 @@ fn_instr	lbsr	frmevl
 		bra	2B
 7		leas	1,s
 8		clrb
-9		clra
-		lbra	givu
+9		lbra	givb
 
 ; ---------- STRING$(n,c) (קורא) ----------
-fn_strng	lbsr	frmevl
-		lbsr	conint
+fn_strng	lbsr	evbyte
 		pshs	b		; n
-		lda	#',
-		lbsr	synchk
+		lbsr	chkcom
 		lbsr	frmevl
 		tst	VALTYP
 		bne	1F
@@ -307,8 +301,7 @@ fn_strng	lbsr	frmevl
 		lbeq	err_fc
 		ldb	,x
 2		pshs	b
-		lda	#')
-		lbsr	synchk
+		lbsr	chkrp
 		lda	1,s
 		lbsr	strspa
 		puls	b
@@ -335,8 +328,7 @@ fn_pos		lbsr	chknum
 		andb	#$1f
 		bra	3F
 2		ldb	LPTPOS		; מדפסת
-3		clra
-		lbra	givu
+3		lbra	givb
 fn_mem		tfr	s,d		; S בכניסה פחות STREND, בלי סימן (קורא)
 		subd	STREND
 		lbra	givu
@@ -347,8 +339,7 @@ fn_varptr	ldd	STREND		; משתנה שלא היה: נוצר, ואז ?FC (קורא
 		puls	d
 		cmpd	STREND
 		lbne	err_fc
-		lda	#')
-		lbsr	synchk
+		lbsr	chkrp
 		clr	VALTYP
 		ldd	VARPNT		; מספר: בית המעריך; מחרוזת: המתאר; מערך: האיבר
 		lbra	givu
@@ -399,8 +390,7 @@ fn_joy		lbsr	conint
 1		puls	b
 		ldx	#JOYVAL
 		ldb	b,x
-		clra
-		lbra	givu
+		lbra	givb
 ; joyrd (קורא): לכל ערוץ, 3 עד 0: הבורר (ביט 3 ב-$FF01 = ביט 0 של הערוץ, ב-$FF03 = ביט 1), ואז מדידה:
 ; DAC מתחיל ב-128 עם צעד 64; כל השוואה (ביט 7 של $FF00) מוסיפה או מורידה את הצעד, והצעד נחצה; 6 השוואות
 ; (64 עד 2), והתוצאה חלקי 4 = 0-63. אם היא שונה מהערך השמור של הערוץ, מודדים שוב, עד 10 פעמים בסך הכול.
@@ -462,11 +452,9 @@ fn_usr		clrb
 		jsr	<chrget
 		puls	b
 1		pshs	b
-		lda	#'(
-		lbsr	synchk
+		lbsr	chklp
 		lbsr	frmevl
-		lda	#')
-		lbsr	synchk
+		lbsr	chkrp
 		puls	b
 		lslb
 		ldx	USTBAD
@@ -517,8 +505,7 @@ defusr		ldx	TXTPTR
 ; x 0-63, y 0-31. תא שאינו גרפי: -1. נקודה כבויה: 0. דולקת: הצבע 1-8
 fn_point	bsr	sgxy
 		pshs	x
-		lda	#')
-		lbsr	synchk
+		lbsr	chkrp
 		puls	x
 		clr	VALTYP
 		ldb	,x
@@ -535,5 +522,4 @@ fn_point	bsr	sgxy
 		lsrb
 		andb	#7
 		incb
-5		clra
-		lbra	givu
+5		lbra	givb

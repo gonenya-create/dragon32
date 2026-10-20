@@ -47,6 +47,12 @@ chrest		ldx	TXTPTR
 		rts
 
 ; synchk: התו הנוכחי חייב להיות A. אחרת ?SN. אחר כך מתקדמים
+; chkrp / chkcom / chklp: ')' / ',' / '(' חייבים להיות כאן (כמו SYNRPR/SYNCOM במקור)
+chkrp		lda	#')
+		bra	synchk
+chkcom		lda	#',
+		bra	synchk
+chklp		lda	#'(
 synchk		pshs	a
 		jsr	<chrgot
 		cmpa	,s+
@@ -278,7 +284,7 @@ letasg		ldx	FORPNT
 ; כמו במקור: הפקודה קוראת לטיפול ברשימה (עוד רמה במחסנית; MEM תלוי בה — קורא)
 print		bsr	prlist
 		rts
-prlist		lbeq	pr_cr
+prlist		beq	pr_cr
 		cmpa	#$cd		; PRINT USING (קורא)
 		lbeq	usstart
 		cmpa	#'@		; PRINT @n (קורא): 0-511, אחרת ?FC; אחריו פסיק אם יש המשך, וסוף = שורה חדשה
@@ -292,8 +298,7 @@ prlist		lbeq	pr_cr
 		std	CURSOR
 		jsr	<chrgot
 		beq	pr_cr
-		lda	#',
-		lbsr	synchk
+		lbsr	chkcom
 		beq	pr_cr
 		cmpa	#$cd		; PRINT @n,USING
 		lbeq	usstart
@@ -726,8 +731,7 @@ eval		clr	VALTYP
 		bne	4F
 		jsr	<chrget
 		lbsr	frmevl
-		lda	#')
-		lbra	synchk
+		lbra	chkrp
 4		cmpa	#$ff		; פונקציה: טבלה לפי הטוקן (mit: ISFUN)
 		bne	5F
 		ldx	TXTPTR
@@ -755,16 +759,14 @@ eval		clr	VALTYP
 		cmpb	#2
 		beq	43F		; A = התו שאחרי המילה
 		pshs	b
-		lda	#'(
-		lbsr	synchk
+		lbsr	chklp
 		puls	a
 		tsta
 		bne	43F
 		pshs	a		; מקום למזהה הפונקציה, שנשאר במחסנית בזמן הארגומנט (קורא)
 		lbsr	frmevl
 		leas	1,s
-		lda	#')
-		lbsr	synchk
+		lbsr	chkrp
 43		jsr	[,s++]		; קוראים לשגרה וחוזרים דרכה, כמו משגר הפונקציות במקור (MEM תלוי בעומק — קורא)
 		rts
 5		cmpa	#'A
@@ -847,10 +849,8 @@ fn_right	bsr	strarg
 fn_mid		lbsr	frmevl
 		bsr	frestr0
 		pshs	x		; המתאר
-		lda	#',
-		lbsr	synchk
-		lbsr	frmevl
-		bsr	conint
+		lbsr	chkcom
+		bsr	evbyte
 		tstb
 		lbeq	err_fc		; אין מקום 0
 		decb
@@ -860,11 +860,9 @@ fn_mid		lbsr	frmevl
 		cmpa	#',
 		bne	1F
 		jsr	<chrget
-		lbsr	frmevl
-		bsr	conint
+		bsr	evbyte
 1		pshs	b
-		lda	#')
-		lbsr	synchk
+		lbsr	chkrp
 		puls	a		; כמה
 		puls	b		; התחלה
 		puls	x
@@ -885,13 +883,10 @@ fn_mid		lbsr	frmevl
 strarg		lbsr	frmevl
 		bsr	frestr0
 		pshs	x
-		lda	#',
-		lbsr	synchk
-		lbsr	frmevl
-		bsr	conint
+		lbsr	chkcom
+		bsr	evbyte
 		pshs	b
-		lda	#')
-		lbsr	synchk
+		lbsr	chkrp
 		puls	b
 		puls	x,pc
 frestr0		tst	VALTYP		; מחרוזת? X = המתאר (בלי לשחרר עדיין)
@@ -899,6 +894,8 @@ frestr0		tst	VALTYP		; מחרוזת? X = המתאר (בלי לשחרר עדיי�
 		ldx	FACMO
 		rts
 ; conint: FAC → B בין 0 ל-255, אחרת ?FC (mit: CONINT)
+; evbyte: ביטוי → B (0-255)
+evbyte		lbsr	frmevl
 conint		lbsr	chknum
 		lbsr	ayint
 		ldd	FACMO

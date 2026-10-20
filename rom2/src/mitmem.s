@@ -17,8 +17,7 @@ clear		beq	clr_go		; בלי מספרים: רק ניקוי
 		pshs	d		; [0] = MEMSIZ החדש, [2] = n
 		jsr	<chrgot
 		beq	1F
-		lda	#',
-		lbsr	synchk
+		lbsr	chkcom
 		lbsr	frmevl
 		lbsr	getadr
 		subd	#1		; MEMSIZ = m-1 (קורא)
@@ -47,8 +46,7 @@ clr_go		lbsr	runc		; משתנים, מחרוזות, DATA, אין המשך
 		lbra	newstt
 
 ; ---------- PCLEAR n ----------
-pclear		lbsr	frmevl
-		lbsr	conint		; B = n
+pclear		lbsr	evbyte		; B = n
 		tstb
 		lbeq	err_fc		; 0 או מעל 8: ?FC (קורא)
 		cmpb	#8

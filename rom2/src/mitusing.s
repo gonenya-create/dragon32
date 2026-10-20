@@ -404,7 +404,7 @@ us_exp		bsr	us_norm		; מעריכי (אפס: e=0)
 		bne	7F
 		clra
 7		sta	USX
-		lbra	us_out
+		bra	us_out
 
 ; us_dd: B = D (0 בלי נקודה)
 us_dd		ldb	USD

@@ -311,15 +311,13 @@ strcmp		bsr	frefac		; הימנית: A = אורך, X = כתובת
 fn_len		lbsr	frestr
 		clr	VALTYP
 		tfr	a,b
-		clra
-		lbra	givu
+		lbra	givb
 fn_asc		lbsr	frestr
 		clr	VALTYP
 		tsta
 		lbeq	err_fc
 		ldb	,x
-		clra
-		lbra	givu
+		lbra	givb
 fn_chr		lbsr	conint		; B = 0-255
 		pshs	b
 		lda	#1
@@ -345,8 +343,7 @@ substr		pshs	a,b,x
 ; m=0 עם B$ לא ריק: מועתקים 256 בתים, כמו במקור (קורא: מונה שיורד אחרי ההעתקה הראשונה)
 midst		jsr	<chrget		; אחרי $FF
 		jsr	<chrget		; אחרי $98
-		lda	#'(
-		lbsr	synchk
+		lbsr	chklp
 		clrb			; יוצרים משתנה אם אין
 		lbsr	ptrget
 		tst	VALTYP
@@ -367,10 +364,8 @@ midst		jsr	<chrget		; אחרי $FF
 		ldx	,s
 		ldd	DSCTMP+2
 		std	2,x
-2		lda	#',
-		lbsr	synchk
-		lbsr	frmevl
-		lbsr	conint
+2		lbsr	chkcom
+		lbsr	evbyte
 		tstb
 		lbeq	err_fc		; אין מקום 0
 		pshs	b		; ההתחלה
@@ -379,11 +374,9 @@ midst		jsr	<chrget		; אחרי $FF
 		cmpa	#',
 		bne	3F
 		jsr	<chrget
-		lbsr	frmevl
-		lbsr	conint
+		lbsr	evbyte
 3		pshs	b		; כמה
-		lda	#')
-		lbsr	synchk
+		lbsr	chkrp
 		lda	#$cb		; =
 		lbsr	synchk
 		lbsr	frmevl

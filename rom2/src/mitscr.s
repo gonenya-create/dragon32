@@ -4,8 +4,7 @@
 ; CLS: בלי מספר: רווחים ($60). 0-8: ממלאים בצבע (0 = $80, אחרת $8F + 16*(n-1)).
 ; 9-255: רווחים ושורה משלנו (במקור: הודעה של מיקרוסופט; גונן, 20.10: "The Dragon machine 2026"), ושתי שורות חדשות
 cls_st		beq	3F
-		lbsr	frmevl
-		lbsr	conint
+		lbsr	evbyte
 		cmpb	#8
 		bhi	4F
 		lda	#$80
@@ -34,15 +33,12 @@ m_cls		fcc	"THE DRAGON MACHINE 2026"
 
 ; sgxy: x,y עד לפני ')' → X = כתובת התא, CELL = מסכת הנקודה. x 0-63, y 0-31, אחרת ?FC
 ; המסכה: 8 למעלה-שמאל, 4 למעלה-ימין, 2 למטה-שמאל, 1 למטה-ימין. התא: $0400 + 32*(y/2) + x/2
-sgxy		lbsr	frmevl
-		lbsr	conint
+sgxy		lbsr	evbyte
 		cmpb	#63
 		lbhi	err_fc
 		pshs	b
-		lda	#',
-		lbsr	synchk
-		lbsr	frmevl
-		lbsr	conint
+		lbsr	chkcom
+		lbsr	evbyte
 		cmpb	#31
 		lbhi	err_fc
 		pshs	b		; [0] = y, [1] = x
@@ -71,19 +67,15 @@ sgxy		lbsr	frmevl
 
 ; SET(x,y,c): c 0-8 חובה. תא גרפי: הנקודות הדולקות נשארות, והצבע (אם c לא 0) לכל התא.
 ; תא טקסט: נהיה גרפי עם הנקודה הזאת בלבד; c=0 שם = ירוק. ')' נבדק לפני הכתיבה
-set_st		lda	#'(
-		lbsr	synchk
+set_st		lbsr	chklp
 		bsr	sgxy
 		pshs	x
-		lda	#',
-		lbsr	synchk
-		lbsr	frmevl
-		lbsr	conint
+		lbsr	chkcom
+		lbsr	evbyte
 		cmpb	#8
 		lbhi	err_fc
 		pshs	b
-		lda	#')
-		lbsr	synchk
+		lbsr	chkrp
 		puls	b
 		puls	x
 		lda	,x
@@ -115,12 +107,10 @@ set_st		lda	#'(
 
 ; RESET(x,y): תא גרפי: רק הנקודה כבה, הצבע נשאר (המסכה ב-CELL נשארת הפוכה, כמו במקור).
 ; תא טקסט: $80 (גרפי, הכול כבוי)
-reset_st	lda	#'(
-		lbsr	synchk
+reset_st	lbsr	chklp
 		lbsr	sgxy
 		pshs	x
-		lda	#')
-		lbsr	synchk
+		lbsr	chkrp
 		puls	x
 		lda	,x
 		bmi	1F

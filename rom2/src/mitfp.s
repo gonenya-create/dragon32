@@ -498,6 +498,8 @@ float		sta	FACHO
 		clr	FACMOH
 		ldb	#$88
 		bra	floats
+; givb: B (בלי סימן) → FAC
+givb		clra
 givu		std	FACHO
 		ldb	#$90
 		clr	FACMO

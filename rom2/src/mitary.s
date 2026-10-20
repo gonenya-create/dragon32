@@ -35,8 +35,7 @@ ary		cmpb	#2		; רק DIM נחשב "DIM"; קריאה רגילה יוצרת מער
 		jsr	<chrgot
 		cmpa	#',
 		beq	1B
-		lda	#')
-		lbsr	synchk
+		lbsr	chkrp
 		puls	a
 		sta	ARYCNT
 		lsla			; הבלוק נמצא מתחת לאינדקסים

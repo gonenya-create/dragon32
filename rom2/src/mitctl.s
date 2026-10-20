@@ -71,8 +71,7 @@ if_no		clr	IFCNT
 		rts
 
 ; ---------- ON n GO TO / GO SUB (mit: ONGOTO) ----------
-on		lbsr	frmevl
-		lbsr	conint		; B = 0-255
+on		lbsr	evbyte		; B = 0-255
 		pshs	b
 		jsr	<chrgot
 		cmpa	#$81		; GO
@@ -211,8 +210,7 @@ trmok		ldd	TXTPTR
 		std	TXTPTR
 		jsr	<chrgot
 		beq	varend
-		lda	#',
-		lbsr	synchk
+		lbsr	chkcom
 		bra	inloop
 varend		ldd	INPPTR
 		tst	INPFLG
@@ -367,15 +365,12 @@ getadr		lbsr	chknum
 fn_peek		bsr	getadr
 		tfr	d,x
 		ldb	,x
-		clra
-		lbra	givu
+		lbra	givb
 poke		lbsr	frmevl
 		bsr	getadr
 		pshs	d
-		lda	#',
-		lbsr	synchk
-		lbsr	frmevl
-		lbsr	conint
+		lbsr	chkcom
+		lbsr	evbyte
 		stb	[,s++]
 		rts
 exec		beq	1F		; בלי כתובת: האחרונה
@@ -394,16 +389,14 @@ def		cmpa	#$ff		; DEF USRn=
 		lbne	err_sn
 		bsr	errdir
 		bsr	getfnm
-		lda	#'(
-		lbsr	synchk
+		lbsr	chklp
 		lda	#$80		; הפרמטר: משתנה פשוט
 		sta	SUBFLG
 		clrb
 		lbsr	ptrget
 		clr	SUBFLG
 		lbsr	chknum
-		lda	#')
-		lbsr	synchk
+		lbsr	chkrp
 		lda	#$cb		; =
 		lbsr	synchk
 		ldx	DEFPNT
@@ -428,11 +421,9 @@ getfnm		lda	#$be
 fndoer		bsr	getfnm
 		ldx	DEFPNT
 		pshs	x
-		lda	#'(
-		lbsr	synchk
+		lbsr	chklp
 		lbsr	frmevl
-		lda	#')
-		lbsr	synchk
+		lbsr	chkrp
 		lbsr	chknum
 		puls	x
 		ldd	,x
