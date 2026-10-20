@@ -150,8 +150,8 @@ stmtbl
 		fdb	screen_st		; $AE SCREEN
 		fdb	pclear		; $AF PCLEAR
 		fdb	color_st		; $B0 COLOR
-		fdb	err_sn		; $B1 CIRCLE
-		fdb	err_sn		; $B2 PAINT
+		fdb	circle_st	; $B1 CIRCLE
+		fdb	paint_st	; $B2 PAINT
 		fdb	err_sn		; $B3 GET
 		fdb	err_sn		; $B4 PUT
 		fdb	err_sn		; $B5 DRAW
