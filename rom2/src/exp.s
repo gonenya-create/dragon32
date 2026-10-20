@@ -597,32 +597,41 @@ linget		ldd	#0
 9		puls	d,pc
 
 ; prnum: D כמספר עשרוני בלי אפסים מובילים
-prnum		pshs	d,x,y
+prnum		pshs	d,x		; D כמספר עשרוני בלי אפסים מובילים
+		bsr	numtxt
+		ldx	#FBUFFR
+		lbsr	puts
+		puls	d,x,pc
+; numtxt: D → ספרות עשרוניות ב-FBUFFR (מסתיים ב-0, בלי אפסים מובילים). B = כמה (גם RENUM)
+numtxt		pshs	x,u
+		ldu	#FBUFFR
 		leax	pow10,pcr
-		clr	KPRE		; כבר הודפסה ספרה?
-1		ldy	,x++
-		beq	9F
-		clr	LASTKEY		; הספרה
-2		pshs	y
-		cmpd	,s++
-		blo	3F
-		pshs	y
-		subd	,s++
-		inc	LASTKEY
+		pshs	d
+1		lda	#'0-1
+		pshs	a		; ,s הספרה  1,s הערך
+2		inc	,s
+		ldd	1,s
+		subd	,x
+		bcs	3F
+		std	1,s
 		bra	2B
-3		pshs	a
-		lda	LASTKEY
+3		puls	a
+		cmpa	#'0
 		bne	4F
-		tst	KPRE
+		cmpu	#FBUFFR
 		bne	4F
-		cmpy	#1
+		ldd	,x		; אפס מוביל: רק בספרה האחרונה
+		cmpd	#1
 		bne	5F
-4		adda	#'0
-		lbsr	putc
-		inc	KPRE
-5		puls	a
-		bra	1B
-9		puls	d,x,y,pc
+4		sta	,u+
+5		leax	2,x
+		ldd	,x
+		bne	1B
+		clr	,u
+		leas	2,s
+		tfr	u,d
+		subd	#FBUFFR
+		puls	x,u,pc
 pow10		fdb	10000,1000,100,10,1,0
 
 ; getline: שורה ל-LINBUF (מסתיים ב-0). ← מוחק, ENTER מסיים, BREAK: C=1. (שלנו, עם מצביע ולא B,X)

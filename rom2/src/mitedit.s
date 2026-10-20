@@ -263,7 +263,7 @@ rl_ref		lbsr	skipsp
 		lbsr	rn_shift
 		puls	b
 		puls	x		; P
-		ldu	#LINBUF
+		ldu	#FBUFFR
 9		lda	,u+
 		sta	,x+
 		decb
@@ -316,38 +316,6 @@ rn_map		pshs	d,x,u
 		puls	d,x,u,pc
 8		andcc	#$fe
 		puls	d,x,u,pc
-; numtxt: D → ספרות עשרוניות ב-LINBUF (בלי אפסים מובילים). B = כמה
-numtxt		pshs	y,u
-		ldu	#LINBUF
-		leay	pow10,pcr
-		pshs	d
-1		ldd	,y++
-		beq	4F
-		pshs	d
-		lda	#'0
-		pshs	a		; ,s ספרה  1,s החזקה  3,s הערך
-2		ldd	3,s
-		subd	1,s
-		bcs	3F
-		std	3,s
-		inc	,s
-		bra	2B
-3		puls	a
-		leas	2,s
-		cmpa	#'0
-		bne	31F
-		cmpu	#LINBUF
-		beq	1B
-31		sta	,u+
-		bra	1B
-4		leas	2,s
-		cmpu	#LINBUF
-		bne	5F
-		lda	#'0
-		sta	,u+
-5		tfr	u,d
-		subd	#LINBUF
-		puls	y,u,pc
 ; rn_shift: מזיזים את [X..VARTAB) ב-D בתים (עם סימן). למעלה: ?OM אם אין מקום
 rn_shift	pshs	d,x
 		ldd	,s
