@@ -3,49 +3,50 @@
 ; שהספרים מסמנים כפנוי, כדי לא לדרוך על הכתובות הקבועות של ה-Dragon.
 hw_init
 		; PIA0: A = שורות המקלדת (קלט), B = עמודות (פלט)
-		clr	PIA0+1		; CRA: גישה ל-DDR
-		clr	PIA0		; DDRA: הכול קלט
-		lda	#$04
-		sta	PIA0+1		; CRA: חזרה לנתונים
-		clr	PIA0+3
+		ldx	#PIA0
+		ldb	#$04		; CR: גישה לנתונים
+		clr	1,x		; CRA: גישה ל-DDR
+		clr	,x		; DDRA: הכול קלט
+		stb	1,x		; CRA: חזרה לנתונים
+		clr	3,x
 		lda	#$ff
-		sta	PIA0+2		; DDRB: הכול פלט
-		lda	#$04
-		sta	PIA0+3
+		sta	2,x		; DDRB: הכול פלט
+		stb	3,x
 		; PIA1: A = ה-DAC בביטים 2-7, ומדפסת בביט 1 (פלט); ביט 0 קלט הקלטת
-		clr	PIA1+1
+		ldx	#PIA1
+		clr	1,x
 		lda	#$fe
-		sta	PIA1
-		lda	#$04
-		sta	PIA1+1
+		sta	,x
+		stb	1,x
 		; PIA1: B = מצב ה-VDG (ביטים 3-7 פלט)
-		clr	PIA1+3
+		clr	3,x
 		lda	#$f8
+		sta	2,x
+		stb	3,x
+		; ממשיכים ב-txtmode: מצב טקסט, ערכת צבעים 0; SAM: מצב 0, המסך ב-$0400
+; txtmode: מצב טקסט (קורא: SAMALP). ב-$FF22 נשארים 3 הביטים התחתונים; SAM: מצב 0, המסך ב-$0400
+txtmode		pshs	a,x
+		lda	PIA1+2
+		anda	#$07
 		sta	PIA1+2
-		lda	#$04
-		sta	PIA1+3
-		clr	PIA1+2		; מצב טקסט, ערכת צבעים 0
-		; SAM: מצב תצוגה טקסט (V0-V2=0), תחילת המסך ב-$0400 (F1=1)
-		sta	SAM+0		; V0=0
-		sta	SAM+2		; V1=0
-		sta	SAM+4		; V2=0
-		sta	SAM+6		; F0=0
-		sta	SAM+9		; F1=1
-		sta	SAM+10		; F2=0
-		sta	SAM+12		; F3=0
-		sta	SAM+14		; F4=0
-		sta	SAM+16		; F5=0
-		sta	SAM+18		; F6=0
-		rts
-
+		ldx	#SAM+20	; לפי הסדר שבמקור: $FFD2 $FFD0 $FFCE $FFCC $FFCA $FFC9 $FFC6 $FFC4 $FFC2 $FFC0
+1		leax	-2,x
+		cmpx	#SAM+8		; במקום F1=0 ($FFC8): F1=1 ($FFC9)
+		bne	2F
+		sta	1,x
+		bra	3F
+2		sta	,x
+3		cmpx	#SAM
+		bne	1B
+		puls	a,x,pc
 ; ---------- מסך ----------
 cls		ldx	#SCREEN
+; clrto: הסמן ב-X, ומשם עד סוף המסך רווחים (גם scroll)
+clrto		stx	CURSOR
 		ldd	#$6060		; רווח (ירוק)
 1		std	,x++
 		cmpx	#SCREND
 		blo	1B
-		ldx	#SCREEN
-		stx	CURSOR
 		rts
 
 ; putc: התו ב-A למסך במקום הסמן (קורא: docs/DRAGON-SPEC-SCREEN.md, סעיף 3)
@@ -61,24 +62,28 @@ putc		pshs	a,b,x
 		cmpa	#$20
 		blo	putc_done
 		cmpa	#$40
-		bhs	1F
-		adda	#$40
-		bra	2F
-1		cmpa	#$60
+		blo	1F
+		cmpa	#$60
 		blo	2F
 		cmpa	#$80
 		bhs	2F
-		suba	#$60
+		adda	#$60		; $60-$7F: יחד עם ה-$40 שאחריו, פחות $60
+1		adda	#$40
 2		sta	,x+
 pc_adv		stx	CURSOR
 		cmpx	#SCREND
 		blo	putc_done
-		bsr	scroll
+		; גלילה: כל השורות עולות אחת, והאחרונה מתנקה
+		ldx	#SCREEN
+4		ldd	32,x
+		std	,x++
+		cmpx	#SCREND-32
+		blo	4B
+		bsr	clrto
 		bra	putc_done
 pc_cr		ldb	CURSOR+1	; כמה תאים עד סוף השורה (1-32)
-		andb	#$1f
+		orb	#$e0		; 32 פחות העמודה
 		negb
-		addb	#32
 		lda	#$60
 3		sta	,x+
 		decb
@@ -91,42 +96,10 @@ pc_bs		cmpx	#SCREEN
 		stx	CURSOR
 putc_done	puls	a,b,x,pc
 
-; txtmode: מצב טקסט (קורא: SAMALP). ב-$FF22 נשארים 3 הביטים התחתונים; SAM: מצב 0, המסך ב-$0400
-txtmode		pshs	a,x
-		lda	PIA1+2
-		anda	#$07
-		sta	PIA1+2
-		ldx	#SAM		; לפי הסדר: $FFD2 $FFD0 $FFCE $FFCC $FFCA $FFC9 $FFC6 $FFC4 $FFC2 $FFC0
-		sta	18,x
-		sta	16,x
-		sta	14,x
-		sta	12,x
-		sta	10,x
-		sta	9,x
-		sta	6,x
-		sta	4,x
-		sta	2,x
-		sta	,x
-		puls	a,x,pc
-; scroll: כל השורות עולות אחת, והאחרונה מתנקה
-scroll		pshs	d,x
-		ldx	#SCREEN
-1		ldd	32,x
-		std	,x++
-		cmpx	#SCREND-32
-		blo	1B
-		ldd	#$6060
-2		std	,x++
-		cmpx	#SCREND
-		blo	2B
-		ldx	#SCREND-32
-		stx	CURSOR
-		puls	d,x,pc
-
 ; puts: מחרוזת ב-X שמסתיימת ב-0
 puts		lda	,x+
 		beq	1F
-		lbsr	putc
+		bsr	putc
 		bra	puts
 1		rts
 
@@ -232,17 +205,16 @@ gk_loop		ldd	KQCNT
 		bra	gk_got
 ; gk_pop: התו הבא בתור
 gk_pop		pshs	b,x
-		ldd	KQCNT
-		subd	#1
-		std	KQCNT
+		ldx	KQCNT
+		leax	-1,x
+		stx	KQCNT
 		ldx	KQPTR
 		lda	,x+
 		stx	KQPTR
 		puls	b,x,pc
 ; לולאת ההמתנה (קורא): הבהוב (עם השהיה), סריקה, ושוב. מקש: $60 בתא הסמן, ורק אז הוא חוזר
 gk_scan		bsr	blink
-		lbsr	keyindex
-		tsta
+		lbsr	keyindex	; Z לפי A
 		beq	gk_loop
 gk_got		ldx	CURSOR
 		ldb	#$60

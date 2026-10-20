@@ -60,10 +60,10 @@ reset		orcc	#$50
 		sta	SAM+26
 		sta	SAM+29
 		lds	#STACKINI
-		ldx	#0		; ניקוי ראשון של $0000-$03FF (קורא: "הניקוי הראשוני")
-1		clr	,x+
-		cmpx	#$0400
-		blo	1B
+		ldx	#$0400		; ניקוי ראשון של $0000-$03FF (קורא: "הניקוי הראשוני")
+1		clr	,-x
+		leax	,x
+		bne	1B
 		clr	,-s		; סמן תחתית למחסנית ה-FOR/GOSUB (קורא: ב-STKTOP-1)
 		leax	chrtpl,pcr	; קריאת התו ל-RAM ($9F-$AA)
 		ldu	#chrget
@@ -72,9 +72,7 @@ reset		orcc	#$50
 		sta	,u+
 		decb
 		bne	1B
-		clra
-		tfr	a,dp
-		lbsr	hw_init
+		lbsr	hw_init		; DP כבר 0 מההדלקה (והקוד לא משנה אותו)
 		lda	PIA0+2
 		lda	#$05
 		sta	PIA0+3
@@ -87,87 +85,82 @@ reset		orcc	#$50
 		std	KQCNT
 		stx	KQPTR
 		; מצב ההדלקה (ספר): תוכנית ב-$1E01, אפס ב-$1E00, גבולות הזיכרון והמחרוזות
-		clr	$1e00
-		ldd	#$1e01
-		std	TXTTAB
-		ldd	#$7ffe
-		std	MEMSIZ
-		std	FRETOP
-		ldd	#$7f36
-		std	STKTOP
+		; (FRETOP ו-TEMPPT: נקבעים ב-scrtch/runc)
+		ldx	#$1e01
+		stx	TXTTAB
+		clr	-1,x
 		ldd	#$7ffe		; קורא: גבול ה-RAM
+		std	MEMSIZ
 		std	ENDMEM
-		ldd	#$0c00		; קורא: מצב הגרפיקה בהדלקה — PMODE 0, דף 1, דפים מ-$0600
-		std	SCTOP
-		lda	#$06
-		sta	SCRBAS
-		ldd	#TEMPST
-		std	TEMPPT
+		ldb	#$36		; $7F36
+		std	STKTOP
+		lda	#$0c		; קורא: מצב הגרפיקה בהדלקה — PMODE 0, דף 1, דפים מ-$0600
+		sta	SCTOP		; $0C00 (הבית התחתון כבר 0)
+		lsra
+		sta	SCRBAS		; $06
 		ldd	#$804f		; קורא: זרע ה-RND, 80 4F C7 52 59
 		std	$0115
 		ldd	#$c752
 		std	$0117
 		lda	#$59
 		sta	$0119
-		ldd	#USRTAB		; קורא: טבלת USR, עשר כתובות שמובילות ל-?FC
-		std	USTBAD
-		ldx	#USRTAB
+		ldx	#USRTAB		; קורא: טבלת USR, עשר כתובות שמובילות ל-?FC
+		stx	USTBAD
 		leau	err_fc,pcr
+		ldb	#10
 1		stu	,x++
-		cmpx	#USRTAB+20
-		blo	1B
+		decb
+		bne	1B
 		leax	execrts,pcr	; EXEC בלי כתובת אחרי ההדלקה: אצלנו חוזר מיד (ב-Dragon: פתוח)
 		stx	EXECJP
 		lbsr	scrtch
-		leax	banner,pcr
-		lbsr	puts
+		leax	banner,pcr	; הכותרת ומיד אחריה OK (אחרי 13 אין שורה חדשה נוספת)
+		bra	mo_puts
+; endcon: סוף התוכנית או סוף השורה הישירה (mit: ENDCON). המחסנית לא מתאפסת
+endcon
 main_ok		bsr	condcr
 		leax	m_ok,pcr
-		lbsr	puts
+mo_puts		lbsr	puts
 main		lbsr	getline
 		bcs	main_ok		; BREAK
 		ldx	#LINBUF
 		lbsr	skipsp
 		beq	main		; שורה ריקה
-		cmpa	#'0
-		blo	1F
-		cmpa	#'9
-		bhi	1F
+		lbsr	isdig
+		bcc	1F
 		lbsr	storeline	; שורה עם מספר: נשמרת, בלי OK (כמו במקור)
 		lds	STKTOP		; עריכה מנקה את המחסנית (mit: CLEARC/STKINI)
 		clr	,-s
 		bra	main
 1		lbsr	crunch		; פקודה ישירה: מכווצים ומבצעים (mit: MAIN, CRDONE)
-		clr	,u+		; אחרי השורה: קישור 0000, כמו סוף תוכנית
-		clr	,u+
+		clra			; אחרי השורה: קישור 0000, כמו סוף תוכנית
+		clrb
+		std	,u
 		ldx	#CRB-1
 		stx	TXTPTR
-		ldd	#$ffff
-		std	CURLIN
+		coma
+		comb
+		std	CURLIN		; $FFFF
 		lbra	gone		; המחסנית נשארת: רשומות FOR/GOSUB שמורות עד CONT (mit)
 
-; endcon: סוף התוכנית או סוף השורה הישירה (mit: ENDCON). המחסנית לא מתאפסת
-endcon		bra	main_ok
 ; condcr: שורה חדשה אם הסמן לא בעמודה 0
 condcr		lda	CURSOR+1
 		anda	#$1f
-		beq	1F
-		lda	#13
-		lbra	putc
-1		rts
+		bne	prcr
+		rts
 ; prin: " IN n" אם בתוכנית, ושורה חדשה
 prin		ldd	CURLIN
-		cmpd	#$ffff
-		beq	2F
+		inca			; $FFxx = שורה ישירה (מספרי השורות עד 63999)
+		beq	prcr
+		deca
 		leax	m_in,pcr
 		lbsr	puts
 		lbsr	prnum
-2		lda	#13
+; prcr: שורה חדשה
+prcr		lda	#13
 		lbra	putc
 
 ; ---------- שגיאות (mit: ERROR) ----------
-err_sn		ldd	#'S*256+'N
-		bra	error
 err_ov		ldd	#'O*256+'V
 		bra	error
 err_fc		ldd	#'F*256+'C
@@ -205,21 +198,18 @@ err_dn		ldd	#'D*256+'N
 err_no		ldd	#'N*256+'O
 		bra	error
 err_dv0		ldd	#'/*256+'0
+		bra	error
+err_sn		ldd	#'S*256+'N
 error		lds	STKTOP		; mit: STKINI — מחסנית, זמניים, ואין המשך
 		clr	,-s
-		ldx	#TEMPST
-		stx	TEMPPT
-		ldx	#0
-		stx	OLDTXT
-		clr	SUBFLG
-		pshs	d
+		pshs	d		; שתי האותיות, ואחריהן ה-0 של הסמן: מחרוזת במחסנית
+		lbsr	rcsub
 		lbsr	condcr
 		lda	#'?
-		lbsr	putc
-		puls	d
-		lbsr	putc
-		tfr	b,a
-		lbsr	putc
+		pshs	a		; "?XY"
+		leax	,s
+		lbsr	puts
+		leas	3,s
 		leax	m_err,pcr
 		lbsr	puts
 		lbsr	prin
@@ -229,39 +219,71 @@ m_err		fcc	" ERROR"
 m_in		fcc	" IN "
 		fcb	0
 
+; linget: מספר שורה מ-X ל-D (עד 63999)
+linget		clra
+		clrb
+1		pshs	d
+		ldb	,x
+		subb	#'0
+		cmpb	#9
+		bhi	9F
+		leax	1,x
+		pshs	b
+		ldd	1,s
+		cmpd	#6399		; מעל 63999: ?SN (קורא: קורא מספרי השורות)
+		bhi	err_sn
+		lslb
+		rola
+		std	1,s		; *2
+		lslb
+		rola
+		lslb
+		rola			; *8
+		addd	1,s		; *10
+		addb	,s+
+		adca	#0
+		leas	2,s
+		bra	1B
+9		puls	d,pc
+
 ; ---------- שמירת שורה (mit: MAIN1/NODEL/STOLOP, m6502.asm:1567-1641) ----------
-storeline	lbsr	linget		; D = מספר השורה
+storeline	bsr	linget		; D = מספר השורה
 		std	LINNUM
 storel2					; EDIT נכנס כאן: LINNUM מוכן, X = הטקסט
 		lbsr	skipsp		; רווחים אחרי המספר לא נשמרים (mit: CHRGET מדלג עליהם)
 		lbsr	crunch		; X = הטקסט → CRB; U = הסוף (אחרי ה-0)
 		tfr	u,d
-		subd	#CRB
-		addd	#4		; קישור + מספר + טקסט + 0
+		subd	#CRB-4		; קישור + מספר + טקסט + 0
 		pshs	d		; האורך
 		ldd	LINNUM
 		bsr	fndlin		; Y = השורה (C=1 אם קיימת)
 		bcc	1F
-		bsr	dellin		; קיימת: קודם מוחקים
+		ldx	,y		; קיימת: קודם מוחקים (mit: m6502.asm:1571-1608). X = השורה הבאה
+		tfr	y,u
+5		cmpx	VARTAB
+		bhs	6F
+		lda	,x+
+		sta	,u+
+		bra	5B
+6		stu	VARTAB
 1		tst	CRB
 		beq	9F		; רק מספר: רק מחיקה
 		; מזיזים את [Y..VARTAB) למעלה באורך השורה (mit: BLTU)
-		ldx	VARTAB
 		ldd	VARTAB
 		addd	,s
-		pshs	d,x		; יש מקום? אחרת ?OM לפני שמזיזים משהו (mit: REASON)
+		pshs	d,y		; יש מקום? אחרת ?OM לפני שמזיזים משהו (mit: REASON). Y = הגבול התחתון
 		lbsr	reason
-		puls	d,x
+		ldx	VARTAB
+		puls	d
 		tfr	d,u
 		std	VARTAB
-		sty	LOWTR
-2		cmpx	LOWTR
+2		cmpx	,s
 		bls	3F
 		lda	,-x
 		sta	,-u
 		bra	2B
-3		ldd	#$ffff		; קישור זמני שאינו אפס; lnkprg מחשב את האמיתי
-		std	,y
+3		puls	y
+		sty	,y		; קישור זמני שאינו אפס; lnkprg מחשב את האמיתי
 		ldd	LINNUM
 		std	2,y
 		leau	4,y
@@ -273,26 +295,12 @@ storel2					; EDIT נכנס כאן: LINNUM מוכן, X = הטקסט
 		bsr	lnkprg
 		bra	runc
 
-; dellin: מוחק את השורה ב-Y (mit: m6502.asm:1571-1608)
-dellin		pshs	d,x,y,u
-		ldx	,y		; השורה הבאה
-		tfr	y,u
-1		cmpx	VARTAB
-		bhs	2F
-		lda	,x+
-		sta	,u+
-		bra	1B
-2		stu	VARTAB
-		puls	d,x,y,u,pc
-
 ; fndlin: מחפש את השורה D. Y = הרשומה שלה או הראשונה שגדולה ממנה (או סמן הסוף). C=1 אם נמצאה
 ; (mit: FNDLIN, m6502.asm:1879)
 fndlin		ldy	TXTTAB
 fndlnc
-1		pshs	d
-		ldd	,y
-		puls	d
-		beq	8F		; סוף התוכנית
+1		tst	,y		; סוף התוכנית: קישור 0 (קישור אמיתי תמיד מעל $00FF)
+		beq	8F
 		cmpd	2,y
 		beq	9F
 		blo	8F
@@ -318,9 +326,8 @@ lnkprg		ldx	TXTTAB
 
 ; scrtch (NEW): שני אפסים בתחילת התוכנית, והמשתנים אחריהם (mit: SCRTCH, m6502.asm:1919)
 scrtch		ldx	TXTTAB
-		clr	,x
-		clr	1,x
-		leax	2,x
+		clr	,x+
+		clr	,x+
 		stx	VARTAB
 ; runc: מאפסים משתנים ומערכים (mit: RUNC/CLEARC)
 runc		ldd	MEMSIZ
@@ -331,19 +338,38 @@ runc		ldd	MEMSIZ
 		ldd	TXTTAB		; RESTORE
 		subd	#1
 		std	DATPTR
-		ldd	#TEMPST
+; rcsub: זמניים, ואין המשך (גם error)
+rcsub		ldd	#TEMPST
 		std	TEMPPT
-		ldd	#0		; אין המשך
+		clra			; אין המשך
+		clrb
 		std	OLDTXT
 		clr	SUBFLG
 		rts
 
+skipsp		lda	,x+
+		cmpa	#$20
+		beq	skipsp
+		leax	-1,x
+		tsta
+		rts
+; isdig: C=1 אם A ספרה
+isdig		pshs	a
+		suba	#'0
+		cmpa	#10
+		puls	a,pc
+
+
 ; ---------- כיווץ (mit: CRUNCH, m6502.asm:1785; כללי ה-Dragon: קורא + ספר) ----------
 ; X = הטקסט (מסתיים ב-0). הפלט ב-CRB, מסתיים ב-0. U = אחרי ה-0
+cr_rest		lda	,x+		; השאר כמו שהוא, עד ה-0 (כולל)
+		sta	,u+
+		bne	cr_rest
+cr_ret		rts
 crunch		ldu	#CRB
 		clr	CRMODE
 cr_lp		lda	,x
-		lbeq	cr_end
+		beq	cr_rest	; סוף: ה-0 נשמר
 		cmpa	#$20		; רווח נשמר (קורא)
 		beq	cr_put
 		cmpa	#'"
@@ -357,8 +383,7 @@ cr_lp		lda	,x
 1		cmpa	#'?		; ? = PRINT
 		bne	2F
 		lda	#$87
-		leax	1,x
-		bra	cr_put1
+		bra	cr_put
 2		cmpa	#''		; ' = נקודתיים ו-$83, ואז השאר כמו שהוא (קורא)
 		bne	3F
 		leax	1,x
@@ -371,10 +396,9 @@ cr_lp		lda	,x
 		bls	cr_put
 cr_kw		bsr	kwmatch		; מילה שמורה? C=1, B = הטוקן, KPRE = $FF לפונקציה
 		bcc	cr_name
-		tst	KPRE
+		lda	KPRE
 		beq	4F
-		lda	#$ff		; פונקציה: $FF ואחריו הטוקן
-		sta	,u+
+		sta	,u+		; פונקציה: $FF ואחריו הטוקן
 		stb	,u+
 		bra	cr_lp
 4		cmpb	#$84		; ELSE: לפניו נקודתיים, גם אם כבר היו (קורא)
@@ -388,6 +412,17 @@ cr_kw		bsr	kwmatch		; מילה שמורה? C=1, B = הטוקן, KPRE = $FF לפ�
 6		cmpb	#$82		; REM: השאר כמו שהוא
 		beq	cr_rest
 		bra	cr_lp
+cr_put		leax	1,x
+		sta	,u+
+		bra	cr_lp
+cr_str		leax	1,x		; מרכאות: עד המרכאות הבאות או סוף השורה
+		sta	,u+
+8		lda	,x+
+		sta	,u+
+		beq	cr_ret		; סוף השורה: ה-0 נשמר
+		cmpa	#'"
+		bne	8B
+cr_lp2		bra	cr_lp
 cr_name		lda	,x		; לא מילה שמורה. אות: שם, וכל האותיות והספרות שאחריה נשמרות כמו שהן (קורא)
 		cmpa	#'A
 		blo	cr_put
@@ -396,33 +431,13 @@ cr_name		lda	,x		; לא מילה שמורה. אות: שם, וכל האותיות
 7		sta	,u+
 		leax	1,x
 		lda	,x
-		cmpa	#'0
-		blo	cr_lp
-		cmpa	#'9
-		bls	7B
+		lbsr	isdig
+		bcs	7B
 		cmpa	#'A
-		blo	cr_lp
+		blo	cr_lp2
 		cmpa	#'Z
 		bls	7B
-		lbra	cr_lp
-cr_put		leax	1,x
-cr_put1		sta	,u+
-		lbra	cr_lp
-cr_str		sta	,u+		; מרכאות: עד המרכאות הבאות או סוף השורה
-		leax	1,x
-8		lda	,x
-		beq	cr_end
-		sta	,u+
-		leax	1,x
-		cmpa	#'"
-		bne	8B
-		lbra	cr_lp
-cr_rest		lda	,x+
-		sta	,u+
-		bne	cr_rest
-		rts
-cr_end		clr	,u+
-		rts
+		bra	cr_lp2
 
 ; kwmatch: האם בתחילת X יש מילה שמורה? קודם הפקודות ($80-$CD), אחר כך הפונקציות ($FF $80-$A1).
 ; התאמה מדויקת, בלי דרישה לגבול מילה (קורא). כן: C=1, B = הטוקן, X אחרי המילה. לא: C=0, X לא זז
@@ -430,32 +445,26 @@ cr_end		clr	,u+
 kwmatch		pshs	x
 		clr	KPRE
 		leay	stmtab,pcr
-		ldb	#$80
+km_tab		ldb	#$80
 km_word		tst	,y
 		bne	1F
 		tst	KPRE		; סוף הטבלה
 		bne	km_no
-		com	KPRE		; עוברים לפונקציות
-		leay	fntab,pcr
-		ldb	#$80
-		bra	km_word
+		com	KPRE		; עוברים לפונקציות (fntab מיד אחרי ה-0)
+		leay	1,y
+		bra	km_tab
 1		ldx	,s
-km_ch		lda	,y+
-		pshs	a
-		anda	#$7f
-		cmpa	,x+
-		puls	a
+km_ch		lda	,y+		; שווה בלי ביט 7: Z. ביט 7 (התו האחרון) עובר ל-C
+		eora	,x+
+		lsla
 		bne	km_skip
-		tsta
-		bpl	km_ch		; עוד לא התו האחרון
-		leas	2,s		; נמצאה
-		orcc	#1
+		bcc	km_ch		; עוד לא התו האחרון
+		leas	2,s		; נמצאה (C=1)
 		rts
-km_skip		tsta
-		bmi	2F
+km_skip		leay	-1,y		; לסוף המילה
 3		lda	,y+
 		bpl	3B
-2		incb
+		incb
 		bra	km_word
 km_no		puls	x
 		andcc	#$fe
@@ -463,33 +472,28 @@ km_no		puls	x
 
 ; ---------- LIST [מ][-[עד]] (mit: LIST, m6502.asm:1975) ----------
 ; lrange: טווח שורות מ-X: [n][-[m]]. D = ההתחלה (0 אם אין), LEND = הסוף ($FFFF אם אין; מספר בודד: הוא עצמו)
-lrange		lbsr	skipsp
-		ldd	#0
+lrange		clra
+		clrb
 		pshs	d		; מ
-		ldd	#$ffff
-		std	LEND
-		lda	,x
-		cmpa	#'0
-		blo	1F
-		cmpa	#'9
-		bhi	1F
-		lbsr	linget
-		std	,s
-		std	LEND		; מספר אחד = שורה אחת
+		bsr	lnum
+		bcc	1F
+		std	,s		; מספר אחד = שורה אחת
 1		lbsr	skipsp
 		cmpa	#$c4		; - (טוקן)
 		bne	2F
 		leax	1,x
+		bsr	lnum
+2		puls	d,pc
+; lnum: LEND = $FFFF, ואם יש מספר: D = LEND = המספר, C=1
+lnum		lbsr	skipsp
+		lbsr	isdig
 		ldd	#$ffff
 		std	LEND
-		lbsr	skipsp
-		cmpa	#'0
-		blo	2F
-		cmpa	#'9
-		bhi	2F
+		bcc	9F
 		lbsr	linget
 		std	LEND
-2		puls	d,pc
+		orcc	#1
+9		rts
 do_list		bsr	lrange
 		lbsr	fndlin
 3		ldd	,y
@@ -497,14 +501,13 @@ do_list		bsr	lrange
 		ldd	2,y
 		cmpd	LEND
 		bhi	9F
-		lbsr	prnum		; מספר השורה
+		bsr	prnum		; מספר השורה
 		lda	#$20
 		lbsr	putc
 		leax	4,y
 		pshs	y
 		bsr	prline
-		lda	#13
-		lbsr	putc
+		lbsr	prcr
 		puls	y
 		ldy	,y
 		bra	3B
@@ -523,16 +526,26 @@ prline		clr	CRMODE		; כאן: בתוך מרכאות
 		beq	1B
 		cmpb	#$83
 		beq	1B
-2		cmpa	#$ff
-		bne	3F
-		ldb	,x+		; פונקציה
-		leay	fntab,pcr
-		bra	4F
-3		tsta
+2		tsta
 		bpl	5F
 		tfr	a,b
 		leay	stmtab,pcr
-4		bsr	prword
+		cmpa	#$ff
+		bne	3F
+		ldb	,x+		; פונקציה
+		leay	fntab,pcr
+; המילה מספר B-$80 בטבלה Y
+3		subb	#$80
+7		beq	8F
+4		lda	,y+
+		bpl	4B
+		decb
+		bra	7B
+8		lda	,y		; lout שומר על X ועל Y
+		anda	#$7f
+		lbsr	lout
+		lda	,y+
+		bpl	8B
 		bra	1B
 5		cmpa	#'"
 		bne	6F
@@ -541,61 +554,8 @@ prline		clr	CRMODE		; כאן: בתוך מרכאות
 		bra	1B
 9		rts
 
-; prword: מדפיס את המילה מספר B-$80 בטבלה Y
-prword		pshs	x
-		subb	#$80
-1		tstb
-		beq	3F
-2		lda	,y+
-		bpl	2B
-		decb
-		bra	1B
-3		lda	,y+
-		pshs	a
-		anda	#$7f
-		lbsr	lout
-		puls	a
-		tsta
-		bpl	3B
-		puls	x,pc
 
 ; ---------- עזרים (שלנו) ----------
-skipsp		lda	,x
-		cmpa	#$20
-		bne	1F
-		leax	1,x
-		bra	skipsp
-1		tsta
-		rts
-
-; linget: מספר שורה מ-X ל-D (עד 63999)
-linget		ldd	#0
-1		pshs	d
-		lda	,x
-		cmpa	#'0
-		blo	9F
-		cmpa	#'9
-		bhi	9F
-		leax	1,x
-		suba	#'0
-		pshs	a
-		ldd	1,s
-		cmpd	#6399		; מעל 63999: ?SN (קורא: קורא מספרי השורות)
-		lbhi	err_sn
-		lslb
-		rola
-		std	1,s		; *2
-		lslb
-		rola
-		lslb
-		rola			; *8
-		addd	1,s		; *10
-		addb	,s+
-		adca	#0
-		leas	2,s
-		bra	1B
-9		puls	d,pc
-
 ; prnum: D כמספר עשרוני בלי אפסים מובילים
 prnum		pshs	d,x		; D כמספר עשרוני בלי אפסים מובילים
 		bsr	numtxt
@@ -606,7 +566,13 @@ prnum		pshs	d,x		; D כמספר עשרוני בלי אפסים מובילים
 numtxt		pshs	x,u
 		ldu	#FBUFFR
 		leax	pow10,pcr
-		pshs	d
+0		cmpd	,x		; מדלגים על החזקות שגדולות מהמספר (לא על 1): בלי אפסים מובילים
+		bhs	6F
+		tst	3,x
+		beq	6F
+		leax	2,x
+		bra	0B
+6		pshs	d
 1		lda	#'0-1
 		pshs	a		; ,s הספרה  1,s הערך
 2		inc	,s
@@ -616,16 +582,9 @@ numtxt		pshs	x,u
 		std	1,s
 		bra	2B
 3		puls	a
-		cmpa	#'0
-		bne	4F
-		cmpu	#FBUFFR
-		bne	4F
-		ldd	,x		; אפס מוביל: רק בספרה האחרונה
-		cmpd	#1
-		bne	5F
-4		sta	,u+
-5		leax	2,x
-		ldd	,x
+		sta	,u+
+		leax	2,x
+		tst	1,x		; 0 = סוף הטבלה
 		bne	1B
 		clr	,u
 		leas	2,s
@@ -636,7 +595,7 @@ pow10		fdb	10000,1000,100,10,1,0
 
 ; getline: שורה ל-LINBUF (מסתיים ב-0). ← מוחק, ENTER מסיים, BREAK: C=1. (שלנו, עם מצביע ולא B,X)
 getline		pshs	b,x
-		ldx	#LINBUF
+gl_new		ldx	#LINBUF
 gl_key		lbsr	getkey		; הסמן מהבהב בתוך getkey (קורא)
 		cmpa	#13
 		beq	gl_done
@@ -648,43 +607,30 @@ gl_key		lbsr	getkey		; הסמן מהבהב בתוך getkey (קורא)
 		bne	1F
 		lbsr	cls
 		clr	IKEYIM
-		ldx	#LINBUF
-		bra	gl_key
+		bra	gl_new
 1
 		cmpa	#$20
 		blo	gl_key
 		cmpx	#LINBUF+LINMAX
 		bhs	gl_key
 		sta	,x+
-		lbsr	putc
+2		lbsr	putc
 		bra	gl_key
 gl_back		cmpx	#LINBUF
 		beq	gl_key
 		leax	-1,x
-		pshs	x
-		ldx	CURSOR
-		leax	-1,x
-		lda	#$60
-		sta	,x
-		stx	CURSOR
-		puls	x
-		bra	gl_key
-gl_brk		lda	#13
-		lbsr	putc
-		clr	LINBUF
-		orcc	#1
-		puls	b,x,pc
+		lda	#8		; תא אחד אחורה ורווח (הסמן אחרי התווים שהוקלדו)
+		bra	2B
+gl_brk		ldx	#LINBUF
 gl_done		clr	,x
-		lda	#13
-		lbsr	putc
-		andcc	#$fe
-		puls	b,x,pc
+		cmpa	#4		; C=1 ב-BREAK
+		pshs	cc
+		lbsr	prcr
+		puls	cc,b,x,pc
+banner		fcc	"DRAGON 1982 BASIC STAGE 1"
+		fcb	13,13		; ממשיך ב-m_ok
 m_ok		fcc	"OK"
 		fcb	13,0
-m_sn		fcc	"?SN ERROR"
-		fcb	13,0
-banner		fcc	"DRAGON 1982 BASIC STAGE 1"
-		fcb	13,13,0
 
 ; ---------- טבלת המילים, בסדר הטוקנים של ה-Dragon (ספר: Companion עמ' 39-40) ----------
 ; הפורמט כמו ב-mit (RESLST): התו האחרון של כל מילה עם ביט 7 דלוק, ו-0 בסוף הטבלה
@@ -818,9 +764,9 @@ fntab		fcs	"SGN"
 		include	"testq.s"
 
 irq		lda	PIA0+2
-		ldd	TICKS
-		addd	#1
-		std	TICKS
+		ldx	TICKS
+		leax	1,x
+		stx	TICKS
 		rti
 
 		org	$bff2
