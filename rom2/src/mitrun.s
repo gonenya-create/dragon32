@@ -31,17 +31,15 @@ chrest		ldx	TXTPTR
 		bne	3F
 		jmp	<chrget
 3		cmpa	#':
-		beq	1F
+		bhs	2F
 		tsta
 		beq	1F
-		cmpa	#'0
-		blo	2F
-		cmpa	#'9
-		bhi	2F
+		cmpa	#'0		; מתחת ל-'0': C=1, Z=0
+		blo	9F
 		andcc	#$fa		; ספרה: C=0, Z=0
-		rts
-2		orcc	#1		; לא ספרה: C=1, Z=0
-		andcc	#$fb
+9		rts
+2		beq	1F
+		orcc	#1		; אות וכו': C=1, Z=0
 		rts
 1		orcc	#5		; סוף פקודה: C=1, Z=1
 		rts
@@ -164,11 +162,10 @@ stmtbl
 		fdb	renum		; $BA RENUM
 
 rem		ldx	TXTPTR		; עד סוף השורה
-1		lda	,x
-		beq	2F
-		leax	1,x
-		bra	1B
-2		stx	TXTPTR
+1		tst	,x+
+		bne	1B
+		leax	-1,x
+		stx	TXTPTR
 		rts
 
 ; RUN [שורה]: משתנים מתאפסים, ומתחילים מהשורה הראשונה (TXTPTR = TXTTAB-1, האפס שב-$1E00) או מהשורה שצוינה
@@ -197,12 +194,10 @@ go		cmpa	#$bc		; TO
 gosub1					; כתובת החזרה של הפקודה נשארת מתחת לרשומה, כמו במקור (קורא: 7 בתים)
 		ldb	#5
 		lbsr	getstk
-		ldx	TXTPTR
-		pshs	x
+		ldy	TXTPTR
 		ldx	CURLIN
-		pshs	x
 		lda	#$bd
-		pshs	a
+		pshs	y,x,a
 		bsr	goto1
 		lbra	newstt
 1		jsr	<chrget
@@ -315,11 +310,8 @@ pr_lp		cmpa	#';
 		bra	pr_lp
 3		lbsr	fout
 		ldx	#FBUFFR
-1		lda	,x+
-		beq	2F
-		lbsr	putc
-		bra	1B
-2		lda	#$20		; רווח אחרי מספר
+		lbsr	puts
+		lda	#$20		; רווח אחרי מספר
 		lbsr	putc
 		jsr	<chrgot
 		beq	pr_cr
@@ -327,16 +319,18 @@ pr_lp		cmpa	#';
 pr_semi		jsr	<chrget
 		bne	pr_lp
 		rts			; ; בסוף: בלי שורה חדשה
-pr_comma	lda	CURSOR+1	; לעמודה הבאה שמתחלקת ב-16
-		anda	#$0f
-		pshs	a
-		lda	#$20
+pr_comma	lda	CURSOR+1	; פסיק: מעמודות 0-15 רווחים עד 16; מ-16-31 שורה חדשה (קורא: מפרט המסך)
+		bita	#$10
+		bne	2F
+1		lda	#$20
 		lbsr	putc
-		puls	a
 		lda	CURSOR+1
-		anda	#$0f
-		bne	pr_comma
-		jsr	<chrget
+		bita	#$0f
+		bne	1B
+		bra	3F
+2		lda	#13
+		lbsr	putc
+3		jsr	<chrget
 		bne	pr_lp
 		rts
 pr_cr		lda	#13
@@ -366,41 +360,27 @@ for		lbsr	let		; המשתנה מקבל את ערך ההתחלה
 		bne	3F
 		jsr	<chrget
 		lbsr	frmevl
-3		lbsr	sign
-		pshs	a		; סימן הצעד (זמני)
-		ldx	#TEMPSTP
-		lbsr	movmf
-		puls	a
-		sta	TEMPSGN
-		; הסוף של פקודת ה-FOR: מכאן ממשיכים אחרי כל NEXT
-		bsr	stmend		; X = המקום
-		; בונים את הרשומה: דוחפים מהסוף להתחלה
-		pshs	x		; [16-17] הטקסט
+3		bsr	stmend		; X = סוף פקודת ה-FOR: מכאן ממשיכים אחרי כל NEXT
 		ldd	CURLIN
-		pshs	d		; [14-15] השורה
+		pshs	x,d		; [16-17] הטקסט, [14-15] השורה
+		leas	-14,s
+		lbsr	sign
+		sta	8,s		; [8] סימן הצעד
+		leax	3,s		; [3-7] הצעד
+		lbsr	movmf
 		ldx	#TEMPLIM	; [9-13] העד
-		ldb	#5
-		abx
-4		lda	,-x
-		pshs	a
-		cmpx	#TEMPLIM
-		bhi	4B
-		lda	TEMPSGN
-		pshs	a		; [8] סימן הצעד
-		ldx	#TEMPSTP+5	; [3-7] הצעד
-5		lda	,-x
-		pshs	a
-		cmpx	#TEMPSTP
-		bhi	5B
-		ldd	FORPNT
-		pshs	d		; [1-2] המשתנה
-		lda	#$80
-		pshs	a		; [0] FOR
-		ldx	TXTPTR		; ממשיכים מסוף ה-FOR
+		ldd	,x
+		std	9,s
+		ldd	2,x
+		std	11,s
+		lda	4,x
+		sta	13,s
+		ldd	FORPNT		; [1-2] המשתנה
+		std	1,s
+		lda	#$80		; [0] FOR
+		sta	,s
 		lbra	newstt
 TEMPLIM		equ	$03e0		; זמני: העד, בתוך FBUFFR שלא בשימוש כאן
-TEMPSTP		equ	$03ea-5
-TEMPSGN		equ	$03df
 RELSAV		equ	$03da		; זמני: המקום לפני סימן יחס
 
 ; stmend: X = הסוף של הפקודה הנוכחית (: או 0), בלי להזיז את TXTPTR (mit: DATAN)
@@ -547,11 +527,11 @@ ptrget		pshs	b
 		sty	ARYTAB
 		ldd	VARNAM
 		std	,x
-		clr	2,x
-		clr	3,x
-		clr	4,x
-		clr	5,x
-		clr	6,x
+		clra
+		clrb
+		std	2,x
+		std	4,x
+		sta	6,x
 		bra	10F
 6		leas	1,s
 10		leax	2,x
@@ -572,19 +552,15 @@ fe_lp		clr	OPMASK
 		blo	3F
 		cmpa	#$cc
 		bhi	3F
-		suba	#$ca
+		suba	#$c9		; > = <: 1 2 3 → מסכה 1 2 4
 		ldb	#1
-		tsta
+21		deca
 		beq	2F
-		ldb	#2
-		deca
-		beq	2F
-		ldb	#4
-2		pshs	b
+		lslb
+		bra	21B
+2		bitb	OPMASK		; אותו סימן פעמיים
+		lbne	err_sn
 		orb	OPMASK
-		cmpb	OPMASK		; אותו סימן פעמיים
-		puls	a
-		lbls	err_sn
 		stb	OPMASK
 		jsr	<chrget
 		bra	1B
@@ -596,7 +572,7 @@ fe_lp		clr	OPMASK
 		ldx	RELSAV		; לא עכשיו: מחזירים את הסימנים לטקסט
 		stx	TXTPTR
 		lbra	9F
-5		leau	dorel,pcr
+5		ldu	#dorel
 		bra	7F
 4		cmpa	#$c3		; + - * / ^ AND OR
 		lblo	9F
@@ -610,39 +586,32 @@ fe_lp		clr	OPMASK
 		ldb	,x		; הקדימות
 		cmpb	,s		; לא גבוהה מהמינימלית: מסיימים כאן
 		bls	9F
+		ldu	1,x
 		pshs	b
-		ldd	1,x
-		leau	optab,pcr
-		leau	d,u
 		jsr	<chrget		; מדלגים על הסימן
 		puls	b
 ; שומרים את הצד השמאלי, מחשבים את הימני, ומפעילים. ב-Dragon בלי עיגול לפני השמירה (קורא; ב-mit יש)
-7		pshs	u
-		lda	OPMASK		; בית אחד: המסכה, וביט 7 = השמאלי מחרוזת (כמו במקור: מסגרת של 13 בתים — קורא)
+7		lda	OPMASK		; בית אחד: המסכה, וביט 7 = השמאלי מחרוזת (כמו במקור: מסגרת של 13 בתים — קורא)
 		tst	VALTYP
 		beq	73F
 		ora	#$80
-73		pshs	a
+73		pshs	u,a
+		ldx	FACHO		; B = הקדימות: לא לגעת
+		ldy	FACMO
 		lda	FACSGN
-		pshs	a
-		ldx	FACMO
-		pshs	x
-		ldx	FACHO
-		pshs	x
+		pshs	y,x,a
 		lda	FACEXP
 		pshs	a
 		lbsr	fexpr		; הצד הימני, עם הקדימות של הסימן
 		puls	a
 		sta	ARGEXP
-		puls	x
+		puls	a,x,y
 		stx	ARGHO
-		puls	x
-		stx	ARGMO
-		puls	a
+		sty	ARGMO
 		sta	ARGSGN
 		eora	FACSGN
 		sta	ARISGN
-		puls	a
+		puls	a,u
 		tfr	a,b
 		anda	#$7f
 		sta	OPMASK
@@ -650,40 +619,34 @@ fe_lp		clr	OPMASK
 		tstb
 		bpl	74F
 		deca
-74
-		puls	u
-		cmpa	VALTYP		; שני הצדדים מאותו סוג (mit: CHKVAL)
+74		cmpa	VALTYP		; שני הצדדים מאותו סוג (mit: CHKVAL)
 		lbne	err_tm
 		tsta
 		beq	72F
-		leax	dorel,pcr	; מחרוזות: רק יחס או +
-		pshs	x
-		cmpu	,s++
+		cmpu	#dorel		; מחרוזות: רק יחס או +
 		beq	72F
-		leax	faddt,pcr
-		pshs	x
-		cmpu	,s++
+		cmpu	#faddt
 		lbne	err_tm
 		lbsr	cat
 		lbra	fe_lp
 72		jsr	,u		; FAC = ARG op FAC
 		lbra	fe_lp
 9		puls	b,pc
-; טבלת הסימנים: קדימות, כתובת יחסית ל-optab (mit: OPTAB)
+; טבלת הסימנים: קדימות, כתובת (mit: OPTAB)
 optab		fcb	121
-		fdb	faddt-optab
+		fdb	faddt
 		fcb	121
-		fdb	fsubt-optab
+		fdb	fsubt
 		fcb	123
-		fdb	fmultt-optab
+		fdb	fmultt
 		fcb	123
-		fdb	fdivt-optab
+		fdb	fdivt
 		fcb	127
-		fdb	fpwrt-optab
+		fdb	fpwrt
 		fcb	80
-		fdb	andop-optab
+		fdb	andop
 		fcb	70
-		fdb	orop-optab
+		fdb	orop
 
 ; eval: איבר אחד → FAC
 eval		clr	VALTYP
@@ -904,25 +867,24 @@ conint		lbsr	chknum
 		rts
 
 ; AND / OR (mit: ANDOP 3520, OROP 3518): על מספרים שלמים בין -32768 ל-32767
-andop		clra
-		bra	1F
-orop		lda	#$ff
-1		sta	OPMASK		; כאן: המשלים (דה-מורגן, כמו ב-mit)
-		lbsr	ayint
+andop		bsr	logpre
+		anda	,s+
+		andb	,s+
+		lbra	givd
+orop		bsr	logpre
+		ora	,s+
+		orb	,s+
+		lbra	givd
+; logpre: שני הצדדים כשלמים: D = הימני (FAC), והשמאלי (ARG) נשאר במחסנית מתחת לכתובת החזרה
+logpre		lbsr	ayint
 		ldd	FACMO
-		eora	OPMASK
-		eorb	OPMASK
-		pshs	d
+		ldx	,s
+		std	,s
+		pshs	x
 		lbsr	movfa
 		lbsr	ayint
 		ldd	FACMO
-		eora	OPMASK
-		eorb	OPMASK
-		anda	,s+
-		andb	,s+
-		eora	OPMASK
-		eorb	OPMASK
-		lbra	givd
+		rts
 
 ; dorel: יחס (mit: DOREL 3547, DOCMP 3590). OPMASK: 1 = >, 2 = =, 4 = <. התוצאה -1 או 0
 dorel		tst	VALTYP
@@ -935,17 +897,14 @@ dorel		tst	VALTYP
 		sta	ARGHO
 		ldx	#ARGEXP
 		lbsr	fcomp		; A = הסימן של FAC פחות ARG
-2		; ARG ? FAC: אם FAC < ARG אז ARG > FAC
-		ldb	#1		; ARG > FAC
-		cmpa	#$ff
-		beq	1F
-		ldb	#2		; שווים
-		tsta
-		beq	1F
-		ldb	#4		; ARG < FAC
-1		andb	OPMASK
-		beq	3F
-		lda	#$ff
-		lbra	float
-3		clra
+2		inca			; ARG ? FAC: -1 0 1 → מסכה 1 (ARG > FAC) 2 (שווים) 4 (ARG < FAC)
+		ldb	#1
+1		deca
+		bmi	3F
+		lslb
+		bra	1B
+3		andb	OPMASK
+		beq	4F
+		ldb	#$ff
+4		tfr	b,a
 		lbra	float
