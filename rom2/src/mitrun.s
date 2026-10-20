@@ -75,6 +75,8 @@ gone3		beq	9F		; פקודה ריקה
 		lda	1,x
 		cmpa	#$9e
 		lbeq	timset
+		cmpa	#$98		; MID$ כפקודה (קורא)
+		lbeq	midst
 		lbra	err_sn
 1
 		leau	stmdsp,pcr
@@ -179,7 +181,7 @@ go		cmpa	#$bc		; TO
 		lbsr	chrget
 ; gosub1: TXTPTR על מספר השורה. רשומה של 5 בתים, מהכתובת הנמוכה: $BD, השורה הקוראת, המקום בטקסט —
 ; לפני מספר השורה; RETURN חוזר לשם ומדלג עד סוף הפקודה (קורא)
-gosub1		leas	2,s		; בלי החזרה ל-gone: הרשומה נכנסת מתחתיה
+gosub1					; כתובת החזרה של הפקודה נשארת מתחת לרשומה, כמו במקור (קורא: 7 בתים)
 		ldb	#5
 		lbsr	getstk
 		ldx	TXTPTR
@@ -266,7 +268,10 @@ letasg		ldx	FORPNT
 
 
 ; ---------- PRINT (mit: PRINT 2669), בניסוי: מספרים, מחרוזות במרכאות, ; ו-, ----------
-print		beq	pr_cr
+; כמו במקור: הפקודה קוראת לטיפול ברשימה (עוד רמה במחסנית; MEM תלוי בה — קורא)
+print		bsr	prlist
+		rts
+prlist		beq	pr_cr
 pr_lp		cmpa	#';
 		beq	pr_semi
 		cmpa	#',
@@ -581,16 +586,13 @@ fe_lp		clr	OPMASK
 		leau	d,u
 		lbsr	chrget		; מדלגים על הסימן
 		puls	b
-7		pshs	b		; שומרים את הצד השמאלי, מחשבים את הימני, ומפעילים
+; שומרים את הצד השמאלי, מחשבים את הימני, ומפעילים. ב-Dragon בלי עיגול לפני השמירה (קורא; ב-mit יש)
+7		pshs	u
+		lda	OPMASK		; בית אחד: המסכה, וביט 7 = השמאלי מחרוזת (כמו במקור: מסגרת של 13 בתים — קורא)
 		tst	VALTYP
-		bne	71F		; מחרוזת: אין מה לעגל
-		lbsr	round
-71		puls	b
-		pshs	u
-		lda	VALTYP
-		pshs	a
-		lda	OPMASK
-		pshs	a
+		beq	73F
+		ora	#$80
+73		pshs	a
 		lda	FACSGN
 		pshs	a
 		ldx	FACMO
@@ -611,8 +613,14 @@ fe_lp		clr	OPMASK
 		eora	FACSGN
 		sta	ARISGN
 		puls	a
+		tfr	a,b
+		anda	#$7f
 		sta	OPMASK
-		puls	a		; הסוג של השמאלי
+		clra			; הסוג של השמאלי
+		tstb
+		bpl	74F
+		deca
+74
 		puls	u
 		cmpa	VALTYP		; שני הצדדים מאותו סוג (mit: CHKVAL)
 		lbne	err_tm
@@ -659,7 +667,9 @@ eval		clr	VALTYP
 		bne	1F
 		lbsr	chrget
 		ldb	#125
+		pshs	b		; בית בקרה שלא בשימוש (קורא: עומק המחסנית כמו במקור)
 		lbsr	fexpr
+		leas	1,s
 		lbra	negop
 1		cmpa	#$c3		; +
 		bne	2F
@@ -669,7 +679,9 @@ eval		clr	VALTYP
 		bne	3F
 		lbsr	chrget
 		ldb	#90
+		pshs	b		; בית בקרה שלא בשימוש (קורא)
 		lbsr	fexpr
+		leas	1,s
 		lbsr	ayint
 		ldd	FACMO
 		coma
@@ -720,10 +732,13 @@ eval		clr	VALTYP
 		puls	a
 		tsta
 		bne	43F
+		pshs	a		; מקום למזהה הפונקציה, שנשאר במחסנית בזמן הארגומנט (קורא)
 		lbsr	frmevl
+		leas	1,s
 		lda	#')
 		lbsr	synchk
-43		rts			; קופצים לשגרה
+43		jsr	[,s++]		; קוראים לשגרה וחוזרים דרכה, כמו משגר הפונקציות במקור (MEM תלוי בעומק — קורא)
+		rts
 5		cmpa	#'A
 		lblo	err_sn
 		cmpa	#'Z

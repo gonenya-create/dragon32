@@ -108,9 +108,9 @@ await check('IF/ELSE (catalogue L-IF-01, L-ELSE-01), false IF skips the line, IF
 await check('nested ELSE pairs with the nearest IF (L-FLOW-08: ours, open on hardware)', ['10 IF 1 THEN IF 0 THEN PRINT "A"; ELSE PRINT "B"; ELSE PRINT "C";', '20 IF 0 THEN IF 1 THEN PRINT "A"; ELSE PRINT "B"; ELSE PRINT "C";', 'RUN'], screenHas(/RUN\nBC\nOK$/));
 await check('ELSE inside quotes or SQR/RND tokens is not an ELSE', ['IF 0 THEN PRINT "ELSE":A=SQR(4)+RND(1) ELSE PRINT "Y"'], screenHas(/\nY\nOK$/));
 await check('GOSUB/RETURN (L-RETURN-01), GO SUB with a space (L-FLOW-05), nested', ['10 GOSUB 30:PRINT "B";:GO SUB 40:PRINT "D":END', '30 PRINT "A";:RETURN', '40 GOSUB 30:PRINT "C";:RETURN', 'RUN'], screenHas(/RUN\nABACD\nOK$/));
-await check('GOSUB frame = 5 bytes on the stack: BD, calling line, text pointer at the line number (reader)', ['10 GOSUB 100', '100 STOP', 'RUN'], r => {
-  const f = [...r.ram.subarray(0x7f30, 0x7f36)]; const tp = f[3] * 256 + f[4];
-  return (f[0] === 0xbd && f[1] === 0 && f[2] === 10 && f[5] === 0 && r.ram[tp] === 0x31 && r.ram[tp - 1] === 0x20 && r.ram[tp - 2] === 0xbd) || `frame ${hex(f)} text@${tp.toString(16)}=${r.ram[tp]?.toString(16)}`;
+await check('GOSUB frame = 5 bytes on the stack: BD, calling line, text pointer at the line number; the statement return address (2) stays above it (reader)', ['10 GOSUB 100', '100 STOP', 'RUN'], r => {
+  const f = [...r.ram.subarray(0x7f2e, 0x7f36)]; const tp = f[3] * 256 + f[4];
+  return (f[0] === 0xbd && f[1] === 0 && f[2] === 10 && f[7] === 0 && r.ram[tp] === 0x31 && r.ram[tp - 1] === 0x20 && r.ram[tp - 2] === 0xbd) || `frame ${hex(f)} text@${tp.toString(16)}=${r.ram[tp]?.toString(16)}`;
 });
 await check('RETURN without GOSUB: ?RG; RETURN drops FOR loops opened inside the subroutine', ['10 GOSUB 30:PRINT "B":RETURN', '30 FOR I=1 TO 5:RETURN', 'RUN'], screenHas(/RUN\nB\n\?RG ERROR IN 10\nOK$/));
 await check('ON GOTO (L-ON-01), ON 0 and past the list fall through (L-FLOW-09), ON GOSUB (L-FLOW-10)',
@@ -146,8 +146,8 @@ await check('CLEAR n keeps MEMSIZ; string space is exactly n bytes (10 fit, 11 g
 await check('CLEAR too big: ?OM, nothing changes', ['CLEAR 40000', 'CLEAR 32700', 'CLEAR 200,32768'], r =>
   (w(r, 0x21) === 0x7f36 && w(r, 0x27) === 0x7ffe && /\nCLEAR 40000\n\?OM ERROR\nOK\nCLEAR 32700\n\?OM ERROR\nOK\nCLEAR 200,32768\n\?OM ERROR\nOK$/.test(r.screen.replace(/\n@$/, ''))) || `STKTOP ${w(r, 0x21).toString(16)} ` + r.screen.split('\n').slice(-6).join(' | '));
 await check('the stack moves with CLEAR: GOSUB frame right under the new STKTOP, zero at STKTOP-1', ['10 CLEAR 1000:GOSUB 20', '20 STOP', 'RUN'], r => {
-  const t = 0x7ffe - 1000; const f = [...r.ram.subarray(t - 6, t)];
-  return (f[0] === 0xbd && f[2] === 10 && f[5] === 0) || `STKTOP ${w(r, 0x21).toString(16)} frame ${hex(f)}`;
+  const t = 0x7ffe - 1000; const f = [...r.ram.subarray(t - 8, t)];
+  return (f[0] === 0xbd && f[2] === 10 && f[7] === 0) || `STKTOP ${w(r, 0x21).toString(16)} frame ${hex(f)}`;
 });
 await check('PCLEAR 1 / 8: program moves to $0C01 / $3601 with a zero before it, LIST and RUN still work (book + reader)', ['10 PRINT "HI";', '20 GOTO 40', '30 PRINT "BAD"', '40 PRINT "!"', 'PCLEAR 1', 'RUN', 'PCLEAR 8', 'RUN'], r =>
   (w(r, 0x19) === 0x3601 && r.ram[0x3600] === 0 && w(r, 0x1b) > 0x3601 && w(r, 0x3601) > 0x3601 && /PCLEAR 1\nOK\nRUN\nHI!\nOK\nPCLEAR 8\nOK\nRUN\nHI!\nOK$/.test(r.screen.replace(/\n@$/, ''))) || `TXTTAB ${w(r, 0x19).toString(16)} ` + r.screen.split('\n').slice(-8).join(' | '));
@@ -192,5 +192,39 @@ await check('JOYSTK: 0 refreshes all four (centre 31 in the emulator); 1-3 retur
 await check('USR: default targets give ?FC (reader); DEF USR3 and a numeric / string argument reach the routine', ['PRINT USR0(1)', 'POKE 1536,57:DEF USR3=1536:PRINT USR3(7);USR3("AB")'], screenHas(/\nPRINT USR0\(1\)\n\?FC ERROR\nOK\n.*\n.*\n 7 AB\nOK$/));
 await check('MEM is the free space between STREND and the stack', ['PRINT MEM>20000 AND MEM<30000'], screenHas(/\n-1\nOK$/));
 
+
+console.log('stage 2: closing items');
+// מקרי קצה בחשבון: 57 תוצאות שהקורא חישב מהמקור (rom2/tools/edge.json): הבתים של A ומה ש-PRINT מראה
+{
+  const { readFileSync } = await import('node:fs');
+  const rows = JSON.parse(readFileSync(new URL('./edge.json', import.meta.url), 'utf8'));
+  const bad = [];
+  for (const [e, bytes, shown] of rows) {
+    const r = await runRom([e.includes('A=') ? e : 'A=' + e, 'PRINT A'], { timeout: 5 });
+    const L = r.screen.replace(/\n@$/, '').split('\n');
+    if (shown.startsWith('?')) { if (!L.some(l => l.startsWith(shown + ' ERROR'))) bad.push(`${e}: want ${shown}`); continue; }
+    let v = w(r, 0x1b); while (v < w(r, 0x1d) && !(r.ram[v] === 0x41 && r.ram[v + 1] === 0)) v += 7;
+    const got = hex([...r.ram.subarray(v + 2, v + 7)]).toUpperCase();
+    const i = L.findIndex(l => l === 'PRINT A');
+    const out = (L[i + 1] || '').trim();
+    if (got !== bytes || out !== shown) bad.push(`${e}: got ${got} "${out}" / want ${bytes} "${shown}"`);
+  }
+  if (bad.length === 0) { pass++; console.log(`  ✓ arithmetic edge cases (reader, computed from the source): all ${rows.length} — bytes and PRINT`); }
+  else { fail++; console.log('  ✗ arithmetic edge cases\n      ' + bad.join('\n      ')); }
+}
+await check('MEM after power-on = 24871 (reader: S at the MEM call = $7F2A, 11 bytes below the main loop)', ['PRINT MEM'], outLines(' 24871'));
+await check('10 PRINT MEM : RUN = 24862 (reader)', ['10 PRINT MEM', 'RUN'], outLines(' 24862'));
+await check('MID$ statement (reader): 2 args, 3 args, longer replacement is cut, length kept', ['A$="HELLO"', 'MID$(A$,2)="XY"', 'PRINT A$', 'MID$(A$,2,1)="QQ"', 'PRINT A$', 'MID$(A$,4)="XYZW"', 'PRINT A$;LEN(A$)'], outLines('HXYLO', 'HQYLO', 'HQYXY 5'));
+await check('MID$ statement: start 0 → ?FC', ['A$="HELLO"', 'MID$(A$,0)="X"'], r => /\?FC ERROR/.test(r.screen) || r.screen.split('\n').slice(-3).join(' | '));
+await check('MID$ statement: start past the end → ?FC, even with an empty right side', ['A$="HELLO"', 'MID$(A$,6)=""'], r => /\?FC ERROR/.test(r.screen) || r.screen.split('\n').slice(-3).join(' | '));
+await check('MID$ statement: numeric target or right side → ?TM', ['MID$(A,1)="X"', 'A$="HI"', 'MID$(A$,1)=5'], r => (r.screen.match(/\?TM ERROR/g) || []).length === 2 || r.screen.split('\n').slice(-4).join(' | '));
+await check('MID$ statement on a string in the program text: copied first, the program is not changed', ['10 A$="HELLO"', '20 MID$(A$,1)="J"', '30 PRINT A$', 'RUN', 'LIST 10'], r =>
+  /RUN\nJELLO\nOK\nLIST 10\n10 A\$="HELLO"\nOK$/.test(r.screen.replace(/\n@$/, '')) || r.screen.split('\n').slice(-6).join(' | '));
+await check('JOYSTK (reader): JOYSTK(0) refreshes all four; a centred stick reads 31 in XRoar', ['PRINT JOYSTK(0);JOYSTK(1);JOYSTK(2);JOYSTK(3)'], outLines(' 31  31  31  31'));
+
+await check('MEM inside expressions (reader: stack frames as in the original): 1+MEM, (MEM), -MEM, ABS(MEM), A=MEM', ['PRINT 1+MEM', 'PRINT (MEM)', 'PRINT -MEM', 'PRINT ABS(MEM)', 'A=MEM:PRINT A'], outLines(' 24860', ' 24866', '-24865', ' 24863', ' 24865'));
+await check('MEM inside FOR = 24825 (reader)', ['10 FOR I=1 TO 1:PRINT MEM:NEXT', 'RUN'], outLines(' 24825'));
+await check('MEM inside GOSUB = 24841 (reader: record 5 + return address 2)', ['10 GOSUB 20:END', '20 PRINT MEM:RETURN', 'RUN'], outLines(' 24841'));
+await check('after RETURN the stack is balanced: 24871 - 23 program bytes = 24848', ['10 GOSUB 20:PRINT MEM:END', '20 RETURN', 'RUN'], outLines(' 24848'));
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

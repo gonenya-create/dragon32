@@ -536,10 +536,8 @@ fcomp		lda	,x
 		lda	3,x
 		cmpa	FACMO
 		bne	1F
-		lda	#$7f
-		cmpa	FACOV		; C=1 אם FACOV מעגל למעלה
-		lda	4,x
-		sbca	FACLO
+		lda	4,x		; Dragon: הבית הנוסף לא משתתף בהשוואה (קורא; ב-mit הוא כן)
+		suba	FACLO
 		beq	9F
 1		lda	FACSGN
 		bcs	fcomps		; המספר בזיכרון קטן יותר

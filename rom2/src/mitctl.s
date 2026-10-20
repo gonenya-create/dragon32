@@ -113,7 +113,7 @@ return		leas	2,s
 		std	CURLIN
 		ldd	3,x
 		std	TXTPTR
-		leas	5,x
+		leas	7,x		; הרשומה ועוד כתובת החזרה שמתחתיה (קורא)
 		bsr	data		; מדלגים עד סוף הפקודה שקראה (GOSUB או ON)
 		lbra	newstt
 

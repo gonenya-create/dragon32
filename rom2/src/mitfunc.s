@@ -401,8 +401,10 @@ fn_joy		lbsr	conint
 		ldb	b,x
 		clra
 		lbra	givu
-; joyrd: לכל ערוץ: הבורר (CA2 ו-CB2 של PIA0), וחיפוש בינרי של 6 ביט ב-DAC (PIA1 A, ביטים 2-7),
-; מול המשווה (PIA0 A, ביט 7). ערוץ 0 = ימין X, 1 = ימין Y, 2 = שמאל X, 3 = שמאל Y
+; joyrd (קורא): לכל ערוץ, 3 עד 0: הבורר (ביט 3 ב-$FF01 = ביט 0 של הערוץ, ב-$FF03 = ביט 1), ואז מדידה:
+; DAC מתחיל ב-128 עם צעד 64; כל השוואה (ביט 7 של $FF00) מוסיפה או מורידה את הצעד, והצעד נחצה; 6 השוואות
+; (64 עד 2), והתוצאה חלקי 4 = 0-63. אם היא שונה מהערך השמור של הערוץ, מודדים שוב, עד 10 פעמים בסך הכול.
+; אין שחזור: הבורר נשאר על ערוץ 0, וה-DAC על הניסיון האחרון שנכתב
 joyrd		ldb	#3
 1		pshs	b
 		lda	PIA0+1		; ביט 0 של הערוץ → CA2
@@ -419,29 +421,30 @@ joyrd		ldb	#3
 		beq	3F
 		ora	#$08
 3		sta	PIA0+3
-		clrb			; הערך
-		lda	#$20		; הביט הנבדק
-4		pshs	a
-		orb	,s
-		pshs	b
-		lslb
-		lslb
-		lda	PIA1
-		anda	#$03
+		lda	#10		; ניסיונות
 		pshs	a
-		orb	,s+
-		stb	PIA1
-		puls	b
-		lda	PIA0
-		bmi	5F		; המוט מעל ה-DAC: הביט נשאר
-		eorb	,s		; מתחת: מורידים אותו
-5		puls	a
+4		ldd	#$8040		; A = הקירוב, B = הצעד
+5		sta	PIA1		; הניסיון ל-DAC
+		pshs	b
+		tst	PIA0
+		bmi	6F		; המוט מעל ה-DAC: מוסיפים
+		suba	,s+
+		bra	7F
+6		adda	,s+
+7		lsrb
+		cmpb	#1
+		bne	5B
+		lsra			; 0-63
 		lsra
-		bne	4B
-		puls	a		; הערוץ
+		ldb	1,s		; הערוץ
 		ldx	#JOYVAL
-		stb	a,x
-		tfr	a,b
+		cmpa	b,x
+		beq	8F		; כמו הערך השמור: מסיימים
+		dec	,s
+		bne	4B
+8		sta	b,x
+		leas	1,s
+		puls	b
 		decb
 		bpl	1B
 		rts

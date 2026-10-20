@@ -338,3 +338,83 @@ substr		pshs	a,b,x
 		lbsr	movstr
 		leas	4,s
 		lbra	putnew
+
+; ---------- MID$ כפקודה: MID$(A$,n[,m])=B$ (קורא, docs/DRAGON-SPEC-FUNCTIONS.md) ----------
+; היעד שלא בשטח המחרוזות (למשל בתוך התוכנית) מועתק לשם קודם, כולו. n=0: ?FC לפני צד ימין.
+; n גדול מהאורך: ?FC אחרי צד ימין. מוחלפים min(m, אורך B$, מה שנשאר מ-n); האורך של A$ לא משתנה.
+; m=0 עם B$ לא ריק: מועתקים 256 בתים, כמו במקור (קורא: מונה שיורד אחרי ההעתקה הראשונה)
+midst		lbsr	chrget		; אחרי $FF
+		lbsr	chrget		; אחרי $98
+		lda	#'(
+		lbsr	synchk
+		clrb			; יוצרים משתנה אם אין
+		lbsr	ptrget
+		tst	VALTYP
+		lbeq	err_tm
+		ldx	VARPNT
+		pshs	x		; המתאר
+		ldd	2,x
+		cmpd	STKTOP
+		bls	1F
+		cmpd	MEMSIZ
+		bls	2F		; כבר בשטח המחרוזות: משנים במקום
+1		lda	,x		; מעתיקים את כל המחרוזת לשטח המחרוזות
+		lbsr	strspa
+		ldx	,s
+		lda	,x
+		ldx	2,x
+		lbsr	movstr
+		ldx	,s
+		ldd	DSCTMP+2
+		std	2,x
+2		lda	#',
+		lbsr	synchk
+		lbsr	frmevl
+		lbsr	conint
+		tstb
+		lbeq	err_fc		; אין מקום 0
+		pshs	b		; ההתחלה
+		ldb	#255		; ברירת מחדל
+		lbsr	chrgot
+		cmpa	#',
+		bne	3F
+		lbsr	chrget
+		lbsr	frmevl
+		lbsr	conint
+3		pshs	b		; כמה
+		lda	#')
+		lbsr	synchk
+		lda	#$cb		; =
+		lbsr	synchk
+		lbsr	frmevl
+		lbsr	frestr		; A = האורך, X = הכתובת
+		pshs	a,x		; 0=אורך B$, 1=כתובת, 3=כמה, 4=התחלה, 5=המתאר
+		ldu	5,s
+		lda	4,s
+		cmpa	,u
+		lbhi	err_fc		; התחלה מעבר לסוף
+		ldb	,u
+		subb	4,s
+		incb			; מה שנשאר מ-n
+		cmpb	3,s
+		bls	4F
+		ldb	3,s
+4		cmpb	,s
+		bls	5F
+		ldb	,s
+5		tst	,s
+		beq	7F		; B$ ריק: אין העתקה
+		pshs	b
+		ldb	5,s
+		decb
+		clra
+		addd	2,u
+		tfr	d,u		; לאן
+		ldx	2,s		; מאין
+		puls	b
+6		lda	,x+
+		sta	,u+
+		decb
+		bne	6B
+7		leas	7,s
+		rts
