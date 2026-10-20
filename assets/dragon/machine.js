@@ -612,11 +612,50 @@ export function createMachine({ view, sound, loadTape, saveTape, joy }) {
   function compileLine(text) {
     let c = compiled.get(text);
     if (!c) {
-      c = flatten(goWords(text), 0);
+      c = flatten(goWords(spaceWords(text)), 0);
       if (compiled.size > 500) compiled.clear();
       compiled.set(text, c);
     }
     return c;
+  }
+  // כמו ב-Dragon האמיתי: מילת פקודה מזוהה בכל מקום מחוץ למרכאות, גם בלי רווחים (FORI=1TO9, READA, IFA=1THENPRINTA).
+  // מוסיפים רק את הרווחים שהמפענח שלנו צריך. כמו במקור, גם שם משתנה שמסתתרת בו מילה (SCORE = SC OR E) מתפרק.
+  const WORDS = ['FOR','GO','REM','ELSE','IF','DATA','PRINT','ON','INPUT','END','NEXT','DIM','READ','LET','RUN','RESTORE','RETURN','STOP',
+    'POKE','CONT','LIST','CLEAR','NEW','CLOAD','CSAVE','OPEN','CLOSE','LLIST','SET','RESET','CLS','MOTOR','SOUND','AUDIO','EXEC','SKIPF',
+    'DEL','EDIT','TRON','TROFF','DEF','LINE','PCLS','PSET','PRESET','SCREEN','PCLEAR','COLOR','CIRCLE','PAINT','GET','PUT','DRAW','PCOPY',
+    'PMODE','PLAY','DLOAD','RENUM','TAB(','TO','SUB','FN','THEN','NOT','STEP','OFF','AND','OR','USING','AUTO',
+    'SGN','INT','ABS','POS','RND','SQR','LOG','EXP','SIN','COS','TAN','ATN','PEEK','LEN','STR$','VAL','ASC','CHR$','EOF','JOYSTK',
+    'FIX','HEX$','LEFT$','RIGHT$','MID$','POINT','INKEY$','MEM','VARPTR','INSTR','TIMER','PPOINT','STRING$','USR']
+    .sort((a, b) => b.length - a.length);
+  const AL = /[A-Z0-9.$]/;
+  function spaceWords(src) {
+    let out = '', i = 0, inData = false;
+    const put = w => { if (out && AL.test(out[out.length - 1])) out += ' '; out += w; };
+    while (i < src.length) {
+      const ch = src[i];
+      if (ch === '"') { const j = src.indexOf('"', i + 1); const e = j < 0 ? src.length : j + 1; out += src.slice(i, e); i = e; continue; }
+      if (inData) { if (ch === ':') inData = false; out += ch; i++; continue; }
+      if (ch === "'") return out + src.slice(i);
+      if (ch === '&' && /[HO]/.test(src[i + 1] || '')) { const m = /^&[HO][0-9A-F]*/.exec(src.slice(i)); out += m[0]; i += m[0].length; continue; }
+      if (/[A-Z]/.test(ch)) {
+        const w = WORDS.find(k => src.startsWith(k, i));
+        if (w) {
+          put(w); i += w.length;
+          if (w === 'REM') return out + src.slice(i);
+          if (w === 'DATA') inData = true;
+          if (w !== 'FN' && !w.endsWith('(') && /[A-Z0-9.]/.test(src[i] || '')) out += ' ';
+          continue;
+        }
+        // שם משתנה: אותיות וספרות, עד מילת הפקודה הבאה
+        let j = i + 1;
+        while (j < src.length && /[A-Z0-9]/.test(src[j]) && !WORDS.some(k => src.startsWith(k, j))) j++;
+        if (src[j] === '$') j++;
+        out += src.slice(i, j); i = j;
+        continue;
+      }
+      out += ch; i++;
+    }
+    return out;
   }
   // ב-Dragon האמיתי GO היה מילה בפני עצמה, ולכן GO TO ו-GO SUB (עם רווח) עבדו כמו GOTO ו-GOSUB.
   // מחליפים רק מחוץ למרכאות, ולא בתוך הערה (REM או ')
