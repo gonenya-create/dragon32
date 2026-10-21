@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The journey — Dragon 1982</title>
+<meta name="description" content="How I rebuilt the 1982 Dragon 32 in the browser, with AI, day by day.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;700&amp;display=swap">
+<style>
+:root { --bg: #0e0b09; --ink: #efe6d2; --muted: #c9bba5; --line: #4a3d31; --accent: #f2c94c; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.65 'IBM Plex Sans Hebrew', system-ui, sans-serif; }
+header { display: flex; align-items: center; gap: 12px; padding: 10px 16px; flex-wrap: wrap; }
+header b { font-size: 18px; }
+.tag { font-size: 13px; padding: 3px 10px; border-radius: 999px; background: #3a2a10; color: var(--accent); }
+header a:first-of-type { margin-inline-start: auto; }
+header a { color: var(--ink); text-decoration: none; border: 1.5px solid var(--line); border-radius: 8px; padding: 6px 12px; font-size: 14px; }
+main { max-width: 720px; margin: 0 auto; padding: 8px 16px 40px; }
+h1 { font-size: 26px; margin: 12px 0 8px; }
+h2 { font-size: 19px; margin: 26px 0 6px; color: var(--accent); }
+p, li { color: var(--ink); }
+ul { padding-inline-start: 22px; margin: 6px 0; }
+li { margin: 4px 0; }
+.muted { color: var(--muted); }
+a { color: var(--accent); }
+code { font-family: 'Courier New', monospace; }
+a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.ep { border-inline-start: 3px solid var(--line); padding-inline-start: 14px; margin: 22px 0; }
+.ep time { display: block; font-size: 14px; color: var(--muted); }
+.ep h2 { margin-top: 2px; }
+.lesson { background: #1c1610; border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; margin: 10px 0; }
+</style>
+</head>
+<body>
+<header>
+  <b dir="ltr">Dragon 1982</b><span class="tag">The journey</span>
+  <a href="/story/" lang="he" hreflang="he" data-lang="he">עברית</a>
+  <a href="/en/">← Back to the computer</a>
+</header>
+<main>
+<h1>The journey</h1>
+<p>In 1982 I was 13, and I got a Dragon 32 for my birthday. It was my first computer. I loaded games from cassettes, and sometimes the tape snapped or got stuck in the recorder, and everything started again from the top. Later I bought a disk drive, and it felt like magic.</p>
+<p>In October 2026 I started rebuilding it in the browser. I'm not a programmer; I build with AI. Here I write what happened, day by day: what we built, what I decided, and what I learned.</p>
+<p class="muted">Newest first. To try it: <a href="/en/">the app</a> · <a href="/en/lab/1982/">the Dragon machine</a></p>
+
+<section class="ep">
+<time datetime="2026-10-21">21 October 2026</time>
+<h2>The whole BASIC in one chip</h2>
+<p>Our ROM is complete: the whole BASIC in one 16K chip, like the original, with the cartridge slot left empty. In went the cassette in the original format and speed, the printer, a RESET that keeps your program, and the 25 extension hooks that cartridges used to plug into BASIC. 574 tests passed, I wrote "merge", and that evening it went live.</p>
+<p class="lesson"><strong>What I learned:</strong> the AI suggested fixing two "bugs". Before fixing, we sent the reader to check the original. One was a real bug; the other turned out to be exactly what the original does, and "fixing" it would have taken us further from the original. The AI is confident even when it is guessing.</p>
+</section>
+
+<section class="ep">
+<time datetime="2026-10-20">20 October 2026</time>
+<h2>One chip, and Ciaran answers</h2>
+<p>I decided the whole BASIC must fit in one 16K chip, like the original, with no extension chip. The experiment showed it was possible, but tight: sixteen rounds of saving space, byte by byte.</p>
+<p>I wrote to Ciaran Anscomb, who built the XRoar emulator, and he answered the same day: the exact cassette speed and other details no book has. The same day, a member of the Dragon owners' group told us that <code>READA</code> without a space didn't work for us. It did on the original, so we fixed it.</p>
+</section>
+
+<section class="ep">
+<time datetime="2026-10-19">19 October 2026</time>
+<h2>The principle</h2>
+<p>I stopped and wrote down the project's principle: <strong>the real computer, as close as we know how, without copying the original code.</strong> No shortcuts, however long it takes. Every decision is judged by one question: does this bring us closer to the original? Hence the new name, "the Dragon machine", and a work plan in stages that starts with research, not code.</p>
+</section>
+
+<section class="ep">
+<time datetime="2026-10-17">17 October 2026</time>
+<h2>The real computer</h2>
+<p>A long day. I shared a video of the computer in groups of old-computer fans, and the app got a new design, an English version, an accessibility page and a world Hall of Fame. In the evening "the real computer" was born: the XRoar emulator emulates the Dragon's chips, and on it runs a BASIC we wrote from scratch in the 6809's machine language.</p>
+<p>When I checked, I saw that from the outside it looked like the original, but not on the inside. Programs were stored in memory differently, and the chip filled up until we added a second chip in the cartridge slot. I decided to rebuild: on the BASIC that Microsoft published as open source, and "identical" would include memory too.</p>
+<p class="lesson"><strong>What I learned:</strong> it's easy to get excited about something that looks right. The real test is what happens inside.</p>
+</section>
+
+<section class="ep">
+<time datetime="2026-10-16">16 October 2026</time>
+<h2>A home of its own</h2>
+<p>The Dragon moved out of my personal site into a home of its own, dragon1982.com: an app you can install on your phone, open source, and our own power-on message instead of Dragon Data's.</p>
+</section>
+
+<section class="ep">
+<time datetime="2026-10-13">13 October 2026</time>
+<h2>A green screen</h2>
+<p>It started as a small corner of the <a href="https://www.gonenyarom.co.il/history/">"evolution of the machine"</a> page on my personal site: a green screen with a little BASIC we wrote in JavaScript. <code>PRINT</code>, <code>GOTO</code>, <code>FOR</code>, <code>SOUND</code>. By the end of that day there was a cassette with loading noise, "Guess the number", the first cartridge and a magazine program.</p>
+</section>
+
+<h2>Behind the scenes</h2>
+<ul>
+  <li><strong>Two rooms:</strong> the original ROM is under copyright. So one AI agent reads the original and reports only facts, in its own words. A second agent writes the code without ever seeing the original.</li>
+  <li><strong>Tests:</strong> every change passes hundreds of automatic tests. But tests only check what we knew to write, which is why people with a real machine matter.</li>
+  <li><strong>My rules:</strong> nothing goes live until I write "merge". No building before research. And nothing original of others goes in: no code, no games, no logos.</li>
+</ul>
+
+<h2>What's next</h2>
+<p>Old machine-code games jump to addresses inside the original ROM. Our routines sit elsewhere, so such games don't run yet. That's the next stage. <a href="/en/lab/1982/building/">What we are building now</a> · <a href="/en/dragon-history/">The history of the Dragon</a></p>
+</main>
+<script src="/assets/dragon/langpick.js" defer></script>
+</body>
+</html>
