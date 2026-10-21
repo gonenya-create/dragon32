@@ -730,3 +730,17 @@ html[lang="en"] .d32-helper-title { padding-right: 34px; }
 .d32.is-theater .d32-theater-btns > .d32-lab:hover { background: rgba(242, 201, 76, 0.1); }
 .d32.is-phone .d32-lab-shelf { display: block; order: -1; padding: 10px 12px; border: 1.5px dashed #f2c94c; border-radius: 10px; color: #f2c94c; font: 700 14px/1.4 var(--font-body); text-decoration: none; text-align: center; }
 .d32-lab:focus-visible { outline: 3px solid #f2c94c; outline-offset: 2px; }
+.d32.is-phone .d32-theater-btns > .d32-lab { display: inline-flex; align-items: center; padding: 5px 9px; border: 1.5px dashed #f2c94c; border-radius: 8px; font-size: 15px; line-height: 1.2; text-decoration: none; }
+@media (max-width: 399px) {
+  .d32.is-phone .d32-theater-bar, .d32.is-phone .d32-theater-btns { gap: 5px; }
+  .d32.is-phone .d32-bar-brand { gap: 6px; flex-shrink: 0; }
+  .d32.is-phone .d32-bar-brand b { font-size: 15px; }
+  .d32.is-phone .d32-status { padding: 3px 7px; }
+  .d32.is-phone .d32-theater-btns > :is(.d32-theater-exit, .d32-lang) { padding: 6px 7px; }
+  .d32.is-phone .d32-theater-btns > .d32-lab { padding: 5px 6px; }
+}
+@media (max-width: 359px) { .d32.is-phone .d32-status { display: none; } }
+.d32.is-phone .d32-theater-btns > .d32-lab .d32-lab-word { display: none; }
+.d32-hello-lab { display: none; }
+.d32.is-phone.is-off .d32-hello-lab { display: block; margin: 14px 8px 0; padding: 10px 12px; border: 1.5px dashed #f2c94c; border-radius: 10px; color: #f2c94c; font: 700 14px/1.4 var(--font-body); text-decoration: none; text-align: center; }
+.d32-hello-lab:focus-visible { outline: 3px solid #f2c94c; outline-offset: 2px; }

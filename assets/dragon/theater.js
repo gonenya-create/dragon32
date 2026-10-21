@@ -40,7 +40,8 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
     + '<button type="button" class="d32-theater-click" aria-pressed="true">' + tr('צליל מקשים', 'Key clicks') + '</button>'
     + '<button type="button" class="d32-theater-only">' + tr('מסך בלבד', 'Screen only') + ' ⛶</button>'
     // מכונת ה-Dragon (בבנייה): XRoar עם ה-BASIC שכתבנו, בדף נפרד
-    + '<a class="d32-lab" href="' + (EN ? '/en/lab/1982/' : '/lab/1982/') + '"><span aria-hidden="true">🧪</span> ' + tr('מכונת ה-Dragon', 'The Dragon machine') + '</a>'
+    // בטלפון רואים רק את 🧪 (אין מקום למילים), ולכן השם גם ב-aria-label
+    + '<a class="d32-lab" href="' + (EN ? '/en/lab/1982/' : '/lab/1982/') + '" aria-label="' + tr('מכונת ה-Dragon', 'The Dragon machine') + '"><span aria-hidden="true">🧪</span> <span class="d32-lab-word" aria-hidden="true">' + tr('מכונת ה-Dragon', 'The Dragon machine') + '</span></a>'
     + '<button type="button" class="d32-theater-exit"><span aria-hidden="true">📖</span> ' + tr('מדריך', 'Guide') + '</button>'
     // מעבר שפה: הדף השני (/ או /en/). הבחירה נשמרת (langpick.js)
     + (EN ? '<a class="d32-lang" href="/" lang="he" hreflang="he" data-lang="he">עברית</a>' : '<a class="d32-lang" href="/en/" lang="en" hreflang="en" data-lang="en">English</a>') + '</span>';
@@ -522,6 +523,12 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
     + '<p class="d32-hello-text">' + tr('זה <bdi dir="ltr">Dragon 32</bdi>, המחשב הביתי שיצא בוויילס. משחקים במחסניות ובקלטות, כותבים <bdi dir="ltr">BASIC</bdi>, ושואלים את העוזר.', 'This is the <bdi dir="ltr">Dragon 32</bdi>, the home computer from Wales. Play cartridges and tapes, write <bdi dir="ltr">BASIC</bdi>, and ask the helper.') + '</p>'
     + '<p class="d32-hello-go">' + tr('לוחצים על המתג, ומתחילים ↓', 'Press the switch to start ↓') + '</p>';
   tv.before(hello);
+  // ובטלפון, מתחת למחשב הכבוי: הדרך למכונת ה-Dragon (גונן, 21.10)
+  const helloLab = document.createElement('a');
+  helloLab.className = 'd32-hello-lab';
+  helloLab.href = EN ? '/en/lab/1982/' : '/lab/1982/';
+  helloLab.innerHTML = '<span aria-hidden="true">🧪</span> ' + tr('מכונת ה-<bdi dir="ltr">Dragon</bdi> (בבנייה): השבבים של ה-<bdi dir="ltr">Dragon 32</bdi>, עם <bdi dir="ltr">BASIC</bdi> שכתבנו', 'The <bdi dir="ltr">Dragon</bdi> machine (being built): the <bdi dir="ltr">Dragon 32</bdi> chips, with a <bdi dir="ltr">BASIC</bdi> we wrote');
+  tv.after(helloLab);
   function enterPhone() {
     if (phone || active) return;
     left = false;
