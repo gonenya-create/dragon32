@@ -110,7 +110,7 @@ setTimeout(() => document.documentElement.classList.remove('d32-booting'), 3000)
 <p class="mag-kicker" dir="ltr">TYPE-IN PROGRAM · 1983</p>
 <h2 id="mag-title" class="mag-title" dir="ltr">DRAGON DERBY</h2>
 <p class="mag-lead">תוכנית מעיתון. בשנות ה-80 עיתוני מחשבים הדפיסו תוכניות שלמות, וילדים ישבו שעות והקלידו אותן אות אחרי אות. מספיקה טעות אחת קטנה, והמחשב עונה <bdi dir="ltr">?SN ERROR</bdi>. זו תוכנית מקורית שלנו, בסגנון של אז: מרוץ סוסים קטן. מהמרים על סוס, ורואים מי מגיע ראשון.</p>
-<p class="mag-lead">איך: במחשב מקלידים <bdi dir="ltr">AUTO</bdi>, ואחריו את השורות (בלי המספרים, <bdi dir="ltr">AUTO</bdi> מוסיף אותם). בסוף <bdi dir="ltr">RUN</bdi>. או שהמחשב יקליד בשבילכם.</p>
+<p class="mag-lead">איך: במחשב מקלידים <bdi dir="ltr">AUTO</bdi>, ואחריו את השורות (בלי המספרים, <bdi dir="ltr">AUTO</bdi> מוסיף אותם; ב-<bdi>Dragon</bdi> המקורי הקלידו גם את המספרים). בסוף <bdi dir="ltr">RUN</bdi>. או שהמחשב יקליד בשבילכם.</p>
 <p class="mag-actions"><button type="button" class="mag-typein" data-typein="#listing-derby" data-target="#dragon-room" data-run="1">⌨ הקלד במחשב</button> <button type="button" class="mag-copy" data-copy="#listing-derby">📋 העתקה</button> <span class="mag-copied" role="status"></span></p>
 <details class="mag-code">
 <summary>הצג את הקוד (18 שורות)</summary>
@@ -148,10 +148,11 @@ setTimeout(() => document.documentElement.classList.remove('d32-booting'), 3000)
 <tr><th scope="row">המסך, המקלדת והצליל</th><td><bdi>JavaScript</bdi></td><td>ציור מחדש בדפדפן, בצבעים ובגופן של אז.</td></tr>
 <tr><th scope="row">4 המחסניות</th><td><bdi>JavaScript</bdi></td><td>משחקים חדשים שכתבנו ברוח המשחקים של אז. במקור, מחסניות נכתבו בשפת מכונה.</td></tr>
 <tr><th scope="row">6 הקלטות ותוכנית העיתון</th><td><bdi>BASIC</bdi></td><td>תוכניות שכתבנו, בשפה של ה-<bdi>Dragon</bdi>. אחרי הטעינה <bdi dir="ltr">LIST</bdi> מראה את הקוד.</td></tr>
+<tr><th scope="row">מכונת ה-<bdi>Dragon</bdi> (בבנייה)</th><td>שפת מכונה של 6809</td><td>ROM משלנו של 16K, שרץ על האמולטור <bdi>XRoar</bdi> של <bdi>Ciaran Anscomb</bdi> (רישיון <bdi>GPL</bdi>). את <bdi>XRoar</bdi> לא כתבנו אנחנו.</td></tr>
 <tr><th scope="row">העוזר</th><td><bdi>Claude</bdi></td><td>בינה מלאכותית של היום, שמכירה את ה-BASIC הזה.</td></tr>
 </tbody>
 </table>
-<p class="lab-link"><strong>🧪 שני מחשבים, ולכל אחד תפקיד.</strong> <strong>האפליקציה</strong> (כאן) היא הדרך הנוחה: היא מחקה את מה שרואים על מסך ה-<bdi>Dragon</bdi>, עם משחקים מוכנים, כרטיסי פקודות ועוזר. <strong>מכונת ה-<bdi>Dragon</bdi></strong> היא משהו אחר: השבבים של ה-<bdi>Dragon 32</bdi> מדומים בדפדפן (האמולטור <bdi>XRoar</bdi>), ועליהם רץ <bdi>BASIC</bdi> שכתבנו בעצמנו, במקום ה-ROM המוגן. היא עוד בבנייה, ומבפנים היא עוד לא זהה למקור. <a href="/lab/1982/">לנסות את מכונת ה-<bdi>Dragon</bdi></a> · <a href="/lab/1982/building/">מה אנחנו בונים עכשיו</a></p>
+<p class="lab-link"><strong>🧪 שני מחשבים, ולכל אחד תפקיד.</strong> <strong>האפליקציה</strong> (כאן) היא הדרך הנוחה: היא מחקה את מה שרואים על מסך ה-<bdi>Dragon</bdi>, עם משחקים מוכנים, כרטיסי פקודות ועוזר. <strong>מכונת ה-<bdi>Dragon</bdi></strong> היא משהו אחר: השבבים של ה-<bdi>Dragon 32</bdi> מדומים בדפדפן (האמולטור <bdi>XRoar</bdi>), ועליהם רץ <bdi>BASIC</bdi> שכתבנו בעצמנו, במקום ה-ROM המוגן. היא עוד בבנייה: ה-<bdi>BASIC</bdi> מתנהג כמו המקורי, אבל משחקים בשפת מכונה עוד לא רצים עליה. <a href="/lab/1982/">לנסות את מכונת ה-<bdi>Dragon</bdi></a> · <a href="/lab/1982/building/">מה אנחנו בונים עכשיו</a></p>
 </section>
 
 <section class="prose room-then" aria-label="אז והיום">
@@ -198,7 +199,7 @@ setTimeout(() => document.documentElement.classList.remove('d32-booting'), 3000)
 <div><dt dir="ltr">10 PRINT "HI"</dt><dd>שורה עם מספר לא רצה מיד. היא נשמרת בתוכנית, לפי סדר המספרים.</dd></div>
 <div><dt dir="ltr">RUN</dt><dd>מריץ את התוכנית.</dd></div>
 <div><dt dir="ltr">LIST</dt><dd>מציג את התוכנית. אחרי שטוענים משחק, אפשר לראות את הקוד שלו.</dd></div>
-<div><dt dir="ltr">AUTO</dt><dd>ממספר בשבילכם את השורות: 10, 20, 30. שורה ריקה מסיימת.</dd></div>
+<div><dt dir="ltr">AUTO</dt><dd>ממספר בשבילכם את השורות: 10, 20, 30. שורה ריקה מסיימת. (לא היה ב-<bdi>Dragon</bdi> המקורי, תוספת שלנו לנוחות.)</dd></div>
 <div><dt dir="ltr">NEW</dt><dd>מוחק את התוכנית ומתחיל מחדש.</dd></div>
 <div><dt dir="ltr">BREAK / Esc</dt><dd>עוצר תוכנית שרצה. יש גם כפתור "עצירה" על המסך.</dd></div>
 <div><dt dir="ltr">CLS 3</dt><dd>מנקה את המסך וצובע אותו. מספר מ-0 עד 8.</dd></div>
