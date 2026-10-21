@@ -169,9 +169,8 @@ stmtbl
 ; LLIST: אותו LIST, למדפסת (קורא: מדפסת 1.8). בסוף שניהם: סוף שורה מותנה, חזרה למסך, ו-OK
 llist		ldb	#$fe
 		stb	DEVNUM
-list_st		lbsr	do_list
-		lbsr	clsone
-		lbra	main_ok
+list_st		leas	2,s		; בלי החזרה ל-gone, כמו במקור: BREAK בין השורות לא משאיר כלום במחסנית (קורא)
+		lbra	do_list		; והסוף: clsone ו-OK (שם)
 rem					; עד סוף השורה. X = TXTPTR (מ-chrget של המשגר)
 1		tst	,x+
 		bne	1B

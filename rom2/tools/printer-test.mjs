@@ -88,6 +88,14 @@ try {
   ok('LIST: שורה של בדיוק 32 תווים בלי שורה ריקה אחריה', r.screen.includes('LIST\n10 REM' + 'X'.repeat(26) + '\n20 REM\nOK'), show(r.screen));
   r = await lp(['10 LIST', '20 PRINT "NO"', 'RUN']);
   ok('LIST בתוכנית: עוצר ב-OK (כמו במקור)', !r.screen.includes('\nNO') && r.screen.trimEnd().endsWith('OK'), r.screen);
+  {
+    // מחסנית אחרי BREAK באמצע LIST: כמו אחרי STOP (קורא: LIST זורק את החזרה ל-gone, ו-BREAK את החזרה מבדיקת המקלדת)
+    const mc = 'POKE 1536,31:POKE 1537,64:POKE 1538,253:POKE 1539,6:POKE 1540,16:POKE 1541,57';
+    const sp = 'EXEC 1536:PRINT PEEK(1552)*256+PEEK(1553)';
+    const prog = ['10 LIST']; for (let i = 20; i < 400; i += 10) prog.push(`${i} REM ${'X'.repeat(20)}`);
+    const a = await lp([mc, ...prog, '5 STOP', 'RUN', sp]), b = await lp([mc, ...prog, 'RUN', '\x03', sp]);
+    ok('BREAK באמצע LIST: המחסנית כמו אחרי STOP', b.screen.includes('BREAK IN 10') && lastNums(a.screen)[0] === lastNums(b.screen)[0], `${lastNums(a.screen)} ${lastNums(b.screen)}`);
+  }
 
   console.log('ההתחלה החמה ונקודות החיבור (3.1-3.6, 7.4)');
   r = await lp(['10 PRINT "KEPT"', 'A=5', 'EXEC PEEK(49150)*256+PEEK(49151)', 'LIST', 'PRINT A']);

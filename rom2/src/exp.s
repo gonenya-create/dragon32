@@ -683,7 +683,12 @@ dlist2		lbsr	fndlin		; D = השורה הראשונה, LEND = האחרונה (CSA
 		puls	y
 		ldy	,y
 		bra	3B
-9		lbra	condcr		; והאחרונה נגמרת בסוף שורה מותנה
+9		lbsr	condcr		; והאחרונה נגמרת בסוף שורה מותנה
+		lbsr	istape
+		beq	8F		; קלטת (CSAVE ,A): חזרה למי שקרא
+		lbsr	clsone		; LIST / LLIST: סוגרים, ו-OK
+		lbra	main_ok
+8		rts
 
 ; prline: טקסט מכווץ ב-X עד 0. נקודתיים לפני ELSE ו-' לא מוצגים (קורא)
 prline		leax	-4,x		; 25: עם X = הקישור של השורה
@@ -815,7 +820,9 @@ gl_done		clr	,x
 		pshs	cc
 		lbsr	prcr
 		puls	cc,b,x,pc
-banner		fcc	"DRAGON 1982 BASIC STAGE 1"
+banner		fcc	"DRAGON 1982 BASIC 1.0"	; כמו במחשב הראשי של האתר
+		fcb	13
+		fcc	"(C) 2026 GONEN YAROM"
 		fcb	13,13		; ממשיך ב-m_ok
 m_ok		fcc	"OK"
 		fcb	13,0

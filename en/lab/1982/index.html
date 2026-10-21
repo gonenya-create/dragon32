@@ -127,7 +127,7 @@ var Module = {
   print: () => {}, printErr: () => {},
   onRuntimeInitialized: () => { window.d32Ready = true; },
   preRun: [function () {
-    // שני שבבים: ה-BASIC ($8000) ושבב ההרחבה בחריץ המחסנית ($C000)
+    // שבב אחד: כל ה-BASIC ב-16K ($8000-$BFFF). חריץ המחסנית ריק
     for (const f of ['d32.rom']) {
       addRunDependency(f);
       fetch('/lab/1982/' + f).then(r => r.arrayBuffer()).then(b => { FS.writeFile('/' + f, new Uint8Array(b)); removeRunDependency(f); });
