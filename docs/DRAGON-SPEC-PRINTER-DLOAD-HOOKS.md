@@ -312,7 +312,7 @@ On RESET the ROM always re-runs **hardware init** (PIAs, SAM, 6551 on the D64) f
 
 ### 3.6 The 25 RAM hooks
 
-**Common contract:** every hook is called with a 2-byte JSR **at the very top of its routine**, before the routine has pushed anything (unless noted). Its initial content is three RTS bytes, so it returns at once with **all registers and CC unchanged**. A replacement normally either (a) does its job and returns, letting the ROM routine carry on with the registers as the hook left them, or (b) discards its own return address (2 bytes) and finishes the job itself, returning straight to the ROM routine's caller. The ROM never checks a return value except where noted ("flags used"). Inputs listed are what the ROM has in registers/RAM at the call.
+**Common contract:** every hook is called with a 3-byte extended JSR (opcode + 16-bit address $01xx; it pushes a 2-byte return address) **at the very top of its routine**, before the routine has pushed anything (unless noted). Its initial content is three RTS bytes, so it returns at once with **all registers and CC unchanged**. A replacement normally either (a) does its job and returns, letting the ROM routine carry on with the registers as the hook left them, or (b) discards its own return address (2 bytes) and finishes the job itself, returning straight to the ROM routine's caller. The ROM never checks a return value except where noted ("flags used"). Inputs listed are what the ROM has in registers/RAM at the call.
 
 | # | Addr | Called from | At the call | Notes / effect of what the hook returns |
 |---|---|---|---|---|
@@ -409,3 +409,107 @@ Taken from the listing's assembled addresses (32K-mode build).
 5. **$011F:** 5 in this source (a D64 repeat rate); the D32 value is unknown.
 6. **D64 32K-mode key repeat:** in this listing the 32K-mode IRQ vector skips the D64 repeat/serial wedge, so the repeat countdown would never run in 32K mode. That's odd and may mean the listing predates the shipped ROM. It doesn't affect the D32.
 7. TRON output landing on the printer during PRINT #-2 (1.9): theoretical; not traced.
+
+---
+
+## 7. Follow-up (writer's questions)
+
+### 7.1 The 13-byte table copied to $8F–$9B (scan-checked)
+
+| Addr | Value | Meaning |
+|---|---|---|
+| $8F | $32 (50) | Cursor blink counter reload. The keyboard-wait loop calls "blink" once per pass. Each call decrements $8F. When it hits 0 it reloads 50 and toggles bit 6 of the character at the cursor. Every call then waits ≈10 ms (a 1118-count delay loop) |
+| $90–$91 | **$01, $00** (256) | Leader length. **This source has 256, not 0,128.** Your "0,128" ($0080 = 128) is the assumed D32 value; it isn't in this source (TAPE spec 7) |
+| $92 | $12 (18) | Bit threshold |
+| $93 | $0A (10) | Half-cycle short/long threshold |
+| $94 | $12 (18) | Half-cycle maximum |
+| $95–$96 | $DA, $5C (218, 92) | Motor delay (55,900) |
+| **$97–$98** | **$04, $5E (1118)** | **Keyboard debounce delay count.** When the keyboard scan sees a change in a column, it waits this many counts of a delay loop (8 cycles per count ≈ 8,944 cycles ≈ **10.1 ms**). Then it re-reads that column; if the rows differ from the first reading, the key is ignored |
+| $99 | $10 | Printer comma width |
+| $9A | $74 | Printer last comma field |
+| $9B | $84 | Printer width |
+
+So $8F–$96 = 50, **1, 0**, 18, 10, 18, 218, 92 in this source. Everything else matches yours.
+
+### 7.2 Device parameters for the screen and the tape
+
+Device-parameter routine. Entry: any registers. A, B and X are preserved; CC changes. Steps: clear $6E, then branch on $6F.
+
+| | $6A comma width | $6B last comma field | $6C position | $6D width | $6E | Z on exit |
+|---|---|---|---|---|---|---|
+| 0 screen | 16 | 16 | **low byte of the cursor address ($89) AND 31**, i.e. the cursor column 0–31 | 32 | 0 | **0** (width ≠ 0) |
+| −1 tape | 1 | 0 | 0 | 0 | **$FF** | **1** (width = 0, "infinite") |
+| −2 / $FD printer | ($99) | ($9A) | ($9C) | ($9B) | 0 | 1 only if $9B = 0 |
+
+The screen position always comes from the cursor address ($88–$89), even when a graphics mode is displayed. Z is set by storing the width (the last store), so Z = (width = 0).
+
+**PRINT comma on the screen, step by step:**
+1. Fetch the parameters: comma width 16, last field 16, position = column, width 32 (Z = 0).
+2. If the column is **< 16**: count = 16 − (column mod 16). The ROM repeatedly subtracts 16 until it borrows, then negates; for columns 0–15 that gives 16 − column, so column 0 gives **16 spaces**. If $6E isn't set (on the screen it isn't), output that many spaces, so the cursor ends at column 16.
+3. If the column is **≥ 16**: output a CR (on the screen the CR clears to the end of the line and moves to column 0 of the next line). **No spaces are added**; the next item starts at column 0.
+4. Then fetch the next character and continue the list. A statement end straight after the comma gives no CR.
+
+With an infinite-width device (tape) step 2 always runs with the raw position, and then the tape ignores the spaces because $6E is set.
+
+### 7.3 Hardware init values and interrupt enabling
+
+Hardware init (run on **every** power-up and RESET, and by the cartridge handler):
+- **PIA0:** write $00 to $FF01 and $FF03 (selects the DDRs, interrupts off). DDRA $FF00 = $00 (all inputs). DDRB $FF02 = $FF (all outputs). Then $34 to **$FF01** and **$FF03**. $34 means: data register selected, CA2/CB2 = output held **low**, IRQ input on the **falling** edge, **IRQ disabled**. So the horizontal-sync (CRA) and field-sync (CRB) interrupts are both off, and the sound source select lines (CA2/CB2) are 0,0.
+- **PIA1:** write $00 to $FF21 and $FF23. DDRA $FF20 = $FE (bit 0 input). DDRB $FF22 = $F8 (bits 0–2 inputs). Then $34 to **$FF21** (motor off) and **$FF23** (sound-enable CB2 low = off, cartridge interrupt disabled). Then $00 to $FF20 and $00 to $FF22 (VDG text mode).
+- SAM: all 16 control bits cleared, then the display base is set to $0400 (F1). **D64 only:** the 64K memory bit is set, and the 6551 is set up.
+
+**Cartridge interrupt:** enabled straight after hardware init, still in the power-up/reset path **before** the restart test. That means **at both cold and warm start**: **$37** is written to **$FF23**. $37 means: CB1 interrupt **enabled**, active on the **rising** edge, data register selected, CB2 output low (sound still off). It's only effective once the F bit is cleared.
+
+**Field-sync (50/60 Hz) IRQ:** enabled by OR-ing bit 0 into **$FF03** (so it becomes $35). In the cold path this happens after the graphics init and before the disk-ROM test. In the warm entry it happens as the second step (7.4).
+
+**Unmask:** "AND CC with $AF", which **clears bit 6 (F) and bit 4 (I)** together. At cold start this happens after the "DK" disk-ROM test, just **before the sign-on message is printed**. (If a cartridge is plugged in, its FIRQ can fire right here; see 3.4.) At warm start it's step 5 of 7.4. The statement loop and "motor off" do the same AND before every statement.
+
+### 7.4 Warm start
+
+- **$72–$73** points to BASIC's warm entry; the cold start sets it just after the sign-on. The **first byte there is $12** (the NOP opcode). The reset code checks that $71 = $55 and that the target's first byte is $12 before jumping. It jumps with a temporary stack at $03D7 (top of the line buffer) and **after** hardware init and the $FF23 = $37 write.
+- **BASIC's warm entry, in order:**
+  1. Clear the PLAY note counter $E3–$E4 (so the IRQ doesn't think a note is playing).
+  2. Enable the field-sync IRQ (OR bit 0 into $FF03).
+  3. $6F = 0.
+  4. Stack reset: the temporary-string pointer $0B–$0C goes back to the start of the descriptor area ($01A9), and S = the stack top ($21–$22). A zero byte is pushed (bottom-of-stack marker, so FOR/GOSUB records are gone). CONT is forbidden ($2D–$2E = 0), and the subscript flag $08 = 0.
+  5. Unmask IRQ and FIRQ (CC AND $AF).
+  6. **Clear the screen** (green-space fill $60 over $0400–$05FF, cursor to $0400).
+  7. Go to the READY path. Its conditional CR prints nothing (column 0), then "OK" and the line loop.
+- **Kept:** the program, variables and string space (only the string temporaries are reset). The DATA pointer, **TRON** ($AF isn't touched), the tape-file state $78 and buffer, the printer state, all of $0100–$01FF, TIMER.
+- **Sound and motor:** not stopped by the warm entry itself, but by the hardware init just before it. The motor relay goes off (CA2 low), the sound enable goes off (CB2 low), the sound source goes back to the DAC, and the DAC = 0. A SOUND or PLAY in progress is simply abandoned (RESET interrupts it). The SOUND countdown $8D–$8E isn't cleared; it just runs down in the IRQ.
+
+### 7.5 The command-table descriptors
+
+**Layout of each 10-byte descriptor:**
+
+| Offset | Size | Content |
+|---|---|---|
+| 0 | 1 | Number of statement-type words in this list (0 = end of active lists) |
+| 1 | 2 | Address of that word list |
+| 3 | 2 | Descriptor 0: address of the statement **jump table**. Other descriptors: address of a statement **dispatch routine** |
+| 5 | 1 | Number of function words (0 = end) |
+| 6 | 2 | Address of the function word list |
+| 8 | 2 | Descriptor 0: address of the function jump table. Others: a function dispatch routine |
+
+Descriptor 0 = $0120–$0129, descriptor 1 = $012A–$0133 (counts 0, both routine words = the ?SN entry, list pointers 0). "Descriptor 2" would start at $0134, which **is the USR table**. So if an extension makes descriptor 1 active, the walk then reads $0134 as a count. That's the high byte of the ?FC address, which is non-zero, so it reads garbage. The original comments say a user of descriptor 1 must move the USR table first (it's reached through the pointer at $B0–$B1).
+
+**Do the routines walk the RAM descriptors?** Yes, all of them read these RAM copies:
+- **Crunch:** walks descriptors 0, 1, … for statement-type words, stopping at the first with a zero count. If there's no match, it walks again for function words (fields 5–6). The token number **starts at 0 and keeps counting across descriptors**, adding 1 for every word skipped. So descriptor-1 statement words get tokens **$80 + (descriptor-0 statement count) + index**, and descriptor-1 function words get **$FF, then $80 + (descriptor-0 function count) + index**. Words are matched in list order, descriptor 0 first, and a word matches if its letters equal the input with the last letter flagged by bit 7. There are at most 127 statement-type and 127 function tokens in total.
+- **Decrunch (LIST):** takes the token with bit 7 removed (for $FF tokens, the second byte). It subtracts each descriptor's count in turn until the result goes negative; the word list of that descriptor is used. A token beyond all active lists (it reaches a descriptor with count 0) is listed as **"!"**.
+- **Statement dispatch:** a statement token ≤ the last descriptor-0 **statement** token is dispatched through the jump table whose address is in **RAM $0123–$0124**. A token above that but ≤ the last descriptor-0 **normal** token (the non-statement words such as TO, THEN, TAB() gives ?SN. A token above that **jumps indirect through $012D–$012E** (descriptor-1 routine; ?SN by default). At that jump: A = the token, TXTPTR still points **at** the token (the next character hasn't been fetched), and the statement loop's return address is on the stack. A $FF prefix in statement position goes to the function-assignment path instead (MID$, TIME, then hook 23, then ?SN).
+- **Function dispatch:** the second token byte is doubled, dropping bit 7. If the result is > twice the last descriptor-0 function number, it **jumps indirect through $0132–$0133** (descriptor-1 function routine; ?SN by default). At that jump: **B = 2 × (token − $80) (mod 256)**, A = the character after the token (already fetched), and the expression evaluator's return is on the stack. Otherwise the descriptor-0 table address is read from **RAM $0128–$0129**.
+
+### 7.6 Hook call size
+
+Yes: each hook call is a **3-byte extended JSR** (opcode $BD + the 16-bit address $015E…$01A6). "2-byte" in 3.6 was the size of the return address it pushes; I've fixed 3.6. A hook that wants to take over discards those 2 bytes.
+
+### 7.7 Exact placement of hooks 21 and 10
+
+**Statement loop, per statement, in order:**
+1. **Hook 21 ($019A)**: the very first thing, with interrupts still in whatever state the previous statement left them.
+2. Unmask IRQ+FIRQ (CC AND $AF).
+3. Keyboard poll: BREAK → STOP; SHIFT-@ → pause until another key; any other key is saved in $87 for INKEY$.
+4. Save TXTPTR in $2F–$30 and look at the current character: ":" → go to the dispatcher. 0 → end of line: if the next link is zero, the program has finished; otherwise load the new line number into $68–$69. **If TRON is on ($AF ≠ 0), print "[", the line number, "]" here**, at the start of each new line only, not for statements after ":". Then go to the dispatcher. Anything else → ?SN.
+5. **Dispatcher:** fetch the first byte of the statement. A terminator (empty statement) returns to step 1 without calling hook 10. Otherwise **hook 10 ($0179)**, with A = that byte. Then the token test and dispatch.
+
+So hook 10 comes **after** the TRON output, and it's skipped for empty statements. The dispatcher (step 5) is also entered directly by IF…THEN/ELSE for a statement after THEN/ELSE, so hook 10 runs for those statements too, while hook 21 doesn't run again until the next statement boundary. Those are the only two callers of the dispatcher (the statement loop and the THEN/ELSE path; the extension module names it but never calls it).

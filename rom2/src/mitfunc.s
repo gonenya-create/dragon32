@@ -9,6 +9,10 @@ RNDX		equ	$0116		; קורא: מצב ה-RND, 32 ביט (ב-$0115 נשאר $80)
 RACC		equ	$ea		; פנימי: המכפלה של RND, 8 בתים
 CELL		equ	$86		; קורא: מסכת הנקודה של POINT
 LPTPOS		equ	$9c		; קורא: עמודת המדפסת
+LPTCFW		equ	$99		; המדפסת: רוחב שדה הפסיק, ואחריו ($9A) השדה האחרון (קורא: מדפסת 1.5)
+LPTWID		equ	$9b		; רוחב השורה של המדפסת
+LPAUTO		equ	$0148		; ≠0: שורה מלאה = ירידת שורה של המדפסת עצמה
+LPEOL		equ	$014a		; רצף סוף השורה: כמה, ואחריו עד 6 בתים
 USTBAD		equ	$b0		; קורא: הטבלה של USR, $0134
 USRTAB		equ	$0134		; קורא: עשר כתובות USR
 JOYVAL		equ	$015a		; ספר + קורא: ארבע דגימות הג'ויסטיק
@@ -272,19 +276,18 @@ fn_strng	lbsr	evbyte
 4		lbra	putnew
 
 ; ---------- POS, MEM, VARPTR, TIMER (קורא) ----------
+; POS(n) (קורא: מדפסת 1.9): ההתקן כמו ב-PRINT #, בדיקת "פתוח לכתיבה", והמקום מפרמטרי ההתקן.
+; ההתקן הקודם חוזר אחר כך
 fn_pos		lbsr	chknum
-		lbsr	ayint		; INT, בין -32768 ל-32767
-		ldd	FACMO
-		beq	1F
-		addd	#1		; -1 קלטת: בשלב הקלטת
-		lbeq	err_no
-		addd	#1		; -2 מדפסת
-		lbne	err_dn
-		ldb	LPTPOS
-		bra	3F
-1		ldb	CURSOR+1	; המסך: העמודה 0-31
-		andb	#$1f
-3		lbra	givb
+		lda	DEVNUM
+		pshs	a
+		lbsr	devfac
+		lbsr	chkout
+		lbsr	devpar
+		puls	a
+		sta	DEVNUM
+		ldb	DEVPOS
+		lbra	givb
 fn_mem		tfr	s,d		; S בכניסה פחות STREND, בלי סימן (קורא)
 		subd	STREND
 		lbra	givu

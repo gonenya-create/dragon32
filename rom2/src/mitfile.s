@@ -2,6 +2,10 @@
 ; הכול לפי הקורא: docs/DRAGON-SPEC-TAPE.md, סעיפים 2-3 (עובדות בלבד, בלי קוד). נכתב מאפס.
 ; צעד 3: ההתקנים, קובצי נתונים (OPEN, CLOSE, PRINT #, INPUT #, EOF) וקובצי ASCII (סעיפים 3.3-3.13, 4).
 
+DEVCFW		equ	$6a		; פרמטרי ההתקן (קורא: מדפסת 1.6, 7.2): רוחב שדה הפסיק
+DEVLCF		equ	$6b		; תחילת שדה הפסיק האחרון
+DEVPOS		equ	$6c		; המקום בשורה
+DEVWID		equ	$6d		; רוחב השורה (0 = אין סוף)
 SPCIO		equ	$6e		; קלט-פלט מיוחד: $FF כשההתקן הוא הקלטת (קורא 4.4)
 DEVNUM		equ	$6f		; ההתקן: 0 מסך/מקלדת, $FF קלטת, $FE מדפסת
 EOFFLG		equ	$70		; סוף קובץ: נדלק כשהחוצץ ריק בקריאת תו
@@ -260,8 +264,6 @@ cs_asc		clra
 		lda	#$ff
 		sta	DEVNUM
 		sta	SPCIO
-		lda	#13
-		lbsr	chrout
 		ldd	#$ffff
 		std	LEND
 		clra
@@ -369,14 +371,18 @@ chrout		tst	DEVNUM
 		lbeq	putc
 		pshs	a,b,x,y
 		bsr	istape
-		bne	9F
+		beq	0F
+		lda	,s		; לא קלטת: המדפסת ($FE)
+		bsr	prtout
+		bra	9F
+0
 		ldb	FSTATE
 		cmpb	#2
 		bne	9F
 		ldb	CBFCNT
 		cmpb	#255
 		bne	1F
-		bsr	wbuf
+		lbsr	wbuf
 		clrb
 1		ldx	#TBUF
 		abx
@@ -384,6 +390,78 @@ chrout		tst	DEVNUM
 		sta	,x
 		inc	CBFCNT
 9		puls	a,b,x,y,pc
+; devpar: פרמטרי ההתקן שב-DEVNUM ל-$6A-$6E (קורא: מדפסת 1.6, 7.2). Z=1 כשהרוחב 0. האוגרים נשמרים
+; מסך: 16, 16, העמודה, 32. קלטת: 1, 0, 0, 0 (ו-SPCIO=$FF). מדפסת: $99, $9A, $9C, $9B
+devpar		pshs	a,b
+		ldb	DEVNUM
+		beq	1F
+		incb
+		beq	2F
+		ldd	LPTCFW		; $99/$9A
+		std	DEVCFW
+		lda	LPTPOS
+		ldb	LPTWID
+		bra	3F
+1		ldd	#$1010
+		std	DEVCFW
+		lda	CURSOR+1
+		anda	#$1f
+		ldb	#32
+3		std	DEVPOS
+		clr	SPCIO
+		bra	9F
+2		ldd	#$0100
+		std	DEVCFW
+		clra
+		std	DEVPOS
+		coma
+		sta	SPCIO
+9		tst	DEVWID
+		puls	a,b,pc
+
+; ---------- המדפסת ($800F; קורא: מדפסת 1.2-1.4) ----------
+; prtout: התו ב-A למדפסת. 13 לא נשלח: במקומו רצף סוף השורה ($014A), ולפניו רווח אם השורה ריקה.
+; תו מ-$20 מקדם את המקום ($9C); כשהמקום מגיע לרוחב: עם $0148 ≠ 0 המקום חוזר ל-0 (המדפסת יורדת שורה
+; לבד), ועם 0 נשלח סוף שורה. A, B ו-X נשמרים
+prtout		pshs	a,b,x
+		cmpa	#13
+		beq	2F
+		cmpa	#$20
+		blo	1F
+		inc	LPTPOS
+1		bsr	lpsend
+		lda	LPTPOS
+		cmpa	LPTWID
+		blo	9F
+		tst	LPAUTO
+		beq	2F
+		clr	LPTPOS
+9		puls	a,b,x,pc
+2		tst	LPTPOS		; סוף שורה
+		bne	3F
+		lda	#$20
+		bsr	lpsend
+3		ldx	#LPEOL
+		ldb	,x+		; כמה בתים (עד 6)
+		beq	5F
+4		lda	,x+
+		bsr	lpsend
+		decb
+		bne	4B
+5		clr	LPTPOS
+		puls	a,b,x,pc
+; lpsend: בית אחד. מחכים לסוף ה"עסוק" ($FF22 ביט 0) בלי הגבלה ובלי BREAK; הנתון ל-$FF02, ופעימה
+; בביט 1 של $FF20 (1 ואז 0; גם ה-DAC מתאפס). ב-Dragon 32 בלי המתנה למקלדת (קורא 1.2: הסקה)
+lpsend		pshs	b
+1		ldb	PIA1+2
+		lsrb
+		bcs	1B
+		sta	PIA0+2
+		ldb	#2
+		stb	PIA1
+		clr	PIA1
+		puls	b,pc
+
 ; wbuf: החוצץ כבלוק נתונים, עם מבוא ומנוע משלו
 wbuf		lda	#1
 		sta	BLKTYP

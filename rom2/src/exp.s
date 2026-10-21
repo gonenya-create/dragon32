@@ -53,7 +53,11 @@ LINBUF		equ	$02dd		; מאגר השורה (קורא: BUF ב-$02DD)
 LINMAX		equ	249
 CRB		equ	$02dc		; השורה המכווצת: במקום, בתוך מאגר השורה, בית אחד לפני הקלט (קורא: קלטת 11).
 					; הגרש (1 → 2 בתים) קורה פעם אחת לכל היותר, ובית הפתיחה מספיק
-STACKINI	equ	$7f36		; ספר: STKTOP אחרי ההדלקה
+STACKINI	equ	$7f36
+RSTFLG		equ	$71		; $55: ‏RESET חוזר ל-BASIC (קורא: מדפסת 3.5)
+RSTVEC		equ	$72		; לאן חוזרים ב-RESET
+HOOKS		equ	$015e		; 25 נקודות חיבור, 3 בתים כל אחת (קורא: מדפסת 3.6)
+DESC1		equ	$012a		; מתאר הפקודות השני (קורא 3.2)		; ספר: STKTOP אחרי ההדלקה
 
 ; ---------- הכניסות הקבועות ב-$8000 (docs/DRAGON-SPEC-INTERFACES.md 3ג, DRAGON-SPEC-TAPE.md 1.10) ----------
 		jmp	hw_init		; $8000 אתחול חומרה (חוזר דרך Y)
@@ -61,7 +65,7 @@ STACKINI	equ	$7f36		; ספר: STKTOP אחרי ההדלקה
 		jmp	inkey		; $8006 מקלדת
 		jmp	blink		; $8009 הבהוב הסמן
 		jmp	putc		; $800C פלט למסך
-		jmp	noserv		; $800F פלט למדפסת (בהמשך)
+		jmp	prtout		; $800F פלט למדפסת
 		jmp	joyrd		; $8012 ג'ויסטיקים
 		jmp	tmoton		; $8015 מנוע דולק
 		jmp	motoff		; $8018 מנוע כבוי
@@ -79,8 +83,20 @@ reset		orcc	#$50
 		sta	SAM+26
 		sta	SAM+29
 		lds	#STACKINI
-		leay	swinit,pcr
+		leay	rst2,pcr
 		lbra	hw_init
+; rst2: אחרי אתחול החומרה, בכל הדלקה ואיפוס: פסיקת המחסנית דולקת ($FF23 = $37). אחר כך התחלה חמה, אם
+; RSTFLG = $55 והבית בכתובת שב-RSTVEC הוא NOP ($12); אחרת התחלה קרה (קורא: מדפסת 3.5, 7.3, 7.4)
+rst2		lda	#$37
+		sta	PIA1+3
+		lda	RSTFLG
+		cmpa	#$55
+		bne	swinit
+		ldx	RSTVEC
+		lda	,x
+		cmpa	#$12
+		bne	swinit
+		jmp	,x
 swinit		orcc	#$50
 		lds	#STACKINI
 		ldx	#$0400		; ניקוי ראשון של $0000-$03FF (קורא: "הניקוי הראשוני")
@@ -100,10 +116,17 @@ swinit		orcc	#$50
 		decb
 		bne	2B
 		bra	1B
-3		lda	PIA0+2
+3		ldx	#HOOKS		; 25 נקודות החיבור: RTS RTS RTS (קורא: מדפסת 3.6)
+		lda	#$39
+4		sta	,x+
+		cmpx	#HOOKS+75
+		bne	4B
+		leax	err_sn,pcr	; מתאר הפקודות השני: בלי מילים, והקפיצות שלו ל-?SN (קורא 3.2)
+		stx	DESC1+3
+		stx	DESC1+8
+		lda	PIA0+2
 		lda	#$35		; פסיקת השדה; CB2 (SEL2) נשאר פלט נמוך (קורא: צליל 0.3)
 		sta	PIA0+3
-		andcc	#$ef
 		lbsr	cls
 		leax	testq,pcr	; תור הבדיקות: אורך וכתובת. ב-ROM האמיתי 0; בבדיקות התור במחסנית ב-$C000
 		ldd	,x
@@ -139,17 +162,64 @@ swinit		orcc	#$50
 		leax	execrts,pcr	; EXEC בלי כתובת אחרי ההדלקה: אצלנו חוזר מיד (ב-Dragon: פתוח)
 		stx	EXECJP
 		lbsr	scrtch
+		lda	#$55		; מעכשיו RESET חוזר ל-OK והתוכנית נשמרת
+		sta	RSTFLG
+		leax	warm,pcr
+		stx	RSTVEC
+		andcc	#$af		; IRQ ו-FIRQ פתוחות, ממש לפני הכותרת (קורא 7.3)
 		leax	banner,pcr	; הכותרת ומיד אחריה OK (אחרי 13 אין שורה חדשה נוספת)
 		bra	mo_puts
 ; initab: [כמה][מאיפה][לאן], 0 בסוף. אזורי ה-RAM האלה לא נוגעים זה בזה ולא בפסיקה, אז הסדר לא משנה
 initab		fcb	12		; קריאת התו ל-RAM ($9F-$AA)
 		fdb	chrtpl,chrget
-		fcb	8		; הסמן והקלטת: מטבלה ל-$8F-$96 (קורא: קלטת 0.3)
+		fcb	13		; הסמן, הקלטת, המקלדת והמדפסת: ל-$8F-$9B (קורא: קלטת 0.3, מדפסת 1.5, 7.1)
 		fdb	tdefs,CBLCNT
-		fcb	5		; קורא: זרע ה-RND, 80 4F C7 52 59
-		fdb	rndini,$0115
+		fcb	30		; $010C-$0129: הפסיקות, TIMER, זרע ה-RND, מתאר הפקודות (קורא: מדפסת 3.2)
+		fdb	lowtab,$010c
+		fcb	9		; $0148-$0150: שורה חדשה אוטומטית, נעילה, ורצף סוף השורה למדפסת (קורא 1.5)
+		fdb	lptab,$0148
 		fcb	0
-rndini		fcb	$80,$4f,$c7,$52,$59
+lowtab		jmp	irq		; $010C IRQ
+		jmp	firq		; $010F FIRQ
+		fcb	0,0,0		; $0112 TIMER
+		fcb	$80,$4f,$c7,$52,$59	; $0115 זרע ה-RND
+		fcb	0,0,0,0,0	; $011A-$011E
+		fcb	0		; $011F: ב-Dragon 64 ‏5 (קצב חזרת מקש); ב-32 פתוח, כנראה 0 (קורא 3.2)
+		fcb	78		; $0120 מתאר 0: מילות הפקודה ($80-$CD)
+		fdb	stmtab,stmtbl
+		fcb	34		; מילות הפונקציה ($FF $80-$A1)
+		fdb	fntab,fntbl
+lptab		fcb	$ff,$ff,1,13,10,0,0,0,0
+; warm: ההתחלה החמה (קורא 7.4): התוכנית, המשתנים, TRON, הקבצים, המדפסת ו-$0100-$01FF נשמרים
+warm		nop			; ה-NOP שהאיפוס בודק
+		clra
+		clrb
+		std	PLYTMR
+		lda	PIA0+3		; פסיקת השדה
+		ora	#1
+		sta	PIA0+3
+		clr	DEVNUM
+		lds	STKTOP		; המחסנית והזמניים; אין CONT
+		clr	,-s
+		lbsr	rcsub
+		andcc	#$af
+		lbsr	cls
+		bra	main_ok
+; firq (קורא 3.4): רק כשקו המחסנית דלק ($FF23 ביט 7). כ-1.2 שניות המתנה, אתחול חומרה (שמכבה את
+; פסיקת המחסנית), ואין חזרה ל-BASIC ב-RESET. ואז $C000
+firq		tst	PIA1+3
+		bmi	1F
+		rti
+1		ldb	#2
+2		ldx	<$8a		; תמיד 0: ‏65,536 סיבובים
+3		leax	-1,x
+		bne	3B
+		decb
+		bne	2B
+		clr	RSTFLG
+		leay	4F,pcr
+		lbra	hw_init
+4		jmp	$c000
 ; endcon: סוף התוכנית או סוף השורה הישירה (mit: ENDCON). המחסנית לא מתאפסת
 endcon
 main_ok		bsr	condcr
@@ -178,8 +248,11 @@ main		lbsr	getline
 		lbra	gone		; המחסנית נשארת: רשומות FOR/GOSUB שמורות עד CONT (mit)
 
 ; condcr: שורה חדשה אם הסמן לא בעמודה 0
-condcr		lda	CURSOR+1
-		anda	#$1f
+; לפי ההתקן: המקום מפרמטרי ההתקן; לקלטת תמיד (כך LIST לקלטת מתחיל כל שורה ב-CR)
+condcr		lbsr	devpar
+		tst	SPCIO
+		bne	prcr
+		tst	DEVPOS
 		bne	prcr
 		rts
 ; prin: " IN n" אם בתוכנית, ושורה חדשה
@@ -549,16 +622,20 @@ dlist2		lbsr	fndlin		; D = השורה הראשונה, LEND = האחרונה (CSA
 		ldd	2,y
 		cmpd	LEND
 		bhi	9F
+		lbsr	istape		; בין השורות: BREAK (לא לקלטת; קורא: מדפסת 1.8)
+		beq	1F
+		lbsr	brkchk
+1		lbsr	condcr		; כל שורה מתחילה בסוף שורה מותנה (קורא: מדפסת 1.8)
+		ldd	2,y
 		bsr	prnum		; מספר השורה
 		lbsr	prspc
 		leax	4,y
 		pshs	y
 		bsr	prline
-		lbsr	prcr
 		puls	y
 		ldy	,y
 		bra	3B
-9		rts
+9		lbra	condcr		; והאחרונה נגמרת בסוף שורה מותנה
 
 ; prline: טקסט מכווץ ב-X עד 0. נקודתיים לפני ELSE ו-' לא מוצגים (קורא)
 prline		clr	CRMODE		; כאן: בתוך מרכאות
@@ -857,4 +934,4 @@ irq		lda	PIA0+3
 9		rti
 
 		org	$bff2
-		fdb	reset,reset,reset,irq,reset,reset,reset
+		fdb	$0100,$0103,$010f,$010c,$0106,$0109,reset	; SWI3 SWI2 FIRQ IRQ SWI NMI דרך ה-RAM (קורא 3.1)

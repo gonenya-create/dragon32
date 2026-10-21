@@ -95,6 +95,8 @@ try {
   ok('C-04: CLOADM טוען ל-$0600, ביצוע $0601', nums(s.screen).join(' ') === '17 34 51 1537', s.screen);
   s = await runRom(['CLOADM "M",16', 'PRINT PEEK(1552);PEEK(1553);PEEK(1554);PEEK(157)*256+PEEK(158)'], { ...T, tapeLoad: m });
   ok('C-05: עם היסט 16: $0610, ביצוע $0611', nums(s.screen).join(' ') === '17 34 51 1553', s.screen);
+  s = await runRom(['CLOADM "M",16,5', 'PRINT PEEK(1552);PEEK(157)*256+PEEK(158)'], { ...T, tapeLoad: m });
+  ok('CLOADM רציף עם זבל אחרי ההיסט: ?SN רק אחרי הטעינה (קורא: מדפסת 4.1)', s.screen.includes('?SN ERROR') && nums(s.screen).join(' ') === '17 1553', s.screen);
   s = await runRom(['10 CLOADM:PRINT "GO ON"', 'RUN'], { ...T, tapeLoad: m });
   ok('CLOADM בתוכנית: ממשיכים', s.screen.includes('GO ON'), s.screen);
   s = await runRom(['CSAVEM "M",1538,1536,1537']);

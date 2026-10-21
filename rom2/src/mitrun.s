@@ -128,7 +128,7 @@ stmtbl
 		fdb	csave_st	; $9A CSAVE
 		fdb	open_st		; $9B OPEN
 		fdb	close_st	; $9C CLOSE
-		fdb	err_sn		; $9D LLIST
+		fdb	llist		; $9D LLIST
 		fdb	set_st		; $9E SET
 		fdb	reset_st		; $9F RESET
 		fdb	cls_st		; $A0 CLS
@@ -160,8 +160,12 @@ stmtbl
 		fdb	renum		; $BA RENUM
 
 ; LIST: אותה שגרה כמו במצב ישיר (X = TXTPTR: הפקודות נכנסות דרך chrget)
+; LLIST: אותו LIST, למדפסת (קורא: מדפסת 1.8). בסוף שניהם: סוף שורה מותנה, חזרה למסך, ו-OK
+llist		ldb	#$fe
+		stb	DEVNUM
 list_st		lbsr	do_list
-		ldx	TXTPTR
+		clr	DEVNUM
+		lbra	main_ok
 rem					; עד סוף השורה. X = TXTPTR (מ-chrget של המשגר)
 1		tst	,x+
 		bne	1B
@@ -310,6 +314,8 @@ prlist		beq	pr_cr
 		lbeq	usstart
 pr_lp		cmpa	#';
 		beq	pr_semi
+		cmpa	#$bb		; TAB(
+		beq	pr_tab
 		cmpa	#',
 		beq	pr_comma
 		lbsr	frmevl
@@ -322,6 +328,9 @@ pr_lp		cmpa	#';
 		lbsr	puts
 		lbsr	istape		; לקלטת: בלי רווח אחרי מספר
 		beq	4F
+		jsr	<chrgot		; ולפני פסיק גם לא (קורא: מדפסת 1.7)
+		cmpa	#',
+		beq	4F
 		bsr	prspc		; רווח אחרי מספר
 4		lbsr	istape		; לקלטת: CR אחרי כל פריט, וזה גם הסוף
 		bne	5F
@@ -332,20 +341,47 @@ pr_lp		cmpa	#';
 5		jsr	<chrgot
 		beq	pr_cr
 		bra	pr_lp
-pr_comma	lbsr	istape		; לקלטת: פסיק לא מוציא כלום
+; פסיק (קורא: מדפסת 1.7, 7.2): לפני השדה האחרון, רווחים עד הכפולה הבאה של רוחב השדה; אחרת סוף שורה.
+; מסך 16/16/32, מדפסת 16/116/132. לקלטת: כלום
+pr_comma	lbsr	istape
 		beq	pr_semi
-		lda	CURSOR+1	; פסיק: מעמודות 0-15 רווחים עד 16; מ-16-31 שורה חדשה (קורא: מפרט המסך)
-		bita	#$10
-		bne	2F
-1		lbsr	prspc
-		lda	CURSOR+1
-		bita	#$0f
-		bne	1B
+		lbsr	devpar
+		ldd	DEVLCF		; A = השדה האחרון, B = המקום
+		pshs	a
+		cmpb	,s+
+		bhs	2F
+		tfr	b,a
+1		suba	DEVCFW
+		bhs	1B
+		nega			; 1 עד רוחב השדה
+		bsr	prspcs
 		bra	pr_semi
 2		lbsr	pr_cr
 pr_semi		jsr	<chrget		; גם הפסיק ממשיך כאן
 		bne	pr_lp
 		rts			; ; בסוף: בלי שורה חדשה
+; TAB(n) (קורא: מדפסת 4.2): n בין 0 ל-255, ואחריו ')'. רווחים עד העמודה n; אם כבר שם או אחריה: כלום
+; (בלי שורה חדשה). לקלטת: כלום. אחרי TAB אין שורה חדשה בסוף, כמו ';'
+pr_tab		jsr	<chrget
+		lbsr	evbyte
+		lbsr	chkrp
+		lbsr	devpar
+		tst	SPCIO
+		bne	3F
+		subb	DEVPOS
+		bls	3F
+		tfr	b,a
+		bsr	prspcs
+3		jsr	<chrgot
+		bne	pr_lp
+		rts
+; prspcs: A רווחים (A > 0)
+prspcs		pshs	b
+		tfr	a,b
+1		lbsr	prspc
+		decb
+		bne	1B
+		puls	b,pc
 
 ; ---------- FOR / NEXT (mit: FOR 2081, NEXT 3110) ----------
 ; רשומה במחסנית, מהכתובת הנמוכה: $80, כתובת המשתנה (2), הצעד (5), סימן הצעד (1), העד (5),
