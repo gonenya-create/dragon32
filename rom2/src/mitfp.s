@@ -234,7 +234,10 @@ normal		clrb
 		addb	#8
 		cmpb	#32
 		bne	1B
-		bra	zerofc
+zerofc		clra
+		sta	FACEXP
+		sta	FACSGN
+		rts
 2		incb
 		lsl	FACOV
 		rol	FACLO
@@ -251,27 +254,8 @@ normal		clrb
 nround		lbsr	rnd1
 		clr	FACOV
 		rts
-zerofc		clra
-		sta	FACEXP
-		sta	FACSGN
-		rts
 
 ; ---------- כפל (mit: FMULT 5264, MULDIV 5333) ----------
-fmult		lbsr	conupk
-fmultt		tst	FACEXP
-		beq	9F
-		bsr	muldiv
-		clra
-		clrb
-		std	RESHO
-		std	RESMO			; ב-Dragon הבית הנוסף לא נכנס לכפל (קורא; ב-mit כן)
-		bsr	mltply
-		ldx	#FACLO+1	; FACLO, FACMO, FACMOH, FACHO
-1		lda	,-x
-		bsr	mltply
-		cmpx	#FACHO
-		bne	1B
-		bra	movfr
 mltply		bne	mltpl1
 		lda	RESLO		; בית אפס: רק הזזה של בית
 		sta	FACOV
@@ -316,9 +300,23 @@ muldv2		tst	ARGEXP
 		stb	FACEXP
 		lda	ARISGN
 		sta	FACSGN
-		rts
+fprts		rts
 8		leas	2,s
 		bra	zerofc
+fmult		lbsr	conupk
+fmultt		tst	FACEXP
+		beq	fprts
+		bsr	muldiv
+		clra
+		clrb
+		std	RESHO
+		std	RESMO			; ב-Dragon הבית הנוסף לא נכנס לכפל (קורא; ב-mit כן)
+		bsr	mltply
+		ldx	#FACLO+1	; FACLO, FACMO, FACMOH, FACHO
+1		lda	,-x
+		bsr	mltply
+		cmpx	#FACHO
+		bne	1B
 movfr		ldd	RESHO
 		std	FACHO
 		ldd	RESMO
@@ -377,23 +375,6 @@ divnrm		ldb	#64		; שתי הסיביות לראש הבית הנוסף
 		puls	cc
 		bra	movfr
 
-; mul10 / div10 (mit: MUL10 5359, DIV10 5378)
-mul10		lbsr	movaf
-		lda	FACEXP
-		beq	9F
-		adda	#2
-		lbcs	ovf
-		sta	ARGEXP		; ARG = 4*FAC
-		clr	ARISGN
-		lbsr	faddt		; 5*FAC
-		lbra	incexp		; 10*FAC
-9		rts
-div10		lbsr	movaf
-		leax	tenzc,pcr
-		clr	ARISGN
-		lbsr	movfm
-		lbra	fdivt
-
 ; ---------- קריאת מספר מהטקסט (mit: FIN 5704) ----------
 ; בכניסה: TXTPTR על התו הראשון. ביציאה: FAC, ו-TXTPTR אחרי המספר
 fin		clra
@@ -406,8 +387,6 @@ fin		clra
 		jsr	<chrgot		; (chrgot משנה את X)
 		ldx	#SGNFLG		; סימן בהתחלה: רק בקלט וב-DATA (בביטוי הוא טוקן) (mit: FIN)
 		bsr	fsgn
-		bra	fin_lp
-fin_nx		jsr	<chrget
 fin_lp		bcc	fin_dig		; ספרה
 		cmpa	#'.
 		bne	fin_e
@@ -423,7 +402,8 @@ fin_dig		tst	DPTFLG
 		puls	a
 		suba	#'0
 		bsr	finlog
-		bra	fin_nx
+fin_nx		jsr	<chrget
+		bra	fin_lp
 fin_e		cmpa	#'E
 		bne	fin_end
 		jsr	<chrget
@@ -431,19 +411,18 @@ fin_e		cmpa	#'E
 		bsr	fsgn
 		bcs	fin_end
 fin_ed		suba	#'0		; המעריך כפול 10 ועוד הספרה
-		pshs	a
 		ldb	TENEXP
 		cmpb	#10
 		blo	3F
 		tst	EXPSGN
-		lbeq	ovf
+		beq	ovf2
 		ldb	#100
 		bra	4F
-3		lda	#10
+3		pshs	a
+		lda	#10
 		mul
-		addb	,s
+		addb	,s+
 4		stb	TENEXP
-		puls	a
 		jsr	<chrget
 		bcc	fin_ed
 fin_end		lda	TENEXP
@@ -455,13 +434,12 @@ fin_end		lda	TENEXP
 		bmi	7F
 		deca
 		pshs	a
-		lbsr	mul10
+		bsr	mul10
 		bra	9F
 7		inca
 		pshs	a
-		lbsr	div10
-9		puls	a
-		tsta
+		bsr	div10
+9		lda	,s+		; (גם הדגלים)
 		bra	6B
 8		tst	SGNFLG
 		beq	1F
@@ -486,7 +464,63 @@ finlog		lbsr	movaf		; (movaf לא נוגע ב-A)
 		lbsr	float
 		lbra	finl2
 
+; mul10 / div10 (mit: MUL10 5359, DIV10 5378)
+mul10		lbsr	movaf
+		lda	FACEXP
+		beq	9F
+		adda	#2
+		bcs	ovf2
+		sta	ARGEXP		; ARG = 4*FAC
+		clr	ARISGN
+		lbsr	faddt		; 5*FAC
+		lbra	incexp		; 10*FAC
+9		rts
+ovf2		lbra	err_ov		; עוד עותק של ovf, קרוב (קפיצות קצרות)
+div10		lbsr	movaf
+		leax	tenzc,pcr
+		clr	ARISGN
+		lbsr	movfm
+		lbra	fdivt
+
 ; ---------- סימן, השוואה, שלמים (mit: SIGN 5562, FLOAT 5575, FCOMP 5602, QINT 5644, INT 5673, AYINT 3804) ----------
+; ayint: בין -32768 ל-32767, אחרת ?FC. התוצאה בשני הבתים FACMO:FACLO
+ayint		lda	FACEXP
+		cmpa	#144
+		blo	qint
+		leax	n32768,pcr
+		bsr	fcomp
+		lbne	err_fc
+; qint: FAC → מספר שלם של 32 ביט עם סימן ב-FACHO..FACLO (מעוגל כלפי מטה)
+qint		ldb	FACEXP
+		beq	clrfac
+		negb
+		addb	#160		; B = 160 - FACEXP
+		clra
+		tst	FACSGN
+		bpl	1F
+		coma
+		lbsr	negfch
+1		sta	BITS
+		ldx	#FACEXP
+		lbsr	shiftr
+		clr	BITS
+		rts
+clrfac		clra
+		clrb
+		std	FACHO
+		std	FACMO
+9		rts
+; fint: INT
+fint		lda	FACEXP
+		cmpa	#160
+		bhs	9B
+		bsr	qint		; (qint לא נוגע ב-FACSGN)
+		ldb	FACLO		; הבית הנמוך: הזוגיות, בשביל ^ (mit: INTEGR)
+		stb	INTEGR
+		ldb	#160
+		lda	FACSGN
+		lbra	fltail
+; sign: A = 1, 0 או $FF לפי הסימן של FAC (וגם הדגלים)
 sign		lda	FACEXP
 		beq	sgnr
 fcsign		lda	FACSGN
@@ -515,46 +549,6 @@ fcomp		ldb	,x
 		bcs	fcomps		; המספר בזיכרון קטן יותר
 		coma
 		bra	fcomps
-; qint: FAC → מספר שלם של 32 ביט עם סימן ב-FACHO..FACLO (מעוגל כלפי מטה)
-qint		ldb	FACEXP
-		beq	clrfac
-		negb
-		addb	#160		; B = 160 - FACEXP
-		clra
-		tst	FACSGN
-		bpl	1F
-		coma
-		lbsr	negfch
-1		sta	BITS
-		ldx	#FACEXP
-		lbsr	shiftr
-		clr	BITS
-		rts
-clrfac		clra
-		clrb
-		std	FACHO
-		std	FACMO
-9		rts
-; fint: INT
-fint		lda	FACEXP
-		cmpa	#160
-		bhs	9B
-		lda	FACSGN
-		pshs	a
-		bsr	qint
-		ldb	FACLO		; הבית הנמוך: הזוגיות, בשביל ^ (mit: INTEGR)
-		stb	INTEGR
-		ldb	#160
-		puls	a
-		lbra	fltail
-; ayint: בין -32768 ל-32767, אחרת ?FC. התוצאה בשני הבתים FACMO:FACLO
-ayint		lda	FACEXP
-		cmpa	#144
-		blo	qint
-		leax	n32768,pcr
-		bsr	fcomp
-		lbne	err_fc
-		bra	qint
 
 ; ---------- הדפסת מספר (mit: FOUT 5852) ----------
 ; FAC → טקסט ב-FBUFFR (מסתיים ב-0), עם רווח או מינוס בהתחלה
@@ -579,10 +573,10 @@ fout		ldy	#FBUFFR
 		ldb	#-9
 4		stb	DECCNT
 fout4		leax	nz9999,pcr
-		lbsr	fcomp
+		bsr	fcomp
 		bgt	fout9		; גדול מהגבול העליון: חלקי 10 (ב-Dragon שוויון לא נחשב, קורא)
 fout3		leax	nz0999,pcr
-		lbsr	fcomp
+		bsr	fcomp
 		bgt	fout5
 		lbsr	mul10
 		dec	DECCNT
@@ -602,9 +596,8 @@ fout5		lbsr	faddh
 		lda	#2
 5		suba	#2
 		sta	TENEXP
-		stb	DECCNT
 		ldy	FBUFPT
-		tstb
+		stb	DECCNT		; (גם הדגלים של B)
 		beq	6F
 		bpl	7F
 6		lda	#'.		; מספר קטן מ-1: נקודה לפני הספרות
@@ -628,16 +621,15 @@ fout5		lbsr	faddh
 		cmpa	#'.
 		beq	13F
 		leay	1,y
-13		ldb	TENEXP
+13		lda	#'+
+		ldb	TENEXP
 		beq	15F
-		lda	#'E
-		sta	,y+
-		lda	#'+
-		tstb
-		bpl	14F
+		bpl	14F		; (הדגלים של ldb)
 		negb
 		lda	#'-
-14		sta	,y+
+14		sta	1,y		; הסימן אחרי ה-E
+		lda	#'E
+		sta	,y++
 		lda	#'0-1
 16		inca
 		subb	#10
@@ -668,7 +660,7 @@ fdig		lda	#'0
 		puls	b,pc
 
 ; ---------- קבועים ----------
-fone		fcb	$81,$00,$00,$00,$00	; 1
+fone		equ	expcon+36		; 1: המקדם האחרון של expcon (mitconst.s), אותם 5 בתים
 tenzc		fcb	$84,$20,$00,$00,$00	; 10
 nzmil		fcb	$9e,$6e,$6b,$28,$00	; 10^9            (mit: NZMIL)
 nz9999		fcb	$9e,$6e,$6b,$27,$fd	; 999999999.499   (mit: NZ9999)

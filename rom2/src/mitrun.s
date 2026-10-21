@@ -47,14 +47,14 @@ chrest		ldx	TXTPTR
 ; synchk: התו הנוכחי חייב להיות A. אחרת ?SN. אחר כך מתקדמים
 ; chkrp / chkcom / chklp: ')' / ',' / '(' חייבים להיות כאן (כמו SYNRPR/SYNCOM במקור)
 chkrp		lda	#')
-		bra	synchk
+		fcb	$8c		; cmpx #: מדלג על ה-lda הבא (בית אחד במקום bra)
 chkcom		lda	#',
-		bra	synchk
+		fcb	$8c
 chklp		lda	#'(
 synchk		pshs	a
 		jsr	<chrgot
 		cmpa	,s+
-		lbne	err_sn
+		bne	snerr
 		jmp	<chrget
 
 ; ---------- לולאת הפקודות (mit: NEWSTT 2138, GONE 2165) ----------
@@ -77,28 +77,25 @@ gone		jsr	<chrget
 		bra	newstt
 2		cmpa	#':
 		beq	gone
-		lbra	err_sn
+snerr		lbra	err_sn		; יציאה משותפת ל-?SN בסביבה
 gone3		beq	9F		; פקודה ריקה
 		tsta
 		lbpl	let		; לא מילה שמורה: השמה
 		cmpa	#$ff		; פונקציה בתחילת פקודה: TIMER= (קורא)
 		bne	1F
-		ldx	TXTPTR
-		lda	1,x
+		lda	1,x		; X = TXTPTR (כל הכניסות ל-gone3 באות אחרי chrget/chrgot)
 		cmpa	#$9e
 		lbeq	timset
 		cmpa	#$98		; MID$ כפקודה (קורא)
 		lbeq	midst
-		lbra	err_sn
+		bra	snerr
 1		cmpa	#$ba
-		bhi	3F
-		suba	#$80
-		lsla
+		bhi	snerr
+		lsla			; (טוקן-$80)*2
 		leau	stmtbl,pcr
 		ldu	a,u
 		pshs	u
 		jmp	<chrget		; קופצים לפקודה (דרך ה-RTS של chrget), A = התו שאחרי המילה
-3		lbra	err_sn
 9		rts
 ; טבלת הפקודות לפי הטוקן ($80-$BA), כתובת לכל אחת. עוד לא בנויה: ?SN
 stmtbl
@@ -162,7 +159,10 @@ stmtbl
 		fdb	err_sn		; $B9 DLOAD
 		fdb	renum		; $BA RENUM
 
-rem		ldx	TXTPTR		; עד סוף השורה
+; LIST: אותה שגרה כמו במצב ישיר (X = TXTPTR: הפקודות נכנסות דרך chrget)
+list_st		lbsr	do_list
+		ldx	TXTPTR
+rem					; עד סוף השורה. X = TXTPTR (מ-chrget של המשגר)
 1		tst	,x+
 		bne	1B
 		leax	-1,x
@@ -178,19 +178,18 @@ run		lbsr	gfxrun		; הנקודה האחרונה, זווית וקנה מידה ש
 		clr	,-s		; סמן תחתית למחסנית ה-FOR (mit: STKINI)
 		jsr	<chrgot
 		beq	1F
-		lbcs	err_sn		; RUN "שם": עם הקלטת, בהמשך
-		bsr	goto1
-		lbra	newstt
+		bcs	gosn		; RUN "שם": עם הקלטת, בהמשך (Z=0 כאן, אז ה-lbne שם קופץ)
+		bra	gogo
 1		ldx	TXTTAB
 		leax	-1,x
 		stx	TXTPTR
-		lbra	newstt
+		bra	gonew
 
 ; GO TO / GO SUB (mit: GOTO 2391, GOSUB 2373)
 go		cmpa	#$bc		; TO
 		beq	1F
 		cmpa	#$bd		; SUB
-		lbne	err_sn
+gosn		lbne	err_sn
 		jsr	<chrget
 ; gosub1: TXTPTR על מספר השורה. רשומה של 5 בתים, מהכתובת הנמוכה: $BD, השורה הקוראת, המקום בטקסט —
 ; לפני מספר השורה; RETURN חוזר לשם ומדלג עד סוף הפקודה (קורא)
@@ -201,20 +200,19 @@ gosub1					; כתובת החזרה של הפקודה נשארת מתחת לרש�
 		ldx	CURLIN
 		lda	#$bd
 		pshs	y,x,a
-		bsr	goto1
-		lbra	newstt
+gogo		bsr	goto1		; גם RUN n
+gonew		lbra	newstt
 1		jsr	<chrget
 ; goto1: TXTPTR על מספר השורה. שורה גדולה מהנוכחית: מחפשים מהשורה הבאה; אחרת מההתחלה (mit: GOTO)
-goto1		bsr	lineget
+goto1		bsr	lineget		; X = TXTPTR
+		ldy	TXTTAB		; מההתחלה (fndlin)
 		cmpd	CURLIN
-		bls	2F		; גם במצב ישיר (CURLIN = $FFFF): מההתחלה
-		ldy	TXTPTR		; סוף השורה הנוכחית
+		bls	4F		; גם במצב ישיר (CURLIN = $FFFF): מההתחלה
+		tfr	x,y		; סוף השורה הנוכחית
 3		tst	,y+
 		bne	3B
-		lbsr	fndlnc
-		bra	4F
-2		lbsr	fndlin
-4		lbcc	err_ul
+4		lbsr	fndlnc
+		lbcc	err_ul
 		leay	-1,y		; TXTPTR = הבית שלפני השורה (ה-0 של השורה הקודמת)
 		sty	TXTPTR
 		rts
@@ -226,16 +224,13 @@ lineget		ldx	TXTPTR
 		jsr	<chrgot
 		puls	d,pc
 
-list_st		ldx	TXTPTR		; LIST: אותה שגרה כמו במצב ישיר
-		lbsr	do_list
-		lbra	rem
 new_st		lbsr	scrtch
 		lds	STKTOP
 		clr	,-s
 		lbra	endcon
 
 ; ---------- LET (mit: LET 2540) ----------
-let		ldb	#0		; יוצרים משתנה אם אין
+let		clrb			; יוצרים משתנה אם אין
 		lbsr	ptrget
 		ldd	VARPNT
 		std	FORPNT
@@ -255,9 +250,9 @@ letasg		ldx	FORPNT
 		ldx	FACMO
 		ldd	2,x
 		cmpd	FRETOP
-		bhi	2F		; כבר בשטח המחרוזות
+		bhi	3F		; כבר בשטח המחרוזות (X = FACMO)
 		cmpd	VARTAB
-		blo	2F		; בתוך התוכנית
+		blo	3F		; בתוך התוכנית
 		lda	,x
 		lbsr	strini
 		ldx	DSCPNT
@@ -265,8 +260,6 @@ letasg		ldx	FORPNT
 		ldx	2,x
 		lbsr	movstr
 		ldx	#DSCTMP
-		bra	3F
-2		ldx	FACMO
 3		stx	DSCPNT
 		lbsr	fretms		; משחררים את הזמני (בלי לשחרר את המקום)
 		ldx	DSCPNT
@@ -283,15 +276,22 @@ letasg		ldx	FORPNT
 print		bsr	prlist
 		clr	DEVNUM		; בסוף PRINT: חזרה למסך
 		rts
-prlist		lbeq	pr_cr
+; prsep: אחרי #n או @n: סוף (Z=1), או פסיק חובה ואחריו התו הבא (Z=1 אם סוף)
+prsep		jsr	<chrgot
+		beq	9F
+		lbsr	chkcom
+9		rts
+prspc		lda	#$20		; רווח (גם LIST)
+		fcb	$8c		; cmpx #: מדלג על ה-lda הבא
+pr_cr		lda	#13		; כאן, באמצע: כל הקפיצות אליו קצרות
+		lbra	chrout
+prlist		beq	pr_cr
 		cmpa	#'#		; PRINT #התקן[,רשימה] (קורא: קלטת 3.10)
 		bne	1F
 		lbsr	getdev
 		lbsr	chkout
-		jsr	<chrgot
-		lbeq	pr_cr
-		lbsr	chkcom
-		lbeq	pr_cr
+		bsr	prsep
+		beq	pr_cr
 1
 		cmpa	#$cd		; PRINT USING (קורא)
 		lbeq	usstart
@@ -304,9 +304,7 @@ prlist		lbeq	pr_cr
 		lbhi	err_fc
 		addd	#SCREEN
 		std	CURSOR
-		jsr	<chrgot
-		beq	pr_cr
-		lbsr	chkcom
+		bsr	prsep
 		beq	pr_cr
 		cmpa	#$cd		; PRINT @n,USING
 		lbeq	usstart
@@ -324,46 +322,36 @@ pr_lp		cmpa	#';
 		lbsr	puts
 		lbsr	istape		; לקלטת: בלי רווח אחרי מספר
 		beq	4F
-		lda	#$20		; רווח אחרי מספר
-		lbsr	chrout
+		bsr	prspc		; רווח אחרי מספר
 4		lbsr	istape		; לקלטת: CR אחרי כל פריט, וזה גם הסוף
 		bne	5F
-		lda	#13
-		lbsr	chrout
+		bsr	pr_cr
 		jsr	<chrgot
 		bne	pr_lp
 		rts
 5		jsr	<chrgot
 		beq	pr_cr
 		bra	pr_lp
-pr_semi		jsr	<chrget
-		bne	pr_lp
-		rts			; ; בסוף: בלי שורה חדשה
 pr_comma	lbsr	istape		; לקלטת: פסיק לא מוציא כלום
-		beq	3F
+		beq	pr_semi
 		lda	CURSOR+1	; פסיק: מעמודות 0-15 רווחים עד 16; מ-16-31 שורה חדשה (קורא: מפרט המסך)
 		bita	#$10
 		bne	2F
-1		lda	#$20
-		lbsr	chrout
+1		lbsr	prspc
 		lda	CURSOR+1
 		bita	#$0f
 		bne	1B
-		bra	3F
-2		lda	#13
-		lbsr	chrout
-3		jsr	<chrget
+		bra	pr_semi
+2		lbsr	pr_cr
+pr_semi		jsr	<chrget		; גם הפסיק ממשיך כאן
 		bne	pr_lp
-		rts
-pr_cr		lda	#13
-		lbra	chrout
+		rts			; ; בסוף: בלי שורה חדשה
 
 ; ---------- FOR / NEXT (mit: FOR 2081, NEXT 3110) ----------
 ; רשומה במחסנית, מהכתובת הנמוכה: $80, כתובת המשתנה (2), הצעד (5), סימן הצעד (1), העד (5),
 ; מספר השורה (2), המקום בטקסט אחרי ה-FOR (2) — 18 בתים (קורא)
-for		lbsr	let		; המשתנה מקבל את ערך ההתחלה
-		ldd	VARPNT
-		std	FORPNT
+for		lbsr	let		; המשתנה מקבל את ערך ההתחלה; let שם ב-FORPNT את המשתנה של הלולאה
+				; (לא VARPNT: הביטוי של ההתחלה כבר דרס אותו — FOR I=J TO 3)
 		leas	2,s		; בלי החזרה ל-gone: הרשומה נכנסת מתחתיה (mit: NOTOL)
 		bsr	fndfor		; אותו משתנה כבר בלולאה? מוחקים אותה ומה שמעליה
 		bne	2F
@@ -401,7 +389,7 @@ for		lbsr	let		; המשתנה מקבל את ערך ההתחלה
 		std	1,s
 		lda	#$80		; [0] FOR
 		sta	,s
-		lbra	newstt
+		bra	nxnew
 TEMPLIM		equ	$03e0		; זמני: העד, בתוך FBUFFR שלא בשימוש כאן
 RELSAV		equ	$03da		; זמני: המקום לפני סימן יחס
 
@@ -427,21 +415,19 @@ stmend		ldx	TXTPTR
 fndfor		leax	2,s
 1		lda	,x
 		cmpa	#$80
-		bne	8F
+		bne	9F		; Z=0: לא נמצאה
 		ldd	FORPNT
-		beq	9F
+		beq	9F		; Z=1: נמצאה
 		cmpd	1,x
 		beq	9F
 		leax	18,x
 		bra	1B
-8		andcc	#$fb
-		rts
-9		orcc	#4
-		rts
+9		rts
 
 ; NEXT [משתנה[,משתנה]]
 next		leas	2,s
-nx_one		ldd	#0
+nx_one		clra
+		clrb
 		std	FORPNT
 		jsr	<chrgot
 		beq	1F
@@ -466,39 +452,33 @@ nx_one		ldd	#0
 		std	CURLIN
 		ldx	16,s
 		stx	TXTPTR
-		lbra	newstt
+nxnew
+3		lbra	newstt
 2		leas	18,s		; הלולאה נגמרה
 		jsr	<chrgot
 		cmpa	#',
-		bne	3F
+		bne	3B
 		jsr	<chrget
 		bra	nx_one
-3		lbra	newstt
 
 ; ---------- משתנים (mit: PTRGET 3626, NOTFNS 3709) ----------
 ; משתנה פשוט: [שם 2][ערך 5] בין VARTAB ל-ARYTAB. B=1: לא יוצרים (קריאה בביטוי מחזירה 0)
 ptrget		pshs	b
 		clr	VALTYP
 		jsr	<chrgot
-		cmpa	#'A
-		lblo	err_sn
-		cmpa	#'Z
-		lbhi	err_sn
+		lbsr	islet
+		lbcc	err_sn
 		sta	VARNAM
 		clr	VARNAM+1
 		jsr	<chrget
 		bcc	1F		; ספרה
-		cmpa	#'A
-		blo	3F
-		cmpa	#'Z
-		bhi	3F
+		lbsr	islet
+		bcc	3F
 1		sta	VARNAM+1
 2		jsr	<chrget		; שאר האותיות והספרות לא נחשבות
 		bcc	2B
-		cmpa	#'A
-		blo	3F
-		cmpa	#'Z
-		bls	2B
+		lbsr	islet
+		bcs	2B
 3		cmpa	#'$		; מחרוזת: ביט 7 בתו השני של השם (ספר)
 		bne	11F
 		lda	VARNAM+1
@@ -506,15 +486,15 @@ ptrget		pshs	b
 		sta	VARNAM+1
 		com	VALTYP
 		jsr	<chrget
-11		lda	SUBFLG		; ביט 6: שם של DEF FN — ביט 7 בתו הראשון (mit: GETFNM)
-		bita	#$40
+11		ldb	SUBFLG		; ביט 6: שם של DEF FN — ביט 7 בתו הראשון (mit: GETFNM)
+		bitb	#$40
 		beq	13F
 		lda	VARNAM
 		ora	#$80
 		sta	VARNAM
-13		tst	SUBFLG		; ביט 7: בלי מערכים (הפרמטר והשם של DEF FN)
+13		tstb			; ביט 7: בלי מערכים (הפרמטר והשם של DEF FN)
 		bmi	12F
-		lda	[TXTPTR]	; ( = מערך (mit: ISARY)
+		lda	,x		; ( = מערך (mit: ISARY). X = TXTPTR מה-chrget האחרון
 		cmpa	#'(
 		bne	12F
 		puls	b
@@ -529,9 +509,8 @@ ptrget		pshs	b
 		bra	4B
 5		tst	,s+		; לא נמצא
 		beq	7F
-		leax	zero5,pcr	; קריאה בביטוי: אפס, בלי ליצור (קורא)
-		stx	VARPNT
-		rts
+		leax	zero5-2,pcr	; קריאה בביטוי: אפס, בלי ליצור (קורא)
+		bra	10F
 7		ldx	STREND		; יוצרים: מזיזים את המערכים 7 בתים למעלה
 		leay	7,x
 		pshs	x,y		; יש מקום? (mit: REASON)
@@ -574,13 +553,9 @@ fe_lp		clr	OPMASK
 		blo	3F
 		cmpa	#$cc
 		bhi	3F
-		suba	#$c9		; > = <: 1 2 3 → מסכה 1 2 4
-		ldb	#1
-21		deca
-		beq	2F
-		lslb
-		bra	21B
-2		bitb	OPMASK		; אותו סימן פעמיים
+		leax	msktab-$ca+256,pcr	; > = < ($CA-$CC, שלילי ב-a,x) → מסכה 1 2 4
+		ldb	a,x
+		bitb	OPMASK		; אותו סימן פעמיים
 		lbne	err_sn
 		orb	OPMASK
 		stb	OPMASK
@@ -609,48 +584,39 @@ fe_lp		clr	OPMASK
 		cmpb	,s		; לא גבוהה מהמינימלית: מסיימים כאן
 		bls	9F
 		ldu	1,x
-		pshs	b
-		jsr	<chrget		; מדלגים על הסימן
-		puls	b
+		jsr	<chrget		; מדלגים על הסימן (chrget לא נוגע ב-B וב-U)
 ; שומרים את הצד השמאלי, מחשבים את הימני, ומפעילים. ב-Dragon בלי עיגול לפני השמירה (קורא; ב-mit יש)
 7		lda	OPMASK		; בית אחד: המסכה, וביט 7 = השמאלי מחרוזת (כמו במקור: מסגרת של 13 בתים — קורא)
 		tst	VALTYP
 		beq	73F
 		ora	#$80
 73		pshs	u,a
-		ldx	FACHO		; B = הקדימות: לא לגעת
-		ldy	FACMO
-		lda	FACSGN
-		pshs	y,x,a
-		lda	FACEXP
-		pshs	a
+		ldx	FACEXP		; B = הקדימות: לא לגעת. FAC (6 בתים, לפי הסדר בזיכרון) במחסנית
+		ldy	FACMOH
+		ldu	FACLO
+		pshs	x,y,u
 		bsr	fexpr		; הצד הימני, עם הקדימות של הסימן
-		puls	a
-		sta	ARGEXP
-		puls	a,x,y
-		stx	ARGHO
-		sty	ARGMO
-		sta	ARGSGN
+		puls	x,y,u		; → ARG (אותו סדר)
+		stx	ARGEXP
+		sty	ARGMOH
+		stu	ARGLO
+		lda	ARGSGN
 		eora	FACSGN
 		sta	ARISGN
 		puls	a,u
 		tfr	a,b
 		anda	#$7f
 		sta	OPMASK
-		clra			; הסוג של השמאלי
-		tstb
-		bpl	74F
-		deca
-74		cmpa	VALTYP		; שני הצדדים מאותו סוג (mit: CHKVAL)
-		lbne	err_tm
+		sex			; הסוג של השמאלי: A = 0 או $FF לפי ביט 7
+		cmpa	VALTYP		; שני הצדדים מאותו סוג (mit: CHKVAL)
+75		lbne	err_tm
 		tsta
 		beq	72F
 		cmpu	#dorel		; מחרוזות: רק יחס או +
 		beq	72F
 		cmpu	#faddt
-		lbne	err_tm
-		lbsr	cat
-		lbra	fe_lp
+		bne	75B
+		ldu	#cat		; חיבור מחרוזות
 72		jsr	,u		; FAC = ARG op FAC
 		lbra	fe_lp
 9		puls	b,pc
@@ -673,9 +639,9 @@ optab		fcb	121
 ; eval: איבר אחד → FAC
 eval		clr	VALTYP
 		jsr	<chrgot
-		lbcc	fin		; מספר
+1		lbcc	fin		; מספר
 		cmpa	#'.
-		lbeq	fin
+		beq	1B		; שווה: C=0, ולכן ה-lbcc קופץ
 		cmpa	#'&		; &H / &O / & (קורא)
 		lbeq	radix
 		cmpa	#$c4		; - חד-מקומי: קדימות 125
@@ -704,8 +670,7 @@ eval		clr	VALTYP
 		lbra	givd
 3		cmpa	#'"		; מחרוזת במרכאות (mit: STRTXT)
 		bne	31F
-		ldx	TXTPTR
-		leax	1,x
+		leax	1,x		; X = TXTPTR מה-chrgot
 		lbsr	strlit
 		ldx	STRNG2
 		stx	TXTPTR
@@ -719,36 +684,30 @@ eval		clr	VALTYP
 		lbra	chkrp
 4		cmpa	#$ff		; פונקציה: טבלה לפי הטוקן (mit: ISFUN)
 		bne	5F
-		ldx	TXTPTR
-		lda	1,x
+		lda	1,x		; X = TXTPTR מה-chrgot
 		leax	1,x
 		stx	TXTPTR
 		cmpa	#$a1
 		lbhi	err_sn
-		suba	#$80
-		lsla
+		lsla			; (טוקן-$80)*2: אותו דבר כמו suba #$80 ואז lsla
 		leau	fntbl,pcr
-		ldx	a,u		; ביטים 14-15: הסוג; השאר: הכתובת פחות $8000
-		tfr	x,d
+		ldd	a,u		; ביטים 14-15: הסוג; השאר: הכתובת פחות $8000
+		pshs	b
+		tfr	a,b
 		anda	#$3f
 		ora	#$80
-		pshs	d		; הכתובת
-		tfr	x,d
-		rola
-		rola
-		rola
-		anda	#3		; 0: ארגומנט אחד בסוגריים; 1: השגרה קוראת בעצמה אחרי '('; 2: בלי סוגריים
-		pshs	a
-		jsr	<chrget
-		puls	b
+		pshs	a		; הכתובת
+		rolb
+		rolb
+		rolb
+		andb	#3		; 0: ארגומנט אחד בסוגריים; 1: השגרה קוראת בעצמה אחרי '('; 2: בלי סוגריים
+		jsr	<chrget		; chrget ו-chklp לא נוגעים ב-B
 		cmpb	#2
 		beq	43F		; A = התו שאחרי המילה
-		pshs	b
 		lbsr	chklp
-		puls	a
-		tsta
+		tstb
 		bne	43F
-		pshs	a		; מקום למזהה הפונקציה, שנשאר במחסנית בזמן הארגומנט (קורא)
+		pshs	b		; (B=0) מקום למזהה הפונקציה, שנשאר במחסנית בזמן הארגומנט (קורא)
 		lbsr	frmevl
 		leas	1,s
 		lbsr	chkrp
@@ -807,33 +766,24 @@ fn_abs		bsr	chknum
 		clr	FACSGN
 		rts
 chknum		tst	VALTYP
-		lbne	err_tm
+		bne	tmerr
 		rts
+tmerr		lbra	err_tm
 ; left$ / right$ / mid$: (מחרוזת,מספר[,מספר]) (mit: LEFT, RIGHT, MID, PREAM)
-fn_left		bsr	strarg
-		cmpb	,x
-		bls	1F
-		ldb	,x
-1		tfr	b,a
+fn_left		bsr	strarg		; A = B = כמה
 		clrb
-		lbra	substr
-fn_right	bsr	strarg
-		cmpb	,x
-		bls	1F
-		ldb	,x
-1		pshs	b
-		lda	,x
-		suba	,s
-		tfr	a,b		; התחלה = אורך - כמה
-		puls	a
-		lbra	substr
+		bra	subs
+fn_right	bsr	strarg		; A = כמה
+		negb
+		addb	,x		; התחלה = אורך - כמה
+subs		lbra	substr
 fn_mid		lbsr	frmevl
 		bsr	frestr0
 		pshs	x		; המתאר
 		lbsr	chkcom
 		bsr	evbyte
 		tstb
-		lbeq	err_fc		; אין מקום 0
+		beq	fcerr		; אין מקום 0
 		decb
 		pshs	b		; ההתחלה
 		ldb	#255		; ברירת מחדל: עד הסוף
@@ -842,57 +792,58 @@ fn_mid		lbsr	frmevl
 		bne	1F
 		jsr	<chrget
 		bsr	evbyte
-1		pshs	b
-		lbsr	chkrp
-		puls	a		; כמה
-		puls	b		; התחלה
-		puls	x
+1		lbsr	chkrp		; לא נוגע ב-B
+		tfr	b,a		; כמה
+		puls	b,x		; התחלה, המתאר
 		pshs	a
 		lda	,x
 		pshs	b
 		suba	,s+		; נשאר = אורך - התחלה
 		bhi	2F
 		clra			; התחלה מעבר לסוף: מחרוזת ריקה
-		leas	1,s
-		lbra	substr
+		bra	3F
 2		cmpa	,s
 		bls	3F
 		lda	,s
 3		leas	1,s
-		lbra	substr
-; strarg: (מחרוזת,מספר) → X = המתאר, B = המספר (0-255)
+		bra	subs
+; strarg: (מחרוזת,מספר) → X = המתאר, A = B = המספר (0-255), לא יותר מאורך המחרוזת (רק LEFT$ ו-RIGHT$)
 strarg		lbsr	frmevl
 		bsr	frestr0
 		pshs	x
 		lbsr	chkcom
 		bsr	evbyte
-		pshs	b
-		lbsr	chkrp
-		puls	b
-		puls	x,pc
+		lbsr	chkrp		; לא נוגע ב-B
+		puls	x
+		cmpb	,x		; לא יותר מהאורך
+		bls	1F
+		ldb	,x
+1		tfr	b,a
+		rts
 frestr0		tst	VALTYP		; מחרוזת? X = המתאר (בלי לשחרר עדיין)
-		lbeq	err_tm
+		beq	tmerr
 		ldx	FACMO
 		rts
 ; conint: FAC → B בין 0 ל-255, אחרת ?FC (mit: CONINT)
 ; evbyte: ביטוי → B (0-255)
 evbyte		lbsr	frmevl
-conint		lbsr	chknum
+conint		bsr	chknum
 		lbsr	ayint
 		ldd	FACMO
 		tsta
-		lbne	err_fc
+		bne	fcerr
 		rts
+fcerr		lbra	err_fc
 
 ; AND / OR (mit: ANDOP 3520, OROP 3518): על מספרים שלמים בין -32768 ל-32767
 andop		bsr	logpre
 		anda	,s+
 		andb	,s+
-		lbra	givd
+		bra	1F
 orop		bsr	logpre
 		ora	,s+
 		orb	,s+
-		lbra	givd
+1		lbra	givd
 ; logpre: שני הצדדים כשלמים: D = הימני (FAC), והשמאלי (ARG) נשאר במחסנית מתחת לכתובת החזרה
 logpre		lbsr	ayint
 		ldd	FACMO
@@ -915,14 +866,10 @@ dorel		tst	VALTYP
 		sta	ARGHO
 		ldx	#ARGEXP
 		lbsr	fcomp		; A = הסימן של FAC פחות ARG
-2		inca			; ARG ? FAC: -1 0 1 → מסכה 1 (ARG > FAC) 2 (שווים) 4 (ARG < FAC)
-		ldb	#1
-1		deca
-		bmi	3F
-		lslb
-		bra	1B
-3		andb	OPMASK
+2		leax	msktab+1,pcr	; ARG ? FAC: -1 0 1 → מסכה 1 (ARG > FAC) 2 (שווים) 4 (ARG < FAC)
+		lda	a,x
+		anda	OPMASK
 		beq	4F
-		ldb	#$ff
-4		tfr	b,a
-		lbra	float
+		lda	#$ff
+4		lbra	float		; float משתמש רק ב-A
+msktab		fcb	1,2,4

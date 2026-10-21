@@ -90,8 +90,7 @@ ary_new		stx	ARYREC
 		blo	6B
 		tst	1,u
 		beq	getdef		; לא DIM: עכשיו ניגשים לאיבר
-		leas	4,u		; DIM: מוציאים את האינדקסים ואת הבלוק, וזהו
-		rts
+		bra	ary_x		; DIM: מוציאים את האינדקסים ואת הבלוק, וזהו
 ; getdef: X = הרשומה. ההיסט לפי האינדקסים שבמחסנית: האחרון ראשון (mit: GETDEF/INLPNM)
 getdef		clr	CURTOL
 		clr	CURTOL+1
@@ -113,7 +112,7 @@ getdef		clr	CURTOL
 		addd	CURTOL
 		leax	d,y		; Y = אחרי הגדלים = האיבר הראשון
 		stx	VARPNT
-		leas	4,u		; האינדקסים והבלוק
+ary_x		leas	4,u		; האינדקסים והבלוק
 		rts
 ary_om		lbra	err_om
 ; mulcur: CURTOL = CURTOL * D, וגם D = התוצאה (16 ביט, גלישה: ?OM). X, Y, U לא משתנים

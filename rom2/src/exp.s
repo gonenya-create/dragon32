@@ -90,24 +90,20 @@ swinit		orcc	#$50
 		clr	,-s		; סמן תחתית למחסנית ה-FOR/GOSUB (קורא: ב-STKTOP-1)
 		lda	#$39		; קורא (קלטת 11): $02D9 לא אפס, קישור דמה לפני מספר השורה
 		sta	$02d9
-		leax	chrtpl,pcr	; קריאת התו ל-RAM ($9F-$AA)
-		ldu	#chrget
-		ldb	#12
-1		lda	,x+
+		leay	initab,pcr	; טבלת ההעתקות: קריאת התו, הסמן והקלטת, זרע ה-RND
+1		ldb	,y+		; כמה (0 = סוף)
+		beq	3F
+		ldx	,y++		; מאיפה
+		ldu	,y++		; לאן
+2		lda	,x+
 		sta	,u+
 		decb
-		bne	1B
-		lda	PIA0+2
+		bne	2B
+		bra	1B
+3		lda	PIA0+2
 		lda	#$35		; פסיקת השדה; CB2 (SEL2) נשאר פלט נמוך (קורא: צליל 0.3)
 		sta	PIA0+3
 		andcc	#$ef
-		leax	tdefs,pcr	; הסמן והקלטת: מטבלה ל-$8F-$96 (קורא: קלטת 0.3)
-		ldu	#CBLCNT
-		ldb	#8
-1		lda	,x+
-		sta	,u+
-		decb
-		bne	1B
 		lbsr	cls
 		leax	testq,pcr	; תור הבדיקות: אורך וכתובת. ב-ROM האמיתי 0; בבדיקות התור במחסנית ב-$C000
 		ldd	,x
@@ -133,12 +129,6 @@ swinit		orcc	#$50
 		sta	GFORE
 		stb	GROWB
 		lbsr	gfxrun
-		ldd	#$804f		; קורא: זרע ה-RND, 80 4F C7 52 59
-		std	$0115
-		ldd	#$c752
-		std	$0117
-		lda	#$59
-		sta	$0119
 		ldx	#USRTAB		; קורא: טבלת USR, עשר כתובות שמובילות ל-?FC
 		stx	USTBAD
 		leau	err_fc,pcr
@@ -151,6 +141,15 @@ swinit		orcc	#$50
 		lbsr	scrtch
 		leax	banner,pcr	; הכותרת ומיד אחריה OK (אחרי 13 אין שורה חדשה נוספת)
 		bra	mo_puts
+; initab: [כמה][מאיפה][לאן], 0 בסוף. אזורי ה-RAM האלה לא נוגעים זה בזה ולא בפסיקה, אז הסדר לא משנה
+initab		fcb	12		; קריאת התו ל-RAM ($9F-$AA)
+		fdb	chrtpl,chrget
+		fcb	8		; הסמן והקלטת: מטבלה ל-$8F-$96 (קורא: קלטת 0.3)
+		fdb	tdefs,CBLCNT
+		fcb	5		; קורא: זרע ה-RND, 80 4F C7 52 59
+		fdb	rndini,$0115
+		fcb	0
+rndini		fcb	$80,$4f,$c7,$52,$59
 ; endcon: סוף התוכנית או סוף השורה הישירה (mit: ENDCON). המחסנית לא מתאפסת
 endcon
 main_ok		bsr	condcr
@@ -324,9 +323,8 @@ storel2					; EDIT נכנס כאן: LINNUM מוכן, X = הטקסט
 		pshs	d,y		; יש מקום? אחרת ?OM לפני שמזיזים משהו (mit: REASON). Y = הגבול התחתון
 		lbsr	reason
 		ldx	VARTAB
-		puls	d
-		tfr	d,u
-		std	VARTAB
+		puls	u
+		stu	VARTAB
 2		cmpx	,s
 		bls	3F
 		lda	,-x
@@ -448,8 +446,7 @@ cr_kw		bsr	kwmatch		; מילה שמורה? C=1, B = הטוקן, KPRE = $FF לפ�
 		bcc	cr_name
 		lda	KPRE
 		beq	4F
-		sta	,u+		; פונקציה: $FF ואחריו הטוקן
-		stb	,u+
+		std	,u++		; פונקציה: $FF ואחריו הטוקן
 		bra	cr_lp
 4		cmpb	#$84		; ELSE: לפניו נקודתיים, גם אם כבר היו (קורא)
 		bne	5F
@@ -473,20 +470,21 @@ cr_str		leax	1,x		; מרכאות: עד המרכאות הבאות או סוף ה�
 		cmpa	#'"
 		bne	8B
 cr_lp2		bra	cr_lp
+; islet: C=1 אם A אות A-Z (שלנו)
+islet		pshs	a
+		suba	#'A
+		cmpa	#26
+		puls	a,pc
 cr_name		lda	,x		; לא מילה שמורה. אות: שם, וכל האותיות והספרות שאחריה נשמרות כמו שהן (קורא)
-		cmpa	#'A
-		blo	cr_put
-		cmpa	#'Z
-		bhi	cr_put
+		bsr	islet
+		bcc	cr_put
 7		sta	,u+
 		leax	1,x
 		lda	,x
 		lbsr	isdig
 		bcs	7B
-		cmpa	#'A
-		blo	cr_lp2
-		cmpa	#'Z
-		bls	7B
+		bsr	islet
+		bcs	7B
 		bra	cr_lp2
 
 ; kwmatch: האם בתחילת X יש מילה שמורה? קודם הפקודות ($80-$CD), אחר כך הפונקציות ($FF $80-$A1).
@@ -552,8 +550,7 @@ dlist2		lbsr	fndlin		; D = השורה הראשונה, LEND = האחרונה (CSA
 		cmpd	LEND
 		bhi	9F
 		bsr	prnum		; מספר השורה
-		lda	#$20
-		lbsr	chrout
+		lbsr	prspc
 		leax	4,y
 		pshs	y
 		bsr	prline

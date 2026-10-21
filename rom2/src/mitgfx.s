@@ -25,14 +25,13 @@ GANGLE		equ	$e8		; DRAW: הזווית 0-3
 GSCALE		equ	$e9		; DRAW: קנה המידה 0-62
 
 ; gfxrun: בהדלקה ובכל RUN (קורא 0.2): הנקודה האחרונה (128,96), זווית וקנה מידה 0
-gfxrun		lbsr	plyini		; ברירות PLAY (קורא: צליל 0.2)
-		ldd	#128
+gfxrun		ldd	#128
 		std	GLX
 		ldb	#96
 		std	GLY
-		clr	GANGLE
-		clr	GSCALE
-		rts
+		clrb			; A כבר 0: הזווית וקנה המידה (GANGLE, GSCALE צמודים)
+		std	GANGLE
+		lbra	plyini		; ברירות PLAY (קורא: צליל 0.2)
 
 ; ---------- קואורדינטות (קורא 0.4) ----------
 ; gpar: "(x,y)" ל-U. gcoord: "x,y" ל-U (x ב-U, y ב-U+2, שני בתים כל אחד).
@@ -40,6 +39,7 @@ gfxrun		lbsr	plyini		; ברירות PLAY (קורא: צליל 0.2)
 gpar		lbsr	chklp
 		bsr	gcoord
 		lbra	chkrp
+gcogx		ldu	#GX		; gcogx: ל-GX
 gcoord		pshs	u
 		lbsr	frmevl
 		lbsr	getadr
@@ -55,14 +55,14 @@ gcoord		pshs	u
 2		puls	a,u
 		clr	,u
 		sta	1,u
-		clr	2,u
-		stb	3,u
+		clra
+		std	2,u
 		rts
 
 ; gscl: מקטינים את הנקודה ש-X מצביע עליה לפי ה-PMODE: 0-1 חצי ו-חצי, 2-3 רק x בחצי, 4 כמו שהיא
 gscl2		ldx	#GX2
 		bsr	gscl
-		ldx	#GX
+gsclp		ldx	#GX		; gsclp: רק הנקודה GX
 gscl		lda	GMODE
 		cmpa	#4
 		beq	9F
@@ -131,6 +131,10 @@ gplot		pshs	a
 		stb	GCHG
 		sta	,x
 		puls	a,pc
+; gpt1: ')' ואז הנקודה GX מוקטנת → X = הבית, A = המסכה (PSET, PPOINT)
+gpt1		lbsr	chkrp
+		bsr	gsclp
+		bra	gaddr
 
 ; ---------- צבעים (קורא 0.5, 0.6) ----------
 ; evcol: ביטוי → B. gcolor: B = צבע 0-8 (9 ומעלה: ?FC) → B = צבע פנימי לפי ה-PMODE.
@@ -147,11 +151,10 @@ gcolor		cmpb	#9
 		decb
 		andb	#3
 		rts
-2		lsrb
-		ldb	#0		; ldb לא נוגע ב-C
-		bcc	3F
-		ldb	#3
-3		rts
+2		andb	#1		; אי-זוגי: 1 → -1 → 3, זוגי: 0
+		negb
+		andb	#3
+		rts
 ; gsetac: B = הצבע הפנימי של הפעולה. gdefc: צבע הכתיבה ל-PSET, הרקע ל-PRESET
 gdefc		ldb	GFORE
 		tst	GSETF
@@ -161,20 +164,19 @@ gsetac		stb	GACT
 		lda	#$55
 		mul
 		stb	GACTB
-		rts
+9		rts
 ; gocol: צבע אופציונלי אחרי נקודה (קורא 0.6). בסוף הפקודה או לפני ')': ברירת המחדל.
 ; אחרת פסיק, ואם אחריו עוד פסיק: ברירת המחדל, ועוצרים על הפסיק השני
 gocol		bsr	gdefc
 		jsr	<chrgot
-		beq	9F
+		beq	9B
 		cmpa	#')
-		beq	9F
+		beq	9B
 		lbsr	chkcom
 		cmpa	#',
-		beq	9F
+		beq	9B
 		bsr	evcol
 		bra	gsetac
-9		rts
 
 ; ---------- PSET(x,y[,c]) / PRESET(x,y[,c]) (קורא 6) ----------
 pset_st		lda	#1
@@ -182,38 +184,30 @@ pset_st		lda	#1
 preset_st	clra
 		sta	GSETF
 		lbsr	chklp
-		ldu	#GX
-		lbsr	gcoord
+		lbsr	gcogx
 		bsr	gocol
-		lbsr	chkrp
-		ldx	#GX
-		lbsr	gscl
-		bra	gpset
+		bsr	gpt1
+		bra	gplot
 
 ; ---------- PPOINT(x,y) (קורא 7) ----------
 ; שחור-לבן: 0, או 1 (5 בערכה 8). צבעים: הערך 0-3 ועוד 1 (ועוד 4 בערכה 8)
-fn_ppoint	ldu	#GX
-		lbsr	gcoord
-		lbsr	chkrp
-		ldx	#GX
-		lbsr	gscl
-		lbsr	gaddr
+fn_ppoint	lbsr	gcogx
+		bsr	gpt1
 		pshs	a
 		ldb	,x
 		andb	,s
-		lda	GMODE
-		lsra
-		bcs	2F
-		tstb
-		beq	8F
-		ldb	#1
-		bra	5F
-2		lsr	,s		; מורידים את הנקודה לביטים 0-1
+2		lsr	,s		; מורידים את הנקודה לביט 0 (או לביטים 0-1)
 		bcs	3F
 		lsrb
 		bra	2B
-3		incb
-5		tst	GCSS
+3		lda	GMODE
+		lsra
+		bcs	4F
+		tstb			; שחור-לבן: 0 או 1
+		beq	8F
+		decb
+4		incb
+		tst	GCSS
 		beq	8F
 		addb	#4
 8		leas	1,s
@@ -221,7 +215,7 @@ fn_ppoint	ldu	#GX
 
 ; ---------- PCLS [c] (קורא 4) ----------
 pcls_st		beq	1F
-		lbsr	evcol
+		bsr	evcol
 		fcb	$8c		; cmpx: מדלג על ה-ldb
 1		ldb	GBACK
 		lda	#$55
@@ -251,7 +245,7 @@ pmode_st	cmpa	#',
 		beq	2F
 		lbsr	evbyte
 		cmpb	#5
-		lbhs	err_fc
+		bhs	pmfc
 		pshs	b
 		leax	pmtab,pcr
 		lslb
@@ -260,7 +254,7 @@ pmode_st	cmpa	#',
 		sta	GSTART
 		adda	,x
 		cmpa	TXTTAB
-		lbhi	err_fc
+		bhi	pmfc
 		sta	GEND
 		lda	1,x
 		sta	GROWB
@@ -271,23 +265,27 @@ pmode_st	cmpa	#',
 		jsr	<chrgot
 		beq	9F
 2		lbsr	chkcom
-		lbsr	evbyte
-		tstb
-		lbeq	err_fc
-		decb
-		lda	#6
-		mul			; רק הבית התחתון נחשב
-		addb	SCRBAS
+		bsr	gpg0
 		pshs	b		; תחילת הדף החדש
 		ldb	GEND
 		subb	GSTART
 		addb	,s		; הסוף החדש
 		cmpb	TXTTAB
-		lbhi	err_fc
+		bhi	pmfc
 		stb	GEND
 		puls	a
 		sta	GSTART
 9		rts
+pmfc		lbra	err_fc
+; gpg0: מספר דף (0 → ?FC) → B = הבית הגבוה של הדף (8 ביטים). גם PCOPY
+gpg0		lbsr	evbyte
+		tstb
+		beq	pmfc
+		decb
+		lda	#6
+		mul			; רק הבית התחתון נחשב
+		addb	SCRBAS
+		rts
 pmtab		fcb	6,16,12,32,12,16,24,32,24,32	; לכל מצב: דפים של 256 בתים, בתים בשורה
 
 ; ---------- SCREEN [t][,c] (קורא 3, 0.7) ----------
@@ -297,7 +295,7 @@ screen_st	cmpa	#',
 		tstb
 		bne	1F
 		lbsr	txtmode
-		bra	3F
+		fcb	$8c		; cmpx: מדלג על ה-bsr
 1		bsr	gfxmode
 3		jsr	<chrgot
 		beq	9F
@@ -309,8 +307,7 @@ screen_st	cmpa	#',
 4		stb	GCSS
 		lda	PIA1+2
 		anda	#$f7
-		pshs	b
-		ora	,s+
+		ora	GCSS
 		sta	PIA1+2
 9		rts
 ; gfxmode: מצב גרפי לפי ה-PMODE, הדף וערכת הצבעים. קודם $FF22: שלושת הביטים התחתונים נשארים,
@@ -344,9 +341,9 @@ gfxmode		ldb	GMODE
 samset		lsra
 		bcc	2F
 		sta	1,x
-		bra	3F
+		fcb	$8c		; cmpx: מדלג על ה-sta ,x
 2		sta	,x
-3		leax	2,x
+		leax	2,x
 		decb
 		bne	samset
 		rts
@@ -361,10 +358,7 @@ g2pt		cmpa	#'(
 		beq	1F
 		lda	#'@
 		lbsr	synchk
-1		ldd	GLX
-		std	GX
-		ldd	GLY
-		std	GY
+1		bsr	glgx
 		jsr	<chrgot
 		cmpa	#$c4
 		beq	2F
@@ -374,11 +368,19 @@ g2pt		cmpa	#'(
 		lbsr	synchk
 		ldu	#GX2
 		lbra	gpar
-gline_st	bsr	g2pt
-		ldd	GX2
+; glgx: הנקודה האחרונה → נקודה 1. g2gl: נקודה 2 → הנקודה האחרונה (גם DRAW)
+glgx		ldd	GLX
+		std	GX
+		ldd	GLY
+		std	GY
+		rts
+g2gl		ldd	GX2
 		std	GLX
 		ldd	GY2
 		std	GLY
+		rts
+gline_st	bsr	g2pt
+		bsr	g2gl
 		lbsr	chkcom
 		suba	#$ac		; PSET = 0, PRESET = 1
 		cmpa	#1
@@ -397,41 +399,35 @@ gline_st	bsr	g2pt
 		lda	#'F
 		lbsr	synchk
 ; gbfill: קווים אופקיים מ-y1 עד y2, צעד אחרי צעד
-gbfill		lda	GX+1
-		ldb	GX2+1
-		bsr	ghl
+gbfill		bsr	ghlx
 		lda	GY+1
 		cmpa	GY2+1
 		beq	9F
 		blo	1F
 		dec	GY+1
-		bra	gbfill
+		fcb	$8c		; cmpx: מדלג על ה-inc
 1		inc	GY+1
 		bra	gbfill
-9		rts
 ; gbox: למעלה, שמאל, ימין, למטה
-gbox		lda	GX+1
-		ldb	GX2+1
-		bsr	ghl
-		lda	GY+1
-		ldb	GY2+1
-		bsr	gvl
+gbox		bsr	ghlx
+		bsr	gvly
 		lda	GX+1		; x1 נשמר במחסנית (gpset משנה את X)
 		pshs	a
 		ldb	GX2+1
 		stb	GX+1
-		lda	GY+1
-		ldb	GY2+1
-		bsr	gvl
+		bsr	gvly
 		puls	a
 		sta	GX+1
 		ldb	GY2+1
 		stb	GY+1
-		lda	GX+1
-		ldb	GX2+1
 ; ghl / gvl: קו אופקי / אנכי מ-A עד B (בכל סדר), מהקטן לגדול. הערך של הציר חוזר בסוף
+; ghlx / gvly: אותו דבר מ-x1 עד x2 / מ-y1 עד y2
+ghlx		lda	GX+1
+		ldb	GX2+1
 ghl		ldu	#GX+1
 		bra	gseg
+gvly		lda	GY+1
+		ldb	GY2+1
 gvl		ldu	#GY+1
 gseg		pshs	a
 		cmpb	,s+
@@ -449,38 +445,25 @@ gseg		pshs	a
 		bra	2B
 3		puls	a,b
 		sta	,u
-		rts
+9		rts
 
 ; gline: קו מ-(GX,GY) ל-(GX2,GY2), אחרי ההקטנה (קורא 8, גם ל-DRAW ול-CIRCLE).
 ; הציר הארוך M צועד כל פעם; המצבר מתחיל ב-M/2 (ועוד -1 אם M זוגי והצעד שלילי, כדי שקו לשני
 ; הכיוונים יצא אותו דבר), ועולה ב-m; כשהוא מגיע ל-M, צעד גם בציר השני. M+1 נקודות, מההתחלה לסוף
 gline		lda	GY+1
 		cmpa	GY2+1
-		bne	1F
+		beq	ghlx
 		lda	GX+1
-		ldb	GX2+1
-		bra	ghl
-1		lda	GX+1
-		ldb	GX2+1
 		cmpa	GX2+1
-		bne	2F
-		lda	GY+1
-		ldb	GY2+1
-		bra	gvl
-2		ldb	#1
+		beq	gvly
 		lda	GX2+1
 		suba	GX+1
-		bcc	3F
-		nega
-		ldb	#-1
-3		pshs	d		; dx, הצעד של x
-		ldb	#1
+		bsr	gdl
+		pshs	d		; dx, הצעד של x
 		lda	GY2+1
 		suba	GY+1
-		bcc	4F
-		nega
-		ldb	#-1
-4		pshs	d		; dy, הצעד של y
+		bsr	gdl
+		pshs	d		; dy, הצעד של y
 		ldu	#GY+1
 		ldy	#GX+1
 		lda	2,s
@@ -519,33 +502,32 @@ gline		lda	GY+1
 		bra	7B
 9		leas	6,s
 		rts
+; gdl: אחרי suba: A = המרחק בערך מוחלט, B = הצעד (1 או -1)
+gdl		ldb	#1		; ldb לא נוגע ב-C
+		bcc	1F
+		nega
+		ldb	#-1
+1		rts
 
 ; ---------- PCOPY s TO d (קורא 13) ----------
 ; כל דף: 0 → ?FC, ומתחיל אחרי תחילת התוכנית → ?FC (חשבון של 8 ביטים). 1536 בתים, מלמטה למעלה
 pcopy_st	bsr	gpage
-		pshs	a
+		pshs	d
 		lda	#$bc		; TO
 		lbsr	synchk
 		bsr	gpage
-		clrb
 		tfr	d,u
-		puls	a
-		clrb
-		tfr	d,x
+		puls	x
 		ldy	#768
 1		ldd	,x++
 		std	,u++
 		leay	-1,y
 		bne	1B
 		rts
-gpage		lbsr	evbyte
-		tstb
-		lbeq	err_fc
-		decb
-		lda	#6
-		mul
-		addb	SCRBAS
+; gpage: מספר דף → D = כתובת הדף (gpg0 ליד PMODE)
+gpage		lbsr	gpg0
 		cmpb	TXTTAB
 		lbhs	err_fc
 		tfr	b,a
+		clrb
 		rts

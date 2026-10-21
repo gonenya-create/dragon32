@@ -131,7 +131,7 @@ def		cmpa	#$ff		; DEF USRn=
 		lbsr	chklp
 		lda	#$80		; הפרמטר: משתנה פשוט
 		bsr	ptrsub
-		lbsr	chknum
+		bsr	cchk
 		lbsr	chkrp
 		lda	#$cb		; =
 		lbsr	synchk
@@ -149,7 +149,7 @@ getfnm		lda	#$be
 		bsr	ptrsub
 		ldd	VARPNT
 		std	DEFPNT
-		lbra	chknum
+cchk		lbra	chknum		; (גם קריאות קצרות מ-DEF ומ-fndoer)
 ; ptrsub: משתנה במצב האינדקסים A (SUBFLG), ואחר כך חזרה למצב רגיל
 ptrsub		sta	SUBFLG
 		clrb
@@ -163,7 +163,7 @@ fndoer		bsr	getfnm
 		lbsr	chklp
 		lbsr	frmevl
 		lbsr	chkrp
-		lbsr	chknum
+		bsr	cchk
 		puls	x
 		ldd	,x
 		lbeq	err_uf		; לא הוגדרה
@@ -180,7 +180,7 @@ fndoer		bsr	getfnm
 		ldx	2,s		; הארגומנט → הפרמטר
 		lbsr	movmf
 		lbsr	frmevl
-		lbsr	chknum
+		bsr	cchk
 		jsr	<chrgot
 		lbne	err_sn
 		puls	x,u
@@ -206,7 +206,7 @@ brkchk		ldd	KQCNT		; תור הבדיקות: רק BREAK שעומד ראשון, ו
 		tsta
 		beq	9F
 		sta	IKEYIM
-9		rts
+9		rts			; (גם של end ו-cont)
 5		lda	CURLIN		; התור
 		inca
 		beq	9B
@@ -219,7 +219,7 @@ brkchk		ldd	KQCNT		; תור הבדיקות: רק BREAK שעומד ראשון, ו
 stop		orcc	#1		; BREAK (orcc/andcc לא משנים את Z)
 		fcb	$10,$21		; lbrn: מדלגים על ה-andcc
 end		andcc	#$fe
-		bne	9F		; משהו אחרי STOP / END: ?SN ב-newstt
+		bne	9B		; משהו אחרי STOP / END: ?SN ב-newstt
 		bcs	stpdrop
 		lbsr	tclose		; END סוגר את הקבצים (STOP לא; קורא: קלטת 6). C=0 אחרי clr
 stpdrop		leas	2,s		; בלי החזרה ל-gone
@@ -240,7 +240,6 @@ stpend		pshs	cc
 		lbsr	puts
 		lbsr	prin
 3		lbra	endcon
-9		rts
 cont		bne	9B
 		ldd	OLDTXT		; 0: אחרי RUN, עריכה, שגיאה או NEW (mit: STKINI)
 		lbeq	err_cn
@@ -276,9 +275,8 @@ prompt		jsr	<chrgot
 qinlin		ldx	#m_qs
 qinlx		lbsr	puts		; לקלטת שפתוחה לקריאה: נזרק
 		lbsr	devgetln
-		bcs	1F
-		rts
-1		leas	2,s		; qinlin
+		bcc	9B		; (ה-rts של prompt)
+		leas	2,s		; qinlin
 ; inbrk: עצירה מתוך INPUT / LINE INPUT (C=1: BREAK). TXTPTR = תחילת הפקודה, ו-CONT מריץ אותה שוב
 inbrk		ldx	TXTBEG
 		stx	TXTPTR
@@ -287,21 +285,6 @@ inbrk		ldx	TXTBEG
 ; ---------- READ / INPUT (mit: READ, INPUT, INLOOP) ----------
 ; הנתונים: מצביע אחד על רשימת המשתנים (TXTPTR, נשמר ב-VARTXT) ואחד על הנתונים (INPPTR),
 ; שתמיד מצביע על מפריד: פסיק, נקודתיים או סוף שורה.
-read		ldx	DATPTR
-		lda	#$80
-		sta	INPFLG
-		bra	inloop0
-input		bsr	errdir		; לא במצב ישיר: ?ID; ואחר כך ההנחיה
-		lda	#',
-		sta	BUFMIN
-		bsr	qinlin
-		tst	DEVNUM		; מהקלטת: גם שורה ריקה היא נתון
-		bne	2F
-		tst	LINBUF
-		bne	2F
-		; ENTER בלי כלום: התוכנית נעצרת בשקט, ו-CONT חוזר ל-INPUT (mit: STPEND)
-		andcc	#$fe
-		bra	inbrk
 ; datlop: ה-DATA הבא, מהמקום הנוכחי. אין עוד: ?OD
 datlop		lbsr	data
 		lda	,x
@@ -316,6 +299,18 @@ datlop		lbsr	data
 		cmpa	#$86		; DATA
 		bne	datlop
 		bra	datbk1
+read		ldx	DATPTR
+		lda	#$80
+		sta	INPFLG
+		bra	inloop0
+input		bsr	errdir		; לא במצב ישיר: ?ID; ואחר כך ההנחיה
+		lda	#',
+		sta	BUFMIN
+		bsr	qinlin
+		tst	DEVNUM		; מהקלטת: גם שורה ריקה היא נתון
+		bne	2F
+		tst	LINBUF		; ENTER בלי כלום: התוכנית נעצרת בשקט, ו-CONT חוזר ל-INPUT (mit: STPEND)
+		beq	inbrk		; C=0 כבר מ-qinlin (tst לא משנה את C)
 2		ldx	#BUFMIN
 		clr	INPFLG
 inloop0		stx	INPPTR
@@ -345,11 +340,10 @@ datbk1		jsr	<chrget
 		ldd	#':*256+',
 		tst	DEVNUM		; מהקלטת: מחרוזת בלי מרכאות עד סוף השורה
 		beq	2F
-		clra
-		clrb
-		bra	2F
-1		tfr	a,b
-		leax	1,x
+		clra			; A = B = 0
+		fcb	$8c		; cmpx #: מדלג על leax
+1		leax	1,x
+		tfr	a,b
 2		std	CHARAC
 		lbsr	strlt2
 		ldx	STRNG2
@@ -379,7 +373,7 @@ varend		ldx	INPPTR
 1		tst	,x		; INPUT: נשאר עוד משהו בשורה?
 		beq	2F
 		ldx	#m_extra
-		lbsr	puts
+		bsr	cputs
 2		clr	DEVNUM		; בסוף INPUT: חזרה למסך
 		rts
 ; נתון שלא מתאים: ב-READ ?SN בשורת ה-DATA; ב-INPUT מבקשים שוב את כל הפקודה
@@ -393,7 +387,7 @@ trmnok		tst	INPFLG
 		ldx	TXTBEG		; newstt מריץ את הפקודה מחדש
 		stx	TXTPTR
 		ldx	#m_redo
-		lbra	puts
+cputs		lbra	puts		; (גם של varend)
 m_qq		fcc	"?"		; "??" ו-"? "
 m_qs		fcc	"? "
 		fcb	0
@@ -402,17 +396,15 @@ m_redo		fcc	"?REDO"
 m_extra		fcc	"?EXTRA IGNORED"
 		fcb	13,0
 ; getstk: יש מקום במחסנית ל-B בתים, ועוד רזרבה? אחרת ?OM (mit: GETSTK; הרזרבה 58 — קורא, משוחזר, פתוח)
+; בודקים דרך reason (mitary.s): S-2 < STREND+B+58  ⇔  S-2 <= (STREND+B-5)+62
 getstk		clra
 		addd	STREND
-		addd	#58
-		pshs	d
-		tfr	s,d
-		subd	,s++
-		lblo	err_om
-		rts
+		subd	#5
+		lbra	reason
 
 ; ---------- PEEK / POKE / EXEC (mit: PEEK, POKE, GETADR) ----------
-; getadr: FAC → כתובת 0-65535 ב-D, אחרת ?FC
+; getadr: FAC → כתובת 0-65535 ב-D, אחרת ?FC. frmadr: קודם ביטוי
+frmadr		lbsr	frmevl
 getadr		lbsr	chknum
 		lda	FACEXP
 		beq	1F
@@ -428,16 +420,14 @@ fn_peek		bsr	getadr
 		tfr	d,x
 		ldb	,x
 		lbra	givb
-poke		lbsr	frmevl
-		bsr	getadr
+poke		bsr	frmadr
 		pshs	d
 		lbsr	chkcom
 		lbsr	evbyte
 		stb	[,s++]
 		rts
 exec		beq	1F		; בלי כתובת: האחרונה
-		lbsr	frmevl
-		bsr	getadr
+		bsr	frmadr
 		std	EXECJP
 1		jmp	[EXECJP]	; קוד המכונה חוזר ב-RTS ישר ל-gone
 execrts		rts

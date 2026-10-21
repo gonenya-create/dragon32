@@ -78,23 +78,27 @@ isend		lbsr	skipsp
 		cmpa	#':
 9		rts
 ; rn_num: מספר שורה (חייבת להיות ספרה, אחרת ?SN)
-rn_num		lbsr	skipsp
-		suba	#'0
-		cmpa	#9
+rn_num		bsr	rn_dig
 		bhi	rn_sn
 		lbra	linget
 rn_sn		lbra	err_sn
+; rn_dig: אחרי רווחים: A = התו פחות '0'; "bhi" = לא ספרה
+rn_dig		lbsr	skipsp
+		suba	#'0
+		cmpa	#9
+		rts
 
 ; ---------- RENUM [חדש][,[סף][,צעד]] ----------
 ; ברירות מחדל 10, 0, 10 (קורא). הסדר: ניקוי משתנים, פרמטרים, בדיקות (?FC), הפניות, מספרי השורות, OK.
 ; הפניות: אחרי GOTO/GO TO, GOSUB/GO SUB, THEN, ELSE, ורשימות עם פסיקים. בכל התוכנית.
 ; הפניה לשורה שאין: נשארת, ומודפס "UL x IN y" (y = המספר החדש של השורה המפנה)
 renum		lbsr	runc
-		ldd	#10
+		clra
+		clrb
+		std	RNOLD
+		ldb	#10
 		std	RNNEW
 		std	RNSTEP
-		clr	RNOLD
-		clr	RNOLD+1
 		ldx	TXTPTR
 		ldy	#RNNEW		; קודם החדש, ואחריו הסף (Y: גם לא 0 בשביל rn_map)
 1		bsr	isend
@@ -135,9 +139,7 @@ rl_scan		lbsr	tkget		; בלי מרכאות ובלי הבית שאחרי $FF
 		cmpa	#1
 		bhi	rl_scan
 		leax	1,x
-rl_ref		lbsr	skipsp
-		suba	#'0
-		cmpa	#9
+rl_ref		bsr	rn_dig
 		bhi	rl_scan
 		pshs	x		; P = הספרה הראשונה
 		ldu	#0		; הערך (מודולו 65536)
@@ -331,15 +333,11 @@ ed_key		bsr	ed_get
 		bra	ed_key
 1		adda	#'0		; הפקודה
 		leax	ed_keys,pcr
-		clrb
 2		tst	,x
 		beq	ed_cmd		; לא מוכרת: כלום
 		cmpa	,x+
-		beq	3F
-		incb
-		bra	2B
-3		leax	ed_offs,pcr
-		ldb	b,x
+		bne	2B
+		ldb	ed_offs-ed_keys-1,x	; X אחרי התו שנמצא: ההיסט שלו ב-ed_offs
 		leax	ed_sp,pcr
 		abx
 		jsr	,x
@@ -384,8 +382,8 @@ ed_end		orcc	#1
 ed_adv		bsr	ed_px
 		bhs	ed_end
 		lda	,x
-		lbsr	putc
 		inc	EDPOS
+ed_put		lbsr	putc
 		andcc	#$fe
 		rts
 ; ed_del: מוחקים את התו שבמקום (בלי הדפסה). C=1 אם בסוף
@@ -395,9 +393,8 @@ ed_del		bsr	ed_px
 		sta	,x+
 		incb
 		cmpb	EDLEN
-		blo	1B
+		blo	1B		; יוצאים עם C=0
 		dec	EDLEN
-		andcc	#$fe
 		rts
 ed_rest		bsr	ed_adv
 		bcc	ed_rest
@@ -418,9 +415,7 @@ ed_bk		lda	EDPOS
 		beq	ed_end
 		dec	EDPOS
 		lda	#8
-		lbsr	putc
-		andcc	#$fe
-		rts
+		bra	ed_put
 ; ed_sk1: S/K: פעולה אחת (Y: הדפסה או מחיקה), ועוד עד לפני התו EDCH. C=1 בסוף
 ed_sk1		jsr	,y
 		bcs	9F
@@ -435,7 +430,7 @@ ed_sk1		jsr	,y
 ; ed_c1: C: תו חדש במקום הקיים (ENTER, בריחה ו-← לא נחשבים); לא מאריך
 ed_c1		bsr	ed_px
 		bhs	ed_end
-1		lbsr	ed_get
+1		bsr	ed_get
 		cmpa	#$20
 		blo	1B
 		sta	,x
@@ -500,11 +495,10 @@ ed_a		bsr	ed_cr		; A: מבטלים את השינויים וטוענים מחדש
 		lbra	ed_load
 ed_ent		lbsr	ed_rest		; ENTER: היתר, שורה חדשה, שמירה
 ed_e		bsr	ed_cr		; E: שמירה בלי להדפיס את היתר
-		ldb	EDLEN		; שומרים כמו שורה שהוקלדה: מכווצים, מחליפים, משתנים מתאפסים
-		ldx	#LINBUF
-		abx
-		clr	,x
-		ldx	#LINBUF
+		ldx	#LINBUF		; שומרים כמו שורה שהוקלדה: מכווצים, מחליפים, משתנים מתאפסים
+		clra
+		ldb	EDLEN
+		clr	d,x
 		ldd	EDNUM
 		std	LINNUM
 		lbsr	storel2

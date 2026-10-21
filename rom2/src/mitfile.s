@@ -18,13 +18,17 @@ HEXEC		equ	$01e5		; 2 בתים: כתובת הביצוע
 HLOAD		equ	$01e7		; 2 בתים: כתובת הטעינה
 
 ; ---------- עזרים ----------
+; getfne: השם, ואחריו סוף הפקודה. nochr: סוף הפקודה, אחרת ?SN
+getfne		bsr	getfn
+nochr		jsr	<chrgot
+		lbne	err_sn
+		rts
 ; getfn (3.1): השם מתמלא ברווחים. אם יש ביטוי: מחרוזת, וכל התווים שלה מועתקים מ-FNAME (שם ארוך גולש לחוצץ)
 getfn		ldx	#FNAME
-		ldd	#$2020
-		std	,x
-		std	2,x
-		std	4,x
-		std	6,x
+		ldd	#$2008		; 8 רווחים
+1		sta	,x+
+		decb
+		bne	1B
 		clr	FNLEN
 		jsr	<chrgot
 		beq	9F
@@ -33,23 +37,21 @@ getfn		ldx	#FNAME
 		sta	FNLEN
 		beq	9F
 		ldu	#FNAME
-1		ldb	,x+
+; cpy: A בתים מ-X ל-U (A לא 0)
+cpy		ldb	,x+
 		stb	,u+
 		deca
-		bne	1B
+		bne	cpy
 9		rts
 
-; rblk: קריאת בלוק שלמה: סנכרון (מנוע + השהיה), בלוק, מנוע כבוי. התוצאה ב-B, עם הדגלים
-rblk		jsr	tsync
+; rblk: קריאת בלוק שלמה לחוצץ: סנכרון (מנוע + השהיה), בלוק, מנוע כבוי. התוצאה ב-B, עם הדגלים
+rblk		ldx	#TBUF
+		stx	BLKADR
+		jsr	tsync
 		jsr	tblkrd
 		lbsr	motoff
 		ldb	BLKRES
 		rts
-; wblk: כתיבת בלוק שלמה: מבוא (מנוע + השהיה), בלוק, מנוע כבוי
-wblk		jsr	tleader
-		jsr	tblkwr
-		lbra	motoff
-
 ; wrhdr: הכותרת. A = סוג הקובץ, B = הדגלים (ASCII ופערים שווים בכל סוגי השמירה). קובץ פתוח: ?AO.
 ; רק השם, הסוג והדגלים נכתבים; בתי הביצוע והטעינה נשארים כמו שהם (CSAVEM כותב אותם לפני)
 wrhdr		tst	FSTATE
@@ -59,17 +61,17 @@ wrhdr		tst	FSTATE
 		stb	HGAP
 		ldx	#FNAME
 		ldu	#TBUF
-		ldb	#8
-1		lda	,x+
-		sta	,u+
-		decb
-		bne	1B
+		lda	#8
+		bsr	cpy
 		clr	BLKTYP
 		lda	#15
 		sta	BLKLEN
-		ldx	#TBUF
+; wblkt: החוצץ כבלוק. wblk: כתיבת בלוק שלמה: מבוא (מנוע + השהיה), בלוק, מנוע כבוי
+wblkt		ldx	#TBUF
 		stx	BLKADR
-		bra	wblk
+wblk		jsr	tleader
+		jsr	tblkwr
+		lbra	motoff
 
 ; wdata: X = ההתחלה, D = הסוף (לא כולל). בלוקים של 255 (האחרון קצר) ברצף, בלי מבוא ביניהם; אחריהם סוף
 ; קובץ, ומנוע כבוי. לפני כן: מבוא (tleader)
@@ -111,9 +113,7 @@ srch2		bsr	drct
 		sta	SCREEN
 		ldx	#SCREEN+2
 		stx	CURSOR
-1		ldx	#TBUF
-		stx	BLKADR
-		lbsr	rblk
+1		lbsr	rblk
 		bne	1B
 		lda	BLKTYP
 		bne	1B
@@ -149,37 +149,41 @@ skipfl		ldb	HGAP		; החוצץ יידרס: הדגל נשמר במחסנית
 		pshs	b
 		bne	1F
 		jsr	tsync
-1		ldx	#TBUF
-		stx	BLKADR
-		tst	,s
+1		tst	,s
 		beq	2F
 		lbsr	rblk
 		bra	3F
-2		jsr	tblkrd
-3		lbne	err_io
-		lda	BLKTYP
-		lbeq	err_io
+2		ldx	#TBUF
+		stx	BLKADR
+		jsr	tblkrd
+3		bsr	chkblk
 		inca			; $FF: הסוף
 		beq	4F
 		cmpa	#$82		; $01-$80: נתונים
 		blo	1B
-		lbra	err_io
+		bra	eio
 4		leas	1,s
 		lbra	motoff
+
+; chkblk: אחרי קריאת בלוק: שגיאה (Z=0) או כותרת (סוג 0): ?IO. אחרת A = הסוג, עם הדגלים
+chkblk		bne	eio
+		lda	BLKTYP
+		beq	eio
+		rts
+eio		lbra	err_io
+efm		lbra	err_fm
 
 ; ---------- CLOAD (3.3) ----------
 cload_st	clr	FSTATE		; סוגרים בכוח (מה שחיכה לכתיבה הולך לאיבוד)
 		cmpa	#'M
 		beq	cloadm
 		leas	2,s		; CLOAD לא חוזר לתוכנית
-		lbsr	getfn
-		jsr	<chrgot
-		lbne	err_sn
+		lbsr	getfne
 		lbsr	search
 		tst	HGAP
 		lbne	cl_asc
 		tst	HTYPE		; רציף: רק תוכנית
-		lbne	err_fm
+		bne	efm
 		lbsr	scrtch
 		jsr	tsync
 		ldx	TXTTAB
@@ -204,7 +208,7 @@ cload_st	clr	FSTATE		; סוגרים בכוח (מה שחיכה לכתיבה הו�
 		clr	,-s
 		lbra	main		; לא מריצים, ובלי OK נוסף
 7		lbsr	scrtch		; מה שנטען נמחק
-		lbra	err_io
+		bra	eio
 
 ; ---------- CLOADM (3.4) ----------
 cloadm		jsr	<chrget		; ה-M
@@ -212,18 +216,11 @@ cloadm		jsr	<chrget		; ה-M
 		lbsr	search
 		tst	HGAP
 		lbne	clm_gap
-		clra			; ההיסט (אחרי החיפוש)
-		clrb
+		bsr	getofs		; ההיסט (אחרי החיפוש)
 		pshs	d
-		jsr	<chrgot
-		beq	1F
-		lbsr	chkcom
-		lbsr	frmevl
-		lbsr	getadr
-		std	,s
-1		lda	HTYPE
+		lda	HTYPE
 		cmpa	#2
-		lbne	err_fm
+		bne	efm
 		ldd	HEXEC
 		addd	,s
 		std	EXECJP
@@ -234,9 +231,7 @@ cloadm		jsr	<chrget		; ה-M
 		puls	x
 2		stx	BLKADR
 		jsr	tblkrd
-		lbne	err_io
-		lda	BLKTYP
-		lbeq	err_io
+		lbsr	chkblk
 		bpl	2B
 		lbra	motoff		; ממשיכים לפקודה הבאה
 
@@ -245,19 +240,46 @@ csave_st	cmpa	#'M
 		beq	csavem
 		lbsr	getfn
 		jsr	<chrgot
-		beq	1F
-		lbsr	chkcom		; ,A
-		lda	#'A
-		lbsr	synchk
-		lbne	err_sn
-		lbra	cs_asc
-1		clra			; תוכנית, בינארי, רציף
+		bne	1F
+		clra			; תוכנית, בינארי, רציף
 		clrb
 		lbsr	wrhdr
 		jsr	tleader
 		ldx	TXTTAB		; מתחילת התוכנית עד VARTAB (כולל שני האפסים של הסוף)
 		ldd	VARTAB
 		lbra	wdata
+1		lbsr	chkcom		; ,A
+		lda	#'A
+		lbsr	synchk
+		lbsr	nochr
+; ---------- CSAVE "שם",A (3.6) ----------
+; כותרת (0, $FF, $FF), הקובץ פתוח לכתיבה, ו-LIST של כל התוכנית לקלטת. בגלל הרוחב האינסופי: CR לפני כל שורה
+; ואחרי האחרונה. אחר כך הקובץ נסגר, והתוכנית (אם רצה) נגמרת
+cs_asc		clra
+		lbsr	wopen
+		lda	#$ff
+		sta	DEVNUM
+		sta	SPCIO
+		lda	#13
+		lbsr	chrout
+		ldd	#$ffff
+		std	LEND
+		clra
+		clrb
+		lbsr	dlist2
+		lbsr	tclose
+		lds	STKTOP
+		clr	,-s
+		lbra	endcon
+
+; getofs: [,היסט] → D (בלי: 0). cadr: ,כתובת → D
+getofs		clrb
+		jsr	<chrgot		; סוף: A = 0
+		bne	cadr
+		rts
+cadr		lbsr	chkcom
+		lbsr	frmevl
+		lbra	getadr
 
 ; ---------- CSAVEM (3.14) ----------
 csavem		jsr	<chrget		; ה-M
@@ -271,8 +293,7 @@ csavem		jsr	<chrget		; ה-M
 		pshs	d
 		bsr	cadr
 		std	HEXEC
-		jsr	<chrgot
-		lbne	err_sn
+		lbsr	nochr
 		lda	#2
 		clrb
 		lbsr	wrhdr
@@ -280,24 +301,18 @@ csavem		jsr	<chrget		; ה-M
 		puls	d,x		; D = הסוף, X = ההתחלה
 		addd	#1		; כולל הסוף
 		lbra	wdata
-cadr		lbsr	chkcom		; ,כתובת
-		lbsr	frmevl
-		lbra	getadr
 
 ; ---------- SKIPF (3.7) ----------
-skipf_st	lbsr	getfn
-		jsr	<chrgot
-		lbne	err_sn
+skipf_st	lbsr	getfne
 		lbsr	search
 		lbra	skipfl
 
 ; ---------- MOTOR ON / OFF (3.8) ----------
-motor_st	pshs	a
+motor_st	tfr	a,b		; chrget לא נוגע ב-B
 		jsr	<chrget
-		puls	a
-		cmpa	#$c2		; OFF
+		cmpb	#$c2		; OFF
 		lbeq	motoff
-		cmpa	#$88		; ON: המנוע והשהיה; הפסיקות לא נחסמות
+		cmpb	#$88		; ON: המנוע והשהיה; הפסיקות לא נחסמות
 		lbne	err_sn
 		jmp	tmoton
 
@@ -311,23 +326,21 @@ getdev		cmpa	#'#
 		jsr	<chrget
 1		lbsr	frmevl
 devfac		lbsr	ayint
-		ldd	FACMO
-		pshs	a
+		ldb	FACLO
 		sex
-		cmpa	,s+
-		lbne	err_dn
+		cmpa	FACMO
+		bne	8F
 		stb	DEVNUM
-		clra			; הדגל של הקלטת
+		clra			; הדגל של הקלטת: $FF רק כש-B = $FF (אז C=0)
 		cmpb	#$ff
-		bne	2F
-		coma
-2		sta	SPCIO
+		adca	#$ff
+		sta	SPCIO
+		cmpb	#$fe		; $FE, $FF או 0. B = DEVNUM ביציאה
+		bhs	9F
 		tstb
-		beq	9F
-		lbpl	err_dn
-		cmpb	#$fe
-		lblt	err_dn
+		bne	8F
 9		rts
+8		lbra	err_dn
 ; istape: Z=1 כשההתקן הוא הקלטת. A משתנה
 istape		lda	DEVNUM
 		inca
@@ -338,16 +351,16 @@ chkout		ldb	#2
 		bra	1F
 chkin		lda	DEVNUM
 		cmpa	#$fe
-		lbeq	err_fm
+		beq	8F
 		ldb	#1
 1		bsr	istape
 		bne	9F
 		lda	FSTATE
 		lbeq	err_no
-		pshs	b
-		cmpa	,s+
-		lbne	err_fm
+		cmpb	FSTATE
+		bne	8F
 9		rts
+8		lbra	err_fm
 
 ; ---------- פלט תו להתקן ($A002) ----------
 ; chrout: A להתקן שב-DEVNUM. מסך: putc. קלטת: לחוצץ (פתוח לקריאה או סגור: נזרק); חוצץ מלא (255): קודם
@@ -376,14 +389,12 @@ wbuf		lda	#1
 		sta	BLKTYP
 		ldb	CBFCNT
 		stb	BLKLEN
-		ldx	#TBUF
-		stx	BLKADR
-		lbsr	wblk
+		lbsr	wblkt
 		clr	CBFCNT
 		rts
 
 ; ---------- קלט תו מהקלטת ----------
-; tchin: התו הבא מהחוצץ → A. חוצץ ריק: EOFFLG = $FF. כשהתו האחרון נלקח, ממלאים מיד. B ו-X נשמרים
+; tchin: התו הבא מהחוצץ → A. חוצץ ריק: EOFFLG = $FF (ו-Z=0). כשהתו האחרון נלקח, ממלאים מיד. B ו-X נשמרים
 tchin		pshs	b,x
 		clr	EOFFLG
 		ldb	CBFCNT
@@ -398,16 +409,16 @@ tchin		pshs	b,x
 		pshs	a
 		bsr	refill
 		puls	a
-9		puls	b,x,pc
+9		tst	EOFFLG
+		puls	b,x,pc
 ; refill: הבלוק הבא של קובץ עם פערים לחוצץ. סוג 0 או שגיאה: ?IO. $80-$FF: סוף (חוצץ ריק). בלוק ריק: הבא
+; ropen: הקלטת פתוחה לקריאה, והבלוק הראשון
+ropen		lda	#1
+		sta	FSTATE
 refill		ldx	#TBUF
 		stx	CBFPTR
-1		ldx	#TBUF
-		stx	BLKADR
-		lbsr	rblk
-		lbne	err_io
-		lda	BLKTYP
-		lbeq	err_io
+1		lbsr	rblk
+		lbsr	chkblk
 		bmi	2F
 		ldb	BLKLEN
 		beq	1B
@@ -420,7 +431,6 @@ refill		ldx	#TBUF
 tgetln		ldx	#LINBUF
 		clrb
 1		bsr	tchin
-		tst	EOFFLG
 		bne	8F
 		anda	#$7f
 		cmpa	#13
@@ -434,8 +444,7 @@ tgetln		ldx	#LINBUF
 		sta	,x+
 		incb
 		bra	1B
-2		clr	,x
-		andcc	#$fe
+2		clr	,x		; C=0
 		rts
 8		clr	,x
 		orcc	#1
@@ -457,54 +466,51 @@ open_st		lbsr	frmevl
 		lbsr	chkcom
 		lbsr	getdev
 		lbsr	chkcom
-		lbsr	getfn
-		jsr	<chrgot
-		lbne	err_sn
+		lbsr	getfne
 		lda	DEVNUM
 		clr	DEVNUM
 		puls	b
 		cmpb	#'O
 		beq	2F
 		cmpb	#'I
-		lbne	err_fm
+		bne	efmo
 		cmpa	#$fe		; "I": מדפסת ?FM, מסך כלום
-		lbeq	err_fm
+		beq	efmo
 		inca
 		bne	9F
 		lbsr	search
 		tst	HASCII		; רק קובץ ASCII עם פערים
-		lbeq	err_fm
+		beq	efmo
 		tst	HGAP
-		lbeq	err_fm
-		lda	#1
-		sta	FSTATE
-		lbra	refill
+		beq	efmo
+		lbra	ropen
 2		inca			; "O": מסך ומדפסת כלום
 		bne	9F
 		lda	#1		; נתונים, ASCII, פערים
-		ldb	#$ff
+; wopen: כותרת (A = הסוג, ASCII ופערים), הקלטת פתוחה לכתיבה, והחוצץ ריק
+wopen		ldb	#$ff
 		lbsr	wrhdr
 		lda	#2
 		sta	FSTATE
 		clr	CBFCNT
 9		rts
+efmo		lbra	err_fm		; ?FM קרוב (OPEN, CLOAD של ASCII)
 
 ; ---------- CLOSE [#התקן[,#התקן...]] (3.13) ----------
 close_st	beq	tclose		; בלי כלום: הקלטת
 1		lbsr	getdev
-		lbsr	istape
+		incb			; B = DEVNUM: הקלטת?
 		bne	2F
 		bsr	tclose
 2		clr	DEVNUM
 		jsr	<chrgot
-		beq	9F
+		beq	9F		; ה-rts של tclose
 		lbsr	chkcom
 		bra	1B
-9		rts
 ; tclose: קובץ פתוח לכתיבה: מה שנשאר בחוצץ (אם יש) ובלוק סוף, כל אחד עם מנוע ומבוא. תמיד: סגור, התקן 0
 tclose		lda	FSTATE
 		cmpa	#2
-		bne	1F
+		bne	tcl1
 		tst	CBFCNT
 		beq	2F
 		lbsr	wbuf
@@ -512,17 +518,16 @@ tclose		lda	FSTATE
 		sta	BLKTYP
 		clr	BLKLEN
 		lbsr	wblk
-1		clr	FSTATE
+tcl1		clr	FSTATE		; C=0 (END)
 		clr	DEVNUM
-		rts
+9		rts
 
 ; ---------- EOF(התקן) (3.12) ----------
 ; מקלדת: 0. מדפסת: ?FM. קלטת: פתוחה לקריאה, ו-1- כשהחוצץ ריק. ההתקן הקודם חוזר אחר כך
 fn_eof		lda	DEVNUM
 		pshs	a
-		lbsr	devfac
-		clrb
-		tst	DEVNUM
+		lbsr	devfac		; B = DEVNUM
+		tstb
 		beq	1F
 		lbsr	chkin
 		clrb
@@ -534,42 +539,16 @@ fn_eof		lda	DEVNUM
 		sex
 		lbra	givd
 
-; ---------- CSAVE "שם",A (3.6) ----------
-; כותרת (0, $FF, $FF), הקובץ פתוח לכתיבה, ו-LIST של כל התוכנית לקלטת. בגלל הרוחב האינסופי: CR לפני כל שורה
-; ואחרי האחרונה. אחר כך הקובץ נסגר, והתוכנית (אם רצה) נגמרת
-cs_asc		clra
-		ldb	#$ff
-		lbsr	wrhdr
-		lda	#2
-		sta	FSTATE
-		clr	CBFCNT
-		lda	#$ff
-		sta	DEVNUM
-		sta	SPCIO
-		lda	#13
-		lbsr	chrout
-		ldd	#$ffff
-		std	LEND
-		clra
-		clrb
-		lbsr	dlist2
-		bsr	tclose
-		lds	STKTOP
-		clr	,-s
-		lbra	endcon
-
 ; ---------- CLOAD של קובץ ASCII (3.3) ----------
 ; דגל ASCII חובה (?FM). NEW, הקלטת פתוחה לקריאה, ושורה אחרי שורה כאילו הוקלדה (בלי הד). שורה בלי מספר: ?DS.
 ; בסוף הקובץ: סגור, ו-OK. שורה שנקטעה בסוף הקובץ הולכת לאיבוד
 cl_asc		tst	HASCII
-		lbeq	err_fm
+		beq	efmo
 		lbsr	scrtch
 		lda	#$ff
 		sta	DEVNUM
 		sta	SPCIO
-		lda	#1
-		sta	FSTATE
-		lbsr	refill
+		lbsr	ropen
 1		lbsr	tgetln
 		bcs	3F
 		ldx	#LINBUF
@@ -579,8 +558,7 @@ cl_asc		tst	HASCII
 		lbcc	err_ds
 		lbsr	storeline
 		bra	1B
-3		clr	FSTATE
-		clr	DEVNUM
+3		bsr	tcl1
 		lds	STKTOP
 		clr	,-s
 		lbra	main_ok
@@ -596,28 +574,14 @@ clm_gap		ldd	HTYPE		; הכותרת תידרס בחוצץ: הסוג וה-ASCII נ
 		puls	d
 		cmpd	#$0200
 		lbne	err_fm
-		clra
-		clrb
-		pshs	d		; ההיסט
-		jsr	<chrgot
-		beq	1F
-		lbsr	chkcom
-		lbsr	frmevl
-		lbsr	getadr
-		std	,s
-		jsr	<chrgot
-		lbne	err_sn
+		lbsr	getofs		; ההיסט
+		pshs	d
+		lbsr	nochr
 1		bsr	trawb		; סוג
 		pshs	a
-		bsr	trawb		; אורך
-		tfr	a,b
-		bsr	trawb
-		exg	a,b
+		bsr	trawd		; אורך
 		tfr	d,y
-		bsr	trawb		; כתובת
-		tfr	a,b
-		bsr	trawb
-		exg	a,b
+		bsr	trawd		; כתובת
 		addd	1,s
 		tfr	d,x
 		tst	,s+
@@ -627,16 +591,20 @@ clm_gap		ldd	HTYPE		; הכותרת תידרס בחוצץ: הסוג וה-ASCII נ
 		bsr	trawb
 		sta	,x
 		cmpa	,x+
-		lbne	err_io
+		bne	eio2
 		leay	-1,y
 		bra	2B
 3		stx	EXECJP
 		leas	2,s
-		clr	FSTATE
-		clr	DEVNUM
+		lbra	tcl1
+; trawd: שני בתים מהקלטת → D (הגבוה קודם)
+trawd		bsr	trawb
+		tfr	a,b
+		bsr	trawb
+		exg	a,b
 		rts
 ; trawb: בית מהקלטת. סוף הקובץ באמצע: ?IO
 trawb		lbsr	tchin
-		tst	EOFFLG
-		lbne	err_io
+		bne	eio2
 		rts
+eio2		lbra	err_io

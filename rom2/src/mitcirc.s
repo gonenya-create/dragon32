@@ -29,9 +29,7 @@ gat		cmpa	#'@
 ; ---------- CIRCLE [@](x,y),r[,c[,יחס[,התחלה[,סוף]]]] (קורא 9) ----------
 circle_st	ldu	#GCX
 		bsr	gat
-		lbsr	chkcom
-		lbsr	frmevl
-		lbsr	getadr
+		lbsr	cadr		; ,רדיוס 0-65535
 		std	GR
 		ldx	#GR		; הרדיוס מוקטן כמו x (גם GASP זז כאן, וממילא נקבע מיד)
 		lbsr	gscl
@@ -80,7 +78,7 @@ circle_st	ldu	#GCX
 gcpos		ldb	#6
 		bsr	gcnum
 		tsta
-		lbne	err_fc
+		bne	gcfc
 		andb	#63
 		rts
 ; gcnum: פסיק, מספר כפול 2^B (מוסיפים למעריך), ואז 0-65535 ב-D (אחרת ?FC)
@@ -92,9 +90,10 @@ gcnum		pshs	b
 		tst	FACEXP
 		beq	1F
 		addb	FACEXP
-		lbcs	err_fc
+		bcs	gcfc
 		stb	FACEXP
 1		lbra	getadr
+gcfc		lbra	err_fc
 
 ; gcpt: הנקודה של המיקום B → GX2, GY2. שמינית o = B/8, צעד b. k = b, או 8-b בשמינית אי-זוגית.
 ; a = r*cos, bb = r*sin. בשמיניות 1,2,5,6 מחליפים. V = Vr*יחס/256 (2^24 ומעלה: ?FC).
@@ -134,7 +133,7 @@ gcpt		tfr	b,a
 		ldx	GASP
 		bsr	umul
 		tst	FACHO
-		lbne	err_fc
+		bne	gcfc
 		ldu	FACMOH		; V
 		ldx	#GCY
 		lda	4,s
@@ -211,17 +210,15 @@ paint_st	ldu	#GX
 		puls	b
 		lbsr	gsetac
 ; רשימת העבודה במחסנית, 6 בתים לרשומה: כיוון, y, x (משמאל לקטע), כמה. קודם רשומה עם כיוון 0
+		lda	#1		; כיוון 1 לזרע (gpushs, gpushr). gpop קובע את GDIR מחדש מיד
+		sta	GDIR
 		clra
 		bsr	gpush
 		lbsr	gsl		; הזרע: שמאלה, ואם צבענו משהו גם ימינה
 		beq	gpop
 		bsr	gext
-		tfr	d,u
-		ldx	GSAV
-		lda	#1
-		bsr	gpush
-		lda	#-1
-		bsr	gpush
+		bsr	gpushs		; כיוון 1
+		bsr	gpushr		; כיוון -1, אותם X ו-U
 		bra	gpop		; בפעם הראשונה לא זורקים כלום
 ; gext: אחרי סריקה שמאלה (D = L): ימינה מהתחלת הקטע. GLC = L, GRR = R, D = L+R, ו-GSAV = העצירה משמאל
 gext		std	GLC
@@ -284,9 +281,7 @@ gpop		puls	a,b,x,u
 6		addd	GREM		; נשארו פחות
 		std	GREM
 		ble	8F
-		ldd	GX		; הליכה ימינה על הקטע של ההורה
-		addd	#1
-		std	GX
+		bsr	gxinc		; הליכה ימינה על הקטע של ההורה
 		bsr	gbord
 		beq	5B
 		ldd	GX
@@ -299,8 +294,7 @@ gpop		puls	a,b,x,u
 		ldd	#-1
 		subd	GRR
 		bra	6B
-8		ldd	GX		; מה שמימין לקטע: בכיוון ההפוך
-		addd	#1
+8		bsr	gxinc		; מה שמימין לקטע: בכיוון ההפוך
 		addd	GREM
 		std	GX
 		tfr	d,x
@@ -309,16 +303,19 @@ gpop		puls	a,b,x,u
 		ble	gmain
 		tfr	d,u
 		lbsr	gpushr
-		lbra	gmain
+		bra	gmain
 ; gsl: סריקה שמאלה מ-GX (שומרים אותו ב-GSAV). gsr: ימינה מ-GX+1.
 ; עוצרים בגבול או מחוץ למסך (X מתחת ל-0 או מעל המקסימום). D = כמה נצבעו, Z=1 אם 0
 gsl		ldd	GX
 		std	GSAV
 		ldd	#-1
 		bra	1F
-gsr		ldd	GX
+; gxinc: GX = GX+1, גם ב-D
+gxinc		ldd	GX
 		addd	#1
 		std	GX
+		rts
+gsr		bsr	gxinc
 		ldd	#1
 1		pshs	d
 		ldu	#0

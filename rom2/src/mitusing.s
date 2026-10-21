@@ -20,7 +20,7 @@ usstart		jsr	<chrget
 		lbsr	synchk
 		ldx	USDSC
 		tst	,x
-		lbeq	err_fc		; תבנית ריקה
+us_fc		lbeq	err_fc		; תבנית ריקה
 		clr	USEND
 		jsr	<chrgot		; אין ערכים בכלל?
 		bne	us_cyc
@@ -35,7 +35,7 @@ us_cr		lda	#13
 9		ldx	USDSC		; משחררים את התבנית
 		lbra	fretms
 1		tst	USANY		; עוד ערכים: מתחילים שוב, אם במחזור נצרך משהו (אחרת ?FC)
-		lbeq	err_fc
+		beq	us_fc
 us_cyc		clr	USPOS
 		clr	USANY
 us_scan		ldu	USDSC		; USEPT = סוף התבנית, X = התו הנוכחי (מחדש כל פעם: איסוף מחרוזות)

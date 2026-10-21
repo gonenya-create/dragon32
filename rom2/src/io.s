@@ -5,27 +5,26 @@ hw_init
 		; PIA0: A = שורות המקלדת (קלט), B = עמודות (פלט)
 		ldx	#PIA0
 		ldb	#$34		; CR: גישה לנתונים; CA2/CB2 פלט נמוך — בוררי הצליל, הצליל והמנוע כבויים (קורא: צליל 0.3)
-		clr	1,x		; CRA: גישה ל-DDR
-		clr	,x		; DDRA: הכול קלט
-		stb	1,x		; CRA: חזרה לנתונים
-		clr	3,x
+		clra
+		bsr	piaddr		; DDRA: הכול קלט
 		lda	#$ff
-		sta	2,x		; DDRB: הכול פלט
-		stb	3,x
+		bsr	piaddr2		; DDRB: הכול פלט
 		; PIA1: A = ה-DAC בביטים 2-7, ומדפסת בביט 1 (פלט); ביט 0 קלט הקלטת
-		ldx	#PIA1
-		clr	1,x
+		leax	PIA1-PIA0-2,x
 		lda	#$fe
-		sta	,x
-		stb	1,x
+		bsr	piaddr
 		clr	,x		; $FF20 = 0
 		; PIA1: B = מצב ה-VDG (ביטים 3-7 פלט)
-		clr	3,x
 		lda	#$f8
-		sta	2,x
-		stb	3,x
+		bsr	piaddr2
 		bsr	txtmode		; מצב טקסט, ערכת צבעים 0; SAM: מצב 0, המסך ב-$0400
 		jmp	,y		; חוזרים דרך Y (קורא: ממשקים, הכניסה ב-$8000)
+; piaddr: CR (1,x) לגישה ל-DDR, DDR (,x) = A, ו-CR = B. piaddr2: אותו דבר לצד B (X עולה ב-2)
+piaddr2		leax	2,x
+piaddr		clr	1,x
+		sta	,x
+		stb	1,x
+		rts
 ; txtmode: מצב טקסט (קורא: SAMALP). ב-$FF22 נשארים 3 הביטים התחתונים; SAM: מצב 0, המסך ב-$0400
 txtmode		pshs	a,x
 		lda	PIA1+2
@@ -36,18 +35,18 @@ txtmode		pshs	a,x
 		cmpx	#SAM+8		; במקום F1=0 ($FFC8): F1=1 ($FFC9)
 		bne	2F
 		sta	1,x
-		bra	3F
+		fcb	$8c		; cmpx #: מדלג על השורה הבאה
 2		sta	,x
-3		cmpx	#SAM
+		cmpx	#SAM
 		bne	1B
 		puls	a,x,pc
 ; noserv: המדפסת (בהמשך) וכניסות התקשורת שאין ב-Dragon 32
 noserv		rts
 ; ---------- מסך ----------
 cls		ldx	#SCREEN
-; clrto: הסמן ב-X, ומשם עד סוף המסך רווחים (גם scroll)
-clrto		stx	CURSOR
-		ldd	#$6060		; רווח (ירוק)
+; clrto: הסמן ב-X, ומשם עד סוף המסך רווחים (גם scroll). clrxd: אותו דבר עם התא שב-D (CLS n)
+clrto		ldd	#$6060		; רווח (ירוק)
+clrxd		stx	CURSOR
 1		std	,x++
 		cmpx	#SCREND
 		blo	1B
@@ -124,83 +123,71 @@ SHIFTED		fcc	"0!\"#$%&'"		; SHIFT על 0-7
 
 ; keyindex: סריקה מלאה. מחזיר ב-A את התו של מקש שנלחץ עכשיו (לא היה לחוץ בסריקה הקודמת), או 0.
 ; משווים כל עמודה לסריקה הקודמת (KPREV), כך שמקש חדש נקלט גם כשהקודם עדיין לחוץ (הקלדה מהירה)
-keyindex	pshs	b,x,y
-		ldy	#KEYMAP
+keyindex	pshs	b,x
 		clr	KFOUND		; 0 = אין; אחרת האינדקס בטבלה + 1
-		clrb			; עמודה
-ki_col		lda	#1
-		pshs	b
-		tstb
-		beq	2F
-1		lsla
-		decb
-		bne	1B
-2		coma
-		sta	PIA0+2
-		puls	b
+		ldx	#KPREV
+		ldd	#$fe00		; A = מסכת העמודה (0 = נסרקת), B = העמודה
+ki_col		sta	PIA0+2
+		pshs	a		; המסכה
+		lda	b,x		; הקודם
+		pshs	a
 		lda	PIA0
 		coma
 		anda	#$7f		; השורות הלחוצות עכשיו
-		ldx	#KPREV
-		pshs	a
-		lda	b,x
-		coma
-		anda	,s		; חדש = עכשיו וגם לא קודם
-		sta	KNEW
-		puls	a
 		sta	b,x		; לסריקה הבאה
+		eora	,s+
+		anda	b,x		; חדש = עכשיו וגם לא קודם
 		cmpb	#3
 		blo	3F
-		lda	KNEW		; שורה 6 היא תו רק בעמודות 0-2 (ENTER, CLEAR, BREAK). SHIFT לא
-		anda	#$3f
-		sta	KNEW
-3		tst	KFOUND
+		anda	#$3f		; שורה 6 היא תו רק בעמודות 0-2 (ENTER, CLEAR, BREAK). SHIFT לא
+3		sta	KNEW
+		tst	KFOUND
 		bne	ki_next
-		lda	KNEW
+		tsta
 		beq	ki_next
+		stb	KCOL
 		clr	KROW		; השורה הנמוכה שנלחצה
+		incb			; האינדקס + 1 = 8*שורה + עמודה + 1
 4		lsra
 		bcs	5F
 		inc	KROW
+		addb	#8
 		bra	4B
-5		stb	KCOL
-		lda	KROW
-		ldb	#8
-		mul
-		addb	KCOL
-		incb
-		stb	KFOUND
+5		stb	KFOUND
 		ldb	KCOL
-ki_next		incb
+ki_next		puls	a		; המסכה של העמודה הבאה
+		lsla
+		inca
+		incb
 		cmpb	#8
 		blo	ki_col
 		ldb	KFOUND
 		beq	ki_none
 		decb
-		lda	b,y		; התו
+		lda	7,x		; SHIFT לחוץ? (KPREV+7, שורה 6) → C
+		lsla
+		lsla
+		ldx	#KEYMAP		; (LD לא משנה את C)
+		lda	b,x		; התו
 		beq	ki_none
-		pshs	a
-		lda	KPREV+7		; SHIFT לחוץ? (עמודה 7, שורה 6)
-		bita	#$40
-		puls	a
-		beq	ki_out
+		bcc	ki_out
 		cmpb	#16
 		blo	1F
 		cmpa	#$5e		; SHIFT+↑ = $5F (ב-EDIT: יציאה ממצב הוספה)
 		bne	ki_out
 		inca
 		bra	ki_out
-1		ldx	#SHIFTED
+1		leax	SHIFTED-KEYMAP,x	; b < 16
 		lda	b,x
 		bra	ki_out
 ki_none		clra
-ki_out		tsta			; Z לפי התו (בלי SHIFT ה-Z נשאר מבדיקת ה-SHIFT: מקש רגיל נראה כמו "אין")
-		puls	b,x,y,pc
+ki_out		tsta			; Z לפי התו
+		puls	b,x,pc
 
 ; inkey: מקש בלי לחכות (INKEY$): מהתור, או מקש שנלחץ עכשיו. אין: A=0
 inkey		ldd	KQCNT
 		bne	gk_pop
-		lbra	keyindex
+		bra	keyindex
 
 ; getkey: מחכה למקש, מחזיר את התו ב-A. קודם תור הבדיקות (KEYQ), אחר כך המקלדת
 getkey		pshs	b,x

@@ -74,6 +74,7 @@ await check('variable record: [name 2][value 5] at VARTAB, ARYTAB after it (5 = 
   return (same(rec, [0x41, 0x00, 0x83, 0x20, 0x00, 0x00, 0x00]) === true && w(r, 0x1d) === v + 7 && w(r, 0x1f) === v + 7) || same(rec, [0x41, 0x00, 0x83, 0x20, 0x00, 0x00, 0x00]) + ` ARYTAB ${w(r, 0x1d).toString(16)}`;
 });
 await check('reading an unassigned variable does not create it (reader)', ['PRINT QQ'], r => w(r, 0x1d) === w(r, 0x1b) || `VARTAB ${w(r, 0x1b).toString(16)} ARYTAB ${w(r, 0x1d).toString(16)}`);
+await check('FOR with a variable in the start value counts the loop variable (FOR I=J, FOR K=J*2)', ['J=1:FOR I=J TO 3:PRINT I;:NEXT I:PRINT J', 'FOR K=J*2 TO 4:PRINT K;:NEXT:PRINT J'], screenHas(/ 1  2  3  1\nOK\nFOR K[^]*\n 2  3  4  1\nOK$/));
 await check('FOR/NEXT with STEP -1, nested, NEXT J,I; GOTO', ['10 FOR I=3 TO 1 STEP -1:FOR J=1 TO 2:PRINT I*10+J;:NEXT J,I', '20 GOTO 40', '30 PRINT "BAD"', '40 PRINT "END"', 'RUN'], screenHas(/RUN\n 31  32  21  22  11  12 END\nOK$/));
 await check('errors: ?/0 ?UL ?NF', ['PRINT 1/0', 'GOTO 99', 'NEXT'], screenHas(/\?\/0 ERROR\nOK\nGOTO 99\n\?UL ERROR\nOK\nNEXT\n\?NF ERROR\nOK$/));
 await check('errors: ?OV ?SN, and IN line inside a program', ['PRINT 1E38*10', 'PRINT 2+', '10 PRINT 1/0', 'RUN'], screenHas(/\n\?OV ERROR\nOK\nPRINT 2\+\n\?SN ERROR\nOK\n10 PRINT 1\/0\nRUN\n\?\/0 ERROR IN 10\nOK$/));

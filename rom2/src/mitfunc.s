@@ -310,7 +310,8 @@ timset		jsr	<chrget		; אחרי $FF
 ; eqadr: '=' ואחריו כתובת 0-65535 ב-D
 eqadr		lda	#$cb		; =
 		lbsr	synchk
-		lbsr	frmevl
+; evadr: ביטוי → כתובת 0-65535 ב-D
+evadr		lbsr	frmevl
 		lbra	getadr
 
 ; ---------- INKEY$ (קורא) ----------
@@ -438,10 +439,7 @@ defusr		ldx	TXTPTR
 
 ; ---------- POINT(x,y): מסך הטקסט (קורא + ה-VDG) ----------
 ; x 0-63, y 0-31. תא שאינו גרפי: -1. נקודה כבויה: 0. דולקת: הצבע 1-8
-fn_point	lbsr	sgxy
-		pshs	x
-		lbsr	chkrp
-		puls	x
+fn_point	lbsr	sgxyr
 		ldb	,x		; VALTYP כבר 0 (evbyte)
 		bmi	3F
 		ldd	#-1		; לא גרפי
@@ -457,3 +455,57 @@ fn_point	lbsr	sgxy
 		andb	#7
 		incb
 5		lbra	givb
+
+; ===== הועברו לכאן מ-mitmem.s ומ-mitscr.s, כדי לנצל את המקום שלפני טבלת $A000 =====
+; ---------- CLEAR [n[,m]] ----------
+clear		beq	clr_go		; בלי מספרים: רק ניקוי
+		lbsr	evadr		; n: 0-65535
+		pshs	d
+		ldd	MEMSIZ
+		pshs	d		; [0] = MEMSIZ החדש, [2] = n
+		jsr	<chrgot
+		beq	1F
+		lbsr	cadr		; ,m
+		subd	#1		; MEMSIZ = m-1 (קורא)
+		bcs	mem_om		; m = 0
+		cmpd	ENDMEM		; מעל ה-RAM
+		bhi	mem_om
+		std	,s
+1		ldd	,s
+		subd	2,s		; STKTOP = MEMSIZ-n
+		bcs	mem_om
+		std	2,s		; [2] = STKTOP החדש
+		ldd	VARTAB		; חייב להישאר מקום מעל התוכנית (הרזרבה: קורא, משוחזרת, פתוח)
+		addd	#58
+		bcs	mem_om
+		cmpd	2,s
+		bhi	mem_om
+		puls	d,x
+		std	MEMSIZ
+		stx	STKTOP
+clr_go		lbsr	runc		; משתנים, מחרוזות, DATA, אין המשך
+		lds	STKTOP		; בלי החזרה ל-gone: המחסנית מתאפסת (mit: STKINI)
+		clr	,-s
+		lbra	newstt
+mem_om		lbra	err_om
+
+; CLS: בלי מספר: רווחים ($60). 0-8: ממלאים בצבע (0 = $80, אחרת $8F + 16*(n-1)).
+; 9-255: רווחים ושורה משלנו (במקור: הודעה של מיקרוסופט; גונן, 20.10: "The Dragon machine 2026"), ושתי שורות חדשות
+cls_st		lbeq	cls
+		lbsr	evbyte
+		cmpb	#8
+		bhi	4F
+		lda	#16		; הצבע: 16n+$7F, ול-0: $80
+		mul
+		addb	#$7f
+		bmi	1F
+		incb
+1		tfr	b,a		; כל המסך בצבע, והסמן בהתחלה (כמו אחרי cls)
+		ldx	#SCREEN
+		lbra	clrxd
+4		lbsr	cls		; קודם רווחים
+		leax	m_cls,pcr
+		lbra	puts
+m_cls		fcc	"THE DRAGON MACHINE 2026"
+		fcb	13,13,0
+

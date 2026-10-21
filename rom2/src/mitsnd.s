@@ -37,7 +37,7 @@ sndoff		ldb	PIA1+3
 ; evnzb: ביטוי → B בין 1 ל-255. שלילי, 0 או מעל 255: ?FC. השבר נחתך (קורא 1.1)
 evnzb		lbsr	evbyte
 		tstb
-		lbeq	err_fc
+		beq	pfc
 		rts
 
 ; ---------- SOUND טון,משך (קורא 1) ----------
@@ -86,17 +86,17 @@ audio_st	pshs	a		; המילה שאחרי AUDIO נקראת קודם
 		cmpa	#$88		; ON
 		lbne	err_sn
 		lda	#1		; כניסת הקלטת
-		bsr	sndsel
+; snds: sndsel ואז sndon
+snds		bsr	sndsel
 		bra	sndon
 
 ; ---------- PLAY מחרוזת (קורא 2, 9) ----------
 ; plyini: ברירות המחדל, בהדלקה ובכל RUN (קורא 0.2): O3 (נשמר 2), עוצמה $B8/$44, L4, T2, בלי נקודות
-plyini		ldd	#$02b8
-		std	OCTAVE
-		ldd	#$4404
+plyini		ldd	#$4404
 		std	VOLLO
-		lda	#2
-		sta	TEMPO
+		ldd	#$02b8
+		std	OCTAVE
+		sta	TEMPO		; A = 2
 		clr	DOTVAL
 		rts
 
@@ -107,8 +107,7 @@ play_st		ldx	#0
 		pshs	a,x
 		lbsr	frmevl
 		clra			; DAC והצליל דולק, עוד לפני בדיקת הסוג
-		lbsr	sndsel
-		lbsr	sndon
+		bsr	snds
 		lbsr	frestr		; לא מחרוזת: ?TM
 		sta	DLEN
 		stx	DPTR
@@ -144,11 +143,10 @@ ploop		lbsr	dget
 		bhi	pfc
 		lslb
 		lslb
-		pshs	b
-		lda	#126		; גבוה = 126+4V, נמוך = 124-4V
-		adda	,s
-		ldb	#124
-		subb	,s+
+		tfr	b,a		; גבוה = 126+4V, נמוך = 124-4V
+		adda	#126
+		negb
+		addb	#124
 		std	VOLHI
 		bra	ploop
 3		cmpa	#'L
@@ -172,14 +170,14 @@ ploop		lbsr	dget
 		ldb	TEMPO
 		lbsr	parg
 		tstb
-		lbeq	pfc
+		beq	pfc2
 		stb	TEMPO
 		bra	ploop
 5		cmpa	#'P
 		bne	6F
 		lbsr	dval		; רק "=שם;" או ספרות
 		tstb
-		lbeq	pfc
+		beq	pfc2
 		ldx	VOLHI		; השתיקה: תו C בעוצמה $7C/$7C, בלי נקודות, ואחר כך חזרה
 		lda	DOTVAL
 		pshs	a,x
@@ -194,21 +192,10 @@ ploop		lbsr	dget
 		lbra	ploop
 6		cmpa	#'X
 		bne	7F
-		lbsr	dvar		; X שם; : מחרוזת אחרת (?TM)
-		tst	VALTYP
-		lbeq	err_tm
-		ldb	#4		; שתי מילים מעל הרזרבה (?OM)
-		lbsr	getstk
-		ldx	VARPNT
-		lda	,x
-		lbeq	ploop		; ריקה או לא קיימת: חוזרים מיד
-		ldu	DPTR
-		ldb	DLEN
-		pshs	b,u
-		sta	DLEN
-		ldx	2,x
-		stx	DPTR
+		ldb	#2		; X שם; : מחרוזת אחרת. getstk של 4 בתים (שתי מילים)
+		lbsr	dxstr
 		lbra	ploop
+pfc2		lbra	err_fc
 7		cmpa	#'N		; N לפני תו: מדלגים
 		bne	8F
 		lbsr	dgetf
@@ -224,23 +211,22 @@ ploop		lbsr	dget
 		cmpa	#'#
 		beq	81F
 		cmpa	#'+
-		bne	82F
+		beq	81F
+		cmpa	#'-
+		beq	82F
+		lbsr	dback
+		bra	83F
+82		dec	,s
+		fcb	$8c		; cmpx: מדלג על ה-inc
 81		inc	,s
-		bra	83F
-82		cmpa	#'-
-		bne	84F
-		dec	,s
-		bra	83F
-84		lbsr	dback
 83		puls	a
-		deca
 		bra	91F
 9		lbsr	dback		; תו לפי מספר, 1-12 (כל תו אחר: ?FC)
 		lbsr	dval
 		tfr	b,a
-		deca
-91		cmpa	#11
-		lbhi	err_fc
+91		deca
+		cmpa	#11
+		bhi	pfc2
 		ldb	NOTELN
 		bsr	pnote
 		lbra	ploop
@@ -253,24 +239,24 @@ parg		pshs	b
 		cmpa	#'+
 		bne	1F
 		incb
-		lbeq	pfc
+		beq	pfc2
 		rts
 1		cmpa	#'-
 		bne	2F
 		tstb
-		lbeq	pfc
+		beq	pfc2
 		decb
 		rts
 2		cmpa	#'>
 		bne	3F
 		cmpb	#128
-		lbhs	pfc
+		bhs	pfc2
 		lslb
 		rts
 3		cmpa	#'<
 		bne	4F
 		tstb
-		lbeq	pfc
+		beq	pfc2
 		lsrb
 		rts
 4		lbsr	dback

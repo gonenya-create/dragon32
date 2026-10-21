@@ -18,13 +18,12 @@ POLYPT		equ	$64		; קורא: חופף ל-STRNG2
 ; polyx: X = הטבלה. FAC = x*P(x^2)
 polyx		stx	POLYPT
 		ldx	#TEMPF1
-		lbsr	movmf
-		ldx	#TEMPF1
-		lbsr	fmult		; x^2
+		lbsr	movmf		; (movmf לא משנה את X)
+		bsr	pfmult		; x^2
 		ldx	POLYPT
 		bsr	poly
 		ldx	#TEMPF1
-		lbra	fmult
+pfmult		lbra	fmult		; (גם קריאות קצרות מ-poly ומ-LOG)
 ; poly: X = הטבלה: [מעלה][מקדמים של 5 בתים, הגבוה ראשון]. שיטת הורנר
 poly		lda	,x+
 		sta	DEGREE
@@ -32,7 +31,7 @@ poly		lda	,x+
 		ldx	#TEMPF2
 		lbsr	movmf
 		ldx	POLYPT
-1		lbsr	fmult		; בפעם הראשונה: המקדם הראשון
+1		bsr	pfmult		; בפעם הראשונה: המקדם הראשון
 		ldx	POLYPT
 		leax	5,x
 		stx	POLYPT
@@ -64,7 +63,7 @@ log		lbsr	sign
 		puls	a
 		lbsr	finlog		; ועוד המעריך
 		ldx	#log2c	; כפול ln 2
-		lbra	fmult
+		bra	pfmult
 
 ; ---------- SQR ו-^ (mit: SQR, FPWRT) ----------
 ; ^: ARG = הבסיס, FAC = המעריך
@@ -78,7 +77,7 @@ fpwrt		tst	FACEXP
 		bne	1F
 		tst	FACSGN		; בסיס 0: מעריך שלילי ?/0 (קורא), אחרת 0
 		lbmi	err_dv0
-		lbra	zerofc
+		bra	mzero
 1		ldx	#TEMPF3		; שומרים את המעריך
 		lbsr	movmf
 		clrb			; הזוגיות
@@ -113,8 +112,8 @@ exp		ldx	#logeb2	; x*log2(e)
 		cmpa	#$88		; |y| >= 128: גדול מדי
 		blo	2F
 6		tst	FACSGN		; חיובי: ?OV. שלילי: 0
-		lbpl	err_ov
-		lbra	zerofc
+		bpl	m_ov
+mzero		lbra	zerofc		; (גם של fpwrt)
 2		lbsr	fint
 		lda	INTEGR
 		adda	#$81
@@ -130,11 +129,11 @@ exp		ldx	#logeb2	; x*log2(e)
 		lbra	muldiv
 
 ; ---------- SIN / COS / TAN (mit: SIN, COS, TAN) ----------
-fn_cos		lbsr	chknum
+fn_cos		bsr	mchk
 		ldx	#pi2		; cos x = sin(x+π/2)
 		lbsr	fadd
 		bra	sin
-fn_sin		lbsr	chknum
+fn_sin		bsr	mchk
 sin		lbsr	movaf
 		ldx	#twopi	; x/2π
 		lbsr	movfm
@@ -154,17 +153,21 @@ sin		lbsr	movaf
 		lda	FACSGN
 		bmi	sin2
 		com	TANSGN		; רביע 2 ו-3
-sin1		lbsr	negop
+sin1		bsr	mneg
 sin2		ldx	#fr4
 		lbsr	fadd
 		lda	,s+
 		bpl	1F
-		lbsr	negop
+		bsr	mneg
 1		ldx	#sincon
-		lbra	polyx
+mpoly		lbra	polyx		; (גם של ATN)
+; mneg, mchk, m_ov: קפיצות קרובות ל-negop (mitfp.s), ל-chknum (mitrun.s) ול-err_ov, בשביל קריאות קצרות מכאן
+mneg		lbra	negop
+mchk		lbra	chknum
+m_ov		lbra	err_ov
 cosc		pshs	a		; הקוסינוס של הזווית המצומצמת (polyx השאיר אותה ב-TEMPF1)
 		bra	sin1
-fn_tan		lbsr	chknum
+fn_tan		bsr	mchk
 		ldx	#TEMPF1
 		lbsr	movmf
 		clr	TANSGN
@@ -177,31 +180,31 @@ fn_tan		lbsr	chknum
 		lda	TANSGN
 		bsr	cosc
 		tst	FACEXP		; קוסינוס 0: ?OV (קורא)
-		lbeq	err_ov
+		beq	m_ov
 		ldx	#TEMPF3
-		lbra	fdiv
+mfdiv		lbra	fdiv		; (גם של ATN)
 
 ; ---------- ATN (mit: ATN) ----------
-fn_atn		lbsr	chknum
+fn_atn		bsr	mchk
 		lda	FACSGN
 		pshs	a
 		bpl	1F
-		lbsr	negop
+		bsr	mneg
 1		lda	FACEXP
 		pshs	a
 		cmpa	#$81		; 1 ומעלה: 1/x
 		blo	2F
 		ldx	#fone
-		lbsr	fdiv
+		bsr	mfdiv
 2		ldx	#atncon
-		lbsr	polyx
+		bsr	mpoly
 		puls	a
 		cmpa	#$81
 		blo	3F
 		ldx	#pi2		; π/2 - atn(1/x)
 		lbsr	fsub
 3		lda	,s+
-		lbmi	negop
+		bmi	mneg
 		rts
 
 		include	"mitconst.s"
