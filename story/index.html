@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>יומן המסע — Dragon 1982</title>
+<meta name="description" content="איך בניתי מחדש את ה-Dragon 32 מ-1982 בדפדפן, עם AI, יום אחרי יום.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;700&amp;display=swap">
+<style>
+:root { --bg: #0e0b09; --ink: #efe6d2; --muted: #c9bba5; --line: #4a3d31; --accent: #f2c94c; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.65 'IBM Plex Sans Hebrew', system-ui, sans-serif; }
+header { display: flex; align-items: center; gap: 12px; padding: 10px 16px; flex-wrap: wrap; }
+header b { font-size: 18px; }
+.tag { font-size: 13px; padding: 3px 10px; border-radius: 999px; background: #3a2a10; color: var(--accent); }
+header a:first-of-type { margin-inline-start: auto; }
+header a { color: var(--ink); text-decoration: none; border: 1.5px solid var(--line); border-radius: 8px; padding: 6px 12px; font-size: 14px; }
+main { max-width: 720px; margin: 0 auto; padding: 8px 16px 40px; }
+h1 { font-size: 26px; margin: 12px 0 8px; }
+h2 { font-size: 19px; margin: 26px 0 6px; color: var(--accent); }
+p, li { color: var(--ink); }
+ul { padding-inline-start: 22px; margin: 6px 0; }
+li { margin: 4px 0; }
+.muted { color: var(--muted); }
+a { color: var(--accent); }
+code { font-family: 'Courier New', monospace; }
+a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.ep { border-inline-start: 3px solid var(--line); padding-inline-start: 14px; margin: 22px 0; }
+.ep time { display: block; font-size: 14px; color: var(--muted); }
+.ep h2 { margin-top: 2px; }
+.lesson { background: #1c1610; border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; margin: 10px 0; }
+</style>
+</head>
+<body>
+<header>
+  <b dir="ltr">Dragon 1982</b><span class="tag">יומן המסע</span>
+  <a href="/en/story/" lang="en" hreflang="en" data-lang="en">English</a>
+  <a href="/">← חזרה למחשב</a>
+</header>
+<main>
+<h1>יומן המסע</h1>
+<p>ב-1982 הייתי בן 13, וקיבלתי <bdi>Dragon 32</bdi> מתנה ליום ההולדת. זה היה המחשב הראשון שלי. טענתי משחקים מקלטות, ולפעמים הסרט נקרע או נתקע בתוך הרשמקול, והכל מתחיל מההתחלה. מאוחר יותר קניתי כונן דיסקטים, וזה הרגיש כמו קסם.</p>
+<p>באוקטובר 2026 התחלתי לבנות אותו מחדש בדפדפן. אני לא מתכנת, אני בונה עם AI. כאן אני כותב מה קרה, יום אחרי יום: מה בנינו, מה החלטתי, ומה למדתי.</p>
+<p class="muted">החדש למעלה. מי שרוצה לנסות: <a href="/">האפליקציה</a> · <a href="/lab/1982/">מכונת ה-<bdi>Dragon</bdi></a></p>
+
+<section class="ep">
+<time datetime="2026-10-21">21.10.2026</time>
+<h2>כל ה-BASIC בשבב אחד</h2>
+<p>ה-ROM שלנו גמור: כל ה-<bdi>BASIC</bdi> בשבב אחד של 16K, כמו במקור, וחריץ המחסנית נשאר ריק. נכנסו הקלטת בפורמט ובמהירות המקוריים, המדפסת, <bdi>RESET</bdi> ששומר את התוכנית, ו-25 נקודות ההרחבה שדרכן מחסניות התחברו ל-<bdi>BASIC</bdi>. 574 בדיקות עברו, וכתבתי "מזג". באותו ערב זה עלה לאתר.</p>
+<p class="lesson"><strong>מה למדתי:</strong> ה-AI הציע לתקן שני "באגים". לפני התיקון שלחנו את הקורא לבדוק במקור. אחד היה באג אמיתי, והשני התברר כהתנהגות זהה למקור. "תיקון" שלו היה מרחיק אותנו מהמקור. ה-AI בטוח בעצמו גם כשהוא מנחש.</p>
+</section>
+
+<section class="ep">
+<time datetime="2026-10-20">20.10.2026</time>
+<h2>שבב אחד, ו-Ciaran עונה</h2>
+<p>החלטתי שכל ה-<bdi>BASIC</bdi> חייב להיכנס בשבב אחד של 16K, כמו במקור, בלי שבב הרחבה. הניסוי הראה שזה אפשרי, אבל צפוף. היו 16 סבבים של חיסכון במקום, בית אחר בית.</p>
+<p>כתבתי ל-<bdi>Ciaran Anscomb</bdi>, שבנה את האמולטור <bdi>XRoar</bdi>, והוא ענה באותו יום: המהירות המדויקת של הקלטת, ועוד פרטים שאין באף ספר. באותו יום גם חבר בקבוצת בעלי ה-<bdi>Dragon</bdi> סיפר ש-<code dir="ltr">READA</code> בלי רווח לא עובד אצלנו. במקור זה עבד, ותיקנו.</p>
+</section>
+
+<section class="ep">
+<time datetime="2026-10-19">19.10.2026</time>
+<h2>העיקרון</h2>
+<p>עצרתי וכתבתי את העיקרון של הפרויקט: <strong>המחשב האמיתי, כמה שיותר קרוב, בלי להעתיק את הקוד המקורי.</strong> בלי קיצורי דרך, כמה זמן שזה ייקח. כל החלטה נבחנת בשאלה אחת: האם זה מקרב אותנו למקור? מכאן גם השם החדש, "מכונת ה-<bdi>Dragon</bdi>", ותוכנית עבודה בשלבים, שמתחילה במחקר ולא בקוד.</p>
+</section>
+
+<section class="ep">
+<time datetime="2026-10-17">17.10.2026</time>
+<h2>המחשב האמיתי</h2>
+<p>יום ארוך. שיתפתי סרטון של המחשב בקבוצות של חובבי מחשבים ישנים, והאפליקציה קיבלה עיצוב חדש, גרסה באנגלית, דף נגישות והיכל תהילה עולמי. ובערב נולד "המחשב האמיתי": האמולטור <bdi>XRoar</bdi> מדמה את השבבים של ה-<bdi>Dragon</bdi>, ועליו רץ <bdi>BASIC</bdi> שכתבנו מאפס בשפת המכונה של המעבד 6809.</p>
+<p>כשבדקתי, ראיתי שמבחוץ זה נראה כמו המקור, אבל מבפנים לא. התוכנית נשמרה בזיכרון אחרת, והשבב התמלא עד שהוספנו שבב שני בחריץ המחסנית. החלטתי לבנות מחדש: על בסיס ה-<bdi>BASIC</bdi> ש-<bdi>Microsoft</bdi> פרסמה כקוד פתוח, ו"זהה" כולל גם את הזיכרון.</p>
+<p class="lesson"><strong>מה למדתי:</strong> קל להתלהב ממשהו שנראה נכון. הבדיקה האמיתית היא מה קורה מבפנים.</p>
+</section>
+
+<section class="ep">
+<time datetime="2026-10-16">16.10.2026</time>
+<h2>בית משלו</h2>
+<p>ה-<bdi>Dragon</bdi> יצא מהאתר האישי שלי לבית משלו, dragon1982.com: אפליקציה שאפשר להתקין בטלפון, קוד פתוח, ושורת פתיחה משלנו במקום זו של <bdi>Dragon Data</bdi>.</p>
+</section>
+
+<section class="ep">
+<time datetime="2026-10-13">13.10.2026</time>
+<h2>מסך ירוק</h2>
+<p>זה התחיל כפינה קטנה בדף <a href="https://www.gonenyarom.co.il/history/">"התפתחות המכונה"</a> באתר האישי שלי: מסך ירוק עם <bdi>BASIC</bdi> קטן שכתבנו ב-<bdi>JavaScript</bdi>. ‏<code dir="ltr">PRINT</code>, <code dir="ltr">GOTO</code>, <code dir="ltr">FOR</code>, <code dir="ltr">SOUND</code>. עוד באותו יום היו קלטת עם רעש טעינה, "נחש את המספר", המחסנית הראשונה ותוכנית מעיתון.</p>
+</section>
+
+<h2>מאחורי הקלעים</h2>
+<ul>
+  <li><strong>שני חדרים:</strong> ה-ROM המקורי מוגן בזכויות יוצרים. לכן סוכן AI אחד קורא את המקור ומחזיר רק עובדות, במילים שלו. סוכן שני כותב את הקוד בלי לראות את המקור אף פעם.</li>
+  <li><strong>בדיקות:</strong> כל שינוי עובר מאות בדיקות אוטומטיות. אבל הבדיקות בודקות רק מה שידענו לכתוב, ולכן חשובים אנשים עם מחשב אמיתי.</li>
+  <li><strong>הכללים שלי:</strong> שום דבר לא עולה לאתר לפני שאני כותב "מזג". לא בונים לפני שחוקרים. ושום דבר מקורי של אחרים לא נכנס: לא קוד, לא משחקים ולא לוגואים.</li>
+</ul>
+
+<h2>מה הלאה</h2>
+<p>משחקים ישנים בשפת מכונה קופצים לכתובות בתוך ה-ROM המקורי. אצלנו השגרות יושבות במקומות אחרים, ולכן משחקים כאלה עוד לא רצים. זה השלב הבא. <a href="/lab/1982/building/">מה אנחנו בונים עכשיו</a> · <a href="/dragon-history/">ההיסטוריה של ה-<bdi>Dragon</bdi></a></p>
+</main>
+<script src="/assets/dragon/langpick.js" defer></script>
+</body>
+</html>
