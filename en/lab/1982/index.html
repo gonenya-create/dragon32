@@ -104,8 +104,8 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
   <div class="info">
   <p class="note">Try: <code>PRINT 2+3</code>, or a program: <code>10 FOR I=1 TO 10:PRINT I*I:NEXT</code> then <code>RUN</code>. To stop: <code>BREAK</code> (Esc).</p>
   <details class="note" open><summary><strong>What works, and what's still missing</strong></summary>
-    <p><strong>Works:</strong> numbers and strings, variables and arrays, IF/THEN/ELSE, AND/OR/NOT, FOR, GOTO, GOSUB, ON, DATA/READ, INPUT, DEF FN, the functions (INT, RND, SIN, LEFT$, MID$...), graphics (PMODE, LINE, CIRCLE, PAINT, DRAW, GET/PUT), sound (SOUND, PLAY), cassette (CSAVE/CLOAD), PRINT USING, EDIT, RENUM, AUTO, DEL, STOP/CONT, TRON.</p>
-    <p><strong>Still missing:</strong> Original 1982 program tapes don't load yet (they are stored in a different, tokenised format). Speed is still a little below the original. The app's cartridges and helper don't work here.</p>
+    <p><strong>Works:</strong> the whole BASIC in one 16K chip, like the original: numbers and strings, variables and arrays, IF/THEN/ELSE, AND/OR/NOT, FOR, GOTO, GOSUB, ON, DATA/READ, INPUT, DEF FN, the functions (INT, RND, SIN, LEFT$, MID$...), graphics (PMODE, LINE, CIRCLE, PAINT, DRAW, GET/PUT), sound (SOUND, AUDIO, PLAY), cassette in the original format (CSAVE/CLOAD, CSAVEM/CLOADM, OPEN/PRINT #/INPUT #), PRINT USING, TAB, EDIT, RENUM, DEL, STOP/CONT, TRON. RESET keeps your program, like a real Dragon.</p>
+    <p><strong>Still missing:</strong> DLOAD. Nothing has been checked against a real Dragon yet. The app's cartridges and helper don't work here.</p>
     <p><strong>Found a difference from the Dragon you remember?</strong> That is exactly what we're looking for. <a href="https://github.com/gonenya-create/dragon32/issues/new?labels=real-machine&amp;title=Difference%20from%20the%20original%3A%20&amp;body=What%20I%20typed%3A%0A%0A%0AWhat%20I%20got%3A%0A%0A%0AWhat%20the%20original%20Dragon%20would%20do%3A%0A%0A%0AComputer%20/%20phone%20and%20browser%3A%0A">Open a report on GitHub</a> (a ready form with three questions; a GitHub account is needed), or write via the <a href="https://www.gonenyarom.co.il/about/#contact">contact page</a> (in Hebrew; English is fine): what you typed, what you got, and what the original would have done.</p>
   </details>
   <details class="note"><summary><strong>How to edit a line (EDIT)</strong></summary>
@@ -123,12 +123,12 @@ for (const f of ['ui_done_initialising', 'ui_menu_add', 'ui_menu_add_str', 'ui_m
 var Module = {
   canvas: document.getElementById('canvas'),
   // ה-ROM שלנו במקום ה-BASIC המקורי; kbd-translate: מה שמקלידים במחשב הוא מה שמופיע
-  arguments: ['-machine', 'dragon32', '-extbas', '/d32.rom', '-cart', 'd32x', '-cart-type', 'rom', '-cart-rom', '/d32x.rom', '-no-cart-autorun', '-kbd-translate', '-kbd-lang', 'us', '-no-vo-colour-killer', '-tape-write', '/out.cas'],
+  arguments: ['-machine', 'dragon32', '-extbas', '/d32.rom', '-kbd-translate', '-kbd-lang', 'us', '-no-vo-colour-killer', '-tape-write', '/out.cas'],
   print: () => {}, printErr: () => {},
   onRuntimeInitialized: () => { window.d32Ready = true; },
   preRun: [function () {
     // שני שבבים: ה-BASIC ($8000) ושבב ההרחבה בחריץ המחסנית ($C000)
-    for (const f of ['d32.rom', 'd32x.rom']) {
+    for (const f of ['d32.rom']) {
       addRunDependency(f);
       fetch('/lab/1982/' + f).then(r => r.arrayBuffer()).then(b => { FS.writeFile('/' + f, new Uint8Array(b)); removeRunDependency(f); });
     }
