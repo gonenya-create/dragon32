@@ -45,6 +45,7 @@ strlt2		stx	DSCTMP+2
 3		leax	-1,x
 4		stx	STRNG2
 		stb	DSCTMP
+		jsr	HK_STR		; 20: B = האורך, X = הסוף
 		ldx	DSCTMP+2
 		cmpx	TXTTAB
 		blo	4F

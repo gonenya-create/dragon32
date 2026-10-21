@@ -57,7 +57,33 @@ STACKINI	equ	$7f36
 RSTFLG		equ	$71		; $55: ‏RESET חוזר ל-BASIC (קורא: מדפסת 3.5)
 RSTVEC		equ	$72		; לאן חוזרים ב-RESET
 HOOKS		equ	$015e		; 25 נקודות חיבור, 3 בתים כל אחת (קורא: מדפסת 3.6)
-DESC1		equ	$012a		; מתאר הפקודות השני (קורא 3.2)		; ספר: STKTOP אחרי ההדלקה
+DESC1		equ	$012a		; מתאר הפקודות השני (קורא 3.2)
+; נקודות החיבור לפי הסדר (קורא: מדפסת 3.6). כל אחת נקראת ב-JSR, ובהדלקה חוזרת מיד
+HK_OPEN		equ	$015e		; 1 OPEN
+HK_DEVN		equ	$0161		; 2 בדיקת מספר ההתקן (Z=1 מקבל)
+HK_DEVP		equ	$0164		; 3 פרמטרי ההתקן
+HK_COUT		equ	$0167		; 4 פלט תו
+HK_CIN		equ	$016a		; 5 קלט תו
+HK_CKIN		equ	$016d		; 6 פתוח לקריאה?
+HK_CKOUT	equ	$0170		; 7 פתוח לכתיבה?
+HK_CLALL	equ	$0173		; 8 סגירת הכול
+HK_CLONE	equ	$0176		; 9 סגירת התקן
+HK_STMT		equ	$0179		; 10 משגר הפקודות
+HK_INPQ		equ	$017c		; 11 INPUT לפני "??"
+HK_LBRK		equ	$017f		; 12 BREAK ב-LIST
+HK_LINE		equ	$0182		; 13 קלט שורה
+HK_AEOF		equ	$0185		; 14 סוף קובץ בטעינת ASCII
+HK_EOF		equ	$0188		; 15 EOF(
+HK_OPND		equ	$018b		; 16 ערך בביטוי
+HK_ERR1		equ	$018e		; 17 שגיאה (B = הקוד)
+HK_ERR2		equ	$0191		; 18 שגיאה, השנייה
+HK_RUN		equ	$0194		; 19 RUN
+HK_STR		equ	$0197		; 20 מחרוזת קבועה / ניקוי המשתנים
+HK_NEWS		equ	$019a		; 21 לפני כל פקודה
+HK_SASG		equ	$019d		; 22 השמת מחרוזת
+HK_MISC		equ	$01a0		; 23 CLS, RENUM, GET/PUT, השמה לפונקציה
+HK_CRUN		equ	$01a3		; 24 כיווץ
+HK_DECR		equ	$01a6		; 25 פתיחת שורה (LIST, EDIT)		; ספר: STKTOP אחרי ההדלקה
 
 ; ---------- הכניסות הקבועות ב-$8000 (docs/DRAGON-SPEC-INTERFACES.md 3ג, DRAGON-SPEC-TAPE.md 1.10) ----------
 		jmp	hw_init		; $8000 אתחול חומרה (חוזר דרך Y)
@@ -267,75 +293,83 @@ prin		ldd	CURLIN
 prcr		lda	#13
 		lbra	chrout
 
-; ---------- שגיאות (mit: ERROR) ----------
-err_ov		ldd	#'O*256+'V
-		bra	error
-err_fc		ldd	#'F*256+'C
-		bra	error
-err_tm		ldd	#'T*256+'M
-		bra	error
-err_nf		ldd	#'N*256+'F
-		bra	error
-err_ul		ldd	#'U*256+'L
-		bra	error
-err_bs		ldd	#'B*256+'S
-		bra	error
-err_dd		ldd	#'D*256+'D
-		bra	error
-err_om		ldd	#'O*256+'M
-		bra	error
-err_st		ldd	#'S*256+'T
-		bra	error
-err_os		ldd	#'O*256+'S
-		bra	error
-err_ls		ldd	#'L*256+'S
-		bra	error
-err_rg		ldd	#'R*256+'G
-		bra	error
-err_od		ldd	#'O*256+'D
-		bra	error
-err_id		ldd	#'I*256+'D
-		bra	error
-err_cn		ldd	#'C*256+'N
-		bra	error
-err_uf		ldd	#'U*256+'F
-		bra	error
-err_dn		ldd	#'D*256+'N
-		bra	error
-err_no		ldd	#'N*256+'O
-		bra	error
-err_dv0		ldd	#'/*256+'0
-		bra	error
-err_ao		ldd	#'A*256+'O
-		bra	error
-err_io		ldd	#'I*256+'O
-		bra	error
-err_fm		ldd	#'F*256+'M
-		bra	error
-err_ie		ldd	#'I*256+'E
-		bra	error
-err_ds		ldd	#'D*256+'S
-		bra	error
-err_fd		ldd	#'F*256+'D
-		bra	error
-err_sn		ldd	#'S*256+'N
-error		lds	STKTOP		; mit: STKINI — מחסנית, זמניים, ואין המשך
+; ---------- שגיאות (mit: ERROR; קורא: מדפסת, טבלת השגיאות) ----------
+; כל שגיאה: B = הקוד (ההיסט בטבלה, 2 לכל שגיאה), ונופלים דרך ה-cmpx עד error
+err_nf		ldb	#0
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_sn		ldb	#2
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_rg		ldb	#4
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_od		ldb	#6
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_fc		ldb	#8
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_ov		ldb	#10
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_om		ldb	#12
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_ul		ldb	#14
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_bs		ldb	#16
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_dd		ldb	#18
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_dv0		ldb	#20
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_id		ldb	#22
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_tm		ldb	#24
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_os		ldb	#26
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_ls		ldb	#28
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_st		ldb	#30
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_cn		ldb	#32
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_uf		ldb	#34
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_fd		ldb	#36
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_ao		ldb	#38
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_dn		ldb	#40
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_io		ldb	#42
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_fm		ldb	#44
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_no		ldb	#46
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_ie		ldb	#48
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_ds		ldb	#50
+error		jsr	HK_ERR1		; נקודות החיבור 17 ו-18, עם B = הקוד
+		jsr	HK_ERR2
+		lds	STKTOP		; mit: STKINI — מחסנית, זמניים, ואין המשך
 		clr	DEVNUM		; כל שגיאה: חזרה למסך (קורא: קלטת 4.3)
 		clr	,-s
-		pshs	d		; שתי האותיות, ואחריהן ה-0 של הסמן: מחרוזת במחסנית
+		pshs	b
 		lbsr	sndoff		; כל שגיאה: הצליל והמנוע כבויים (קורא: צליל 1.1)
 		lbsr	motoff
 		lbsr	rcsub
 		lbsr	condcr
 		lda	#'?
-		pshs	a		; "?XY"
-		leax	,s
-		lbsr	puts
-		leas	3,s
+		lbsr	chrout
+		puls	b
+		leax	errtab,pcr	; שתי האותיות מהטבלה, לפי B
+		abx
+		lda	,x+
+		lbsr	chrout
+		lda	,x
+		lbsr	chrout
 		leax	m_err,pcr
 		lbsr	puts
 		lbsr	prin
 		lbra	main_ok
+errtab		fcc	"NFSNRGODFCOVOMULBSDD/0IDTMOSLSSTCNUFFDAODNIOFMNOIEDS"
 m_err		fcc	" ERROR"
 		fcb	0
 m_in		fcc	" IN "
@@ -353,7 +387,7 @@ linget		clra
 		pshs	b
 		ldd	1,s
 		cmpd	#6399		; מעל 63999: ?SN (קורא: קורא מספרי השורות)
-		bhi	err_sn
+		lbhi	err_sn
 		lslb
 		rola
 		std	1,s		; *2
@@ -451,7 +485,8 @@ scrtch		ldx	TXTTAB
 		clr	,x+
 		stx	VARTAB
 ; runc: מאפסים משתנים ומערכים (mit: RUNC/CLEARC)
-runc		ldd	MEMSIZ
+runc		jsr	HK_STR		; 20 (ניקוי המשתנים)
+		ldd	MEMSIZ
 		std	FRETOP
 		ldd	VARTAB
 		std	ARYTAB
@@ -487,7 +522,8 @@ cr_rest		lda	,x+		; השאר כמו שהוא, עד ה-0 (כולל)
 		sta	,u+
 		bne	cr_rest
 cr_ret		rts
-crunch		ldu	#CRB
+crunch		jsr	HK_CRUN		; 24
+		ldu	#CRB
 		clr	CRMODE
 cr_lp		lda	,x
 		beq	cr_rest	; סוף: ה-0 נשמר
@@ -622,6 +658,7 @@ dlist2		lbsr	fndlin		; D = השורה הראשונה, LEND = האחרונה (CSA
 		ldd	2,y
 		cmpd	LEND
 		bhi	9F
+		jsr	HK_LBRK		; 12
 		lbsr	istape		; בין השורות: BREAK (לא לקלטת; קורא: מדפסת 1.8)
 		beq	1F
 		lbsr	brkchk
@@ -638,7 +675,10 @@ dlist2		lbsr	fndlin		; D = השורה הראשונה, LEND = האחרונה (CSA
 9		lbra	condcr		; והאחרונה נגמרת בסוף שורה מותנה
 
 ; prline: טקסט מכווץ ב-X עד 0. נקודתיים לפני ELSE ו-' לא מוצגים (קורא)
-prline		clr	CRMODE		; כאן: בתוך מרכאות
+prline		leax	-4,x		; 25: עם X = הקישור של השורה
+		jsr	HK_DECR
+		leax	4,x
+		clr	CRMODE		; כאן: בתוך מרכאות
 1		lda	,x+
 		beq	9F
 		tst	CRMODE
@@ -718,7 +758,8 @@ numtxt		pshs	x,u
 pow10		fdb	10000,1000,100,10,1,0
 
 ; getline: שורה ל-LINBUF (מסתיים ב-0). ← מוחק, ENTER מסיים, BREAK: C=1. (שלנו, עם מצביע ולא B,X)
-getline		pshs	b,x
+getline		jsr	HK_LINE		; 13
+		pshs	b,x
 gl_new		ldx	#LINBUF
 gl_key		lbsr	getkey		; הסמן מהבהב בתוך getkey (קורא)
 		cmpa	#13
@@ -878,7 +919,6 @@ fntab		fcs	"SGN"
 		include	"mitstr.s"
 		include	"mitary.s"
 		include	"mitctl.s"
-		include	"mitmath.s"
 		include	"mitfunc.s"
 
 ; ---------- שבעת המצביעים ב-$A000 (docs/DRAGON-SPEC-INTERFACES.md 3ב, DRAGON-SPEC-TAPE.md 1.10) ----------
@@ -892,6 +932,7 @@ fntab		fcs	"SGN"
 		fdb	$8012		; $A00A ג'ויסטיקים
 		fdb	$801b		; $A00C מבוא קלטת (כמו במקור: דרך הכניסה)
 		include	"mitmem.s"		; אחרי הטבלה: הקוד שלפניה צריך להיכנס עד $A000
+		include	"mitmath.s"		; גם הוא אחרי הטבלה (המקום שלפני $A000 התמלא)
 		include	"mitscr.s"
 		include	"mitedit.s"
 		include	"mitusing.s"

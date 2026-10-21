@@ -100,6 +100,18 @@ try {
   ok('וקטורי המעבד דרך ה-RAM: $0100 $0103 $010F $010C $0106 $0109', lastNums(r.screen).join(' ') === '256 259 271 268 262 265', r.screen);
   r = await lp(['PRINT PEEK(268);PEEK(271);PEEK(288);PEEK(293);PEEK(298)']);
   ok('$010C/$010F = JMP; מתאר 0: ‏78 מילות פקודה, 34 פונקציות; מתאר 1: 0', lastNums(r.screen).join(' ') === '126 126 78 34 0', r.screen);
+  // נקודת חיבור מלאה בהוראה של 3 בתים: אחריה נופלים ל-RTS הראשון של הנקודה הבאה
+  const hook = (addr, b) => `POKE ${addr},${b[0]}:POKE ${addr + 1},${b[1]}:POKE ${addr + 2},${b[2]}`;
+  r = await lp(['POKE 16128,0:' + hook(0x019a, [0x7c, 0x3f, 0x00]), 'A=1:B=2:C=3', 'PRINT PEEK(16128)']);
+  ok('נקודה 21 ($019A) נקראת לפני כל פקודה (INC $3F00)', lastNums(r.screen)[0] >= 4, r.screen);
+  r = await lp([hook(0x018e, [0xf7, 0x3f, 0x00]), 'X=1/0', 'PRINT PEEK(16128)']);
+  ok('נקודה 17 ($018E): B = קוד השגיאה (?/0 = 20), וההודעה כרגיל', r.screen.includes('?/0 ERROR') && lastNums(r.screen)[0] === 20, r.screen);
+  r = await lp([hook(0x018e, [0xf7, 0x3f, 0x00]), 'NEXT', 'PRINT PEEK(16128)']);
+  ok('?NF = 0', r.screen.includes('?NF ERROR') && lastNums(r.screen)[0] === 0, r.screen);
+  r = await lp([hook(0x0161, [0x1a, 0x04, 0x39]), 'PRINT #5,"A";:PRINT "OK5"']);
+  ok('נקודה 2 ($0161): החזרה עם Z=1 מקבלת התקן 5 (בלי ?DN)', !r.screen.includes('?DN') && r.screen.includes('OK5'), r.screen);
+  r = await lp(['PRINT #5,"A"']);
+  ok('בלי הנקודה: PRINT #5 = ?DN', r.screen.includes('?DN ERROR'), r.screen);
 } finally {
   await rm(dir, { recursive: true, force: true });
 }

@@ -8,12 +8,12 @@
 sgxyp		lbsr	chklp		; SET/RESET: '(' לפני
 sgxy		lbsr	evbyte
 		cmpb	#63
-		bhi	mem_fc
+		lbhi	mem_fc
 		pshs	b		; x
 		lbsr	chkcom
 		lbsr	evbyte
 		cmpb	#31
-sg_fc		bhi	mem_fc		; (גם SET קופץ לכאן, עם אותם דגלים)
+sg_fc		lbhi	mem_fc		; (גם SET קופץ לכאן, עם אותם דגלים)
 		lda	#8		; B = y
 		lsrb			; y אי-זוגי: השורה התחתונה
 		bcc	1F

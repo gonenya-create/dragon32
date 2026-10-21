@@ -494,7 +494,8 @@ mem_om		lbra	err_om
 
 ; CLS: בלי מספר: רווחים ($60). 0-8: ממלאים בצבע (0 = $80, אחרת $8F + 16*(n-1)).
 ; 9-255: רווחים ושורה משלנו (במקור: הודעה של מיקרוסופט; גונן, 20.10: "The Dragon machine 2026"), ושתי שורות חדשות
-cls_st		lbeq	cls
+cls_st		jsr	HK_MISC		; 23 (Z נשמר)
+		lbeq	cls
 		lbsr	evbyte
 		cmpb	#8
 		bhi	4F

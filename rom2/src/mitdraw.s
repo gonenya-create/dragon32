@@ -330,6 +330,7 @@ gmin		lda	1,x
 get_st		clrb
 		fcb	$8c		; cmpx: מדלג על ה-ldb
 put_st		ldb	#1
+		jsr	HK_MISC		; 23: B = 0 GET / 1 PUT
 		stb	GPFLG
 		lbsr	g2pt
 		lbsr	chkcom

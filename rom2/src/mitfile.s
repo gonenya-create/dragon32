@@ -269,7 +269,7 @@ cs_asc		clra
 		clra
 		clrb
 		lbsr	dlist2
-		lbsr	tclose
+		lbsr	clsone
 		lds	STKTOP
 		clr	,-s
 		lbra	endcon
@@ -333,14 +333,16 @@ devfac		lbsr	ayint
 		cmpa	FACMO
 		bne	8F
 		stb	DEVNUM
-		clra			; הדגל של הקלטת: $FF רק כש-B = $FF (אז C=0)
+		tstb			; 2: B עם הדגלים שלו; Z=1 בחזרה = מקובל (גם התקן של הרחבה)
+		jsr	HK_DEVN
+		beq	1F
+		bpl	8F		; חיובי: ?DN
+		cmpb	#$fe		; ‏$FE או $FF; מתחת ל-2-: ?DN
+		blo	8F
+1		clra			; הדגל של הקלטת: $FF רק כש-B = $FF (אז C=0)
 		cmpb	#$ff
 		adca	#$ff
 		sta	SPCIO
-		cmpb	#$fe		; $FE, $FF או 0. B = DEVNUM ביציאה
-		bhs	9F
-		tstb
-		bne	8F
 9		rts
 8		lbra	err_dn
 ; istape: Z=1 כשההתקן הוא הקלטת. A משתנה
@@ -349,9 +351,11 @@ istape		lda	DEVNUM
 		rts
 ; chkout / chkin (4.2): הקלטת חייבת להיות פתוחה לכתיבה / לקריאה. סגורה: ?NO, בכיוון השני: ?FM.
 ; קריאה מהמדפסת: ?FM
-chkout		ldb	#2
+chkout		jsr	HK_CKOUT	; 7
+		ldb	#2
 		bra	1F
-chkin		lda	DEVNUM
+chkin		jsr	HK_CKIN		; 6
+		lda	DEVNUM
 		cmpa	#$fe
 		beq	8F
 		ldb	#1
@@ -367,7 +371,8 @@ chkin		lda	DEVNUM
 ; ---------- פלט תו להתקן ($A002) ----------
 ; chrout: A להתקן שב-DEVNUM. מסך: putc. קלטת: לחוצץ (פתוח לקריאה או סגור: נזרק); חוצץ מלא (255): קודם
 ; בלוק. מדפסת: בהמשך. כל האוגרים נשמרים
-chrout		tst	DEVNUM
+chrout		jsr	HK_COUT		; 4
+		tst	DEVNUM
 		lbeq	putc
 		pshs	a,b,x,y
 		bsr	istape
@@ -392,7 +397,8 @@ chrout		tst	DEVNUM
 9		puls	a,b,x,y,pc
 ; devpar: פרמטרי ההתקן שב-DEVNUM ל-$6A-$6E (קורא: מדפסת 1.6, 7.2). Z=1 כשהרוחב 0. האוגרים נשמרים
 ; מסך: 16, 16, העמודה, 32. קלטת: 1, 0, 0, 0 (ו-SPCIO=$FF). מדפסת: $99, $9A, $9C, $9B
-devpar		pshs	a,b
+devpar		jsr	HK_DEVP		; 3
+		pshs	a,b
 		ldb	DEVNUM
 		beq	1F
 		incb
@@ -473,7 +479,8 @@ wbuf		lda	#1
 
 ; ---------- קלט תו מהקלטת ----------
 ; tchin: התו הבא מהחוצץ → A. חוצץ ריק: EOFFLG = $FF (ו-Z=0). כשהתו האחרון נלקח, ממלאים מיד. B ו-X נשמרים
-tchin		pshs	b,x
+tchin		jsr	HK_CIN		; 5
+		pshs	b,x
 		clr	EOFFLG
 		ldb	CBFCNT
 		bne	1F
@@ -506,7 +513,8 @@ refill		ldx	#TBUF
 		rts
 ; tgetln: שורה מהקלטת ל-LINBUF (מסתיימת ב-0): ביט 7 נמחק, תווים מתחת ל-$20 או מעל z נזרקים, עד 249, CR
 ; מסיים. סוף הקובץ: C=1
-tgetln		ldx	#LINBUF
+tgetln		jsr	HK_LINE		; 13
+		ldx	#LINBUF
 		clrb
 1		bsr	tchin
 		bne	8F
@@ -535,7 +543,8 @@ devgetln	lbsr	istape
 		rts
 
 ; ---------- OPEN "I"|"O",#התקן,[שם] (3.9) ----------
-open_st		lbsr	frmevl
+open_st		jsr	HK_OPEN		; 1
+		lbsr	frmevl
 		lbsr	frestr		; ?TM
 		tsta
 		lbeq	err_fc
@@ -575,18 +584,25 @@ wopen		ldb	#$ff
 efmo		lbra	err_fm		; ?FM קרוב (OPEN, CLOAD של ASCII)
 
 ; ---------- CLOSE [#התקן[,#התקן...]] (3.13) ----------
-close_st	beq	tclose		; בלי כלום: הקלטת
+close_st	beq	tclose		; בלי כלום: הכול
 1		lbsr	getdev
-		incb			; B = DEVNUM: הקלטת?
-		bne	2F
-		bsr	tclose
-2		clr	DEVNUM
+		bsr	clsone
 		jsr	<chrgot
 		beq	9F		; ה-rts של tclose
 		lbsr	chkcom
 		bra	1B
-; tclose: קובץ פתוח לכתיבה: מה שנשאר בחוצץ (אם יש) ובלוק סוף, כל אחד עם מנוע ומבוא. תמיד: סגור, התקן 0
-tclose		lda	FSTATE
+; tclose: סגירת הכול (END, RUN, CLOSE; קורא: מדפסת 3.6 נקודות 8-9): הקלטת, דרך סגירת התקן אחד
+tclose		jsr	HK_CLALL	; 8
+		lda	#$ff
+		sta	DEVNUM
+; clsone: סגירת ההתקן שב-DEVNUM, ו-DEVNUM = 0. קלטת פתוחה לכתיבה: מה שנשאר בחוצץ (אם יש) ובלוק סוף,
+; כל אחד עם מנוע ומבוא; הקלטת סגורה
+clsone		jsr	HK_CLONE	; 9
+		lda	DEVNUM
+		clr	DEVNUM
+		inca
+		bne	9F
+		lda	FSTATE
 		cmpa	#2
 		bne	tcl1
 		tst	CBFCNT
@@ -602,7 +618,8 @@ tcl1		clr	FSTATE		; C=0 (END)
 
 ; ---------- EOF(התקן) (3.12) ----------
 ; מקלדת: 0. מדפסת: ?FM. קלטת: פתוחה לקריאה, ו-1- כשהחוצץ ריק. ההתקן הקודם חוזר אחר כך
-fn_eof		lda	DEVNUM
+fn_eof		jsr	HK_EOF		; 15
+		lda	DEVNUM
 		pshs	a
 		lbsr	devfac		; B = DEVNUM
 		tstb
@@ -636,7 +653,8 @@ cl_asc		tst	HASCII
 		lbcc	err_ds
 		lbsr	storeline
 		bra	1B
-3		bsr	tcl1
+3		jsr	HK_AEOF		; 14
+		bsr	tcl1
 		lds	STKTOP
 		clr	,-s
 		lbra	main_ok

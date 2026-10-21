@@ -59,7 +59,8 @@ synchk		pshs	a
 
 ; ---------- לולאת הפקודות (mit: NEWSTT 2138, GONE 2165) ----------
 ; TXTPTR מצביע על התו שלפני הפקודה הבאה. 0 = סוף שורה: הקישור שאחריו אומר מה הלאה
-newstt		andcc	#$af		; הפסיקות פתוחות בתחילת כל פקודה (קורא: קלטת 5, צליל 1.2)
+newstt		jsr	HK_NEWS		; 21
+		andcc	#$af		; הפסיקות פתוחות בתחילת כל פקודה (קורא: קלטת 5, צליל 1.2)
 		lbsr	brkchk		; BREAK? (mit: ISCNTC)
 		ldx	TXTPTR
 		stx	TXTBEG		; תחילת הפקודה: לשם חוזרים אחרי קלט שגוי ב-INPUT (קורא: TXTBEG)
@@ -79,6 +80,7 @@ gone		jsr	<chrget
 		beq	gone
 snerr		lbra	err_sn		; יציאה משותפת ל-?SN בסביבה
 gone3		beq	9F		; פקודה ריקה
+		jsr	HK_STMT		; 10, עם A = הבית
 		tsta
 		lbpl	let		; לא מילה שמורה: השמה
 		cmpa	#$ff		; פונקציה בתחילת פקודה: TIMER= (קורא)
@@ -88,6 +90,7 @@ gone3		beq	9F		; פקודה ריקה
 		lbeq	timset
 		cmpa	#$98		; MID$ כפקודה (קורא)
 		lbeq	midst
+		jsr	HK_MISC		; 23: השמה לפונקציה לא מוכרת
 		bra	snerr
 1		cmpa	#$ba
 		bhi	snerr
@@ -164,7 +167,7 @@ stmtbl
 llist		ldb	#$fe
 		stb	DEVNUM
 list_st		lbsr	do_list
-		clr	DEVNUM
+		lbsr	clsone
 		lbra	main_ok
 rem					; עד סוף השורה. X = TXTPTR (מ-chrget של המשגר)
 1		tst	,x+
@@ -175,7 +178,8 @@ rem					; עד סוף השורה. X = TXTPTR (מ-chrget של המשגר)
 
 ; RUN [שורה]: משתנים מתאפסים, ומתחילים מהשורה הראשונה (TXTPTR = TXTTAB-1, האפס שב-$1E00) או מהשורה שצוינה
 ; (mit: RUN — CLEARC ואז GOTO)
-run		lbsr	gfxrun		; הנקודה האחרונה, זווית וקנה מידה של DRAW (קורא 0.2)
+run		jsr	HK_RUN		; 19
+		lbsr	gfxrun		; הנקודה האחרונה, זווית וקנה מידה של DRAW (קורא 0.2)
 		lbsr	tclose		; הקבצים נסגרים (קורא: קלטת 6)
 		lbsr	runc
 		lds	STKTOP
@@ -251,6 +255,7 @@ letasg		ldx	FORPNT
 		tst	VALTYP
 		lbeq	movmf
 ; מחרוזת: מעתיקים אותה לשטח המחרוזות אם היא לא שם ולא בתוך התוכנית (mit: GETSPT/COPY)
+		jsr	HK_SASG		; 22
 		ldx	FACMO
 		ldd	2,x
 		cmpd	FRETOP
@@ -673,7 +678,8 @@ optab		fcb	121
 		fdb	orop
 
 ; eval: איבר אחד → FAC
-eval		clr	VALTYP
+eval		jsr	HK_OPND		; 16
+		clr	VALTYP
 		jsr	<chrgot
 1		lbcc	fin		; מספר
 		cmpa	#'.

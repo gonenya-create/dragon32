@@ -326,6 +326,7 @@ inloop		clrb			; המשתנה (נוצר אם אין)
 		bne	datbk1
 		tst	INPFLG		; הנתונים נגמרו
 		bne	datlop		; READ: ה-DATA הבא
+		jsr	HK_INPQ		; 11
 		ldx	#m_qq		; INPUT: "??" ועוד שורה
 		bsr	qinlx
 		ldx	#BUFMIN

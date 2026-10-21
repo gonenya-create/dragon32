@@ -128,6 +128,7 @@ rl_line		ldd	,x
 		leax	4,x
 rl_scan		lbsr	tkget		; בלי מרכאות ובלי הבית שאחרי $FF
 		beq	rl_line
+		jsr	HK_MISC		; 23: A = הטוקן
 		cmpa	#$bf		; THEN
 		beq	rl_ref
 		cmpa	#$84		; ELSE
