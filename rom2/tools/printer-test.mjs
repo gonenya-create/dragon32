@@ -112,6 +112,14 @@ try {
   ok('נקודה 2 ($0161): החזרה עם Z=1 מקבלת התקן 5 (בלי ?DN)', !r.screen.includes('?DN') && r.screen.includes('OK5'), r.screen);
   r = await lp(['PRINT #5,"A"']);
   ok('בלי הנקודה: PRINT #5 = ?DN', r.screen.includes('?DN ERROR'), r.screen);
+  // הרחבה: מתאר 1 מוסיף את הפקודה HI ($CE). המילה ב-$3F00, השגרה ב-$3F10: INC $3F20, JMP <$9F (chrget)
+  const ext = ['POKE 16128,72:POKE 16129,201:POKE 16160,0', 'POKE 16144,124:POKE 16145,63:POKE 16146,32:POKE 16147,14:POKE 16148,159',
+    'POKE 308,0:POKE 298,1:POKE 299,63:POKE 300,0:POKE 301,63:POKE 302,16'];
+  r = await lp([...ext, 'HI:HI', '10 HI:PRINT "X"', 'LIST', 'RUN', 'PRINT PEEK(16160);PEEK(7685)']);
+  ok('מתאר 1 (הרחבה): HI מתכווצת ל-$CE, נרשמת ב-LIST, ונשלחת דרך $012D', r.screen.includes('\n10 HI:PRINT "X"\n') &&
+    r.screen.includes('\nX\n') && lastNums(r.screen).join(' ') === '3 206', r.screen);
+  r = await lp([...ext, '10 HI', 'POKE 298,0', 'LIST']);
+  ok('טוקן שאין לו מתאר: LIST מציג "!"', r.screen.includes('\n10 !\n'), r.screen);
 } finally {
   await rm(dir, { recursive: true, force: true });
 }

@@ -93,8 +93,11 @@ gone3		beq	9F		; פקודה ריקה
 		jsr	HK_MISC		; 23: השמה לפונקציה לא מוכרת
 		bra	snerr
 1		cmpa	#$ba
-		bhi	snerr
-		lsla			; (טוקן-$80)*2
+		bls	2F
+		cmpa	#$cd		; מילים של מתאר 0 שאינן פקודה (TO, THEN, TAB( ...): ?SN
+		bls	snerr
+		jmp	[DESC1+3]	; מעבר למתאר 0: דרך $012D, עם A = הטוקן ו-TXTPTR עליו (קורא: מדפסת 7.5)
+2		lsla			; (טוקן-$80)*2
 		leau	stmtbl,pcr
 		ldu	a,u
 		pshs	u
@@ -730,7 +733,7 @@ eval		jsr	HK_OPND		; 16
 		leax	1,x
 		stx	TXTPTR
 		cmpa	#$a1
-		lbhi	err_sn
+		bhi	fnext
 		lsla			; (טוקן-$80)*2: אותו דבר כמו suba #$80 ואז lsla
 		leau	fntbl,pcr
 		ldd	a,u		; ביטים 14-15: הסוג; השאר: הכתובת פחות $8000
@@ -764,6 +767,11 @@ eval		jsr	HK_OPND		; 16
 		rts
 
 ; טבלת הפונקציות לפי הטוקן ($80-$A1): הכתובת פחות $8000, והסוג בשני הביטים העליונים. עוד לא בנויה: ?SN
+; fnext: פונקציה מעבר למתאר 0: דרך $0132, עם B = (טוקן-$80)*2 ו-A = התו הבא (קורא: מדפסת 7.5)
+fnext		lsla
+		tfr	a,b
+		jsr	<chrget
+		jmp	[DESC1+8]
 fntbl
 		fdb	fn_sgn-$8000+0*$4000	; $80 SGN
 		fdb	fn_int-$8000+0*$4000	; $81 INT

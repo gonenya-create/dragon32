@@ -596,35 +596,46 @@ cr_name		lda	,x		; לא מילה שמורה. אות: שם, וכל האותיות
 		bcs	7B
 		bra	cr_lp2
 
-; kwmatch: האם בתחילת X יש מילה שמורה? קודם הפקודות ($80-$CD), אחר כך הפונקציות ($FF $80-$A1).
-; התאמה מדויקת, בלי דרישה לגבול מילה (קורא). כן: C=1, B = הטוקן, X אחרי המילה. לא: C=0, X לא זז
+; kwmatch: האם בתחילת X יש מילה שמורה? קודם מילות הפקודה של כל המתארים ב-RAM ($0120, כל 10 בתים),
+; אחר כך מילות הפונקציה. הטוקנים ממשיכים לספור ממתאר למתאר (קורא: מדפסת 7.5). התאמה מדויקת, בלי דרישה
+; לגבול מילה (קורא). כן: C=1, B = הטוקן, X אחרי המילה, KPRE = $FF לפונקציה. לא: C=0, X לא זז
 ; (mit: RESER/RESCON/NTHIS, m6502.asm:1810)
-kwmatch		pshs	x
+kwmatch		pshs	x,u		; U נשמר (crunch כותב דרכו)
 		clr	KPRE
-		leay	stmtab,pcr
-km_tab		ldb	#$80
-km_word		tst	,y
-		bne	1F
-		tst	KPRE		; סוף הטבלה
-		bne	km_no
-		com	KPRE		; עוברים לפונקציות (fntab מיד אחרי ה-0)
-		leay	1,y
-		bra	km_tab
-1		ldx	,s
-km_ch		lda	,y+		; שווה בלי ביט 7: Z. ביט 7 (התו האחרון) עובר ל-C
+		ldu	#$0120		; הפקודות: המונה ב-+0
+		bsr	km_scan
+		bcs	1F
+		com	KPRE
+		ldu	#$0125		; הפונקציות: המונה ב-+5
+		bsr	km_scan
+		bcs	1F
+		puls	x,u,pc		; C=0
+1		leas	2,s
+		puls	u,pc
+; km_scan: U = המונה של המתאר הראשון; ממשיכים כל 10 בתים עד מונה 0
+km_scan		ldb	#$80
+1		lda	,u
+		beq	8F
+		ldy	1,u		; רשימת המילים
+		pshs	a
+2		ldx	3,s		; [מונה][חזרה][X]
+3		lda	,y+		; שווה בלי ביט 7: Z. ביט 7 (התו האחרון) עובר ל-C
 		eora	,x+
 		lsla
-		bne	km_skip
-		bcc	km_ch		; עוד לא התו האחרון
-		leas	2,s		; נמצאה (C=1)
+		bne	4F
+		bcc	3B		; עוד לא התו האחרון
+		leas	1,s		; נמצאה (C=1)
 		rts
-km_skip		leay	-1,y		; לסוף המילה
-3		lda	,y+
-		bpl	3B
+4		leay	-1,y		; לסוף המילה
+5		lda	,y+
+		bpl	5B
 		incb
-		bra	km_word
-km_no		puls	x
-		andcc	#$fe
+		dec	,s
+		bne	2B
+		leas	1,s
+		leau	10,u
+		bra	1B
+8		andcc	#$fe
 		rts
 
 ; ---------- LIST [מ][-[עד]] (mit: LIST, m6502.asm:1975) ----------
@@ -664,7 +675,7 @@ dlist2		lbsr	fndlin		; D = השורה הראשונה, LEND = האחרונה (CSA
 		lbsr	brkchk
 1		lbsr	condcr		; כל שורה מתחילה בסוף שורה מותנה (קורא: מדפסת 1.8)
 		ldd	2,y
-		bsr	prnum		; מספר השורה
+		lbsr	prnum		; מספר השורה
 		lbsr	prspc
 		leax	4,y
 		pshs	y
@@ -678,6 +689,7 @@ dlist2		lbsr	fndlin		; D = השורה הראשונה, LEND = האחרונה (CSA
 prline		leax	-4,x		; 25: עם X = הקישור של השורה
 		jsr	HK_DECR
 		leax	4,x
+		pshs	u
 		clr	CRMODE		; כאן: בתוך מרכאות
 1		lda	,x+
 		beq	9F
@@ -693,13 +705,24 @@ prline		leax	-4,x		; 25: עם X = הקישור של השורה
 2		tsta
 		bpl	5F
 		tfr	a,b
-		leay	stmtab,pcr
+		ldu	#$0120		; המילה דרך המתארים ב-RAM (קורא: מדפסת 7.5)
 		cmpa	#$ff
 		bne	3F
 		ldb	,x+		; פונקציה
-		leay	fntab,pcr
-; המילה מספר B-$80 בטבלה Y
+		ldu	#$0125
 3		subb	#$80
+31		lda	,u		; המונה של המתאר: 0 = אין עוד מתארים, טוקן לא מוכר: "!"
+		beq	33F
+		cmpb	,u
+		blo	32F
+		subb	,u
+		leau	10,u
+		bra	31B
+33		lda	#'!
+		bra	6F
+; המילה מספר B ברשימה של המתאר
+32		ldy	1,u
+		tstb
 7		beq	8F
 4		lda	,y+
 		bpl	4B
@@ -716,7 +739,7 @@ prline		leax	-4,x		; 25: עם X = הקישור של השורה
 		com	CRMODE
 6		lbsr	lout
 		bra	1B
-9		rts
+9		puls	u,pc
 
 
 ; ---------- עזרים (שלנו) ----------
