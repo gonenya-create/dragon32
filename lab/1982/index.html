@@ -80,7 +80,7 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
   <a href="/">← חזרה לאפליקציה</a>
 </header>
 <main>
-  <p class="note">זו <strong>מכונת ה-Dragon</strong>: השבבים של ה-Dragon 32 (המעבד 6809, הזיכרון והמסך), עם <strong>BASIC שכתבנו בעצמנו</strong>, בלי ה-ROM המקורי. <strong>היא עוד בבנייה:</strong> מבפנים ה-BASIC שלנו עוד לא זהה למקור, ולכן קלטות ותוכנות מקוריות מ-1982 עוד לא רצות עליה. <a href="./building/">מה אנחנו בונים עכשיו</a>. לוחצים על המסך ומקלידים, או משתמשים במקלדת שלמטה.</p>
+  <p class="note">זו <strong>מכונת ה-Dragon</strong>: השבבים של ה-Dragon 32 (המעבד 6809, הזיכרון והמסך), עם <strong>BASIC שכתבנו בעצמנו</strong>, בלי ה-ROM המקורי. <strong>היא עוד בבנייה:</strong> ה-BASIC מתנהג כמו המקורי, אבל מבפנים השגרות יושבות בכתובות אחרות, ולכן תוכנות בשפת מכונה מ-1982 עוד לא רצות עליה. <a href="./building/">מה אנחנו בונים עכשיו</a>. לוחצים על המסך ומקלידים, או משתמשים במקלדת שלמטה.</p>
   <div class="machine">
   <div class="tv"><canvas id="canvas" tabindex="0" oncontextmenu="event.preventDefault()" aria-label="מסך המחשב"></canvas></div>
   <div class="kbd" id="kbd" aria-label="מקלדת Dragon 32"></div>
@@ -113,7 +113,7 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
     <p><strong>רווח:</strong> תו קדימה · <strong>←:</strong> תו אחורה · <strong><span dir="ltr">D</span>:</strong> מחיקה · <strong><span dir="ltr">C</span>:</strong> החלפה · <strong><span dir="ltr">I</span>:</strong> הוספה · <strong><span dir="ltr">X</span>:</strong> הוספה בסוף · <strong><span dir="ltr">H</span>:</strong> מחיקת הסוף והוספה · <strong><span dir="ltr">S</span> ותו:</strong> קפיצה אל התו · <strong><span dir="ltr">K</span> ותו:</strong> מחיקה עד התו · <strong><span dir="ltr">L</span>:</strong> הצגת השורה · <strong><span dir="ltr">A</span>:</strong> ביטול השינויים.</p>
     <p>יציאה ממצב הוספה: <strong><span dir="ltr">SHIFT+↑</span></strong> (במקלדת של מחשב: <code dir="ltr">_</code>). <strong><span dir="ltr">ENTER</span></strong> שומר את השורה, <strong><span dir="ltr">BREAK</span></strong> יוצא בלי לשמור.</p>
   </details>
-  <p class="note">האמולטור הוא <a href="https://www.6809.org.uk/xroar/" dir="ltr">XRoar</a> של Ciaran Anscomb, ברישיון <span dir="ltr">GPL v3</span>. <a href="./SOURCE.md">קוד המקור והרישיון</a>. ה-BASIC שלנו: <a href="https://github.com/gonenya-create/dragon32/tree/main/rom" dir="ltr">github.com/gonenya-create/dragon32</a>.</p>
+  <p class="note">האמולטור הוא <a href="https://www.6809.org.uk/xroar/" dir="ltr">XRoar</a> של Ciaran Anscomb, ברישיון <span dir="ltr">GPL v3</span>. <a href="./SOURCE.md">קוד המקור והרישיון</a>. ה-BASIC שלנו: <a href="https://github.com/gonenya-create/dragon32/tree/main/rom2" dir="ltr">github.com/gonenya-create/dragon32</a>.</p>
   </div>
 </main>
 <script src="/assets/dragon/langpick.js" defer></script>
@@ -127,7 +127,7 @@ var Module = {
   print: () => {}, printErr: () => {},
   onRuntimeInitialized: () => { window.d32Ready = true; },
   preRun: [function () {
-    // שני שבבים: ה-BASIC ($8000) ושבב ההרחבה בחריץ המחסנית ($C000)
+    // שבב אחד: כל ה-BASIC ב-16K ($8000-$BFFF). חריץ המחסנית ריק
     for (const f of ['d32.rom']) {
       addRunDependency(f);
       fetch('/lab/1982/' + f).then(r => r.arrayBuffer()).then(b => { FS.writeFile('/' + f, new Uint8Array(b)); removeRunDependency(f); });

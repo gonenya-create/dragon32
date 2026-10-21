@@ -80,7 +80,7 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
   <a href="/en/">← Back to the app</a>
 </header>
 <main>
-  <p class="note">This is <strong>the Dragon machine</strong>: the Dragon 32's chips (the 6809 CPU, memory and video), running <strong>a BASIC we wrote ourselves</strong>, without the original ROM. <strong>It is still being built:</strong> inside, our BASIC is not yet identical to the original, so original 1982 tapes and software do not run on it yet. <a href="./building/">What we are building now</a>. Click the screen and type, or use the keyboard below.</p>
+  <p class="note">This is <strong>the Dragon machine</strong>: the Dragon 32's chips (the 6809 CPU, memory and video), running <strong>a BASIC we wrote ourselves</strong>, without the original ROM. <strong>It is still being built:</strong> the BASIC behaves like the original, but inside its routines sit at different addresses, so 1982 machine-code software does not run on it yet. <a href="./building/">What we are building now</a>. Click the screen and type, or use the keyboard below.</p>
   <div class="machine">
   <div class="tv"><canvas id="canvas" tabindex="0" oncontextmenu="event.preventDefault()" aria-label="Computer screen"></canvas></div>
   <div class="kbd" id="kbd" aria-label="Dragon 32 keyboard"></div>
@@ -113,7 +113,7 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
     <p><strong>Space:</strong> one character forward · <strong>←:</strong> one back · <strong>D:</strong> delete · <strong>C:</strong> change · <strong>I:</strong> insert · <strong>X:</strong> insert at the end · <strong>H:</strong> delete the rest and insert · <strong>S and a character:</strong> jump to it · <strong>K and a character:</strong> delete up to it · <strong>L:</strong> show the line · <strong>A:</strong> undo the changes.</p>
     <p>To leave insert mode: <strong>SHIFT+↑</strong> (on a computer keyboard: <code>_</code>). <strong>ENTER</strong> saves the line, <strong>BREAK</strong> leaves without saving.</p>
   </details>
-  <p class="note">The emulator is <a href="https://www.6809.org.uk/xroar/">XRoar</a> by Ciaran Anscomb, licensed under GPL v3. <a href="/lab/1982/SOURCE.md">Sources and licences</a>. Our BASIC: <a href="https://github.com/gonenya-create/dragon32/tree/main/rom">github.com/gonenya-create/dragon32</a>.</p>
+  <p class="note">The emulator is <a href="https://www.6809.org.uk/xroar/">XRoar</a> by Ciaran Anscomb, licensed under GPL v3. <a href="/lab/1982/SOURCE.md">Sources and licences</a>. Our BASIC: <a href="https://github.com/gonenya-create/dragon32/tree/main/rom2">github.com/gonenya-create/dragon32</a>.</p>
   </div>
 </main>
 <script src="/assets/dragon/langpick.js" defer></script>
