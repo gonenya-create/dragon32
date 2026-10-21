@@ -36,34 +36,50 @@ a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 </header>
 <main>
 <h1>What we are building now</h1>
-<p>The Dragon machine is a Dragon 32 whose chips are emulated in your browser: the 6809 CPU, memory, video and cassette. The original ROM belongs to its rights holders, so it runs a BASIC we wrote ourselves.</p>
+<p>The Dragon machine is a Dragon 32 whose chips are emulated in your browser: the 6809 CPU, memory, video and cassette, through Ciaran Anscomb's XRoar emulator. The ROM, the chip that holds the BASIC language, belongs to its rights holders. So we are writing our own ROM, from scratch, in the 6809's machine language.</p>
 
 <h2>The goal</h2>
-<p>A machine that behaves like the original Dragon 32, outside and inside: programs are stored in memory as they were in 1982, and original software and tapes run on it.</p>
-
-<h2>What there is today</h2>
-<ul>
-  <li>The Dragon's chips, through the XRoar emulator.</li>
-  <li>Our BASIC with most of the commands, including graphics and sound.</li>
-  <li>Tapes: loading, saving your own programs, and downloading them as a file.</li>
-</ul>
-
-<h2>What is still missing</h2>
-<ul>
-  <li><strong>The inside:</strong> our BASIC stores programs and lays out memory differently from the original. That is why original 1982 tapes and machine-code software do not run on it yet.</li>
-  <li><strong>Some commands,</strong> including the power sign <code>^</code>, <code>JOYSTK</code>, <code>PCLEAR</code> and <code>CLOADM</code>.</li>
-</ul>
+<p>The real computer, as close as we know how, without copying the original code. Every decision is judged by one question: does this bring us closer to the original?</p>
 
 <h2>How we are building it</h2>
 <ul>
-  <li><strong>The core:</strong> a new BASIC core, based on the BASIC that Microsoft published as open source (MIT licence).</li>
-  <li><strong>The Dragon's additions:</strong> written from the books published at the time.</li>
-  <li><strong>Testing:</strong> everything is checked against what the books describe.</li>
+  <li><strong>The core:</strong> the BASIC that Microsoft published as open source (MIT licence). It gives us numbers, strings, variables and loops.</li>
+  <li><strong>Two rooms:</strong> I'm not a programmer; I build with AI. One AI agent reads the original and reports only facts, in its own words: what each command does, and at which memory addresses. A second agent writes the code without ever seeing the original. Same behaviour, our own code.</li>
+  <li><strong>The books of the time:</strong> the manuals that came with the computer and BASIC books from those years.</li>
+  <li><strong>The emulator's author:</strong> Ciaran Anscomb answered questions no book answers, such as the exact cassette speed.</li>
 </ul>
-<p class="muted">This is a hobby project with no timetable. Meanwhile the current machine keeps working as it is.</p>
+
+<h2>How we test it</h2>
+<p>574 automatic tests run the ROM inside XRoar on every change. They check what appears on the screen, what is written to tape and what goes to the printer. Among them are 74 programs from old BASIC books, with the output printed in the book, and sound down to the CPU cycle.</p>
+
+<h2>What there is today</h2>
+<ul>
+  <li>The whole BASIC in one 16K chip, as in the original. The cartridge slot stays empty.</li>
+  <li>All the commands, with the same error messages: graphics, sound and <code>PLAY</code>, <code>EDIT</code> and <code>RENUM</code>.</li>
+  <li>Cassette in the original format and at the original speed, including files.</li>
+  <li>Printer: <code>LLIST</code> and <code>PRINT #-2</code>.</li>
+  <li>RESET keeps your program, and BREAK stops with the line number.</li>
+  <li>25 extension hooks in memory, in the same places as the original. Cartridges add commands through them.</li>
+</ul>
+
+<h2>What is still far from the original</h2>
+<ul>
+  <li><strong>Machine-code software:</strong> many old games jump straight to addresses inside the original ROM. Our routines sit at other addresses, so such games do not run yet. That is the next step.</li>
+  <li><strong>Speed:</strong> a BASIC program runs at a slightly different speed from the original. We have not measured by how much yet.</li>
+  <li><strong><code>DLOAD</code>:</strong> loading over a cable. We do not know yet what it does on a Dragon 32.</li>
+  <li><strong>A real machine:</strong> we have not checked against a real Dragon yet. Everything we know comes from the original, the books and Ciaran.</li>
+</ul>
+<p class="muted">This is a hobby project with no timetable. What we build here does not change the main app.</p>
 
 <h2>Do you have a real Dragon?</h2>
-<p>If you find a difference from the original, we would love to hear about it. You can write to us through the <a href="https://www.gonenyarom.co.il/about/#contact">contact page</a>.</p>
+<p>Some things can only be learned from a working machine. Please type these lines and tell us what appeared on the screen, and which model:</p>
+<ul>
+  <li><code>PRINT PEEK(144)*256+PEEK(145)</code> (the length of the tone at the start of every tape)</li>
+  <li><code>PRINT PEEK(287)</code> (one memory value we do not know)</li>
+  <li><code>10 REM</code> then <code>LLIST</code>, with no printer connected (does OK appear, or does it hang? RESET brings it back)</li>
+  <li><code>DLOAD</code> (an error, nothing, or a hang?)</li>
+</ul>
+<p>You can write to us through the <a href="https://www.gonenyarom.co.il/about/#contact">contact page</a>.</p>
 </main>
 <script src="/assets/dragon/langpick.js" defer></script>
 </body>

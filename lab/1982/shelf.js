@@ -17,13 +17,14 @@
     for (const b of data) sum += b;
     return [0x55, 0x3c, type, data.length, ...data, sum & 255, 0x55];
   }
+  // קובץ טקסט "עם פערים", כמו CSAVE ,A במחשב האמיתי: מבוא לפני כל בלוק (המחשב קורא כל בלוק בנפרד, עם סנכרון)
   function cassette(name, text) {
     const leader = new Array(128).fill(0x55);
     const header = [...name.toUpperCase().padEnd(8).slice(0, 8)].map(c => c.charCodeAt(0)).concat([0, 255, 255, 0, 0, 0, 0]);
     const data = [...text.replace(/\r?\n/g, '\r')].map(c => c.charCodeAt(0) & 127);
-    let out = leader.concat(block(0, header), leader);
-    for (let i = 0; i < data.length; i += 255) out = out.concat(block(1, data.slice(i, i + 255)));
-    return new Uint8Array(out.concat(block(255, [])));
+    let out = leader.concat(block(0, header));
+    for (let i = 0; i < data.length; i += 255) out = out.concat(leader, block(1, data.slice(i, i + 255)));
+    return new Uint8Array(out.concat(leader, block(255, [])));
   }
   const box = document.getElementById('tapes');
   const status = document.getElementById('tape-status');
@@ -76,6 +77,13 @@
     return rows;
   }
   // מחפשים מיד אחרי ההדלקה, כשמשפט הפתיחה עוד על המסך
+  // השורה שממנה מחפשים את סוף הטעינה: שורת ה-CLOAD (ה-ROM הישן), או S/F בפינה (ה-ROM החדש מנקה את המסך
+  // בחיפוש, כמו המחשב האמיתי, ומראה S ואחר כך F ושם הקובץ)
+  function cloadRow(rows) {
+    const at = rows.map(r => r.startsWith('CLOAD')).lastIndexOf(true);
+    const c = (rows[0].charCodeAt(0) | 0x40), sf = (c === 0x53 || c === 0x46) && rows[0][1] === ' ';   // גם הפוך (מהבהב)
+    return at >= 0 ? at : (sf ? 0 : -1);
+  }
   const early = setInterval(() => { if (window.d32Ready) { clearInterval(early); setTimeout(findRam, 1500); } }, 300);
   // אחרי CLOAD: מחכים ל-OK (נטען) או לשגיאה. בלי גישה לזיכרון: לפי האורך של הקלטת
   async function loaded(bytes) {
@@ -84,7 +92,7 @@
     while (Date.now() - start < 90000) {
       await wait(250);
       const rows = screenRows();
-      const at = rows.map(r => r.startsWith('CLOAD')).lastIndexOf(true);
+      const at = cloadRow(rows);
       if (at < 0) continue;
       const after = rows.slice(at + 1);
       if (after.some(r => /ERROR/.test(r))) return false;
@@ -156,12 +164,15 @@
     }
     return files;
   }
+  // לפי הכותרת: קובץ עם פערים (בית 10 שלה) — מבוא לפני כל בלוק; רציף — מבוא אחד והבלוקים ברצף
   function tapeBytes(files) {
     const leader = new Array(128).fill(0x55);
     let out = [];
     for (const f of files) {
-      out = out.concat(leader, block(0, f.b[0].slice(1)), leader);
-      for (const b of f.b.slice(1)) out = out.concat(block(b[0], b.slice(1)));
+      const gap = f.b[0][11];
+      out = out.concat(leader, block(0, f.b[0].slice(1)));
+      if (!gap) out = out.concat(leader);
+      for (const b of f.b.slice(1)) out = out.concat(gap ? leader : [], block(b[0], b.slice(1)));
     }
     return new Uint8Array(out);
   }
@@ -274,7 +285,7 @@
   setInterval(() => {
     if (busy || ram < 0 || !window.d32Ready) return;
     const rows = screenRows();
-    const at = rows.map(r => r.startsWith('CLOAD')).lastIndexOf(true);
+    const at = cloadRow(rows);
     if (at < 0) return;
     const end = rows.findIndex((r, i) => i > at && (r === 'OK' || /ERROR/.test(r)));
     if (end < 0) return;
