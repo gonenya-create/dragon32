@@ -81,29 +81,27 @@ sseg		sta	PIA1
 ; ---------- AUDIO ON / OFF (קורא 3) ----------
 ; @endnofill
 audio_st	pshs	a		; המילה שאחרי AUDIO נקראת קודם
-		jsr	<chrget
-		puls	a
 		bra	isl_b44f_e	;@isl
 		fill	$ff,$b44f-*	;@isl
 		nop	;@isl
 		jmp	warm	;@isl
 isl_b44f_e	;@isl
+		jsr	<chrget
+		puls	a
 		cmpa	#$c2		; OFF: רק מכבים. הבוררים לא משתנים
 		beq	sndoff
 		cmpa	#$88		; ON
 		lbne	err_sn
 		lda	#1		; כניסת הקלטת
 ; snds: sndsel ואז sndon
-snds		lbsr	sndsel
+snds		bsr	sndsel
 		bra	sndon
+		fill	$ff,$b469-*	;@isl
+		jmp	firq	;@isl
 
 ; ---------- PLAY מחרוזת (קורא 2, 9) ----------
 ; plyini: ברירות המחדל, בהדלקה ובכל RUN (קורא 0.2): O3 (נשמר 2), עוצמה $B8/$44, L4, T2, בלי נקודות
 plyini		ldd	#$4404
-		bra	isl_b469_e	;@isl
-		fill	$ff,$b469-*	;@isl
-		jmp	firq	;@isl
-isl_b469_e	;@isl
 		std	VOLLO
 		ldd	#$02b8
 		std	OCTAVE
@@ -210,12 +208,12 @@ pfc2		lbra	err_fc
 7		cmpa	#'N		; N לפני תו: מדלגים
 		bne	8F
 		lbsr	dgetf
-8		cmpa	#'A
-		blo	9F
 		bra	isl_b54a_e	;@isl
 		fill	$ff,$b54a-*	;@isl
 		jmp	chrout	;@isl
 isl_b54a_e	;@isl
+8		cmpa	#'A
+		blo	9F
 		cmpa	#'G
 		bhi	9F
 		leax	pletr-'A,pcr	; C=1 D=3 E=5 F=6 G=8 A=10 B=12

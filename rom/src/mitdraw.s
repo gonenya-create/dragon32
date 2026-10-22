@@ -471,12 +471,12 @@ gpbit		lsrb
 		ora	,s
 		eora	,s
 41		bitb	#1		; היפוך
-		beq	42F
-		eora	,s
 		bra	isl_b3b4_e	;@isl
 		fill	$ff,$b3b4-*	;@isl
 		jmp	reset	;@isl
 isl_b3b4_e	;@isl
+		beq	42F
+		eora	,s
 42		sta	,x
 5		puls	a,b
 		lsra			; ביט אחד ימינה במסך

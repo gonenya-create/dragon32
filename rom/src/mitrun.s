@@ -49,6 +49,13 @@ newstt		jsr	HK_NEWS		; 21
 newst2		ldx	TXTPTR		; ($84A6: אחרי בדיקת ה-BREAK)
 		stx	TXTBEG		; תחילת הפקודה: לשם חוזרים אחרי קלט שגוי ב-INPUT (קורא: TXTBEG)
 		lda	,x
+		bra	isl_8e4f_e	;@isl
+		fill	$ff,$8e4f-*	;@isl
+		jsr	<chrget	;@isl
+		jsr	frmevl	;@isl
+		jsr	conint	;@isl
+		jmp	<chrgot	;@isl
+isl_8e4f_e	;@isl
 		bne	2F
 		ldd	1,x		; הקישור
 		lbeq	endcon		; סוף התוכנית (או סוף השורה הישירה)
@@ -63,6 +70,15 @@ gone		jsr	<chrget
 2		cmpa	#':
 		beq	gone
 snerr		lbra	err_sn		; יציאה משותפת ל-?SN בסביבה
+		fill	$ff,$8e7a-*	;@isl
+		jmp	x_adrbyt	;@isl
+		fill	$ff,$8e7e-*	;@isl
+		jsr	chkcom	;@isl
+		bra	$8e51	;@isl
+		jsr	frmevl	;@isl
+		jsr	getadr	;@isl
+		tfr	d,x	;@isl
+		rts	;@isl
 gone3		beq	9F		; פקודה ריקה
 		jsr	HK_STMT		; 10, עם A = הבית
 		tsta
@@ -88,67 +104,6 @@ gone3		beq	9F		; פקודה ריקה
 		pshs	u
 		jmp	<chrget		; קופצים לפקודה (דרך ה-RTS של chrget), A = התו שאחרי המילה
 9		rts
-; טבלת הפקודות לפי הטוקן ($80-$BA), כתובת לכל אחת. עוד לא בנויה: ?SN
-stmtbl
-		fdb	for		; $80 FOR
-		fdb	go		; $81 GO
-		fdb	rem		; $82 REM
-		fdb	rem		; $83 '
-		fdb	rem		; $84 ELSE
-		fdb	if		; $85 IF
-		fdb	data		; $86 DATA
-		fdb	print		; $87 PRINT
-		fdb	on		; $88 ON
-		fdb	input		; $89 INPUT
-		fdb	end		; $8A END
-		fdb	next		; $8B NEXT
-		fdb	dim		; $8C DIM
-		fdb	read		; $8D READ
-		fdb	let		; $8E LET
-		fdb	run		; $8F RUN
-		fdb	restore		; $90 RESTORE
-		fdb	return		; $91 RETURN
-		fdb	stop		; $92 STOP
-		fdb	poke		; $93 POKE
-		fdb	cont		; $94 CONT
-		fdb	list_st		; $95 LIST
-		fdb	clear		; $96 CLEAR
-		fdb	new_st		; $97 NEW
-		fdb	def		; $98 DEF
-		fdb	cload_st	; $99 CLOAD
-		fdb	csave_st	; $9A CSAVE
-		fdb	open_st		; $9B OPEN
-		fdb	close_st	; $9C CLOSE
-		fdb	llist		; $9D LLIST
-		fdb	set_st		; $9E SET
-		fdb	reset_st		; $9F RESET
-		fdb	cls_st		; $A0 CLS
-		fdb	motor_st	; $A1 MOTOR
-		fdb	sound_st	; $A2 SOUND
-		fdb	audio_st	; $A3 AUDIO
-		fdb	exec		; $A4 EXEC
-		fdb	skipf_st	; $A5 SKIPF
-		fdb	del_st		; $A6 DEL
-		fdb	edit_st		; $A7 EDIT
-		fdb	tron		; $A8 TRON
-		fdb	troff		; $A9 TROFF
-		fdb	line_st		; $AA LINE
-		fdb	pcls_st		; $AB PCLS
-		fdb	pset_st		; $AC PSET
-		fdb	preset_st		; $AD PRESET
-		fdb	screen_st		; $AE SCREEN
-		fdb	pclear		; $AF PCLEAR
-		fdb	color_st		; $B0 COLOR
-		fdb	circle_st	; $B1 CIRCLE
-		fdb	paint_st	; $B2 PAINT
-		fdb	get_st		; $B3 GET
-		fdb	put_st		; $B4 PUT
-		fdb	draw_st		; $B5 DRAW
-		fdb	pcopy_st		; $B6 PCOPY
-		fdb	pmode_st		; $B7 PMODE
-		fdb	play_st		; $B8 PLAY
-		fdb	err_sn		; $B9 DLOAD
-		fdb	renum		; $BA RENUM
 
 ; LIST: אותה שגרה כמו במצב ישיר
 ; LLIST: אותו LIST, למדפסת (קורא: מדפסת 1.8). בסוף שניהם: סוף שורה מותנה, חזרה למסך, ו-OK
@@ -160,13 +115,6 @@ list_st		ldx	TXTPTR
 rem		ldx	TXTPTR		; עד סוף השורה
 1		tst	,x+
 		bne	1B
-		bra	isl_8e4f_e	;@isl
-		fill	$ff,$8e4f-*	;@isl
-		jsr	<chrget	;@isl
-		lbsr	frmevl	;@isl
-		lbsr	conint	;@isl
-		jmp	<chrgot	;@isl
-isl_8e4f_e	;@isl
 		leax	-1,x
 		stx	TXTPTR
 		rts
@@ -185,15 +133,6 @@ run		jsr	HK_RUN		; 19
 		leax	-1,x
 		stx	TXTPTR
 		bra	gonew
-		fill	$ff,$8e7a-*	;@isl
-		jmp	x_adrbyt	;@isl
-		fill	$ff,$8e7e-*	;@isl
-		lbsr	chkcom	;@isl
-		bra	$8e51	;@isl
-		lbsr	frmevl	;@isl
-		lbsr	getadr	;@isl
-		tfr	d,x	;@isl
-		rts	;@isl
 
 ; GO TO / GO SUB (mit: GOTO 2391, GOSUB 2373)
 go		cmpa	#$bc		; TO
@@ -320,9 +259,9 @@ prlist		beq	pr_cr
 		cmpa	#$cd		; PRINT @n,USING
 		lbeq	usstart
 pr_lp		cmpa	#';
-		beq	pr_semi
+		lbeq	pr_semi
 		cmpa	#$bb		; TAB(
-		beq	pr_tab
+		lbeq	pr_tab
 		cmpa	#',
 		beq	pr_comma
 		lbsr	frmevl
@@ -348,6 +287,8 @@ pr_lp		cmpa	#';
 5		jsr	<chrgot
 		beq	pr_cr
 		bra	pr_lp
+		fill	$ff,$903d-*	;@isl
+		jmp	print	;@isl
 ; פסיק (קורא: מדפסת 1.7, 7.2): לפני השדה האחרון, רווחים עד הכפולה הבאה של רוחב השדה; אחרת סוף שורה.
 ; מסך 16/16/32, מדפסת 16/116/132. לקלטת: כלום
 pr_comma	lbsr	istape
@@ -365,7 +306,7 @@ pr_comma	lbsr	istape
 		bra	pr_semi
 2		lbsr	pr_cr
 pr_semi		jsr	<chrget		; גם הפסיק ממשיך כאן
-		bne	pr_lp
+		lbne	pr_lp
 		rts			; ; בסוף: בלי שורה חדשה
 ; TAB(n) (קורא: מדפסת 4.2): n בין 0 ל-255, ואחריו ')'. רווחים עד העמודה n; אם כבר שם או אחריה: כלום
 ; (בלי שורה חדשה). לקלטת: כלום. אחרי TAB אין שורה חדשה בסוף, כמו ';'
@@ -380,7 +321,7 @@ pr_tab		jsr	<chrget
 		tfr	b,a
 		bsr	prspcs
 3		jsr	<chrgot
-		bne	pr_lp
+		lbne	pr_lp
 		rts
 ; prspcs: A רווחים (A > 0)
 prspcs		pshs	b
@@ -408,10 +349,6 @@ for		lbsr	let		; המשתנה מקבל את ערך ההתחלה; let שם ב-FOR
 		lbsr	movmf
 		leax	fone,pcr	; צעד ברירת מחדל 1
 		lbsr	movfm
-		bra	isl_903d_e	;@isl
-		fill	$ff,$903d-*	;@isl
-		jmp	print	;@isl
-isl_903d_e	;@isl
 		jsr	<chrgot
 		cmpa	#$c1		; STEP
 		bne	3F
@@ -432,11 +369,16 @@ isl_903d_e	;@isl
 		std	11,s
 		lda	4,x
 		sta	13,s
+		bra	isl_90e5_e	;@isl
+		fill	$ff,$90e5-*	;@isl
+		jmp	x_strout	;@isl
+		jmp	strprt	;@isl
+isl_90e5_e	;@isl
 		ldd	FORPNT		; [1-2] המשתנה
 		std	1,s
 		lda	#$80		; [0] FOR
 		sta	,s
-		bra	nxnew
+		lbra	nxnew
 TEMPLIM		equ	$03e0		; זמני: העד, בתוך FBUFFR שלא בשימוש כאן
 RELSAV		equ	$03da		; זמני: המקום לפני סימן יחס
 
@@ -498,11 +440,6 @@ nx_one		clra
 		ldd	14,s		; עוד סיבוב
 		std	CURLIN
 		ldx	16,s
-		bra	isl_90e5_e	;@isl
-		fill	$ff,$90e5-*	;@isl
-		jmp	x_strout	;@isl
-		jmp	strprt	;@isl
-isl_90e5_e	;@isl
 		stx	TXTPTR
 nxnew
 3		lbra	newstt
@@ -673,20 +610,6 @@ fe_lp		clr	OPMASK
 		lbra	fe_lp
 9		puls	b,pc
 ; טבלת הסימנים: קדימות, כתובת (mit: OPTAB)
-optab		fcb	121
-		fdb	faddt
-		fcb	121
-		fdb	fsubt
-		fcb	123
-		fdb	fmultt
-		fcb	123
-		fdb	fdivt
-		fcb	127
-		fdb	fpwrt
-		fcb	80
-		fdb	andop
-		fcb	70
-		fdb	orop
 
 ; eval: איבר אחד → FAC
 eval		jsr	HK_OPND		; 16
@@ -743,29 +666,21 @@ eval		jsr	HK_OPND		; 16
 		leax	1,x
 		stx	TXTPTR
 		cmpa	#$a1
-		bhi	fnext
+		lbhi	fnext
 		lsla			; (טוקן-$80)*2: אותו דבר כמו suba #$80 ואז lsla
 		leau	fntbl,pcr
-		ldd	a,u		; ביטים 14-15: הסוג; השאר: הכתובת פחות $8000
-		pshs	b
-		tfr	a,b
-		anda	#$3f
-		ora	#$80
-		pshs	a		; הכתובת
-		rolb
-		rolb
-		rolb
-		andb	#3		; 0: ארגומנט אחד בסוגריים; 1: השגרה קוראת בעצמה אחרי '('; 2: בלי סוגריים
-		jsr	<chrget		; chrget ו-chklp לא נוגעים ב-B
-		cmpb	#2
-		beq	43F		; A = התו שאחרי המילה
+		ldu	a,u		; הכתובת (טבלה רגילה, כמו במקור)
+		pshs	u
+		cmpa	#($96-$80)*2	; מ-LEFT$ והלאה: השגרה קוראת בעצמה את מה שאחרי המילה
+		bhs	42F
+		jsr	<chrget		; עד HEX$: ארגומנט אחד בסוגריים
 		lbsr	chklp
-		tstb
-		bne	43F
-		pshs	b		; (B=0) מקום למזהה הפונקציה, שנשאר במחסנית בזמן הארגומנט (קורא)
+		clr	,-s		; מקום למזהה הפונקציה, שנשאר במחסנית בזמן הארגומנט (קורא)
 		lbsr	frmevl
 		leas	1,s
 		lbsr	chkrp
+		fcb	$8c		; cmpx #: מדלג על ה-chrget
+42		jsr	<chrget		; A = התו שאחרי המילה
 43		jsr	[,s++]		; קוראים לשגרה וחוזרים דרכה, כמו משגר הפונקציות במקור (MEM תלוי בעומק — קורא)
 		rts
 5		ldb	#1		; משתנה: בלי ליצור (ptrget בודק שזו אות: ?SN)
@@ -776,47 +691,6 @@ eval		jsr	HK_OPND		; 16
 		stx	FACMO		; מחרוזת: FAC מצביע על המתאר שבמשתנה (mit: ISVRET)
 		rts
 
-; טבלת הפונקציות לפי הטוקן ($80-$A1): הכתובת פחות $8000, והסוג בשני הביטים העליונים. עוד לא בנויה: ?SN
-; fnext: פונקציה מעבר למתאר 0: דרך $0132, עם B = (טוקן-$80)*2 ו-A = התו הבא (קורא: מדפסת 7.5)
-fnext		lsla
-		tfr	a,b
-		jsr	<chrget
-		jmp	[DESC1+8]
-fntbl
-		fdb	fn_sgn-$8000+0*$4000	; $80 SGN
-		fdb	fn_int-$8000+0*$4000	; $81 INT
-		fdb	fn_abs-$8000+0*$4000	; $82 ABS
-		fdb	fn_pos-$8000+0*$4000	; $83 POS
-		fdb	fn_rnd-$8000+0*$4000	; $84 RND
-		fdb	fn_sqr-$8000+0*$4000	; $85 SQR
-		fdb	fn_log-$8000+0*$4000	; $86 LOG
-		fdb	fn_exp-$8000+0*$4000	; $87 EXP
-		fdb	fn_sin-$8000+0*$4000	; $88 SIN
-		fdb	fn_cos-$8000+0*$4000	; $89 COS
-		fdb	fn_tan-$8000+0*$4000	; $8A TAN
-		fdb	fn_atn-$8000+0*$4000	; $8B ATN
-		fdb	fn_peek-$8000+0*$4000	; $8C PEEK
-		fdb	fn_len-$8000+0*$4000	; $8D LEN
-		fdb	fn_str-$8000+0*$4000	; $8E STR$
-		fdb	fn_val-$8000+0*$4000	; $8F VAL
-		fdb	fn_asc-$8000+0*$4000	; $90 ASC
-		fdb	fn_chr-$8000+0*$4000	; $91 CHR$
-		fdb	fn_eof-$8000+0*$4000	; $92 EOF
-		fdb	fn_joy-$8000+0*$4000	; $93 JOYSTK
-		fdb	fn_fix-$8000+0*$4000	; $94 FIX
-		fdb	fn_hex-$8000+0*$4000	; $95 HEX$
-		fdb	fn_left-$8000+1*$4000	; $96 LEFT$
-		fdb	fn_right-$8000+1*$4000	; $97 RIGHT$
-		fdb	fn_mid-$8000+1*$4000	; $98 MID$
-		fdb	fn_point-$8000+1*$4000	; $99 POINT
-		fdb	fn_inkey-$8000+2*$4000	; $9A INKEY$
-		fdb	fn_mem-$8000+2*$4000	; $9B MEM
-		fdb	fn_varptr-$8000+1*$4000	; $9C VARPTR
-		fdb	fn_instr-$8000+1*$4000	; $9D INSTR
-		fdb	fn_timer-$8000+2*$4000	; $9E TIMER
-		fdb	fn_ppoint-$8000+1*$4000	; $9F PPOINT
-		fdb	fn_strng-$8000+1*$4000	; $A0 STRING$
-		fdb	fn_usr-$8000+2*$4000	; $A1 USR
 fn_sgn		bsr	chknum
 		lbsr	sign
 		lbra	float
@@ -830,14 +704,17 @@ chknum		tst	VALTYP
 		rts
 tmerr		lbra	err_tm
 ; left$ / right$ / mid$: (מחרוזת,מספר[,מספר]) (mit: LEFT, RIGHT, MID, PREAM)
-fn_left		bsr	strarg		; A = B = כמה
+fn_left		lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את הארגומנטים בעצמה)
+		bsr	strarg		; A = B = כמה
 		clrb
 		bra	subs
-fn_right	bsr	strarg		; A = כמה
+fn_right	lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את הארגומנטים בעצמה)
+		bsr	strarg		; A = כמה
 		negb
 		addb	,x		; התחלה = אורך - כמה
 subs		lbra	substr
-fn_mid		lbsr	frmevl
+fn_mid		lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את הארגומנטים בעצמה)
+		lbsr	frmevl
 		bsr	frestr0
 		pshs	x		; המתאר
 		lbsr	chkcom

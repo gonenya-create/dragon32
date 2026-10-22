@@ -76,6 +76,27 @@ def nofill_lines():
             bad.add((f, i + 1))
     return bad
 
+
+def diff_spans(text):
+    """טווחי כתובות בין שתי תוויות שהקוד מחשב את המרחק ביניהן (למשל SHIFTED-KEYMAP): אסור להכניס גוש ביניהן."""
+    labels = {}
+    for f in text:
+        for l in text[f]:
+            m = re.match(r'^([A-Za-z_]\w*)\s', l)
+            if m: labels[m.group(1)] = None
+    cm, _ = code_map()
+    addr = {}
+    for a, f, n in cm or []:
+        m = re.match(r'^([A-Za-z_]\w*)\s', text[f][n-1])
+        if m: addr.setdefault(m.group(1), a)
+    spans = []
+    for f in text:
+        for l in text[f]:
+            code = l.split(';')[0]
+            for x, y in re.findall(r'\b([A-Za-z_]\w*)-([A-Za-z_]\w*)\b', code):
+                if x in addr and y in addr: spans.append((min(addr[x], addr[y]), max(addr[x], addr[y])))
+    return {'span': spans}
+
 def place(b, report):
     A = b['addr']
     cm, err = code_map()
@@ -88,13 +109,20 @@ def place(b, report):
     bad = nofill_lines()
     text = {f: open(f).read().split('\n') for f in files()}
     best = bestfree = None
+    pairs = diff_spans(text)
     for k, (addr, f, n) in enumerate(cm):
         if addr > A: break
         src = text[f][n - 1]
-        if DATA.match(src) or (f, n) in bad: continue
         prev = text[cm[k-1][1]][cm[k-1][2] - 1] if k else ''
-        if k and DATA.match(prev) and cm[k-1][0] < addr: continue   # בתוך טבלה
-        free = bool(UNCOND.match(prev))
+        if (f, n) in bad or src.rstrip().endswith(TAG): continue   # לא בתוך גוש אחר
+        if DATA.match(src) or (k and DATA.match(prev) and cm[k-1][0] < addr):
+            # בין שתי טבלאות נפרדות: רק לפני טבלה עם שם משלה, אחרי טבלה, ולא בין שתי תוויות שהקוד מחשב את המרחק ביניהן
+            if not (DATA.match(src) and k and DATA.match(prev) and re.match(r'^[A-Za-z_]\w*\s', src)
+                    and not any(lo < addr <= hi for lo, hi in pairs.get('span', []))):
+                continue
+            free = True
+        else:
+            free = bool(UNCOND.match(prev))
         if addr <= A - (0 if free else 2):
             best = (addr, f, n, free)
             if free: bestfree = best
@@ -113,6 +141,7 @@ def place(b, report):
     L[at:at] = ins
     open(f, 'w').write('\n'.join(L))
     report.append('$%04X: %s:%d (נדחף מ-$%04X, %s)' % (A, f, n, addr, 'אחרי קפיצה' if free else 'עם bra'))
+    if os.environ.get('ISLDEBUG'): print(report[-1], file=sys.stderr)
 
 def assemble_ok():
     r = subprocess.run(['asm6809', '-B', '-o', '/dev/null', 'exp.s'], capture_output=True, text=True)

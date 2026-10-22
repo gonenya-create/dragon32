@@ -1,7 +1,7 @@
 # מקצר קפיצות ארוכות (lbsr/lbra/lbxx) לקצרות כשהן בטווח. לא נוגע במשמעות: אותה קפיצה, פחות בתים.
 import re,subprocess,glob,os
 os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','src'))
-files=[f for f in glob.glob('*.s')]
+files=[f for f in glob.glob('*.s') if f!='islands.s']
 pat=re.compile(r'(\t)l(b(?:sr|ra|eq|ne|cs|cc|hi|ls|lo|hs|pl|mi|gt|ge|lt|le|vs|vc))(\t)')
 orig={f:open(f).read() for f in files}
 # 1. כל הארוכות → קצרות

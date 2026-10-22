@@ -191,7 +191,8 @@ preset_st	clra
 
 ; ---------- PPOINT(x,y) (קורא 7) ----------
 ; שחור-לבן: 0, או 1 (5 בערכה 8). צבעים: הערך 0-3 ועוד 1 (ועוד 4 בערכה 8)
-fn_ppoint	lbsr	gcogx
+fn_ppoint	lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את הארגומנטים בעצמה)
+		lbsr	gcogx
 		bsr	gpt1
 		pshs	a
 		ldb	,x
@@ -215,7 +216,7 @@ fn_ppoint	lbsr	gcogx
 
 ; ---------- PCLS [c] (קורא 4) ----------
 pcls_st		beq	1F
-		bsr	evcol
+		lbsr	evcol
 		fcb	$8c		; cmpx: מדלג על ה-ldb
 1		ldb	GBACK
 		lda	#$55

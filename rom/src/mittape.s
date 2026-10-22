@@ -26,12 +26,10 @@ tmoton		lda	PIA1+1
 1		leax	-1,x
 		bne	1B
 		rts
-; motoff: המנוע כבוי, והפסיקות פתוחות. A משתנה
-motoff		lda	PIA1+1
-		bra	isl_b6a5_e	;@isl
 		fill	$ff,$b6a5-*	;@isl
 		jmp	csavp	;@isl
-isl_b6a5_e	;@isl
+; motoff: המנוע כבוי, והפסיקות פתוחות. A משתנה
+motoff		lda	PIA1+1
 		anda	#$f7
 		sta	PIA1+1
 		andcc	#$af
@@ -52,11 +50,11 @@ getfn		ldx	#FNAME
 		jsr	<chrgot
 		beq	9F
 		lbsr	frmevl
-		lbsr	frestr		; לא מחרוזת: ?TM
 		bra	isl_b6d4_e	;@isl
 		fill	$ff,$b6d4-*	;@isl
 		jmp	cload_st	;@isl
 isl_b6d4_e	;@isl
+		lbsr	frestr		; לא מחרוזת: ?TM
 		sta	FNLEN
 		beq	9F
 		ldu	#FNAME

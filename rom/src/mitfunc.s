@@ -192,7 +192,8 @@ IT_SA		equ	$ea		; פנימי
 IT_SL		equ	$ec
 IT_TA		equ	$ed
 IT_TL		equ	$ef
-fn_instr	lbsr	frmevl
+fn_instr	lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את הארגומנטים בעצמה)
+		lbsr	frmevl
 		ldb	#1		; בלי מקום: מ-1
 		tst	VALTYP
 		pshs	b
@@ -250,7 +251,8 @@ fn_instr	lbsr	frmevl
 9		lbra	givb
 
 ; ---------- STRING$(n,c) (קורא) ----------
-fn_strng	lbsr	evbyte
+fn_strng	lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את הארגומנטים בעצמה)
+		lbsr	evbyte
 		pshs	b		; n
 		lbsr	chkcom
 		lbsr	frmevl
@@ -272,6 +274,12 @@ fn_strng	lbsr	evbyte
 		beq	4F
 3		stb	,x+
 		deca
+		bra	isl_9d3d_e	;@isl
+		fill	$ff,$9d3d-*	;@isl
+		jmp	irq	;@isl
+		fill	$ff,$9d46-*	;@isl
+		jmp	irqtk	;@isl
+isl_9d3d_e	;@isl
 		bne	3B
 4		lbra	putnew
 
@@ -288,14 +296,11 @@ fn_pos		lbsr	chknum
 		sta	DEVNUM
 		ldb	DEVPOS
 		lbra	givb
-		fill	$ff,$9d3d-*	;@isl
-		jmp	irq	;@isl
-		fill	$ff,$9d46-*	;@isl
-		jmp	irqtk	;@isl
 fn_mem		tfr	s,d		; S בכניסה פחות STREND, בלי סימן (קורא)
 		subd	STREND
 		lbra	givu
-fn_varptr	ldd	STREND		; משתנה שלא היה: נוצר, ואז ?FC (קורא)
+fn_varptr	lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את הארגומנטים בעצמה)
+		ldd	STREND		; משתנה שלא היה: נוצר, ואז ?FC (קורא)
 		pshs	d
 		clrb
 		lbsr	ptrget
@@ -446,7 +451,8 @@ defusr		ldx	TXTPTR
 
 ; ---------- POINT(x,y): מסך הטקסט (קורא + ה-VDG) ----------
 ; x 0-63, y 0-31. תא שאינו גרפי: -1. נקודה כבויה: 0. דולקת: הצבע 1-8
-fn_point	lbsr	sgxyr
+fn_point	lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את הארגומנטים בעצמה)
+		lbsr	sgxyr
 		ldb	,x		; VALTYP כבר 0 (evbyte)
 		bmi	3F
 		ldd	#-1		; לא גרפי

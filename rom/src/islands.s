@@ -1,4 +1,5 @@
-; שלטי ההפניה בכתובות הקבועות של המקור (גונן, 22.10: "מאשר").
+; שלטי ההפניה בכתובות הקבועות של המקור.
+; בגוש עם כמה כניסות: רק jsr/jmp לכתובות רחוקות, כדי שהגודל לא ישתנה (shorten.py ו-fixbr.py לא נוגעים בקובץ הזה) (גונן, 22.10: "מאשר").
 ; הקובץ הזה לא נכלל ב-exp.s: הכלי tools/islands.py מכניס כל גוש לקוד, בדיוק בכתובת שלו.
 ; המקור לכתובות ולחוזים: docs/DRAGON-SPEC-ENTRIES.md (הקורא) ו-docs/DRAGON-RESEARCH-ERA.md (הספרים).
 ; כתובות צמודות (פחות מ-3 בתים) הן גוש אחד: הראשונה פקודה קצרה ש"נופלת" לבאה.
@@ -123,18 +124,18 @@ isl_852b	bsr	inkey
 ; @island $8E4F
 ; ‏$8E4F: התו הבא ואז בית. ‏$8E51: ביטוי → B. ‏$8E54: ‏FAC → B (קורא 2.2)
 		jsr	<chrget
-		bsr	frmevl
-		bsr	conint
+		jsr	frmevl
+		jsr	conint
 		jmp	<chrgot
 
 ; @island $8E7A
 ; ‏$8E7A כתובת, פסיק ובית. ‏$8E7E פסיק ובית. ‏$8E83 ביטוי → X. ‏$8E86 ‏FAC → X (קורא 2.2)
 		jmp	x_adrbyt
 		fill	$ff,$8e7e-*
-		bsr	chkcom
+		jsr	chkcom
 		bra	$8e51
-		bsr	frmevl
-		bsr	getadr
+		jsr	frmevl
+		jsr	getadr
 		tfr	d,x
 		rts
 

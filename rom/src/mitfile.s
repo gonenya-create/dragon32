@@ -259,7 +259,6 @@ cadr		lbsr	chkcom
 ; ---------- CSAVEM (3.14) ----------
 csavem		jsr	<chrget		; ה-M
 		lbsr	getfn
-		bsr	cadr
 		bra	isl_ba77_e	;@isl
 		fill	$ff,$ba77-*	;@isl
 		ldb	#$60	;@isl
@@ -270,6 +269,7 @@ isl_ba7e	stb	,x+	;@isl
 		blo	isl_ba7e	;@isl
 		rts	;@isl
 isl_ba77_e	;@isl
+		bsr	cadr
 		std	HLOAD
 		pshs	d
 		bsr	cadr
@@ -660,14 +660,14 @@ fn_eof		jsr	HK_EOF		; 15
 ; דגל ASCII חובה (?FM). NEW, הקלטת פתוחה לקריאה, ושורה אחרי שורה כאילו הוקלדה (בלי הד). שורה בלי מספר: ?DS.
 ; בסוף הקובץ: סגור, ו-OK. שורה שנקטעה בסוף הקובץ הולכת לאיבוד
 cl_asc		tst	HASCII
-		lbeq	efmo
+		beq	efmo
 		lbsr	scrtch
 		lda	#$ff
+		sta	DEVNUM
 		bra	isl_bd52_e	;@isl
 		fill	$ff,$bd52-*	;@isl
 		jmp	joyrd	;@isl
 isl_bd52_e	;@isl
-		sta	DEVNUM
 		sta	SPCIO
 		lbsr	ropen
 1		lbsr	tgetln

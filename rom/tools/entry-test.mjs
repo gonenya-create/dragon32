@@ -28,14 +28,29 @@ console.log('המקום של הגושים');
 ok('$8342: ‏LDB #12, ואחריו JMP ב-$8344', at(0x8342) === 0xC6 && at(0x8343) === 12 && at(0x8344) === 0x7E);
 ok('$89A4-$89B4: ‏LDB, דילוג, LDB, דילוג, LDB, ובדיקה ב-$89AC', at(0x89A4) === 0xC6 && at(0x89A6) === 0x8C && at(0x89A7) === 0xC6 && at(0x89A9) === 0x8C && at(0x89AA) === 0xC6 && at(0x89AB) === 0x2C && at(0x89B4) === 0x7E);
 ok('$8C36: פקודה של בית אחד (CLRA) שנופלת ל-$8C37 (CLR VALTYP)', at(0x8C36) === 0x4F && at(0x8C37) === 0x0F && at(0x8C38) === 0x06);
+ok('כניסות באמצע גוש: ‏$8E51 $8E54 $8E7E $8E83 $8E86 מתחילות בפקודה (JSR), ‏$8E81 BRA', [0x8E51, 0x8E54, 0x8E7E, 0x8E83, 0x8E86].every(a => at(a) === 0xBD) && at(0x8E81) === 0x20);
 for (const a of [...src.matchAll(/@island \$([0-9A-F]{4})/gi)].map(m => parseInt(m[1], 16)))
   ok(`$${a.toString(16).toUpperCase()}: לא ריק`, at(a) !== 0xFF && at(a) !== 0x00);
 
+console.log('הטבלאות במקום של המקור (קורא 3)');
+const word = (a, s) => [...s].every((c, i) => at(a + i) === (c.charCodeAt(0) | (i === s.length - 1 ? 0x80 : 0)));
+const w16 = a => at(a) * 256 + at(a + 1);
+ok('$8033: שמות הפקודות, מ-FOR', word(0x8033, 'FOR') && word(0x8036, 'GO'));
+ok('$8154: כתובות הפקודות (59)', w16(0x8154) >= 0x8000 && w16(0x8154 + 58 * 2) >= 0x8000 && !word(0x81CA - 1, 'X'));
+ok('$81CA: שמות הפונקציות, מ-SGN, ו-USR אחרון', word(0x81CA, 'SGN') && word(0x824D, 'USR'));
+ok('$8250: כתובות הפונקציות (34), כתובות רגילות', [...Array(34).keys()].every(i => w16(0x8250 + 2 * i) >= 0x8000 && w16(0x8250 + 2 * i) < 0xC000));
+ok('$8294: טבלת הפעולות: 121 121 123 123 127 80 70', [121, 121, 123, 123, 127, 80, 70].every((p, i) => at(0x8294 + 3 * i) === p));
+ok('$82A9: קודי השגיאה, מ-NF עד NE', String.fromCharCode(...rom.subarray(0x02A9, 0x02DF)) === 'NFSNRGODFCOVOMULBSDD/0IDTMOSLSSTCNUFFDAODNIOFMNOIEDSNE');
+ok('$82DF " ERROR" ו-$82E6 " IN "', String.fromCharCode(...rom.subarray(0x02DF, 0x02EB)) === ' ERROR\0 IN \0');
+
+let s;
 try {
+  s = await run(['PRINT PEEK(&H120);PEEK(&H121)*256+PEEK(&H122);PEEK(&H123)*256+PEEK(&H124);PEEK(&H125);PEEK(&H126)*256+PEEK(&H127);PEEK(&H128)*256+PEEK(&H129)']);
+  ok('המתאר ב-$0120 מצביע על הטבלאות: 78 $8033 $8154, ‏34 $81CA $8250', s.replace(/\n/g, '').includes(' 78  32819  33108  34  33226  33360'), show(tail(s)));
   console.log('USR: ‏$8B2D (מספר מ-BASIC) ו-$8C37 (תוצאה ל-BASIC)');
   // JSR $8B2D / ADDD #1 / JMP $8C37
   const usr1 = [...poke(0x7000, 'BD8B2D C30001 7E8C37'), 'DEFUSR0=&H7000'];
-  let s = await run([...usr1, 'PRINT USR(5);USR(-1.5);USR(-32768);USR(32767.9)']);
+  s = await run([...usr1, 'PRINT USR(5);USR(-1.5);USR(-32768);USR(32767.9)']);
   ok('USR(5)=6, ‏-1.5 נקטע ל-1- (לכיוון אפס), ‏-32768 מותר, 32767.9 → 32767', /^ 6  0 -32767 -32768 ?$/m.test(s), show(tail(s)));
   s = await run([...usr1, 'PRINT USR(32768)']);
   ok('USR(32768): ?FC', /\?FC ERROR/.test(s), show(tail(s)));
