@@ -269,6 +269,18 @@ mltpl1		lsra
 		ora	#$80		; סמן: הלולאה נגמרת כשהוא יוצא
 1		bcc	2F
 		pshs	a
+		bra	isl_89a4_e	;@isl
+		fill	$ff,$89a4-*	;@isl
+		ldb	#')	;@isl
+		fcb	$8c	;@isl
+		ldb	#'(	;@isl
+		fcb	$8c	;@isl
+		ldb	#',	;@isl
+		tfr	b,a	;@isl
+		jmp	synchk	;@isl
+		fill	$ff,$89b4-*	;@isl
+		jmp	err_sn	;@isl
+isl_89a4_e	;@isl
 		ldd	RESMO
 		addd	ARGMO
 		std	RESMO
@@ -302,17 +314,7 @@ muldv2		tst	ARGEXP
 		sta	FACSGN
 fprts		rts
 8		leas	2,s
-		bra	zerofc
-		fill	$ff,$89a4-*	;@isl
-		ldb	#')	;@isl
-		fcb	$8c	;@isl
-		ldb	#'(	;@isl
-		fcb	$8c	;@isl
-		ldb	#',	;@isl
-		tfr	b,a	;@isl
-		jmp	synchk	;@isl
-		fill	$ff,$89b4-*	;@isl
-		jmp	err_sn	;@isl
+		lbra	zerofc
 fmult		lbsr	conupk
 fmultt		tst	FACEXP
 		beq	fprts
@@ -321,7 +323,7 @@ fmultt		tst	FACEXP
 		clrb
 		std	RESHO
 		std	RESMO			; ב-Dragon הבית הנוסף לא נכנס לכפל (קורא; ב-mit כן)
-		lbsr	mltply
+		bsr	mltply
 		ldx	#FACLO+1	; FACLO, FACMO, FACMOH, FACHO
 1		lda	,-x
 		lbsr	mltply
@@ -408,7 +410,7 @@ fin_dig		tst	DPTFLG
 		beq	1F
 		inc	DECCNT
 1		pshs	a
-		bsr	mul10
+		lbsr	mul10
 		puls	a
 		suba	#'0
 		bsr	finlog
@@ -472,6 +474,10 @@ fsgn		cmpa	#'-
 ; finlog: FAC = FAC + הספרה ב-A
 finlog		lbsr	movaf		; (movaf לא נוגע ב-A)
 		lbsr	float
+		bra	isl_8b2d_e	;@isl
+		fill	$ff,$8b2d-*	;@isl
+		jmp	x_intcnv	;@isl
+isl_8b2d_e	;@isl
 		lbra	finl2
 
 ; mul10 / div10 (mit: MUL10 5359, DIV10 5378)
@@ -502,10 +508,6 @@ ayint		lda	FACEXP
 		lbne	err_fc
 ; qint: FAC → מספר שלם של 32 ביט עם סימן ב-FACHO..FACLO (מעוגל כלפי מטה)
 qint		ldb	FACEXP
-		bra	isl_8b2d_e	;@isl
-		fill	$ff,$8b2d-*	;@isl
-		jmp	x_intcnv	;@isl
-isl_8b2d_e	;@isl
 		beq	clrfac
 		negb
 		addb	#160		; B = 160 - FACEXP
@@ -521,6 +523,11 @@ isl_8b2d_e	;@isl
 		rts
 clrfac		clra
 		clrb
+		bra	isl_8b8a_e	;@isl
+		fill	$ff,$8b8a-*	;@isl
+		jmp	err_bs	;@isl
+		jmp	err_fc	;@isl
+isl_8b8a_e	;@isl
 		std	FACHO
 		std	FACMO
 9		rts
@@ -555,11 +562,6 @@ fcomp		ldb	,x
 		ldd	1,x
 		ora	#$80
 		cmpd	FACHO
-		bra	isl_8b8a_e	;@isl
-		fill	$ff,$8b8a-*	;@isl
-		jmp	err_bs	;@isl
-		jmp	err_fc	;@isl
-isl_8b8a_e	;@isl
 		bne	1F
 		ldd	3,x		; Dragon: הבית הנוסף לא משתתף בהשוואה (קורא; ב-mit הוא כן)
 		subd	FACMO
@@ -609,6 +611,11 @@ fout5		lbsr	faddh
 		lda	DECCNT
 		adda	#10
 		cmpa	#11		; mit: 3*ADDPRC+10 בבסיס 8 = 11. שלילי (קטן מ-.01 בערך) או גדול מ-999999999: כתיב E
+		bra	isl_8c36_e	;@isl
+		fill	$ff,$8c36-*	;@isl
+		clra	;@isl
+		jmp	x_givabf	;@isl
+isl_8c36_e	;@isl
 		bhs	5F
 		tfr	a,b
 		decb
@@ -638,11 +645,6 @@ fout5		lbsr	faddh
 		cmpa	#'0
 		beq	12B
 		cmpa	#'.
-		bra	isl_8c36_e	;@isl
-		fill	$ff,$8c36-*	;@isl
-		clra	;@isl
-		jmp	x_givabf	;@isl
-isl_8c36_e	;@isl
 		beq	13F
 		leay	1,y
 13		lda	#'+

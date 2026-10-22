@@ -236,6 +236,10 @@ midst		jsr	<chrget		; אחרי $FF
 		clrb			; יוצרים משתנה אם אין
 		lbsr	ptrget
 		tst	VALTYP
+		bra	isl_957a_e	;@isl
+		fill	$ff,$957a-*	;@isl
+		jmp	prnum	;@isl
+isl_957a_e	;@isl
 		lbeq	err_tm
 		ldx	VARPNT
 		pshs	x		; המתאר
@@ -254,7 +258,7 @@ midst		jsr	<chrget		; אחרי $FF
 2		lbsr	chkcom
 		lbsr	evbyte
 		tstb
-		beq	str_fc		; אין מקום 0
+		lbeq	str_fc		; אין מקום 0
 		pshs	b		; ההתחלה
 		ldb	#255		; ברירת מחדל
 		jsr	<chrgot
@@ -272,7 +276,7 @@ midst		jsr	<chrget		; אחרי $FF
 		ldu	5,s
 		ldb	4,s
 		cmpb	,u
-		bhi	str_fc		; התחלה מעבר לסוף
+		lbhi	str_fc		; התחלה מעבר לסוף
 		ldx	2,u		; לאן: הכתובת ועוד n-1
 		abx
 		leax	-1,x

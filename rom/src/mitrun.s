@@ -46,7 +46,7 @@ synchk		pshs	a
 newstt		jsr	HK_NEWS		; 21
 		andcc	#$af		; הפסיקות פתוחות בתחילת כל פקודה (קורא: קלטת 5, צליל 1.2)
 		lbsr	brkchk		; BREAK? (mit: ISCNTC)
-		ldx	TXTPTR
+newst2		ldx	TXTPTR		; ($84A6: אחרי בדיקת ה-BREAK)
 		stx	TXTBEG		; תחילת הפקודה: לשם חוזרים אחרי קלט שגוי ב-INPUT (קורא: TXTBEG)
 		lda	,x
 		bne	2F
@@ -199,6 +199,12 @@ gosub1					; כתובת החזרה של הפקודה נשארת מתחת לרש�
 gogo		bsr	goto1		; גם RUN n
 gonew		lbra	newstt
 1		jsr	<chrget
+		bra	isl_8e4f_e	;@isl
+		fill	$ff,$8e4f-*	;@isl
+		jsr	<chrget	;@isl
+		jmp	x_getbyt	;@isl
+		jmp	x_conbyt	;@isl
+isl_8e4f_e	;@isl
 ; goto1: TXTPTR על מספר השורה. שורה גדולה מהנוכחית: מחפשים מהשורה הבאה; אחרת מההתחלה (mit: GOTO)
 goto1		bsr	lineget
 		ldy	TXTTAB		; מההתחלה (fndlin)
@@ -214,6 +220,15 @@ goto1		bsr	lineget
 		rts
 ; lineget: מספר שורה מהטקסט (TXTPTR) ל-D
 lineget		ldx	TXTPTR
+		bra	isl_8e7a_e	;@isl
+		fill	$ff,$8e7a-*	;@isl
+		jmp	x_adrbyt	;@isl
+		fill	$ff,$8e7e-*	;@isl
+		jmp	x_combyt	;@isl
+		fill	$ff,$8e83-*	;@isl
+		jmp	x_getx	;@isl
+		jmp	x_fac2x	;@isl
+isl_8e7a_e	;@isl
 		lbsr	linget
 		stx	TXTPTR
 		pshs	d
@@ -382,7 +397,7 @@ prspcs		pshs	b
 for		lbsr	let		; המשתנה מקבל את ערך ההתחלה; let שם ב-FORPNT את המשתנה של הלולאה
 				; (לא VARPNT: הביטוי של ההתחלה כבר דרס אותו — FOR I=J TO 3)
 		leas	2,s		; בלי החזרה ל-gone: הרשומה נכנסת מתחתיה (mit: NOTOL)
-		bsr	fndfor		; אותו משתנה כבר בלולאה? מוחקים אותה ומה שמעליה
+		lbsr	fndfor		; אותו משתנה כבר בלולאה? מוחקים אותה ומה שמעליה
 		bne	2F
 		leas	18,x		; X = הרשומה
 2		ldb	#18
@@ -418,7 +433,7 @@ for		lbsr	let		; המשתנה מקבל את ערך ההתחלה; let שם ב-FOR
 		std	1,s
 		lda	#$80		; [0] FOR
 		sta	,s
-		bra	nxnew
+		lbra	nxnew
 TEMPLIM		equ	$03e0		; זמני: העד, בתוך FBUFFR שלא בשימוש כאן
 RELSAV		equ	$03da		; זמני: המקום לפני סימן יחס
 
@@ -429,6 +444,10 @@ stmend		ldx	TXTPTR
 		cmpa	#':
 		beq	9F
 		cmpa	#'"
+		bra	isl_903d_e	;@isl
+		fill	$ff,$903d-*	;@isl
+		jmp	print	;@isl
+isl_903d_e	;@isl
 		bne	2F
 3		leax	1,x
 		lda	,x
@@ -513,6 +532,11 @@ ptrget		pshs	b
 		lda	VARNAM+1
 		ora	#$80
 		sta	VARNAM+1
+		bra	isl_90e5_e	;@isl
+		fill	$ff,$90e5-*	;@isl
+		jmp	x_strout	;@isl
+		jmp	strprt	;@isl
+isl_90e5_e	;@isl
 		com	VALTYP
 		jsr	<chrget
 11		ldb	SUBFLG		; ביט 6: שם של DEF FN — ביט 7 בתו הראשון (mit: GETFNM)

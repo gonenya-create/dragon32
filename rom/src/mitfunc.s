@@ -313,6 +313,12 @@ timset		jsr	<chrget		; אחרי $FF
 ; eqadr: '=' ואחריו כתובת 0-65535 ב-D
 eqadr		lda	#$cb		; =
 		lbsr	synchk
+		bra	isl_9d3d_e	;@isl
+		fill	$ff,$9d3d-*	;@isl
+		jmp	irq	;@isl
+		fill	$ff,$9d46-*	;@isl
+		jmp	irqtk	;@isl
+isl_9d3d_e	;@isl
 ; evadr: ביטוי → כתובת 0-65535 ב-D
 evadr		lbsr	frmevl
 		lbra	getadr
@@ -382,19 +388,13 @@ joyrd		ldb	#3
 		ldb	1,s		; הערוץ
 		ldx	#JOYVAL
 		cmpa	b,x
-		lbeq	8F		; כמו הערך השמור: מסיימים
-		bra	isl_9d3d_e	;@isl
-		fill	$ff,$9d3d-*	;@isl
-		jmp	irq	;@isl
-		fill	$ff,$9d46-*	;@isl
-		jmp	irqtk	;@isl
-isl_9d3d_e	;@isl
+		beq	8F		; כמו הערך השמור: מסיימים
 		dec	,s
-		lbne	4B
+		bne	4B
 8		sta	b,x
 		puls	a,b
 		decb
-		lbpl	1B
+		bpl	1B
 		rts
 
 ; ---------- USR0-USR9, DEF USR (קורא) ----------

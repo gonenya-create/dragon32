@@ -455,10 +455,10 @@ gpbit		lsrb
 		tst	GPFLG
 		bne	3F
 		bita	,x		; GET: ביט דלוק במסך → דלוק במערך
-		beq	5F
+		lbeq	5F
 		orb	,u
 		stb	,u
-		bra	5F
+		lbra	5F
 3		ldb	GPACT		; PUT: הפעולה לפי הביט במערך
 		lda	1,s
 		anda	,u
@@ -473,6 +473,10 @@ gpbit		lsrb
 41		bitb	#1		; היפוך
 		beq	42F
 		eora	,s
+		bra	isl_b3b4_e	;@isl
+		fill	$ff,$b3b4-*	;@isl
+		jmp	reset	;@isl
+isl_b3b4_e	;@isl
 42		sta	,x
 5		puls	a,b
 		lsra			; ביט אחד ימינה במסך
@@ -480,13 +484,13 @@ gpbit		lsrb
 		rora
 		leax	1,x
 6		leay	-1,y
-		bne	gpbit
+		lbne	gpbit
 		ldx	GPRADR		; השורה הבאה, מאותה מסכה
 		lda	GROWB
 		leax	a,x
 		lda	GPRMSK
 		dec	GY2+1
-		bne	gpbrow
+		lbne	gpbrow
 		rts
 ; הפעולות של PUT: מחיקה = 2, הדלקה = 3, היפוך = 1, בלי שינוי = 0 (לביט 1 בביטים 2-3)
 gpatab		fcb	$ac,$0e		; PSET: מחיקה / הדלקה

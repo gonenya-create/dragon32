@@ -46,6 +46,7 @@ sound_st	bsr	evnzb
 		lbsr	chkcom
 		bsr	evnzb
 ; sound2: כניסה שנייה (קורא 1.6): B = המשך, הטון כבר ב-$8C
+; @nofill: לולאות מתוזמנות, לפי מחזורים. tools/islands.py לא מכניס כאן גושים
 sound2		clra
 		lslb			; 4 שדות לכל יחידה
 		rola
@@ -78,21 +79,31 @@ sseg		sta	PIA1
 		rts
 
 ; ---------- AUDIO ON / OFF (קורא 3) ----------
+; @endnofill
 audio_st	pshs	a		; המילה שאחרי AUDIO נקראת קודם
 		jsr	<chrget
 		puls	a
+		bra	isl_b44f_e	;@isl
+		fill	$ff,$b44f-*	;@isl
+		nop	;@isl
+		jmp	warm	;@isl
+isl_b44f_e	;@isl
 		cmpa	#$c2		; OFF: רק מכבים. הבוררים לא משתנים
 		beq	sndoff
 		cmpa	#$88		; ON
 		lbne	err_sn
 		lda	#1		; כניסת הקלטת
 ; snds: sndsel ואז sndon
-snds		bsr	sndsel
+snds		lbsr	sndsel
 		bra	sndon
 
 ; ---------- PLAY מחרוזת (קורא 2, 9) ----------
 ; plyini: ברירות המחדל, בהדלקה ובכל RUN (קורא 0.2): O3 (נשמר 2), עוצמה $B8/$44, L4, T2, בלי נקודות
 plyini		ldd	#$4404
+		bra	isl_b469_e	;@isl
+		fill	$ff,$b469-*	;@isl
+		jmp	firq	;@isl
+isl_b469_e	;@isl
 		std	VOLLO
 		ldd	#$02b8
 		std	OCTAVE
@@ -201,6 +212,10 @@ pfc2		lbra	err_fc
 		lbsr	dgetf
 8		cmpa	#'A
 		blo	9F
+		bra	isl_b54a_e	;@isl
+		fill	$ff,$b54a-*	;@isl
+		jmp	chrout	;@isl
+isl_b54a_e	;@isl
 		cmpa	#'G
 		bhi	9F
 		leax	pletr-'A,pcr	; C=1 D=3 E=5 F=6 G=8 A=10 B=12
@@ -250,19 +265,20 @@ parg		pshs	b
 2		cmpa	#'>
 		bne	3F
 		cmpb	#128
-		bhs	pfc2
+		lbhs	pfc2
 		lslb
 		rts
 3		cmpa	#'<
 		bne	4F
 		tstb
-		beq	pfc2
+		lbeq	pfc2
 		lsrb
 		rts
 4		lbsr	dback
 		lbra	dval
 
 ; pnote: A = התו (0-11), B = האורך. U = המקום של כתובת החזרה: פסיקת השדה חוזרת לשם כשהתו נגמר (קורא 9)
+; @nofill: לולאות מתוזמנות, לפי מחזורים. tools/islands.py לא מכניס כאן גושים
 pnote		pshs	a
 		lda	TEMPO
 		mul
@@ -325,6 +341,7 @@ pseg8		sta	PIA1
 1		decb
 		bne	1B
 		rts
+; @endnofill
 ptab16		fdb	424,400,378,356,336,317,299,282,266,251,237,223
 		fdb	211,199,187,177,166,157,148,139,131,124,117,110
 ptab8		fcb	166,156,147,139,131,123,116,109,103,97,91,86

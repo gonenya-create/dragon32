@@ -213,6 +213,7 @@ gk_got		ldx	CURSOR
 		stb	,x
 		puls	b,x,pc
 ; blink (קורא): CBLCNT יורד; ב-0: ביט $40 בתא הסמן מתהפך, והמונה חוזר ל-50. אחר כך השהיה: 1118 סיבובים של 8 מחזורים
+; @nofill: לולאות מתוזמנות, לפי מחזורים. tools/islands.py לא מכניס כאן גושים
 blink		pshs	a,x
 		dec	CBLCNT
 		bne	1F
@@ -226,3 +227,4 @@ blink		pshs	a,x
 2		leax	-1,x
 		bne	2B
 		puls	a,x,pc
+; @endnofill

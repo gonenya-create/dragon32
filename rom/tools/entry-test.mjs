@@ -79,6 +79,38 @@ try {
     ok(`${name}, ו-X לא משתנה`, new RegExp(`^ ${c}  4660 ?$`, 'm').test(s), show(tail(s)));
   }
 
+  console.log('סבב 2: כמו בתוכנות של אז');
+  s = await run(['PRINT PEEK(&HBFFE)*256+PEEK(&HBFFF);PEEK(&H72)*256+PEEK(&H73);PEEK(&H10D)*256+PEEK(&H10E);PEEK(&H110)*256+PEEK(&H111)']);
+  ok('וקטור RESET = $B3B4, הכניסה החמה = $B44F, ‏IRQ דרך $9D3D, ‏FIRQ דרך $B469', /^ 46004  46159  40253  46185 ?$/m.test(s), show(tail(s)));
+  // JSR $BA77 / STX $7062 / RTS
+  s = await run([...poke(0x7000, 'BDBA77 BF7062 39'), 'PRINT "XYZ":EXEC &H7000:PRINT PEEK(&H7062)*256+PEEK(&H7063);PEEK(1024)']);
+  ok('$BA77: המסך נקי, ‏X=$0600 (וה-PRINT שאחריו מתחיל למעלה, ברווח)', /^ 1536  96 ?$/m.test(s) && !/XYZ/.test(s), show(tail(s)));
+  // LDB #$41 / JSR $BA79 / RTS
+  s = await run([...poke(0x7000, 'C641 BDBA79 39'), 'EXEC &H7000:PRINT:PRINT PEEK(1500)']);
+  ok('$BA79: כל המסך בתו שב-B', /^ 65 ?$/m.test(s), show(tail(s)));
+  // JSR $89AA / JSR $8E83 / STX $7062 / JSR $8E7E(פסיק ובית) / STB $7060 / RTS
+  const prm = poke(0x7000, 'BD89AA BD8E83 BF7062 BD8E7E F77060 39');
+  s = await run([...prm, 'EXEC &H7000,1234,200:PRINT PEEK(&H7062)*256+PEEK(&H7063);PEEK(&H7060)']);
+  ok('EXEC עם פרמטרים: ‏$8E83 → X=1234, ‏$8E7E → B=200', /^ 1234  200 ?$/m.test(s), show(tail(s)));
+  s = await run([...prm, 'EXEC &H7000,70000,1']);
+  ok('$8E83: ‏70000 → ?FC', /\?FC ERROR/.test(s), show(tail(s)));
+  s = await run([...prm, 'EXEC &H7000,1,256']);
+  ok('$8E7E: ‏256 → ?FC', /\?FC ERROR/.test(s), show(tail(s)));
+  // מחרוזת ב-$7080: HELLO 0. ‏LDX #$707F / JSR $90E5 / LDD #54321 / JSR $957A / RTS
+  s = await run([...poke(0x7080, '48454C4C4F00'), ...poke(0x7000, '8E707F BD90E5 CCD431 BD957A 39'), 'EXEC &H7000:PRINT']);
+  ok('$90E5 מדפיס מחרוזת מהזיכרון, ‏$957A מספר בלי סימן', /HELLO54321/.test(s), show(tail(s)));
+  // JSR $A0EA / STA $7060 / RTS — המקש הבא בתור
+  s = await run([...poke(0x7000, 'BDA0EA B77060 39'), 'EXEC &H7000', 'Q', 'PRINT PEEK(&H7060)']);
+  ok('$A0EA: מחכה למקש ומחזיר אותו, בלי הד', /^ 81 ?$/m.test(s) && !/^Q$/m.test(s), show(tail(s)));
+  // JSR $841F / JMP $849F: מריצים את התוכנית מקוד מכונה
+  s = await run([...poke(0x7000, 'BD841F 7E849F'), '10 PRINT "RAN";2+3', 'EXEC &H7000']);
+  ok('$841F ואז $849F: התוכנית רצה', /^RAN 5 ?$/m.test(s), show(tail(s)));
+  // הדרך של אז להוסיף פקודה: ה-JMP שב-RAM ($A9-$AA) מופנה לקוד שלנו, שחוזר ל-$BB26.
+  // הקוד סופר תווים: INC $7060 / JMP $BB26. ההתקנה: LDD #$7100 / STD <$A9 / RTS
+  s = await run([...poke(0x7100, '7C7060 7EBB26'), ...poke(0x7010, 'CC7100 DDA9 39'),
+    'POKE &H7060,0:EXEC &H7010:PRINT "OK2";PEEK(&H7060)>0;2*3']);
+  ok('$BB26: קוד שמחובר ל"קרא את התו הבא" רץ, ו-BASIC ממשיך לעבוד', /^OK2-1  6 ?$/m.test(s), show(tail(s)));
+
   console.log('הפסיקה: ‏$9D3D');
   // פסיקה של המשתמש: INC $7060 / JMP $9D3D. ההתקנה במכונה, עם פסיקות חסומות:
   // ORCC #$50 / LDX #$7040 / STX $010D / ANDCC #$AF / RTS

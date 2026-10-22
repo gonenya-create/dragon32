@@ -190,7 +190,7 @@ swinit		orcc	#$50
 		lbsr	scrtch
 		lda	#$55		; מעכשיו RESET חוזר ל-OK והתוכנית נשמרת
 		sta	RSTFLG
-		leax	warm,pcr
+		ldx	#$b44f		; כמו במקור: הכניסה החמה הקבועה (src/islands.s), שמתחילה ב-NOP
 		stx	RSTVEC
 		andcc	#$af		; IRQ ו-FIRQ פתוחות, ממש לפני הכותרת (קורא 7.3)
 		leax	banner,pcr	; הכותרת ומיד אחריה OK (אחרי 13 אין שורה חדשה נוספת)
@@ -205,8 +205,8 @@ initab		fcb	12		; קריאת התו ל-RAM ($9F-$AA)
 		fcb	9		; $0148-$0150: שורה חדשה אוטומטית, נעילה, ורצף סוף השורה למדפסת (קורא 1.5)
 		fdb	lptab,$0148
 		fcb	0
-lowtab		jmp	irq		; $010C IRQ
-		jmp	firq		; $010F FIRQ
+lowtab		jmp	$9d3d		; $010C IRQ (כמו במקור: הכתובות הקבועות, src/islands.s)
+		jmp	$b469		; $010F FIRQ
 		fcb	0,0,0		; $0112 TIMER
 		fcb	$80,$4f,$c7,$52,$59	; $0115 זרע ה-RND
 		fcb	0,0,0,0,0	; $011A-$011E
@@ -493,6 +493,12 @@ runc		jsr	HK_STR		; 20 (ניקוי המשתנים)
 		std	FRETOP
 		ldd	VARTAB
 		std	ARYTAB
+		bra	isl_8371_e	;@isl
+		fill	$ff,$8371-*	;@isl
+		jmp	main_ok	;@isl
+		fill	$ff,$837a-*	;@isl
+		jmp	main	;@isl
+isl_8371_e	;@isl
 		std	STREND
 		ldd	TXTTAB		; RESTORE
 		subd	#1
@@ -554,6 +560,10 @@ cr_lp		lda	,x
 		blo	cr_kw
 		cmpa	#';
 		bls	cr_put
+		bra	isl_83ed_e	;@isl
+		fill	$ff,$83ed-*	;@isl
+		jmp	lnkprg	;@isl
+isl_83ed_e	;@isl
 cr_kw		bsr	kwmatch		; מילה שמורה? C=1, B = הטוקן, KPRE = $FF לפונקציה
 		bcc	cr_name
 		lda	KPRE
@@ -575,6 +585,10 @@ cr_put		leax	1,x
 		sta	,u+
 		bra	cr_lp
 cr_str		leax	1,x		; מרכאות: עד המרכאות הבאות או סוף השורה
+		bra	isl_841f_e	;@isl
+		fill	$ff,$841f-*	;@isl
+		jmp	x_clrrun	;@isl
+isl_841f_e	;@isl
 		sta	,u+
 8		lda	,x+
 		sta	,u+
@@ -646,6 +660,12 @@ km_scan		ldb	#$80
 lrange		clra
 		clrb
 		pshs	d		; מ
+		bra	isl_849f_e	;@isl
+		fill	$ff,$849f-*	;@isl
+		jmp	newstt	;@isl
+		fill	$ff,$84a6-*	;@isl
+		jmp	newst2	;@isl
+isl_849f_e	;@isl
 		bsr	lnum
 		bcc	1F
 		std	,s		; מספר אחד = שורה אחת
@@ -674,6 +694,10 @@ dlist2		lbsr	fndlin		; D = השורה הראשונה, LEND = האחרונה (CSA
 		bhi	9F
 		jsr	HK_LBRK		; 12
 		lbsr	istape		; בין השורות: BREAK (לא לקלטת; קורא: מדפסת 1.8)
+		bra	isl_84ed_e	;@isl
+		fill	$ff,$84ed-*	;@isl
+		jmp	x_disp	;@isl
+isl_84ed_e	;@isl
 		beq	1F
 		lbsr	brkchk
 1		lbsr	condcr		; כל שורה מתחילה בסוף שורה מותנה (קורא: מדפסת 1.8)
@@ -691,6 +715,8 @@ dlist2		lbsr	fndlin		; D = השורה הראשונה, LEND = האחרונה (CSA
 		beq	8F		; קלטת (CSAVE ,A): חזרה למי שקרא
 		lbsr	clsone		; LIST / LLIST: סוגרים, ו-OK
 		lbra	main_ok
+		fill	$ff,$851b-*	;@isl
+		jmp	brkchk	;@isl
 8		rts
 
 ; prline: טקסט מכווץ ב-X עד 0. נקודתיים לפני ELSE ו-' לא מוצגים (קורא)
@@ -698,6 +724,10 @@ prline		leax	-4,x		; 25: עם X = הקישור של השורה
 		jsr	HK_DECR
 		leax	4,x
 		pshs	u
+		bra	isl_852b_e	;@isl
+		fill	$ff,$852b-*	;@isl
+		jmp	brkpau	;@isl
+isl_852b_e	;@isl
 		clr	CRMODE		; כאן: בתוך מרכאות
 1		lda	,x+
 		beq	9F
@@ -759,6 +789,10 @@ prnum		pshs	d,x		; D כמספר עשרוני בלי אפסים מובילים
 		puls	d,x,pc
 ; numtxt: D → ספרות עשרוניות ב-FBUFFR (מסתיים ב-0, בלי אפסים מובילים). B = כמה (גם RENUM)
 numtxt		pshs	x,u
+		bra	isl_85a5_e	;@isl
+		fill	$ff,$85a5-*	;@isl
+		jmp	run	;@isl
+isl_85a5_e	;@isl
 		ldu	#FBUFFR
 		leax	pow10,pcr
 0		cmpd	,x		; מדלגים על החזקות שגדולות מהמספר (לא על 1): בלי אפסים מובילים
@@ -954,6 +988,7 @@ fntab		fcs	"SGN"
 		include	"mitctl.s"
 		include	"mitfunc.s"
 		include	"entries.s"		; מתאמים לכתובות הקבועות של המקור
+		include	"mitmem.s"		; (עבר לכאן ב-22.10, כדי לפנות מקום למעלה לכתובות הקבועות)
 
 ; ---------- שבעת המצביעים ב-$A000 (docs/DRAGON-SPEC-INTERFACES.md 3ב, DRAGON-SPEC-TAPE.md 1.10) ----------
 ; הקוד שלפני הטבלה חייב להיגמר לפני $A000 (אחרת האסמבלר נותן שגיאה). המקום שנשאר פנוי מתמלא ב-$FF
@@ -965,7 +1000,7 @@ fntab		fcs	"SGN"
 		fdb	tblkwr		; $A008 כתיבת בלוק
 		fdb	$8012		; $A00A ג'ויסטיקים
 		fdb	$801b		; $A00C מבוא קלטת (כמו במקור: דרך הכניסה)
-		include	"mitmem.s"		; אחרי הטבלה: הקוד שלפניה צריך להיכנס עד $A000
+		jmp	fn_hex		; $A00E: הפונקציה HEX$ (קורא 1; תוכנות של אז קוראות לה)
 		include	"mitmath.s"		; גם הוא אחרי הטבלה (המקום שלפני $A000 התמלא)
 		include	"mitscr.s"
 		include	"mitedit.s"
@@ -1009,4 +1044,4 @@ irqtk		ldx	TICKS		; ($9D46: כניסה אחרי האישור)
 9		rti
 
 		org	$bff2
-		fdb	$0100,$0103,$010f,$010c,$0106,$0109,reset	; SWI3 SWI2 FIRQ IRQ SWI NMI דרך ה-RAM (קורא 3.1)
+		fdb	$0100,$0103,$010f,$010c,$0106,$0109,$b3b4	; SWI3 SWI2 FIRQ IRQ SWI NMI דרך ה-RAM (קורא 3.1)

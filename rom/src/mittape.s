@@ -28,15 +28,50 @@ tmoton		lda	PIA1+1
 		rts
 ; motoff: המנוע כבוי, והפסיקות פתוחות. A משתנה
 motoff		lda	PIA1+1
+		bra	isl_b6a5_e	;@isl
+		fill	$ff,$b6a5-*	;@isl
+		jmp	csavp	;@isl
+isl_b6a5_e	;@isl
 		anda	#$f7
 		sta	PIA1+1
 		andcc	#$af
 		rts
 
+; ---------- שם הקובץ (עבר לכאן מ-mitfile.s ב-22.10: ממלא את המקום שלפני הלולאות המתוזמנות) ----------
+getfne		bsr	getfn
+nochr		jsr	<chrgot
+		lbne	err_sn
+		rts
+; getfn (3.1): השם מתמלא ברווחים. אם יש ביטוי: מחרוזת, וכל התווים שלה מועתקים מ-FNAME (שם ארוך גולש לחוצץ)
+getfn		ldx	#FNAME
+		ldd	#$2008		; 8 רווחים
+1		sta	,x+
+		decb
+		bne	1B
+		clr	FNLEN
+		jsr	<chrgot
+		beq	9F
+		lbsr	frmevl
+		lbsr	frestr		; לא מחרוזת: ?TM
+		bra	isl_b6d4_e	;@isl
+		fill	$ff,$b6d4-*	;@isl
+		jmp	cload_st	;@isl
+isl_b6d4_e	;@isl
+		sta	FNLEN
+		beq	9F
+		ldu	#FNAME
+; cpy: A בתים מ-X ל-U (A לא 0)
+cpy		ldb	,x+
+		stb	,u+
+		deca
+		bne	cpy
+9		rts
+
 ; ---------- כתיבת בית (קורא 1.3) ----------
 ; twbyte: A = הבית, מהביט הנמוך. כל ביט = גל סינוס מדורג: קודם הערך השמור מהביט הקודם, ואז מהטבלה:
 ; לביט 0 האינדקסים 0-34 (35 נשמר לבא), לביט 1 הזוגיים 0-32 (34 נשמר). המרווחים בין כתיבות:
 ; ביט 0: 26, אחר כך 22, ובסוף 39 (813). ביט 1: 27, אחר כך 23, ובסוף 40 (435). A נשמר; B ו-Y משתנים
+; @nofill: לולאות מתוזמנות, לפי מחזורים. tools/islands.py לא מכניס כאן גושים
 twbyte		pshs	a
 		ldb	#1		; המסכה של הביט (הבית במחסנית לא משתנה)
 1		lda	HELD
@@ -73,7 +108,7 @@ tsin		fcb	$80,$90,$a8,$b8,$c8,$d8,$e8,$f0,$f8
 ; ---------- מבוא (קורא 1.4) ----------
 ; tleader: פסיקות חסומות, מנוע (עם ההשהיה), ואז LDRCNT בתים של $55 (0 = 65536). B ו-Y נשמרים
 tleader		orcc	#$50
-		bsr	tmoton
+		lbsr	tmoton
 		pshs	b,y
 		ldx	LDRCNT
 		lda	#$55
@@ -251,6 +286,7 @@ thl		clr	POLLS
 
 ; הערכים של הקלטת בהדלקה (מועתקים ל-$8F): הבהוב הסמן, מבוא 128 (Dragon 32, גונן 20.10: לבדוק במחשב אמיתי),
 ; ספים $12/$0A/$12, השהיית מנוע $DA5C
+; @endnofill
 tdefs		fcb	50,$00,$80,$12,$0a,$12,$da,$5c
 		fdb	$045e		; $97: השהיית המקלדת (קורא: מדפסת 7.1)
 		fcb	16,116,132	; $99-$9B המדפסת: רוחב שדה הפסיק, שדה הפסיק האחרון, רוחב השורה (קורא 1.5)

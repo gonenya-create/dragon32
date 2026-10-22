@@ -51,3 +51,153 @@
 isl_bb26_1	suba	#'0
 		suba	#-'0
 isl_bb26_9	rts
+
+; @island $8371
+; ‏OK ולולאת הפקודות (קורא 8.14). ‏$837A: בלי OK
+		jmp	main_ok
+		fill	$ff,$837a-*
+		jmp	main
+
+; @island $83ED
+; חיבור השורות מחדש (קורא 8.15)
+		jmp	lnkprg
+
+; @island $841F
+; ניקוי כמו RUN, וחזרה למי שקרא (קורא 8.15)
+		jmp	x_clrrun
+
+; @island $849F
+; לולאת הפקודות (קורא 8.16). ‏$84A6: אחרי בדיקת ה-BREAK
+		jmp	newstt
+		fill	$ff,$84a6-*
+		jmp	newst2
+
+; @island $84ED
+; משגר פקודות מטבלה (קורא 8.2)
+		jmp	x_disp
+
+; @island $851B
+; בדיקת BREAK ו-SHIFT-@ (קורא 2.5)
+		jmp	brkchk
+
+; @island $852B
+; מחכים למקש בלי סמן, ובודקים אותו (קורא 8.4)
+		jmp	brkpau
+
+; @island $85A5
+; הפקודה RUN (קורא 8.16)
+		jmp	run
+
+; @island $8E4F
+; ‏$8E4F: התו הבא ואז בית. ‏$8E51: ביטוי → B. ‏$8E54: ‏FAC → B (קורא 2.2)
+		jsr	<chrget
+		jmp	x_getbyt
+		jmp	x_conbyt
+
+; @island $8E7A
+; ‏$8E7A כתובת, פסיק ובית. ‏$8E7E פסיק ובית. ‏$8E83 ביטוי → X. ‏$8E86 ‏FAC → X (קורא 2.2)
+		jmp	x_adrbyt
+		fill	$ff,$8e7e-*
+		jmp	x_combyt
+		fill	$ff,$8e83-*
+		jmp	x_getx
+		jmp	x_fac2x
+
+; @island $903D
+; הפקודה PRINT (קורא 8.3)
+		jmp	print
+
+; @island $90E5
+; ‏$90E5 הדפסת מחרוזת מהזיכרון (X = הכתובת שלפניה). ‏$90E8 המחרוזת שב-FAC (קורא 2.4)
+		jmp	x_strout
+		jmp	strprt
+
+; @island $957A
+; הדפסת D כמספר בלי סימן (קורא 2.4)
+		jmp	prnum
+
+; @island $A0E3
+; ‏$A0E3 שני בתים מההתקן ל-D. ‏$A0E5 בית אחד, ואז A ו-B מתחלפים. ‏$A0E9 RTS משותף.
+; ‏$A0EA "חכה למקש": תו מההתקן, ‏?IO בסוף קובץ (קורא 8.1; הכתובת הנפוצה ביותר בתוכנות של אז)
+		bsr	isl_a0e5
+isl_a0e5	bsr	isl_a0ea
+		exg	a,b
+		rts
+isl_a0ea	jmp	x_getdev
+
+; @island $A93A
+; מצב טקסט, כל האוגרים נשמרים (קורא 8.13)
+		jmp	txtmode
+
+; @island $AA10
+; ערכת הצבעים מ-B (קורא 8.12)
+		jmp	x_css
+
+; @island $B3B4
+; ‏RESET: וקטור המעבד מצביע לכאן, כמו במקור
+		jmp	reset
+
+; @island $B44F
+; הכניסה החמה של BASIC: מתחילה ב-NOP, כי RESET בודק אותו (קורא 2.11)
+		nop
+		jmp	warm
+
+; @island $B469
+; ‏FIRQ (המחסנית), דרך $010F
+		jmp	firq
+
+; @island $B54A
+; תו להתקן הנוכחי (היעד של $A002)
+		jmp	chrout
+
+; @island $B6A5
+; ‏CSAVE של התוכנית, אחרי שהשם כבר במקום (קורא 8.9)
+		jmp	csavp
+
+; @island $B6D4
+; הפקודה CLOAD (קורא 8.8)
+		jmp	cload_st
+
+; @island $BA77
+; ‏$BA77 מסך נקי. ‏$BA79 המסך כולו בתו שב-B. ‏$BA7C מ-X עד הסוף. הסמן בהתחלה, X=$0600 (קורא 8.10)
+		ldb	#$60
+		ldx	#$0400
+		stx	CURSOR
+isl_ba7e	stb	,x+
+		cmpx	#$0600
+		blo	isl_ba7e
+		rts
+
+; @island $BAC3
+; ‏$BAC3 הצליל כבוי. ‏$BAC5 דולק (קורא 2.7)
+		bra	isl_bac8
+		jmp	sndon
+isl_bac8	jmp	sndoff
+
+; @island $BAEC
+; מקור הצליל B+1, והצליל דולק (קורא 8.11)
+		jmp	x_audon
+
+; @island $BBB5
+; הבהוב הסמן (היעד של $8009)
+		jmp	blink
+
+; @island $BBE5
+; סריקת המקלדת (היעד של $8006 ו-$A000)
+		jmp	inkey
+
+; @island $BCF5
+; תו למדפסת, בלי טיפול בסוף שורה (קורא 8.6)
+		jmp	lpsend
+
+; @island $BD1A
+; תו למדפסת עם סוף שורה (היעד של $800F; קורא 8.7)
+		jmp	prtout
+
+; @island $BD41
+; בחירת מקור הצליל מ-B (קורא 1)
+		jmp	x_mux
+
+; @island $BD52
+; קריאת הג'ויסטיקים (היעד של $8012 ו-$A00A)
+		jmp	joyrd

@@ -9,7 +9,7 @@ import os, re, subprocess, sys, tempfile, shutil
 SRC = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'src')
 os.chdir(SRC)
 TAG = ';@isl'
-FREEGAP = 10
+FREEGAP = 0
 DATA = re.compile(r'^\S*\s+(fcb|fdb|fcc|fcs|fill|rmb|zmb|equ|org|setdp|include|end)\b', re.I)
 UNCOND = re.compile(r'^\S*\s+(rts|rti|bra|lbra|jmp)\b|^\S*\s+puls\s+.*\bpc\b', re.I)
 
@@ -66,16 +66,24 @@ def code_map():
 def nofill_lines():
     bad = set()
     for f in files():
-        on = False
+        on = first = False
         for i, l in enumerate(open(f).read().split('\n')):
-            if '@nofill' in l: on = True
-            if on: bad.add((f, i + 1))
+            if '@nofill' in l: on = first = True; continue
             if '@endnofill' in l: on = False
+            if not on: continue
+            code = l.strip() and not l.lstrip().startswith(';')
+            if first and code: first = False; continue   # לפני הפקודה הראשונה באזור מותר להכניס גוש
+            bad.add((f, i + 1))
     return bad
 
 def place(b, report):
     A = b['addr']
     cm, err = code_map()
+    if cm is None and 'out of range' in err:   # גוש קודם הרחיק קפיצה קצרה: מאריכים אותה
+        subprocess.run(['python3', '../tools/fixbr.py'], capture_output=True)
+        cm, err = code_map()
+    if cm is None and 'negative count for FILL' in err:
+        raise Retry(err)          # גוש קודם נדחף מעבר לכתובת שלו: מתחילים סבב חדש (הקפיצות שהוארכו נשארות)
     if cm is None: sys.exit('assembly failed before placing $%04X:\n%s' % (A, err[:800]))
     bad = nofill_lines()
     text = {f: open(f).read().split('\n') for f in files()}
@@ -110,11 +118,17 @@ def assemble_ok():
     r = subprocess.run(['asm6809', '-B', '-o', '/dev/null', 'exp.s'], capture_output=True, text=True)
     return r.returncode == 0, r.stderr
 
+class Retry(Exception): pass
+
 blocks = read_blocks()
+err = ''
 for rnd in range(8):
     strip_islands()
     report = []
-    for b in blocks: place(b, report)
+    try:
+        for b in blocks: place(b, report)
+    except Retry as e:
+        err = str(e); continue
     subprocess.run(['python3', '../tools/fixbr.py'], capture_output=True)
     ok, err = assemble_ok()
     cm, _ = code_map()
@@ -123,9 +137,10 @@ for rnd in range(8):
         starts = {}
         for addr, f, n in cm:
             line = open(f).read().split('\n')[n-1]
-            if line.rstrip().endswith(TAG) and 'fill' not in line and 'bra\tisl_' not in line:
+            if line.rstrip().endswith(TAG) and 'fill' not in line and not re.search(r'bra\tisl_[0-9a-f]{4}_e\t', line):
                 starts.setdefault(addr, line)
         missing = [b for b in blocks if b['addr'] not in starts]
+        err = 'not at their address: ' + ' '.join('$%04X' % b['addr'] for b in missing)
         if not missing:
             print('\n'.join(report)); print('islands: %d placed, round %d' % (len(blocks), rnd + 1)); sys.exit(0)
 print(err[:800]); sys.exit('islands did not settle')
