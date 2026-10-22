@@ -295,4 +295,25 @@
     insertLibrary();
   }, 700);
   const ready = setInterval(() => { if (window.d32Ready) { clearInterval(ready); setTimeout(insertLibrary, 2000); } }, 300);
+  // הגיעו מהאפליקציה עם ?mine=NAME: תוכנית שנשמרה ב"קלטות שלי" באפליקציה (טקסט בדפדפן הזה).
+  // הופכים אותה לקלטת טקסט, כמו ש-CSAVE "X",A כותב במחשב האמיתי (כותרת: סוג 0, ASCII ו"פערים";
+  // לפני כל שורה CR), שומרים אותה גם בקלטות שלי של המכונה, וטוענים עם CLOAD רגיל. ה-ROM עושה את השאר.
+  const mineName = new URLSearchParams(location.search).get('mine');
+  if (mineName && /^[A-Z0-9]{1,8}$/.test(mineName)) {
+    let text = null;
+    try { const t = (JSON.parse(localStorage.getItem('d32-mytapes')) || []).find(x => x && x.n === mineName); if (t) text = String(t.t); } catch (e) {}
+    if (text === null) status.textContent = EN ? 'The tape ' + mineName + ' is not saved in this browser.' : 'הקלטת ' + mineName + ' לא שמורה בדפדפן הזה.';
+    else {
+      const body = Array.from('\r' + text.split(/\r?\n/).filter(l => l.trim()).join('\r') + '\r', c => c.charCodeAt(0)).filter(c => c === 13 || (c >= 32 && c < 127));
+      const hdr = [...mineName.padEnd(8)].map(c => c.charCodeAt(0)).concat([0, 0xff, 0xff, 0, 0, 0, 0]);
+      const f = { n: mineName, b: [[0, ...hdr]] };
+      for (let i = 0; i < body.length; i += 255) f.b.push([1, ...body.slice(i, i + 255)]);
+      f.b.push([255]);
+      const go = setInterval(() => {
+        if (!window.d32Ready) return;
+        clearInterval(go);
+        setTimeout(() => { addTapes([f]); play(tapeBytes([f]), '/mine.cas', mineName, null, true, true); }, 2000);
+      }, 300);
+    }
+  }
 })();

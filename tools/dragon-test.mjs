@@ -531,6 +531,7 @@ if (part('GOSUB, ON, DIM, READ/DATA, CSAVE')) {
   await send(p, 'csave "mine"', 2600);
   check('CSAVE', /CSAVE "MINE"\nOK$/.test(await screenText(p)), tail(await screenText(p), 2));
   check('saved tape on the shelf', await p.locator('.d32-tape-mine:has-text("MINE")').count() === 1);
+  check('saved tape has an "on the Dragon machine" link', await p.locator('.d32-tape-wrap:has(.d32-tape-mine:has-text("MINE")) a.d32-tape-real[href$="/lab/1982/?mine=MINE"]').count() === 1);
   await p.reload();
   await p.waitForSelector('#dragon-room.is-ready');
   await send(p, 'cload "mine"', 3600);
@@ -1070,6 +1071,19 @@ if (part('real machine lab')) {
       await q.waitForFunction(() => document.querySelector('#tapes .tape.in small')?.textContent === 'LANDER', null, { timeout: 30000 }).catch(() => {});
       check('?tape=lander from the app loads that tape by itself', await q.evaluate(() => document.querySelector('#tapes .tape.in small')?.textContent === 'LANDER'));
       await q.close();
+      // מהאפליקציה: ?mine=APPPROG — תוכנית מ"הקלטות שלי" של האפליקציה, כקלטת טקסט (כמו CSAVE "X",A), נטענת ורצה
+      const a = await browser.newPage({ viewport: { width: 1000, height: 900 } });
+      const aerrs = [];
+      a.on('pageerror', e => aerrs.push(e.message));
+      await a.goto(base.replace(/\/$/, '') + path);
+      await a.evaluate(() => localStorage.setItem('d32-mytapes', JSON.stringify([{ n: 'APPPROG', t: '10 FOR I=1 TO 3\n20 PRINT "FROM THE APP";I\n30 NEXT I' }])));
+      await a.goto(base.replace(/\/$/, '') + path + '?mine=APPPROG');
+      const fromApp = await a.waitForFunction(() => (window.d32Screen?.() || []).includes('FROM THE APP 3'), null, { timeout: 60000 }).then(() => true, () => false);
+      check('?mine=APPPROG: a program saved in the app loads as a text tape and runs', fromApp && aerrs.length === 0,
+        JSON.stringify(await a.evaluate(() => [document.getElementById('tape-status').textContent, window.d32Screen?.()])) + aerrs.join(' | '));
+      check('the app program also lands on the machine\'s "my tapes"', await a.locator('#mytapes .tape small:text-is("APPPROG")').count() === 1);
+      await a.evaluate(() => { localStorage.removeItem('d32-mytapes'); localStorage.removeItem('d32-lab-tapes'); });
+      await a.close();
       // הקלטות שלי: CSAVE מקליט ושומר בדפדפן, ואחרי טעינה מחדש CLOAD מוצא את התוכנית
       const m = await browser.newPage({ viewport: { width: 1000, height: 900 } });
       const merrs = [];

@@ -187,7 +187,12 @@ function renderMine(root, bind) {
       deleteMyTape(n);
       renderMine(root, bind);
     });
-    wrap.append(b, del);
+    // מתחת לקלטת: אותה תוכנית במכונת ה-Dragon (שם היא נטענת מקלטת טקסט, כמו CSAVE "X",A, ומתחילה לבד)
+    const real = document.createElement('a');
+    real.className = 'd32-tape-real';
+    real.href = (EN ? '/en' : '') + '/lab/1982/?mine=' + n;
+    real.textContent = tr('🧪 במכונת ה-Dragon', '🧪 On the Dragon machine');
+    wrap.append(b, del, real);
     box.appendChild(wrap);
     if (bind) bind(b);
   }
