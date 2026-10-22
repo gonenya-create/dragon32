@@ -39,3 +39,15 @@
 		jmp	irq
 		fill	$ff,$9d46-*
 		jmp	irqtk
+
+; @island $BB26
+; ההמשך של "קרא את התו הבא" (קורא 2.1): ה-RAM ב-$9F קופץ לכאן עם A = התו. משתנים רק A ו-CC.
+; ':' ומעלה: C=0 (ו-Z=1 על ':'). רווח: חוזרים ל-$9F. ספרה: C=1. ‏0: ‏Z=1. ה-RTS ב-$BB34
+		cmpa	#':
+		bhs	isl_bb26_9
+		cmpa	#$20
+		bne	isl_bb26_1
+		jmp	<chrget
+isl_bb26_1	suba	#'0
+		suba	#-'0
+isl_bb26_9	rts

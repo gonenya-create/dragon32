@@ -357,11 +357,22 @@ chkout		jsr	HK_CKOUT	; 7
 chkin		jsr	HK_CKIN		; 6
 		lda	DEVNUM
 		cmpa	#$fe
-		beq	8F
+		lbeq	8F
 		ldb	#1
 1		bsr	istape
-		bne	9F
+		lbne	9F
 		lda	FSTATE
+		bra	isl_bb26_e	;@isl
+		fill	$ff,$bb26-*	;@isl
+		cmpa	#':	;@isl
+		bhs	isl_bb26_9	;@isl
+		cmpa	#$20	;@isl
+		bne	isl_bb26_1	;@isl
+		jmp	<chrget	;@isl
+isl_bb26_1	suba	#'0	;@isl
+		suba	#-'0	;@isl
+isl_bb26_9	rts	;@isl
+isl_bb26_e	;@isl
 		lbeq	err_no
 		cmpb	FSTATE
 		bne	8F
@@ -375,7 +386,7 @@ chrout		jsr	HK_COUT		; 4
 		tst	DEVNUM
 		lbeq	putc
 		pshs	a,b,x,y
-		bsr	istape
+		lbsr	istape
 		beq	0F
 		lda	,s		; לא קלטת: המדפסת ($FE)
 		bsr	prtout

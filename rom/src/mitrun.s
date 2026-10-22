@@ -17,32 +17,16 @@ TXTPTR		equ	$a6
 ; ---------- קריאת תו (mit: CHRGET 961; ה-Dragon: ב-RAM, $9F-$AA — קורא: מפרט הזיכרון) ----------
 ; chrget ($9F): מתקדמים תו אחד. chrgot ($A5): התו הנוכחי. TXTPTR ($A6) הוא האופרנד של ה-LDA שם.
 ; 12 הבתים מועתקים ל-RAM בהדלקה; ההמשך כאן ב-ROM. מדלגים על רווחים.
-; A = התו, X = TXTPTR. Z=1 בסוף פקודה (0 או :). C=0 אם ספרה
+; כמו במקור (קורא 2.1): משתנים רק A ו-CC. Z=1 בסוף פקודה (0 או :). C=1 רק אם ספרה.
+; ההמשך ב-ROM יושב בכתובת הקבועה $BB26 (src/islands.s), כי תוכנות של אז מחברות לכאן פקודות משלהן
 chrget		equ	$9f
 chrgot		equ	$a5
 chrtpl		fcb	$0c,$a7		; inc <$A7
 		fcb	$26,$02		; bne $A5
 		fcb	$0c,$a6		; inc <$A6
 		fcb	$b6,0,0		; lda >TXTPTR
-		fcb	$7e		; jmp chrest
-		fdb	chrest
-chrest		ldx	TXTPTR
-		cmpa	#$20
-		bne	3F
-		jmp	<chrget
-3		cmpa	#':
-		bhs	2F
-		tsta
-		beq	1F
-		cmpa	#'0		; מתחת ל-'0': C=1, Z=0
-		blo	9F
-		andcc	#$fa		; ספרה: C=0, Z=0
-9		rts
-2		beq	1F
-		orcc	#1		; אות וכו': C=1, Z=0
-		rts
-1		orcc	#5		; סוף פקודה: C=1, Z=1
-		rts
+		fcb	$7e		; jmp $BB26
+		fdb	$bb26
 
 ; synchk: התו הנוכחי חייב להיות A. אחרת ?SN. אחר כך מתקדמים
 ; chkrp / chkcom / chklp: ')' / ',' / '(' חייבים להיות כאן (כמו SYNRPR/SYNCOM במקור)
@@ -85,7 +69,8 @@ gone3		beq	9F		; פקודה ריקה
 		lbpl	let		; לא מילה שמורה: השמה
 		cmpa	#$ff		; פונקציה בתחילת פקודה: TIMER= (קורא)
 		bne	1F
-		lda	1,x		; X = TXTPTR (כל הכניסות ל-gone3 באות אחרי chrget/chrgot)
+		ldx	TXTPTR		; (chrget לא משנה את X, כמו במקור)
+		lda	1,x
 		cmpa	#$9e
 		lbeq	timset
 		cmpa	#$98		; MID$ כפקודה (קורא)
@@ -165,13 +150,14 @@ stmtbl
 		fdb	err_sn		; $B9 DLOAD
 		fdb	renum		; $BA RENUM
 
-; LIST: אותה שגרה כמו במצב ישיר (X = TXTPTR: הפקודות נכנסות דרך chrget)
+; LIST: אותה שגרה כמו במצב ישיר
 ; LLIST: אותו LIST, למדפסת (קורא: מדפסת 1.8). בסוף שניהם: סוף שורה מותנה, חזרה למסך, ו-OK
 llist		ldb	#$fe
 		stb	DEVNUM
-list_st		leas	2,s		; בלי החזרה ל-gone, כמו במקור: BREAK בין השורות לא משאיר כלום במחסנית (קורא)
+list_st		ldx	TXTPTR
+		leas	2,s		; בלי החזרה ל-gone, כמו במקור: BREAK בין השורות לא משאיר כלום במחסנית (קורא)
 		lbra	do_list		; והסוף: clsone ו-OK (שם)
-rem					; עד סוף השורה. X = TXTPTR (מ-chrget של המשגר)
+rem		ldx	TXTPTR		; עד סוף השורה
 1		tst	,x+
 		bne	1B
 		leax	-1,x
@@ -188,7 +174,7 @@ run		jsr	HK_RUN		; 19
 		clr	,-s		; סמן תחתית למחסנית ה-FOR (mit: STKINI)
 		jsr	<chrgot
 		beq	1F
-		bcs	gosn		; RUN "שם": עם הקלטת, בהמשך (Z=0 כאן, אז ה-lbne שם קופץ)
+		bcc	gosn		; RUN "שם": עם הקלטת, בהמשך (Z=0 כאן, אז ה-lbne שם קופץ)
 		bra	gogo
 1		ldx	TXTTAB
 		leax	-1,x
@@ -214,11 +200,11 @@ gogo		bsr	goto1		; גם RUN n
 gonew		lbra	newstt
 1		jsr	<chrget
 ; goto1: TXTPTR על מספר השורה. שורה גדולה מהנוכחית: מחפשים מהשורה הבאה; אחרת מההתחלה (mit: GOTO)
-goto1		bsr	lineget		; X = TXTPTR
+goto1		bsr	lineget
 		ldy	TXTTAB		; מההתחלה (fndlin)
 		cmpd	CURLIN
 		bls	4F		; גם במצב ישיר (CURLIN = $FFFF): מההתחלה
-		tfr	x,y		; סוף השורה הנוכחית
+		ldy	TXTPTR		; סוף השורה הנוכחית
 3		tst	,y+
 		bne	3B
 4		lbsr	fndlnc
@@ -514,12 +500,12 @@ ptrget		pshs	b
 		sta	VARNAM
 		clr	VARNAM+1
 		jsr	<chrget
-		bcc	1F		; ספרה
+		bcs	1F		; ספרה
 		lbsr	islet
 		bcc	3F
 1		sta	VARNAM+1
 2		jsr	<chrget		; שאר האותיות והספרות לא נחשבות
-		bcc	2B
+		bcs	2B
 		lbsr	islet
 		bcs	2B
 3		cmpa	#'$		; מחרוזת: ביט 7 בתו השני של השם (ספר)
@@ -537,7 +523,7 @@ ptrget		pshs	b
 		sta	VARNAM
 13		tstb			; ביט 7: בלי מערכים (הפרמטר והשם של DEF FN)
 		bmi	12F
-		lda	,x		; ( = מערך (mit: ISARY). X = TXTPTR מה-chrget האחרון
+		lda	[TXTPTR]	; ( = מערך (mit: ISARY). (chrget לא משנה את X, כמו במקור)
 		cmpa	#'(
 		bne	12F
 		puls	b
@@ -683,9 +669,9 @@ optab		fcb	121
 eval		jsr	HK_OPND		; 16
 		clr	VALTYP
 		jsr	<chrgot
-1		lbcc	fin		; מספר
+1		lbcs	fin		; מספר
 		cmpa	#'.
-		beq	1B		; שווה: C=0, ולכן ה-lbcc קופץ
+		lbeq	fin		; נקודה: גם מספר
 		cmpa	#'&		; &H / &O / & (קורא)
 		lbeq	radix
 		cmpa	#$c4		; - חד-מקומי: קדימות 125
@@ -714,7 +700,8 @@ eval		jsr	HK_OPND		; 16
 		lbra	givd
 3		cmpa	#'"		; מחרוזת במרכאות (mit: STRTXT)
 		bne	31F
-		leax	1,x		; X = TXTPTR מה-chrgot
+		ldx	TXTPTR
+		leax	1,x
 		lbsr	strlit
 		ldx	STRNG2
 		stx	TXTPTR
@@ -728,7 +715,8 @@ eval		jsr	HK_OPND		; 16
 		lbra	chkrp
 4		cmpa	#$ff		; פונקציה: טבלה לפי הטוקן (mit: ISFUN)
 		bne	5F
-		lda	1,x		; X = TXTPTR מה-chrgot
+		ldx	TXTPTR
+		lda	1,x
 		leax	1,x
 		stx	TXTPTR
 		cmpa	#$a1

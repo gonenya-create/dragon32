@@ -394,10 +394,10 @@ fin		clra
 		sta	FACOV
 		std	DECCNT		; וגם DPTFLG
 		std	TENEXP		; וגם EXPSGN
-		jsr	<chrgot		; (chrgot משנה את X)
+		jsr	<chrgot
 		ldx	#SGNFLG		; סימן בהתחלה: רק בקלט וב-DATA (בביטוי הוא טוקן) (mit: FIN)
 		bsr	fsgn
-fin_lp		bcc	fin_dig		; ספרה
+fin_lp		bcs	fin_dig		; ספרה
 		cmpa	#'.
 		bne	fin_e
 		tst	DPTFLG
@@ -419,7 +419,7 @@ fin_e		cmpa	#'E
 		jsr	<chrget
 		ldx	#EXPSGN
 		bsr	fsgn
-		bcs	fin_end
+		bcc	fin_end
 fin_ed		suba	#'0		; המעריך כפול 10 ועוד הספרה
 		ldb	TENEXP
 		cmpb	#10
@@ -434,7 +434,7 @@ fin_ed		suba	#'0		; המעריך כפול 10 ועוד הספרה
 		addb	,s+
 4		stb	TENEXP
 		jsr	<chrget
-		bcc	fin_ed
+		bcs	fin_ed
 fin_end		lda	TENEXP
 		tst	EXPSGN
 		beq	5F

@@ -34,7 +34,7 @@ if		lbsr	frmevl
 1		tst	FACEXP		; 0 = שקר, כל השאר אמת
 		beq	if_no
 if_do		jsr	<chrgot
-		lbcc	goto1		; מספר: GOTO
+		lbcs	goto1		; מספר: GOTO
 		lbra	gone3		; פקודה
 ; שקר: מחפשים ELSE באותה רמה — כל IF בדרך מוסיף רמה, וכל ELSE סוגר אחת. אין: מדלגים על השורה
 if_no		clr	IFCNT

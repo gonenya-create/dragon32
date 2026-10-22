@@ -69,6 +69,16 @@ try {
     ok(`${hex} → ?${err}`, s.includes(`?${err} ERROR`), show(tail(s)));
   }
 
+  console.log('"קרא את התו הבא": ‏$9F ב-RAM, וההמשך ב-$BB26');
+  s = await run(['PRINT PEEK(&HA8);PEEK(&HA9);PEEK(&HAA)']);
+  ok('ב-RAM: ‏JMP $BB26 בסוף השגרה ($A8-$AA)', /^ 126  187  38 ?$/m.test(s), show(tail(s)));
+  // LDX #$1234 / JSR <$9F / TFR CC,B / STB $7060 / STX $7062 / JSR <$9F / RTS
+  const cg = poke(0x7000, '8E1234 9D9F 1FA9 F77060 BF7062 9D9F 39');
+  for (const [arg, c, name] of [['5', 1, 'ספרה: C=1'], [' 7', 1, 'רווחים מדלגים, ספרה: C=1'], ['A', 0, 'אות: C=0'], ['"', 0, 'מרכאות: C=0']]) {
+    s = await run([...cg, `EXEC &H7000,${arg}`, 'PRINT PEEK(&H7060) AND 1;PEEK(&H7062)*256+PEEK(&H7063)']);
+    ok(`${name}, ו-X לא משתנה`, new RegExp(`^ ${c}  4660 ?$`, 'm').test(s), show(tail(s)));
+  }
+
   console.log('הפסיקה: ‏$9D3D');
   // פסיקה של המשתמש: INC $7060 / JMP $9D3D. ההתקנה במכונה, עם פסיקות חסומות:
   // ORCC #$50 / LDX #$7040 / STX $010D / ANDCC #$AF / RTS

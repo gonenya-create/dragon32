@@ -366,7 +366,7 @@ joyrd		ldb	#3
 		anda	#$f7
 3		sta	,x++
 		cmpx	#PIA0+5
-		lbne	2B
+		bne	2B
 4		ldd	#$8040		; A = הקירוב, B = הצעד
 5		sta	PIA1		; הניסיון ל-DAC
 		pshs	b
@@ -375,12 +375,6 @@ joyrd		ldb	#3
 		neg	,s
 6		adda	,s+
 		lsrb
-		bra	isl_9d3d_e	;@isl
-		fill	$ff,$9d3d-*	;@isl
-		jmp	irq	;@isl
-		fill	$ff,$9d46-*	;@isl
-		jmp	irqtk	;@isl
-isl_9d3d_e	;@isl
 		cmpb	#1
 		bne	5B
 		lsra			; 0-63
@@ -388,9 +382,15 @@ isl_9d3d_e	;@isl
 		ldb	1,s		; הערוץ
 		ldx	#JOYVAL
 		cmpa	b,x
-		beq	8F		; כמו הערך השמור: מסיימים
+		lbeq	8F		; כמו הערך השמור: מסיימים
+		bra	isl_9d3d_e	;@isl
+		fill	$ff,$9d3d-*	;@isl
+		jmp	irq	;@isl
+		fill	$ff,$9d46-*	;@isl
+		jmp	irqtk	;@isl
+isl_9d3d_e	;@isl
 		dec	,s
-		bne	4B
+		lbne	4B
 8		sta	b,x
 		puls	a,b
 		decb
