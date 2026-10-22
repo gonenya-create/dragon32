@@ -40,6 +40,8 @@
   - קלטת: `tape-test.mjs`, ‏`tape-file-test.mjs` ו-`tape-data-test.mjs`.
   - מדפסת ונקודות חיבור: `printer-test.mjs`.
   - המעבדה באתר: `cd tools && ONLY="real machine lab" node dragon-test.mjs`.
+  - קלטות המדף: `node rom/tools/mktapes.mjs --check` אחרי כל שינוי ב-ROM (הקלטות הן מה שהמכונה שמרה עם CSAVE).
+  - הכתובות הקבועות: `node rom/tools/entry-test.mjs`. הגושים ב-`rom/src/islands.s`; לא עורכים ביד שורות `;@isl`.
 - **ב-worktree חדש** צריך קישור ל-`node_modules`: `ln -s ~/Projects/dragon32/tools/node_modules tools/node_modules`, ולמחוק אותו לפני commit.
 - **צילומי מסך:** ‏playwright-core עם `chromium.launch({ channel: 'chrome' })` ב-390×844, מתיקיית `tools`. שולחים לגונן עם SendUserFile.
 - **הקלדה בדפדפן:** הקלדה דרך כלי הדפדפן לא מגיעה ל-XRoar. משתמשים בפונקציה `press()` של המקלדת המצוירת.

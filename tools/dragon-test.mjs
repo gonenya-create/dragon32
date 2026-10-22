@@ -1055,6 +1055,11 @@ if (part('real machine lab')) {
       check('a tape goes into the tape player and CLOAD is typed', await p.evaluate(() =>
         document.querySelector('#tapes .tape.in small')?.textContent === 'GUESS' && /טוען|רץ/.test(document.getElementById('tape-status').textContent)
         && FS.stat('/tape-guess.cas').size > 280) && errs.length === 0, errs.join(' | '));
+      // הקלטת היא מה שהמכונה עצמה שמרה (פורמט מכווץ): CLOAD מצליח, RUN, והמשחק על המסך
+      const ran = await p.waitForFunction(() => /רץ/.test(document.getElementById('tape-status').textContent)
+        && (window.d32Screen?.() || []).some(r => r.includes('GUESS MY NUMBER')), null, { timeout: 60000 }).then(() => true, () => false);
+      check('the machine-saved tape (compact format) loads with CLOAD and the program runs', ran,
+        JSON.stringify(await p.evaluate(() => [document.getElementById('tape-status').textContent, window.d32Screen?.()])));
     }
     if (path === '/lab/1982/') {
       // מהאפליקציה: ?tape=lander טוען את הקלטת לבד

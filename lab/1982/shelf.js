@@ -1,5 +1,5 @@
-// מדף קלטות במכונת ה-Dragon: אותן קלטות BASIC כמו באפליקציה. הקלטת נבנית כאן בפורמט של הרשמקול
-// (קובץ CAS, תוכנית בטקסט), נכנסת לרשמקול של XRoar, והמקלדת מקלידה CLOAD, וכשעל המסך מופיע OK, גם RUN.
+// מדף קלטות במכונת ה-Dragon: אותן תוכניות BASIC כמו באפליקציה, על קלטות שהמכונה עצמה שמרה עם CSAVE
+// (lab/1982/tapes, בפורמט המכווץ של המחשב). הקלטת נכנסת לרשמקול של XRoar, המקלדת מקלידה CLOAD, וכשעל המסך מופיע OK, גם RUN.
 (function () {
   const EN = document.documentElement.lang === 'en';
   const TAPES = [
@@ -16,15 +16,6 @@
     let sum = type + data.length;
     for (const b of data) sum += b;
     return [0x55, 0x3c, type, data.length, ...data, sum & 255, 0x55];
-  }
-  // קובץ טקסט "עם פערים", כמו CSAVE ,A במחשב האמיתי: מבוא לפני כל בלוק (המחשב קורא כל בלוק בנפרד, עם סנכרון)
-  function cassette(name, text) {
-    const leader = new Array(128).fill(0x55);
-    const header = [...name.toUpperCase().padEnd(8).slice(0, 8)].map(c => c.charCodeAt(0)).concat([0, 255, 255, 0, 0, 0, 0]);
-    const data = [...text.replace(/\r?\n/g, '\r')].map(c => c.charCodeAt(0) & 127);
-    let out = leader.concat(block(0, header));
-    for (let i = 0; i < data.length; i += 255) out = out.concat(leader, block(1, data.slice(i, i + 255)));
-    return new Uint8Array(out.concat(leader, block(255, [])));
   }
   const box = document.getElementById('tapes');
   const status = document.getElementById('tape-status');
@@ -104,8 +95,9 @@
   async function load(id, title, button) {
     if (busy) return;
     try {
-      const text = await (await fetch('/assets/dragon/tapes/' + id + '.bas')).text();
-      await play(cassette(id, text), '/tape-' + id + '.cas', title, button, true);
+      // הקלטת כמו קלטת אמיתית: מה שהמכונה עצמה כתבה עם CSAVE, בפורמט המכווץ (rom/tools/mktapes.mjs)
+      const bytes = new Uint8Array(await (await fetch('/lab/1982/tapes/' + id + '.cas')).arrayBuffer());
+      await play(bytes, '/tape-' + id + '.cas', title, button, true);
     } catch (e) { status.textContent = failed(); }
   }
   // מכניסים קלטת לרשמקול, מקלידים CLOAD, ואם run גם RUN כשהטעינה נגמרת
