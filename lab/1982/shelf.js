@@ -1,5 +1,5 @@
-// מדף קלטות במכונת ה-Dragon: אותן קלטות BASIC כמו באפליקציה. הקלטת נבנית כאן בפורמט של הרשמקול
-// (קובץ CAS, תוכנית בטקסט), נכנסת לרשמקול של XRoar, והמקלדת מקלידה CLOAD, וכשעל המסך מופיע OK, גם RUN.
+// מדף קלטות במכונת ה-Dragon: אותן תוכניות BASIC כמו באפליקציה, על קלטות שהמכונה עצמה שמרה עם CSAVE
+// (lab/1982/tapes, בפורמט המכווץ של המחשב). הקלטת נכנסת לרשמקול של XRoar, המקלדת מקלידה CLOAD, וכשעל המסך מופיע OK, גם RUN.
 (function () {
   const EN = document.documentElement.lang === 'en';
   const TAPES = [
@@ -17,15 +17,6 @@
     for (const b of data) sum += b;
     return [0x55, 0x3c, type, data.length, ...data, sum & 255, 0x55];
   }
-  // קובץ טקסט "עם פערים", כמו CSAVE ,A במחשב האמיתי: מבוא לפני כל בלוק (המחשב קורא כל בלוק בנפרד, עם סנכרון)
-  function cassette(name, text) {
-    const leader = new Array(128).fill(0x55);
-    const header = [...name.toUpperCase().padEnd(8).slice(0, 8)].map(c => c.charCodeAt(0)).concat([0, 255, 255, 0, 0, 0, 0]);
-    const data = [...text.replace(/\r?\n/g, '\r')].map(c => c.charCodeAt(0) & 127);
-    let out = leader.concat(block(0, header));
-    for (let i = 0; i < data.length; i += 255) out = out.concat(leader, block(1, data.slice(i, i + 255)));
-    return new Uint8Array(out.concat(leader, block(255, [])));
-  }
   const box = document.getElementById('tapes');
   const status = document.getElementById('tape-status');
   if (!box) return;
@@ -36,7 +27,7 @@
     b.innerHTML = '<span></span><small dir="ltr"></small>';
     b.querySelector('span').textContent = EN ? en : he;
     b.querySelector('small').textContent = id.toUpperCase();
-    b.addEventListener('click', () => load(id, EN ? en : he, b));
+    b.addEventListener('click', () => load(id, EN ? en : he, b, false));
     box.appendChild(b);
   }
   // הגיעו מהאפליקציה עם ?tape=guess: הקלטת נטענת לבד, ברגע שהמחשב מוכן
@@ -46,7 +37,7 @@
     const go = setInterval(() => {
       if (!window.d32Ready) return;
       clearInterval(go);
-      setTimeout(() => box.children[wanted].click(), 2000);
+      setTimeout(() => load(TAPES[wanted][0], EN ? TAPES[wanted][2] : TAPES[wanted][1], box.children[wanted], true), 2000);
     }, 300);
   }
   let busy = false;
@@ -101,15 +92,18 @@
     return false;
   }
   const failed = () => EN ? 'The tape did not load. Try again.' : 'הקלטת לא נטענה. נסו שוב.';
-  async function load(id, title, button) {
+  // auto: מהאפליקציה (?tape=), שם הנוחות: המחשב מקליד CLOAD ו-RUN. לחיצה במכונה: רק מכניסים את הקלטת לרשמקול,
+  // ומקלידים בעצמנו, כמו ב-1982 (גונן, 22.10: "מכונת דראגון תהיה המקור... בלי הטבות")
+  async function load(id, title, button, auto) {
     if (busy) return;
     try {
-      const text = await (await fetch('/assets/dragon/tapes/' + id + '.bas')).text();
-      await play(cassette(id, text), '/tape-' + id + '.cas', title, button, true);
+      // הקלטת כמו קלטת אמיתית: מה שהמכונה עצמה כתבה עם CSAVE, בפורמט המכווץ (rom/tools/mktapes.mjs)
+      const bytes = new Uint8Array(await (await fetch('/lab/1982/tapes/' + id + '.cas')).arrayBuffer());
+      await play(bytes, '/tape-' + id + '.cas', title, button, true, auto);
     } catch (e) { status.textContent = failed(); }
   }
-  // מכניסים קלטת לרשמקול, מקלידים CLOAD, ואם run גם RUN כשהטעינה נגמרת
-  async function play(bytes, path, title, button, run) {
+  // מכניסים קלטת לרשמקול. auto: גם מקלידים CLOAD, ואם run גם RUN כשהטעינה נגמרת
+  async function play(bytes, path, title, button, run, auto) {
     if (busy) return;
     if (typeof Module === 'undefined' || !window.d32Ready) { status.textContent = EN ? 'The computer is still starting. Try again in a moment.' : 'המחשב עוד נדלק. נסו שוב בעוד רגע.'; return; }
     busy = true;
@@ -118,6 +112,12 @@
       FS.writeFile(path, bytes);
       Module.ccall('wasm_load_file', null, ['string', 'number', 'number'], [path, 2, 0]);
       document.querySelectorAll('.tape').forEach(t => t.classList.toggle('in', t === button));
+      if (!auto) {
+        status.textContent = EN ? 'The tape "' + title + '" is in the recorder. Type CLOAD, and after OK type RUN.'
+          : 'הקלטת "' + title + '" ברשמקול. הקלידו CLOAD, ואחרי ה-OK הקלידו RUN.';
+        document.getElementById('canvas')?.focus({ preventScroll: true });
+        return;
+      }
       status.textContent = EN ? 'Loading "' + title + '" from the tape…' : 'טוען את "' + title + '" מהקלטת…';
       if (innerWidth < 1000) document.querySelector('.tv').scrollIntoView({ behavior: 'smooth', block: 'start' });
       // עוצרים תוכנית שרצה (פעמיים: תוכנית שמחכה למקש עלולה לבלוע את הראשון), ומנקים את המסך,
@@ -137,7 +137,7 @@
       } else status.textContent = failed();
     } catch (e) {
       status.textContent = failed();
-    } finally { busy = false; insertLibrary(); }
+    } finally { busy = false; if (auto) insertLibrary(); }
   }
 
   // ---- הקלטות שלי: CSAVE מקליט לקובץ /out.cas (XRoar כותב אותו), ומכאן כל תוכנית נשמרת בדפדפן ----
@@ -216,7 +216,7 @@
       b.innerHTML = '<span></span><small dir="ltr"></small>';
       b.querySelector('span').textContent = EN ? 'My tape' : 'הקלטת שלי';
       b.querySelector('small').textContent = f.n;
-      b.addEventListener('click', () => play(tapeBytes([f]), '/mine.cas', f.n, b, false));
+      b.addEventListener('click', () => play(tapeBytes([f]), '/mine.cas', f.n, b, false, false));
       const down = document.createElement('button');
       down.type = 'button';
       down.className = 'mini';

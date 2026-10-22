@@ -7,6 +7,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const exec = promisify(execFile);
+import { buildTest } from './xr2.mjs';
 const source = fileURLToPath(new URL('../src/', import.meta.url));
 
 // traceDac: היומן מתחיל כשהמעבד מגיע ל-startSym.
@@ -20,15 +21,10 @@ export async function traceDac(lines, startSym, seconds = 1, { noteOn, noteOff }
     const src = join(dir, 'src'), rom = join(dir, 't.rom'), sym = join(dir, 't.sym'), log = join(dir, 'trace.txt');
     await cp(source, src, { recursive: true });
     const input = Buffer.from(lines.map(l => l + '\r').join(''), 'ascii');
-    const cart = join(dir, 'testq.rom');            // התור המוקלד במחסנית ב-$C000 (כמו ב-xr2.mjs)
-    await writeFile(cart, Buffer.concat([input, Buffer.alloc(8192 - input.length)]));   // 8K מלאים (קובץ קטן משתקף)
-    await writeFile(join(src, 'testq.s'), `testq\t\tfdb\t${input.length},$c000\n`);
-    await exec('asm6809', ['-B', '-o', rom, '-s', sym, 'exp.s'], { cwd: src });
-    const symtext = await readFile(sym, 'utf8');
+    const { cart, symbols } = await buildTest(src, dir, rom, sym, input, 300000);   // מחסנית הבדיקות, כמו ב-xr2.mjs
     const addr = name => {
-      const m = symtext.match(new RegExp(`^${name}\\s+equ\\s+(\\d+)`, 'm'));
-      if (!m) throw new Error(`Unknown symbol ${name}`);
-      return Number(m[1]).toString(16).padStart(4, '0');
+      if (!symbols.has(name)) throw new Error(`Unknown symbol ${name}`);
+      return symbols.get(name).toString(16).padStart(4, '0');
     };
     const pc = addr(startSym), on = noteOn && addr(noteOn), off = noteOff && addr(noteOff);
     await exec('sh', ['-c', `xroar -ui null -ao null -machine dragon32 -extbas ${rom} -cart testq -cart-type rom -cart-rom ${cart} -no-cart-autorun -no-ratelimit -trap pc=0x${pc} -trap-trace -trace-timing -timeout ${seconds} > ${log} 2>&1`],

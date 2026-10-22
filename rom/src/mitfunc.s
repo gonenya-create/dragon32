@@ -192,7 +192,8 @@ IT_SA		equ	$ea		; פנימי
 IT_SL		equ	$ec
 IT_TA		equ	$ed
 IT_TL		equ	$ef
-fn_instr	lbsr	frmevl
+fn_instr	lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את הארגומנטים בעצמה)
+		lbsr	frmevl
 		ldb	#1		; בלי מקום: מ-1
 		tst	VALTYP
 		pshs	b
@@ -250,7 +251,8 @@ fn_instr	lbsr	frmevl
 9		lbra	givb
 
 ; ---------- STRING$(n,c) (קורא) ----------
-fn_strng	lbsr	evbyte
+fn_strng	lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את הארגומנטים בעצמה)
+		lbsr	evbyte
 		pshs	b		; n
 		lbsr	chkcom
 		lbsr	frmevl
@@ -291,9 +293,16 @@ fn_pos		lbsr	chknum
 fn_mem		tfr	s,d		; S בכניסה פחות STREND, בלי סימן (קורא)
 		subd	STREND
 		lbra	givu
-fn_varptr	ldd	STREND		; משתנה שלא היה: נוצר, ואז ?FC (קורא)
+fn_varptr	lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את הארגומנטים בעצמה)
+		ldd	STREND		; משתנה שלא היה: נוצר, ואז ?FC (קורא)
 		pshs	d
 		clrb
+		bra	isl_9d3d_e	;@isl
+		fill	$ff,$9d3d-*	;@isl
+		jmp	irq	;@isl
+		fill	$ff,$9d46-*	;@isl
+		jmp	irqtk	;@isl
+isl_9d3d_e	;@isl
 		lbsr	ptrget
 		puls	d
 		cmpd	STREND
@@ -321,12 +330,8 @@ evadr		lbsr	frmevl
 ; המקש השמור ב-$87 (נשמר בין פקודות), אחרת סריקה. $87 מתאפס. אין מקש: מחרוזת ריקה
 fn_inkey	lda	IKEYIM
 		bne	1F
-		lda	CURLIN		; תור הבדיקות רק בזמן שתוכנית רצה (כמו BREAK); אחרת המקלדת
-		inca			; $FFxx רק במצב ישיר
-		bne	0F
-		lbsr	keyindex
-		bra	1F
-0		lbsr	inkey
+		jsr	$bbe5		; סריקה דרך הכניסה הקבועה (כמו במקור)
+ink_r
 1		clr	IKEYIM
 		sta	FACLO
 		pshs	a
@@ -442,7 +447,8 @@ defusr		ldx	TXTPTR
 
 ; ---------- POINT(x,y): מסך הטקסט (קורא + ה-VDG) ----------
 ; x 0-63, y 0-31. תא שאינו גרפי: -1. נקודה כבויה: 0. דולקת: הצבע 1-8
-fn_point	lbsr	sgxyr
+fn_point	lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את הארגומנטים בעצמה)
+		lbsr	sgxyr
 		ldb	,x		; VALTYP כבר 0 (evbyte)
 		bmi	3F
 		ldd	#-1		; לא גרפי
@@ -486,9 +492,7 @@ clear		beq	clr_go		; בלי מספרים: רק ניקוי
 		puls	d,x
 		std	MEMSIZ
 		stx	STKTOP
-clr_go		lbsr	runc		; משתנים, מחרוזות, DATA, אין המשך
-		lds	STKTOP		; בלי החזרה ל-gone: המחסנית מתאפסת (mit: STKINI)
-		clr	,-s
+clr_go		bsr	runstk		; משתנים, מחרוזות, DATA, אין המשך, ומחסנית חדשה (mit: STKINI)
 		lbra	newstt
 mem_om		lbra	err_om
 

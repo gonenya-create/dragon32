@@ -104,7 +104,9 @@ try {
   console.log('מצב');
   {
     let s = await runRom(['FOR I=143 TO 150:PRINT PEEK(I);:NEXT:PRINT']);
-    ok('$8F-$96 בהדלקה: 50 0 128 18 10 18 218 92', lastNums(s.screen).join(' ') === '50 0 128 18 10 18 218 92', s.screen);
+    // $8F (מונה ההבהוב) מתחיל ב-50 ויורד בכל סבב של לולאת ההמתנה, גם בזמן ההקלדה (כמו במחשב האמיתי); הערך עצמו נבדק ב-s1-test
+    const v = lastNums(s.screen);
+    ok('$8F-$96 בהדלקה: (1-50) 0 128 18 10 18 218 92', v[0] >= 1 && v[0] <= 50 && v.slice(1).join(' ') === '0 128 18 10 18 218 92', s.screen);
     s = await runRom(['EXEC 32789']);
     ok('$8015: המנוע דולק', !!(s.pia1cra & 8), hex(s.pia1cra));
     s = await runRom(['EXEC 32789:EXEC 32792']);

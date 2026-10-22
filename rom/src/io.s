@@ -124,6 +124,13 @@ SHIFTED		fcc	"0!\"#$%&'"		; SHIFT על 0-7
 ; keyindex: סריקה מלאה. מחזיר ב-A את התו של מקש שנלחץ עכשיו (לא היה לחוץ בסריקה הקודמת), או 0.
 ; משווים כל עמודה לסריקה הקודמת (KPREV), כך שמקש חדש נקלט גם כשהקודם עדיין לחוץ (הקלדה מהירה)
 keyindex	pshs	b,x
+		clr	PIA0+2		; כל העמודות למטה, קריאה אחת. בלי שינוי מהפעם הקודמת: יוצאים מהר (קורא 2.10)
+		lda	PIA0
+		coma
+		anda	#$7f
+		cmpa	KALL
+		beq	ki_none
+		sta	KALL
 		clr	KFOUND		; 0 = אין; אחרת האינדקס בטבלה + 1
 		ldx	#KPREV
 		ldd	#$fe00		; A = מסכת העמודה (0 = נסרקת), B = העמודה
@@ -184,35 +191,18 @@ ki_none		clra
 ki_out		tsta			; Z לפי התו
 		puls	b,x,pc
 
-; inkey: מקש בלי לחכות (INKEY$): מהתור, או מקש שנלחץ עכשיו. אין: A=0
-inkey		ldd	KQCNT
-		bne	gk_pop
-		bra	keyindex
-
-; getkey: מחכה למקש, מחזיר את התו ב-A. קודם תור הבדיקות (KEYQ), אחר כך המקלדת
+; getkey: מחכה למקש, ומחזיר את התו ב-A. כמו במקור: הבהוב (עם השהיה), ואז סריקה דרך $BBE5, ושוב.
+; מקש: $60 בתא הסמן, ורק אז הוא חוזר (קורא 2.5, 8.1)
 getkey		pshs	b,x
-gk_loop		ldd	KQCNT
-		beq	gk_scan
-		bsr	gk_pop
-		bra	gk_got
-; gk_pop: התו הבא בתור
-gk_pop		pshs	b,x
-		ldx	KQCNT
-		leax	-1,x
-		stx	KQCNT
-		ldx	KQPTR
-		lda	,x+
-		stx	KQPTR
-		puls	b,x,pc
-; לולאת ההמתנה (קורא): הבהוב (עם השהיה), סריקה, ושוב. מקש: $60 בתא הסמן, ורק אז הוא חוזר
-gk_scan		bsr	blink
-		lbsr	keyindex	; Z לפי A
-		beq	gk_loop
+gk_loop		bsr	blink
+		jsr	$bbe5		; סריקת המקלדת, דרך הכניסה הקבועה (כמו במקור)
+gk_r		beq	gk_loop
 gk_got		ldx	CURSOR
 		ldb	#$60
 		stb	,x
 		puls	b,x,pc
 ; blink (קורא): CBLCNT יורד; ב-0: ביט $40 בתא הסמן מתהפך, והמונה חוזר ל-50. אחר כך השהיה: 1118 סיבובים של 8 מחזורים
+; @nofill: לולאות מתוזמנות, לפי מחזורים. tools/islands.py לא מכניס כאן גושים
 blink		pshs	a,x
 		dec	CBLCNT
 		bne	1F
@@ -226,3 +216,4 @@ blink		pshs	a,x
 2		leax	-1,x
 		bne	2B
 		puls	a,x,pc
+; @endnofill

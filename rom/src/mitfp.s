@@ -35,6 +35,25 @@ FBUFFR		equ	$03da		; קורא: מאגר הדפסת מספר
 
 ; ---------- העברות (mit: CONUPK 5306, MOVFM 5477, MOVMF 5506, MOVFA 5528, MOVAF 5537) ----------
 ; conupk: המספר הארוז ב-X → ARG, ו-ARISGN = הסימנים שונים?
+; @nofill: קבועים שצמודים זה לזה (‎-32768 נגמר בבתים של 0.5). עברו לכאן ב-22.10, רחוק מהכתובות הקבועות
+; ---------- קבועים ----------
+fone		equ	expcon+36		; 1: המקדם האחרון של expcon (mitconst.s), אותם 5 בתים
+tenzc		fcb	$84,$20,$00,$00,$00	; 10
+nzmil		fcb	$9e,$6e,$6b,$28,$00	; 10^9            (mit: NZMIL)
+nz9999		fcb	$9e,$6e,$6b,$27,$fd	; 999999999.499   (mit: NZ9999)
+nz0999		fcb	$9b,$3e,$bc,$1f,$fd	; 99999999.9499   (mit: NZ0999)
+n32768		fcb	$90			; -32768
+fhalf		fcb	$80,$00,$00,$00,$00	; 0.5 (גם הסוף של -32768)
+foutbl		fdb	$05f5,$e100		; 10^8 ... 1
+		fdb	$0098,$9680
+		fdb	$000f,$4240
+		fdb	$0001,$86a0
+		fdb	$0000,$2710
+		fdb	$0000,$03e8
+		fdb	$0000,$0064
+		fdb	$0000,$000a
+		fdb	$0000,$0001
+; @endnofill
 conupk		ldu	#ARGEXP
 		bsr	unpk
 ; arisg: ARISGN = הסימן של ARG xor הסימן של FAC
@@ -100,6 +119,18 @@ faddt		tst	FACEXP
 		clr	BITS
 		lda	ARGEXP
 		beq	9F		; ARG=0: התוצאה FAC
+		bra	isl_89a4_e	;@isl
+		fill	$ff,$89a4-*	;@isl
+		ldb	#')	;@isl
+		fcb	$8c	;@isl
+		ldb	#'(	;@isl
+		fcb	$8c	;@isl
+		ldb	#',	;@isl
+		tfr	b,a	;@isl
+		jmp	synchk	;@isl
+		fill	$ff,$89b4-*	;@isl
+		jmp	err_sn	;@isl
+isl_89a4_e	;@isl
 		ldx	#ARGEXP		; X = המוזז (הקטן), Y = הגדול
 		ldy	#FACEXP
 		suba	FACEXP
@@ -314,7 +345,33 @@ fmultt		tst	FACEXP
 		bsr	mltply
 		ldx	#FACLO+1	; FACLO, FACMO, FACMOH, FACHO
 1		lda	,-x
-		bsr	mltply
+		bra	isl_8b2d_e	;@isl
+		fill	$ff,$8b2d-*	;@isl
+		lbsr	chknum	;@isl
+		lda	FACSGN	;@isl
+		pshs	a	;@isl
+		clr	FACSGN	;@isl
+		lda	FACEXP	;@isl
+		cmpa	#144	;@isl
+		blo	isl_8b2d_1	;@isl
+		lda	,s	;@isl
+		sta	FACSGN	;@isl
+		leax	n32768,pcr	;@isl
+		lbsr	fcomp	;@isl
+		lbne	err_fc	;@isl
+		clr	FACSGN	;@isl
+isl_8b2d_1	lbsr	qint	;@isl
+		ldd	FACMO	;@isl
+		tst	,s+	;@isl
+		bpl	isl_8b2d_2	;@isl
+		coma	;@isl
+		comb	;@isl
+		addd	#1	;@isl
+isl_8b2d_2	std	FACMO	;@isl
+		tstb	;@isl
+		rts	;@isl
+isl_8b2d_e	;@isl
+		lbsr	mltply
 		cmpx	#FACHO
 		bne	1B
 movfr		ldd	RESHO
@@ -329,10 +386,15 @@ fdivt		ldb	FACEXP
 		lbeq	err_dv0		; ב-Dragon בלי עיגול בכניסה; המנה מתעגלת בסוף (קורא)
 		negb
 		clra
-		bsr	muldv2		; ARG - FAC + 128
+		lbsr	muldv2		; ARG - FAC + 128
 		lbsr	incexp		; ועוד 1
 		ldu	#RESHO
 		lda	#1
+		bra	isl_8b8a_e	;@isl
+		fill	$ff,$8b8a-*	;@isl
+		jmp	err_bs	;@isl
+		jmp	err_fc	;@isl
+isl_8b8a_e	;@isl
 dvcmp		ldx	FACHO		; ARG >= FAC? אז סיבית 1
 		cmpx	ARGHO
 		bne	savq		; C = FAC < ARG
@@ -373,7 +435,7 @@ divnrm		ldb	#64		; שתי הסיביות לראש הבית הנוסף
 		mul
 		stb	FACOV
 		puls	cc
-		bra	movfr
+		lbra	movfr
 
 ; ---------- קריאת מספר מהטקסט (mit: FIN 5704) ----------
 ; בכניסה: TXTPTR על התו הראשון. ביציאה: FAC, ו-TXTPTR אחרי המספר
@@ -384,10 +446,10 @@ fin		clra
 		sta	FACOV
 		std	DECCNT		; וגם DPTFLG
 		std	TENEXP		; וגם EXPSGN
-		jsr	<chrgot		; (chrgot משנה את X)
+		jsr	<chrgot
 		ldx	#SGNFLG		; סימן בהתחלה: רק בקלט וב-DATA (בביטוי הוא טוקן) (mit: FIN)
-		bsr	fsgn
-fin_lp		bcc	fin_dig		; ספרה
+		lbsr	fsgn
+fin_lp		bcs	fin_dig		; ספרה
 		cmpa	#'.
 		bne	fin_e
 		tst	DPTFLG
@@ -398,7 +460,7 @@ fin_dig		tst	DPTFLG
 		beq	1F
 		inc	DECCNT
 1		pshs	a
-		bsr	mul10
+		lbsr	mul10
 		puls	a
 		suba	#'0
 		bsr	finlog
@@ -409,12 +471,18 @@ fin_e		cmpa	#'E
 		jsr	<chrget
 		ldx	#EXPSGN
 		bsr	fsgn
-		bcs	fin_end
+		bcc	fin_end
 fin_ed		suba	#'0		; המעריך כפול 10 ועוד הספרה
 		ldb	TENEXP
 		cmpb	#10
 		blo	3F
 		tst	EXPSGN
+		bra	isl_8c36_e	;@isl
+		fill	$ff,$8c36-*	;@isl
+		clra	;@isl
+		clr	VALTYP	;@isl
+		lbra	givd	;@isl
+isl_8c36_e	;@isl
 		beq	ovf2
 		ldb	#100
 		bra	4F
@@ -424,7 +492,7 @@ fin_ed		suba	#'0		; המעריך כפול 10 ועוד הספרה
 		addb	,s+
 4		stb	TENEXP
 		jsr	<chrget
-		bcc	fin_ed
+		bcs	fin_ed
 fin_end		lda	TENEXP
 		tst	EXPSGN
 		beq	5F
@@ -659,20 +727,3 @@ fdig		lda	#'0
 		leax	4,x
 		puls	b,pc
 
-; ---------- קבועים ----------
-fone		equ	expcon+36		; 1: המקדם האחרון של expcon (mitconst.s), אותם 5 בתים
-tenzc		fcb	$84,$20,$00,$00,$00	; 10
-nzmil		fcb	$9e,$6e,$6b,$28,$00	; 10^9            (mit: NZMIL)
-nz9999		fcb	$9e,$6e,$6b,$27,$fd	; 999999999.499   (mit: NZ9999)
-nz0999		fcb	$9b,$3e,$bc,$1f,$fd	; 99999999.9499   (mit: NZ0999)
-n32768		fcb	$90			; -32768
-fhalf		fcb	$80,$00,$00,$00,$00	; 0.5 (גם הסוף של -32768)
-foutbl		fdb	$05f5,$e100		; 10^8 ... 1
-		fdb	$0098,$9680
-		fdb	$000f,$4240
-		fdb	$0001,$86a0
-		fdb	$0000,$2710
-		fdb	$0000,$03e8
-		fdb	$0000,$0064
-		fdb	$0000,$000a
-		fdb	$0000,$0001

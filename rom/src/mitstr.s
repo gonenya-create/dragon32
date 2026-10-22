@@ -197,28 +197,30 @@ strspa		sta	DSCTMP
 		lbsr	garba2
 		bra	1B
 GARBFL		equ	$07
+		fill	$ff,$957a-*	;@isl
+		jmp	prnum	;@isl
 
 ; ---------- פונקציות מחרוזת בסיסיות (mit: LEN 4730, ASC 4741, CHR 4627, LEFT 4642, RIGHT 4672, MID 4677) ----------
-fn_asc		bsr	frestr
+fn_asc		lbsr	frestr
 		clr	VALTYP
 		tsta
 		beq	str_fc
 		ldb	,x
 		bra	1F
-fn_len		bsr	frestr
+fn_len		lbsr	frestr
 		clr	VALTYP
 		tfr	a,b
 1		lbra	givb
 fn_chr		lbsr	conint		; B = 0-255
 		pshs	b
 		lda	#1
-		bsr	strspa
+		lbsr	strspa
 		puls	b
 		stb	,x		; X = הכתובת (strspa)
 		lbra	putnew
 ; left$/right$/mid$: X = מתאר המחרוזת, B = התחלה (0..), A = כמה תווים. מעתיקים לזמני חדש
 substr		pshs	a,b,x
-		bsr	strspa		; מקום ל-A תווים (עלול לאסוף: מחשבים את המקור אחר כך)
+		lbsr	strspa		; מקום ל-A תווים (עלול לאסוף: מחשבים את המקור אחר כך)
 		ldx	2,s
 		lbsr	fretmp		; X = כתובת המקור
 		puls	d,u		; A = כמה, B = התחלה (U סתם)

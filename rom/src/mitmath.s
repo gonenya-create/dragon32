@@ -109,6 +109,14 @@ exp		ldx	#logeb2	; x*log2(e)
 		lbsr	movaf		; ARG = y
 		clr	FACOV
 		lda	FACEXP
+		bra	isl_a0e3_e	;@isl
+		fill	$ff,$a0e3-*	;@isl
+		bsr	isl_a0e5	;@isl
+isl_a0e5	bsr	isl_a0ea	;@isl
+		exg	a,b	;@isl
+		rts	;@isl
+isl_a0ea	jmp	x_getdev	;@isl
+isl_a0e3_e	;@isl
 		cmpa	#$88		; |y| >= 128: גדול מדי
 		blo	2F
 6		tst	FACSGN		; חיובי: ?OV. שלילי: 0

@@ -1051,10 +1051,17 @@ if (part('real machine lab')) {
     if (path === '/lab/1982/') {
       await p.waitForFunction(() => window.d32Ready, null, { timeout: 20000 });
       await p.click('#tapes .tape:has-text("GUESS")');
-      await p.waitForTimeout(1500);
-      check('a tape goes into the tape player and CLOAD is typed', await p.evaluate(() =>
-        document.querySelector('#tapes .tape.in small')?.textContent === 'GUESS' && /טוען|רץ/.test(document.getElementById('tape-status').textContent)
-        && FS.stat('/tape-guess.cas').size > 280) && errs.length === 0, errs.join(' | '));
+      await p.waitForTimeout(800);
+      check('a tape click only puts the tape in the recorder (you type CLOAD yourself, like 1982)', await p.evaluate(() =>
+        document.querySelector('#tapes .tape.in small')?.textContent === 'GUESS' && /CLOAD/.test(document.getElementById('tape-status').textContent)
+        && FS.stat('/tape-guess.cas').size > 280 && !(window.d32Screen?.() || []).some(r => r.startsWith('CLOAD'))) && errs.length === 0, errs.join(' | '));
+      // הקלטת היא מה שהמכונה עצמה שמרה (פורמט מכווץ): מקלידים CLOAD, אחרי OK את RUN, והמשחק על המסך
+      await p.evaluate(() => window.d32Type('CLOAD\n'));
+      const okAfter = await p.waitForFunction(() => { const r = window.d32Screen?.() || []; const i = r.findIndex(x => x === 'F GUESS'); return i >= 0 && r.slice(i + 1).includes('OK'); }, null, { timeout: 60000 }).then(() => true, () => false);
+      if (okAfter) await p.evaluate(() => window.d32Type('RUN\n'));
+      const ran = okAfter && await p.waitForFunction(() => (window.d32Screen?.() || []).some(r => r.includes('GUESS MY NUMBER')), null, { timeout: 30000 }).then(() => true, () => false);
+      check('typing CLOAD then RUN loads the machine-saved tape (compact format) and the program runs', ran,
+        JSON.stringify(await p.evaluate(() => [document.getElementById('tape-status').textContent, window.d32Screen?.()])));
     }
     if (path === '/lab/1982/') {
       // מהאפליקציה: ?tape=lander טוען את הקלטת לבד

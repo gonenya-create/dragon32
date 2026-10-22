@@ -278,7 +278,7 @@ us_num		lda	USD		; שדה רחב מ-17 (עם הנקודה): ?FC
 5		lda	USE		; הנקודה אחרי 9+e ספרות
 		adda	#9
 		sta	USP
-		bra	us_dg
+		lbra	us_dg
 
 ; us_dd: B = D (0 בלי נקודה)
 us_dd		ldb	USD
@@ -332,6 +332,10 @@ us_exp		bsr	us_norm		; מעריכי (אפס: e=0)
 		inc	USN
 		bne	2B
 3		lda	FACEXP		; אפס? המעריך 0
+		bra	isl_a93a_e	;@isl
+		fill	$ff,$a93a-*	;@isl
+		jmp	txtmode	;@isl
+isl_a93a_e	;@isl
 		bne	us_dg
 		clr	USX
 ; us_dg: חצי (בחיבור של ה-Dragon), החלק השלם, ותשע ספרות עם אפסים מובילים ב-USDG
@@ -439,6 +443,8 @@ us_fit		ldb	USD
 		bmi	3F
 		bsr	us_digi
 		bra	2B
+		fill	$ff,$aa10-*	;@isl
+		jmp	x_css	;@isl
 3		lda	USFLG
 		bita	#$40
 		beq	5F

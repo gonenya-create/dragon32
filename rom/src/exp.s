@@ -36,7 +36,8 @@ CBLCNT		equ	$8f		; מונה ההבהוב של הסמן (קורא: 50 בהדלק�
 TICKS		equ	$0112		; TIMER (ספר: Inside)
 
 ; ---------- משתני הניסוי, באזור שהספרים מסמנים כפנוי ----------
-KPREV		equ	$03ea		; 8 בתים
+KALL		equ	$0151		; מצב כולל של המקלדת: כל השורות כשכל העמודות למטה (מפרט הזיכרון, כמו במקור)
+KPREV		equ	$0152		; 8 בתים: מצב כל עמודה בסריקה הקודמת ($0152-$0159, כמו במקור)
 KFOUND		equ	$03f2
 KNEW		equ	$03f3
 KROW		equ	$03f4
@@ -47,8 +48,6 @@ KPRE		equ	$03f9		; קידומת המילה שנמצאה: 0 פקודה, $FF פו�
 LEND		equ	$03fa		; 2 בתים: סוף טווח LIST
 LASTKEY		equ	$03fc
 
-KQPTR		equ	$f8		; רק לבדיקות: המקש הבא בתור המוקלד (התור עצמו ב-ROM, testq)
-KQCNT		equ	$fa		; כמה מקשים נשארו, 2 בתים (באזור הפנוי $EA-$FF, קורא)
 LINBUF		equ	$02dd		; מאגר השורה (קורא: BUF ב-$02DD)
 LINMAX		equ	249
 CRB		equ	$02dc		; השורה המכווצת: במקום, בתוך מאגר השורה, בית אחד לפני הקלט (קורא: קלטת 11).
@@ -88,7 +87,7 @@ HK_DECR		equ	$01a6		; 25 פתיחת שורה (LIST, EDIT)		; ספר: STKTOP אח
 ; ---------- הכניסות הקבועות ב-$8000 (docs/DRAGON-SPEC-INTERFACES.md 3ג, DRAGON-SPEC-TAPE.md 1.10) ----------
 		jmp	hw_init		; $8000 אתחול חומרה (חוזר דרך Y)
 		jmp	swinit		; $8003 אתחול תוכנה
-		jmp	inkey		; $8006 מקלדת
+		jmp	$bbe5		; $8006 מקלדת (כמו במקור: דרך $BBE5)
 		jmp	blink		; $8009 הבהוב הסמן
 		jmp	putc		; $800C פלט למסך
 		jmp	prtout		; $800F פלט למדפסת
@@ -103,6 +102,248 @@ twslot		jmp	twbyte		; $801E בית לקלטת
 		jmp	noserv		; $802A-$8030 תקשורת: אין ב-Dragon 32
 		jmp	noserv
 		jmp	noserv
+
+; ---------- הטבלאות הקבועות, במקום ובסדר של המקור (קורא 3; ספרים: Inside עמ' 239, Companion עמ' 35, PRG עמ' 97) ----------
+; ‏$8033 שמות הפקודות, ‏$8154 כתובות הפקודות, ‏$81CA שמות הפונקציות, ‏$8250 כתובות הפונקציות, ‏$8294 טבלת הפעולות,
+; ‏$82A9 קודי השגיאה, ואחריהם " ERROR" ו-" IN ". הגדלים כמו במקור, אז כל טבלה מתחילה בדיוק בכתובת שלה
+; (entry-test בודק). בלי 0 בסוף רשימות השמות: המתארים ב-$0120 סופרים
+; ---------- טבלת המילים, בסדר הטוקנים של ה-Dragon (ספר: Companion עמ' 39-40) ----------
+; הפורמט כמו ב-mit (RESLST): התו האחרון של כל מילה עם ביט 7 דלוק, ו-0 בסוף הטבלה
+stmtab		fcs	"FOR"
+		fcs	"GO"
+		fcs	"REM"
+		fcs	"'"
+		fcs	"ELSE"
+		fcs	"IF"
+		fcs	"DATA"
+		fcs	"PRINT"
+		fcs	"ON"
+		fcs	"INPUT"
+		fcs	"END"
+		fcs	"NEXT"
+		fcs	"DIM"
+		fcs	"READ"
+		fcs	"LET"
+		fcs	"RUN"
+		fcs	"RESTORE"
+		fcs	"RETURN"
+		fcs	"STOP"
+		fcs	"POKE"
+		fcs	"CONT"
+		fcs	"LIST"
+		fcs	"CLEAR"
+		fcs	"NEW"
+		fcs	"DEF"
+		fcs	"CLOAD"
+		fcs	"CSAVE"
+		fcs	"OPEN"
+		fcs	"CLOSE"
+		fcs	"LLIST"
+		fcs	"SET"
+		fcs	"RESET"
+		fcs	"CLS"
+		fcs	"MOTOR"
+		fcs	"SOUND"
+		fcs	"AUDIO"
+		fcs	"EXEC"
+		fcs	"SKIPF"
+		fcs	"DEL"
+		fcs	"EDIT"
+		fcs	"TRON"
+		fcs	"TROFF"
+		fcs	"LINE"
+		fcs	"PCLS"
+		fcs	"PSET"
+		fcs	"PRESET"
+		fcs	"SCREEN"
+		fcs	"PCLEAR"
+		fcs	"COLOR"
+		fcs	"CIRCLE"
+		fcs	"PAINT"
+		fcs	"GET"
+		fcs	"PUT"
+		fcs	"DRAW"
+		fcs	"PCOPY"
+		fcs	"PMODE"
+		fcs	"PLAY"
+		fcs	"DLOAD"
+		fcs	"RENUM"
+		fcs	"TAB("
+		fcs	"TO"
+		fcs	"SUB"
+		fcs	"FN"
+		fcs	"THEN"
+		fcs	"NOT"
+		fcs	"STEP"
+		fcs	"OFF"
+		fcs	"+"
+		fcs	"-"
+		fcs	"*"
+		fcs	"/"
+		fcs	"^"
+		fcs	"AND"
+		fcs	"OR"
+		fcs	">"
+		fcs	"="
+		fcs	"<"
+		fcs	"USING"
+; טבלת הפקודות לפי הטוקן ($80-$BA), כתובת לכל אחת. עוד לא בנויה: ?SN
+stmtbl
+		fdb	for		; $80 FOR
+		fdb	go		; $81 GO
+		fdb	rem		; $82 REM
+		fdb	rem		; $83 '
+		fdb	rem		; $84 ELSE
+		fdb	if		; $85 IF
+		fdb	data		; $86 DATA
+		fdb	print		; $87 PRINT
+		fdb	on		; $88 ON
+		fdb	input		; $89 INPUT
+		fdb	end		; $8A END
+		fdb	next		; $8B NEXT
+		fdb	dim		; $8C DIM
+		fdb	read		; $8D READ
+		fdb	let		; $8E LET
+		fdb	run		; $8F RUN
+		fdb	restore		; $90 RESTORE
+		fdb	return		; $91 RETURN
+		fdb	stop		; $92 STOP
+		fdb	poke		; $93 POKE
+		fdb	cont		; $94 CONT
+		fdb	list_st		; $95 LIST
+		fdb	clear		; $96 CLEAR
+		fdb	new_st		; $97 NEW
+		fdb	def		; $98 DEF
+		fdb	cload_st	; $99 CLOAD
+		fdb	csave_st	; $9A CSAVE
+		fdb	open_st		; $9B OPEN
+		fdb	close_st	; $9C CLOSE
+		fdb	llist		; $9D LLIST
+		fdb	set_st		; $9E SET
+		fdb	reset_st		; $9F RESET
+		fdb	cls_st		; $A0 CLS
+		fdb	motor_st	; $A1 MOTOR
+		fdb	sound_st	; $A2 SOUND
+		fdb	audio_st	; $A3 AUDIO
+		fdb	exec		; $A4 EXEC
+		fdb	skipf_st	; $A5 SKIPF
+		fdb	del_st		; $A6 DEL
+		fdb	edit_st		; $A7 EDIT
+		fdb	tron		; $A8 TRON
+		fdb	troff		; $A9 TROFF
+		fdb	line_st		; $AA LINE
+		fdb	pcls_st		; $AB PCLS
+		fdb	pset_st		; $AC PSET
+		fdb	preset_st		; $AD PRESET
+		fdb	screen_st		; $AE SCREEN
+		fdb	pclear		; $AF PCLEAR
+		fdb	color_st		; $B0 COLOR
+		fdb	circle_st	; $B1 CIRCLE
+		fdb	paint_st	; $B2 PAINT
+		fdb	get_st		; $B3 GET
+		fdb	put_st		; $B4 PUT
+		fdb	draw_st		; $B5 DRAW
+		fdb	pcopy_st		; $B6 PCOPY
+		fdb	pmode_st		; $B7 PMODE
+		fdb	play_st		; $B8 PLAY
+		fdb	err_sn		; $B9 DLOAD
+		fdb	renum		; $BA RENUM
+fntab		fcs	"SGN"
+		fcs	"INT"
+		fcs	"ABS"
+		fcs	"POS"
+		fcs	"RND"
+		fcs	"SQR"
+		fcs	"LOG"
+		fcs	"EXP"
+		fcs	"SIN"
+		fcs	"COS"
+		fcs	"TAN"
+		fcs	"ATN"
+		fcs	"PEEK"
+		fcs	"LEN"
+		fcs	"STR$"
+		fcs	"VAL"
+		fcs	"ASC"
+		fcs	"CHR$"
+		fcs	"EOF"
+		fcs	"JOYSTK"
+		fcs	"FIX"
+		fcs	"HEX$"
+		fcs	"LEFT$"
+		fcs	"RIGHT$"
+		fcs	"MID$"
+		fcs	"POINT"
+		fcs	"INKEY$"
+		fcs	"MEM"
+		fcs	"VARPTR"
+		fcs	"INSTR"
+		fcs	"TIMER"
+		fcs	"PPOINT"
+		fcs	"STRING$"
+		fcs	"USR"
+; טבלת הפונקציות לפי הטוקן ($80-$A1): כתובת לכל אחת, כמו במקור
+fntbl
+		fdb	fn_sgn	; $80 SGN
+		fdb	fn_int	; $81 INT
+		fdb	fn_abs	; $82 ABS
+		fdb	fn_pos	; $83 POS
+		fdb	fn_rnd	; $84 RND
+		fdb	fn_sqr	; $85 SQR
+		fdb	fn_log	; $86 LOG
+		fdb	fn_exp	; $87 EXP
+		fdb	fn_sin	; $88 SIN
+		fdb	fn_cos	; $89 COS
+		fdb	fn_tan	; $8A TAN
+		fdb	fn_atn	; $8B ATN
+		fdb	fn_peek	; $8C PEEK
+		fdb	fn_len	; $8D LEN
+		fdb	fn_str	; $8E STR$
+		fdb	fn_val	; $8F VAL
+		fdb	fn_asc	; $90 ASC
+		fdb	fn_chr	; $91 CHR$
+		fdb	fn_eof	; $92 EOF
+		fdb	fn_joy	; $93 JOYSTK
+		fdb	fn_fix	; $94 FIX
+		fdb	fn_hex	; $95 HEX$
+		fdb	fn_left	; $96 LEFT$
+		fdb	fn_right	; $97 RIGHT$
+		fdb	fn_mid	; $98 MID$
+		fdb	fn_point	; $99 POINT
+		fdb	fn_inkey	; $9A INKEY$
+		fdb	fn_mem	; $9B MEM
+		fdb	fn_varptr	; $9C VARPTR
+		fdb	fn_instr	; $9D INSTR
+		fdb	fn_timer	; $9E TIMER
+		fdb	fn_ppoint	; $9F PPOINT
+		fdb	fn_strng	; $A0 STRING$
+		fdb	fn_usr	; $A1 USR
+; טבלת הפעולות: קדימות וכתובת, לפי הסדר + - * / ^ AND OR
+optab		fcb	121
+		fdb	faddt
+		fcb	121
+		fdb	fsubt
+		fcb	123
+		fdb	fmultt
+		fcb	123
+		fdb	fdivt
+		fcb	127
+		fdb	fpwrt
+		fcb	80
+		fdb	andop
+		fcb	70
+		fdb	orop
+errtab		fcc	"NFSNRGODFCOVOMULBSDD/0IDTMOSLSSTCNUFFDAODNIOFMNOIEDSNE"	; ‏NE ($34) כמו במקור: 27 קודים (קורא 3)
+m_err		fcc	" ERROR"
+		fcb	0
+m_in		fcc	" IN "
+		fcb	0
+
+; fnext: פונקציה מעבר למתאר 0: דרך $0132, עם B = (טוקן-$80)*2 ו-A = התו הבא (קורא: מדפסת 7.5)
+fnext		lsla
+		tfr	a,b
+		jsr	<chrget
+		jmp	[DESC1+8]
 
 ; ---------- הפעלה ----------
 reset		orcc	#$50
@@ -138,6 +379,11 @@ swinit		orcc	#$50
 		ldx	,y++		; מאיפה
 		ldu	,y++		; לאן
 2		lda	,x+
+		bra	isl_8342_e	;@isl
+		fill	$ff,$8342-*	;@isl
+		ldb	#12	;@isl
+		jmp	error	;@isl
+isl_8342_e	;@isl
 		sta	,u+
 		decb
 		bne	2B
@@ -154,11 +400,12 @@ swinit		orcc	#$50
 		lda	#$35		; פסיקת השדה; CB2 (SEL2) נשאר פלט נמוך (קורא: צליל 0.3)
 		sta	PIA0+3
 		lbsr	cls
-		leax	testq,pcr	; תור הבדיקות: אורך וכתובת. ב-ROM האמיתי 0; בבדיקות התור במחסנית ב-$C000
-		ldd	,x
-		std	KQCNT
-		ldx	2,x
-		stx	KQPTR
+		bra	isl_8371_e	;@isl
+		fill	$ff,$8371-*	;@isl
+		jmp	main_ok	;@isl
+		fill	$ff,$837a-*	;@isl
+		jmp	main	;@isl
+isl_8371_e	;@isl
 		; מצב ההדלקה (ספר): תוכנית ב-$1E01, אפס ב-$1E00, גבולות הזיכרון והמחרוזות
 		; (FRETOP ו-TEMPPT: נקבעים ב-scrtch/runc)
 		ldx	#$1e01
@@ -190,32 +437,11 @@ swinit		orcc	#$50
 		lbsr	scrtch
 		lda	#$55		; מעכשיו RESET חוזר ל-OK והתוכנית נשמרת
 		sta	RSTFLG
-		leax	warm,pcr
+		ldx	#$b44f		; כמו במקור: הכניסה החמה הקבועה (src/islands.s), שמתחילה ב-NOP
 		stx	RSTVEC
 		andcc	#$af		; IRQ ו-FIRQ פתוחות, ממש לפני הכותרת (קורא 7.3)
 		leax	banner,pcr	; הכותרת ומיד אחריה OK (אחרי 13 אין שורה חדשה נוספת)
 		bra	mo_puts
-; initab: [כמה][מאיפה][לאן], 0 בסוף. אזורי ה-RAM האלה לא נוגעים זה בזה ולא בפסיקה, אז הסדר לא משנה
-initab		fcb	12		; קריאת התו ל-RAM ($9F-$AA)
-		fdb	chrtpl,chrget
-		fcb	13		; הסמן, הקלטת, המקלדת והמדפסת: ל-$8F-$9B (קורא: קלטת 0.3, מדפסת 1.5, 7.1)
-		fdb	tdefs,CBLCNT
-		fcb	30		; $010C-$0129: הפסיקות, TIMER, זרע ה-RND, מתאר הפקודות (קורא: מדפסת 3.2)
-		fdb	lowtab,$010c
-		fcb	9		; $0148-$0150: שורה חדשה אוטומטית, נעילה, ורצף סוף השורה למדפסת (קורא 1.5)
-		fdb	lptab,$0148
-		fcb	0
-lowtab		jmp	irq		; $010C IRQ
-		jmp	firq		; $010F FIRQ
-		fcb	0,0,0		; $0112 TIMER
-		fcb	$80,$4f,$c7,$52,$59	; $0115 זרע ה-RND
-		fcb	0,0,0,0,0	; $011A-$011E
-		fcb	0		; $011F: ב-Dragon 64 ‏5 (קצב חזרת מקש); ב-32 פתוח, כנראה 0 (קורא 3.2)
-		fcb	78		; $0120 מתאר 0: מילות הפקודה ($80-$CD)
-		fdb	stmtab,stmtbl
-		fcb	34		; מילות הפונקציה ($FF $80-$A1)
-		fdb	fntab,fntbl
-lptab		fcb	$ff,$ff,1,13,10,0,0,0,0
 ; warm: ההתחלה החמה (קורא 7.4): התוכנית, המשתנים, TRON, הקבצים, המדפסת ו-$0100-$01FF נשמרים
 warm		nop			; ה-NOP שהאיפוס בודק
 		clra
@@ -231,6 +457,8 @@ warm		nop			; ה-NOP שהאיפוס בודק
 		andcc	#$af
 		lbsr	cls
 		bra	main_ok
+		fill	$ff,$83ed-*	;@isl
+		jmp	lnkprg	;@isl
 ; firq (קורא 3.4): רק כשקו המחסנית דלק ($FF23 ביט 7). כ-1.2 שניות המתנה, אתחול חומרה (שמכבה את
 ; פסיקת המחסנית), ואין חזרה ל-BASIC ב-RESET. ואז $C000
 firq		tst	PIA1+3
@@ -254,6 +482,13 @@ mo_puts		lbsr	puts
 main		lbsr	getline
 		bcs	main_ok		; BREAK
 		ldx	#LINBUF
+		bra	isl_841f_e	;@isl
+		fill	$ff,$841f-*	;@isl
+		ldd	TXTTAB	;@isl
+		subd	#1	;@isl
+		std	TXTPTR	;@isl
+		lbra	runstk	;@isl
+isl_841f_e	;@isl
 		lbsr	skipsp
 		beq	main		; שורה ריקה
 		lbsr	isdig
@@ -293,59 +528,6 @@ prin		ldd	CURLIN
 prcr		lda	#13
 		lbra	chrout
 
-; ---------- שגיאות (mit: ERROR; קורא: מדפסת, טבלת השגיאות) ----------
-; כל שגיאה: B = הקוד (ההיסט בטבלה, 2 לכל שגיאה), ונופלים דרך ה-cmpx עד error
-err_nf		ldb	#0
-		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
-err_sn		ldb	#2
-		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
-err_rg		ldb	#4
-		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
-err_od		ldb	#6
-		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
-err_fc		ldb	#8
-		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
-err_ov		ldb	#10
-		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
-err_om		ldb	#12
-		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
-err_ul		ldb	#14
-		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
-err_bs		ldb	#16
-		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
-err_dd		ldb	#18
-		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
-err_dv0		ldb	#20
-		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
-err_id		ldb	#22
-		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
-err_tm		ldb	#24
-		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
-err_os		ldb	#26
-		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
-err_ls		ldb	#28
-		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
-err_st		ldb	#30
-		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
-err_cn		ldb	#32
-		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
-err_uf		ldb	#34
-		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
-err_fd		ldb	#36
-		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
-err_ao		ldb	#38
-		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
-err_dn		ldb	#40
-		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
-err_io		ldb	#42
-		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
-err_fm		ldb	#44
-		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
-err_no		ldb	#46
-		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
-err_ie		ldb	#48
-		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
-err_ds		ldb	#50
 error		jsr	HK_ERR1		; נקודות החיבור 17 ו-18, עם B = הקוד
 		jsr	HK_ERR2
 		lds	STKTOP		; mit: STKINI — מחסנית, זמניים, ואין המשך
@@ -355,7 +537,7 @@ error		jsr	HK_ERR1		; נקודות החיבור 17 ו-18, עם B = הקוד
 		lbsr	sndoff		; כל שגיאה: הצליל והמנוע כבויים (קורא: צליל 1.1)
 		lbsr	motoff
 		lbsr	rcsub
-		lbsr	condcr
+		bsr	condcr
 		lda	#'?
 		lbsr	chrout
 		puls	b
@@ -363,17 +545,18 @@ error		jsr	HK_ERR1		; נקודות החיבור 17 ו-18, עם B = הקוד
 		abx
 		lda	,x+
 		lbsr	chrout
+		bra	isl_849f_e	;@isl
+		fill	$ff,$849f-*	;@isl
+		jmp	newstt	;@isl
+		fill	$ff,$84a6-*	;@isl
+		jmp	newst2	;@isl
+isl_849f_e	;@isl
 		lda	,x
 		lbsr	chrout
 		leax	m_err,pcr
 		lbsr	puts
-		lbsr	prin
+		bsr	prin
 		lbra	main_ok
-errtab		fcc	"NFSNRGODFCOVOMULBSDD/0IDTMOSLSSTCNUFFDAODNIOFMNOIEDS"
-m_err		fcc	" ERROR"
-		fcb	0
-m_in		fcc	" IN "
-		fcb	0
 
 ; linget: מספר שורה מ-X ל-D (עד 63999)
 linget		clra
@@ -404,6 +587,14 @@ linget		clra
 
 ; ---------- שמירת שורה (mit: MAIN1/NODEL/STOLOP, m6502.asm:1567-1641) ----------
 storeline	bsr	linget		; D = מספר השורה
+		bra	isl_84ed_e	;@isl
+		fill	$ff,$84ed-*	;@isl
+		tfr	a,b	;@isl
+		lslb	;@isl
+		abx	;@isl
+		jsr	<chrget	;@isl
+		jmp	[,x]	;@isl
+isl_84ed_e	;@isl
 		std	LINNUM
 storel2					; EDIT נכנס כאן: LINNUM מוכן, X = הטקסט
 		lbsr	skipsp		; רווחים אחרי המספר לא נשמרים (mit: CHRGET מדלג עליהם)
@@ -421,12 +612,20 @@ storel2					; EDIT נכנס כאן: LINNUM מוכן, X = הטקסט
 		lda	,x+
 		sta	,u+
 		bra	5B
+		fill	$ff,$851b-*	;@isl
+		jmp	brkchk	;@isl
 6		stu	VARTAB
 1		tst	CRB
 		beq	9F		; רק מספר: רק מחיקה
 		; מזיזים את [Y..VARTAB) למעלה באורך השורה (mit: BLTU)
 		ldd	VARTAB
 		addd	,s
+		bra	isl_852b_e	;@isl
+		fill	$ff,$852b-*	;@isl
+isl_852b	jsr	$bbe5	;@isl
+		beq	isl_852b	;@isl
+		lbra	brktst	;@isl
+isl_852b_e	;@isl
 		pshs	d,y		; יש מקום? אחרת ?OM לפני שמזיזים משהו (mit: REASON). Y = הגבול התחתון
 		lbsr	reason
 		ldx	VARTAB
@@ -490,6 +689,10 @@ runc		jsr	HK_STR		; 20 (ניקוי המשתנים)
 		std	FRETOP
 		ldd	VARTAB
 		std	ARYTAB
+		bra	isl_85a5_e	;@isl
+		fill	$ff,$85a5-*	;@isl
+		jmp	run	;@isl
+isl_85a5_e	;@isl
 		std	STREND
 		ldd	TXTTAB		; RESTORE
 		subd	#1
@@ -827,129 +1030,92 @@ banner		fcc	"DRAGON 1982 BASIC 1.0"	; כמו במחשב הראשי של האתר
 m_ok		fcc	"OK"
 		fcb	13,0
 
-; ---------- טבלת המילים, בסדר הטוקנים של ה-Dragon (ספר: Companion עמ' 39-40) ----------
-; הפורמט כמו ב-mit (RESLST): התו האחרון של כל מילה עם ביט 7 דלוק, ו-0 בסוף הטבלה
-stmtab		fcs	"FOR"
-		fcs	"GO"
-		fcs	"REM"
-		fcs	"'"
-		fcs	"ELSE"
-		fcs	"IF"
-		fcs	"DATA"
-		fcs	"PRINT"
-		fcs	"ON"
-		fcs	"INPUT"
-		fcs	"END"
-		fcs	"NEXT"
-		fcs	"DIM"
-		fcs	"READ"
-		fcs	"LET"
-		fcs	"RUN"
-		fcs	"RESTORE"
-		fcs	"RETURN"
-		fcs	"STOP"
-		fcs	"POKE"
-		fcs	"CONT"
-		fcs	"LIST"
-		fcs	"CLEAR"
-		fcs	"NEW"
-		fcs	"DEF"
-		fcs	"CLOAD"
-		fcs	"CSAVE"
-		fcs	"OPEN"
-		fcs	"CLOSE"
-		fcs	"LLIST"
-		fcs	"SET"
-		fcs	"RESET"
-		fcs	"CLS"
-		fcs	"MOTOR"
-		fcs	"SOUND"
-		fcs	"AUDIO"
-		fcs	"EXEC"
-		fcs	"SKIPF"
-		fcs	"DEL"
-		fcs	"EDIT"
-		fcs	"TRON"
-		fcs	"TROFF"
-		fcs	"LINE"
-		fcs	"PCLS"
-		fcs	"PSET"
-		fcs	"PRESET"
-		fcs	"SCREEN"
-		fcs	"PCLEAR"
-		fcs	"COLOR"
-		fcs	"CIRCLE"
-		fcs	"PAINT"
-		fcs	"GET"
-		fcs	"PUT"
-		fcs	"DRAW"
-		fcs	"PCOPY"
-		fcs	"PMODE"
-		fcs	"PLAY"
-		fcs	"DLOAD"
-		fcs	"RENUM"
-		fcs	"TAB("
-		fcs	"TO"
-		fcs	"SUB"
-		fcs	"FN"
-		fcs	"THEN"
-		fcs	"NOT"
-		fcs	"STEP"
-		fcs	"OFF"
-		fcs	"+"
-		fcs	"-"
-		fcs	"*"
-		fcs	"/"
-		fcs	"^"
-		fcs	"AND"
-		fcs	"OR"
-		fcs	">"
-		fcs	"="
-		fcs	"<"
-		fcs	"USING"
-		fcb	0
-fntab		fcs	"SGN"
-		fcs	"INT"
-		fcs	"ABS"
-		fcs	"POS"
-		fcs	"RND"
-		fcs	"SQR"
-		fcs	"LOG"
-		fcs	"EXP"
-		fcs	"SIN"
-		fcs	"COS"
-		fcs	"TAN"
-		fcs	"ATN"
-		fcs	"PEEK"
-		fcs	"LEN"
-		fcs	"STR$"
-		fcs	"VAL"
-		fcs	"ASC"
-		fcs	"CHR$"
-		fcs	"EOF"
-		fcs	"JOYSTK"
-		fcs	"FIX"
-		fcs	"HEX$"
-		fcs	"LEFT$"
-		fcs	"RIGHT$"
-		fcs	"MID$"
-		fcs	"POINT"
-		fcs	"INKEY$"
-		fcs	"MEM"
-		fcs	"VARPTR"
-		fcs	"INSTR"
-		fcs	"TIMER"
-		fcs	"PPOINT"
-		fcs	"STRING$"
-		fcs	"USR"
-		fcb	0
 
+; @nofill: תמונות שמועתקות ל-RAM בהדלקה (גם ה-JMP שבהן הם נתונים)
+; initab: [כמה][מאיפה][לאן], 0 בסוף. אזורי ה-RAM האלה לא נוגעים זה בזה ולא בפסיקה, אז הסדר לא משנה
+initab		fcb	12		; קריאת התו ל-RAM ($9F-$AA)
+		fdb	chrtpl,chrget
+		fcb	13		; הסמן, הקלטת, המקלדת והמדפסת: ל-$8F-$9B (קורא: קלטת 0.3, מדפסת 1.5, 7.1)
+		fdb	tdefs,CBLCNT
+		fcb	30		; $010C-$0129: הפסיקות, TIMER, זרע ה-RND, מתאר הפקודות (קורא: מדפסת 3.2)
+		fdb	lowtab,$010c
+		fcb	9		; $0148-$0150: שורה חדשה אוטומטית, נעילה, ורצף סוף השורה למדפסת (קורא 1.5)
+		fdb	lptab,$0148
+		fcb	0
+lowtab		jmp	$9d3d		; $010C IRQ (כמו במקור: הכתובות הקבועות, src/islands.s)
+		jmp	$b469		; $010F FIRQ
+		fcb	0,0,0		; $0112 TIMER
+		fcb	$80,$4f,$c7,$52,$59	; $0115 זרע ה-RND
+		fcb	0,0,0,0,0	; $011A-$011E
+		fcb	0		; $011F: ב-Dragon 64 ‏5 (קצב חזרת מקש); ב-32 פתוח, כנראה 0 (קורא 3.2)
+		fcb	78		; $0120 מתאר 0: מילות הפקודה ($80-$CD)
+		fdb	stmtab,stmtbl
+		fcb	34		; מילות הפונקציה ($FF $80-$A1)
+		fdb	fntab,fntbl
+lptab		fcb	$ff,$ff,1,13,10,0,0,0,0
+; @endnofill
+; ---------- שגיאות (mit: ERROR; קורא: מדפסת, טבלת השגיאות) ----------
+; כל שגיאה: B = הקוד (ההיסט בטבלה, 2 לכל שגיאה), ונופלים דרך ה-cmpx עד error
+err_nf		ldb	#0
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_sn		ldb	#2
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_rg		ldb	#4
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_od		ldb	#6
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_fc		ldb	#8
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_ov		ldb	#10
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_om		ldb	#12
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_ul		ldb	#14
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_bs		ldb	#16
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_dd		ldb	#18
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_dv0		ldb	#20
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_id		ldb	#22
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_tm		ldb	#24
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_os		ldb	#26
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_ls		ldb	#28
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_st		ldb	#30
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_cn		ldb	#32
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_uf		ldb	#34
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_fd		ldb	#36
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_ao		ldb	#38
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_dn		ldb	#40
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_io		ldb	#42
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_fm		ldb	#44
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_no		ldb	#46
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_ie		ldb	#48
+		fcb	$8c		; cmpx #: מדלג על ה-ldb הבא
+err_ds		ldb	#50
+		lbra	error		; (השרשרת עברה לכאן ב-22.10, רחוק מהכתובות הקבועות)
 		include	"mitfp.s"
 		include	"mitrun.s"
 		include	"mitstr.s"
 		include	"mitary.s"
 		include	"mitctl.s"
 		include	"mitfunc.s"
+		include	"entries.s"		; מתאמים לכתובות הקבועות של המקור
+		include	"mitmem.s"		; (עבר לכאן ב-22.10, כדי לפנות מקום למעלה לכתובות הקבועות)
 
 ; ---------- שבעת המצביעים ב-$A000 (docs/DRAGON-SPEC-INTERFACES.md 3ב, DRAGON-SPEC-TAPE.md 1.10) ----------
 ; הקוד שלפני הטבלה חייב להיגמר לפני $A000 (אחרת האסמבלר נותן שגיאה). המקום שנשאר פנוי מתמלא ב-$FF
@@ -961,7 +1127,7 @@ fntab		fcs	"SGN"
 		fdb	tblkwr		; $A008 כתיבת בלוק
 		fdb	$8012		; $A00A ג'ויסטיקים
 		fdb	$801b		; $A00C מבוא קלטת (כמו במקור: דרך הכניסה)
-		include	"mitmem.s"		; אחרי הטבלה: הקוד שלפניה צריך להיכנס עד $A000
+		jmp	fn_hex		; $A00E: הפונקציה HEX$ (קורא 1; תוכנות של אז קוראות לה)
 		include	"mitmath.s"		; גם הוא אחרי הטבלה (המקום שלפני $A000 התמלא)
 		include	"mitscr.s"
 		include	"mitedit.s"
@@ -973,13 +1139,12 @@ fntab		fcs	"SGN"
 		include	"mittape.s"
 		include	"mitfile.s"
 		include	"io.s"
-		include	"testq.s"
 
 ; פסיקת השדה (קורא: צליל 4, 9.5): רק כשהדגל ב-$FF03 דולק. TIMER, ואחריו התו של PLAY, ורק אם אין תו: SOUND
 irq		lda	PIA0+3
 		bpl	9F
 		lda	PIA0+2
-		ldx	TICKS
+irqtk		ldx	TICKS		; ($9D46: כניסה אחרי האישור)
 		leax	1,x
 		stx	TICKS
 		ldd	PLYTMR
@@ -1005,4 +1170,4 @@ irq		lda	PIA0+3
 9		rti
 
 		org	$bff2
-		fdb	$0100,$0103,$010f,$010c,$0106,$0109,reset	; SWI3 SWI2 FIRQ IRQ SWI NMI דרך ה-RAM (קורא 3.1)
+		fdb	$0100,$0103,$010f,$010c,$0106,$0109,$b3b4	; SWI3 SWI2 FIRQ IRQ SWI NMI דרך ה-RAM (קורא 3.1)

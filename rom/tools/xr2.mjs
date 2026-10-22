@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 
 const exec = promisify(execFile);
 const source = fileURLToPath(new URL('../src/', import.meta.url));
+const testcartSrc = fileURLToPath(new URL('./testcart.s', import.meta.url));
 
 // מספרים באורך משתנה: ביטי הפתיחה קובעים כמה בתים לקרוא.
 function reader(data, start = 0) {
@@ -41,7 +42,7 @@ function reader(data, start = 0) {
   return { nodes, uint };
 }
 
-function snapshot(data) {
+export function snapshot(data) {
   const header = Buffer.from('#!/usr/bin/env xroar\n# 6809.org.uk\n');
   if (!data.subarray(0, header.length).equals(header)) throw new Error('Unsupported XRoar snapshot header');
   const root = reader(data, header.length).nodes();
@@ -87,12 +88,38 @@ function snapshot(data) {
     pia0cra: pia('PIA0', 1, 1), pia0crb: pia('PIA0', 2, 1), ram, screen: rows.join('\n').replace(/\n+$/, ''), pia1b };
 }
 
+
+// buildTest: בונה את ה-ROM מ-src (בלי שינוי), את מחסנית הבדיקות עם השורות, ומפנה את $BBE5 בעותק הבדיקה אל המחסנית.
+// מחזיר את קובץ המחסנית ואת כל הסמלים (ROM ומחסנית). משותף ל-runRom ול-sndtrace.mjs
+export async function buildTest(src, dir, rom, sym, input, wallTimeout = 20000) {
+  // הקלדה: מחסנית הבדיקות (testcart.s) ב-$C000, והשורות אחריה. ב-ROM אין קוד בדיקות: רק בעותק הבדיקה
+  // ה-JMP שב-$BBE5 (סריקת המקלדת) מופנה למחסנית
+  await exec('asm6809', ['-B', '-o', rom, '-s', sym, 'exp.s'], { cwd: src, timeout: wallTimeout, killSignal: 'SIGKILL' });
+  const symbols = new Map([...((await readFile(sym, 'utf8')).matchAll(/^(\w+)\s+equ\s+(\d+)\s*$/gm))].map(m => [m[1], Number(m[2])]));
+  const hex = n => '$' + symbols.get(n).toString(16);
+  for (const n of ['keyindex', 'gk_r', 'brk_r', 'ink_r', 'CURLIN']) if (!symbols.has(n)) throw new Error(`Missing ROM symbol ${n}`);
+  const cartBin = join(dir, 'testcart.bin'), cartSym = join(dir, 'testcart.sym');
+  await exec('asm6809', ['-B', '-o', cartBin, '-s', cartSym, '-d', `KEYIDX=${hex('keyindex')}`, '-d', `GKRET=${hex('gk_r')}`,
+    '-d', `BRKRET=${hex('brk_r')}`, '-d', `INKRET=${hex('ink_r')}`, '-d', `CURLIN=${hex('CURLIN')}`, testcartSrc], { timeout: wallTimeout, killSignal: 'SIGKILL' });
+  for (const m of (await readFile(cartSym, 'utf8')).matchAll(/^(\w+)\s+equ\s+(\d+)\s*$/gm)) symbols.set(m[1], Number(m[2]));
+  const code = await readFile(cartBin);
+  if (code.length + input.length > 8192) throw new Error(`ROM input is ${input.length} bytes; maximum is ${8192 - code.length}`);
+  code.writeUInt16BE(input.length, 2);   // tqlen
+  const cart = join(dir, 'testq.rom');
+  await writeFile(cart, Buffer.concat([code, input, Buffer.alloc(8192 - code.length - input.length)]));   // 8K מלאים
+  const image = await readFile(rom);
+  if (image[0x3be5] !== 0x7e) throw new Error('Expected JMP at $BBE5');
+  image.writeUInt16BE(symbols.get('tq_pol'), 0x3be6);
+  await writeFile(rom, image);
+  return { cart, symbols };
+}
+
 export async function runRom(lines, opts = {}) {
   if (!Array.isArray(lines) || lines.some(line => typeof line !== 'string' || /[^\x03\x0c\x20-\x7e]/.test(line)))
     throw new Error('ROM input must be an array of printable ASCII lines (\\x03 = BREAK, \\x0c = CLEAR)');
   const input = Buffer.from(lines.map(line => line + '\r').join(''), 'ascii');
-  if (input.length > 8192) throw new Error(`ROM input is ${input.length} bytes; maximum is 8192 bytes including CRs (cartridge at $C000)`);
-  const { trapSym = 'gk_scan', range, timeout = 5, wallTimeout = 20000 } = opts;
+  if (input.length > 8192) throw new Error(`ROM input is ${input.length} bytes; maximum is about 8100 bytes including CRs (cartridge at $C000)`);
+  const { trapSym = 'tq_idle', range, timeout = 5, wallTimeout = 20000 } = opts;
   if (!Number.isFinite(timeout) || timeout <= 0 || !Number.isFinite(wallTimeout) || wallTimeout <= 0)
     throw new Error('Timeouts must be positive finite numbers');
   if (range !== undefined && !/^[1-9]\d*(?:-[1-9]\d*)?$/.test(String(range)))
@@ -127,12 +154,7 @@ export async function runRom(lines, opts = {}) {
         sta PIA0+1
         clr PIA0`));
     }
-    // התור המוקלד: במחסנית ב-$C000 (ה-ROM מלא), וב-ROM רק האורך והכתובת
-    const cart = join(dir, 'testq.rom');
-    await writeFile(cart, Buffer.concat([input, Buffer.alloc(8192 - input.length)]));   // 8K מלאים (קובץ קטן משתקף)
-    await writeFile(join(src, 'testq.s'), `testq\t\tfdb\t${input.length},$c000\n`);
-    await exec('asm6809', ['-B', '-o', rom, '-s', sym, 'exp.s'], { cwd: src, timeout: wallTimeout, killSignal: 'SIGKILL' });
-    const symbols = new Map([...((await readFile(sym, 'utf8')).matchAll(/^(\w+)\s+equ\s+(\d+)\s*$/gm))].map(m => [m[1], Number(m[2])]));
+    const { cart, symbols } = await buildTest(src, dir, rom, sym, input, wallTimeout);
     if (!symbols.has(trapSym)) throw new Error(`Unknown trap symbol: ${trapSym}`);
     const args = ['-no-tape-fast', '-no-tape-pad-auto', '-ui', 'null', '-ao', 'null', '-machine', 'dragon32', '-extbas', rom, '-no-ratelimit', '-trap', `pc=0x${symbols.get(trapSym).toString(16)}`];
     args.push('-cart', 'testq', '-cart-type', 'rom', '-cart-rom', cart, '-no-cart-autorun');
@@ -140,7 +162,8 @@ export async function runRom(lines, opts = {}) {
     if (opts.xroarArgs) args.push(...opts.xroarArgs);   // הגדרות נוספות ל-XRoar (למשל -tape-ao-rate)
     if (opts.tapeWrite) args.push('-tape-write', opts.tapeWrite);
     if (range !== undefined) args.push('-trap-range', String(range));
-    args.push('-trap-snap', sna, '-trap-timeout', '0', '-timeout', String(timeout));
+    // כמו במחשב האמיתי, לולאת ההמתנה מהבהבת (עם השהיה של כ-10 אלפיות) לפני כל בדיקת מקש: לכל תו מוקלד מוסיפים זמן
+    args.push('-trap-snap', sna, '-trap-timeout', '0', '-timeout', String(timeout + Math.ceil(input.length * 0.012)));
     await exec('xroar', args, { timeout: wallTimeout, killSignal: 'SIGKILL' });
     let data;
     try { data = await readFile(sna); }
