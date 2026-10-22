@@ -153,12 +153,24 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   showTab(tab, false);
   // מה עובר לכל לשונית בזמן המסך המלא
   panes.commands.appendChild(createCommands({ root, machine, powerOn, input }));
+  // הדפים "יומן המסע" ו"ההיסטוריה של ה-Dragon": שורת קישורים שרואים בטלפון (במסך הפתיחה ובלשונית "מדף")
+  const pagesRow = () => {
+    const row = document.createElement('nav');
+    row.className = 'd32-pages';
+    row.setAttribute('aria-label', tr('עוד באתר', 'More on the site'));
+    row.innerHTML = '<a href="' + (EN ? '/en/story/' : '/story/') + '"><span aria-hidden="true">📜</span> ' + tr('יומן המסע', 'The journey') + '</a>'
+      + '<a href="' + (EN ? '/en/dragon-history/' : '/dragon-history/') + '"><span aria-hidden="true">🐉</span> ' + tr('ההיסטוריה של ה-<bdi dir="ltr">Dragon</bdi>', 'The history of the <bdi dir="ltr">Dragon</bdi>') + '</a>';
+    return row;
+  };
   // בטלפון הפס העליון צר: הקישור למכונת ה-Dragon בראש לשונית "מדף"
   const labLink = document.createElement('a');
   labLink.className = 'd32-lab d32-lab-shelf';
   labLink.href = EN ? '/en/lab/1982/' : '/lab/1982/';
   labLink.innerHTML = '<span aria-hidden="true">🧪</span> ' + tr('מכונת ה-Dragon (בבנייה): השבבים של ה-Dragon 32, עם BASIC שכתבנו', 'The Dragon machine (being built): the Dragon 32 chips, with a BASIC we wrote');
   panes.shelf.appendChild(labLink);
+  const shelfPages = pagesRow();
+  shelfPages.classList.add('d32-pages-shelf');
+  panes.shelf.appendChild(shelfPages);
   const MOVE = [['.d32-share-row', 'program'], ['.d32-cartshelf', 'shelf'], ['.d32-shelf:not(.d32-cartshelf)', 'shelf']];
   const moved = [];
   function toTabs() {
@@ -529,6 +541,9 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   helloLab.href = EN ? '/en/lab/1982/' : '/lab/1982/';
   helloLab.innerHTML = '<span aria-hidden="true">🧪</span> ' + tr('מכונת ה-<bdi dir="ltr">Dragon</bdi> (בבנייה): השבבים של ה-<bdi dir="ltr">Dragon 32</bdi>, עם <bdi dir="ltr">BASIC</bdi> שכתבנו', 'The <bdi dir="ltr">Dragon</bdi> machine (being built): the <bdi dir="ltr">Dragon 32</bdi> chips, with a <bdi dir="ltr">BASIC</bdi> we wrote');
   tv.after(helloLab);
+  const helloPages = pagesRow();
+  helloPages.classList.add('d32-pages-hello');
+  helloLab.after(helloPages);
   function enterPhone() {
     if (phone || active) return;
     left = false;
