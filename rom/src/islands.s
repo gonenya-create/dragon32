@@ -113,7 +113,7 @@ isl_bb26_9	rts
 
 ; @island $852B
 ; מחכים למקש בלי סמן, ובודקים אותו (קורא 8.4)
-isl_852b	bsr	inkey
+isl_852b	jsr	$bbe5
 		beq	isl_852b
 		bra	brktst
 
@@ -219,8 +219,9 @@ isl_bac8	jmp	sndoff
 		jmp	blink
 
 ; @island $BBE5
+; (בבדיקות בלבד, tools/xr2.mjs מפנה את ה-JMP הזה למחסנית הבדיקות, שמקלידה את השורות. ב-ROM עצמו אין קוד בדיקות)
 ; סריקת המקלדת (היעד של $8006 ו-$A000)
-		jmp	inkey
+		jmp	keyindex
 
 ; @island $BCF5
 ; תו למדפסת, בלי טיפול בסוף שורה (קורא 8.6)

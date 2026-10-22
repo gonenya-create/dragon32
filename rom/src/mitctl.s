@@ -193,14 +193,8 @@ fndoer		bsr	getfnm
 		rts
 
 ; brkchk: בין פקודות. BREAK עוצר; מקש אחר נשמר בשביל INKEY$. קודם בדיקה מהירה: אף מקש לא לחוץ
-brkchk		ldd	KQCNT		; תור הבדיקות: רק BREAK שעומד ראשון, ורק כשתוכנית רצה (כדי לבדוק
-		bne	5F		; BREAK גם ב-INPUT, אחרי RUN שהוקלד מראש)
-		clr	PIA0+2
-		lda	PIA0
-		coma
-		anda	#$7f
-		beq	9F
-		lbsr	keyindex
+brkchk		jsr	$bbe5		; סריקת המקלדת דרך הכניסה הקבועה, כמו במקור (קורא 2.5)
+brk_r		beq	9F
 brktst		cmpa	#3
 		beq	2F
 		cmpa	#$13		; SHIFT-@: עוצרים עד המקש הבא, ובודקים גם אותו (קורא 2.5, 8.4)
@@ -209,13 +203,6 @@ brktst		cmpa	#3
 		beq	9F
 		sta	IKEYIM
 9		rts			; (גם של end ו-cont)
-5		lda	CURLIN		; התור
-		inca
-		beq	9B
-		lda	[KQPTR]
-		cmpa	#3
-		bne	9B
-		lbsr	gk_pop
 2		orcc	#5		; BREAK: C=1, Z=1, וממשיכים כמו STOP (שם גם יוצאים מ-newstt)
 ; ---------- STOP / END / CONT, ו-BREAK (mit: STOP, END, STOPC, CONT, ISCNTC) ----------
 stop		orcc	#1		; BREAK (orcc/andcc לא משנים את Z)

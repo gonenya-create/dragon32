@@ -36,7 +36,8 @@ CBLCNT		equ	$8f		; מונה ההבהוב של הסמן (קורא: 50 בהדלק�
 TICKS		equ	$0112		; TIMER (ספר: Inside)
 
 ; ---------- משתני הניסוי, באזור שהספרים מסמנים כפנוי ----------
-KPREV		equ	$03ea		; 8 בתים
+KALL		equ	$0151		; מצב כולל של המקלדת: כל השורות כשכל העמודות למטה (מפרט הזיכרון, כמו במקור)
+KPREV		equ	$0152		; 8 בתים: מצב כל עמודה בסריקה הקודמת ($0152-$0159, כמו במקור)
 KFOUND		equ	$03f2
 KNEW		equ	$03f3
 KROW		equ	$03f4
@@ -47,8 +48,6 @@ KPRE		equ	$03f9		; קידומת המילה שנמצאה: 0 פקודה, $FF פו�
 LEND		equ	$03fa		; 2 בתים: סוף טווח LIST
 LASTKEY		equ	$03fc
 
-KQPTR		equ	$f8		; רק לבדיקות: המקש הבא בתור המוקלד (התור עצמו ב-ROM, testq)
-KQCNT		equ	$fa		; כמה מקשים נשארו, 2 בתים (באזור הפנוי $EA-$FF, קורא)
 LINBUF		equ	$02dd		; מאגר השורה (קורא: BUF ב-$02DD)
 LINMAX		equ	249
 CRB		equ	$02dc		; השורה המכווצת: במקום, בתוך מאגר השורה, בית אחד לפני הקלט (קורא: קלטת 11).
@@ -88,7 +87,7 @@ HK_DECR		equ	$01a6		; 25 פתיחת שורה (LIST, EDIT)		; ספר: STKTOP אח
 ; ---------- הכניסות הקבועות ב-$8000 (docs/DRAGON-SPEC-INTERFACES.md 3ג, DRAGON-SPEC-TAPE.md 1.10) ----------
 		jmp	hw_init		; $8000 אתחול חומרה (חוזר דרך Y)
 		jmp	swinit		; $8003 אתחול תוכנה
-		jmp	inkey		; $8006 מקלדת
+		jmp	$bbe5		; $8006 מקלדת (כמו במקור: דרך $BBE5)
 		jmp	blink		; $8009 הבהוב הסמן
 		jmp	putc		; $800C פלט למסך
 		jmp	prtout		; $800F פלט למדפסת
@@ -407,11 +406,6 @@ isl_8342_e	;@isl
 		fill	$ff,$837a-*	;@isl
 		jmp	main	;@isl
 isl_8371_e	;@isl
-		leax	testq,pcr	; תור הבדיקות: אורך וכתובת. ב-ROM האמיתי 0; בבדיקות התור במחסנית ב-$C000
-		ldd	,x
-		std	KQCNT
-		ldx	2,x
-		stx	KQPTR
 		; מצב ההדלקה (ספר): תוכנית ב-$1E01, אפס ב-$1E00, גבולות הזיכרון והמחרוזות
 		; (FRETOP ו-TEMPPT: נקבעים ב-scrtch/runc)
 		ldx	#$1e01
@@ -458,15 +452,13 @@ warm		nop			; ה-NOP שהאיפוס בודק
 		sta	PIA0+3
 		clr	DEVNUM
 		lds	STKTOP		; המחסנית והזמניים; אין CONT
-		bra	isl_83ed_e	;@isl
-		fill	$ff,$83ed-*	;@isl
-		jmp	lnkprg	;@isl
-isl_83ed_e	;@isl
 		clr	,-s
 		lbsr	rcsub
 		andcc	#$af
 		lbsr	cls
 		bra	main_ok
+		fill	$ff,$83ed-*	;@isl
+		jmp	lnkprg	;@isl
 ; firq (קורא 3.4): רק כשקו המחסנית דלק ($FF23 ביט 7). כ-1.2 שניות המתנה, אתחול חומרה (שמכבה את
 ; פסיקת המחסנית), ואין חזרה ל-BASIC ב-RESET. ואז $C000
 firq		tst	PIA1+3
@@ -485,6 +477,11 @@ firq		tst	PIA1+3
 ; endcon: סוף התוכנית או סוף השורה הישירה (mit: ENDCON). המחסנית לא מתאפסת
 endcon
 main_ok		bsr	condcr
+		leax	m_ok,pcr
+mo_puts		lbsr	puts
+main		lbsr	getline
+		bcs	main_ok		; BREAK
+		ldx	#LINBUF
 		bra	isl_841f_e	;@isl
 		fill	$ff,$841f-*	;@isl
 		ldd	TXTTAB	;@isl
@@ -492,11 +489,6 @@ main_ok		bsr	condcr
 		std	TXTPTR	;@isl
 		lbra	runstk	;@isl
 isl_841f_e	;@isl
-		leax	m_ok,pcr
-mo_puts		lbsr	puts
-main		lbsr	getline
-		bcs	main_ok		; BREAK
-		ldx	#LINBUF
 		lbsr	skipsp
 		beq	main		; שורה ריקה
 		lbsr	isdig
@@ -547,18 +539,18 @@ error		jsr	HK_ERR1		; נקודות החיבור 17 ו-18, עם B = הקוד
 		lbsr	rcsub
 		bsr	condcr
 		lda	#'?
-		bra	isl_849f_e	;@isl
-		fill	$ff,$849f-*	;@isl
-		jmp	newstt	;@isl
-		fill	$ff,$84a6-*	;@isl
-		jmp	newst2	;@isl
-isl_849f_e	;@isl
 		lbsr	chrout
 		puls	b
 		leax	errtab,pcr	; שתי האותיות מהטבלה, לפי B
 		abx
 		lda	,x+
 		lbsr	chrout
+		bra	isl_849f_e	;@isl
+		fill	$ff,$849f-*	;@isl
+		jmp	newstt	;@isl
+		fill	$ff,$84a6-*	;@isl
+		jmp	newst2	;@isl
+isl_849f_e	;@isl
 		lda	,x
 		lbsr	chrout
 		leax	m_err,pcr
@@ -586,14 +578,6 @@ linget		clra
 		rola
 		lslb
 		rola			; *8
-		bra	isl_84ed_e	;@isl
-		fill	$ff,$84ed-*	;@isl
-		tfr	a,b	;@isl
-		lslb	;@isl
-		abx	;@isl
-		jsr	<chrget	;@isl
-		jmp	[,x]	;@isl
-isl_84ed_e	;@isl
 		addd	1,s		; *10
 		addb	,s+
 		adca	#0
@@ -603,6 +587,14 @@ isl_84ed_e	;@isl
 
 ; ---------- שמירת שורה (mit: MAIN1/NODEL/STOLOP, m6502.asm:1567-1641) ----------
 storeline	bsr	linget		; D = מספר השורה
+		bra	isl_84ed_e	;@isl
+		fill	$ff,$84ed-*	;@isl
+		tfr	a,b	;@isl
+		lslb	;@isl
+		abx	;@isl
+		jsr	<chrget	;@isl
+		jmp	[,x]	;@isl
+isl_84ed_e	;@isl
 		std	LINNUM
 storel2					; EDIT נכנס כאן: LINNUM מוכן, X = הטקסט
 		lbsr	skipsp		; רווחים אחרי המספר לא נשמרים (mit: CHRGET מדלג עליהם)
@@ -613,29 +605,27 @@ storel2					; EDIT נכנס כאן: LINNUM מוכן, X = הטקסט
 		ldd	LINNUM
 		bsr	fndlin		; Y = השורה (C=1 אם קיימת)
 		bcc	1F
-		bra	isl_851b_e	;@isl
-		fill	$ff,$851b-*	;@isl
-		jmp	brkchk	;@isl
-isl_851b_e	;@isl
 		ldx	,y		; קיימת: קודם מוחקים (mit: m6502.asm:1571-1608). X = השורה הבאה
 		tfr	y,u
 5		cmpx	VARTAB
 		bhs	6F
 		lda	,x+
-		bra	isl_852b_e	;@isl
-		fill	$ff,$852b-*	;@isl
-isl_852b	lbsr	inkey	;@isl
-		beq	isl_852b	;@isl
-		lbra	brktst	;@isl
-isl_852b_e	;@isl
 		sta	,u+
 		bra	5B
+		fill	$ff,$851b-*	;@isl
+		jmp	brkchk	;@isl
 6		stu	VARTAB
 1		tst	CRB
 		beq	9F		; רק מספר: רק מחיקה
 		; מזיזים את [Y..VARTAB) למעלה באורך השורה (mit: BLTU)
 		ldd	VARTAB
 		addd	,s
+		bra	isl_852b_e	;@isl
+		fill	$ff,$852b-*	;@isl
+isl_852b	jsr	$bbe5	;@isl
+		beq	isl_852b	;@isl
+		lbra	brktst	;@isl
+isl_852b_e	;@isl
 		pshs	d,y		; יש מקום? אחרת ?OM לפני שמזיזים משהו (mit: REASON). Y = הגבול התחתון
 		lbsr	reason
 		ldx	VARTAB
@@ -691,10 +681,6 @@ lnkprg		ldx	TXTTAB
 ; scrtch (NEW): שני אפסים בתחילת התוכנית, והמשתנים אחריהם (mit: SCRTCH, m6502.asm:1919)
 scrtch		ldx	TXTTAB
 		clr	,x+
-		bra	isl_85a5_e	;@isl
-		fill	$ff,$85a5-*	;@isl
-		jmp	run	;@isl
-isl_85a5_e	;@isl
 		clr	,x+
 		stx	VARTAB
 ; runc: מאפסים משתנים ומערכים (mit: RUNC/CLEARC)
@@ -703,6 +689,10 @@ runc		jsr	HK_STR		; 20 (ניקוי המשתנים)
 		std	FRETOP
 		ldd	VARTAB
 		std	ARYTAB
+		bra	isl_85a5_e	;@isl
+		fill	$ff,$85a5-*	;@isl
+		jmp	run	;@isl
+isl_85a5_e	;@isl
 		std	STREND
 		ldd	TXTTAB		; RESTORE
 		subd	#1
@@ -1149,7 +1139,6 @@ err_ds		ldb	#50
 		include	"mittape.s"
 		include	"mitfile.s"
 		include	"io.s"
-		include	"testq.s"
 
 ; פסיקת השדה (קורא: צליל 4, 9.5): רק כשהדגל ב-$FF03 דולק. TIMER, ואחריו התו של PLAY, ורק אם אין תו: SOUND
 irq		lda	PIA0+3

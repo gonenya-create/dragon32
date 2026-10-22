@@ -188,10 +188,6 @@ strspa		sta	DSCTMP
 		tfr	d,x
 		leax	1,x
 		stx	FRESPC
-		bra	isl_957a_e	;@isl
-		fill	$ff,$957a-*	;@isl
-		jmp	prnum	;@isl
-isl_957a_e	;@isl
 		stx	DSCTMP+2
 		lda	DSCTMP
 		rts
@@ -201,9 +197,11 @@ isl_957a_e	;@isl
 		lbsr	garba2
 		bra	1B
 GARBFL		equ	$07
+		fill	$ff,$957a-*	;@isl
+		jmp	prnum	;@isl
 
 ; ---------- פונקציות מחרוזת בסיסיות (mit: LEN 4730, ASC 4741, CHR 4627, LEFT 4642, RIGHT 4672, MID 4677) ----------
-fn_asc		lbsr	frestr
+fn_asc		bsr	frestr
 		clr	VALTYP
 		tsta
 		beq	str_fc

@@ -245,7 +245,7 @@ await check('PRINT @n: cell 0-511 (@100,"Q" → $0464); @512 and @-1: ?FC', ['PR
 await check('SET/RESET/POINT (reader): colour per cell, colour 0 keeps it, RESET keeps the colour, text cell: RESET → $80, POINT -1/0/colour', ['SET(0,0,3):SET(1,1,0):A=POINT(0,0):B=POINT(1,1):C=POINT(1,0)', 'RESET(0,0):D=PEEK(1024):RESET(4,4):E=PEEK(1090)', 'SET(8,8,0):F=PEEK(1156):G=POINT(20,20)', 'PRINT A;B;C;D;E;F;G'], outLines(' 3  3  0  161  128  136 -1'));
 await check('SET/RESET errors: x 64 or y 32 ?FC, colour 9 ?FC, colour missing ?SN', ['SET(64,0,1)', 'SET(0,32,1)', 'SET(0,0,9)', 'SET(0,0)'], r => (r.screen.match(/\?FC ERROR/g) || []).length === 3 && /\?SN ERROR\nOK$/.test(r.screen.replace(/\n@$/, '')) || r.screen.split('\n').slice(-8).join(' | '));
 await check('CLEAR key while typing: the screen is cleared and the line starts again (reader)', ['PRINT 1\fPRINT 2'], r => /^PRINT 2\n 2\nOK/.test(r.screen) || r.screen.split('\n').slice(0, 3).join(' | '));
-await check('cursor blink counter CBLCNT ($8F) = 50 at power-on (reader)', [], r => r.ram[0x8f] === 50 || 'CBLCNT ' + r.ram[0x8f]);
+await check('cursor blink counter CBLCNT ($8F) = 50 at power-on (reader): 49 at the first poll, after one blink (wait loop: blink, then poll)', [], r => r.ram[0x8f] === 49 || 'CBLCNT ' + r.ram[0x8f]);
 
 console.log('stage 3 part 2: editing tools (reader: docs/DRAGON-SPEC-EDIT.md)');
 await check('TRON: [n] at each program line entered, no spaces, not again after a colon; flag $AF = $4F; TROFF: 0', ['10 PRINT "A";', '20 PRINT "B";:PRINT "C";', '30 GOTO 50', '40 PRINT "X"', '50 END', 'TRON', 'RUN', 'TROFF', 'RUN'], r =>

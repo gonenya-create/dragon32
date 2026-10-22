@@ -49,13 +49,6 @@ newstt		jsr	HK_NEWS		; 21
 newst2		ldx	TXTPTR		; ($84A6: אחרי בדיקת ה-BREAK)
 		stx	TXTBEG		; תחילת הפקודה: לשם חוזרים אחרי קלט שגוי ב-INPUT (קורא: TXTBEG)
 		lda	,x
-		bra	isl_8e4f_e	;@isl
-		fill	$ff,$8e4f-*	;@isl
-		jsr	<chrget	;@isl
-		jsr	frmevl	;@isl
-		jsr	conint	;@isl
-		jmp	<chrgot	;@isl
-isl_8e4f_e	;@isl
 		bne	2F
 		ldd	1,x		; הקישור
 		lbeq	endcon		; סוף התוכנית (או סוף השורה הישירה)
@@ -63,6 +56,13 @@ isl_8e4f_e	;@isl
 		std	CURLIN
 		leax	4,x
 		stx	TXTPTR
+		bra	isl_8e4f_e	;@isl
+		fill	$ff,$8e4f-*	;@isl
+		jsr	<chrget	;@isl
+		jsr	frmevl	;@isl
+		jsr	conint	;@isl
+		jmp	<chrgot	;@isl
+isl_8e4f_e	;@isl
 		lbsr	trace		; TRON: [n] (קורא)
 gone		jsr	<chrget
 		bsr	gone3
@@ -70,6 +70,13 @@ gone		jsr	<chrget
 2		cmpa	#':
 		beq	gone
 snerr		lbra	err_sn		; יציאה משותפת ל-?SN בסביבה
+gone3		beq	9F		; פקודה ריקה
+		jsr	HK_STMT		; 10, עם A = הבית
+		tsta
+		lbpl	let		; לא מילה שמורה: השמה
+		cmpa	#$ff		; פונקציה בתחילת פקודה: TIMER= (קורא)
+		bne	1F
+		bra	isl_8e7a_e	;@isl
 		fill	$ff,$8e7a-*	;@isl
 		jmp	x_adrbyt	;@isl
 		fill	$ff,$8e7e-*	;@isl
@@ -79,12 +86,7 @@ snerr		lbra	err_sn		; יציאה משותפת ל-?SN בסביבה
 		jsr	getadr	;@isl
 		tfr	d,x	;@isl
 		rts	;@isl
-gone3		beq	9F		; פקודה ריקה
-		jsr	HK_STMT		; 10, עם A = הבית
-		tsta
-		lbpl	let		; לא מילה שמורה: השמה
-		cmpa	#$ff		; פונקציה בתחילת פקודה: TIMER= (קורא)
-		bne	1F
+isl_8e7a_e	;@isl
 		ldx	TXTPTR		; (chrget לא משנה את X, כמו במקור)
 		lda	1,x
 		cmpa	#$9e
@@ -287,8 +289,6 @@ pr_lp		cmpa	#';
 5		jsr	<chrgot
 		beq	pr_cr
 		bra	pr_lp
-		fill	$ff,$903d-*	;@isl
-		jmp	print	;@isl
 ; פסיק (קורא: מדפסת 1.7, 7.2): לפני השדה האחרון, רווחים עד הכפולה הבאה של רוחב השדה; אחרת סוף שורה.
 ; מסך 16/16/32, מדפסת 16/116/132. לקלטת: כלום
 pr_comma	lbsr	istape
@@ -297,6 +297,10 @@ pr_comma	lbsr	istape
 		ldd	DEVLCF		; A = השדה האחרון, B = המקום
 		pshs	a
 		cmpb	,s+
+		bra	isl_903d_e	;@isl
+		fill	$ff,$903d-*	;@isl
+		jmp	print	;@isl
+isl_903d_e	;@isl
 		bhs	2F
 		tfr	b,a
 1		suba	DEVCFW
@@ -369,11 +373,6 @@ for		lbsr	let		; המשתנה מקבל את ערך ההתחלה; let שם ב-FOR
 		std	11,s
 		lda	4,x
 		sta	13,s
-		bra	isl_90e5_e	;@isl
-		fill	$ff,$90e5-*	;@isl
-		jmp	x_strout	;@isl
-		jmp	strprt	;@isl
-isl_90e5_e	;@isl
 		ldd	FORPNT		; [1-2] המשתנה
 		std	1,s
 		lda	#$80		; [0] FOR
@@ -385,6 +384,11 @@ RELSAV		equ	$03da		; זמני: המקום לפני סימן יחס
 ; stmend: X = הסוף של הפקודה הנוכחית (: או 0), בלי להזיז את TXTPTR (mit: DATAN)
 stmend		ldx	TXTPTR
 1		lda	,x
+		bra	isl_90e5_e	;@isl
+		fill	$ff,$90e5-*	;@isl
+		jmp	x_strout	;@isl
+		jmp	strprt	;@isl
+isl_90e5_e	;@isl
 		beq	9F
 		cmpa	#':
 		beq	9F

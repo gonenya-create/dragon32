@@ -274,12 +274,6 @@ fn_strng	lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את האר
 		beq	4F
 3		stb	,x+
 		deca
-		bra	isl_9d3d_e	;@isl
-		fill	$ff,$9d3d-*	;@isl
-		jmp	irq	;@isl
-		fill	$ff,$9d46-*	;@isl
-		jmp	irqtk	;@isl
-isl_9d3d_e	;@isl
 		bne	3B
 4		lbra	putnew
 
@@ -304,6 +298,12 @@ fn_varptr	lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את הא�
 		pshs	d
 		clrb
 		lbsr	ptrget
+		bra	isl_9d3d_e	;@isl
+		fill	$ff,$9d3d-*	;@isl
+		jmp	irq	;@isl
+		fill	$ff,$9d46-*	;@isl
+		jmp	irqtk	;@isl
+isl_9d3d_e	;@isl
 		puls	d
 		cmpd	STREND
 		lbne	err_fc
@@ -330,12 +330,8 @@ evadr		lbsr	frmevl
 ; המקש השמור ב-$87 (נשמר בין פקודות), אחרת סריקה. $87 מתאפס. אין מקש: מחרוזת ריקה
 fn_inkey	lda	IKEYIM
 		bne	1F
-		lda	CURLIN		; תור הבדיקות רק בזמן שתוכנית רצה (כמו BREAK); אחרת המקלדת
-		inca			; $FFxx רק במצב ישיר
-		bne	0F
-		lbsr	keyindex
-		bra	1F
-0		lbsr	inkey
+		jsr	$bbe5		; סריקה דרך הכניסה הקבועה (כמו במקור)
+ink_r
 1		clr	IKEYIM
 		sta	FACLO
 		pshs	a

@@ -464,7 +464,7 @@ isl_bbb5_e	;@isl
 		bne	4B
 		bra	isl_bbe5_e	;@isl
 		fill	$ff,$bbe5-*	;@isl
-		jmp	inkey	;@isl
+		jmp	keyindex	;@isl
 isl_bbe5_e	;@isl
 5		clr	LPTPOS
 		puls	a,b,x,pc

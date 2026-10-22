@@ -111,6 +111,14 @@ fadd		bsr	conupk
 		bra	faddt
 fsub		bsr	conupk
 fsubt		com	FACSGN
+finl2		bsr	arisg
+; faddt: FAC = ARG + FAC
+faddt		tst	FACEXP
+		beq	movfa		; FAC=0: התוצאה ARG
+		clr	FACOV		; ב-Dragon הבית הנוסף הקודם לא נכנס לחיבור (קורא; ב-mit נשמר ב-OLDOV)
+		clr	BITS
+		lda	ARGEXP
+		beq	9F		; ARG=0: התוצאה FAC
 		bra	isl_89a4_e	;@isl
 		fill	$ff,$89a4-*	;@isl
 		ldb	#')	;@isl
@@ -123,14 +131,6 @@ fsubt		com	FACSGN
 		fill	$ff,$89b4-*	;@isl
 		jmp	err_sn	;@isl
 isl_89a4_e	;@isl
-finl2		lbsr	arisg
-; faddt: FAC = ARG + FAC
-faddt		tst	FACEXP
-		beq	movfa		; FAC=0: התוצאה ARG
-		clr	FACOV		; ב-Dragon הבית הנוסף הקודם לא נכנס לחיבור (קורא; ב-mit נשמר ב-OLDOV)
-		clr	BITS
-		lda	ARGEXP
-		beq	9F		; ARG=0: התוצאה FAC
 		ldx	#ARGEXP		; X = המוזז (הקטן), Y = הגדול
 		ldy	#FACEXP
 		suba	FACEXP
@@ -337,6 +337,14 @@ fprts		rts
 fmult		lbsr	conupk
 fmultt		tst	FACEXP
 		beq	fprts
+		bsr	muldiv
+		clra
+		clrb
+		std	RESHO
+		std	RESMO			; ב-Dragon הבית הנוסף לא נכנס לכפל (קורא; ב-mit כן)
+		bsr	mltply
+		ldx	#FACLO+1	; FACLO, FACMO, FACMOH, FACHO
+1		lda	,-x
 		bra	isl_8b2d_e	;@isl
 		fill	$ff,$8b2d-*	;@isl
 		lbsr	chknum	;@isl
@@ -363,14 +371,6 @@ isl_8b2d_2	std	FACMO	;@isl
 		tstb	;@isl
 		rts	;@isl
 isl_8b2d_e	;@isl
-		bsr	muldiv
-		clra
-		clrb
-		std	RESHO
-		std	RESMO			; ב-Dragon הבית הנוסף לא נכנס לכפל (קורא; ב-mit כן)
-		lbsr	mltply
-		ldx	#FACLO+1	; FACLO, FACMO, FACMOH, FACHO
-1		lda	,-x
 		lbsr	mltply
 		cmpx	#FACHO
 		bne	1B
@@ -383,11 +383,6 @@ movfr		ldd	RESHO
 ; ---------- חילוק (mit: FDIVT 5393, DIVIDE 5410) ----------
 fdiv		lbsr	conupk
 fdivt		ldb	FACEXP
-		bra	isl_8b8a_e	;@isl
-		fill	$ff,$8b8a-*	;@isl
-		jmp	err_bs	;@isl
-		jmp	err_fc	;@isl
-isl_8b8a_e	;@isl
 		lbeq	err_dv0		; ב-Dragon בלי עיגול בכניסה; המנה מתעגלת בסוף (קורא)
 		negb
 		clra
@@ -395,6 +390,11 @@ isl_8b8a_e	;@isl
 		lbsr	incexp		; ועוד 1
 		ldu	#RESHO
 		lda	#1
+		bra	isl_8b8a_e	;@isl
+		fill	$ff,$8b8a-*	;@isl
+		jmp	err_bs	;@isl
+		jmp	err_fc	;@isl
+isl_8b8a_e	;@isl
 dvcmp		ldx	FACHO		; ARG >= FAC? אז סיבית 1
 		cmpx	ARGHO
 		bne	savq		; C = FAC < ARG
@@ -469,12 +469,6 @@ fin_nx		jsr	<chrget
 fin_e		cmpa	#'E
 		bne	fin_end
 		jsr	<chrget
-		bra	isl_8c36_e	;@isl
-		fill	$ff,$8c36-*	;@isl
-		clra	;@isl
-		clr	VALTYP	;@isl
-		lbra	givd	;@isl
-isl_8c36_e	;@isl
 		ldx	#EXPSGN
 		bsr	fsgn
 		bcc	fin_end
@@ -483,6 +477,12 @@ fin_ed		suba	#'0		; המעריך כפול 10 ועוד הספרה
 		cmpb	#10
 		blo	3F
 		tst	EXPSGN
+		bra	isl_8c36_e	;@isl
+		fill	$ff,$8c36-*	;@isl
+		clra	;@isl
+		clr	VALTYP	;@isl
+		lbra	givd	;@isl
+isl_8c36_e	;@isl
 		beq	ovf2
 		ldb	#100
 		bra	4F
