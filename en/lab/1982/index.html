@@ -80,22 +80,22 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
   <a href="/en/">← Back to the app</a>
 </header>
 <main>
-  <p class="note">This is <strong>the Dragon machine</strong>: the Dragon 32's chips (the 6809 CPU, memory and video), running <strong>a BASIC we wrote ourselves</strong>, without the original ROM. <strong>It is still being built:</strong> the BASIC behaves like the original, but inside its routines sit at different addresses, so 1982 machine-code software does not run on it yet. <a href="./building/">What we are building now</a>. Click the screen and type, or use the keyboard below.</p>
+  <p class="note">This is <strong>the Dragon machine</strong>: the Dragon 32's chips (the 6809 CPU, memory and video), running <strong>a BASIC we wrote ourselves</strong>, without the original ROM. <strong>It is still being built:</strong> the BASIC behaves like the original, and the routines that 1982 machine-code software called now sit at the original addresses. We have not yet tested real software from that time on it. <a href="./building/">What we are building now</a>. Click the screen and type, or use the keyboard below.</p>
   <div class="machine">
   <div class="tv"><canvas id="canvas" tabindex="0" oncontextmenu="event.preventDefault()" aria-label="Computer screen"></canvas></div>
   <div class="kbd" id="kbd" aria-label="Dragon 32 keyboard"></div>
   </div>
   <section class="shelf" aria-labelledby="shelf-title">
     <h2 id="shelf-title">Tape shelf</h2>
-    <p class="note">Tap a tape and the game loads and starts by itself.</p>
+    <p class="note">Tap a tape to put it in the cassette player. Type <code>CLOAD</code>, and after OK type <code>RUN</code>.</p>
     <details class="note how"><summary><strong>How did you load a game in 1982?</strong></summary>
       <p>Games were sold on audio cassettes. You put the tape in a cassette player wired to the computer and typed <code>CLOAD</code> ("load from cassette"). The computer listened to the tape for a few seconds and copied the game into memory. Then you typed <code>RUN</code> and the game started.</p>
-      <p>Here you just tap a tape, and the computer does it for you, so you can see what it looked like.</p>
+      <p>Here you tap a tape to put it in the player, and type just like then.</p>
     </details>
     <div class="tapes" id="tapes"></div>
     <p class="note" id="tape-status" role="status" aria-live="polite"></p>
     <h3 class="mine-title">My tapes</h3>
-    <p class="note">Write a program and type <code>CSAVE "NAME"</code> (up to 8 letters). It is recorded to tape and kept here. Load it by tapping the tape, or type <code>CLOAD "NAME"</code>.</p>
+    <p class="note">Write a program and type <code>CSAVE "NAME"</code> (up to 8 letters). It is recorded to tape and kept here. To load: tap the tape and type <code>CLOAD</code>, or type <code>CLOAD "NAME"</code>.</p>
     <div class="mytapes" id="mytapes"></div>
     <button type="button" class="mini upload" id="tape-upload">📂 Load a tape from a file</button>
     <input type="file" id="tape-file" accept=".cas" hidden>

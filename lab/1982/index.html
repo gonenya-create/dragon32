@@ -80,22 +80,22 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
   <a href="/">← חזרה לאפליקציה</a>
 </header>
 <main>
-  <p class="note">זו <strong>מכונת ה-Dragon</strong>: השבבים של ה-Dragon 32 (המעבד 6809, הזיכרון והמסך), עם <strong>BASIC שכתבנו בעצמנו</strong>, בלי ה-ROM המקורי. <strong>היא עוד בבנייה:</strong> ה-BASIC מתנהג כמו המקורי, אבל מבפנים השגרות יושבות בכתובות אחרות, ולכן תוכנות בשפת מכונה מ-1982 עוד לא רצות עליה. <a href="./building/">מה אנחנו בונים עכשיו</a>. לוחצים על המסך ומקלידים, או משתמשים במקלדת שלמטה.</p>
+  <p class="note">זו <strong>מכונת ה-Dragon</strong>: השבבים של ה-Dragon 32 (המעבד 6809, הזיכרון והמסך), עם <strong>BASIC שכתבנו בעצמנו</strong>, בלי ה-ROM המקורי. <strong>היא עוד בבנייה:</strong> ה-BASIC מתנהג כמו המקורי, והשגרות שתוכנות בשפת מכונה מ-1982 קראו להן יושבות עכשיו באותן כתובות כמו במקור. עוד לא בדקנו עליה תוכנות אמיתיות מאותה תקופה. <a href="./building/">מה אנחנו בונים עכשיו</a>. לוחצים על המסך ומקלידים, או משתמשים במקלדת שלמטה.</p>
   <div class="machine">
   <div class="tv"><canvas id="canvas" tabindex="0" oncontextmenu="event.preventDefault()" aria-label="מסך המחשב"></canvas></div>
   <div class="kbd" id="kbd" aria-label="מקלדת Dragon 32"></div>
   </div>
   <section class="shelf" aria-labelledby="shelf-title">
     <h2 id="shelf-title">מדף הקלטות</h2>
-    <p class="note">לוחצים על קלטת, והמשחק נטען ומתחיל לבד.</p>
+    <p class="note">לוחצים על קלטת, והיא נכנסת לרשמקול. מקלידים <code dir="ltr">CLOAD</code>, ואחרי ה-OK מקלידים <code dir="ltr">RUN</code>.</p>
     <details class="note how"><summary><strong>איך טענו משחק ב-1982?</strong></summary>
       <p>משחקים נמכרו על קלטות שמע. מכניסים קלטת לרשמקול שמחובר למחשב, ומקלידים <code dir="ltr">CLOAD</code> ("טען מהקלטת"). המחשב מקשיב לקלטת כמה שניות ומעתיק את המשחק לזיכרון. אחר כך מקלידים <code dir="ltr">RUN</code> ("הפעל"), והמשחק מתחיל.</p>
-      <p>כאן לוחצים על קלטת, והמחשב עושה את זה לבד, כדי שתראו איך זה נראה.</p>
+      <p>כאן לוחצים על קלטת כדי להכניס אותה לרשמקול, ומקלידים בדיוק כמו אז.</p>
     </details>
     <div class="tapes" id="tapes"></div>
     <p class="note" id="tape-status" role="status" aria-live="polite"></p>
     <h3 class="mine-title">הקלטות שלי</h3>
-    <p class="note">כותבים תוכנית ומקלידים <code dir="ltr">CSAVE "NAME"</code> (שם באנגלית, עד 8 אותיות). היא מוקלטת לקלטת ונשמרת כאן. טוענים בלחיצה על הקלטת, או מקלידים <code dir="ltr">CLOAD "NAME"</code>.</p>
+    <p class="note">כותבים תוכנית ומקלידים <code dir="ltr">CSAVE "NAME"</code> (שם באנגלית, עד 8 אותיות). היא מוקלטת לקלטת ונשמרת כאן. כדי לטעון: לוחצים על הקלטת ומקלידים <code dir="ltr">CLOAD</code>, או מקלידים <code dir="ltr">CLOAD "NAME"</code>.</p>
     <div class="mytapes" id="mytapes"></div>
     <button type="button" class="mini upload" id="tape-upload">📂 טעינת קלטת מקובץ</button>
     <input type="file" id="tape-file" accept=".cas" hidden>
