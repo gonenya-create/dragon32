@@ -101,7 +101,7 @@ isl_8e7a_e	;@isl
 		bls	snerr
 		jmp	[DESC1+3]	; מעבר למתאר 0: דרך $012D, עם A = הטוקן ו-TXTPTR עליו (קורא: מדפסת 7.5)
 2		lsla			; (טוקן-$80)*2
-		leau	stmtbl,pcr
+		ldu	$0123		; טבלת הכתובות של מתאר 0, מה-RAM (כמו במקור: הרחבה יכולה להחליף אותה; קורא 8.2)
 		ldu	a,u
 		pshs	u
 		jmp	<chrget		; קופצים לפקודה (דרך ה-RTS של chrget), A = התו שאחרי המילה
@@ -297,11 +297,11 @@ pr_comma	lbsr	istape
 		ldd	DEVLCF		; A = השדה האחרון, B = המקום
 		pshs	a
 		cmpb	,s+
+		bhs	2F
 		bra	isl_903d_e	;@isl
 		fill	$ff,$903d-*	;@isl
 		jmp	print	;@isl
 isl_903d_e	;@isl
-		bhs	2F
 		tfr	b,a
 1		suba	DEVCFW
 		bhs	1B
@@ -384,12 +384,12 @@ RELSAV		equ	$03da		; זמני: המקום לפני סימן יחס
 ; stmend: X = הסוף של הפקודה הנוכחית (: או 0), בלי להזיז את TXTPTR (mit: DATAN)
 stmend		ldx	TXTPTR
 1		lda	,x
+		beq	9F
 		bra	isl_90e5_e	;@isl
 		fill	$ff,$90e5-*	;@isl
 		jmp	x_strout	;@isl
 		jmp	strprt	;@isl
 isl_90e5_e	;@isl
-		beq	9F
 		cmpa	#':
 		beq	9F
 		cmpa	#'"
@@ -672,7 +672,7 @@ eval		jsr	HK_OPND		; 16
 		cmpa	#$a1
 		lbhi	fnext
 		lsla			; (טוקן-$80)*2: אותו דבר כמו suba #$80 ואז lsla
-		leau	fntbl,pcr
+		ldu	$0128		; טבלת הפונקציות של מתאר 0, מה-RAM (כמו במקור)
 		ldu	a,u		; הכתובת (טבלה רגילה, כמו במקור)
 		pshs	u
 		cmpa	#($96-$80)*2	; מ-LEFT$ והלאה: השגרה קוראת בעצמה את מה שאחרי המילה

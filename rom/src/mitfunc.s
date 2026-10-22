@@ -297,13 +297,13 @@ fn_varptr	lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את הא�
 		ldd	STREND		; משתנה שלא היה: נוצר, ואז ?FC (קורא)
 		pshs	d
 		clrb
-		lbsr	ptrget
 		bra	isl_9d3d_e	;@isl
 		fill	$ff,$9d3d-*	;@isl
 		jmp	irq	;@isl
 		fill	$ff,$9d46-*	;@isl
 		jmp	irqtk	;@isl
 isl_9d3d_e	;@isl
+		lbsr	ptrget
 		puls	d
 		cmpd	STREND
 		lbne	err_fc

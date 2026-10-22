@@ -336,7 +336,7 @@ us_exp		bsr	us_norm		; מעריכי (אפס: e=0)
 		fill	$ff,$a93a-*	;@isl
 		jmp	txtmode	;@isl
 isl_a93a_e	;@isl
-		lbne	us_dg
+		bne	us_dg
 		clr	USX
 ; us_dg: חצי (בחיבור של ה-Dragon), החלק השלם, ותשע ספרות עם אפסים מובילים ב-USDG
 us_dg		lbsr	faddh

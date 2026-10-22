@@ -94,7 +94,7 @@ isl_b44f_e	;@isl
 		lbne	err_sn
 		lda	#1		; כניסת הקלטת
 ; snds: sndsel ואז sndon
-snds		bsr	sndsel
+snds		lbsr	sndsel
 		bra	sndon
 		fill	$ff,$b469-*	;@isl
 		jmp	firq	;@isl

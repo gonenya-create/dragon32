@@ -660,14 +660,14 @@ fn_eof		jsr	HK_EOF		; 15
 ; דגל ASCII חובה (?FM). NEW, הקלטת פתוחה לקריאה, ושורה אחרי שורה כאילו הוקלדה (בלי הד). שורה בלי מספר: ?DS.
 ; בסוף הקובץ: סגור, ו-OK. שורה שנקטעה בסוף הקובץ הולכת לאיבוד
 cl_asc		tst	HASCII
-		beq	efmo
+		lbeq	efmo
 		lbsr	scrtch
 		lda	#$ff
-		sta	DEVNUM
 		bra	isl_bd52_e	;@isl
 		fill	$ff,$bd52-*	;@isl
 		jmp	joyrd	;@isl
 isl_bd52_e	;@isl
+		sta	DEVNUM
 		sta	SPCIO
 		lbsr	ropen
 1		lbsr	tgetln

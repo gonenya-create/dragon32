@@ -201,7 +201,7 @@ GARBFL		equ	$07
 		jmp	prnum	;@isl
 
 ; ---------- פונקציות מחרוזת בסיסיות (mit: LEN 4730, ASC 4741, CHR 4627, LEFT 4642, RIGHT 4672, MID 4677) ----------
-fn_asc		bsr	frestr
+fn_asc		lbsr	frestr
 		clr	VALTYP
 		tsta
 		beq	str_fc
