@@ -1,5 +1,5 @@
 // בדיקות DRAW, GET ו-PUT (שלב 3, חלק 3): ה-ROM מול המודל שנכתב מהמפרט (gfxmodel-draw.mjs), ובדיקות שגיאה.
-// הרצה: node rom2/tools/gfx-test-draw.mjs   (SEED=n לסדרה אחרת)
+// הרצה: node rom/tools/gfx-test-draw.mjs   (SEED=n לסדרה אחרת)
 import { runRom } from './xr2.mjs';
 import { GfxD } from './gfxmodel-draw.mjs';
 

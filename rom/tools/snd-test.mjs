@@ -1,5 +1,5 @@
 // בדיקות הצליל (שלב 3 חלק 4) מול המודל שנכתב מהמפרט (sndmodel.mjs).
-// הרצה: node rom2/tools/snd-test.mjs
+// הרצה: node rom/tools/snd-test.mjs
 // הגל נמדד מיומן הריצה של XRoar (-trace -trace-timing): כל כתיבה ל-$FF20 והזמן שלה במחזורי מעבד.
 import { runRom } from './xr2.mjs';
 import { traceDac } from './sndtrace.mjs';

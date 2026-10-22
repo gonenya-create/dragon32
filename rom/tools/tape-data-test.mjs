@@ -1,5 +1,5 @@
 // בדיקות קובצי הנתונים והטקסט (שלב 3 חלק 5, צעד 3) מול המפרט (docs/DRAGON-SPEC-TAPE.md, סעיפים 3.3-3.13, 4, 9).
-// הרצה: node rom2/tools/tape-data-test.mjs
+// הרצה: node rom/tools/tape-data-test.mjs
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';

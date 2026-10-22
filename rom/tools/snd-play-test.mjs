@@ -1,5 +1,5 @@
 // בדיקות PLAY (שלב 3 חלק 4) מול המודל שנכתב מהמפרט (sndmodel.mjs).
-// הרצה: node rom2/tools/snd-play-test.mjs   (SEED=n לסדרה אחרת של מחרוזות אקראיות, COUNT=n כמה)
+// הרצה: node rom/tools/snd-play-test.mjs   (SEED=n לסדרה אחרת של מחרוזות אקראיות, COUNT=n כמה)
 // כל תו נמדד מיומן הריצה: הערכים שנכתבו ל-$FF20, המרווחים במחזורים (בלי פסיקת השדה), וכמה פסיקות נמשך.
 import { runRom } from './xr2.mjs';
 import { traceDac } from './sndtrace.mjs';

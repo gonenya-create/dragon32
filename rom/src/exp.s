@@ -1,17 +1,17 @@
 ; Dragon 1982 BASIC — ניסוי שלב 1 (20.10.2026)
 ;
-; מה נבדק: האם הלב של BASIC-M6502 של Microsoft (רישיון MIT, ראו rom2/mit/LICENSE) עובר טוב לשבב 6809,
+; מה נבדק: האם הלב של BASIC-M6502 של Microsoft (רישיון MIT, ראו rom/mit/LICENSE) עובר טוב לשבב 6809,
 ; ואיך הוא מתאים לסידור הזיכרון של ה-Dragon 32: שמירת שורה מכווצת, המצביעים בכתובות הקבועות, LIST ו-NEW.
 ;
 ; יומן מקור (שלב 1):
-;   mit  = תרגום ל-6809 של שגרה מ-rom2/mit/m6502.asm (מצוין מספר השורה שם)
+;   mit  = תרגום ל-6809 של שגרה מ-rom/mit/m6502.asm (מצוין מספר השורה שם)
 ;   ספר  = עובדה מהספרים, דרך docs/DRAGON-SPEC-*.md (מפת הזיכרון, טבלת המילים, כללי הכיווץ)
 ;   קורא = עובדה מהדוח של "הקורא" (Codex) שגונן בדק, בלי קוד
 ;   שלנו = נכתב כאן
 ; הכותב (שיחת Dragon) לא ראה את הקוד של ה-Dragon.
 ;
 ; Portions of this file are translated from Microsoft BASIC-M6502 (m6502.asm),
-; Copyright (c) Microsoft Corporation, licensed under the MIT License (rom2/mit/LICENSE).
+; Copyright (c) Microsoft Corporation, licensed under the MIT License (rom/mit/LICENSE).
 
 		org	$8000
 		setdp	0

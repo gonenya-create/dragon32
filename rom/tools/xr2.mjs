@@ -1,4 +1,4 @@
-// ניסוי שלב 1: כמו rom/tools/xr.mjs, אבל בונה את rom2/src/exp.s (שבב אחד של 16K, בלי שבב הרחבה).
+// ניסוי שלב 1: כמו archive/rom-v1/tools/xr.mjs, אבל בונה את rom/src/exp.s (שבב אחד של 16K, בלי שבב הרחבה).
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { cp, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';

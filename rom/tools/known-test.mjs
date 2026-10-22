@@ -1,5 +1,5 @@
 // הבדיקות שהתוצאה שלהן ידועה מהספרים (docs/DRAGON-TESTS-BASIC.md), מול ה-BASIC החדש.
-// הרצה: node rom2/tools/known-test.mjs rom2/tools/known.json /tmp/known-result.json
+// הרצה: node rom/tools/known-test.mjs rom/tools/known.json /tmp/known-result.json
 import { runRom } from './xr2.mjs';
 import { readFileSync, writeFileSync } from 'node:fs';
 const known = JSON.parse(readFileSync(process.argv[2], 'utf8'));
