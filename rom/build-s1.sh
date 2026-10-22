@@ -1,5 +1,5 @@
 #!/bin/sh
-# בונה את ה-ROM החדש (מסלול א) ומדפיס את הגודל בבתים. הרצה: sh rom2/build-s1.sh
+# בונה את ה-ROM החדש (מסלול א) ומדפיס את הגודל בבתים. הרצה: sh rom/build-s1.sh
 set -e
 cd "$(dirname "$0")/src"
 python3 ../tools/fixbr.py >/dev/null

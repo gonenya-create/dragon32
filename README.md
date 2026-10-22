@@ -8,7 +8,7 @@ programmer tools and an AI helper. Installable as an app.
 
 - Everything here is original: the BASIC interpreter, the games, the graphics and the texts.
   No original ROM or software is used.
-- **The Dragon machine** ([/lab/1982](https://dragon1982.com/lab/1982/), being built): our own 16K 6809 BASIC ROM (`rom2/`)
+- **The Dragon machine** ([/lab/1982](https://dragon1982.com/lab/1982/), being built): our own 16K 6809 BASIC ROM (`rom/`)
   running on Ciaran Anscomb's [XRoar](https://www.6809.org.uk/xroar/) emulator (GPL v3, see `lab/1982/SOURCE.md`).
 - A hobby tribute project. Not affiliated with, or endorsed by, Dragon Data Ltd.
 - Built by [Gonen Yarom](https://www.gonenyarom.co.il) with AI.

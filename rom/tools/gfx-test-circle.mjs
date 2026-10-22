@@ -1,5 +1,5 @@
 // בדיקות CIRCLE ו-PAINT: ה-ROM מול המודל שנכתב מהמפרט (gfxmodel-circle.mjs), ובדיקות שגיאה.
-// הרצה: node rom2/tools/gfx-test-circle.mjs   (SEED=n לסדרה אחרת)
+// הרצה: node rom/tools/gfx-test-circle.mjs   (SEED=n לסדרה אחרת)
 import { runRom } from './xr2.mjs';
 import { Gfx2 } from './gfxmodel-circle.mjs';
 

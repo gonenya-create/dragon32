@@ -1,5 +1,5 @@
 // בדיקות פקודות הקבצים (שלב 3 חלק 5, צעד 2) מול המפרט (docs/DRAGON-SPEC-TAPE.md) והמודל (tapemodel.mjs).
-// הרצה: node rom2/tools/tape-file-test.mjs
+// הרצה: node rom/tools/tape-file-test.mjs
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';

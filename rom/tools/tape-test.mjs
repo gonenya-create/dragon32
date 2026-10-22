@@ -1,224 +1,124 @@
-// בדיקות קלטת דרך החומרה המדומה בלבד; הקבצים נוצרים לפי תיעוד הפורמט.
-import { test } from 'node:test';
-import assert from 'node:assert/strict';
+// בדיקות הקלטת (שלב 3 חלק 5) מול המודל שנכתב מהמפרט (tapemodel.mjs).
+// הרצה: node rom/tools/tape-test.mjs
+// צעד 1: השגרות נקראות מ-BASIC עם EXEC, דרך הכניסות הקבועות ($8015-$8027) והמצביעים ($A004-$A00C).
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { runRom } from './xr.mjs';
+import { runRom } from './xr2.mjs';
+import { traceDac } from './sndtrace.mjs';
+import { leaderAndBlock, casBlock, blockBytes } from './tapemodel.mjs';
 
-const options = { timeout: 120, wallTimeout: 30000 };
-async function temporary(fn) {
-  const dir = await mkdtemp(join(tmpdir(), 'dragon-tape-'));
-  try { await fn(dir); } finally { await rm(dir, { recursive: true, force: true }); }
-}
-function block(type, data = Buffer.alloc(0)) {
-  return Buffer.from([0x55, 0x3c, type, data.length, ...data,
-    (type + data.length + [...data].reduce((a, b) => a + b, 0)) & 255, 0x55]);
-}
-function cassette(name, text, { type = 0, ascii = 255, chunk = 255 } = {}) {
-  const header = Buffer.from([...Buffer.from(name.padEnd(8)), type, ascii, 255, 0, 0, 0, 0]);
-  const data = Buffer.from(text);
-  const parts = [Buffer.alloc(128, 0x55), block(0, header), Buffer.alloc(128, 0x55)];
-  for (let i = 0; i < data.length; i += chunk) parts.push(block(1, data.subarray(i, i + chunk)));
-  parts.push(block(255));
-  return Buffer.concat(parts);
-}
-function program(ram) {
-  const lines = [];
-  for (let p = 0x1e00, next; (next = ram.readUInt16BE(p)); p = next) {
-    assert.ok(next > p && next < 0x7b00, 'valid program links');
-    const end = ram.indexOf(0, p + 4);
-    lines.push(`${ram.readUInt16BE(p + 2)} ${ram.toString('ascii', p + 4, end)}`);
+let pass = 0, fail = 0;
+const ok = (name, cond, info = '') => {
+  if (cond) { pass++; console.log(`  ✓ ${name}`); }
+  else { fail++; console.log(`  ✗ ${name} ${info}`); }
+};
+const hex = n => '$' + n.toString(16).toUpperCase().padStart(2, '0');
+const lastNums = s => s.trim().split('\n').filter(l => /^[ \d-]+$/.test(l) && l.trim()).at(-1).trim().split(/\s+/).map(Number);
+const dir = await mkdtemp(join(tmpdir(), 'dragon32-tape-'));
+const WRITE = 'EXEC 32795:EXEC PEEK(40968)*256+PEEK(40969):EXEC 32792';           // מבוא, בלוק ($A008), מנוע כבוי
+const READ = 'EXEC 32801:EXEC PEEK(40966)*256+PEEK(40967):EXEC 32792';            // סנכרון ($8021), בלוק ($A006), מנוע כבוי
+const setBlk = (type, data, addr = 0x0600) =>
+  `POKE 124,${type}:POKE 125,${data.length}:POKE 126,${addr >> 8}:POKE 127,${addr & 255}` +
+  data.map((d, i) => `:POKE ${addr + i},${d}`).join('');
+
+try {
+  // 1. הגל של הכתיבה: כל כתיבה ל-$FF20 והמרווח שאחריה, מול המודל
+  console.log('כתיבה: הגל והתזמון (1.3-1.5)');
+  for (const [name, n, type, data] of [['מבוא 3 + בלוק של 3 בתים', 3, 1, [0x11, 0x22, 0x33]],
+    ['מבוא 2 + בלוק ריק (סוף קובץ)', 2, 0xff, []], ['מבוא 2 + בית $00 ובית $FF', 2, 1, [0x00, 0xff]]]) {
+    const { writes } = await traceDac([`POKE 144,0:POKE 145,${n}`, setBlk(type, data), WRITE], 'tleader', 3);
+    const model = leaderAndBlock(n, type, data).writes;
+    let bad = '';
+    if (writes.length !== model.length) bad = `writes ${writes.length} != ${model.length}`;
+    for (let i = 0; !bad && i < model.length; i++) {
+      if (writes[i].v !== model[i].v) bad = `write ${i}: ${hex(writes[i].v)} != ${hex(model[i].v)}`;
+      else if (i + 1 < writes.length && model[i].after !== null) {
+        const gap = writes[i + 1].t - writes[i].t;
+        if (gap !== model[i].after) bad = `gap after write ${i}: ${gap} != ${model[i].after}`;
+      }
+    }
+    ok(`${name}: ${model.length} כתיבות`, !bad, bad);
   }
-  return lines;
+  {
+    // ביט 0 = 813 מחזורים, ביט 1 = 435 (Ciaran): בבית $55 של המבוא, בלי הגבול
+    const { writes } = await traceDac(['POKE 144,0:POKE 145,2', setBlk(1, []), WRITE], 'tleader', 3);
+    const bitLen = (start, n) => writes[start + n].t - writes[start].t;
+    ok('ביט 1 = 435 מחזורים, ביט 0 = 813', bitLen(0, 18) === 435 && bitLen(18, 36) === 813, `${bitLen(0, 18)} ${bitLen(18, 36)}`);
+  }
+
+  // 2. XRoar מפענח את מה שה-ROM כותב (קובץ CAS)
+  console.log('כתיבה: XRoar קורא את מה שכתבנו');
+  {
+    const cas = join(dir, 'w.cas');
+    await runRom(['POKE 144,0:POKE 145,10', setBlk(1, [0x11, 0x22, 0x33]), WRITE], { tapeWrite: cas, timeout: 6 });
+    const got = [...await readFile(cas)];
+    const want = blockBytes(1, [0x11, 0x22, 0x33]);
+    const i = got.findIndex((b, k) => b === 0x3c && got[k - 1] === 0x55 && got[k + 1] === 1);
+    ok(`CAS: מבוא $55 ואחריו ${want.map(hex).join(' ')}`, i > 0 && JSON.stringify(got.slice(i - 1, i - 1 + want.length)) === JSON.stringify(want) &&
+      got.slice(0, i - 1).filter(b => b === 0x55).length >= 10, got.map(hex).join(' '));
+  }
+
+  // 3. קריאה: CAS שנבנה מהמפרט, ו-WAV שה-ROM עצמו כתב (שני הקטבים)
+  console.log('קריאה: סנכרון ובלוק (1.7-1.9)');
+  const readCase = async (name, tape, data, want) => {
+    const s = await runRom(['POKE 126,6:POKE 127,0', READ,
+      `PRINT PEEK(124);PEEK(125);PEEK(129);PEEK(132);${data.map((_, i) => `PEEK(${1536 + i})`).join(';') || '0'}`],
+      { tapeLoad: tape, timeout: 10, wallTimeout: 120000 });
+    const got = lastNums(s.screen);
+    ok(name, JSON.stringify(got.filter((_, i) => i !== 3)) === JSON.stringify(want), `${got} != ${want}`);
+    return got;
+  };
+  const casFile = async (name, bytes) => { const p = join(dir, name); await writeFile(p, Buffer.from(bytes)); return p; };
+  await readCase('CAS: בלוק של 3 בתים', await casFile('r1.cas', casBlock(128, 1, [0x11, 0x22, 0x33])), [0x11, 0x22, 0x33], [1, 3, 0, 0x11, 0x22, 0x33]);
+  await readCase('CAS: סוף קובץ', await casFile('r2.cas', casBlock(128, 0xff, [])), [], [255, 0, 0, 0]);
+  const bad = casBlock(128, 1, [0x11, 0x22, 0x33]); bad[128 + 7] ^= 1;
+  await readCase('CAS: סכום שגוי → 1', await casFile('r3.cas', bad), [0x11, 0x22, 0x33], [1, 3, 1, 0x11, 0x22, 0x33]);
+  const data255 = Array.from({ length: 255 }, (_, i) => (i * 37 + 5) & 255);
+  {
+    const s = await runRom(['POKE 126,6:POKE 127,0', READ, 'S=0:FOR I=0 TO 254:S=S+PEEK(1536+I)*(I+1):NEXT:PRINT PEEK(125);PEEK(129);S'],
+      { tapeLoad: await casFile('r4.cas', casBlock(128, 1, data255)), timeout: 10, wallTimeout: 120000 });
+    const want = data255.reduce((a, d, i) => a + d * (i + 1), 0);
+    ok('CAS: בלוק של 255 בתים', lastNums(s.screen).join(' ') === `255 0 ${want}`, s.screen);
+  }
+  {
+    const s = await runRom(['POKE 126,128:POKE 127,0', READ, 'PRINT PEEK(129)'],
+      { tapeLoad: await casFile('r5.cas', casBlock(128, 1, [1, 2, 3])), timeout: 10 });
+    ok('קריאה לתוך ה-ROM → 2', lastNums(s.screen)[0] === 2, s.screen);
+  }
+  // WAV שה-ROM כתב, ואותו WAV הפוך
+  const wav = join(dir, 'w.wav');
+  await runRom(['POKE 144,0:POKE 145,128', setBlk(1, [0x11, 0x22, 0x33]), WRITE], { tapeWrite: wav, timeout: 6, xroarArgs: ['-tape-ao-rate', '44100'] });
+  const p1 = await readCase('WAV שכתבנו: נקרא חזרה', wav, [0x11, 0x22, 0x33], [1, 3, 0, 0x11, 0x22, 0x33]);
+  const w = await readFile(wav);
+  const dataAt = w.indexOf('data') + 8, bits = w.readUInt16LE(34);
+  const inv = Buffer.from(w);
+  if (bits === 8) for (let i = dataAt; i < inv.length; i++) inv[i] = 255 - inv[i];
+  else for (let i = dataAt; i + 1 < inv.length; i += 2) inv.writeInt16LE(Math.max(-32768, Math.min(32767, -inv.readInt16LE(i))), i);
+  const wavInv = join(dir, 'winv.wav');
+  await writeFile(wavInv, inv);
+  const p2 = await readCase('WAV הפוך: נקרא חזרה', wavInv, [0x11, 0x22, 0x33], [1, 3, 0, 0x11, 0x22, 0x33]);
+  ok(`שני הקטבים נותנים PHASE שונה (${p1[3]}, ${p2[3]})`, (p1[3] === 0) !== (p2[3] === 0));
+
+  // 4. מצב: ערכי ההדלקה, ומה המנוע והפסיקות עושים
+  console.log('מצב');
+  {
+    let s = await runRom(['FOR I=143 TO 150:PRINT PEEK(I);:NEXT:PRINT']);
+    ok('$8F-$96 בהדלקה: 50 0 128 18 10 18 218 92', lastNums(s.screen).join(' ') === '50 0 128 18 10 18 218 92', s.screen);
+    s = await runRom(['EXEC 32789']);
+    ok('$8015: המנוע דולק', !!(s.pia1cra & 8), hex(s.pia1cra));
+    s = await runRom(['EXEC 32789:EXEC 32792']);
+    ok('$8018: המנוע כבוי', !(s.pia1cra & 8), hex(s.pia1cra));
+    s = await runRom(['T=TIMER:EXEC 32789:PRINT TIMER-T']);
+    const n = lastNums(s.screen)[0];
+    ok(`השהיית המנוע כ-0.5 שנייה (${n} שדות)`, n >= 24 && n <= 27, s.screen);
+    s = await runRom(['PRINT PEEK(40960)*256+PEEK(40961);PEEK(40964)*256+PEEK(40965);PEEK(40972)*256+PEEK(40973)']);
+    ok('$A000/$A004/$A00C: מצביעים ל-$8006, $8021, $801B', lastNums(s.screen).join(' ') === '32774 32801 32795', s.screen);
+    s = await runRom(['PRINT PEEK(32768);PEEK(32769)*256+PEEK(32770);PEEK(32798)']);
+    ok('$8000: הוראות JMP', lastNums(s.screen)[0] === 0x7e && lastNums(s.screen)[2] === 0x7e, s.screen);
+  }
+} finally {
+  await rm(dir, { recursive: true, force: true });
 }
-function idle(result) {
-  assert.equal(result.pia1cra & 8, 0, 'motor off');
-  assert.equal(result.pia0crb & 0x3f, 5, '50 Hz IRQ configuration restored');
-  assert.doesNotMatch(result.screen, /\?\w+ ERROR/);
-}
-
-test('CSAVE to real CAS, CLOAD and LIST in a second emulator', () => temporary(async dir => {
-  const tape = join(dir, 'out.cas');
-  const lines = ['10 PRINT "HELLO"', '20 PRINT 42'];
-  const saved = await runRom([...lines, 'CSAVE "TEST",A'], { ...options, tapeWrite: tape });
-  idle(saved);
-  const bytes = await readFile(tape);
-  const header = bytes.indexOf(Buffer.from([0x55, 0x3c, 0, 15]));
-  assert.ok(header >= 128);
-  assert.deepEqual(bytes.subarray(header + 4, header + 19),
-    Buffer.from([...Buffer.from('TEST    '), 0, 255, 255, 0, 0, 0, 0]));
-  assert.ok(bytes.includes(Buffer.from(lines.join('\r') + '\r')));
-  const loaded = await runRom(['CLOAD "TEST"', 'LIST'], { ...options, tapeLoad: tape });
-  idle(loaded);
-  assert.deepEqual(program(loaded.ram), lines);
-  assert.match(loaded.screen, /S\nF TEST/);
-  assert.match(loaded.screen, /LIST\n10 PRINT "HELLO"\n20 PRINT 42\nOK/);
-}));
-
-test('WAV uses the real DAC output and comparator input', () => temporary(async dir => {
-  const tape = join(dir, 'out.wav');
-  await runRom(['10 PRINT "WAVE"', 'CSAVE "TEST"'], { ...options, tapeWrite: tape });
-  const loaded = await runRom(['CLOAD', 'LIST'], { ...options, tapeLoad: tape });
-  idle(loaded);
-  assert.deepEqual(program(loaded.ram), ['10 PRINT "WAVE"']);
-}));
-
-test('20 lines cross data blocks and are saved again without loss', () => temporary(async dir => {
-  const tape = join(dir, 'twenty.cas'), saved = join(dir, 'again.cas');
-  const lines = Array.from({ length: 20 }, (_, i) => `${(i + 1) * 10} REM LINE ${i + 1} WITH SOME TEXT`);
-  await writeFile(tape, cassette('TWENTY', lines.join('\r') + '\r'));
-  const loaded = await runRom(['CLOAD "TWENTY"', 'CSAVE "TWENTY"'], { ...options, tapeLoad: tape, tapeWrite: saved });
-  idle(loaded);
-  assert.deepEqual(program(loaded.ram), lines);
-  const again = await runRom(['CLOAD "TWENTY"'], { ...options, tapeLoad: saved });
-  idle(again);
-  assert.deepEqual(program(again.ram), lines);
-}));
-
-test('wrong filenames are skipped; only the matching program is loaded', () => temporary(async dir => {
-  const tape = join(dir, 'names.cas');
-  await writeFile(tape, Buffer.concat([
-    cassette('OTHER', '10 PRINT "WRONG"\r'), cassette('RIGHT', '20 PRINT "RIGHT"\r')
-  ]));
-  const loaded = await runRom(['10 PRINT "OLD"', 'CLOAD "RIGHT"'], { ...options, tapeLoad: tape });
-  idle(loaded);
-  assert.deepEqual(program(loaded.ram), ['20 PRINT "RIGHT"']);
-  assert.match(loaded.screen, /S\nF OTHER[\s\S]*F RIGHT/);
-}));
-
-test('a corrupted data byte reports IO and restores hardware', () => temporary(async dir => {
-  const tape = join(dir, 'bad.cas');
-  const bytes = cassette('BAD', '10 PRINT 42\r');
-  const data = bytes.indexOf(Buffer.from([0x55, 0x3c, 1]));
-  bytes[data + 8] ^= 1;
-  await writeFile(tape, bytes);
-  const loaded = await runRom(['CLOAD "BAD"', 'PRINT 7'], { ...options, tapeLoad: tape });
-  assert.match(loaded.screen, /\?IO ERROR\nOK\nPRINT 7\n 7\nOK/);
-  assert.equal(loaded.pia1cra & 8, 0);
-  assert.equal(loaded.pia0crb & 0x3f, 5);
-}));
-
-for (const [label, settings] of [['machine code', { type: 2, ascii: 0 }],
-  ['tokenised BASIC', { ascii: 0 }], ['ASCII data file', { type: 1 }]]) {
-  test(`${label} reports FM`, () => temporary(async dir => {
-    const tape = join(dir, 'format.cas');
-    await writeFile(tape, cassette('FORMAT', '10 PRINT 1\r', settings));
-    const loaded = await runRom(['CLOAD "FORMAT"'], { ...options, tapeLoad: tape });
-    assert.match(loaded.screen, /\?FM ERROR\nOK/);
-    assert.equal(loaded.pia1cra & 8, 0);
-    assert.deepEqual(program(loaded.ram), []);
-  }));
-}
-
-test('an empty program overwrites the old program and can be run', () => temporary(async dir => {
-  const tape = join(dir, 'empty.cas');
-  idle(await runRom(['CSAVE "EMPTY"'], { ...options, tapeWrite: tape }));
-  const loaded = await runRom(['10 PRINT "OLD"', 'CLOAD "EMPTY"', 'LIST', 'RUN'], { ...options, tapeLoad: tape });
-  idle(loaded);
-  assert.deepEqual(program(loaded.ram), []);
-  assert.match(loaded.screen, /LIST\nOK\nRUN\nOK/);
-}));
-
-test('MOTOR and AUDIO control their PIA pins', async () => {
-  const on = await runRom(['MOTOR ON', 'AUDIO ON']);
-  assert.equal(on.pia1cra & 0x3c, 0x38);
-  assert.equal(on.pia1crb & 0x38, 0x38);
-  assert.equal(on.pia0cra & 0x38, 0x38);
-  assert.equal(on.pia0crb & 0x38, 0x30);
-  const off = await runRom(['MOTOR ON:MOTOR OFF', 'AUDIO ON:AUDIO OFF']);
-  assert.equal(off.pia1cra & 0x38, 0x30);
-  assert.equal(off.pia1crb & 0x38, 0x30);
-  assert.match(off.screen, /AUDIO OFF\nOK/);
-});
-
-for (const command of ['CSAVE', 'CSAVE "123456789"', 'CSAVE "UNCLOSED',
-  'CSAVE "A",B', 'CSAVE "A",AX', 'CLOAD X', 'CLOAD "A" X', 'MOTOR ONCE', 'AUDIO OFFX']) {
-  test(`invalid syntax: ${command}`, async () => {
-    const result = await runRom([command]);
-    assert.match(result.screen, /\?(?:SN|FC) ERROR\nOK/);
-    assert.equal(result.pia1cra & 8, 0);
-  });
-}
-
-for (const text of ['PRINT 1\r', '64000 PRINT 1\r', `10 ${'X'.repeat(248)}\r`, '10 PRINT 1', '10 PRINT\t1\r']) {
-  test(`malformed ASCII line is IO: ${JSON.stringify(text.slice(0, 25))}`, () => temporary(async dir => {
-    const tape = join(dir, 'badline.cas');
-    await writeFile(tape, cassette('LINE', text));
-    const loaded = await runRom(['CLOAD "LINE"'], { ...options, tapeLoad: tape });
-    assert.match(loaded.screen, /\?IO ERROR\nOK/);
-    assert.equal(loaded.pia1cra & 8, 0);
-  }));
-}
-
-test('line zero, five digit numbers, and lines split across blocks', () => temporary(async dir => {
-  const tape = join(dir, 'split.cas'), copy = join(dir, 'copy.cas');
-  const lines = ['0 PRINT "ZERO"', '9 PRINT 9', '1000 PRINT 1000', '63999 PRINT "LAST"'];
-  await writeFile(tape, cassette('SPLIT', lines.join('\r') + '\r', { chunk: 7 }));
-  const loaded = await runRom(['CLOAD "SPLIT"', 'CSAVE "SPLIT"'], { ...options, tapeLoad: tape, tapeWrite: copy });
-  idle(loaded);
-  assert.deepEqual(program(loaded.ram), lines);
-  const again = await runRom(['CLOAD'], { ...options, tapeLoad: copy });
-  idle(again);
-  assert.deepEqual(program(again.ram), lines);
-}));
-
-for (const command of ['CLOAD', 'CSAVE "BREAK"']) {
-  test(`BREAK aborts ${command} and stops the motor`, async () => {
-    const result = await runRom([command], { ...options, tapeBreak: true });
-    assert.match(result.screen, /\nBREAK\nOK/);
-    assert.doesNotMatch(result.screen, /\?\w+ ERROR/);
-    assert.equal(result.pia1cra & 8, 0);
-    assert.equal(result.pia0crb & 0x3f, 5);
-  });
-}
-
-test('a program exceeding the interpreter limit reports OM with the motor off', () => temporary(async dir => {
-  const tape = join(dir, 'huge.cas');
-  const lines = Array.from({ length: 110 }, (_, i) => `${i + 1} REM ${'X'.repeat(230)}`);
-  await writeFile(tape, cassette('HUGE', lines.join('\r') + '\r'));
-  const loaded = await runRom(['CLOAD "HUGE"'], { timeout: 300, wallTimeout: 30000, tapeLoad: tape });
-  assert.match(loaded.screen, /\?OM ERROR\nOK/);
-  assert.equal(loaded.pia1cra & 8, 0);
-  assert.ok(loaded.ram.readUInt16BE(0x90) < 0x7b00);
-}));
-
-test('graphics pages are preserved by saving and loading', () => temporary(async dir => {
-  const tape = join(dir, 'graphics.cas');
-  const setup = ['PMODE 4,1', 'PCLS 1'];
-  const before = await runRom(setup);
-  const saved = await runRom([...setup, '10 PRINT 1', 'CSAVE "GFX"'], { ...options, tapeWrite: tape });
-  assert.deepEqual(saved.ram.subarray(0x600, 0x1e00), before.ram.subarray(0x600, 0x1e00));
-  const loaded = await runRom([...setup, 'CLOAD "GFX"'], { ...options, tapeLoad: tape });
-  idle(loaded);
-  assert.deepEqual(loaded.ram.subarray(0x600, 0x1e00), before.ram.subarray(0x600, 0x1e00));
-}));
-
-test('20-line save/load timing in emulated seconds', () => temporary(async dir => {
-  const { arrival } = await import('./tape-timing.mjs');
-  const input = join(dir, 'timing-input.cas'), output = join(dir, 'timing-output.cas');
-  const lines = Array.from({ length: 20 }, (_, i) => `${(i + 1) * 10} REM LINE ${i + 1} WITH SOME TEXT`);
-  await writeFile(input, cassette('TWENTY', lines.join('\r') + '\r'));
-  const commands = ['CLOAD "TWENTY"', 'CSAVE "TWENTY"'];
-  const saveStart = await arrival(commands, { tapeLoad: input, trapSym: 't_save' });
-  const saveEnd = await arrival(commands, { tapeLoad: input, tapeWrite: output });
-  const loadCommands = ['CLOAD "TWENTY"'];
-  const loadStart = await arrival(loadCommands, { tapeLoad: output, trapSym: 't_load' });
-  const loadEnd = await arrival(loadCommands, { tapeLoad: output });
-  const savedSeconds = saveEnd - saveStart, loadedSeconds = loadEnd - loadStart;
-  assert.ok(savedSeconds > 1 && savedSeconds < 30);
-  assert.ok(loadedSeconds > 1 && loadedSeconds < 30);
-  console.log(`20 lines (${Buffer.byteLength(lines.join('\r') + '\r')} ASCII bytes): save ${savedSeconds.toFixed(2)} s; load ${loadedSeconds.toFixed(2)} s (emulated, +/-0.02 s)`);
-}));
-
-test('a maximum typed line without a separator survives canonical saving', () => temporary(async dir => {
-  const tape = join(dir, 'maximum.cas'), copy = join(dir, 'maximum-copy.cas');
-  const text = `1REM ${'X'.repeat(244)}`;
-  assert.equal(text.length, 249);
-  await writeFile(tape, cassette('MAX', text + '\r'));
-  const loaded = await runRom(['CLOAD "MAX"', 'CSAVE "MAX"'], { ...options, tapeLoad: tape, tapeWrite: copy });
-  idle(loaded);
-  const again = await runRom(['CLOAD "MAX"'], { ...options, tapeLoad: copy });
-  idle(again);
-  assert.deepEqual(program(again.ram), program(loaded.ram));
-}));
+console.log(`\n${pass} passed, ${fail} failed`);
+process.exit(fail ? 1 : 0);

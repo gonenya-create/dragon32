@@ -1,6 +1,6 @@
 // בדיקות הניסוי של שלב 1: מבנה התוכנית בזיכרון, בית אחרי בית, מול מה שהספרים מתארים.
 // מקורות הציפיות: docs/DRAGON-SPEC-MEMORY.md, docs/DRAGON-SPEC-VERIFY.md (טבלת הטוקנים: Companion עמ' 39-40).
-// הרצה: node rom2/tools/s1-test.mjs
+// הרצה: node rom/tools/s1-test.mjs
 import { runRom } from './xr2.mjs';
 
 let pass = 0, fail = 0;
@@ -195,7 +195,7 @@ await check('MEM is the free space between STREND and the stack', ['PRINT MEM>20
 
 
 console.log('stage 2: closing items');
-// מקרי קצה בחשבון: 57 תוצאות שהקורא חישב מהמקור (rom2/tools/edge.json): הבתים של A ומה ש-PRINT מראה
+// מקרי קצה בחשבון: 57 תוצאות שהקורא חישב מהמקור (rom/tools/edge.json): הבתים של A ומה ש-PRINT מראה
 {
   const { readFileSync } = await import('node:fs');
   const rows = JSON.parse(readFileSync(new URL('./edge.json', import.meta.url), 'utf8'));

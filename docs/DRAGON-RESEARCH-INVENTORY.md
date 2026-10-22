@@ -14,7 +14,7 @@
 >
 > **ממצא נוסף של השיחה:** `MEM`, `JOYSTK`, `VARPTR`, `POS` ו-`USR` לא נותנות שגיאה. הן מתפרשות כמשתנים ומחזירות 0 בשקט.
 
-**המסקנה: יש לנו מחשב מדומה אמיתי שמריץ BASIC עצמאי רחב, אבל עדיין אין תאימות מלאה ל־Dragon 32.** הפער העיקרי הוא במבנה התוכנית והזיכרון, בשירותי ה־ROM ובחלקי תחביר. הוספת שמות הפקודות החסרים לבדה לא תסגור אותו. אלה מסקנות מקריאת [המפרש](../rom/src/interp.s), [האתחול](../rom/src/boot.s), [ההרחבה](../rom/src/ext.s) ויתר קובצי המקור.
+**המסקנה: יש לנו מחשב מדומה אמיתי שמריץ BASIC עצמאי רחב, אבל עדיין אין תאימות מלאה ל־Dragon 32.** הפער העיקרי הוא במבנה התוכנית והזיכרון, בשירותי ה־ROM ובחלקי תחביר. הוספת שמות הפקודות החסרים לבדה לא תסגור אותו. אלה מסקנות מקריאת [המפרש](../archive/rom-v1/src/interp.s), [האתחול](../archive/rom-v1/src/boot.s), [ההרחבה](../archive/rom-v1/src/ext.s) ויתר קובצי המקור.
 
 המחקר נעשה **בקריאה בלבד**. נקראו כל ששת הקבצים ב־`docs/`, קובצי המעטפת שביקשת, מקורות ה־ROM וקוד הבדיקות. לא שונה קובץ, ולא הורצו בנייה או בדיקות שיוצרות קבצים. לכן הסימון **עובד** פירושו שנמצא מימוש ברור בקוד; הוא אינו אישור חדש מבדיקה מול מחשב מקורי.
 
@@ -34,12 +34,12 @@
 
 **שכבה ראשונה: מראה ותחושה**
 
-המצבים ההיסטוריים מפורטים ב־[Companion, עמ׳ 5–26](https://archive.worldofdragon.org/browse/downloads/Books/The%20Dragon%2032%20-%20Dragon%20Companion%20-%20Jarvis%20(1982).pdf). מצבי BASIC ממופים אצלנו ב־[gfx.s:174](../rom/src/gfx.s#L174).
+המצבים ההיסטוריים מפורטים ב־[Companion, עמ׳ 5–26](https://archive.worldofdragon.org/browse/downloads/Books/The%20Dragon%2032%20-%20Dragon%20Companion%20-%20Jarvis%20(1982).pdf). מצבי BASIC ממופים אצלנו ב־[gfx.s:174](../archive/rom-v1/src/gfx.s#L174).
 
 | מצב מקורי | רזולוציה וצבעים | מצב אצלנו |
 |---|---|---|
-| טקסט | ⁨`32×16`⁩ תווים | **עובד**; מסך ב־⁨`$0400`⁩, גלילה וסמן ב־[boot.s](../rom/src/boot.s#L117). |
-| ⁨`SG4`⁩ | ⁨`64×32`⁩, שמונה צבעים ושחור | **עובד** באמצעות `SET/RESET/POINT`; [gfx.s:755](../rom/src/gfx.s#L755). |
+| טקסט | ⁨`32×16`⁩ תווים | **עובד**; מסך ב־⁨`$0400`⁩, גלילה וסמן ב־[boot.s](../archive/rom-v1/src/boot.s#L117). |
+| ⁨`SG4`⁩ | ⁨`64×32`⁩, שמונה צבעים ושחור | **עובד** באמצעות `SET/RESET/POINT`; [gfx.s:755](../archive/rom-v1/src/gfx.s#L755). |
 | ⁨`SG6/8/12/24`⁩ | בהתאמה ⁨`64×48/64/96/192`⁩ | **חלקי**: אין פקודות BASIC ייעודיות גם במקור; החומרה נגישה דרך `POKE`, אך לא נערכה בדיקת כל מצב. |
 | רסטר נוסף | ⁨`64×64×4`⁩, ⁨`128×64×2`⁩, ⁨`128×64×4`⁩ | **חלקי**: נגישות חומרה דרך XRoar; אין בחירה דרך `PMODE`, כפי שגם BASIC המקורי אינו חושף אותם כך. |
 | ⁨`PMODE 0`⁩ | ⁨`128×96`⁩, שני צבעים, דף אחד | **עובד**, בכפוף למגבלות הקצאת הדפים בהמשך. |
@@ -52,10 +52,10 @@
 
 | פריט | מצב אצלנו והבדל |
 |---|---|
-| בחירת `CSS` | **עובד** דרך PIA; ‏[gfx.s:148](../rom/src/gfx.s#L148). |
+| בחירת `CSS` | **עובד** דרך PIA; ‏[gfx.s:148](../archive/rom-v1/src/gfx.s#L148). |
 | מראה PAL מדויק | **חלקי/לא אומת**. נבחר דגם `dragon32`, אך אין במעטפת קביעה מפורשת של כל אפשרויות עיבוד PAL. לפי [מדריך XRoar](https://www.6809.org.uk/xroar/doc/xroar.shtml), מצב `simulated` הוא שמדמה גם תופעות צבע PAL; ‏[ההגדרות שלנו](../lab/1982/index.html#L137). |
 | הגדלה ויחס תמונה | **עובד**: יחס ⁨`4:3`⁩ ו־`image-rendering: pixelated`; ‏[index.html:22](../lab/1982/index.html#L22). לא נערכה השוואה חזותית לטלוויזיה מקורית. |
-| חזרה לטקסט | **חלקי**: `main_ok` חוזר תמיד לטקסט. לכן פקודת `SCREEN 1,1` ישירה חוזרת לטקסט עם `OK`; ‏[boot.s:74](../rom/src/boot.s#L74). |
+| חזרה לטקסט | **חלקי**: `main_ok` חוזר תמיד לטקסט. לכן פקודת `SCREEN 1,1` ישירה חוזרת לטקסט עם `OK`; ‏[boot.s:74](../archive/rom-v1/src/boot.s#L74). |
 
 **מקלדת ועריכת קלט**
 
@@ -63,27 +63,27 @@
 
 | פריט | מצב אצלנו והבדל |
 |---|---|
-| מטריצת המקלדת | **עובד**: סריקה ממשית דרך PIA; ‏[boot.s:196](../rom/src/boot.s#L196). |
-| `SHIFT` לסימנים | **עובד** לסימנים שבטבלה ול־`SHIFT+↑`; ‏[boot.s:191](../rom/src/boot.s#L191). |
-| `SHIFT+0` ומצב lowercase/inverse | **חסר**. אין שינוי מצב; תווים קטנים מודפסים כגדולים; ‏[boot.s:132](../rom/src/boot.s#L132). |
-| `CLEAR` בזמן הקלדה | **חסר**: קוד 12 נדחה כתו בקרה; ‏[boot.s:324](../rom/src/boot.s#L324). |
+| מטריצת המקלדת | **עובד**: סריקה ממשית דרך PIA; ‏[boot.s:196](../archive/rom-v1/src/boot.s#L196). |
+| `SHIFT` לסימנים | **עובד** לסימנים שבטבלה ול־`SHIFT+↑`; ‏[boot.s:191](../archive/rom-v1/src/boot.s#L191). |
+| `SHIFT+0` ומצב lowercase/inverse | **חסר**. אין שינוי מצב; תווים קטנים מודפסים כגדולים; ‏[boot.s:132](../archive/rom-v1/src/boot.s#L132). |
+| `CLEAR` בזמן הקלדה | **חסר**: קוד 12 נדחה כתו בקרה; ‏[boot.s:324](../archive/rom-v1/src/boot.s#L324). |
 | `SHIFT+CLEAR` | **חסר**: לא נמצאה ההמרה המקורית. |
-| חץ שמאלה | **עובד** כמחיקה בקלט רגיל; ‏[boot.s:340](../rom/src/boot.s#L340). |
+| חץ שמאלה | **עובד** כמחיקה בקלט רגיל; ‏[boot.s:340](../archive/rom-v1/src/boot.s#L340). |
 | יתר החצים וצירופי SHIFT | **חלקי**: קיימים קודים בסיסיים; בקלט רגיל חלקם נדחים. אין מימוש מלא של התנהגותם. |
-| `BREAK` | **עובד** בין פקודות ובקלט; יש גם בדיקה בקלטות. אין להסיק מכך שניתן לקטוע כל שגרה בכל רגע; ‏[interp.s:108](../rom/src/interp.s#L108). |
+| `BREAK` | **עובד** בין פקודות ובקלט; יש גם בדיקה בקלטות. אין להסיק מכך שניתן לקטוע כל שגרה בכל רגע; ‏[interp.s:108](../archive/rom-v1/src/interp.s#L108). |
 | חזרה אוטומטית של מקש | היעדרה **אינו פער כשלעצמו** מול Dragon 32. תוספת ה־64 מתארת חזרה אוטומטית כתכונה של מצב 64K; ‏[התוספת הרשמית, עמ׳ 6](https://dragondata.co.uk/Publications/BASIC-MAN/DD_D64_Supplement.pdf). |
 | מקלדת מגע | **חלקי**: כל לחיצה שולחת לחיצה קצרה; `SHIFT` ננעל לתו הבא. אין החזקה רציפה כמו מקש פיזי; ‏[index.html:164](../lab/1982/index.html#L164). |
-| תווי בקרה בפלט | **חלקי**: `putc` מטפל במפורש ב־CR; אין טיפול מלא ביתר קודי הבקרה; ‏[boot.s:132](../rom/src/boot.s#L132). |
+| תווי בקרה בפלט | **חלקי**: `putc` מטפל במפורש ב־CR; אין טיפול מלא ביתר קודי הבקרה; ‏[boot.s:132](../archive/rom-v1/src/boot.s#L132). |
 
 **צליל וקלטת כחוויה**
 
 | פריט | מצב אצלנו |
 |---|---|
-| יצירת צליל בחומרה | **עובד** דרך DAC ו־PIA, ולא דרך חיקוי JavaScript נפרד; ‏[sound.s](../rom/src/sound.s). חיבורי החומרה מתועדים ב־[מידע למשתמשי קוד מכונה](https://dragondata.co.uk/Publications/Info_for_mc_users/Info_For_Machine_Code_Users_original.pdf). |
-| גובה צליל, משך ועוצמה זהים | **חלקי**: יש מימוש ובדיקות פנימיות, אך לא נמצאה מדידה מול המקור; ‏[sound-test.mjs](../rom/tools/sound-test.mjs). |
+| יצירת צליל בחומרה | **עובד** דרך DAC ו־PIA, ולא דרך חיקוי JavaScript נפרד; ‏[sound.s](../archive/rom-v1/src/sound.s). חיבורי החומרה מתועדים ב־[מידע למשתמשי קוד מכונה](https://dragondata.co.uk/Publications/Info_for_mc_users/Info_For_Machine_Code_Users_original.pdf). |
+| גובה צליל, משך ועוצמה זהים | **חלקי**: יש מימוש ובדיקות פנימיות, אך לא נמצאה מדידה מול המקור; ‏[sound-test.mjs](../archive/rom-v1/tools/sound-test.mjs). |
 | `PLAY` מלא | **חלקי**: פרטים בטבלת השפה. |
-| מנוע, אות קלטת וחיפוש | **עובד במסלול הנתמך**: מעבר דרך החומרה המדומה, חיפוש שם, בלוקים ו־checksum; ‏[tape.s](../rom/src/tape.s). |
-| התנהגות סוף קלטת | הקורא מחכה לאות או ל־BREAK; אין חיישן סוף קלטת. התנהגות המימוש מתועדת ב־[tape.md](../rom/docs/tape.md). |
+| מנוע, אות קלטת וחיפוש | **עובד במסלול הנתמך**: מעבר דרך החומרה המדומה, חיפוש שם, בלוקים ו־checksum; ‏[tape.s](../archive/rom-v1/src/tape.s). |
+| התנהגות סוף קלטת | הקורא מחכה לאות או ל־BREAK; אין חיישן סוף קלטת. התנהגות המימוש מתועדת ב־[tape.md](../archive/rom-v1/docs/tape.md). |
 | שמירה קבועה בדפדפן | **עובד כתוספת מודרנית**: CAS מועתק ל־`localStorage`, עם הורדה וייבוא; ‏[shelf.js](../lab/1982/shelf.js). |
 
 **שכבה שנייה: שפת BASIC**
@@ -94,67 +94,67 @@
 
 | פקודה ותחביר בולט | תפקיד | מצב והמקור אצלנו |
 |---|---|---|
-| `LET A=expression` | השמה; `LET` רשות | **עובד**; ‏[interp.s:304](../rom/src/interp.s#L304). |
-| `PRINT`, ‏`?` | פלט; `;`, פסיק, `@`, ‏`TAB(` | **עובד** למסך; ‏[basic.s:225](../rom/src/basic.s#L225). |
-| `PRINT USING format;values` | פלט מעוצב | **חלקי**: שדות מספרים ומחרוזות קיימים; אין מסלול למעריך `^^^^`; ‏[ext.s:350](../rom/src/ext.s#L350). |
-| `INPUT [prompt;]variables` | קלט ערכים | **עובד** מתוך תוכנית; ‏[strings.s:581](../rom/src/strings.s#L581). |
-| `LINE INPUT [prompt;]A$` | קלט שורה | **עובד** מתוך תוכנית; ‏[fn2.s:112](../rom/src/fn2.s#L112). |
+| `LET A=expression` | השמה; `LET` רשות | **עובד**; ‏[interp.s:304](../archive/rom-v1/src/interp.s#L304). |
+| `PRINT`, ‏`?` | פלט; `;`, פסיק, `@`, ‏`TAB(` | **עובד** למסך; ‏[basic.s:225](../archive/rom-v1/src/basic.s#L225). |
+| `PRINT USING format;values` | פלט מעוצב | **חלקי**: שדות מספרים ומחרוזות קיימים; אין מסלול למעריך `^^^^`; ‏[ext.s:350](../archive/rom-v1/src/ext.s#L350). |
+| `INPUT [prompt;]variables` | קלט ערכים | **עובד** מתוך תוכנית; ‏[strings.s:581](../archive/rom-v1/src/strings.s#L581). |
+| `LINE INPUT [prompt;]A$` | קלט שורה | **עובד** מתוך תוכנית; ‏[fn2.s:112](../archive/rom-v1/src/fn2.s#L112). |
 | `PRINT#device,...` | פלט להתקן | **חסר**; מנתח `PRINT` אינו מטפל ב־`#`. |
-| `INPUT#device,...` | קלט מקובץ | **חסר**; ‏[strings.s:581](../rom/src/strings.s#L581). |
-| `LINE INPUT#device,A$` | שורה מקובץ | **חסר**; ‏[fn2.s:112](../rom/src/fn2.s#L112). |
-| `GOTO line`, ‏`GO TO` | קפיצה | **חלקי**: `GOTO` קיים; הצורה עם רווח אינה בטבלת ה־ROM; ‏[interp.s:209](../rom/src/interp.s#L209). |
-| `GOSUB line`, ‏`GO SUB` | תת־שגרה | **חלקי** מאותה סיבה; ‏[stmt2.s](../rom/src/stmt2.s). |
-| `RETURN` | חזרה | **עובד**; ‏[stmt2.s:82](../rom/src/stmt2.s#L82). |
-| `ON expression GOTO/GOSUB list` | בחירת יעד | **עובד** לצורות הממומשות; ‏[stmt2.s:93](../rom/src/stmt2.s#L93). |
-| `IF ... THEN ... ELSE ...` | תנאי | **עובד** במקרים שנכתבו; כולל `IF ... GOTO`; התאמה מלאה של פענוח טרם הוכחה; ‏[interp.s:347](../rom/src/interp.s#L347). |
-| `FOR v=a TO b STEP s` | לולאה | **עובד**; ‏[interp.s:417](../rom/src/interp.s#L417). |
-| `NEXT [I,J]` | המשך לולאות | **עובד**; ‏[interp.s:478](../rom/src/interp.s#L478). |
-| `END` | סיום | **עובד** לסיום; ‏[interp.s:297](../rom/src/interp.s#L297). |
-| `STOP` | עצירה | **עובד**; ‏[interp.s:301](../rom/src/interp.s#L301). |
-| `CONT` | המשך אחרי עצירה | **עובד** למסלול STOP/BREAK; ‏[more.s:37](../rom/src/more.s#L37). |
-| `REM`, ‏`'` | הערה | **עובד**; ‏[interp.s:290](../rom/src/interp.s#L290). |
-| `DATA values` | נתונים קבועים | **עובד**; ‏[stmt2.s:140](../rom/src/stmt2.s#L140). |
-| `READ variables` | קריאת DATA | **עובד**; ‏[stmt2.s:179](../rom/src/stmt2.s#L179). |
-| `RESTORE` | התחלה מחדש של DATA | **עובד**; אצלנו נוסף גם יעד שורה; ‏[stmt2.s:164](../rom/src/stmt2.s#L164). |
-| `DIM A(...)` | מערכים | **חלקי**: עד שני ממדים; ‏[stmt2.s:367](../rom/src/stmt2.s#L367). |
-| `DEF FNA(X)=...` | פונקציית משתמש | **עובד** לצורה הזאת; ‏[fn2.s:8](../rom/src/fn2.s#L8). |
-| `RUN [line]` | הרצה | **חלקי**: מתחיל מתחילת התוכנית, בלי טיפול ביעד; ‏[interp.s:539](../rom/src/interp.s#L539). |
-| `LIST [start-end]` | הצגת תוכנית | **חלקי**: תמיד מציג הכול ומתעלם מהטווח; ‏[interp.s:557](../rom/src/interp.s#L557). |
+| `INPUT#device,...` | קלט מקובץ | **חסר**; ‏[strings.s:581](../archive/rom-v1/src/strings.s#L581). |
+| `LINE INPUT#device,A$` | שורה מקובץ | **חסר**; ‏[fn2.s:112](../archive/rom-v1/src/fn2.s#L112). |
+| `GOTO line`, ‏`GO TO` | קפיצה | **חלקי**: `GOTO` קיים; הצורה עם רווח אינה בטבלת ה־ROM; ‏[interp.s:209](../archive/rom-v1/src/interp.s#L209). |
+| `GOSUB line`, ‏`GO SUB` | תת־שגרה | **חלקי** מאותה סיבה; ‏[stmt2.s](../archive/rom-v1/src/stmt2.s). |
+| `RETURN` | חזרה | **עובד**; ‏[stmt2.s:82](../archive/rom-v1/src/stmt2.s#L82). |
+| `ON expression GOTO/GOSUB list` | בחירת יעד | **עובד** לצורות הממומשות; ‏[stmt2.s:93](../archive/rom-v1/src/stmt2.s#L93). |
+| `IF ... THEN ... ELSE ...` | תנאי | **עובד** במקרים שנכתבו; כולל `IF ... GOTO`; התאמה מלאה של פענוח טרם הוכחה; ‏[interp.s:347](../archive/rom-v1/src/interp.s#L347). |
+| `FOR v=a TO b STEP s` | לולאה | **עובד**; ‏[interp.s:417](../archive/rom-v1/src/interp.s#L417). |
+| `NEXT [I,J]` | המשך לולאות | **עובד**; ‏[interp.s:478](../archive/rom-v1/src/interp.s#L478). |
+| `END` | סיום | **עובד** לסיום; ‏[interp.s:297](../archive/rom-v1/src/interp.s#L297). |
+| `STOP` | עצירה | **עובד**; ‏[interp.s:301](../archive/rom-v1/src/interp.s#L301). |
+| `CONT` | המשך אחרי עצירה | **עובד** למסלול STOP/BREAK; ‏[more.s:37](../archive/rom-v1/src/more.s#L37). |
+| `REM`, ‏`'` | הערה | **עובד**; ‏[interp.s:290](../archive/rom-v1/src/interp.s#L290). |
+| `DATA values` | נתונים קבועים | **עובד**; ‏[stmt2.s:140](../archive/rom-v1/src/stmt2.s#L140). |
+| `READ variables` | קריאת DATA | **עובד**; ‏[stmt2.s:179](../archive/rom-v1/src/stmt2.s#L179). |
+| `RESTORE` | התחלה מחדש של DATA | **עובד**; אצלנו נוסף גם יעד שורה; ‏[stmt2.s:164](../archive/rom-v1/src/stmt2.s#L164). |
+| `DIM A(...)` | מערכים | **חלקי**: עד שני ממדים; ‏[stmt2.s:367](../archive/rom-v1/src/stmt2.s#L367). |
+| `DEF FNA(X)=...` | פונקציית משתמש | **עובד** לצורה הזאת; ‏[fn2.s:8](../archive/rom-v1/src/fn2.s#L8). |
+| `RUN [line]` | הרצה | **חלקי**: מתחיל מתחילת התוכנית, בלי טיפול ביעד; ‏[interp.s:539](../archive/rom-v1/src/interp.s#L539). |
+| `LIST [start-end]` | הצגת תוכנית | **חלקי**: תמיד מציג הכול ומתעלם מהטווח; ‏[interp.s:557](../archive/rom-v1/src/interp.s#L557). |
 | `LLIST [start-end]` | תוכנית למדפסת | **חסר** בטבלת הפקודות. |
-| `NEW` | מחיקת תוכנית | **עובד**; ‏[interp.s:551](../rom/src/interp.s#L551). |
-| `CLEAR [strings[,top]]` | איפוס והקצאת זיכרון | **חלקי מהותית**: המספרים נבלעים ואינם משנים הקצאה; ‏[fn2.s:143](../rom/src/fn2.s#L143). |
-| `DEL start-end` | מחיקת שורות | **עובד** בטווח הממומש; ‏[more.s:116](../rom/src/more.s#L116). |
-| `EDIT line` | עריכת שורה | **חלקי**: עורך ממשי, אך מאגר העריכה קצר ממגבלת הקלט הרגיל; ‏[ext.s:771](../rom/src/ext.s#L771). |
-| `RENUM [new[,old[,step]]]` | מספור והפניות | **חלקי**: מתקן הפניות רבות; אינו מפיק אזהרת הפניה חסרה; ‏[ext.s:48](../rom/src/ext.s#L48). |
-| `TRON`, ‏`TROFF` | מעקב שורות | **עובד**, כל אחד בנפרד; ‏[fn2.s:154](../rom/src/fn2.s#L154). |
+| `NEW` | מחיקת תוכנית | **עובד**; ‏[interp.s:551](../archive/rom-v1/src/interp.s#L551). |
+| `CLEAR [strings[,top]]` | איפוס והקצאת זיכרון | **חלקי מהותית**: המספרים נבלעים ואינם משנים הקצאה; ‏[fn2.s:143](../archive/rom-v1/src/fn2.s#L143). |
+| `DEL start-end` | מחיקת שורות | **עובד** בטווח הממומש; ‏[more.s:116](../archive/rom-v1/src/more.s#L116). |
+| `EDIT line` | עריכת שורה | **חלקי**: עורך ממשי, אך מאגר העריכה קצר ממגבלת הקלט הרגיל; ‏[ext.s:771](../archive/rom-v1/src/ext.s#L771). |
+| `RENUM [new[,old[,step]]]` | מספור והפניות | **חלקי**: מתקן הפניות רבות; אינו מפיק אזהרת הפניה חסרה; ‏[ext.s:48](../archive/rom-v1/src/ext.s#L48). |
+| `TRON`, ‏`TROFF` | מעקב שורות | **עובד**, כל אחד בנפרד; ‏[fn2.s:154](../archive/rom-v1/src/fn2.s#L154). |
 
 **גרפיקה וצליל**
 
-כל פקודה בטבלה נבדקה מול מימושה ב־[gfx.s](../rom/src/gfx.s) או [sound.s](../rom/src/sound.s); משמעותה המקורית במילון [PRG](https://colorcomputerarchive.com/coco/Documents/Books/Dragon/Dragon%2032%20Programmers%20Reference%20Guide%20(John%20Vander%20Reyden).pdf).
+כל פקודה בטבלה נבדקה מול מימושה ב־[gfx.s](../archive/rom-v1/src/gfx.s) או [sound.s](../archive/rom-v1/src/sound.s); משמעותה המקורית במילון [PRG](https://colorcomputerarchive.com/coco/Documents/Books/Dragon/Dragon%2032%20Programmers%20Reference%20Guide%20(John%20Vander%20Reyden).pdf).
 
 | פקודה | תפקיד ותחביר | מצב אצלנו |
 |---|---|---|
-| `CLS [colour]` | ניקוי טקסט | **עובד**; ‏[more.s:9](../rom/src/more.s#L9). |
+| `CLS [colour]` | ניקוי טקסט | **עובד**; ‏[more.s:9](../archive/rom-v1/src/more.s#L9). |
 | `SET(x,y,c)` | נקודה גסה | **עובד**. |
 | `RESET(x,y)` | מחיקתה | **עובד**. |
 | `PMODE mode[,page]` | מצב ודף | **חלקי**: דפים 1–4 בלבד, ואין בדיקה מספקת של סוף שטח התמונה. |
 | `PCLEAR pages` | הקצאת דפים | **חסר**. |
-| `SCREEN type[,CSS]` | בחירת תצוגה | **חלקי**: אצלנו הפסיק ו־CSS נדרשים; ‏[gfx.s:210](../rom/src/gfx.s#L210). |
+| `SCREEN type[,CSS]` | בחירת תצוגה | **חלקי**: אצלנו הפסיק ו־CSS נדרשים; ‏[gfx.s:210](../archive/rom-v1/src/gfx.s#L210). |
 | `COLOR foreground[,background]` | צבעי ציור | **עובד** לצורה הממומשת. |
 | `PCLS [colour]` | ניקוי גרפיקה | **עובד**, אך מושפע מסיכון חפיפת הזיכרון. |
 | `PSET(x,y[,c])` | נקודה | **עובד**. |
 | `PRESET(x,y)` | מחיקת נקודה | **עובד**. |
 | `LINE(...)-(...),PSET/PRESET[,B/BF]` | קו ומלבן | **עובד** לצורות הממומשות. |
-| `CIRCLE(x,y),r[,c,ratio,start,end]` | מעגל, אליפסה וקשת | **חלקי**: רק מרכז, רדיוס וצבע; ‏[gfx.s:570](../rom/src/gfx.s#L570). |
+| `CIRCLE(x,y),r[,c,ratio,start,end]` | מעגל, אליפסה וקשת | **חלקי**: רק מרכז, רדיוס וצבע; ‏[gfx.s:570](../archive/rom-v1/src/gfx.s#L570). |
 | `PAINT(x,y)[,c,border]` | מילוי | **עובד** כמימוש מילוי; זהות מקרי גבול לא הוכחה. |
 | `DRAW string` | שפת ציור | **חלקי**: תנועות ופעולות בסיסיות; אין מכלול המאקרו והמשתנים המקורי. |
 | `GET(...)-(...),array[,G]` | שמירת תמונה | **חלקי**: ייצוג פנימי של בית לפיקסל, שאינו ייצוג התמונות המקורי. |
-| `PUT(...)-(...),array[,action]` | החזרת תמונה | **חלקי**: פעולות לוגיות קיימות, אך מבנה הנתונים שונה; ‏[gfx.s:1068](../rom/src/gfx.s#L1068). |
+| `PUT(...)-(...),array[,action]` | החזרת תמונה | **חלקי**: פעולות לוגיות קיימות, אך מבנה הנתונים שונה; ‏[gfx.s:1068](../archive/rom-v1/src/gfx.s#L1068). |
 | `PCOPY source TO destination` | העתקת דף | **עובד** בטווח הנתמך אצלנו. |
-| `SOUND pitch,duration` | צליל | **חלקי**: לא אומתה התאמת גובה/משך; `SOUND1,1` נדחה בגלל בדיקת גבול המילה; ‏[sound.s:38](../rom/src/sound.s#L38). |
-| `PLAY string` | מנגינה | **חלקי**: דורש מחרוזת במרכאות; חסרים משתנה מחרוזת, מאקרו `X` ונקודות להארכת תו; ‏[sound.s:83](../rom/src/sound.s#L83). |
+| `SOUND pitch,duration` | צליל | **חלקי**: לא אומתה התאמת גובה/משך; `SOUND1,1` נדחה בגלל בדיקת גבול המילה; ‏[sound.s:38](../archive/rom-v1/src/sound.s#L38). |
+| `PLAY string` | מנגינה | **חלקי**: דורש מחרוזת במרכאות; חסרים משתנה מחרוזת, מאקרו `X` ונקודות להארכת תו; ‏[sound.s:83](../archive/rom-v1/src/sound.s#L83). |
 
-**סיכון שצריך לטפל בו מוקדם:** `PMODE 4,4` בוחר שטח שמתחיל ב־⁨`$1800`⁩ ואורכו ⁨`$1800`⁩ בתים. כלומר, פעולת ניקוי יכולה להגיע עד ⁨`$2FFF`⁩, בעוד התוכנית שלנו מתחילה ב־⁨`$1E00`⁩. קיימת חפיפה מחושבת מהקוד. זה **ממצא סטטי שלא שוחזר בהרצה**. המקורות: [חישוב הדף](../rom/src/gfx.s#L179), [תחילת התוכנית](../rom/src/interp.s#L8).
+**סיכון שצריך לטפל בו מוקדם:** `PMODE 4,4` בוחר שטח שמתחיל ב־⁨`$1800`⁩ ואורכו ⁨`$1800`⁩ בתים. כלומר, פעולת ניקוי יכולה להגיע עד ⁨`$2FFF`⁩, בעוד התוכנית שלנו מתחילה ב־⁨`$1E00`⁩. קיימת חפיפה מחושבת מהקוד. זה **ממצא סטטי שלא שוחזר בהרצה**. המקורות: [חישוב הדף](../archive/rom-v1/src/gfx.s#L179), [תחילת התוכנית](../archive/rom-v1/src/interp.s#L8).
 
 **קלטות וקוד מכונה**
 
@@ -174,11 +174,11 @@
 | `DEF USRn=address` | הגדרת שירות מכונה | **חסר**. |
 | `DLOAD/DLOADM` | הורדה מתקשורת | **אינם יעד חסר של Dragon 32**: הטוקן קיים, אך התכונה אינה נתמכת בדגם הזה. |
 
-ראיות המימוש: [tape.s](../rom/src/tape.s), [more.s:143](../rom/src/more.s#L143), [טבלאות הפקודות](../rom/src/interp.s#L209). ההבחנה לגבי `DLOAD` מופיעה ב־[Inside, עמ׳ 349](https://www.dragondata.co.uk/Publications/InsideTheDragon.pdf).
+ראיות המימוש: [tape.s](../archive/rom-v1/src/tape.s), [more.s:143](../archive/rom-v1/src/more.s#L143), [טבלאות הפקודות](../archive/rom-v1/src/interp.s#L209). ההבחנה לגבי `DLOAD` מופיעה ב־[Inside, עמ׳ 349](https://www.dragondata.co.uk/Publications/InsideTheDragon.pdf).
 
 **כל הפונקציות המקוריות**
 
-התפקידים לפי [מילון PRG, עמ׳ 28–35](https://colorcomputerarchive.com/coco/Documents/Books/Dragon/Dragon%2032%20Programmers%20Reference%20Guide%20(John%20Vander%20Reyden).pdf). קובצי המימוש מחולקים ל־[funcs.s](../rom/src/funcs.s), [strings.s](../rom/src/strings.s), [gfx.s](../rom/src/gfx.s) ו־[more.s](../rom/src/more.s).
+התפקידים לפי [מילון PRG, עמ׳ 28–35](https://colorcomputerarchive.com/coco/Documents/Books/Dragon/Dragon%2032%20Programmers%20Reference%20Guide%20(John%20Vander%20Reyden).pdf). קובצי המימוש מחולקים ל־[funcs.s](../archive/rom-v1/src/funcs.s), [strings.s](../archive/rom-v1/src/strings.s), [gfx.s](../archive/rom-v1/src/gfx.s) ו־[more.s](../archive/rom-v1/src/more.s).
 
 | פונקציה | תפקיד | מצב וקובץ |
 |---|---|---|
@@ -197,7 +197,7 @@
 | `PEEK(address)` | קריאת בית | **עובד** גולמית, `more.s`; הזיכרון הפנימי שונה. |
 | `LEN(s)` | אורך | **עובד**, `strings.s`. |
 | `STR$(x)` | מספר לטקסט | **עובד**; זהות פורמט בכל הגבולות לא הוכחה. |
-| `VAL(s)` | טקסט למספר | **חלקי**: מועתקים רק 15 תווים; ‏[strings.s:330](../rom/src/strings.s#L330). |
+| `VAL(s)` | טקסט למספר | **חלקי**: מועתקים רק 15 תווים; ‏[strings.s:330](../archive/rom-v1/src/strings.s#L330). |
 | `ASC(s)` | קוד ראשון | **עובד**, `strings.s`. |
 | `CHR$(n)` | תו | **עובד** ליצירת מחרוזת; פלט תווי בקרה חלקי. |
 | `LEFT$(s,n)` | תחילית | **עובד**, `strings.s`. |
@@ -223,13 +223,13 @@
 
 | פריט מקורי | מצב אצלנו |
 |---|---|
-| ⁨`+ - * /`⁩, סוגריים וסימן חד־איברי | **עובד**; ‏[basic.s](../rom/src/basic.s). |
+| ⁨`+ - * /`⁩, סוגריים וסימן חד־איברי | **עובד**; ‏[basic.s](../archive/rom-v1/src/basic.s). |
 | `^` | **חסר** במנתח הביטויים. |
-| השוואות ⁨`= <> < > <= >=`⁩ | **עובד**; ‏[interp.s:875](../rom/src/interp.s#L875). |
-| `AND/OR/NOT` | **חלקי**: פעולות קיימות; המרת השלמים דוחה גם את הקצה השלילי ⁨`-32768`⁩; ‏[interp.s:856](../rom/src/interp.s#L856). |
-| קבועי `&H` ו־`&O` | **חסר**; קורא המספרים מטפל בעשרוני, נקודה ו־`E`; ‏[fp.s:517](../rom/src/fp.s#L517). |
+| השוואות ⁨`= <> < > <= >=`⁩ | **עובד**; ‏[interp.s:875](../archive/rom-v1/src/interp.s#L875). |
+| `AND/OR/NOT` | **חלקי**: פעולות קיימות; המרת השלמים דוחה גם את הקצה השלילי ⁨`-32768`⁩; ‏[interp.s:856](../archive/rom-v1/src/interp.s#L856). |
+| קבועי `&H` ו־`&O` | **חסר**; קורא המספרים מטפל בעשרוני, נקודה ו־`E`; ‏[fp.s:517](../archive/rom-v1/src/fp.s#L517). |
 | `TO/SUB/FN/THEN/STEP/OFF/USING` | קיימים כחלק מהפקודות הממומשות; אין אצלנו ייצוג טוקנים שלהם. |
-| פקודות צמודות למספרים ורווחים | **חלקי**: `PRINT7` מזוהה, אבל כללי הפענוח אינם אחידים בין הפקודות; ‏[match](../rom/src/basic.s#L329), [sound.s:38](../rom/src/sound.s#L38). |
+| פקודות צמודות למספרים ורווחים | **חלקי**: `PRINT7` מזוהה, אבל כללי הפענוח אינם אחידים בין הפקודות; ‏[match](../archive/rom-v1/src/basic.s#L329), [sound.s:38](../archive/rom-v1/src/sound.s#L38). |
 
 `AUTO` אצלנו היא **תוספת**, ואינה מופיעה בטבלת מילות המקור. לעומתה `DEL`, ‏`EDIT`, ‏`TRON` ו־`TROFF` מקוריות. מקור: [Companion, עמ׳ 39–40](https://archive.worldofdragon.org/browse/downloads/Books/The%20Dragon%2032%20-%20Dragon%20Companion%20-%20Jarvis%20(1982).pdf).
 
@@ -266,9 +266,9 @@
 | 48 | `IE` | קלט אחרי סוף קובץ | **חסר** |
 | 50 | `DS` | פקודה ישירה בקובץ | **חסר** |
 
-ראיות: [basic.s](../rom/src/basic.s#L15), [interp.s:925](../rom/src/interp.s#L925), [stmt2.s:533](../rom/src/stmt2.s#L533), [strings.s:693](../rom/src/strings.s#L693), [tape.s:180](../rom/src/tape.s#L180), [fn2.s:105](../rom/src/fn2.s#L105), [more.s:164](../rom/src/more.s#L164).
+ראיות: [basic.s](../archive/rom-v1/src/basic.s#L15), [interp.s:925](../archive/rom-v1/src/interp.s#L925), [stmt2.s:533](../archive/rom-v1/src/stmt2.s#L533), [strings.s:693](../archive/rom-v1/src/strings.s#L693), [tape.s:180](../archive/rom-v1/src/tape.s#L180), [fn2.s:105](../archive/rom-v1/src/fn2.s#L105), [more.s:164](../archive/rom-v1/src/more.s#L164).
 
-הסיווג כאן מאשר את **הפקת ההודעה**, ולא זהות מלאה בתנאים ובסדר הבדיקות. אין אצלנו טבלת קודים מספריים תואמת. `FM`, למשל, משמש גם לדחיית פורמט קלטת לא נתמך. קיימות גם הודעות `BREAK`, ‏`?REDO`, ‏`??` ו־`?EXTRA IGNORED`; ‏[strings.s:686](../rom/src/strings.s#L686).
+הסיווג כאן מאשר את **הפקת ההודעה**, ולא זהות מלאה בתנאים ובסדר הבדיקות. אין אצלנו טבלת קודים מספריים תואמת. `FM`, למשל, משמש גם לדחיית פורמט קלטת לא נתמך. קיימות גם הודעות `BREAK`, ‏`?REDO`, ‏`??` ו־`?EXTRA IGNORED`; ‏[strings.s:686](../archive/rom-v1/src/strings.s#L686).
 
 **שכבה שלישית: חומרה וזיכרון**
 
@@ -287,7 +287,7 @@
 | ⁨`$FFC0–DF`⁩ | בקרת SAM | **עובד דרך XRoar**. |
 | אזור הווקטורים העליון | פסיקות ואיפוס | **עובד לאתחול שלנו**; אינו משחזר את שירותי BASIC. |
 
-קוד האתחול מגדיר את רכיבי החומרה בפועל: [boot.s:84](../rom/src/boot.s#L84).
+קוד האתחול מגדיר את רכיבי החומרה בפועל: [boot.s:84](../archive/rom-v1/src/boot.s#L84).
 
 **מצביעים ומשתני מערכת שתוכניות מסתמכות עליהם**
 
@@ -320,7 +320,7 @@
 | אזור ⁨`$1D2–2D8`⁩ | שמות ומאגר קלטת | **חסר כמבנה מקורי**. |
 | מאגר הקלט באזור ⁨`$2DD`⁩ | שורת BASIC | **חסר כמבנה מקורי**; אצלנו ב־⁨`$0200`⁩. |
 
-זו רשימת ממשקי התאימות המרכזיים שנמצאו, **לא אישור שכל בית עבודה פנימי מופה ואומת**. המקור אצלנו: [הגדרות המפרש](../rom/src/interp.s#L7), [האתחול](../rom/src/boot.s#L15), [המחרוזות](../rom/src/strings.s#L8), [הגרפיקה](../rom/src/gfx.s#L3).
+זו רשימת ממשקי התאימות המרכזיים שנמצאו, **לא אישור שכל בית עבודה פנימי מופה ואומת**. המקור אצלנו: [הגדרות המפרש](../archive/rom-v1/src/interp.s#L7), [האתחול](../archive/rom-v1/src/boot.s#L15), [המחרוזות](../archive/rom-v1/src/strings.s#L8), [הגרפיקה](../archive/rom-v1/src/gfx.s#L3).
 
 יש גם אי־הסכמה בספרים לגבי סדר צירי הג׳ויסטיק ב־⁨`$15A–15D`⁩. לא הכרעתּי ביניהם בהשערה; נדרש אימות נוסף לפני מימוש.
 
@@ -350,11 +350,11 @@
 8024 byte input     8027 bit input
 ```
 
-אצלנו הקוד מתחיל ישירות באתחול, והווקטורים שבסוף ה־ROM הם וקטורי המעבד בלבד; ‏[boot.s:5](../rom/src/boot.s#L5), [boot.s:390](../rom/src/boot.s#L390). מימוש עתידי צריך להתאים גם אוגרים, דגלים ומשתני RAM של כל שירות.
+אצלנו הקוד מתחיל ישירות באתחול, והווקטורים שבסוף ה־ROM הם וקטורי המעבד בלבד; ‏[boot.s:5](../archive/rom-v1/src/boot.s#L5), [boot.s:390](../archive/rom-v1/src/boot.s#L390). מימוש עתידי צריך להתאים גם אוגרים, דגלים ומשתני RAM של כל שירות.
 
 **ברירות מחדל של גרפיקה**
 
-במקור `PCLEAR` מתחיל בארבעה דפים. תחילת השורה הראשונה הרגילה היא ⁨`$1E01`⁩, אחרי בית אפס ב־⁨`$1E00`⁩. אצלנו הרשומה הראשונה מתחילה ב־⁨`$1E00`⁩ עצמו. המקורות: [מדריך המשתמש, עמ׳ 92](https://www.dragondata.co.uk/Publications/BASIC-MAN/DRAGON_32_BASIC_MANUAL_rel-v2.pdf), [Companion, עמ׳ 35–36](https://archive.worldofdragon.org/browse/downloads/Books/The%20Dragon%2032%20-%20Dragon%20Companion%20-%20Jarvis%20(1982).pdf), [interp.s:8](../rom/src/interp.s#L8).
+במקור `PCLEAR` מתחיל בארבעה דפים. תחילת השורה הראשונה הרגילה היא ⁨`$1E01`⁩, אחרי בית אפס ב־⁨`$1E00`⁩. אצלנו הרשומה הראשונה מתחילה ב־⁨`$1E00`⁩ עצמו. המקורות: [מדריך המשתמש, עמ׳ 92](https://www.dragondata.co.uk/Publications/BASIC-MAN/DRAGON_32_BASIC_MANUAL_rel-v2.pdf), [Companion, עמ׳ 35–36](https://archive.worldofdragon.org/browse/downloads/Books/The%20Dragon%2032%20-%20Dragon%20Companion%20-%20Jarvis%20(1982).pdf), [interp.s:8](../archive/rom-v1/src/interp.s#L8).
 
 ההבדל החשוב יותר מהבית היחיד הוא שאצלנו `PCLEAR` אינו מזיז את גבול התוכנית, ו־`CLEAR` אינו שומר אזור לקוד מכונה. לכן `PEEK/POKE` עובדים בחומרה, אבל תוכנית שמשנה את מצביעי BASIC המקוריים לא תקבל את ההתנהגות הצפויה.
 
@@ -403,7 +403,7 @@ FFA0=STRING$ FFA1=USR
 [next address:2][line number:2][body][00]
 ```
 
-אבל `body` הוא טקסט, ו־`LIST` מדפיס אותו ישירות. מקור: [interp.s:4](../rom/src/interp.s#L4), [storeline](../rom/src/interp.s#L613).
+אבל `body` הוא טקסט, ו־`LIST` מדפיס אותו ישירות. מקור: [interp.s:4](../archive/rom-v1/src/interp.s#L4), [storeline](../archive/rom-v1/src/interp.s#L613).
 
 **פורמט קלטת**
 
@@ -426,7 +426,7 @@ type: 00=header, 01=data, FF=end
 | 11–12 | כתובת EXEC |
 | 13–14 | כתובת טעינה |
 
-אצלנו המסגרת וה־checksum **ממומשים**, אבל `CSAVE` כותב תמיד BASIC ASCII, ו־`CLOAD` מקבל רק את הסוג הזה. הקוד דוחה תוכנית מקודדת או קוד מכונה ב־`FM`. מקור: [tape.s:277](../rom/src/tape.s#L277), [tape.s:492](../rom/src/tape.s#L492).
+אצלנו המסגרת וה־checksum **ממומשים**, אבל `CSAVE` כותב תמיד BASIC ASCII, ו־`CLOAD` מקבל רק את הסוג הזה. הקוד דוחה תוכנית מקודדת או קוד מכונה ב־`FM`. מקור: [tape.s:277](../archive/rom-v1/src/tape.s#L277), [tape.s:492](../archive/rom-v1/src/tape.s#L492).
 
 חשוב להפריד:
 
@@ -449,7 +449,7 @@ type: 00=header, 01=data, FF=end
 | מחסנית היסטורית בחריץ | **מוגבל**: ההרחבה שלנו משתמשת באותו חריץ. |
 | משחקי JavaScript של האפליקציה | אינם רצים בתוך המכונה הזאת; הדבר נאמר גם ב־[דף המעבדה](../lab/1982/index.html#L113). |
 
-ההרחבה היא החלטה מתועדת, אבל היא יוצרת מגבלת תאימות ממשית: החלפתה במחסנית אחרת תסיר את `EDIT`, ‏`RENUM` ו־`PRINT USING`. החיבור אליה נמצא ב־[interp.s:177](../rom/src/interp.s#L177) וב־[ext.s](../rom/src/ext.s).
+ההרחבה היא החלטה מתועדת, אבל היא יוצרת מגבלת תאימות ממשית: החלפתה במחסנית אחרת תסיר את `EDIT`, ‏`RENUM` ו־`PRINT USING`. החיבור אליה נמצא ב־[interp.s:177](../archive/rom-v1/src/interp.s#L177) וב־[ext.s](../archive/rom-v1/src/ext.s).
 
 **אי־ודאות במדריכים**
 
@@ -474,7 +474,7 @@ type: 00=header, 01=data, FF=end
 | הפרדת מפרט ומימוש בתהליך clean-room | **לא נמצא תיעוד תהליך מלא** שמוכיח זאת. |
 | אימות רישוי לפני הפצה | יש רישיונות ומקורות; **אימות חיצוני אינו מוכח מהריפו**. |
 | מקור מדויק ורישיון XRoar זמינים | **יושם**; ‏[SOURCE.md](../lab/1982/SOURCE.md). |
-| בדיקות קלטת בלי האצה | **יושם**; ‏[xr.mjs](../rom/tools/xr.mjs), [tape.md](../rom/docs/tape.md). |
+| בדיקות קלטת בלי האצה | **יושם**; ‏[xr.mjs](../archive/rom-v1/tools/xr.mjs), [tape.md](../archive/rom-v1/docs/tape.md). |
 | בדיקות השוואה לתוצאות מקוריות | **לא נמצאה חבילה שיטתית כזאת**; הבדיקות הקיימות מכילות ציפיות פנימיות. |
 | בחינת MAME ככלי השוואה | **לא נמצאה עדות לביצוע**. |
 | פנייה לרישיון ROM מקורי | **לא נמצאה עדות**; זו אפשרות שהוצעה, לא תנאי לכתיבה עצמאית. |
@@ -496,7 +496,7 @@ type: 00=header, 01=data, FF=end
 | פיילוט חובבי Dragon והורים | **לא נמצאה עדות לפיילוט מסודר**. |
 | אפשרות לכבות אפקטי מסך וצלילי מקשים | **לא אומתה במלואה**; אין לסמן כהושלמה על סמך עיצוב בלבד. |
 
-הקמת היכל התהילה, הפרטיות, האנגלית והשינויים במבנה המוצר מתועדים בהרחבה ב־[מסמך היסוד](DRAGON-APP.md). לעומתם, בדיקות המעבדה נמצאות ב־[rom/tools](../rom/tools/test.mjs).
+הקמת היכל התהילה, הפרטיות, האנגלית והשינויים במבנה המוצר מתועדים בהרחבה ב־[מסמך היסוד](DRAGON-APP.md). לעומתם, בדיקות המעבדה נמצאות ב־[rom/tools](../archive/rom-v1/tools/test.mjs).
 
 **מה כן נחשב סטייה ללא החלטה שנמצאה?** לא בחירת B או הטקסט, אלא התנהגויות מצומצמות כגון התעלמות מפרמטרי `CLEAR`, היעדר טווח `LIST`, ארגון RAM שונה וחלקיות התחביר — לא מצאתי עבורן החלטת מוצר מפורשת. נכון לראות בהן פערי מימוש פתוחים, ולא החלטה לוותר על התאימות.
 
@@ -518,7 +518,7 @@ type: 00=header, 01=data, FF=end
 | חשבון וציור | תלויים בשגרות הקיימות | אינם מואצים אוטומטית |
 | קוד מכונה שקורא לשירותי ROM | עדיין חסר | עדיין חסר עד מימוש השירותים |
 
-הבסיס ההיסטורי הוא פורמט הרשומות וטבלאות הטוקנים ב־[Companion, עמ׳ 35–40](https://archive.worldofdragon.org/browse/downloads/Books/The%20Dragon%2032%20-%20Dragon%20Companion%20-%20Jarvis%20(1982).pdf). ההשלכות על הקוד שלנו נובעות מ־[storeline והריצה](../rom/src/interp.s), [הביטויים](../rom/src/basic.s) ו־[EDIT/RENUM](../rom/src/ext.s).
+הבסיס ההיסטורי הוא פורמט הרשומות וטבלאות הטוקנים ב־[Companion, עמ׳ 35–40](https://archive.worldofdragon.org/browse/downloads/Books/The%20Dragon%2032%20-%20Dragon%20Companion%20-%20Jarvis%20(1982).pdf). ההשלכות על הקוד שלנו נובעות מ־[storeline והריצה](../archive/rom-v1/src/interp.s), [הביטויים](../archive/rom-v1/src/basic.s) ו־[EDIT/RENUM](../archive/rom-v1/src/ext.s).
 
 שלוש הבהרות חשובות:
 
@@ -530,7 +530,7 @@ type: 00=header, 01=data, FF=end
 
 **מה צריך לשנות במעבר**
 
-המעבר נוגע להכנסת שורות, `LIST`, מנתח הביטויים והפקודות, סריקת `DATA`, חיפוש `ELSE`, הגדרות `FN`, עריכה, מספור, קלטות ומצביעי ההמשך של לולאות ותת־שגרות. המבנה המקושר שכבר קיים חוסך חלק מהעבודה, אבל אינו הופך את המעבר להחלפת פונקציה אחת. ראיות: [interp.s](../rom/src/interp.s), [stmt2.s](../rom/src/stmt2.s), [fn2.s](../rom/src/fn2.s), [ext.s](../rom/src/ext.s).
+המעבר נוגע להכנסת שורות, `LIST`, מנתח הביטויים והפקודות, סריקת `DATA`, חיפוש `ELSE`, הגדרות `FN`, עריכה, מספור, קלטות ומצביעי ההמשך של לולאות ותת־שגרות. המבנה המקושר שכבר קיים חוסך חלק מהעבודה, אבל אינו הופך את המעבר להחלפת פונקציה אחת. ראיות: [interp.s](../archive/rom-v1/src/interp.s), [stmt2.s](../archive/rom-v1/src/stmt2.s), [fn2.s](../archive/rom-v1/src/fn2.s), [ext.s](../archive/rom-v1/src/ext.s).
 
 **אומדן בלבד**, בביטחון נמוך, למפתח מנוסה ב־6809 במשרה מלאה:
 

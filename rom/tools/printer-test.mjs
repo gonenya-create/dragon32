@@ -1,5 +1,5 @@
 // בדיקות המדפסת, TAB(, ההתחלה החמה ונקודות החיבור (שלב 3 חלק 6) מול המפרט (docs/DRAGON-SPEC-PRINTER-DLOAD-HOOKS.md).
-// הרצה: node rom2/tools/printer-test.mjs
+// הרצה: node rom/tools/printer-test.mjs
 // מה שהמדפסת מקבלת נאסף בקובץ (XRoar: -lp-file), בית אחרי בית.
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
