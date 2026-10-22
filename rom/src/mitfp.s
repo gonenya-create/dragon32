@@ -303,6 +303,16 @@ muldv2		tst	ARGEXP
 fprts		rts
 8		leas	2,s
 		bra	zerofc
+		fill	$ff,$89a4-*	;@isl
+		ldb	#')	;@isl
+		fcb	$8c	;@isl
+		ldb	#'(	;@isl
+		fcb	$8c	;@isl
+		ldb	#',	;@isl
+		tfr	b,a	;@isl
+		jmp	synchk	;@isl
+		fill	$ff,$89b4-*	;@isl
+		jmp	err_sn	;@isl
 fmult		lbsr	conupk
 fmultt		tst	FACEXP
 		beq	fprts
@@ -311,10 +321,10 @@ fmultt		tst	FACEXP
 		clrb
 		std	RESHO
 		std	RESMO			; ב-Dragon הבית הנוסף לא נכנס לכפל (קורא; ב-mit כן)
-		bsr	mltply
+		lbsr	mltply
 		ldx	#FACLO+1	; FACLO, FACMO, FACMOH, FACHO
 1		lda	,-x
-		bsr	mltply
+		lbsr	mltply
 		cmpx	#FACHO
 		bne	1B
 movfr		ldd	RESHO
@@ -492,6 +502,10 @@ ayint		lda	FACEXP
 		lbne	err_fc
 ; qint: FAC → מספר שלם של 32 ביט עם סימן ב-FACHO..FACLO (מעוגל כלפי מטה)
 qint		ldb	FACEXP
+		bra	isl_8b2d_e	;@isl
+		fill	$ff,$8b2d-*	;@isl
+		jmp	x_intcnv	;@isl
+isl_8b2d_e	;@isl
 		beq	clrfac
 		negb
 		addb	#160		; B = 160 - FACEXP
@@ -541,6 +555,11 @@ fcomp		ldb	,x
 		ldd	1,x
 		ora	#$80
 		cmpd	FACHO
+		bra	isl_8b8a_e	;@isl
+		fill	$ff,$8b8a-*	;@isl
+		jmp	err_bs	;@isl
+		jmp	err_fc	;@isl
+isl_8b8a_e	;@isl
 		bne	1F
 		ldd	3,x		; Dragon: הבית הנוסף לא משתתף בהשוואה (קורא; ב-mit הוא כן)
 		subd	FACMO
@@ -619,6 +638,11 @@ fout5		lbsr	faddh
 		cmpa	#'0
 		beq	12B
 		cmpa	#'.
+		bra	isl_8c36_e	;@isl
+		fill	$ff,$8c36-*	;@isl
+		clra	;@isl
+		jmp	x_givabf	;@isl
+isl_8c36_e	;@isl
 		beq	13F
 		leay	1,y
 13		lda	#'+

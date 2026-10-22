@@ -465,6 +465,9 @@ fndlnc
 		rts
 9		orcc	#1
 		rts
+		fill	$ff,$8342-*	;@isl
+		ldb	#12	;@isl
+		jmp	error	;@isl
 
 ; lnkprg: מחשב מחדש את כל הקישורים. סוף כל שורה = ה-0 שבסופה; סוף התוכנית = קישור $0000
 ; (mit: LNKPRG/CHEAD, m6502.asm:1642)
@@ -950,6 +953,7 @@ fntab		fcs	"SGN"
 		include	"mitary.s"
 		include	"mitctl.s"
 		include	"mitfunc.s"
+		include	"entries.s"		; מתאמים לכתובות הקבועות של המקור
 
 ; ---------- שבעת המצביעים ב-$A000 (docs/DRAGON-SPEC-INTERFACES.md 3ב, DRAGON-SPEC-TAPE.md 1.10) ----------
 ; הקוד שלפני הטבלה חייב להיגמר לפני $A000 (אחרת האסמבלר נותן שגיאה). המקום שנשאר פנוי מתמלא ב-$FF
@@ -979,7 +983,7 @@ fntab		fcs	"SGN"
 irq		lda	PIA0+3
 		bpl	9F
 		lda	PIA0+2
-		ldx	TICKS
+irqtk		ldx	TICKS		; ($9D46: כניסה אחרי האישור)
 		leax	1,x
 		stx	TICKS
 		ldd	PLYTMR
