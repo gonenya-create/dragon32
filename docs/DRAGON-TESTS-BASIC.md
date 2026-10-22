@@ -298,7 +298,7 @@ RUN
 | L-F-MID | `FF98 MID$` — מיקום ואורך מושמט | `PRINT MID$("ABCDE",2,2);"/";MID$("ABCDE",4)` | `BC/DE\n` |
 | L-F-POINT | `FF99 POINT` — תא טקסט | `CLS:IF POINT(0,0)=-1 THEN PRINT "Y" ELSE PRINT "N"` | `Y\n` בגוף הפלט; צילום CLS נבדק בנפרד |
 | L-F-INKEY | `FF9A INKEY$` — אין מקש ומקש יחיד | `10 A$=INKEY$:IF A$="" THEN 10↵20 PRINT ASC(A$)`; בזמן הריצה לחץ A פעם אחת | **פתוח**, כולל חוצץ המקש `$87` |
-| L-F-MEM | `FF9B MEM` — מחסנית GOSUB | תוכנית MEM להלן | **פתוח**; אימות, בדיקה 11 |
+| L-F-MEM | `FF9B MEM` — מחסנית GOSUB | תוכנית MEM להלן | **פתוח**; אימות, בדיקה 11. התחזית שלנו: **7** (רשומה של 5 בתים ועוד כתובת חזרה של 2), לפי [סגירת שלב 2](DRAGON-SPEC-STAGE2-CLOSE.md) |
 | L-F-VARPTR | `FF9C VARPTR` — מרחק משתנים | `10 A=1:B=2↵20 PRINT VARPTR(B)-VARPTR(A)` | **פתוח**; ב־D64 התחזית 7; אימות, בדיקה 3 |
 | L-F-INSTR | `FF9D INSTR` — התחלת חיפוש וחוסר התאמה | `IF INSTR(2,"ABABA","BA")=2 AND INSTR(1,"ABC","Z")=0 THEN PRINT "Y" ELSE PRINT "N"` | `Y\n` |
 | L-F-TIMER | `FF9E TIMER` — השמה ובתים | `10 TIMER=16384↵20 PRINT PEEK(274);PEEK(275);PEEK(276)↵30 PRINT TIMER` | **פתוח**; אין מספר קבוע ללא שליטה בזמן; אימות, בדיקה 2 |
@@ -404,10 +404,12 @@ RUN
 | L-NPRINT-04 | סף E תחתון | `PRINT .000999999999↵PRINT .001↵PRINT .009999999999↵PRINT .01` |
 | L-NPRINT-05 | סף E עליון | `PRINT 999999998↵PRINT 999999999↵PRINT 999999999.5↵PRINT 1000000000` |
 | L-NPRINT-06 | תשע ספרות ועיגול עשרוני | `PRINT 1/3↵PRINT 2/3↵PRINT 1.234567894↵PRINT 1.234567895↵PRINT -1.234567895` |
-| L-NPRINT-07 | עיגול בינרי בחצי | `10 A=1:B=2^(-32)↵20 C=A+B:D=-A-B↵30 PRINT (C-A)*2^31↵40 PRINT (D+A)*2^31` |
+| L-NPRINT-07 | עיגול בינרי בחצי | `10 A=1:B=1:FOR I=1 TO 32:B=B/2:NEXT I↵20 C=A+B:D=-A-B↵30 PRINT (C-A)*2147483648↵40 PRINT (D+A)*2147483648` |
 | L-NPRINT-08 | תת־זרימה וגלישת חזקה | `10 A=2^(-128)↵20 PRINT A/2↵30 PRINT 2^127` |
 
 ב־⁨L-NPRINT-07⁩ מצלמים גם את C ו־D. לפי ממצא **ב** במפרט, השערת העיגול החוצה נותנת בתי ערך ⁨`81 00 00 00 01`⁩ ו־⁨`81 80 00 00 01`⁩ בהתאמה. **ל־D32 התוצאה פתוחה.**
+
+> **תיקון (שלב 5, 22.10.2026):** בנוסח הקודם היה `B=2^(-32)`. החזקה עוברת דרך LOG ו-EXP, ולכן B יוצא מעט קטן מ-2^-32 (בתים `60 7F FF FF D4`), והמקרה כבר אינו "חצי". עכשיו B נבנה בחילוק חוזר ב-2, והוא מדויק (`61 00 00 00 00`). מאותה סיבה גם `2^31` הוחלף במספר 2147483648. ב-ROM שלנו התוצאה: 1 ו-1-, כמו בתחזית "העיגול החוצה".
 
 ---
 
@@ -658,7 +660,7 @@ RUN
 |---|---|---|
 | L-EXT-01 | CSAVEM/CLOADM, קצוות והיסט | `POKE 1536,17:POKE 1537,34:POKE 1538,51↵CSAVEM "M",1536,1538,1537`; החזר סרט; `CLOADM "M",16↵PRINT PEEK(1552);PEEK(1553);PEEK(1554)↵PRINT PEEK(157);PEEK(158)` |
 | L-EXT-02 | CSAVE ASCII וטעינה לבסיס אחר | `10 PRINT "A"↵CSAVE "T",A`; החזר סרט; `NEW↵PCLEAR 1↵CLOAD "T"↵LIST↵RUN` |
-| L-EXT-03 | INPUT#, LINE INPUT# ו־EOF | הכן קובץ `D` עם `OPEN "O",#-1,"D":PRINT #-1,"A,B":CLOSE #-1`. בכל קריאה החזר סרט. מסלול א: `OPEN "I",#-1,"D":PRINT EOF(-1):LINE INPUT #-1,A$:PRINT A$:PRINT EOF(-1)`. מסלול ב: `OPEN "I",#-1,"D":INPUT #-1,A$,B$:PRINT A$;B$` |
+| L-EXT-03 | INPUT#, LINE INPUT# ו־EOF | הכן קובץ `D` עם `OPEN "O",#-1,"D":PRINT #-1,"A,B":CLOSE #-1`. בכל קריאה החזר סרט. מסלול א: `OPEN "I",#-1,"D":PRINT EOF(-1):LINE INPUT #-1,A$:PRINT A$:PRINT EOF(-1)`. מסלול ב: `OPEN "I",#-1,"D":INPUT #-1,A$,B$:PRINT A$;B$` (שלב 5: מריצים כשורות תוכנית, למשל `10 ...` ואז `RUN`. במצב ישיר INPUT# ו-LINE INPUT# נותנים `?ID`) |
 | L-EXT-04 | SKIPF וקובץ שאחריו | הקלט ברצף תוכנית `10 PRINT "T"` בשם T ותוכנית `10 PRINT "U"` בשם U. החזר להתחלה; `SKIPF "T"↵CLOAD "U"↵RUN` |
 | L-EXT-05 | PRINT# למדפסת, TAB ומיקום מסך | בנפרד: `PRINT #-2,"A"`; `PRINT "A","B","C"`; `CLS:PRINT @33,"A";:PRINT TAB(5);"B";`; `PRINT @512,"A"`; `PRINT TAB(256);"A"` |
 | L-EXT-06 | LINE: מסגרת, מילוי, מחיקה ומוצא חסר | אחרי `PMODE 4,1:PCLS 0`, בנפרד: `LINE(0,0)-(7,7),PSET,B`; `LINE(0,0)-(7,7),PSET,BF`; `LINE(0,0)-(7,7),PRESET`; `LINE-(7,7),PSET` |
