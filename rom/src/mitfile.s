@@ -182,9 +182,7 @@ cload_st	clr	FSTATE		; סוגרים בכוח (מה שחיכה לכתיבה הו�
 		leax	m_ok,pcr	; OK ושורה חדשה, גם בתוכנית
 		lbsr	puts
 		lbsr	lnkprg		; קישורים חדשים (תוכנית שנשמרה בכתובת אחרת)
-		lbsr	runc
-		lds	STKTOP
-		clr	,-s
+		lbsr	runstk
 		lbra	main		; לא מריצים, ובלי OK נוסף
 7		lbsr	scrtch		; מה שנטען נמחק
 		bra	eio
@@ -195,7 +193,7 @@ cloadm		jsr	<chrget		; ה-M
 		lbsr	search
 		tst	HGAP
 		lbne	clm_gap
-		lbsr	getofs		; ההיסט (אחרי החיפוש)
+		bsr	getofs		; ההיסט (אחרי החיפוש)
 		pshs	d
 		lda	HTYPE
 		cmpa	#2
@@ -216,7 +214,7 @@ cloadm		jsr	<chrget		; ה-M
 
 ; ---------- CSAVE (3.6) ----------
 csave_st	cmpa	#'M
-		lbeq	csavem
+		beq	csavem
 		lbsr	getfn
 		jsr	<chrgot
 		bne	1F
@@ -257,6 +255,12 @@ getofs		clrb
 cadr		lbsr	chkcom
 		lbsr	frmevl
 		lbra	getadr
+
+; ---------- CSAVEM (3.14) ----------
+csavem		jsr	<chrget		; ה-M
+		lbsr	getfn
+		bsr	cadr
+		bra	isl_ba77_e	;@isl
 		fill	$ff,$ba77-*	;@isl
 		ldb	#$60	;@isl
 		ldx	#$0400	;@isl
@@ -265,11 +269,7 @@ isl_ba7e	stb	,x+	;@isl
 		cmpx	#$0600	;@isl
 		blo	isl_ba7e	;@isl
 		rts	;@isl
-
-; ---------- CSAVEM (3.14) ----------
-csavem		jsr	<chrget		; ה-M
-		lbsr	getfn
-		bsr	cadr
+isl_ba77_e	;@isl
 		std	HLOAD
 		pshs	d
 		bsr	cadr
@@ -294,14 +294,14 @@ skipf_st	lbsr	getfne
 
 ; ---------- MOTOR ON / OFF (3.8) ----------
 motor_st	tfr	a,b		; chrget לא נוגע ב-B
+		jsr	<chrget
+		cmpb	#$c2		; OFF
 		bra	isl_bac3_e	;@isl
 		fill	$ff,$bac3-*	;@isl
 		bra	isl_bac8	;@isl
 		jmp	sndon	;@isl
 isl_bac8	jmp	sndoff	;@isl
 isl_bac3_e	;@isl
-		jsr	<chrget
-		cmpb	#$c2		; OFF
 		lbeq	motoff
 		cmpb	#$88		; ON: המנוע והשהיה; הפסיקות לא נחסמות
 		lbne	err_sn
@@ -318,12 +318,12 @@ getdev		cmpa	#'#
 1		lbsr	frmevl
 devfac		lbsr	ayint
 		ldb	FACLO
+		sex
+		cmpa	FACMO
 		bra	isl_baec_e	;@isl
 		fill	$ff,$baec-*	;@isl
 		jmp	x_audon	;@isl
 isl_baec_e	;@isl
-		sex
-		cmpa	FACMO
 		bne	8F
 		stb	DEVNUM
 		tstb			; 2: B עם הדגלים שלו; Z=1 בחזרה = מקובל (גם התקן של הרחבה)
@@ -352,6 +352,8 @@ chkin		jsr	HK_CKIN		; 6
 		cmpa	#$fe
 		beq	8F
 		ldb	#1
+1		bsr	istape
+		bne	9F
 		bra	isl_bb26_e	;@isl
 		fill	$ff,$bb26-*	;@isl
 		cmpa	#':	;@isl
@@ -363,8 +365,6 @@ isl_bb26_1	suba	#'0	;@isl
 		suba	#-'0	;@isl
 isl_bb26_9	rts	;@isl
 isl_bb26_e	;@isl
-1		bsr	istape
-		bne	9F
 		lda	FSTATE
 		lbeq	err_no
 		cmpb	FSTATE
@@ -435,12 +435,12 @@ devpar		jsr	HK_DEVP		; 3
 ; לבד), ועם 0 נשלח סוף שורה. A, B ו-X נשמרים
 prtout		pshs	a,b,x
 		cmpa	#13
+		beq	2F
+		cmpa	#$20
 		bra	isl_bbb5_e	;@isl
 		fill	$ff,$bbb5-*	;@isl
 		jmp	blink	;@isl
 isl_bbb5_e	;@isl
-		beq	2F
-		cmpa	#$20
 		blo	1F
 		inc	LPTPOS
 1		bsr	lpsend
@@ -459,13 +459,13 @@ isl_bbb5_e	;@isl
 		ldb	,x+		; כמה בתים (עד 6)
 		beq	5F
 4		lda	,x+
+		bsr	lpsend
+		decb
+		bne	4B
 		bra	isl_bbe5_e	;@isl
 		fill	$ff,$bbe5-*	;@isl
 		jmp	inkey	;@isl
 isl_bbe5_e	;@isl
-		bsr	lpsend
-		decb
-		bne	4B
 5		clr	LPTPOS
 		puls	a,b,x,pc
 ; lpsend: בית אחד. מחכים לסוף ה"עסוק" ($FF22 ביט 0) בלי הגבלה ובלי BREAK; הנתון ל-$FF02, ופעימה
@@ -603,12 +603,14 @@ close_st	beq	tclose		; בלי כלום: הכול
 		beq	9F		; ה-rts של tclose
 		lbsr	chkcom
 		bra	1B
-		fill	$ff,$bcf5-*	;@isl
-		jmp	lpsend	;@isl
 ; tclose: סגירת הכול (END, RUN, CLOSE; קורא: מדפסת 3.6 נקודות 8-9): הקלטת, דרך סגירת התקן אחד
 tclose		jsr	HK_CLALL	; 8
 		lda	#$ff
 		sta	DEVNUM
+		bra	isl_bcf5_e	;@isl
+		fill	$ff,$bcf5-*	;@isl
+		jmp	lpsend	;@isl
+isl_bcf5_e	;@isl
 ; clsone: סגירת ההתקן שב-DEVNUM, ו-DEVNUM = 0. קלטת פתוחה לכתיבה: מה שנשאר בחוצץ (אם יש) ובלוק סוף,
 ; כל אחד עם מנוע ומבוא; הקלטת סגורה
 clsone		jsr	HK_CLONE	; 9
@@ -623,13 +625,13 @@ clsone		jsr	HK_CLONE	; 9
 		beq	2F
 		lbsr	wbuf
 2		lda	#$ff
+		sta	BLKTYP
+		clr	BLKLEN
+		lbsr	wblk
 		bra	isl_bd1a_e	;@isl
 		fill	$ff,$bd1a-*	;@isl
 		jmp	prtout	;@isl
 isl_bd1a_e	;@isl
-		sta	BLKTYP
-		clr	BLKLEN
-		lbsr	wblk
 tcl1		clr	FSTATE		; C=0 (END)
 		clr	DEVNUM
 9		rts
@@ -647,26 +649,24 @@ fn_eof		jsr	HK_EOF		; 15
 		tst	CBFCNT
 		bne	1F
 		decb
-		bra	isl_bd41_e	;@isl
-		fill	$ff,$bd41-*	;@isl
-		jmp	x_mux	;@isl
-isl_bd41_e	;@isl
 1		puls	a
 		sta	DEVNUM
 		sex
 		lbra	givd
+		fill	$ff,$bd41-*	;@isl
+		jmp	x_mux	;@isl
 
 ; ---------- CLOAD של קובץ ASCII (3.3) ----------
 ; דגל ASCII חובה (?FM). NEW, הקלטת פתוחה לקריאה, ושורה אחרי שורה כאילו הוקלדה (בלי הד). שורה בלי מספר: ?DS.
 ; בסוף הקובץ: סגור, ו-OK. שורה שנקטעה בסוף הקובץ הולכת לאיבוד
 cl_asc		tst	HASCII
+		lbeq	efmo
+		lbsr	scrtch
+		lda	#$ff
 		bra	isl_bd52_e	;@isl
 		fill	$ff,$bd52-*	;@isl
 		jmp	joyrd	;@isl
 isl_bd52_e	;@isl
-		beq	efmo
-		lbsr	scrtch
-		lda	#$ff
 		sta	DEVNUM
 		sta	SPCIO
 		lbsr	ropen

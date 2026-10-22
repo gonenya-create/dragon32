@@ -288,6 +288,10 @@ fn_pos		lbsr	chknum
 		sta	DEVNUM
 		ldb	DEVPOS
 		lbra	givb
+		fill	$ff,$9d3d-*	;@isl
+		jmp	irq	;@isl
+		fill	$ff,$9d46-*	;@isl
+		jmp	irqtk	;@isl
 fn_mem		tfr	s,d		; S בכניסה פחות STREND, בלי סימן (קורא)
 		subd	STREND
 		lbra	givu
@@ -313,12 +317,6 @@ timset		jsr	<chrget		; אחרי $FF
 ; eqadr: '=' ואחריו כתובת 0-65535 ב-D
 eqadr		lda	#$cb		; =
 		lbsr	synchk
-		bra	isl_9d3d_e	;@isl
-		fill	$ff,$9d3d-*	;@isl
-		jmp	irq	;@isl
-		fill	$ff,$9d46-*	;@isl
-		jmp	irqtk	;@isl
-isl_9d3d_e	;@isl
 ; evadr: ביטוי → כתובת 0-65535 ב-D
 evadr		lbsr	frmevl
 		lbra	getadr
@@ -492,9 +490,7 @@ clear		beq	clr_go		; בלי מספרים: רק ניקוי
 		puls	d,x
 		std	MEMSIZ
 		stx	STKTOP
-clr_go		lbsr	runc		; משתנים, מחרוזות, DATA, אין המשך
-		lds	STKTOP		; בלי החזרה ל-gone: המחסנית מתאפסת (mit: STKINI)
-		clr	,-s
+clr_go		bsr	runstk		; משתנים, מחרוזות, DATA, אין המשך, ומחסנית חדשה (mit: STKINI)
 		lbra	newstt
 mem_om		lbra	err_om
 

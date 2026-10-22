@@ -301,9 +301,10 @@ screen_st	cmpa	#',
 		beq	9F
 2		lbsr	chkcom
 		lbsr	evbyte
-		tstb
+x_css		tstb			; ($AA10: ערכת הצבעים מ-B; קורא 8.12)
 		beq	4F
 		ldb	#8
+x_css2
 4		stb	GCSS
 		lda	PIA1+2
 		anda	#$f7

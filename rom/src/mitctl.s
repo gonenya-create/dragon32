@@ -204,15 +204,11 @@ brkchk		ldd	KQCNT		; תור הבדיקות: רק BREAK שעומד ראשון, ו
 brktst		cmpa	#3
 		beq	2F
 		cmpa	#$13		; SHIFT-@: עוצרים עד המקש הבא, ובודקים גם אותו (קורא 2.5, 8.4)
-		beq	brkpau
+		lbeq	$852b		; (המתנה למקש: src/islands.s)
 		tsta
 		beq	9F
 		sta	IKEYIM
 9		rts			; (גם של end ו-cont)
-; brkpau ($852B): מחכים למקש, בלי סמן
-brkpau		lbsr	inkey
-		beq	brkpau
-		bra	brktst
 5		lda	CURLIN		; התור
 		inca
 		beq	9B

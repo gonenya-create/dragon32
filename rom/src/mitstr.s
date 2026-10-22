@@ -202,23 +202,27 @@ GARBFL		equ	$07
 fn_asc		bsr	frestr
 		clr	VALTYP
 		tsta
+		bra	isl_957a_e	;@isl
+		fill	$ff,$957a-*	;@isl
+		jmp	prnum	;@isl
+isl_957a_e	;@isl
 		beq	str_fc
 		ldb	,x
 		bra	1F
-fn_len		bsr	frestr
+fn_len		lbsr	frestr
 		clr	VALTYP
 		tfr	a,b
 1		lbra	givb
 fn_chr		lbsr	conint		; B = 0-255
 		pshs	b
 		lda	#1
-		bsr	strspa
+		lbsr	strspa
 		puls	b
 		stb	,x		; X = הכתובת (strspa)
 		lbra	putnew
 ; left$/right$/mid$: X = מתאר המחרוזת, B = התחלה (0..), A = כמה תווים. מעתיקים לזמני חדש
 substr		pshs	a,b,x
-		bsr	strspa		; מקום ל-A תווים (עלול לאסוף: מחשבים את המקור אחר כך)
+		lbsr	strspa		; מקום ל-A תווים (עלול לאסוף: מחשבים את המקור אחר כך)
 		ldx	2,s
 		lbsr	fretmp		; X = כתובת המקור
 		puls	d,u		; A = כמה, B = התחלה (U סתם)
@@ -236,10 +240,6 @@ midst		jsr	<chrget		; אחרי $FF
 		clrb			; יוצרים משתנה אם אין
 		lbsr	ptrget
 		tst	VALTYP
-		bra	isl_957a_e	;@isl
-		fill	$ff,$957a-*	;@isl
-		jmp	prnum	;@isl
-isl_957a_e	;@isl
 		lbeq	err_tm
 		ldx	VARPNT
 		pshs	x		; המתאר
@@ -258,7 +258,7 @@ isl_957a_e	;@isl
 2		lbsr	chkcom
 		lbsr	evbyte
 		tstb
-		lbeq	str_fc		; אין מקום 0
+		beq	str_fc		; אין מקום 0
 		pshs	b		; ההתחלה
 		ldb	#255		; ברירת מחדל
 		jsr	<chrgot
@@ -276,7 +276,7 @@ isl_957a_e	;@isl
 		ldu	5,s
 		ldb	4,s
 		cmpb	,u
-		lbhi	str_fc		; התחלה מעבר לסוף
+		bhi	str_fc		; התחלה מעבר לסוף
 		ldx	2,u		; לאן: הכתובת ועוד n-1
 		abx
 		leax	-1,x

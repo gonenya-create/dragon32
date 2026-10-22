@@ -587,15 +587,18 @@ cr_put		leax	1,x
 cr_str		leax	1,x		; מרכאות: עד המרכאות הבאות או סוף השורה
 		bra	isl_841f_e	;@isl
 		fill	$ff,$841f-*	;@isl
-		jmp	x_clrrun	;@isl
+		ldd	TXTTAB	;@isl
+		subd	#1	;@isl
+		std	TXTPTR	;@isl
+		lbra	runstk	;@isl
 isl_841f_e	;@isl
 		sta	,u+
 8		lda	,x+
 		sta	,u+
-		beq	cr_ret		; סוף השורה: ה-0 נשמר
+		lbeq	cr_ret		; סוף השורה: ה-0 נשמר
 		cmpa	#'"
 		bne	8B
-cr_lp2		bra	cr_lp
+cr_lp2		lbra	cr_lp
 ; islet: C=1 אם A אות A-Z (שלנו)
 islet		pshs	a
 		suba	#'A
@@ -652,6 +655,10 @@ km_scan		ldb	#$80
 		leas	1,s
 		leau	10,u
 		bra	1B
+		fill	$ff,$849f-*	;@isl
+		jmp	newstt	;@isl
+		fill	$ff,$84a6-*	;@isl
+		jmp	newst2	;@isl
 8		andcc	#$fe
 		rts
 
@@ -660,12 +667,6 @@ km_scan		ldb	#$80
 lrange		clra
 		clrb
 		pshs	d		; מ
-		bra	isl_849f_e	;@isl
-		fill	$ff,$849f-*	;@isl
-		jmp	newstt	;@isl
-		fill	$ff,$84a6-*	;@isl
-		jmp	newst2	;@isl
-isl_849f_e	;@isl
 		bsr	lnum
 		bcc	1F
 		std	,s		; מספר אחד = שורה אחת
@@ -692,12 +693,16 @@ dlist2		lbsr	fndlin		; D = השורה הראשונה, LEND = האחרונה (CSA
 		ldd	2,y
 		cmpd	LEND
 		bhi	9F
-		jsr	HK_LBRK		; 12
-		lbsr	istape		; בין השורות: BREAK (לא לקלטת; קורא: מדפסת 1.8)
 		bra	isl_84ed_e	;@isl
 		fill	$ff,$84ed-*	;@isl
-		jmp	x_disp	;@isl
+		tfr	a,b	;@isl
+		lslb	;@isl
+		abx	;@isl
+		jsr	<chrget	;@isl
+		jmp	[,x]	;@isl
 isl_84ed_e	;@isl
+		jsr	HK_LBRK		; 12
+		lbsr	istape		; בין השורות: BREAK (לא לקלטת; קורא: מדפסת 1.8)
 		beq	1F
 		lbsr	brkchk
 1		lbsr	condcr		; כל שורה מתחילה בסוף שורה מותנה (קורא: מדפסת 1.8)
@@ -710,13 +715,19 @@ isl_84ed_e	;@isl
 		puls	y
 		ldy	,y
 		bra	3B
+		fill	$ff,$851b-*	;@isl
+		jmp	brkchk	;@isl
 9		lbsr	condcr		; והאחרונה נגמרת בסוף שורה מותנה
 		lbsr	istape
 		beq	8F		; קלטת (CSAVE ,A): חזרה למי שקרא
 		lbsr	clsone		; LIST / LLIST: סוגרים, ו-OK
+		bra	isl_852b_e	;@isl
+		fill	$ff,$852b-*	;@isl
+isl_852b	lbsr	inkey	;@isl
+		beq	isl_852b	;@isl
+		lbra	brktst	;@isl
+isl_852b_e	;@isl
 		lbra	main_ok
-		fill	$ff,$851b-*	;@isl
-		jmp	brkchk	;@isl
 8		rts
 
 ; prline: טקסט מכווץ ב-X עד 0. נקודתיים לפני ELSE ו-' לא מוצגים (קורא)
@@ -724,10 +735,6 @@ prline		leax	-4,x		; 25: עם X = הקישור של השורה
 		jsr	HK_DECR
 		leax	4,x
 		pshs	u
-		bra	isl_852b_e	;@isl
-		fill	$ff,$852b-*	;@isl
-		jmp	brkpau	;@isl
-isl_852b_e	;@isl
 		clr	CRMODE		; כאן: בתוך מרכאות
 1		lda	,x+
 		beq	9F
@@ -777,6 +784,8 @@ isl_852b_e	;@isl
 		com	CRMODE
 6		lbsr	lout
 		bra	1B
+		fill	$ff,$85a5-*	;@isl
+		jmp	run	;@isl
 9		puls	u,pc
 
 
@@ -789,10 +798,6 @@ prnum		pshs	d,x		; D כמספר עשרוני בלי אפסים מובילים
 		puls	d,x,pc
 ; numtxt: D → ספרות עשרוניות ב-FBUFFR (מסתיים ב-0, בלי אפסים מובילים). B = כמה (גם RENUM)
 numtxt		pshs	x,u
-		bra	isl_85a5_e	;@isl
-		fill	$ff,$85a5-*	;@isl
-		jmp	run	;@isl
-isl_85a5_e	;@isl
 		ldu	#FBUFFR
 		leax	pow10,pcr
 0		cmpd	,x		; מדלגים על החזקות שגדולות מהמספר (לא על 1): בלי אפסים מובילים

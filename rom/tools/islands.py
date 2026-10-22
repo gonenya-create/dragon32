@@ -9,7 +9,7 @@ import os, re, subprocess, sys, tempfile, shutil
 SRC = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'src')
 os.chdir(SRC)
 TAG = ';@isl'
-FREEGAP = 0
+FREEGAP = 2
 DATA = re.compile(r'^\S*\s+(fcb|fdb|fcc|fcs|fill|rmb|zmb|equ|org|setdp|include|end)\b', re.I)
 UNCOND = re.compile(r'^\S*\s+(rts|rti|bra|lbra|jmp)\b|^\S*\s+puls\s+.*\bpc\b', re.I)
 

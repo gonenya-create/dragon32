@@ -22,7 +22,29 @@
 
 ; @island $8B2D
 ; FAC → מספר שלם עם סימן ב-D (קטיעה לכיוון אפס), ?TM למחרוזת, ?FC מחוץ לטווח
-		jmp	x_intcnv
+		bsr	chknum
+		lda	FACSGN
+		pshs	a
+		clr	FACSGN
+		lda	FACEXP
+		cmpa	#144
+		blo	isl_8b2d_1
+		lda	,s
+		sta	FACSGN
+		leax	n32768,pcr
+		bsr	fcomp
+		bne	err_fc
+		clr	FACSGN
+isl_8b2d_1	bsr	qint
+		ldd	FACMO
+		tst	,s+
+		bpl	isl_8b2d_2
+		coma
+		comb
+		addd	#1
+isl_8b2d_2	std	FACMO
+		tstb
+		rts
 
 ; @island $8B8A
 ; ‏$8B8A: ‏?BS.  $8B8D: ‏?FC
@@ -32,7 +54,8 @@
 ; @island $8C36
 ; ‏$8C36: ‏B בלי סימן → FAC.  $8C37: ‏D עם סימן → FAC (סוף של שגרת USR)
 		clra
-		jmp	x_givabf
+		clr	VALTYP
+		bra	givd
 
 ; @island $9D3D
 ; הפסיקה של המערכת. תוכנה שמוסיפה פסיקה משלה מסיימת בקפיצה לכאן. ‏$9D46: אחרי האישור, מ-TIMER והלאה
@@ -64,7 +87,10 @@ isl_bb26_9	rts
 
 ; @island $841F
 ; ניקוי כמו RUN, וחזרה למי שקרא (קורא 8.15)
-		jmp	x_clrrun
+		ldd	TXTTAB
+		subd	#1
+		std	TXTPTR
+		bra	runstk
 
 ; @island $849F
 ; לולאת הפקודות (קורא 8.16). ‏$84A6: אחרי בדיקת ה-BREAK
@@ -74,7 +100,11 @@ isl_bb26_9	rts
 
 ; @island $84ED
 ; משגר פקודות מטבלה (קורא 8.2)
-		jmp	x_disp
+		tfr	a,b
+		lslb
+		abx
+		jsr	<chrget
+		jmp	[,x]
 
 ; @island $851B
 ; בדיקת BREAK ו-SHIFT-@ (קורא 2.5)
@@ -82,7 +112,9 @@ isl_bb26_9	rts
 
 ; @island $852B
 ; מחכים למקש בלי סמן, ובודקים אותו (קורא 8.4)
-		jmp	brkpau
+isl_852b	bsr	inkey
+		beq	isl_852b
+		bra	brktst
 
 ; @island $85A5
 ; הפקודה RUN (קורא 8.16)
@@ -91,17 +123,20 @@ isl_bb26_9	rts
 ; @island $8E4F
 ; ‏$8E4F: התו הבא ואז בית. ‏$8E51: ביטוי → B. ‏$8E54: ‏FAC → B (קורא 2.2)
 		jsr	<chrget
-		jmp	x_getbyt
-		jmp	x_conbyt
+		bsr	frmevl
+		bsr	conint
+		jmp	<chrgot
 
 ; @island $8E7A
 ; ‏$8E7A כתובת, פסיק ובית. ‏$8E7E פסיק ובית. ‏$8E83 ביטוי → X. ‏$8E86 ‏FAC → X (קורא 2.2)
 		jmp	x_adrbyt
 		fill	$ff,$8e7e-*
-		jmp	x_combyt
-		fill	$ff,$8e83-*
-		jmp	x_getx
-		jmp	x_fac2x
+		bsr	chkcom
+		bra	$8e51
+		bsr	frmevl
+		bsr	getadr
+		tfr	d,x
+		rts
 
 ; @island $903D
 ; הפקודה PRINT (קורא 8.3)

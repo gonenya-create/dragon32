@@ -259,16 +259,6 @@ nround		lbsr	rnd1
 mltply		bne	mltpl1
 		lda	RESLO		; בית אפס: רק הזזה של בית
 		sta	FACOV
-		ldd	RESMOH
-		std	RESMO
-		clra
-		ldb	RESHO
-		std	RESHO
-9		rts
-mltpl1		lsra
-		ora	#$80		; סמן: הלולאה נגמרת כשהוא יוצא
-1		bcc	2F
-		pshs	a
 		bra	isl_89a4_e	;@isl
 		fill	$ff,$89a4-*	;@isl
 		ldb	#')	;@isl
@@ -281,6 +271,16 @@ mltpl1		lsra
 		fill	$ff,$89b4-*	;@isl
 		jmp	err_sn	;@isl
 isl_89a4_e	;@isl
+		ldd	RESMOH
+		std	RESMO
+		clra
+		ldb	RESHO
+		std	RESHO
+9		rts
+mltpl1		lsra
+		ora	#$80		; סמן: הלולאה נגמרת כשהוא יוצא
+1		bcc	2F
+		pshs	a
 		ldd	RESMO
 		addd	ARGMO
 		std	RESMO
@@ -323,7 +323,7 @@ fmultt		tst	FACEXP
 		clrb
 		std	RESHO
 		std	RESMO			; ב-Dragon הבית הנוסף לא נכנס לכפל (קורא; ב-mit כן)
-		bsr	mltply
+		lbsr	mltply
 		ldx	#FACLO+1	; FACLO, FACMO, FACMOH, FACHO
 1		lda	,-x
 		lbsr	mltply
@@ -413,7 +413,7 @@ fin_dig		tst	DPTFLG
 		lbsr	mul10
 		puls	a
 		suba	#'0
-		bsr	finlog
+		lbsr	finlog
 fin_nx		jsr	<chrget
 		bra	fin_lp
 fin_e		cmpa	#'E
@@ -427,7 +427,7 @@ fin_ed		suba	#'0		; המעריך כפול 10 ועוד הספרה
 		cmpb	#10
 		blo	3F
 		tst	EXPSGN
-		beq	ovf2
+		lbeq	ovf2
 		ldb	#100
 		bra	4F
 3		pshs	a
@@ -450,7 +450,7 @@ fin_end		lda	TENEXP
 		bra	9F
 7		inca
 		pshs	a
-		bsr	div10
+		lbsr	div10
 9		lda	,s+		; (גם הדגלים)
 		bra	6B
 8		tst	SGNFLG
@@ -463,6 +463,32 @@ negop		lda	FACEXP
 fsgn		cmpa	#'-
 		beq	1F
 		cmpa	#$c4
+		bra	isl_8b2d_e	;@isl
+		fill	$ff,$8b2d-*	;@isl
+		lbsr	chknum	;@isl
+		lda	FACSGN	;@isl
+		pshs	a	;@isl
+		clr	FACSGN	;@isl
+		lda	FACEXP	;@isl
+		cmpa	#144	;@isl
+		blo	isl_8b2d_1	;@isl
+		lda	,s	;@isl
+		sta	FACSGN	;@isl
+		leax	n32768,pcr	;@isl
+		lbsr	fcomp	;@isl
+		lbne	err_fc	;@isl
+		clr	FACSGN	;@isl
+isl_8b2d_1	bsr	qint	;@isl
+		ldd	FACMO	;@isl
+		tst	,s+	;@isl
+		bpl	isl_8b2d_2	;@isl
+		coma	;@isl
+		comb	;@isl
+		addd	#1	;@isl
+isl_8b2d_2	std	FACMO	;@isl
+		tstb	;@isl
+		rts	;@isl
+isl_8b2d_e	;@isl
 		bne	2F
 1		com	,x
 3		jmp	<chrget
@@ -474,10 +500,6 @@ fsgn		cmpa	#'-
 ; finlog: FAC = FAC + הספרה ב-A
 finlog		lbsr	movaf		; (movaf לא נוגע ב-A)
 		lbsr	float
-		bra	isl_8b2d_e	;@isl
-		fill	$ff,$8b2d-*	;@isl
-		jmp	x_intcnv	;@isl
-isl_8b2d_e	;@isl
 		lbra	finl2
 
 ; mul10 / div10 (mit: MUL10 5359, DIV10 5378)
@@ -488,6 +510,11 @@ mul10		lbsr	movaf
 		bcs	ovf2
 		sta	ARGEXP		; ARG = 4*FAC
 		clr	ARISGN
+		bra	isl_8b8a_e	;@isl
+		fill	$ff,$8b8a-*	;@isl
+		jmp	err_bs	;@isl
+		jmp	err_fc	;@isl
+isl_8b8a_e	;@isl
 		lbsr	faddt		; 5*FAC
 		lbra	incexp		; 10*FAC
 9		rts
@@ -523,11 +550,6 @@ qint		ldb	FACEXP
 		rts
 clrfac		clra
 		clrb
-		bra	isl_8b8a_e	;@isl
-		fill	$ff,$8b8a-*	;@isl
-		jmp	err_bs	;@isl
-		jmp	err_fc	;@isl
-isl_8b8a_e	;@isl
 		std	FACHO
 		std	FACMO
 9		rts
@@ -581,6 +603,12 @@ fout		ldy	#FBUFFR
 1		sta	,y+
 		clr	FACSGN
 		sty	FBUFPT
+		bra	isl_8c36_e	;@isl
+		fill	$ff,$8c36-*	;@isl
+		clra	;@isl
+		clr	VALTYP	;@isl
+		lbra	givd	;@isl
+isl_8c36_e	;@isl
 		lda	FACEXP
 		bne	2F
 		ldd	#'0*256		; אפס
@@ -611,11 +639,6 @@ fout5		lbsr	faddh
 		lda	DECCNT
 		adda	#10
 		cmpa	#11		; mit: 3*ADDPRC+10 בבסיס 8 = 11. שלילי (קטן מ-.01 בערך) או גדול מ-999999999: כתיב E
-		bra	isl_8c36_e	;@isl
-		fill	$ff,$8c36-*	;@isl
-		clra	;@isl
-		jmp	x_givabf	;@isl
-isl_8c36_e	;@isl
 		bhs	5F
 		tfr	a,b
 		decb

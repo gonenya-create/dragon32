@@ -27,7 +27,7 @@ const at = a => rom[a - 0x8000];
 console.log('המקום של הגושים');
 ok('$8342: ‏LDB #12, ואחריו JMP ב-$8344', at(0x8342) === 0xC6 && at(0x8343) === 12 && at(0x8344) === 0x7E);
 ok('$89A4-$89B4: ‏LDB, דילוג, LDB, דילוג, LDB, ובדיקה ב-$89AC', at(0x89A4) === 0xC6 && at(0x89A6) === 0x8C && at(0x89A7) === 0xC6 && at(0x89A9) === 0x8C && at(0x89AA) === 0xC6 && at(0x89AB) === 0x2C && at(0x89B4) === 0x7E);
-ok('$8C36: פקודה של בית אחד (CLRA) שנופלת ל-$8C37', at(0x8C36) === 0x4F && at(0x8C37) === 0x7E);
+ok('$8C36: פקודה של בית אחד (CLRA) שנופלת ל-$8C37 (CLR VALTYP)', at(0x8C36) === 0x4F && at(0x8C37) === 0x0F && at(0x8C38) === 0x06);
 for (const a of [...src.matchAll(/@island \$([0-9A-F]{4})/gi)].map(m => parseInt(m[1], 16)))
   ok(`$${a.toString(16).toUpperCase()}: לא ריק`, at(a) !== 0xFF && at(a) !== 0x00);
 

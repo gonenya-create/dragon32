@@ -160,6 +160,13 @@ list_st		ldx	TXTPTR
 rem		ldx	TXTPTR		; עד סוף השורה
 1		tst	,x+
 		bne	1B
+		bra	isl_8e4f_e	;@isl
+		fill	$ff,$8e4f-*	;@isl
+		jsr	<chrget	;@isl
+		lbsr	frmevl	;@isl
+		lbsr	conint	;@isl
+		jmp	<chrgot	;@isl
+isl_8e4f_e	;@isl
 		leax	-1,x
 		stx	TXTPTR
 		rts
@@ -169,9 +176,7 @@ rem		ldx	TXTPTR		; עד סוף השורה
 run		jsr	HK_RUN		; 19
 		lbsr	gfxrun		; הנקודה האחרונה, זווית וקנה מידה של DRAW (קורא 0.2)
 		lbsr	tclose		; הקבצים נסגרים (קורא: קלטת 6)
-		lbsr	runc
-		lds	STKTOP
-		clr	,-s		; סמן תחתית למחסנית ה-FOR (mit: STKINI)
+		lbsr	runstk		; ומחסנית חדשה, עם סמן תחתית ל-FOR (mit: STKINI)
 		jsr	<chrgot
 		beq	1F
 		bcc	gosn		; RUN "שם": עם הקלטת, בהמשך (Z=0 כאן, אז ה-lbne שם קופץ)
@@ -180,6 +185,15 @@ run		jsr	HK_RUN		; 19
 		leax	-1,x
 		stx	TXTPTR
 		bra	gonew
+		fill	$ff,$8e7a-*	;@isl
+		jmp	x_adrbyt	;@isl
+		fill	$ff,$8e7e-*	;@isl
+		lbsr	chkcom	;@isl
+		bra	$8e51	;@isl
+		lbsr	frmevl	;@isl
+		lbsr	getadr	;@isl
+		tfr	d,x	;@isl
+		rts	;@isl
 
 ; GO TO / GO SUB (mit: GOTO 2391, GOSUB 2373)
 go		cmpa	#$bc		; TO
@@ -199,12 +213,6 @@ gosub1					; כתובת החזרה של הפקודה נשארת מתחת לרש�
 gogo		bsr	goto1		; גם RUN n
 gonew		lbra	newstt
 1		jsr	<chrget
-		bra	isl_8e4f_e	;@isl
-		fill	$ff,$8e4f-*	;@isl
-		jsr	<chrget	;@isl
-		jmp	x_getbyt	;@isl
-		jmp	x_conbyt	;@isl
-isl_8e4f_e	;@isl
 ; goto1: TXTPTR על מספר השורה. שורה גדולה מהנוכחית: מחפשים מהשורה הבאה; אחרת מההתחלה (mit: GOTO)
 goto1		bsr	lineget
 		ldy	TXTTAB		; מההתחלה (fndlin)
@@ -220,15 +228,6 @@ goto1		bsr	lineget
 		rts
 ; lineget: מספר שורה מהטקסט (TXTPTR) ל-D
 lineget		ldx	TXTPTR
-		bra	isl_8e7a_e	;@isl
-		fill	$ff,$8e7a-*	;@isl
-		jmp	x_adrbyt	;@isl
-		fill	$ff,$8e7e-*	;@isl
-		jmp	x_combyt	;@isl
-		fill	$ff,$8e83-*	;@isl
-		jmp	x_getx	;@isl
-		jmp	x_fac2x	;@isl
-isl_8e7a_e	;@isl
 		lbsr	linget
 		stx	TXTPTR
 		pshs	d
@@ -409,6 +408,10 @@ for		lbsr	let		; המשתנה מקבל את ערך ההתחלה; let שם ב-FOR
 		lbsr	movmf
 		leax	fone,pcr	; צעד ברירת מחדל 1
 		lbsr	movfm
+		bra	isl_903d_e	;@isl
+		fill	$ff,$903d-*	;@isl
+		jmp	print	;@isl
+isl_903d_e	;@isl
 		jsr	<chrgot
 		cmpa	#$c1		; STEP
 		bne	3F
@@ -433,7 +436,7 @@ for		lbsr	let		; המשתנה מקבל את ערך ההתחלה; let שם ב-FOR
 		std	1,s
 		lda	#$80		; [0] FOR
 		sta	,s
-		lbra	nxnew
+		bra	nxnew
 TEMPLIM		equ	$03e0		; זמני: העד, בתוך FBUFFR שלא בשימוש כאן
 RELSAV		equ	$03da		; זמני: המקום לפני סימן יחס
 
@@ -444,10 +447,6 @@ stmend		ldx	TXTPTR
 		cmpa	#':
 		beq	9F
 		cmpa	#'"
-		bra	isl_903d_e	;@isl
-		fill	$ff,$903d-*	;@isl
-		jmp	print	;@isl
-isl_903d_e	;@isl
 		bne	2F
 3		leax	1,x
 		lda	,x
@@ -499,6 +498,11 @@ nx_one		clra
 		ldd	14,s		; עוד סיבוב
 		std	CURLIN
 		ldx	16,s
+		bra	isl_90e5_e	;@isl
+		fill	$ff,$90e5-*	;@isl
+		jmp	x_strout	;@isl
+		jmp	strprt	;@isl
+isl_90e5_e	;@isl
 		stx	TXTPTR
 nxnew
 3		lbra	newstt
@@ -532,11 +536,6 @@ ptrget		pshs	b
 		lda	VARNAM+1
 		ora	#$80
 		sta	VARNAM+1
-		bra	isl_90e5_e	;@isl
-		fill	$ff,$90e5-*	;@isl
-		jmp	x_strout	;@isl
-		jmp	strprt	;@isl
-isl_90e5_e	;@isl
 		com	VALTYP
 		jsr	<chrget
 11		ldb	SUBFLG		; ביט 6: שם של DEF FN — ביט 7 בתו הראשון (mit: GETFNM)
