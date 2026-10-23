@@ -159,8 +159,8 @@ button.d32-cart:focus-visible { outline: 3px solid var(--focus); outline-offset:
 
 /* שיתוף בקישור */
 .prose .d32-share-row { margin: 10px 0 0; display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; font-size: 15px; }
-.d32-share, .d32-check { padding: 7px 12px; border: 1.5px solid var(--ink); border-radius: 8px; background: var(--card); color: var(--ink); font: inherit; font-weight: 700; cursor: pointer; }
-.d32-share:focus-visible, .d32-check:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.d32-share, .d32-check, .d32-tolab { padding: 7px 12px; border: 1.5px solid var(--ink); border-radius: 8px; background: var(--card); color: var(--ink); font: inherit; font-weight: 700; cursor: pointer; }
+.d32-share:focus-visible, .d32-check:focus-visible, .d32-tolab:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 .d32-share-note { color: var(--muted); overflow-wrap: anywhere; }
 .d32.is-cart .d32-share-row { display: none; }
 
@@ -605,7 +605,15 @@ a.d32-cart.is-more:focus-visible { outline: 3px solid var(--focus); outline-offs
 .d32.is-only .d32-stop { left: auto; right: 22px; }   /* במסך בלבד כפתור היציאה בפינה השמאלית */
 /* קלטת שתמחק תוכנית שלא נשמרה: לחיצה ראשונה מזהירה */
 .d32-tape.is-armed { outline: 3px solid var(--red, #d33); outline-offset: 2px; }
-.d32-tape-warn { margin: 8px 0 0; padding: 8px 10px; border: 1.5px solid var(--red, #d33); border-radius: 8px; font-size: 14px; line-height: 1.5; }
+.d32-tape-warn { grid-column: 1 / -1; margin: 8px 0 0; padding: 10px 12px; border: 2px solid var(--red, #d33); border-radius: 10px; background: #fff3f0; color: #2a1a12; font-size: 15px; line-height: 1.5; }
+.d32-tape-warn p { margin: 0; }
+.d32-tape-warn p + p { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px; }
+.d32-tape-warn button { min-height: 40px; padding: 6px 14px; border-radius: 8px; font: inherit; font-weight: 700; cursor: pointer; border: 1.5px solid #2a1a12; }
+.d32-warn-save { background: #2a1a12; color: #fff7e8; }
+.d32-warn-go { background: transparent; color: #2a1a12; }
+.d32-tape-warn button:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.d32-link-lab { display: block; margin: 8px 0 0; padding: 8px 10px; border-radius: 8px; background: #2b2f3a; color: #fff7c7; text-align: center; text-decoration: none; font-size: 14px; }
+.d32-link-lab:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 
 /* ---------- שלב 2 (17.10): הדף הוא מדריך בלבד. המחשב נפתח רק במסך המלא או במסך האפליקציה ---------- */
 .d32-room:not(.is-theater):not(.is-phone), .room-machine:not(:has(.d32.is-theater, .d32.is-phone)) { display: none; }

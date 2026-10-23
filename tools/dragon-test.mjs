@@ -287,6 +287,13 @@ if (part('share link')) {
   const input = q.locator('#dragon-room .d32-input');
   await input.fill('run'); await input.press('Enter'); await q.waitForTimeout(400);
   check('the link loads the program; RUN works', /SHARED OK\n 42 \nOK$/.test(await q.locator('#dragon-room .d32-out').textContent()), await q.locator('#dragon-room .d32-out').textContent());
+  const code = link.split('#p=')[1];
+  check('a shared link also offers the same program on the Dragon machine', (await q.locator('#dragon-room .d32-link-lab').getAttribute('href')) === '/lab/1982/#p=' + code);
+  // "פתח במכונה": אותה תוכנית נפתחת בלשונית חדשה של מכונת ה-Dragon, בתוך הקישור
+  await ctx.route('**/lab/1982/**', route => route.fulfill({ contentType: 'text/html', body: 'lab' }));
+  const [lab] = await Promise.all([ctx.waitForEvent('page'), p.locator('#dragon-room .d32-tolab').click()]);
+  await lab.waitForURL(/lab\/1982/, { timeout: 5000 }).catch(() => {});
+  check('"Open on the machine" opens the program in the machine, in a new tab', lab.url().endsWith('/lab/1982/#p=' + code), lab.url());
   await ctx.close();
 }
 
@@ -789,9 +796,16 @@ if (part('full computer /dragon/app/ (theater, coder, AI)')) {
   await p.locator('.d32-tape:has-text("GUESS")').click();
   await p.waitForTimeout(400);
   check('a tape over an unsaved program warns first and does not load', await p.locator('.d32-tape-warn').isVisible() && !/CLOAD/.test(tail(await screenText(p), 3)));
+  check('the warning offers two clear choices', await p.locator('.d32-tape-warn .d32-warn-save').isVisible() && await p.locator('.d32-tape-warn .d32-warn-go').isVisible());
+  await p.locator('.d32-tape-warn .d32-warn-save').click();
+  check('"Save first" prepares CSAVE " and closes the warning', await p.locator('.d32-input').inputValue() === 'CSAVE "' && !(await p.locator('.d32-tape-warn').count()));
+  await p.locator('.d32-input').fill('');
+  await p.locator('.d32-tab[data-tab="shelf"]').click();
   await p.locator('.d32-tape:has-text("GUESS")').click();
+  await p.waitForTimeout(300);
+  await p.locator('.d32-tape-warn .d32-warn-go').click();
   await p.waitForFunction(() => /\?\s*$/.test(document.querySelector('#dragon-room .d32-out').textContent), null, { timeout: 10000 });
-  check('a second click loads the tape', !(await p.locator('.d32-tape-warn').count()));
+  check('"Replace" loads the tape', !(await p.locator('.d32-tape-warn').count()));
   await p.keyboard.press('Escape');
   await p.waitForTimeout(300);
   await p.locator('.d32-tape:has-text("LANDER")').click();
@@ -1085,6 +1099,17 @@ if (part('real machine lab')) {
       check('the app program also lands on the machine\'s "my tapes"', await a.locator('#mytapes .tape small:text-is("APPPROG")').count() === 1);
       await a.evaluate(() => { localStorage.removeItem('d32-mytapes'); localStorage.removeItem('d32-lab-tapes'); });
       await a.close();
+      // מהאפליקציה: #p=... — "פתח במכונה" או קישור שיתוף. התוכנית בתוך הקישור, נטענת מקלטת טקסט ורצה
+      const l = await browser.newPage({ viewport: { width: 1000, height: 900 } });
+      const lerrs = [];
+      l.on('pageerror', e => lerrs.push(e.message));
+      const code = Buffer.from('10 FOR I=1 TO 2\n20 PRINT "FROM A LINK";I\n30 NEXT I').toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+      await l.goto(base.replace(/\/$/, '') + path + '#p=' + code);
+      const fromLink = await l.waitForFunction(() => (window.d32Screen?.() || []).includes('FROM A LINK 2'), null, { timeout: 60000 }).then(() => true, () => false);
+      check('#p=: a program in a link loads as a text tape and runs', fromLink && lerrs.length === 0,
+        JSON.stringify(await l.evaluate(() => [document.getElementById('tape-status').textContent, window.d32Screen?.()])) + lerrs.join(' | '));
+      await l.evaluate(() => localStorage.removeItem('d32-lab-tapes'));
+      await l.close();
       // הקלטות שלי: CSAVE מקליט ושומר בדפדפן, ואחרי טעינה מחדש CLOAD מוצא את התוכנית
       const m = await browser.newPage({ viewport: { width: 1000, height: 900 } });
       const merrs = [];

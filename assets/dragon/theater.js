@@ -20,6 +20,10 @@ const SEND = { BREAK: 'Escape', ENTER: 'Enter', UP: 'ArrowUp', DOWN: 'ArrowDown'
 // מקש במקלדת האמיתית → המקש המצויר שנדלק
 const FROM_KEY = { Escape: 'BREAK', Enter: 'ENTER', ArrowUp: 'UP', ArrowDown: 'DOWN', ArrowLeft: 'LEFT', Backspace: 'LEFT', ArrowRight: 'RIGHT', ' ': 'SPACE', Shift: 'SHIFT', Home: 'CLEAR' };
 
+// הכניסה למכונת ה-Dragon: ההבדל בין שני המחשבים כבר בקישור (דוח "אינסטינקט", 23.10)
+const labText = () => '<span aria-hidden="true">🧪</span> <strong>' + tr('מכונת ה-<bdi dir="ltr">Dragon</bdi>', 'The <bdi dir="ltr">Dragon</bdi> machine') + '</strong>: '
+  + tr('הכי קרוב למחשב המקורי. בבנייה: תוכנות בשפת מכונה עוד לא נבדקו, ועוד לא השווינו מול <bdi dir="ltr">Dragon</bdi> אמיתי. כאן באפליקציה לומדים וכותבים <bdi dir="ltr">BASIC</bdi> בנוחות.',
+    'as close to the original computer as we can get. Being built: machine-code programs are not tested yet, and it has not been compared with a real <bdi dir="ltr">Dragon</bdi>. Here in the app you learn and write <bdi dir="ltr">BASIC</bdi> the easy way.');
 export function createTheater({ root, input, machine, sound, powerOn }) {
   const tv = root.querySelector('.d32-tv');
 
@@ -166,7 +170,7 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   const labLink = document.createElement('a');
   labLink.className = 'd32-lab d32-lab-shelf';
   labLink.href = EN ? '/en/lab/1982/' : '/lab/1982/';
-  labLink.innerHTML = '<span aria-hidden="true">🧪</span> ' + tr('מכונת ה-Dragon (בבנייה): השבבים של ה-Dragon 32, עם BASIC שכתבנו', 'The Dragon machine (being built): the Dragon 32 chips, with a BASIC we wrote');
+  labLink.innerHTML = labText();
   panes.shelf.appendChild(labLink);
   const shelfPages = pagesRow();
   shelfPages.classList.add('d32-pages-shelf');
@@ -539,7 +543,7 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   const helloLab = document.createElement('a');
   helloLab.className = 'd32-hello-lab';
   helloLab.href = EN ? '/en/lab/1982/' : '/lab/1982/';
-  helloLab.innerHTML = '<span aria-hidden="true">🧪</span> ' + tr('מכונת ה-<bdi dir="ltr">Dragon</bdi> (בבנייה): השבבים של ה-<bdi dir="ltr">Dragon 32</bdi>, עם <bdi dir="ltr">BASIC</bdi> שכתבנו', 'The <bdi dir="ltr">Dragon</bdi> machine (being built): the <bdi dir="ltr">Dragon 32</bdi> chips, with a <bdi dir="ltr">BASIC</bdi> we wrote');
+  helloLab.innerHTML = labText();
   tv.after(helloLab);
   const helloPages = pagesRow();
   helloPages.classList.add('d32-pages-hello');

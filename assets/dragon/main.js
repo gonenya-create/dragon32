@@ -130,6 +130,8 @@ function decodeProgram(code) {
     return new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0))).slice(0, SHARE_MAX);
   } catch { return null; }
 }
+// קישור למכונת ה-Dragon עם התוכנית בתוכו
+const labLink = text => (EN ? '/en' : '') + '/lab/1982/#p=' + encodeProgram(text);
 const sharedCode = (/[#&]p=([A-Za-z0-9_-]+)/.exec(location.hash) || [])[1];
 let sharedTaken = false;
 
@@ -349,6 +351,21 @@ function mount(root) {
     check.textContent = '🔍 ' + tr('בדיקת התוכנית', 'Check the program');
     check.addEventListener('click', () => { helper.report('check'); root.querySelector('.d32-helper').scrollIntoView({ block: 'nearest', behavior: 'smooth' }); });
     shareRow.prepend(check, ' ');
+    // "פתח במכונה": התוכנית שבזיכרון, כמו שהיא, נפתחת במכונת ה-Dragon (בלשונית חדשה, כדי שהיא לא תאבד כאן).
+    // התוכנית נוסעת בתוך הקישור (#p=, כמו בשיתוף), והמכונה טוענת אותה מקלטת טקסט ומריצה
+    const toLab = document.createElement('button');
+    toLab.type = 'button';
+    toLab.className = 'd32-tolab';
+    toLab.textContent = '🧪 ' + tr('פתח במכונה', 'Open on the machine');
+    toLab.addEventListener('click', () => {
+      const text = machine.programText();
+      const say = msg => { const n = root.querySelector('.d32-share-note'); if (n) n.textContent = msg; };
+      if (!text) { say(tr('אין עדיין תוכנית. כתבו שורות עם מספרים (או טענו קלטת), ואז פתחו במכונה.', 'No program yet. Type numbered lines (or load a tape), then open it on the machine.')); return; }
+      if (text.length > SHARE_MAX) { say(tr('התוכנית ארוכה מדי לקישור. שמרו אותה עם CSAVE "NAME", ופתחו אותה מהמדף, מהקישור שמתחת לקלטת.', 'The program is too long for a link. Save it with CSAVE "NAME" and open it from the shelf, with the link under the tape.')); return; }
+      say('');
+      window.open(labLink(text), '_blank', 'noopener');
+    });
+    shareRow.append(' ', toLab);
   }
 
   input.addEventListener('keydown', e => {
@@ -419,23 +436,44 @@ function mount(root) {
     }
   }
 
-  // קלטת מחליפה את התוכנית שבזיכרון. אם כתבתם משהו ולא שמרתם: לחיצה ראשונה מזהירה, השנייה טוענת
-  let armed = null, armTimer = 0;
+  // קלטת מחליפה את התוכנית שבזיכרון. אם כתבתם משהו ולא שמרתם: חלונית ליד הקלטת, עם שתי בחירות:
+  // "לשמור קודם" (מכין CSAVE "" בשורת ההקלדה) או "להחליף" (טוען). גם לחיצה נוספת על הקלטת טוענת
+  let armed = null;
   function tapeGuard(b) {
     if (!/^CLOAD/.test(b.getAttribute('data-lines') || '') || !unsaved() || armed === b) { disarm(); return true; }
     disarm();
     armed = b;
     b.classList.add('is-armed');
-    const note = document.createElement('p');
-    note.className = 'd32-tape-warn';
-    note.setAttribute('role', 'status');
-    note.textContent = tr('יש בזיכרון תוכנית שלא נשמרה, והקלטת תחליף אותה. לחיצה נוספת על הקלטת טוענת בכל זאת. כדי לשמור קודם: CSAVE "NAME", או "שמירה לקובץ" בלשונית "תוכנית".', 'There is an unsaved program in memory, and the tape will replace it. Click the tape again to load it anyway. To save first: CSAVE "NAME", or "Save to file" in the Program tab.');
-    b.closest('.d32-shelf').appendChild(note);
-    armTimer = setTimeout(disarm, 8000);
+    const box = document.createElement('div');
+    box.className = 'd32-tape-warn';
+    box.setAttribute('role', 'alertdialog');
+    box.setAttribute('aria-label', tr('תוכנית שלא נשמרה', 'Unsaved program'));
+    const msg = document.createElement('p');
+    msg.textContent = tr('⚠️ יש בזיכרון תוכנית שלא נשמרה, והקלטת תמחק אותה.', '⚠️ There is an unsaved program in memory, and the tape will erase it.');
+    const save = document.createElement('button');
+    save.type = 'button';
+    save.className = 'd32-warn-save';
+    save.textContent = '💾 ' + tr('לשמור קודם', 'Save first');
+    save.addEventListener('click', () => {
+      disarm();
+      view.prefill('CSAVE "');
+      showTv();
+      input.focus({ preventScroll: true });
+    });
+    const go = document.createElement('button');
+    go.type = 'button';
+    go.className = 'd32-warn-go';
+    go.textContent = tr('להחליף', 'Replace');
+    go.addEventListener('click', () => { armed = b; b.click(); });
+    const row = document.createElement('p');
+    row.append(save, go);
+    box.append(msg, row);
+    (b.closest('.d32-tape-wrap, .d32-tape-box') || b).after(box);
+    box.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    save.focus({ preventScroll: true });
     return false;
   }
   function disarm() {
-    clearTimeout(armTimer);
     if (armed) armed.classList.remove('is-armed');
     armed = null;
     root.querySelectorAll('.d32-tape-warn').forEach(n => n.remove());
@@ -567,6 +605,12 @@ function mount(root) {
     const text = decodeProgram(sharedCode);
     if (text) {
       powerOn().then(() => { machine.loadText(text, 'LINK'); });
+      // מי שקיבל קישור: אפשר להריץ את אותה תוכנית גם במכונת ה-Dragon
+      const a = document.createElement('a');
+      a.className = 'd32-link-lab';
+      a.href = labLink(text);
+      a.textContent = tr('🧪 התוכנית מהקישור, במכונת ה-Dragon', '🧪 The program from the link, on the Dragon machine');
+      root.querySelector('.d32-tv')?.after(a);
     }
   }
   if (on && !sharedTaken) machine.boot();
