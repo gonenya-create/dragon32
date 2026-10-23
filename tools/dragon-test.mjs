@@ -782,6 +782,9 @@ if (part('full computer /dragon/app/ (theater, coder, AI)')) {
   check('top bar: brand and status "מוכן"', (await p.locator('.d32-bar-brand b').textContent()) === 'Dragon 1982' && /מוכן/.test(await p.locator('.d32-status').textContent()));
   check('on a computer, "the journey" and "the history" links are visible under the helper', await p.locator('.d32-pages-side a[href="/story/"]').isVisible() && await p.locator('.d32-pages-side a[href="/dragon-history/"]').isVisible());
   check('toolbox has 3 tabs on a computer; the tapes are in the shelf tab', (await p.locator('.d32-tab:visible').count()) === 3 && (await p.locator('.d32-pane[data-pane="shelf"] .d32-tape').count()) >= 6);
+  await p.locator('.d32-tab[data-tab="shelf"]').click();
+  check('on a computer too, the shelf tab says how the Dragon machine differs from the app', await p.locator('.d32-pane[data-pane="shelf"] .d32-lab-shelf').isVisible() && /הכי קרוב למחשב המקורי/.test(await p.locator('.d32-pane[data-pane="shelf"] .d32-lab-shelf').textContent()));
+  await p.locator('.d32-tab[data-tab="program"]').click();
   const tvBefore = await p.locator('.d32-tv').evaluate(e => e.getBoundingClientRect().width);
   await p.locator('.d32-theater-kbd').click();
   await p.waitForTimeout(150);
