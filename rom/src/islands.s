@@ -204,6 +204,10 @@ isl_ba7e	stb	,x+
 		blo	isl_ba7e
 		rts
 
+; @island $BAA0
+; SOUND מאוגרים: B = המשך, הטון כבר ב-$8C (קורא 2.7). תוכנות בשפת מכונה קוראות לה ישר (למשל DragonTet, דרך CMOC)
+		jmp	sound2
+
 ; @island $BAC3
 ; ‏$BAC3 הצליל כבוי. ‏$BAC5 דולק (קורא 2.7)
 		bra	isl_bac8

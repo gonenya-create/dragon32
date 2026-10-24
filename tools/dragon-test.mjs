@@ -316,8 +316,8 @@ if (part('room /dragon/')) {
   await p.locator('.d32-power').click();
   await p.waitForFunction(() => /OK\s*$/.test(document.querySelector('#dragon-room .d32-out').textContent), null, { timeout: 4000 });
   check('room boots', /DRAGON 1982 BASIC 1\.0\n\(C\) 2026 GONEN YAROM[\s\S]*OK\s*$/.test(await p.locator('#dragon-room .d32-out').textContent()));
-  check('room shelf has 6 tapes', (await p.locator('#dragon-room .d32-tape').count()) === 6);
-  check('every tape has an "on the real machine" link', (await p.locator('#dragon-room .d32-tape-real[href^="/lab/1982/?tape="]').count()) === 6);
+  check('room shelf has 7 tapes', (await p.locator('#dragon-room .d32-tape').count()) === 7);
+  check('every tape has an "on the real machine" link', (await p.locator('#dragon-room .d32-tape-real[href^="/lab/1982/?tape="]').count()) === 7);
   const input = p.locator('#dragon-room .d32-input');
   await input.fill('print 6*7'); await input.press('Enter'); await p.waitForTimeout(250);
   check('room PRINT works', / 42 \nOK$/.test(await p.locator('#dragon-room .d32-out').textContent()));
@@ -1056,7 +1056,7 @@ if (part('real machine lab')) {
     const r = await p.goto(base.replace(/\/$/, '') + path);
     await p.waitForTimeout(3500);
     check(`${path} loads with the drawn keyboard`, r.status() === 200 && (await p.locator('.kbd .k').count()) > 50 && errs.length === 0, errs.join(' | '));
-    check(`${path} has the tape shelf (8 tapes: 7 BASIC + Dragon Eggs)`, (await p.locator('#tapes .tape').count()) === 8);
+    check(`${path} has the tape shelf (10 tapes: 7 BASIC, Dragon Eggs, Blockdown, DragonTet)`, (await p.locator('#tapes .tape').count()) === 10);
     const b = await p.request.get(base.replace(/\/$/, '') + path + 'building/');
     check(`${path} links to "what we are building now", which loads`, b.status() === 200 && (await p.locator('main > p.note a[href="./building/"]').count()) === 1);
     await p.click('#full-open');

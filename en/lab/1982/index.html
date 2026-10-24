@@ -38,6 +38,22 @@ details.note summary { cursor: pointer; color: var(--ink); }
 .tapes { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-top: 8px; }
 .tape { border: 1.5px solid var(--line); border-radius: 10px; background: #1b1511; color: var(--ink); padding: 10px; font: inherit; cursor: pointer; text-align: start; display: flex; flex-direction: column; gap: 2px; }
 .tape small { color: var(--accent); font: 700 12px 'Courier New', monospace; }
+.tape-box { display: flex; flex-direction: column; gap: 4px; }
+.tape-box .tape { flex: 1; }
+.tape-credit { margin: 0; font-size: 12px; color: var(--muted, #b9a98f); }
+.tape-credit a { color: var(--accent); }
+.cabinet { margin-top: 10px; border: 2px solid #5a4430; border-radius: 14px; background: linear-gradient(#2b2018, #1f1712); padding: 8px; display: grid; gap: 8px; box-shadow: inset 0 0 0 1px #00000060; }
+.drawer { border: 1.5px solid #5a4430; border-radius: 10px; background: #261c15; }
+.drawer > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 10px 12px; min-height: 44px; box-sizing: border-box; font-weight: 700; }
+.drawer > summary::-webkit-details-marker { display: none; }
+.drawer > summary::before { content: ''; width: 26px; height: 6px; border-radius: 3px; background: #b08a5a; flex: none; box-shadow: 0 1px 0 #00000080; }
+.drawer > summary::after { content: '▾'; margin-inline-start: auto; color: var(--muted); transition: transform .15s; }
+.drawer:not([open]) > summary::after { transform: rotate(-90deg); }
+html[dir="rtl"] .drawer:not([open]) > summary::after { transform: rotate(90deg); }
+.drawer-count { font: 700 12px 'Courier New', monospace; color: #1b1511; background: var(--accent); border-radius: 999px; padding: 1px 8px; }
+.drawer-body { padding: 0 10px 10px; }
+.drawer-body .tapes { margin-top: 0; }
+.drawer > summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 10px; }
 .tape.in { border-color: var(--accent); background: #3a2a10; }
 .tape:focus-visible, .k:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 #tape-status { min-height: 1.5em; color: var(--accent); }
@@ -87,19 +103,22 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
   </div>
   <section class="shelf" aria-labelledby="shelf-title">
     <h2 id="shelf-title">Tape shelf</h2>
-    <p class="note">Tap a tape to put it in the cassette player. Type <code>CLOAD</code>, and after OK type <code>RUN</code>. Dragon Eggs is written in machine code: type <code>CLOADM</code>, and after OK type <code>EXEC</code>.</p>
+    <p class="note">Tap a tape to put it in the cassette player. Type <code>CLOAD</code>, and after OK type <code>RUN</code>. Dragon Eggs is written in machine code: type <code>CLOADM</code>, and after OK type <code>EXEC</code>. The machine-code games by other authors start by themselves after <code>CLOADM</code>, and are here with their authors' permission.</p>
     <details class="note how"><summary><strong>How did you load a game in 1982?</strong></summary>
       <p>Games were sold on audio cassettes. You put the tape in a cassette player wired to the computer and typed <code>CLOAD</code> ("load from cassette"). The computer listened to the tape for a few seconds and copied the game into memory. Then you typed <code>RUN</code> and the game started.</p>
       <p>Here you tap a tape to put it in the player, and type just like then.</p>
     </details>
-    <div class="tapes" id="tapes"></div>
     <p class="note" id="tape-status" role="status" aria-live="polite"></p>
-    <h3 class="mine-title">My tapes</h3>
+    <div class="cabinet">
+    <div id="tapes"></div>
+    <details class="drawer" id="drawer-mine" data-drawer="mine"><summary><span class="drawer-name">My tapes</span> <span class="drawer-count" id="mine-count">0</span></summary><div class="drawer-body">
     <p class="note">Write a program and type <code>CSAVE "NAME"</code> (up to 8 letters). It is recorded to tape and kept here. To load: tap the tape and type <code>CLOAD</code>, or type <code>CLOAD "NAME"</code>.</p>
     <div class="mytapes" id="mytapes"></div>
     <button type="button" class="mini upload" id="tape-upload">📂 Load a tape from a file</button>
     <input type="file" id="tape-file" accept=".cas" hidden>
     <p class="note">Tapes are kept only in this browser and are lost if you clear it (in Safari also after a week without a visit). To keep one for good or move it to another device: ⬇ downloads the tape as a file.</p>
+    </div></details>
+    </div>
   </section>
   <div class="info">
   <p class="note">Try: <code>PRINT 2+3</code>, or a program: <code>10 FOR I=1 TO 10:PRINT I*I:NEXT</code> then <code>RUN</code>. To stop: <code>BREAK</code> (Esc).</p>

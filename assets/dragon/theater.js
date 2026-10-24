@@ -22,8 +22,8 @@ const FROM_KEY = { Escape: 'BREAK', Enter: 'ENTER', ArrowUp: 'UP', ArrowDown: 'D
 
 // הכניסה למכונת ה-Dragon: ההבדל בין שני המחשבים כבר בקישור (דוח "אינסטינקט", 23.10)
 const labText = () => '<span aria-hidden="true">🧪</span> <strong>' + tr('מכונת ה-<bdi dir="ltr">Dragon</bdi>', 'The <bdi dir="ltr">Dragon</bdi> machine') + '</strong>: '
-  + tr('הכי קרוב למחשב המקורי. בבנייה: תוכנות בשפת מכונה עוד לא נבדקו, ועוד לא השווינו מול <bdi dir="ltr">Dragon</bdi> אמיתי. כאן באפליקציה לומדים וכותבים <bdi dir="ltr">BASIC</bdi> בנוחות.',
-    'as close to the original computer as we can get. Being built: machine-code programs are not tested yet, and it has not been compared with a real <bdi dir="ltr">Dragon</bdi>. Here in the app you learn and write <bdi dir="ltr">BASIC</bdi> the easy way.');
+  + tr('הכי קרוב למחשב המקורי. בבנייה: משחק ראשון בשפת מכונה, ביצי הדרקון שלנו, כבר רץ עליה. משחקים מקוריים מהתקופה עוד לא נבדקו, ועוד לא השווינו מול <bdi dir="ltr">Dragon</bdi> אמיתי. כאן באפליקציה לומדים וכותבים <bdi dir="ltr">BASIC</bdi> בנוחות.',
+    'as close to the original computer as we can get. Being built: our first machine-code game, Dragon Eggs, runs on it. Original games from the period are not tested yet, and it has not been compared with a real <bdi dir="ltr">Dragon</bdi>. Here in the app you learn and write <bdi dir="ltr">BASIC</bdi> the easy way.');
 export function createTheater({ root, input, machine, sound, powerOn }) {
   const tv = root.querySelector('.d32-tv');
 
@@ -163,6 +163,7 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
     row.className = 'd32-pages';
     row.setAttribute('aria-label', tr('עוד באתר', 'More on the site'));
     row.innerHTML = '<a href="' + (EN ? '/en/story/' : '/story/') + '"><span aria-hidden="true">📜</span> ' + tr('יומן המסע', 'The journey') + '</a>'
+      + '<a href="/magazine/"><span aria-hidden="true">📰</span> ' + tr('מה קראו בעלי <bdi dir="ltr">Dragon</bdi>', 'What Dragon owners read (Hebrew)') + '</a>'
       + '<a href="' + (EN ? '/en/dragon-history/' : '/dragon-history/') + '"><span aria-hidden="true">🐉</span> ' + tr('ההיסטוריה של ה-<bdi dir="ltr">Dragon</bdi>', 'The history of the <bdi dir="ltr">Dragon</bdi>') + '</a>';
     return row;
   };

@@ -1,0 +1,186 @@
+<html>
+
+<head>
+<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+<style media='screen,print'><!--/*--><![CDATA[/*><!--*/
+table { border-collapse: collapse; border-style: hidden hidden none hidden; }
+table thead { border-bottom: solid; }
+table thead th { text-align: left; }
+table tbody { border-bottom: solid thin; }
+table tbody th { text-align: left; }
+table td, table th { border-left: solid thin; border-right: solid thin; border-bottom: none; ver
+tical-align: top; padding: 0 0.1875rem 0.0625rem; }
+.breakfloat { clear: both; height: 0; }
+figcaption { font-style: italic; font-size: smaller; }
+table.controls tr th,td { text-align: center; }
+/*]]>*/--></style>
+<title>Blockdown</title>
+</head>
+
+<body>
+
+<h1>Blockdown</h1>
+
+<p><em>Falling blocks puzzle game for the Dragon 32/64 and Tandy Colour
+Computer.  1 or 2 players!  Written in 100% Machine Code!</em>
+
+<p>This distribution contains three versions of the game:
+
+<ul>
+
+<li>A <code>.wav</code> file, which can be recorded onto tape for loading into a
+real Dragon.
+
+<li>A <code>.cas</code> file, another tape image, is better supported by some
+emulators.
+
+<li>A <code>.dsk</code> file, a 40 track single-sided floppy disk image that can be
+transferred to a real floppy disk or used directly with a
+<a href='http://cocosdc.blogspot.co.uk/'>CoCoSDC</a>.
+
+</ul>
+
+<p>Redistribution encouraged!  Just be sure to include the documentation with
+any packaging.
+
+
+<h2>System requirements</h2>
+
+<p>Blockdown will run on any Dragon or Tandy Colour Computer with at least 16K
+of RAM.
+
+<p>Blockdown detects whether you are running on a PAL or NTSC system and
+adjusts certain parameters accordingly. While some effort has been made to
+provide a similar challenge on PAL and NTSC systems, the timings are not quite
+the same, so be aware of that if you’re comparing scores.
+
+<p>Note: The Tandy Colour Computer 3 does not fully support the Semigraphics
+video mode used—while some text will not be readable, the game should remain
+playable.
+
+
+<h2>Starting the game</h2>
+
+<p><strong>Cassette systems</strong>: Type <code>CLOADM</code> and press
+<code>Enter</code>.  Loading time should be approximately 40s.
+
+<p><strong>Dragon disk systems (DragonDOS)</strong>: Type <code>BOOT</code> or
+<code>RUN"BLOCKD"</code> and press <code>Enter</code>.
+
+<p><strong>Tandy CoCo disk systems (RSDOS)</strong>: Type <code>DOS</code> or
+<code>RUN"BLOCKD"</code> and press <code>Enter</code>.
+
+<div class='breakfloat'></div>
+
+<p>When the game has loaded, the title page will show, and after a time it will
+cycle through various other screens: a controls summary (as below),
+single-player leaderboards (fast and slow games) and game options.  You can
+manually switch between these screens with the <code>Left</code> and
+<code>Right</code> arrow keys.
+
+<p>Pressing Space starts a game.
+
+
+<h2>Options</h2>
+
+<p>On the options screen, you can select number of players, normal or fast game
+and (for two-player mode), how garbage is sent.
+
+<p>A normal speed game increases level every 10 lines.  A fast game increases
+the level every 5 lines.
+
+<p>Easy garbage means each line of a sent group has the "hole" in the same
+place, hard garbage randomises every line.
+
+
+<h2>How to play the game</h2>
+
+<p>You know the drill. Pieces comprised of four blocks in various shapes fall
+from the top of the screen; you rotate them and ﬁt them together to form
+complete lines, which disappear giving you points. The more lines you clear in
+one turn, the more you score. The game is over when there is no space for a new
+piece to appear.
+
+<p>Advanced moves like T-spins score more points. An increasing combo bonus is
+awarded for clearing lines on successive turns. In addition, back-to-back
+"difﬁcult" clears score more—that is, T-spins or four-line clears without
+intervening easier clears.
+
+<p>You can hold a piece once per turn—it will appear above and to the left of
+your playﬁeld—and you can see the next six pieces coming your way at all times
+to the right.
+
+<p>In the two-player game, clearing more than one line at a time sends
+"garbage" to your opponent. These appear on a timer, giving an opportunity to
+pare them down with clears of their own. When the timer runs out, random lines
+appear at the bottom of their stack.
+
+<div class='breakfloat'></div>
+
+
+<h2>Controls</h2>
+
+<p>Control is with the keyboard only. There is a set of keys for each player:
+player one to the left of the keyboard, player two to the right. In single
+player mode, you can use keys from either set.
+
+<figure style='margin: 0; width: 75%; min-width: 20em; padding-left: 0.5em; padding-right: 0.5em;'>
+
+<table class='controls' style='width: 100%;'>
+<thead>
+<tr style="text-align: left;" class="header">
+<th></th>
+<th>Move &larr;</th>
+<th>Move &rarr;</th>
+<th>Turn &#x21B6;</th>
+<th>Soft &darr;</th>
+<th>Hard &darr;</th>
+<th>Hold</th>
+<th>Turn &#x21B7;</th>
+</tr>
+</thead>
+<tbody>
+<tr style="text-align: left;" class="odd">
+<td>Player&nbsp;1</td>
+<td>Z</td>
+<td>C</td>
+<td>S</td>
+<td>X</td>
+<td>3</td>
+<td>2</td>
+<td>1</td>
+</tr>
+<tr style="text-align: left;" class="even">
+<td>Player&nbsp;2</td>
+<td>M</td>
+<td>&gt;</td>
+<td>K</td>
+<td>&lt;</td>
+<td>9</td>
+<td>8</td>
+<td>7</td>
+</tr>
+</tbody>
+</table>
+</figure>
+
+<p>Press <code>Clear</code>+<code>Enter</code> to pause the game (then
+<code>Space</code> to resume).  Press <code>Clear</code>+<code>Break</code> to
+quit the game.
+
+
+<h2 id='acknowledgements'>Acknowledgements</h2>
+
+<p>Thanks to Alexey Pajitnov for creating "Tetris", a game that became part of
+our shared culture worldwide.
+
+<p>Thanks to Stewart and Eddie Orchard, for testing the two-player game.
+
+
+<hr>
+<p id='platform'>Dragon 32/64, Tandy Colour Computer 16K.
+<p id='loading'>Type "CLOADM".  The game will start automatically.
+<p id='copyright'>&copy; Copyright 2021 Teipen Mwnci
+
+</body>
+</html>
