@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>לומדים בייסיק עם הדרקון — Dragon 1982</title>
+<meta name="description" content="10 שיעורי BASIC קצרים על מחשב Dragon 32 מ-1982, בדפדפן: מקלידים, מריצים ומבינים.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;500;700&amp;family=Amatic+SC:wght@700&amp;display=swap">
+<link rel="stylesheet" href="/assets/notebook.css">
+<link rel="stylesheet" href="/assets/dragon/dragon.css">
+<link rel="stylesheet" href="/lessons/lessons.css">
+</head>
+<body>
+<nav class="class-nav" aria-label="ניווט">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/en/lessons/" lang="en" hreflang="en">English</a>
+  <a href="/story/">יומן המסע</a>
+  <a href="/">← חזרה למחשב</a>
+</nav>
+<header class="board"><div class="board-in">
+  <h1>לומדים בייסיק עם הדרקון</h1>
+  <p class="board-sub">10 שיעורים קצרים. מקלידים במחשב שלידכם, מריצים, ומקבלים כוכב על כל שיעור.</p>
+  <nav id="lesson-progress" aria-label="השיעורים"></nav>
+  <p id="lesson-count"></p>
+</div></header>
+<main class="desk">
+  <article class="notebook" id="lesson-app" aria-live="polite"><p>טוען את השיעור…</p></article>
+  <aside class="computer-side">
+    <p class="computer-label">המחשב שלכם</p>
+    <section id="lesson-computer" class="d32" data-power="off" aria-label="המחשב שלכם">
+      <div class="d32-tv">
+        <button type="button" class="d32-power"><span class="d32-power-led" aria-hidden="true"></span>הדלקת המחשב</button>
+        <div class="d32-screen" dir="ltr" lang="en">
+          <pre class="d32-out" aria-live="off"></pre>
+          <label class="d32-prompt"><span class="visually-hidden">פקודה למחשב</span><input class="d32-input" type="text" dir="ltr" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" enterkeyhint="send" maxlength="249" /></label>
+        </div>
+        <button type="button" class="d32-stop"><span class="d32-stop-run">■ עצירה</span><span class="d32-stop-gfx">↩ חזרה למסך הטקסט</span></button>
+      </div>
+    </section>
+    <p class="computer-help">"הקלד בשבילי" מקליד את השורה במחשב. אפשר גם ללחוץ על המסך ולהקליד בעצמכם. לעצירת תוכנית: ■ עצירה.</p>
+  </aside>
+</main>
+<script type="module" src="/assets/dragon/main.js"></script>
+<script type="module" src="/lessons/lessons.js"></script>
+</body>
+</html>

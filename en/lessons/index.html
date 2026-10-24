@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BASIC with the Dragon — Dragon 1982</title>
+<meta name="description" content="10 short BASIC lessons on a 1982 Dragon 32, in your browser: type, run and understand.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;500;700&amp;family=Amatic+SC:wght@700&amp;display=swap">
+<link rel="stylesheet" href="/assets/notebook.css">
+<link rel="stylesheet" href="/assets/dragon/dragon.css">
+<link rel="stylesheet" href="/lessons/lessons.css">
+</head>
+<body>
+<nav class="class-nav" aria-label="Navigation">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/lessons/" lang="he" hreflang="he">עברית</a>
+  <a href="/en/story/">The journey</a>
+  <a href="/en/">← Back to the computer</a>
+</nav>
+<header class="board"><div class="board-in">
+  <h1>BASIC with the Dragon</h1>
+  <p class="board-sub">10 short lessons. Type on the computer beside you, run it, and earn a star for every lesson.</p>
+  <nav id="lesson-progress" aria-label="Lessons"></nav>
+  <p id="lesson-count"></p>
+</div></header>
+<main class="desk">
+  <article class="notebook" id="lesson-app" aria-live="polite"><p>Loading the lesson…</p></article>
+  <aside class="computer-side">
+    <p class="computer-label">Your computer</p>
+    <section id="lesson-computer" class="d32" data-power="off" aria-label="Your computer">
+      <div class="d32-tv">
+        <button type="button" class="d32-power"><span class="d32-power-led" aria-hidden="true"></span>Power on</button>
+        <div class="d32-screen" dir="ltr" lang="en">
+          <pre class="d32-out" aria-live="off"></pre>
+          <label class="d32-prompt"><span class="visually-hidden">Command for the computer</span><input class="d32-input" type="text" dir="ltr" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" enterkeyhint="send" maxlength="249" /></label>
+        </div>
+        <button type="button" class="d32-stop"><span class="d32-stop-run">■ Stop</span><span class="d32-stop-gfx">↩ Back to text</span></button>
+      </div>
+    </section>
+    <p class="computer-help">"Type it for me" types the line into the computer. You can also click the screen and type yourself. To stop a program: ■ Stop.</p>
+  </aside>
+</main>
+<script type="module" src="/assets/dragon/main.js"></script>
+<script type="module" src="/lessons/lessons.js"></script>
+</body>
+</html>

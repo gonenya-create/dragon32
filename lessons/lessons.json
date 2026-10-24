@@ -1,0 +1,772 @@
+[
+ {
+  "n": 1,
+  "he": {
+   "title": "שיעור 1: הדרקון מדבר",
+   "intro": "היום המחשב יגיד לכם שלום, יפתור תרגיל כפל וייפרד מכם. זו תוכנית של שלוש שורות בלבד, והיא הצעד הראשון שלכם כמתכנתים. ב-1983 ילדים העתיקו תוכניות מעיתונים, שורה אחרי שורה, בדיוק כמו שתעשו עכשיו.",
+   "steps": [
+    {
+     "code": "10 PRINT \"HELLO! I AM A DRAGON 32\"",
+     "explain": "הפקודה PRINT פירושה \"הדפס\": היא כותבת על המסך. כל מה שבין המירכאות יופיע בדיוק כמו שכתבתם. המספר 10 בהתחלה הוא מספר השורה. בגללו המחשב לא מבצע את השורה מיד, אלא שומר אותה בתוכנית. אחרי שמקלידים את השורה, לוחצים Enter."
+    },
+    {
+     "code": "20 PRINT \"7 X 6 =\";7*6",
+     "explain": "כאן יש שני חלקים. הטקסט שבתוך המירכאות מודפס כמו שהוא. החלק 7*6 נמצא מחוץ למירכאות, ולכן המחשב מחשב אותו. הכוכבית * היא סימן הכפל במחשב. הנקודה-פסיק ; מחברת את שני החלקים באותה שורה על המסך."
+    },
+    {
+     "code": "30 PRINT \"BYE!\"",
+     "explain": "עוד הדפסה אחת, והתוכנית נגמרת. המחשב מבצע את השורות לפי סדר המספרים: קודם 10, אחר כך 20, ובסוף 30."
+    }
+   ],
+   "run": "הקלידו RUN ולחצו Enter. על המסך יופיע:\nHELLO! I AM A DRAGON 32\n7 X 6 = 42\nBYE!\nאחרי זה המחשב יכתוב OK. זה הסימן שהוא מוכן לפקודה הבאה. כדי לראות שוב את התוכנית שכתבתם, הקלידו LIST.",
+   "tip": "בתוך המירכאות האות X היא סתם אות. בחשבון צריך את הכוכבית *. אם תכתבו 7X6 בלי מירכאות, המחשב לא יבין שזה כפל. ועוד דבר: לפני שמתחילים תוכנית חדשה, כדאי להקליד NEW כדי למחוק את הקודמת.",
+   "challenge": "כתבו תוכנית משלכם: היא תציג את השם שלכם, תחשב כמה דקות יש ביממה (24 כפול 60) ותיפרד. אפשר לכתוב את השם שלכם במקום DANA.",
+   "challengeCode": [
+    "10 PRINT \"MY NAME IS DANA\"",
+    "20 PRINT \"1 DAY HAS\";24*60;\"MINUTES\"",
+    "30 PRINT \"SEE YOU!\""
+   ],
+   "nextTeaser": "בשיעור הבא המחשב ישאל לשמכם, יזכור אותו ויענה לכם בשמכם, בעזרת משתנים והפקודה INPUT."
+  },
+  "en": {
+   "title": "Lesson 1: The Dragon Speaks",
+   "intro": "Today the computer will say hello, solve a multiplication sum and say goodbye. The program is only three lines long, and it is your first step as a programmer. In 1983, kids copied programs from magazines line by line, just like you are about to do.",
+   "steps": [
+    {
+     "code": "10 PRINT \"HELLO! I AM A DRAGON 32\"",
+     "explain": "PRINT writes on the screen. Whatever is inside the quotes appears exactly as you typed it. The 10 at the start is the line number. Because of it, the computer doesn't run the line straight away. It stores it in your program instead. Press Enter after each line."
+    },
+    {
+     "code": "20 PRINT \"7 X 6 =\";7*6",
+     "explain": "This line has two parts. The text inside the quotes is printed as it is. The 7*6 is outside the quotes, so the computer works it out. The star * is the computer's times sign. The semicolon ; joins both parts on the same line of the screen."
+    },
+    {
+     "code": "30 PRINT \"BYE!\"",
+     "explain": "One more PRINT, and the program is finished. The computer runs the lines in number order: first 10, then 20, then 30."
+    }
+   ],
+   "run": "Type RUN and press Enter. You should see:\nHELLO! I AM A DRAGON 32\n7 X 6 = 42\nBYE!\nThen the computer writes OK. That means it's ready for your next command. To see your program again, type LIST.",
+   "tip": "Inside quotes, X is just a letter. For maths you need the star *. If you type 7X6 without quotes, the computer won't know you mean multiply. Also, before you start a new program, type NEW to clear the old one.",
+   "challenge": "Write your own program. It should show your name, work out how many minutes are in a day (24 times 60) and say goodbye. Put your own name in place of DANA.",
+   "challengeCode": [
+    "10 PRINT \"MY NAME IS DANA\"",
+    "20 PRINT \"1 DAY HAS\";24*60;\"MINUTES\"",
+    "30 PRINT \"SEE YOU!\""
+   ],
+   "nextTeaser": "Next lesson, the computer will ask your name, remember it and answer you by name, using variables and INPUT."
+  }
+ },
+ {
+  "n": 2,
+  "he": {
+   "title": "שיעור 2: המחשב לומד את השם שלכם",
+   "intro": "בשיעור הקודם המחשב רק דיבר. היום הוא גם יקשיב! נכתוב תוכנית קטנה ששואלת איך קוראים לכם ובן כמה אתם, ואז עונה לכם בשם ומחשבת בת כמה תהיו בעוד 10 שנים. בשנות השמונים ילדים העתיקו תוכניות כאלה מתוך מגזינים למחשבים, שורה אחרי שורה, ועכשיו תורכם.",
+   "steps": [
+    {
+     "code": "10 INPUT \"WHAT IS YOUR NAME\";N$",
+     "explain": "הפקודה INPUT שואלת שאלה ומחכה שתקלידו תשובה ותלחצו Enter. המחשב שם את התשובה בתוך N$. זה משתנה: קופסה קטנה עם שם, ששומרת משהו בזיכרון. הסימן $ בסוף אומר שבקופסה הזאת יש מילים ולא מספר. המחשב גם מוסיף סימן שאלה לבד."
+    },
+    {
+     "code": "20 PRINT \"HELLO \";N$",
+     "explain": "עכשיו המחשב מדפיס HELLO ומיד אחריו את מה שיש בקופסה N$, כלומר את השם שלכם. הנקודה-פסיק מדביקה את שני החלקים ביחד באותה שורה. שימו לב לרווח אחרי HELLO, בתוך המירכאות."
+    },
+    {
+     "code": "30 INPUT \"HOW OLD ARE YOU\";A",
+     "explain": "עוד שאלה. הפעם התשובה נכנסת לקופסה A, בלי סימן $. זה אומר שבקופסה הזאת יש מספר, ועם מספרים אפשר לעשות חשבון."
+    },
+    {
+     "code": "40 PRINT \"IN 10 YEARS YOU WILL BE\";A+10",
+     "explain": "כאן קורה הקסם: המחשב לוקח את המספר שבתוך A, מוסיף לו 10 ומדפיס את התוצאה. הוא לא מדפיס את המילים A+10, אלא מחשב אותן, כי הן מחוץ למירכאות."
+    }
+   ],
+   "run": "קודם הקלידו NEW כדי למחוק את התוכנית הקודמת, אחר כך את ארבע השורות, ואז RUN. המחשב ישאל WHAT IS YOUR NAME? ותקלידו את השם שלכם באנגלית, למשל DANA, ולחצו Enter. הוא יענה HELLO DANA. אחר כך ישאל HOW OLD ARE YOU? ותקלידו מספר, למשל 12. על המסך יופיע IN 10 YEARS YOU WILL BE 22. אפשר להריץ שוב עם RUN ולהקליד שם של חבר!",
+   "tip": "בלי הרווח שבתוך \"HELLO \" המחשב ידביק הכול ויכתוב HELLODANA. מחשבים עושים בדיוק מה שכותבים להם, גם רווחים.",
+   "challenge": "הוסיפו שאלה על האוכל שאתם הכי אוהבים, ותנו למחשב לכתוב משפט כמו DANA LOVES PIZZA. בונוס: שאלו כמה חתיכות אתם יכולים לאכול, ותנו למחשב לחשב כמה דרקון יאכל: פי 10!",
+   "challengeCode": [
+    "10 INPUT \"WHAT IS YOUR NAME\";N$",
+    "20 INPUT \"WHAT IS YOUR FAVORITE FOOD\";F$",
+    "30 PRINT N$;\" LOVES \";F$",
+    "40 INPUT \"HOW MANY PIECES CAN YOU EAT\";P",
+    "50 PRINT \"A DRAGON CAN EAT\";P*10"
+   ],
+   "nextTeaser": "בשיעור הבא המחשב ילמד להחליט לבד עם IF ו-THEN: אם התשובה נכונה, הוא יגיד לכם כל הכבוד!"
+  },
+  "en": {
+   "title": "Lesson 2: The Computer Learns Your Name",
+   "intro": "Last time the computer only talked. Today it listens too! We'll write a little program that asks your name and your age, then greets you by name and works out how old you'll be in 10 years. Back in the 1980s, kids copied programs like this from computer magazines, line by line. Now it's your turn.",
+   "steps": [
+    {
+     "code": "10 INPUT \"WHAT IS YOUR NAME\";N$",
+     "explain": "INPUT asks a question and waits for you to type an answer and press Enter. The computer keeps your answer in N$. That's a variable: a little box with a name that holds something in memory. The $ at the end means this box holds words, not a number. The computer adds the question mark by itself."
+    },
+    {
+     "code": "20 PRINT \"HELLO \";N$",
+     "explain": "Now the computer prints HELLO and then whatever is inside the box N$, which is your name. The semicolon glues the two parts together on the same line. Notice the space after HELLO, inside the quotes."
+    },
+    {
+     "code": "30 INPUT \"HOW OLD ARE YOU\";A",
+     "explain": "Another question. This time the answer goes into box A, with no $. That means this box holds a number, and you can do maths with numbers."
+    },
+    {
+     "code": "40 PRINT \"IN 10 YEARS YOU WILL BE\";A+10",
+     "explain": "Here's the magic: the computer takes the number in A, adds 10 and prints the result. It doesn't print the letters A+10. It calculates them, because they're outside the quotes."
+    }
+   ],
+   "run": "First type NEW to clear the old program, then type the four lines, then RUN. The computer asks WHAT IS YOUR NAME? Type your name, for example DANA, and press Enter. It answers HELLO DANA. Then it asks HOW OLD ARE YOU? Type a number, for example 12. The screen shows IN 10 YEARS YOU WILL BE 22. Type RUN again and try a friend's name!",
+   "tip": "Without the space inside \"HELLO \" the computer glues everything together and prints HELLODANA. Computers do exactly what you write, spaces included.",
+   "challenge": "Add a question about your favourite food, and make the computer print a sentence like DANA LOVES PIZZA. Bonus: ask how many pieces you can eat, and have the computer work out how many a dragon would eat: 10 times more!",
+   "challengeCode": [
+    "10 INPUT \"WHAT IS YOUR NAME\";N$",
+    "20 INPUT \"WHAT IS YOUR FAVORITE FOOD\";F$",
+    "30 PRINT N$;\" LOVES \";F$",
+    "40 INPUT \"HOW MANY PIECES CAN YOU EAT\";P",
+    "50 PRINT \"A DRAGON CAN EAT\";P*10"
+   ],
+   "nextTeaser": "Next lesson, the computer learns to make decisions with IF and THEN: if your answer is right, it will tell you well done!"
+  }
+ },
+ {
+  "n": 3,
+  "he": {
+   "title": "המחשב מחליט: IF, THEN ו-ELSE",
+   "intro": "עד עכשיו המחשב עשה תמיד את אותו הדבר. היום נלמד אותו לבחור! נכתוב תוכנית שמבקשת מכם מספר, ועונה משהו אחר לפי מה שהקלדתם, כולל הפתעה קטנה למספר אחד מיוחד.",
+   "steps": [
+    {
+     "code": "10 INPUT \"PICK A NUMBER FROM 1 TO 10\";N",
+     "explain": "את זה כבר מכירים מהשיעור הקודם. הפקודה INPUT מציגה שאלה ומחכה שתקלידו מספר ותלחצו Enter. המספר נשמר במשתנה N, כמו בקופסה עם שם."
+    },
+    {
+     "code": "20 IF N=7 THEN PRINT \"LUCKY SEVEN!\":END",
+     "explain": "כאן המחשב מחליט בפעם הראשונה. המילה IF פירושה \"אם\", והמילה THEN פירושה \"אז\". אם N שווה 7, המחשב מדפיס LUCKY SEVEN! ואז הפקודה END עוצרת את התוכנית. שימו לב: כל מה שבא אחרי THEN באותה שורה, גם אחרי הנקודתיים, קורה רק אם התנאי נכון. אם N הוא לא 7, המחשב פשוט מדלג לשורה הבאה."
+    },
+    {
+     "code": "30 IF N>5 THEN PRINT \"A BIG NUMBER\" ELSE PRINT \"A SMALL NUMBER\"",
+     "explain": "עכשיו יש שתי דרכים. הסימן > פירושו \"גדול מ\". אם N גדול מ-5, המחשב מדפיס A BIG NUMBER. אחרת, ובאנגלית ELSE, הוא מדפיס A SMALL NUMBER. תמיד יקרה רק אחד מהשניים, אף פעם לא שניהם."
+    }
+   ],
+   "run": "הקלידו RUN ולחצו Enter. על המסך יופיע PICK A NUMBER FROM 1 TO 10? והמחשב יחכה. נסו 7 ותקבלו LUCKY SEVEN!. נסו 9 ותקבלו A BIG NUMBER. נסו 3 ותקבלו A SMALL NUMBER. ומה עם 5? הוא לא גדול מ-5, אז הוא \"קטן\". כדי לנסות מספר נוסף, פשוט הקלידו RUN שוב.",
+   "tip": "למה צריך את END בשורה 20? נסו למחוק אותו: עם 7 המחשב ידפיס LUCKY SEVEN! וגם A BIG NUMBER, כי הוא ימשיך לשורה 30. הפקודה END אומרת לו: \"סיימנו, לא ממשיכים\".",
+   "challenge": "מה קורה אם מישהו מקליד 50 או 0? המחשב לא בודק! הוסיפו שורות 15 ו-16 שבודקות אם המספר קטן מ-1 או גדול מ-10, ואם כן, מתלוננות ושואלות שוב עם GOTO 10. טיפ: אין צורך להקליד הכול מחדש. מספיק להקליד רק את שתי השורות החדשות, והמחשב יכניס אותן למקום הנכון לפי המספר. ככה בדיוק ילדים ב-1983 שיפרו תוכניות שהעתיקו ממגזינים.",
+   "challengeCode": [
+    "10 INPUT \"PICK A NUMBER FROM 1 TO 10\";N",
+    "15 IF N<1 THEN PRINT \"TOO SMALL! TRY AGAIN\":GOTO 10",
+    "16 IF N>10 THEN PRINT \"TOO BIG! TRY AGAIN\":GOTO 10",
+    "20 IF N=7 THEN PRINT \"LUCKY SEVEN!\":END",
+    "30 IF N>5 THEN PRINT \"A BIG NUMBER\" ELSE PRINT \"A SMALL NUMBER\""
+   ],
+   "nextTeaser": "בשיעור הבא נגלה את FOR ו-NEXT, ונלמד את המחשב לעשות דבר אחד הרבה פעמים, בלי שנתעייף!"
+  },
+  "en": {
+   "title": "The Computer Decides: IF, THEN and ELSE",
+   "intro": "Until now, the computer always did the same thing. Today we teach it to choose! We'll write a program that asks you for a number and gives a different answer depending on what you type, with a little surprise for one special number.",
+   "steps": [
+    {
+     "code": "10 INPUT \"PICK A NUMBER FROM 1 TO 10\";N",
+     "explain": "You know this one from last lesson. INPUT shows a question and waits for you to type a number and press Enter. The number is kept in the variable N, like a box with a name on it."
+    },
+    {
+     "code": "20 IF N=7 THEN PRINT \"LUCKY SEVEN!\":END",
+     "explain": "Here the computer makes its first decision. IF means \"if\" and THEN means \"then do this\". If N equals 7, it prints LUCKY SEVEN! and then END stops the program. Notice: everything after THEN on the same line, even after the colon, only happens when the condition is true. If N is not 7, the computer just skips to the next line."
+    },
+    {
+     "code": "30 IF N>5 THEN PRINT \"A BIG NUMBER\" ELSE PRINT \"A SMALL NUMBER\"",
+     "explain": "Now there are two roads. The sign > means \"bigger than\". If N is bigger than 5, it prints A BIG NUMBER. Otherwise (that's ELSE) it prints A SMALL NUMBER. Exactly one of them always happens, never both."
+    }
+   ],
+   "run": "Type RUN and press Enter. You'll see PICK A NUMBER FROM 1 TO 10? and the computer waits. Try 7 and you get LUCKY SEVEN!. Try 9 and you get A BIG NUMBER. Try 3 and you get A SMALL NUMBER. And 5? It isn't bigger than 5, so it counts as small. To try another number, just type RUN again.",
+   "tip": "Why do we need END on line 20? Try removing it: with 7 the computer prints LUCKY SEVEN! and also A BIG NUMBER, because it carries on to line 30. END tells it: \"we're done, stop here\".",
+   "challenge": "What if someone types 50, or 0? The computer doesn't check! Add lines 15 and 16 that check if the number is smaller than 1 or bigger than 10, and if so, complain and ask again with GOTO 10. Tip: you don't need to retype everything. Just type the two new lines and the computer slots them into the right place by their numbers. That's exactly how kids in 1983 improved programs they'd copied from magazines.",
+   "challengeCode": [
+    "10 INPUT \"PICK A NUMBER FROM 1 TO 10\";N",
+    "15 IF N<1 THEN PRINT \"TOO SMALL! TRY AGAIN\":GOTO 10",
+    "16 IF N>10 THEN PRINT \"TOO BIG! TRY AGAIN\":GOTO 10",
+    "20 IF N=7 THEN PRINT \"LUCKY SEVEN!\":END",
+    "30 IF N>5 THEN PRINT \"A BIG NUMBER\" ELSE PRINT \"A SMALL NUMBER\""
+   ],
+   "nextTeaser": "Next lesson: FOR and NEXT, where we teach the computer to do one thing many, many times without ever getting tired!"
+  }
+ },
+ {
+  "n": 4,
+  "he": {
+   "title": "שיעור 4: המחשב שלא מתעייף, עם FOR ו-NEXT",
+   "intro": "היום נלמד את המחשב לעשות את אותו דבר שוב ושוב, בלי להתעייף ובלי להתלונן. נבנה תוכנית ששואלת איזה לוח כפל אתם רוצים, ומדפיסה אותו כולו, מ-1 עד 10. בשנות ה-80 ילדים העתיקו תוכניות קצרות כאלה מעיתוני מחשבים, שורה אחרי שורה, וזה בדיוק מה שנעשה עכשיו.",
+   "steps": [
+    {
+     "code": "10 INPUT \"WHICH TABLE\";T",
+     "explain": "כמו בשיעור 2, הפקודה INPUT שואלת שאלה ומחכה לתשובה. המספר שתקלידו נשמר במשתנה T. אם תקלידו 7, אז T שווה 7."
+    },
+    {
+     "code": "20 FOR I=1 TO 10",
+     "explain": "כאן מתחילה הלולאה. הפירוש הוא: \"תספור עם המשתנה I מ-1 עד 10\". בסיבוב הראשון I שווה 1, בסיבוב הבא 2, וכך הלאה עד 10."
+    },
+    {
+     "code": "30 PRINT I;\"X\";T;\"=\";I*T",
+     "explain": "זו השורה שחוזרת שוב ושוב. היא מדפיסה את I, אחר כך את האות X (היא בתוך מרכאות, אז היא רק קישוט), את T, סימן שווה, ואת התוצאה. בשפת BASIC הכוכבית * היא סימן הכפל, ולכן I*T זה I כפול T. הנקודה-פסיק ; שמה את כל החלקים באותה שורה."
+    },
+    {
+     "code": "40 NEXT I",
+     "explain": "הפקודה NEXT אומרת: \"הגדל את I באחד וחזור ללולאה\". כש-I כבר עבר את 10, הלולאה נגמרת והתוכנית מסתיימת. עשר שורות של חשבון, מארבע שורות קוד בלבד!"
+    }
+   ],
+   "run": "הקלידו RUN ולחצו Enter. המחשב ישאל WHICH TABLE? ויחכה. הקלידו מספר, למשל 7, ולחצו Enter. על המסך יופיע לוח הכפל: 1 X 7 = 7, אחריו 2 X 7 = 14, וכך עד 10 X 7 = 70. אפשר להריץ שוב ולנסות 3, 12 או אפילו 99!",
+   "tip": "טעות נפוצה: לכתוב את האות X במקום כוכבית בתוך החשבון. מחוץ למרכאות, כופלים רק עם *. ועוד טיפ: לפני שמקלידים תוכנית חדשה, כתבו NEW כדי למחוק את התוכנית מהשיעור הקודם.",
+   "challenge": "שנו את התוכנית כך שתשאל גם עד איזה מספר לספור. אם תענו 20, תקבלו את הלוח עד 20 כפול המספר שבחרתם. רמז: צריך משתנה חדש, N, ועוד שורה של INPUT.",
+   "challengeCode": [
+    "10 INPUT \"WHICH TABLE\";T",
+    "20 INPUT \"UP TO\";N",
+    "30 FOR I=1 TO N",
+    "40 PRINT I;\"X\";T;\"=\";I*T",
+    "50 NEXT I",
+    "60 PRINT \"WELL DONE!\""
+   ],
+   "nextTeaser": "בשיעור הבא הדרקון מתחיל לצפצף ולשיר: נלמד את SOUND ואת PLAY ונשמיע צלילים ומנגינות."
+  },
+  "en": {
+   "title": "Lesson 4: The Computer That Never Gets Tired, with FOR and NEXT",
+   "intro": "Today we teach the computer to do the same thing again and again, without getting tired or complaining. We'll build a program that asks which times table you want, then prints the whole thing, from 1 to 10. In the 1980s, kids copied short programs like this from computer magazines, line by line, and that's exactly what we're doing now.",
+   "steps": [
+    {
+     "code": "10 INPUT \"WHICH TABLE\";T",
+     "explain": "Just like in lesson 2, INPUT asks a question and waits for an answer. The number you type is stored in the variable T. Type 7, and T becomes 7."
+    },
+    {
+     "code": "20 FOR I=1 TO 10",
+     "explain": "This is where the loop starts. It means: \"count with the variable I from 1 to 10.\" On the first round I is 1, on the next round it's 2, and so on up to 10."
+    },
+    {
+     "code": "30 PRINT I;\"X\";T;\"=\";I*T",
+     "explain": "This is the line that repeats. It prints I, then the letter X (it's inside quotes, so it's just decoration), then T, an equals sign, and the answer. In BASIC the star * means multiply, so I*T is I times T. The semicolons ; keep all the pieces on the same line."
+    },
+    {
+     "code": "40 NEXT I",
+     "explain": "NEXT says: \"add one to I and go round the loop again.\" Once I has gone past 10, the loop ends and so does the program. Ten lines of maths from just four lines of code!"
+    }
+   ],
+   "run": "Type RUN and press Enter. The computer asks WHICH TABLE? and waits. Type a number, say 7, and press Enter. The times table appears on the screen: 1 X 7 = 7, then 2 X 7 = 14, all the way to 10 X 7 = 70. Run it again and try 3, 12, or even 99!",
+   "tip": "A common mistake: typing the letter X instead of a star in the maths. Outside the quotes, you multiply only with *. One more tip: before typing a new program, type NEW to erase the program from the last lesson.",
+   "challenge": "Change the program so it also asks how far to count. If you answer 20, you get the table all the way up to 20 times your number. Hint: you need a new variable, N, and one more INPUT line.",
+   "challengeCode": [
+    "10 INPUT \"WHICH TABLE\";T",
+    "20 INPUT \"UP TO\";N",
+    "30 FOR I=1 TO N",
+    "40 PRINT I;\"X\";T;\"=\";I*T",
+    "50 NEXT I",
+    "60 PRINT \"WELL DONE!\""
+   ],
+   "nextTeaser": "Next lesson the Dragon starts beeping and singing: we'll learn SOUND and PLAY to make noises and tunes."
+  }
+ },
+ {
+  "n": 5,
+  "he": {
+   "title": "שיעור 5: הדרקון שר",
+   "intro": "היום המחשב שלנו יעשה רעש, ובכוונה! נבנה סירנה קטנה של צפצופים שעולים למעלה, ואחריה המחשב ינגן שיר שכולם מכירים. לפני ארבעים שנה ילדים העתיקו מעיתונים תוכניות שלמות שמנגנות שירים, ועכשיו תורכם.",
+   "steps": [
+    {
+     "code": "10 FOR P=1 TO 251 STEP 25\n20 SOUND P,1\n30 NEXT P",
+     "explain": "זו הלולאה שלמדנו בשיעור הקודם, עם תוספת קטנה. המילה STEP 25 אומרת למשתנה P לקפוץ ב-25 בכל פעם: 1, 26, 51, וכך עד 251. הפקודה SOUND P,1 מצפצפת: המספר הראשון הוא גובה הצליל, והשני הוא האורך. ככל ש-P גדל, הצליל עולה. יוצאים 11 צפצופים קצרים, כמו סירנה שמטפסת למעלה."
+    },
+    {
+     "code": "40 PLAY \"T4O2L4CDECCDECEFL2GL4EFL2G\"",
+     "explain": "הפקודה PLAY מנגנת תווים. האותיות C D E F G הן התווים דו, רה, מי, פה, סול. בנוסף יש בפנים כמה הוראות מיוחדות: T4 קובע את הקצב, O2 בוחר את האוקטבה (כמה גבוה), L4 עושה תווים רגילים ו-L2 תווים ארוכים פי שניים. מה יוצא? ההתחלה של השיר הצרפתי הישן Frère Jacques, שבעברית מכירים אותו בתור „אחינו יעקב”."
+    },
+    {
+     "code": "50 PRINT \"THE END\"",
+     "explain": "כשהשיר נגמר, המחשב כותב על המסך שזה הסוף. כמו בקולנוע!"
+    }
+   ],
+   "run": "הקלידו את חמש השורות וכתבו RUN. קודם תשמעו 11 צפצופים קצרים שעולים מנמוך לגבוה. אחר כך המחשב ינגן את „אחינו יעקב”, ובסוף יופיע על המסך THE END. התוכנית לא שואלת שום דבר, רק להקשיב. לא שומעים כלום? בדקו שהרמקול של המחשב או של הטלפון לא מושתק.",
+   "tip": "כל התווים של PLAY חייבים להיות בתוך המירכאות, צמודים זה לזה. אם תקלידו בטעות אות שהיא לא תו או הוראה, המחשב יעצור ויודיע על שגיאה. אז אם השיר נתקע באמצע, חפשו אות שהתחלפה.",
+   "challenge": "הפכו את הסירנה: שהצפצופים ירדו מגבוה לנמוך במקום לעלות, ושהסירנה תחזור שלוש פעמים. רמז: מספר שלילי אחרי STEP סופר אחורה, ואפשר לשים לולאה בתוך לולאה. בסוף נגנו רק את החצי הראשון של השיר.",
+   "challengeCode": [
+    "10 FOR R=1 TO 3",
+    "20 FOR P=251 TO 1 STEP -25",
+    "30 SOUND P,1",
+    "40 NEXT P",
+    "50 NEXT R",
+    "60 PLAY \"T4O2L4CDECCDEC\"",
+    "70 PRINT \"THE END\""
+   ],
+   "nextTeaser": "בשיעור הבא נצבע את כל המסך בצבעים, ונלמד לכתוב בכל מקום שנרצה עליו עם PRINT @."
+  },
+  "en": {
+   "title": "Lesson 5: The Dragon Sings",
+   "intro": "Today our computer makes noise, on purpose! We'll build a little siren of beeps that climb higher and higher, and then the computer will play a song everybody knows. Forty years ago kids typed whole music programs out of magazines. Now it's your turn.",
+   "steps": [
+    {
+     "code": "10 FOR P=1 TO 251 STEP 25\n20 SOUND P,1\n30 NEXT P",
+     "explain": "This is the loop from last lesson, with one new trick. STEP 25 makes P jump by 25 each time: 1, 26, 51, all the way to 251. SOUND P,1 beeps: the first number is the pitch, the second is how long. As P grows, the beep gets higher. That's 11 short beeps, like a siren climbing up."
+    },
+    {
+     "code": "40 PLAY \"T4O2L4CDECCDECEFL2GL4EFL2G\"",
+     "explain": "PLAY plays musical notes. The letters C D E F G are the notes do, re, mi, fa, sol. Some special instructions are mixed in too: T4 sets the speed, O2 picks the octave (how high), L4 makes normal notes and L2 makes notes twice as long. What comes out? The start of the old French song Frère Jacques, also known as \"Are You Sleeping, Brother John?\""
+    },
+    {
+     "code": "50 PRINT \"THE END\"",
+     "explain": "When the song is over, the computer writes on the screen that we're done. Just like at the movies!"
+    }
+   ],
+   "run": "Type all five lines and then RUN. First you'll hear 11 short beeps going from low to high. Then the computer plays Frère Jacques, and THE END appears on the screen. The program doesn't ask you anything, just listen. Hearing nothing? Check that your computer's or phone's speaker isn't muted.",
+   "tip": "All the notes for PLAY must go inside the quotation marks, squeezed together. If you type a letter by mistake that isn't a note or an instruction, the computer stops with an error. So if the song breaks off halfway, look for a letter that got swapped.",
+   "challenge": "Flip the siren: make the beeps go down from high to low instead of up, and make the siren repeat three times. Hint: a negative number after STEP counts backwards, and you can put a loop inside a loop. At the end, play just the first half of the song.",
+   "challengeCode": [
+    "10 FOR R=1 TO 3",
+    "20 FOR P=251 TO 1 STEP -25",
+    "30 SOUND P,1",
+    "40 NEXT P",
+    "50 NEXT R",
+    "60 PLAY \"T4O2L4CDECCDEC\"",
+    "70 PRINT \"THE END\""
+   ],
+   "nextTeaser": "Next lesson we'll paint the whole screen in colours and learn to write anywhere we like with PRINT @."
+  }
+ },
+ {
+  "n": 6,
+  "he": {
+   "title": "שיעור 6: מסך בכל הצבעים",
+   "intro": "היום נצבע את כל המסך של הדרקון, צבע אחרי צבע! נכתוב תוכנית קצרה שמחליפה את צבע המסך תשע פעמים, ובכל פעם כותבת באמצע המסך את מספר הצבע. בסוף נדע את כל הצבעים שהדרקון יודע לצבוע בהם את המסך.",
+   "steps": [
+    {
+     "code": "10 FOR C=0 TO 8",
+     "explain": "זוכרים את הלולאה משיעור 4? המשתנה C יספור מ-0 עד 8. אלה בדיוק תשעת הצבעים שהדרקון מכיר."
+    },
+    {
+     "code": "20 CLS C",
+     "explain": "הפקודה CLS מנקה את המסך, ואם כותבים אחריה מספר היא גם צובעת אותו. כאן כתבנו C, ולכן בכל סיבוב של הלולאה המסך מקבל צבע אחר: 0 שחור, 1 ירוק, 2 צהוב, 3 כחול, 4 אדום, 5 בז', 6 תכלת, 7 סגול ו-8 כתום."
+    },
+    {
+     "code": "30 PRINT @ 234,\"COLOUR\";C",
+     "explain": "הנה הקסם החדש! הסימן @ אומר למחשב איפה לכתוב. למסך יש 16 שורות, ובכל שורה 32 מקומות. מקום 0 נמצא בפינה השמאלית העליונה. המספר 234 הוא 7 שורות למטה (7 כפול 32 זה 224) ועוד 10 מקומות ימינה. כלומר, בערך באמצע המסך. שם נכתבת המילה COLOUR ואחריה מספר הצבע."
+    },
+    {
+     "code": "40 FOR W=1 TO 400:NEXT W",
+     "explain": "לולאה שלא עושה כלום, רק סופרת עד 400. בזמן שהמחשב סופר, אנחנו מספיקים לראות את הצבע. בלי השורה הזאת הצבעים היו מתחלפים מהר מדי."
+    },
+    {
+     "code": "50 NEXT C",
+     "explain": "סוף הלולאה. המחשב מוסיף 1 ל-C וחוזר לשורה 20 עם הצבע הבא, עד שמגיעים ל-8."
+    }
+   ],
+   "run": "הקלידו RUN ולחצו Enter. המסך יהפוך לשחור, ואחר כך לירוק, צהוב, כחול, אדום, בז', תכלת, סגול ובסוף כתום. בכל צבע תופיע באמצע המסך המילה COLOUR עם המספר שלו. התוכנית לא שואלת שום דבר, רק מתבוננים. בסוף יופיע OK, וזה הסימן שהתוכנית נגמרה.",
+   "tip": "הצבעים מתחלפים מהר מדי או לאט מדי? שנו את המספר 400 בשורה 40. מספר גדול יותר, כמו 1000, נותן לכל צבע יותר זמן על המסך. מספר קטן יותר מאיץ את הכול.",
+   "challenge": "גרמו למילה DRAGON לזוז על מסך כחול משמאל לימין, כמו שלט אורות שרץ!",
+   "challengeCode": [
+    "10 FOR P=0 TO 26",
+    "20 CLS 3",
+    "30 PRINT @ 224+P,\"DRAGON\";",
+    "40 FOR W=1 TO 100:NEXT W",
+    "50 NEXT P"
+   ],
+   "nextTeaser": "בשיעור הבא נעבור למסך הגרפי ונצייר בית עם קווים, עיגולים וצבעים!"
+  },
+  "en": {
+   "title": "Lesson 6: A Screen of Many Colours",
+   "intro": "Today we paint the whole Dragon screen, one colour after another! We'll write a short program that changes the screen colour nine times and writes the colour number in the middle each time. By the end, you'll know every colour the Dragon can fill its screen with.",
+   "steps": [
+    {
+     "code": "10 FOR C=0 TO 8",
+     "explain": "Remember loops from lesson 4? The variable C counts from 0 to 8. That's exactly the nine colours the Dragon knows."
+    },
+    {
+     "code": "20 CLS C",
+     "explain": "CLS clears the screen, and if you put a number after it, it paints the screen too. We wrote C, so every time round the loop the screen gets a new colour: 0 black, 1 green, 2 yellow, 3 blue, 4 red, 5 buff, 6 cyan, 7 magenta and 8 orange."
+    },
+    {
+     "code": "30 PRINT @ 234,\"COLOUR\";C",
+     "explain": "Here's the new magic! The @ sign tells the computer where to write. The screen has 16 rows of 32 places each. Place 0 is the top left corner. 234 is 7 rows down (7 times 32 is 224) plus 10 places across, so it's roughly the middle of the screen. That's where the word COLOUR appears, followed by the colour number."
+    },
+    {
+     "code": "40 FOR W=1 TO 400:NEXT W",
+     "explain": "A loop that does nothing except count to 400. While the computer counts, we get time to see the colour. Without this line the colours would flash by too fast."
+    },
+    {
+     "code": "50 NEXT C",
+     "explain": "The end of the loop. The computer adds 1 to C and goes back to line 20 with the next colour, until it reaches 8."
+    }
+   ],
+   "run": "Type RUN and press Enter. The screen turns black, then green, yellow, blue, red, buff, cyan, magenta and finally orange. Each time, the word COLOUR and its number appear in the middle. The program doesn't ask you anything, you just watch. At the end you'll see OK, which means the program has finished.",
+   "tip": "Colours changing too fast or too slow? Change the 400 in line 40. A bigger number like 1000 keeps each colour on screen longer. A smaller number speeds everything up.",
+   "challenge": "Make the word DRAGON slide across a blue screen from left to right, like a scrolling sign!",
+   "challengeCode": [
+    "10 FOR P=0 TO 26",
+    "20 CLS 3",
+    "30 PRINT @ 224+P,\"DRAGON\";",
+    "40 FOR W=1 TO 100:NEXT W",
+    "50 NEXT P"
+   ],
+   "nextTeaser": "Next lesson we switch to the graphics screen and draw a house with lines, circles and colours!"
+  }
+ },
+ {
+  "n": 7,
+  "he": {
+   "title": "שיעור 7: מציירים בית",
+   "intro": "עד עכשיו המחשב כתב בשבילנו אותיות. היום הוא יצייר! נבנה בית אדום עם גג משולש, ושמש צהובה בשמיים. בשנת 1983 ילדים הקלידו תוכניות כאלה מתוך מגזינים, שורה אחרי שורה, ורק בסוף גילו מה יופיע על המסך.",
+   "steps": [
+    {
+     "code": "10 PMODE 3,1:PCLS:SCREEN 1,0",
+     "explain": "השורה הזאת עוברת למסך הציור. הפקודה PMODE 3,1 בוחרת מסך עם 4 צבעים, הפקודה PCLS מנקה אותו (הוא יהיה ירוק), והפקודה SCREEN 1,0 מציגה אותו. המסך הוא 256 נקודות לרוחב ו-192 לגובה. הנקודה (0,0) נמצאת בפינה השמאלית העליונה. שימו לב: ככל שהמספר השני גדל, יורדים למטה, לא עולים!"
+    },
+    {
+     "code": "20 COLOR 4\n30 LINE(80,90)-(176,170),PSET,B",
+     "explain": "בשורה 20 בוחרים צבע: 4 הוא אדום. בשורה 30 הפקודה LINE מותחת קו מנקודה לנקודה, אבל בזכות ה-B בסוף יוצא מלבן. הפינה השמאלית העליונה שלו ב-(80,90), והימנית התחתונה ב-(176,170). אלה הקירות של הבית."
+    },
+    {
+     "code": "40 LINE(80,90)-(128,40),PSET\n50 LINE-(176,90),PSET",
+     "explain": "עכשיו הגג. שורה 40 מותחת קו מהפינה השמאלית של הבית למעלה, אל קצה הגג ב-(128,40). בשורה 50 יש טריק: המינוס בלי נקודת התחלה אומר להמשיך מאיפה שהקו הקודם נגמר. משם הקו יורד לפינה הימנית, וקיבלנו משולש."
+    },
+    {
+     "code": "60 COLOR 2:CIRCLE(220,40),20\n70 PAINT(220,40),2,2",
+     "explain": "עוברים לצהוב (2). הפקודה CIRCLE מציירת עיגול שהמרכז שלו ב-(220,40), למעלה מימין, והרדיוס שלו 20. בשורה 70 הפקודה PAINT שופכת צבע מהמרכז החוצה: צהוב, עד שהיא נתקלת בקו צהוב. ככה העיגול נהיה שמש מלאה."
+    },
+    {
+     "code": "75 COLOR 4:PAINT(128,130),4,4",
+     "explain": "חוזרים לאדום וצובעים את הקירות מבפנים, מהנקודה (128,130) שבאמצע הבית. הצבע נעצר בקווים האדומים. הגג נשאר ירוק מבפנים, כי הקו העליון של המלבן מפריד בינו לבין הקירות."
+    },
+    {
+     "code": "80 GOTO 80",
+     "explain": "השורה הזאת קופצת לעצמה שוב ושוב, בלי סוף. למה? כשתוכנית נגמרת, המחשב חוזר למסך הטקסט והציור נעלם. ככה הבית נשאר על המסך. כדי לעצור לוחצים על Esc או על הכפתור עצירה."
+    }
+   ],
+   "run": "תקלידו RUN ותלחצו Enter. המסך יהפוך לירוק, ויופיע עליו בית אדום עם גג משולש, ובפינה הימנית העליונה שמש צהובה. התוכנית לא שואלת שום דבר. כשתסיימו להתפעל, לחצו על Esc.",
+   "tip": "כשצובעים עם PAINT, הצורה חייבת להיות סגורה. אם יש בקו אפילו חור קטן, הצבע בורח דרכו וממלא את כל המסך! אם זה קרה, בדקו את המספרים של הקווים.",
+   "challenge": "צבעו את הגג בכחול, והוסיפו לבית דלת כחולה. רמז: את הדלת מציירים אחרי שצובעים את הקירות, אחרת הצבע האדום יכסה אותה. מלבן מלא מציירים עם BF בסוף.",
+   "challengeCode": [
+    "10 PMODE 3,1:PCLS:SCREEN 1,0",
+    "20 COLOR 4",
+    "30 LINE(80,90)-(176,170),PSET,B",
+    "40 LINE(80,90)-(128,40),PSET",
+    "50 LINE-(176,90),PSET",
+    "60 COLOR 2:CIRCLE(220,40),20",
+    "70 PAINT(220,40),2,2",
+    "75 COLOR 4:PAINT(128,130),4,4",
+    "76 PAINT(128,70),3,4",
+    "77 COLOR 3:LINE(116,130)-(140,170),PSET,BF",
+    "80 GOTO 80"
+   ],
+   "nextTeaser": "בשיעור הבא נגלגל קוביות: המחשב יבחר מספרים אקראיים עם RND, ויגיב למקשים עם INKEY$."
+  },
+  "en": {
+   "title": "Lesson 7: Drawing a House",
+   "intro": "Until now the computer wrote letters for us. Today it draws! We'll build a red house with a triangle roof, and a yellow sun in the sky. In 1983, kids typed programs like this out of magazines, line by line, and only found out at the end what would appear on the screen.",
+   "steps": [
+    {
+     "code": "10 PMODE 3,1:PCLS:SCREEN 1,0",
+     "explain": "This line switches to the drawing screen. PMODE 3,1 picks a screen with 4 colours, PCLS clears it (it will be green), and SCREEN 1,0 shows it. The screen is 256 dots wide and 192 tall. Point (0,0) is the top-left corner. Watch out: as the second number gets bigger, you go down, not up!"
+    },
+    {
+     "code": "20 COLOR 4\n30 LINE(80,90)-(176,170),PSET,B",
+     "explain": "Line 20 picks a colour: 4 is red. In line 30, LINE draws from one point to another, but the B at the end turns it into a box. Its top-left corner is at (80,90) and its bottom-right corner at (176,170). These are the walls of the house."
+    },
+    {
+     "code": "40 LINE(80,90)-(128,40),PSET\n50 LINE-(176,90),PSET",
+     "explain": "Now the roof. Line 40 draws from the house's left corner up to the tip of the roof at (128,40). Line 50 has a trick: a minus with no starting point means 'carry on from where the last line ended'. From there the line goes down to the right corner, and we have a triangle."
+    },
+    {
+     "code": "60 COLOR 2:CIRCLE(220,40),20\n70 PAINT(220,40),2,2",
+     "explain": "Switch to yellow (2). CIRCLE draws a circle with its centre at (220,40), up on the right, and a radius of 20. In line 70, PAINT pours colour from the centre outwards: yellow, until it hits a yellow line. That turns the circle into a solid sun."
+    },
+    {
+     "code": "75 COLOR 4:PAINT(128,130),4,4",
+     "explain": "Back to red, and we paint the walls from the inside, starting at (128,130) in the middle of the house. The paint stops at the red lines. The roof stays green inside, because the top line of the box separates it from the walls."
+    },
+    {
+     "code": "80 GOTO 80",
+     "explain": "This line jumps to itself, over and over, forever. Why? When a program ends, the computer goes back to the text screen and the picture disappears. This keeps the house on screen. To stop it, press Esc or the Stop button."
+    }
+   ],
+   "run": "Type RUN and press Enter. The screen turns green, and a red house with a triangle roof appears, with a yellow sun in the top-right corner. The program doesn't ask you anything. When you're done admiring it, press Esc.",
+   "tip": "When you fill with PAINT, the shape must be closed. If there's even a tiny gap in a line, the paint escapes through it and floods the whole screen! If that happens, check the numbers in your lines.",
+   "challenge": "Paint the roof blue, and give the house a blue door. Hint: draw the door after painting the walls, or the red paint will cover it. A filled box is drawn with BF at the end.",
+   "challengeCode": [
+    "10 PMODE 3,1:PCLS:SCREEN 1,0",
+    "20 COLOR 4",
+    "30 LINE(80,90)-(176,170),PSET,B",
+    "40 LINE(80,90)-(128,40),PSET",
+    "50 LINE-(176,90),PSET",
+    "60 COLOR 2:CIRCLE(220,40),20",
+    "70 PAINT(220,40),2,2",
+    "75 COLOR 4:PAINT(128,130),4,4",
+    "76 PAINT(128,70),3,4",
+    "77 COLOR 3:LINE(116,130)-(140,170),PSET,BF",
+    "80 GOTO 80"
+   ],
+   "nextTeaser": "Next lesson we roll dice: the computer picks random numbers with RND and reacts to your keys with INKEY$."
+  }
+ },
+ {
+  "n": 8,
+  "he": {
+   "title": "שיעור 8: קובייה עם קסם של מזל",
+   "intro": "היום נבנה קובייה אלקטרונית! לוחצים על מקש, והמחשב מטיל קובייה ומראה מה יצא. ואם יוצא 6? יש מנגינת ניצחון. בשנות השמונים ילדים הקלידו משחקים כאלה מתוך עיתוני מחשבים, שורה אחרי שורה, ועכשיו תורכם.",
+   "steps": [
+    {
+     "code": "10 CLS\n20 PRINT \"PRESS A KEY TO ROLL\"",
+     "explain": "קודם מנקים את המסך עם CLS. אחר כך כותבים הוראה לשחקן: לחצו על מקש כדי להטיל."
+    },
+    {
+     "code": "30 IF INKEY$=\"\" THEN 30",
+     "explain": "זה הקסם של השיעור! הפקודה INKEY$ בודקת איזה מקש נלחץ ממש עכשיו, בלי לחכות ל-Enter. אם לא נלחץ כלום, מקבלים מילה ריקה, שני מירכאות בלי כלום ביניהן. אז השורה קופצת לעצמה, שוב ושוב, מהר מאוד, עד שלוחצים על מקש. ככה המחשב מחכה לכם."
+    },
+    {
+     "code": "40 D=RND(6)",
+     "explain": "הפקודה RND(6) בוחרת מספר אקראי מ-1 עד 6, בדיוק כמו קובייה אמיתית. המספר נשמר במשתנה D."
+    },
+    {
+     "code": "50 PRINT \"YOU ROLLED\";D",
+     "explain": "מראים על המסך מה יצא. הנקודה-פסיק מחברת את המילים ואת המספר באותה שורה."
+    },
+    {
+     "code": "60 IF D=6 THEN PLAY \"O3L8CEG\"",
+     "explain": "אם יצא 6, המחשב מנגן מנגינת ניצחון קטנה: דו, מי, סול, קצרים ובאוקטבה גבוהה. זוכרים את PLAY משיעור 5?"
+    },
+    {
+     "code": "70 GOTO 30",
+     "explain": "הפקודה GOTO 30 מחזירה אותנו לשורה 30, לחכות למקש הבא. כך אפשר להטיל שוב ושוב, בלי סוף."
+    }
+   ],
+   "run": "אחרי RUN המסך מתנקה ומופיע PRESS A KEY TO ROLL. ואז... כלום. המחשב מחכה. לחצו על מקש כלשהו, ותופיע שורה כמו YOU ROLLED 4. כל לחיצה היא הטלה חדשה, והמספרים משתנים כל פעם. כשיוצא 6 שומעים מנגינה קצרה!",
+   "tip": "התוכנית הזאת לא נגמרת לבד, כי שורה 70 תמיד חוזרת אחורה. כדי לעצור, לחצו על Esc או על כפתור \"עצירה\" במסך. ואל תשכחו את סימן הדולר: בלעדיו INKEY לא יעבוד.",
+   "challenge": "אתגר: הטילו שתי קוביות בבת אחת! הראו את שתיהן ואת הסכום, ואם יצאו שתי קוביות זהות, כתבו DOUBLE! והשמיעו צפצוף.",
+   "challengeCode": [
+    "10 CLS",
+    "20 PRINT \"PRESS A KEY TO ROLL\"",
+    "30 IF INKEY$=\"\" THEN 30",
+    "40 A=RND(6):B=RND(6)",
+    "50 PRINT A;\"+\";B;\"=\";A+B",
+    "60 IF A=B THEN PRINT \"DOUBLE!\":SOUND 200,2",
+    "70 GOTO 30"
+   ],
+   "nextTeaser": "בשיעור הבא ניקח את הג'ויסטיק ונבנה לוח ציור קסום, כמו מגנט-צייר!"
+  },
+  "en": {
+   "title": "Lesson 8: A Dice of Pure Luck",
+   "intro": "Today we build an electronic dice! You press a key, the computer rolls, and it shows what came up. And if you roll a 6? A little victory tune plays. In the 1980s, kids typed games like this from computer magazines, line by line. Now it's your turn.",
+   "steps": [
+    {
+     "code": "10 CLS\n20 PRINT \"PRESS A KEY TO ROLL\"",
+     "explain": "First we clear the screen with CLS. Then we tell the player what to do: press a key to roll."
+    },
+    {
+     "code": "30 IF INKEY$=\"\" THEN 30",
+     "explain": "This is the magic of today's lesson! INKEY$ checks which key is being pressed right now, without waiting for Enter. If nothing is pressed, you get an empty word: two quote marks with nothing between them. So the line jumps to itself, again and again, very fast, until you press a key. That's how the computer waits for you."
+    },
+    {
+     "code": "40 D=RND(6)",
+     "explain": "RND(6) picks a random number from 1 to 6, just like a real dice. The number is stored in the variable D."
+    },
+    {
+     "code": "50 PRINT \"YOU ROLLED\";D",
+     "explain": "Show what came up. The semicolon joins the words and the number on the same line."
+    },
+    {
+     "code": "60 IF D=6 THEN PLAY \"O3L8CEG\"",
+     "explain": "If you rolled a 6, the computer plays a tiny victory tune: C, E, G, short and in a higher octave. Remember PLAY from lesson 5?"
+    },
+    {
+     "code": "70 GOTO 30",
+     "explain": "GOTO 30 sends us back to line 30 to wait for the next key. So you can roll again and again, forever."
+    }
+   ],
+   "run": "After RUN the screen clears and you see PRESS A KEY TO ROLL. Then... nothing. The computer is waiting. Press any key, and a line like YOU ROLLED 4 appears. Every press is a new roll, and the numbers change each time. When you roll a 6, you hear a short tune!",
+   "tip": "This program never ends on its own, because line 70 always jumps back. To stop it, press Esc or the \"Stop\" button on the screen. And don't forget the dollar sign: INKEY without $ won't work.",
+   "challenge": "Challenge: roll two dice at once! Show both and their total, and if both dice are the same, print DOUBLE! and play a beep.",
+   "challengeCode": [
+    "10 CLS",
+    "20 PRINT \"PRESS A KEY TO ROLL\"",
+    "30 IF INKEY$=\"\" THEN 30",
+    "40 A=RND(6):B=RND(6)",
+    "50 PRINT A;\"+\";B;\"=\";A+B",
+    "60 IF A=B THEN PRINT \"DOUBLE!\":SOUND 200,2",
+    "70 GOTO 30"
+   ],
+   "nextTeaser": "Next lesson we grab the joystick and build a magic drawing toy, like an Etch-a-Sketch!"
+  }
+ },
+ {
+  "n": 9,
+  "he": {
+   "title": "שיעור 9: לוח קסם עם ג'ויסטיק",
+   "intro": "זוכרים את לוח הקסם, הצעצוע עם שני כפתורים שמציירים בהם קו על מסך אפור? היום נבנה אחד כזה בעצמנו. נזיז את הג'ויסטיק, והמחשב יצייר קו בכל מקום שעוברים בו. זו תוכנית קצרה, בדיוק מהסוג שילדים העתיקו פעם מתוך מגזינים, שורה אחרי שורה.",
+   "steps": [
+    {
+     "code": "10 PMODE 4,1:PCLS:SCREEN 1,1",
+     "explain": "שלוש פקודות בשורה אחת, עם נקודתיים ביניהן. הפקודה PMODE 4 בוחרת את המסך הגרפי החד ביותר, עם 2 צבעים. אחריה PCLS מנקה אותו, ו-SCREEN 1,1 מציגה אותו לנו. עכשיו יש לנו דף ריק לצייר עליו."
+    },
+    {
+     "code": "20 X=128:Y=96",
+     "explain": "כאן נמצא העט שלנו. המשתנה X אומר כמה ימינה הוא, והמשתנה Y אומר כמה למטה. המסך הוא 256 על 192, ולכן 128 ו-96 הם בדיוק האמצע."
+    },
+    {
+     "code": "30 J=JOYSTK(0):K=JOYSTK(1)",
+     "explain": "קוראים את הג'ויסטיק. הפקודה JOYSTK(0) נותנת מספר לכיוון ימינה-שמאלה, ושומרים אותו ב-J. הפקודה JOYSTK(1) נותנת מספר לכיוון למעלה-למטה, ושומרים אותו ב-K. המספרים הם מ-0 עד 63. כשלא נוגעים, הם בערך באמצע."
+    },
+    {
+     "code": "40 IF J<20 AND X>0 THEN X=X-1\n50 IF J>40 AND X<255 THEN X=X+1\n60 IF K<20 AND Y>0 THEN Y=Y-1\n70 IF K>40 AND Y<191 THEN Y=Y+1",
+     "explain": "כאן העט זז. אם J קטן מ-20, דחפנו שמאלה, ו-X קטן ב-1. אם J גדול מ-40, דחפנו ימינה, ו-X גדל. אותו דבר עם K למעלה ולמטה. שימו לב: ככל ש-Y גדל, העט יורד למטה. המילה AND אומרת ששני הדברים צריכים להיות נכונים, וכך העט לא בורח מקצה המסך."
+    },
+    {
+     "code": "80 PSET(X,Y)\n90 GOTO 30",
+     "explain": "הפקודה PSET מציירת נקודה במקום של העט. אחר כך GOTO 30 חוזר לקרוא את הג'ויסטיק, שוב ושוב בלי סוף. הנקודות אף פעם לא נמחקות, ולכן הן מתחברות לקו."
+    }
+   ],
+   "run": "הקלידו RUN ולחצו Enter. המסך יתנקה, ובאמצע תופיע נקודה. במחשב, הזיזו אותה עם החצים. בטלפון, געו במסך. כל תנועה משאירה קו, אז אפשר לצייר בית, נחש או את השם שלכם. כדי לעצור, לחצו Esc או על כפתור העצירה.",
+   "tip": "מה קורה בלי החלק עם AND? העט ימשיך לנסות לצאת מהמסך, למשל ל-X שהוא מינוס 1, והתוכנית עלולה לעצור עם שגיאה. הבדיקות X>0 ו-X<255 הן הגדר שמחזיקה את העט בפנים.",
+   "challenge": "תנו למחשב לצייר לבד! במקום הג'ויסטיק, השתמשו ב-RND(4) מהשיעור הקודם כדי לבחור כיוון אקראי, ותנו לו לקפוץ 3 צעדים בכל פעם. אחרי דקה תקבלו ציור מוזר ומיוחד.",
+   "challengeCode": [
+    "10 PMODE 4,1:PCLS:SCREEN 1,1",
+    "20 X=128:Y=96",
+    "30 D=RND(4):A=X:B=Y",
+    "40 IF D=1 AND X>2 THEN X=X-3",
+    "50 IF D=2 AND X<253 THEN X=X+3",
+    "60 IF D=3 AND Y>2 THEN Y=Y-3",
+    "70 IF D=4 AND Y<189 THEN Y=Y+3",
+    "80 LINE(A,B)-(X,Y),PSET",
+    "90 GOTO 30"
+   ],
+   "nextTeaser": "בשיעור האחרון נבנה מבחן תגובה: כמה מהר תלחצו על מקש? המחשב ימדוד אתכם עם TIMER."
+  },
+  "en": {
+   "title": "Lesson 9: A Magic Drawing Screen with the Joystick",
+   "intro": "Remember the Etch A Sketch, the toy with two knobs that draws a line on a grey screen? Today we build our own. You move the joystick, and the computer draws a line wherever you go. It's a short program, just the kind kids once typed in from magazines, line by line.",
+   "steps": [
+    {
+     "code": "10 PMODE 4,1:PCLS:SCREEN 1,1",
+     "explain": "Three commands on one line, with colons between them. PMODE 4 picks the sharpest graphics screen, with 2 colours. PCLS clears it, and SCREEN 1,1 shows it to us. Now we have a blank page to draw on."
+    },
+    {
+     "code": "20 X=128:Y=96",
+     "explain": "This is our pen. X says how far right it is, and Y says how far down. The screen is 256 by 192, so 128 and 96 are right in the middle."
+    },
+    {
+     "code": "30 J=JOYSTK(0):K=JOYSTK(1)",
+     "explain": "Read the joystick. JOYSTK(0) gives a number for left and right, and we keep it in J. JOYSTK(1) gives a number for up and down, and we keep it in K. The numbers go from 0 to 63. When you don't touch anything, they sit around the middle."
+    },
+    {
+     "code": "40 IF J<20 AND X>0 THEN X=X-1\n50 IF J>40 AND X<255 THEN X=X+1\n60 IF K<20 AND Y>0 THEN Y=Y-1\n70 IF K>40 AND Y<191 THEN Y=Y+1",
+     "explain": "This is where the pen moves. If J is below 20, you pushed left, so X goes down by 1. If J is above 40, you pushed right, so X goes up. Same with K for up and down. Watch out: a bigger Y means the pen goes lower on the screen. AND means both things must be true, and that stops the pen from running off the edge."
+    },
+    {
+     "code": "80 PSET(X,Y)\n90 GOTO 30",
+     "explain": "PSET draws a dot where the pen is. Then GOTO 30 goes back to read the joystick again, over and over, forever. The dots are never erased, so they join up into a line."
+    }
+   ],
+   "run": "Type RUN and press Enter. The screen clears and a dot appears in the middle. On a computer, steer it with the arrow keys. On a phone, touch the screen. Every move leaves a line, so you can draw a house, a snake, or your name. To stop, press Esc or the stop button.",
+   "tip": "What happens without the AND part? The pen keeps trying to leave the screen, say to an X of minus 1, and the program can stop with an error. The checks X>0 and X<255 are the fence that keeps the pen inside.",
+   "challenge": "Let the computer draw by itself! Instead of the joystick, use RND(4) from the last lesson to pick a random direction, and let it jump 3 steps each time. After a minute you'll have a strange, one-of-a-kind picture.",
+   "challengeCode": [
+    "10 PMODE 4,1:PCLS:SCREEN 1,1",
+    "20 X=128:Y=96",
+    "30 D=RND(4):A=X:B=Y",
+    "40 IF D=1 AND X>2 THEN X=X-3",
+    "50 IF D=2 AND X<253 THEN X=X+3",
+    "60 IF D=3 AND Y>2 THEN Y=Y-3",
+    "70 IF D=4 AND Y<189 THEN Y=Y+3",
+    "80 LINE(A,B)-(X,Y),PSET",
+    "90 GOTO 30"
+   ],
+   "nextTeaser": "In the final lesson we build a reaction test: how fast can you hit a key? The computer will time you with TIMER."
+  }
+ },
+ {
+  "n": 10,
+  "he": {
+   "title": "שיעור 10: מבחן תגובה",
+   "intro": "זה השיעור האחרון בקורס! נבנה מבחן תגובה: המחשב מחכה זמן סודי, מצפצף, ומודד כמה מהר לחצתם על מקש. בשנת 1983 ילדים הקלידו משחקים כאלה מתוך מגזינים, שורה אחרי שורה. עכשיו תורכם.",
+   "steps": [
+    {
+     "code": "10 CLS\n20 PRINT \"WAIT FOR THE BEEP...\"",
+     "explain": "הפקודה CLS מנקה את המסך. אחר כך הפקודה PRINT אומרת לשחקן להתכונן ולחכות לצפצוף."
+    },
+    {
+     "code": "30 FOR W=1 TO RND(1000)+500:NEXT W",
+     "explain": "זו לולאת FOR בלי כלום בפנים. המחשב רק סופר, וזה לוקח זמן. החלק RND(1000)+500 בוחר בכל פעם מספר אחר, בין 501 ל-1500. ככה אף אחד לא יודע מתי יגיע הצפצוף, ואי אפשר לנחש!"
+    },
+    {
+     "code": "35 IF INKEY$<>\"\" THEN 35",
+     "explain": "זו שורת האנטי-רמאות! מי שלחץ על מקשים מוקדם מדי, המחשב זוכר את הלחיצות האלה. השורה הזאת קוראת שוב ושוב את INKEY$ וזורקת את המקשים, עד שלא נשאר אף אחד. לחיצה מוקדמת לא תעזור לכם."
+    },
+    {
+     "code": "40 SOUND 200,2:PRINT \"NOW! PRESS A KEY\"\n50 TIMER=0",
+     "explain": "הפקודה SOUND 200,2 מצפצפת, והמסך כותב שעכשיו לוחצים. בשורה 50 הפקודה TIMER=0 מאפסת את השעון. שעון העצר התחיל!"
+    },
+    {
+     "code": "60 IF INKEY$=\"\" THEN 60\n70 T=TIMER",
+     "explain": "שורה 60 מחכה: כל עוד לא נלחץ מקש, היא קופצת לעצמה. ברגע שלוחצים, התוכנית ממשיכה, והמשתנה T שומר את הזמן שעל השעון."
+    },
+    {
+     "code": "80 PRINT \"YOUR TIME:\";T*2;\"HUNDREDTHS\"\n90 IF T<15 THEN PRINT \"LIGHTNING FAST!\" ELSE PRINT \"TRY AGAIN!\"",
+     "explain": "השעון TIMER סופר 50 פעמים בשנייה, כלומר כל תקתוק הוא 2 מאיות שנייה. לכן מדפיסים T*2, ומקבלים מאיות. אם T קטן מ-15 (פחות מ-30 מאיות, פחות משליש שנייה), אתם מהירים כמו ברק!"
+    }
+   ],
+   "run": "מקלידים RUN ולוחצים Enter. המסך מתנקה וכתוב עליו WAIT FOR THE BEEP... מחכים... ביפ! עכשיו כתוב NOW! PRESS A KEY. לוחצים על מקש כלשהו הכי מהר שאפשר, בלי Enter. תראו משהו כמו YOUR TIME: 42 HUNDREDTHS, ואחריו LIGHTNING FAST! או TRY AGAIN!. כדי לשחק שוב מקלידים שוב RUN. נסו לנצח את כל המשפחה!",
+   "tip": "מי ששוכח את שורה 50 (TIMER=0) יקבל מספר ענק, כי השעון ממשיך לספור מהרגע שהמחשב נדלק. תמיד מאפסים את שעון העצר לפני שמודדים!",
+   "challenge": "הפכו את המשחק לשלושה סיבובים, ובסוף הציגו את הזמן הכי טוב שלכם. אל תשכחו: בכל סיבוב צריך את שורת האנטי-רמאות לפני TIMER=0.",
+   "challengeCode": [
+    "10 CLS:B=999",
+    "20 FOR R=1 TO 3",
+    "30 PRINT \"ROUND\";R;\"- WAIT FOR THE BEEP...\"",
+    "40 FOR W=1 TO RND(1000)+500:NEXT W",
+    "50 IF INKEY$<>\"\" THEN 50",
+    "60 SOUND 200,2:PRINT \"NOW!\"",
+    "70 TIMER=0",
+    "80 IF INKEY$=\"\" THEN 80",
+    "90 T=TIMER*2:PRINT \"TIME:\";T",
+    "100 IF T<B THEN B=T",
+    "110 NEXT R",
+    "120 PRINT \"BEST TIME:\";B;\"HUNDREDTHS\""
+   ],
+   "nextTeaser": "סיימתם את הקורס! שמרו את התוכנית עם CSAVE \"REACT\" כדי שתחכה לכם גם מחר, ותמשיכו להמציא. עכשיו אתם מתכנתי דרקון אמיתיים."
+  },
+  "en": {
+   "title": "Lesson 10: The Reaction Test",
+   "intro": "This is the final lesson! We'll build a reaction test: the computer waits a secret amount of time, beeps, and measures how fast you hit a key. Back in 1983, kids typed games like this from magazines, line by line. Now it's your turn.",
+   "steps": [
+    {
+     "code": "10 CLS\n20 PRINT \"WAIT FOR THE BEEP...\"",
+     "explain": "CLS clears the screen. Then PRINT tells the player to get ready and wait for the beep."
+    },
+    {
+     "code": "30 FOR W=1 TO RND(1000)+500:NEXT W",
+     "explain": "A FOR loop with nothing inside. The computer just counts, and that takes time. RND(1000)+500 picks a different number each time, from 501 to 1500, so nobody knows when the beep is coming. No guessing!"
+    },
+    {
+     "code": "35 IF INKEY$<>\"\" THEN 35",
+     "explain": "The anti-cheat line! If you pressed keys too early, the computer remembers them. This line keeps reading INKEY$ and throwing those keys away until none are left. Pressing early won't help you."
+    },
+    {
+     "code": "40 SOUND 200,2:PRINT \"NOW! PRESS A KEY\"\n50 TIMER=0",
+     "explain": "SOUND 200,2 beeps and the screen says NOW!. In line 50, TIMER=0 resets the clock to zero. The stopwatch has started!"
+    },
+    {
+     "code": "60 IF INKEY$=\"\" THEN 60\n70 T=TIMER",
+     "explain": "Line 60 waits: as long as no key is pressed, it jumps back to itself. The moment you press, the program moves on, and T saves the time on the clock."
+    },
+    {
+     "code": "80 PRINT \"YOUR TIME:\";T*2;\"HUNDREDTHS\"\n90 IF T<15 THEN PRINT \"LIGHTNING FAST!\" ELSE PRINT \"TRY AGAIN!\"",
+     "explain": "TIMER counts 50 times a second, so each tick is 2 hundredths of a second. That's why we print T*2: it gives hundredths. If T is less than 15 (under 30 hundredths, less than a third of a second), you're as fast as lightning!"
+    }
+   ],
+   "run": "Type RUN and press Enter. The screen clears and says WAIT FOR THE BEEP... Wait... BEEP! Now it says NOW! PRESS A KEY. Press any key as fast as you can, no Enter needed. You'll see something like YOUR TIME: 42 HUNDREDTHS, then LIGHTNING FAST! or TRY AGAIN!. To play again, type RUN again. Try to beat your whole family!",
+   "tip": "If you forget line 50 (TIMER=0), you'll get a huge number, because the clock keeps counting from when the computer was switched on. Always reset the stopwatch before you measure!",
+   "challenge": "Turn the game into three rounds and show your best time at the end. Don't forget: every round needs the anti-cheat line before TIMER=0.",
+   "challengeCode": [
+    "10 CLS:B=999",
+    "20 FOR R=1 TO 3",
+    "30 PRINT \"ROUND\";R;\"- WAIT FOR THE BEEP...\"",
+    "40 FOR W=1 TO RND(1000)+500:NEXT W",
+    "50 IF INKEY$<>\"\" THEN 50",
+    "60 SOUND 200,2:PRINT \"NOW!\"",
+    "70 TIMER=0",
+    "80 IF INKEY$=\"\" THEN 80",
+    "90 T=TIMER*2:PRINT \"TIME:\";T",
+    "100 IF T<B THEN B=T",
+    "110 NEXT R",
+    "120 PRINT \"BEST TIME:\";B;\"HUNDREDTHS\""
+   ],
+   "nextTeaser": "You finished the course! Save your program with CSAVE \"REACT\" so it's waiting for you tomorrow, and keep inventing. You're a real Dragon programmer now."
+  }
+ }
+]
