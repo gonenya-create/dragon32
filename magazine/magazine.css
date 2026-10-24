@@ -1,26 +1,68 @@
-/* המדור "מה קראו בעלי Dragon": סיכומים שלנו של גיליונות Dragon User, וקישור לסריקה ב-archive.org. אותו עיצוב כמו יומן המסע */
-:root { --bg: #0e0b09; --ink: #efe6d2; --muted: #c9bba5; --line: #4a3d31; --accent: #f2c94c; --paper: #f3ead6; --paper-ink: #2a2119; }
+/* המדור "מה קראו בעלי Dragon": סיכומים שלנו של גיליונות Dragon User, וקישור לסריקה ב-archive.org.
+   עיצוב ברוח מגזין מחשבים מ-1983: נייר עיתון, ראש מגזין עם פסי צבע, כותרות שחורות כבדות, טורים, ותלוש לגזירה.
+   הכל שלנו: בלי הלוגו או העיצוב של Dragon User. */
+:root {
+  --desk: #17110c; --paper: #f3ead3; --paper2: #e9dcbd; --ink: #1d1712; --soft: #5a4a3a;
+  --red: #c42a1c; --yellow: #f2c94c; --blue: #1f4fa0; --green: #2f8f3a; --rule: #1d1712;
+}
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.7 'IBM Plex Sans Hebrew', system-ui, sans-serif; }
-header { display: flex; align-items: center; gap: 12px; padding: 10px 16px; flex-wrap: wrap; }
-header b { font-size: 18px; }
-.tag { font-size: 13px; padding: 3px 10px; border-radius: 999px; background: #3a2a10; color: var(--accent); }
-header a:first-of-type { margin-inline-start: auto; }
-header a { color: var(--ink); text-decoration: none; border: 1.5px solid var(--line); border-radius: 8px; padding: 6px 12px; font-size: 14px; }
-main { max-width: 720px; margin: 0 auto; padding: 8px 16px 40px; }
-h1 { font-size: 26px; line-height: 1.35; margin: 4px 0 14px; }
-h2 { font-size: 19px; margin: 26px 0 4px; color: var(--accent); }
-p { margin: 8px 0; }
-a { color: var(--accent); overflow-wrap: anywhere; }
-a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.muted { color: var(--muted); }
-.issue { font-size: 14px; font-weight: 700; color: var(--accent); margin-top: 18px; }
-.scan { margin-top: 28px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: #1c1610; }
-.credit { font-size: 14px; color: var(--muted); }
-.more { margin-top: 26px; }
-.issues { list-style: none; padding: 0; margin: 18px 0; display: grid; gap: 12px; }
-.issues a { display: block; text-decoration: none; color: var(--paper-ink); background: var(--paper); border-radius: 10px; padding: 14px 16px; box-shadow: 0 2px 0 #00000060; }
-.issues a:hover { filter: brightness(1.05); }
-.issues small { display: block; font: 700 12px 'Courier New', monospace; color: #7a4b10; }
-.issues strong { display: block; font-size: 18px; line-height: 1.4; margin-top: 2px; }
-.issues span { display: block; font-size: 15px; margin-top: 4px; }
+body { margin: 0; background: var(--desk); color: var(--ink); font: 18px/1.7 'Frank Ruhl Libre', 'Times New Roman', serif; }
+a { color: var(--red); overflow-wrap: anywhere; }
+a:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+
+/* הסרגל העליון של האתר (כמו ביומן המסע) */
+.site { display: flex; align-items: center; gap: 10px; padding: 10px 16px; flex-wrap: wrap; font: 15px/1.4 'Rubik', system-ui, sans-serif; color: #efe6d2; }
+.site b { font-size: 17px; }
+.site a { color: #efe6d2; text-decoration: none; border: 1.5px solid #4a3d31; border-radius: 8px; padding: 6px 12px; font-size: 14px; }
+.site a:first-of-type { margin-inline-start: auto; }
+
+/* דף הנייר */
+.sheet { max-width: 920px; margin: 4px auto 40px; background: var(--paper);
+  background-image: radial-gradient(rgba(90,60,20,.07) 1px, transparent 1px), linear-gradient(180deg, var(--paper), var(--paper2));
+  background-size: 4px 4px, 100% 100%; box-shadow: 0 10px 30px #0008; }
+
+/* ראש המגזין */
+.mast { background: var(--ink); color: var(--paper); padding: 14px 20px 0; }
+.mast-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  font: 700 12px/1.4 'Rubik', sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--yellow); }
+.mast-name { font: 900 clamp(34px, 8vw, 64px)/1 'Rubik', sans-serif; margin: 8px 0 10px; letter-spacing: -.01em; }
+.mast-name bdi { color: var(--yellow); }
+.stripes { display: flex; height: 10px; margin: 0 -20px; }
+.stripes i { flex: 1; }
+.stripes i:nth-child(1) { background: var(--red); } .stripes i:nth-child(2) { background: var(--yellow); }
+.stripes i:nth-child(3) { background: var(--green); } .stripes i:nth-child(4) { background: var(--blue); }
+.strip { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 6px 20px;
+  border-bottom: 3px double var(--rule); font: 700 13px/1.5 'Rubik', sans-serif; color: var(--soft); }
+
+/* הכתבה */
+.story { padding: 18px 20px 28px; }
+.kicker { display: inline-block; background: var(--red); color: var(--paper); font: 700 13px/1 'Rubik', sans-serif;
+  padding: 6px 10px; letter-spacing: .04em; transform: rotate(-1.5deg); }
+.story h1 { font: 900 clamp(28px, 6.2vw, 46px)/1.12 'Rubik', sans-serif; margin: 12px 0 12px; }
+.standfirst { font-size: 21px; line-height: 1.6; font-weight: 700; border-bottom: 2px solid var(--rule); padding-bottom: 14px; margin: 0 0 16px; }
+.cols { column-gap: 32px; column-rule: 1px solid #b9a682; }
+@media (min-width: 760px) { .cols { columns: 2; } }
+.cols h2 { font: 900 21px/1.25 'Rubik', sans-serif; margin: 18px 0 4px; break-after: avoid; padding-top: 6px; border-top: 4px solid var(--red); }
+.cols h2:first-child { margin-top: 0; }
+.cols p { margin: 6px 0 10px; }
+.cols > p:first-of-type::first-letter { float: inline-start; font: 900 3.1em/0.9 'Rubik', sans-serif; color: var(--red); margin-inline-end: 6px; margin-top: 4px; }
+.quote { font-style: italic; font-weight: 700; color: var(--red); }
+
+/* תלוש: איפה הסריקה */
+.coupon { margin: 24px 0 8px; border: 2px dashed var(--ink); padding: 14px 16px; background: #fffaf0; position: relative; break-inside: avoid; }
+.coupon::before { content: '✂'; position: absolute; top: -14px; inset-inline-start: 14px; background: var(--paper); padding: 0 6px; font-size: 18px; }
+.coupon strong { display: block; font: 900 15px/1.4 'Rubik', sans-serif; text-transform: uppercase; letter-spacing: .05em; }
+.credit { font: 13px/1.6 'Rubik', sans-serif; color: var(--soft); margin-top: 10px; }
+.more { font: 15px/1.6 'Rubik', sans-serif; border-top: 3px double var(--rule); margin-top: 22px; padding-top: 10px; }
+.note { font: 15px/1.6 'Rubik', sans-serif; color: var(--soft); }
+
+/* דף הגיליונות: כל גיליון כמו שער של מגזין */
+.issues { list-style: none; padding: 0; margin: 18px 0; display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.issues a { display: flex; flex-direction: column; text-decoration: none; color: var(--ink); background: var(--paper); border: 2px solid var(--ink);
+  box-shadow: 5px 5px 0 var(--ink); min-height: 300px; transition: transform .12s; }
+.issues a:hover { transform: translate(-2px, -2px); }
+.cover-top { background: var(--ink); color: var(--yellow); font: 700 12px/1.4 'Rubik', sans-serif; padding: 8px 12px; letter-spacing: .06em; display: flex; justify-content: space-between; }
+.cover-no { font: 900 64px/1 'Rubik', sans-serif; color: var(--red); padding: 10px 12px 0; }
+.cover-title { font: 900 21px/1.25 'Rubik', sans-serif; padding: 4px 12px; }
+.cover-teaser { font-size: 16px; line-height: 1.5; padding: 4px 12px 12px; color: var(--soft); margin-top: auto; }
+.issues .stripes { margin: 0; height: 8px; }

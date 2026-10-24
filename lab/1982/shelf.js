@@ -11,7 +11,8 @@
     ['draw', 'ציור על המסך', 'Screen drawing'],
     ['derby', 'מרוץ סוסים', 'Horse race'],
     // שפת מכונה (CLOADM ואז EXEC): נבנה מ-games/eggs (node games/eggs/build.mjs)
-    ['eggs', 'ביצי הדרקון', 'Dragon Eggs', 'm'],
+    ['eggs', 'ביצי הדרקון', 'Dragon Eggs', 'm',
+      ['Gonen Yarom, 2026', 'https://github.com/gonenya-create/dragon32/tree/main/games/eggs', null]],
     // משחקים של אחרים, באישור המחבר ועם קרדיט (CLAUDE.md). 'a' = שפת מכונה שמתחילה לבד אחרי CLOADM.
     // [מחבר, תיעוד (חובה לפי הרישיון), אתר המחבר או קוד המקור, רישיון נפרד אם יש]
     ['blockdown', 'Blockdown', 'Blockdown', 'a',
@@ -79,7 +80,9 @@
     site.rel = 'noopener';
     const who = document.createElement('bdi');
     who.textContent = credit[0];
-    by.append(EN ? 'By ' : 'מאת ', who, ' · ', docs, ' · ', site);
+    if (!credit[2]) docs.textContent = EN ? 'source code' : 'קוד המקור';
+    by.append(EN ? 'By ' : 'מאת ', who, document.createElement('br'), docs);
+    if (credit[2]) by.append(' · ', site);
     if (credit[3]) {
       const lic = document.createElement('a');
       lic.href = credit[3];
