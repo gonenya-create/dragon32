@@ -52,6 +52,17 @@
     remember(d);
     box.appendChild(d);
   }
+  // עוד משחק טוב שלא על המדף: ב-Dunjunz יש חלקים מהמשחק המקורי של Bug-Byte בלי רשות, אז רק קישור לאתר של המחבר
+  {
+    const more = document.createElement('p');
+    more.className = 'tape-credit drawer-more';
+    const a = document.createElement('a');
+    a.href = 'https://www.6809.org.uk/dunjunz/';
+    a.rel = 'noopener';
+    a.textContent = 'Dunjunz';
+    more.append(EN ? 'More to play: ' : 'עוד משחק: ', a, EN ? ' by Ciaran Anscomb, on his own site.' : ' של Ciaran Anscomb, באתר שלו.');
+    grids.mc.after(more);
+  }
   const mineDrawer = document.getElementById('drawer-mine');
   if (mineDrawer) { if ('mine' in drawerState) mineDrawer.open = drawerState.mine; remember(mineDrawer); }
   const openDrawerOf = b => { const d = b && b.closest('details.drawer'); if (d) d.open = true; };
