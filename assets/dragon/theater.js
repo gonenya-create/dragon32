@@ -176,7 +176,7 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   const shelfPages = pagesRow();
   shelfPages.classList.add('d32-pages-shelf');
   panes.shelf.appendChild(shelfPages);
-  const MOVE = [['.d32-share-row', 'program'], ['.d32-cartshelf', 'shelf'], ['.d32-shelf:not(.d32-cartshelf)', 'shelf']];
+  const MOVE = [['.d32-share-row', 'program'], ['.d32-cabinet', 'shelf']];
   const moved = [];
   function toTabs() {
     for (const [sel, id] of MOVE) {

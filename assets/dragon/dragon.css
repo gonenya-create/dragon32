@@ -29,6 +29,22 @@
 .d32-shelf { max-width: 560px; margin-top: 14px; }
 .prose .d32-shelf-title { margin: 0 0 8px; font-size: 15px; font-weight: 700; color: var(--ink-2); }
 .d32-tapes { display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 8px; }
+/* ארון המחסניות והקלטות: מגירות עם מספר, נפתחות בלחיצה (כמו במכונה) */
+.d32-cabinet { display: grid; gap: 8px; padding: 8px; border-radius: 14px; border: 2px solid #5a4430; background: linear-gradient(#2b2018, #1f1712); }
+.d32-drawer { border: 1.5px solid #5a4430; border-radius: 10px; background: #261c15; color: #efe6d2; }
+.d32-drawer > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 10px 12px; min-height: 44px; font-weight: 700; }
+.d32-drawer > summary::-webkit-details-marker { display: none; }
+.d32-drawer > summary::before { content: ''; width: 26px; height: 6px; border-radius: 3px; background: #b08a5a; flex: none; }
+.d32-drawer > summary::after { content: '▾'; margin-inline-start: auto; color: #c9bba5; }
+.d32-drawer:not([open]) > summary::after { transform: rotate(-90deg); }
+[dir="rtl"] .d32-drawer:not([open]) > summary::after { transform: rotate(90deg); }
+.d32-drawer > summary:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 10px; }
+.d32-drawer-count { font: 700 12px 'Courier New', monospace; color: #1b1511; background: #f2c94c; border-radius: 999px; padding: 1px 8px; }
+.d32-drawer > :not(summary) { margin-inline: 10px; }
+.d32-drawer > :last-child { margin-bottom: 10px; }
+.prose .d32-drawer .d32-shelf-title, .d32-drawer .d32-shelf-title { color: #e1d5c1; font-weight: 400; font-size: 14px; margin: 0 12px 8px; }
+.d32-mine-empty { margin: 0; color: #c9bba5; font-size: 14px; grid-column: 1 / -1; }
+
 /* קלטת: גוף כהה, תווית נייר בכתב יד, ושני גלגלים */
 .d32-tape {
   display: flex; flex-direction: column; align-items: stretch; gap: 6px; padding: 8px 8px 6px; cursor: pointer;

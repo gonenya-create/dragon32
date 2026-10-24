@@ -96,13 +96,19 @@ setTimeout(() => document.documentElement.classList.remove('d32-booting'), 3000)
     </div>
     <button type="button" class="d32-stop"><span class="d32-stop-run">■ עצירה</span><span class="d32-stop-gfx">↩ חזרה למסך הטקסט</span></button>
   </div>
-  <div class="d32-shelf d32-cartshelf" role="group" aria-labelledby="d32-carts-title">
-    <p id="d32-carts-title" class="d32-shelf-title">חריץ המחסניות: משחקי פעולה עם גרפיקה. בחרו מחסנית, והיא תיכנס למחשב</p>
-    <div class="d32-carts"></div>
-  </div>
-  <div class="d32-shelf" role="group" aria-labelledby="d32-shelf-title">
-    <p id="d32-shelf-title" class="d32-shelf-title">מדף הקלטות: בחרו קלטת, והיא תיטען ותתחיל</p>
-    <div class="d32-tapes"></div>
+  <div class="d32-shelf d32-cabinet" role="group" aria-label="ארון המחסניות והקלטות">
+    <details class="d32-drawer" data-drawer="carts" open><summary><span class="d32-drawer-name">מחסניות</span> <span class="d32-drawer-count" data-count="carts"></span></summary>
+      <p id="d32-carts-title" class="d32-shelf-title">חריץ המחסניות: משחקי פעולה עם גרפיקה. בחרו מחסנית, והיא תיכנס למחשב</p>
+      <div class="d32-carts"></div>
+    </details>
+    <details class="d32-drawer" data-drawer="tapes" open><summary><span class="d32-drawer-name">קלטות BASIC</span> <span class="d32-drawer-count" data-count="tapes"></span></summary>
+      <p id="d32-shelf-title" class="d32-shelf-title">מדף הקלטות: בחרו קלטת, והיא תיטען ותתחיל</p>
+      <div class="d32-tapes"></div>
+    </details>
+    <details class="d32-drawer" data-drawer="mine"><summary><span class="d32-drawer-name">הקלטות שלי</span> <span class="d32-drawer-count" data-count="mine">0</span></summary>
+      <p class="d32-shelf-title">תוכניות ששמרתם בעצמכם עם <bdi dir="ltr">CSAVE "NAME"</bdi>. הן נשמרות בדפדפן הזה.</p>
+      <div class="d32-tapes d32-mytapes"></div>
+    </details>
   </div>
   <p class="d32-share-row"><button type="button" class="d32-share">🔗 שיתוף התוכנית בקישור</button> <span class="d32-share-note" role="status"></span></p>
 </section>
