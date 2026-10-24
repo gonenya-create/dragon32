@@ -162,8 +162,9 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
     const row = document.createElement('nav');
     row.className = 'd32-pages';
     row.setAttribute('aria-label', tr('עוד באתר', 'More on the site'));
-    row.innerHTML = '<a href="' + (EN ? '/en/story/' : '/story/') + '"><span aria-hidden="true">📜</span> ' + tr('יומן המסע', 'The journey') + '</a>'
-      + '<a href="/magazine/"><span aria-hidden="true">📰</span> ' + tr('מה קראו בעלי <bdi dir="ltr">Dragon</bdi>', 'What Dragon owners read (Hebrew)') + '</a>'
+    row.innerHTML = '<a href="' + (EN ? '/en/lessons/' : '/lessons/') + '"><span aria-hidden="true">🎓</span> ' + tr('לומדים בייסיק', 'Learn BASIC') + '</a>'
+      + '<a href="' + (EN ? '/en/story/' : '/story/') + '"><span aria-hidden="true">📜</span> ' + tr('יומן המסע', 'The journey') + '</a>'
+      + '<a href="' + (EN ? '/en/magazine/' : '/magazine/') + '"><span aria-hidden="true">📰</span> ' + tr('מה קראו בעלי <bdi dir="ltr">Dragon</bdi>', 'What Dragon Owners Were Reading') + '</a>'
       + '<a href="' + (EN ? '/en/dragon-history/' : '/dragon-history/') + '"><span aria-hidden="true">🐉</span> ' + tr('ההיסטוריה של ה-<bdi dir="ltr">Dragon</bdi>', 'The history of the <bdi dir="ltr">Dragon</bdi>') + '</a>';
     return row;
   };
@@ -176,7 +177,7 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   const shelfPages = pagesRow();
   shelfPages.classList.add('d32-pages-shelf');
   panes.shelf.appendChild(shelfPages);
-  const MOVE = [['.d32-share-row', 'program'], ['.d32-cartshelf', 'shelf'], ['.d32-shelf:not(.d32-cartshelf)', 'shelf']];
+  const MOVE = [['.d32-share-row', 'program'], ['.d32-cabinet', 'shelf']];
   const moved = [];
   function toTabs() {
     for (const [sel, id] of MOVE) {

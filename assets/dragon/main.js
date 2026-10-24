@@ -90,10 +90,36 @@ function renderHof() {
   });
 }   // חריצים ריקים עם "בקרוב", עד שיגיעו עוד מחסניות
 
+// ארון המחסניות והקלטות (גונן, 24.10, כמו במכונה): מגירה לכל סוג, עם מספר, ונפתחת בלחיצה.
+// מה פתוח נזכר בדפדפן הזה. כשנשמרת קלטת חדשה, המגירה "הקלטות שלי" נפתחת
+const DRAWER_KEY = 'd32-drawers';
+function setCount(root, key, n) {
+  const c = root.querySelector('.d32-drawer-count[data-count="' + key + '"]');
+  if (c) c.textContent = n;
+}
+function openDrawer(root, key) {
+  const d = root.querySelector('.d32-drawer[data-drawer="' + key + '"]');
+  if (d) d.open = true;
+}
+function setupDrawers(root) {
+  let state = {};
+  try { state = JSON.parse(localStorage.getItem(DRAWER_KEY)) || {}; } catch { /* בלי זיכרון בדפדפן */ }
+  for (const d of root.querySelectorAll('.d32-drawer')) {
+    const key = d.dataset.drawer;
+    if (key in state) d.open = !!state[key];
+    d.addEventListener('toggle', () => {
+      state[key] = d.open;
+      try { localStorage.setItem(DRAWER_KEY, JSON.stringify(state)); } catch { /* בלי זיכרון בדפדפן */ }
+    });
+  }
+}
+
 function fillShelf(root) {
   const box = root.querySelector('.d32-tapes');
   if (!box) return;
   box.textContent = '';
+  setCount(root, 'tapes', SHELF.length);
+  setupDrawers(root);
   for (const [file, label] of SHELF) {
     const b = document.createElement('button');
     b.type = 'button';
@@ -160,10 +186,18 @@ function deleteMyTape(name) {
 // הקלטות שלכם על המדף, אחרי הקלטות הקבועות. bind מחבר לכל קלטת את הלחיצה שטוענת אותה.
 // ליד כל קלטת כפתור מחיקה קטן: לחיצה ראשונה שואלת "למחוק?", השנייה מוחקת
 function renderMine(root, bind) {
-  const box = root.querySelector('.d32-tapes');
+  const box = root.querySelector('.d32-mytapes') || root.querySelector('.d32-tapes');
   if (!box) return;
-  box.querySelectorAll('.d32-tape-wrap').forEach(w => w.remove());
-  for (const { n } of myTapes()) {
+  box.querySelectorAll('.d32-tape-wrap, .d32-mine-empty').forEach(w => w.remove());
+  const list = myTapes();
+  setCount(root, 'mine', list.length);
+  if (!list.length && box.classList.contains('d32-mytapes')) {
+    const p = document.createElement('p');
+    p.className = 'd32-mine-empty';
+    p.textContent = tr('עוד אין קלטות.', 'No tapes yet.');
+    box.appendChild(p);
+  }
+  for (const { n } of list) {
     const wrap = document.createElement('div');
     wrap.className = 'd32-tape-wrap';
     const b = document.createElement('button');
@@ -334,6 +368,7 @@ function mount(root) {
     if (!saveMyTape(name, text)) return false;
     kept = text;
     renderMine(root, bindPress);
+    openDrawer(root, 'mine');
     return true;
   } });
   // "מה קרה?": הסבר בעברית מתחת למסך לכל שגיאה. נסגר כשמקלידים את הפקודה הבאה
@@ -541,6 +576,7 @@ function mount(root) {
       });
       carts.appendChild(b);
     }
+    setCount(root, 'carts', SHOWN.length);
     // בגרסה הבסיסית: המחסניות של המחשב המלא מופיעות על המדף כקישור אליו
     if (!FULL) for (const [id, label] of CARTS.filter(c => c[3] === 'full')) {
       const a = document.createElement('a');

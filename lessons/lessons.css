@@ -1,0 +1,104 @@
+/* כיתת הלימוד "לומדים בייסיק עם הדרקון", ברוח חוג מחשבים של 1983: לוח ירוק עם גיר, מחברת עם שורות ושוליים אדומים,
+   נייר מחשב עם פסים ירוקים וחורים בצדדים, פתק צהוב, ומדבקות כוכב על כל שיעור שגמרתם. הכל שלנו. */
+:root {
+  --wall: #2a211a; --board: #1f3d2c; --board2: #234733; --chalk: #f4f1e6; --chalk2: #cfe3d2;
+  --sheet: #f3ead3; --lines: #d9c9a3; --margin: #e06a5a; --pencil: #1b2a4a; --soft: #4a5878;
+  --bar: #dff0d8; --hole: #e9e4d4; --star: #f2b705; --red: #c23a27;
+}
+body { background: var(--wall); background-image: radial-gradient(rgba(255,255,255,.03) 1px, transparent 1px); background-size: 6px 6px; }
+
+/* סרגל עליון */
+.class-nav { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 16px; max-width: 1240px; margin: 0 auto; }
+.class-nav b { color: var(--chalk); font-size: 17px; }
+.class-nav a { color: var(--chalk); text-decoration: none; border: 1.5px solid #5a4a3a; border-radius: 8px; padding: 6px 12px; font-size: 14px; }
+.class-nav a:first-of-type { margin-inline-start: auto; }
+
+/* הלוח */
+.board { max-width: 1240px; margin: 0 auto; padding: 0 16px; }
+.board-in { position: relative; background: radial-gradient(ellipse at 30% 20%, var(--board2), var(--board)); border: 12px solid #7a5434; border-radius: 6px;
+  box-shadow: inset 0 0 40px #0008, 0 8px 20px #0007; padding: 18px 20px 26px; color: var(--chalk); }
+.board-in::after { content: ''; position: absolute; inset-inline: 10%; bottom: -12px; height: 8px; background: #5e3f25; border-radius: 0 0 4px 4px; }
+.board h1 { margin: 0; font: 700 clamp(34px, 7vw, 56px)/1 'Amatic SC', cursive; letter-spacing: .02em; text-shadow: 0 0 1px #fff8; }
+.board-sub { margin: 6px 0 14px; color: var(--chalk2); font-size: 16px; }
+#lesson-progress { display: flex; gap: 8px; flex-wrap: wrap; }
+.tile { position: relative; display: grid; place-items: center; width: 46px; height: 46px; border: 2px dashed #cfe3d2aa; border-radius: 8px;
+  color: var(--chalk); text-decoration: none; font: 700 26px/1 'Amatic SC', cursive; }
+.tile:hover { background: #ffffff10; }
+.tile.is-current { border-style: solid; border-color: var(--chalk); background: #ffffff1a; }
+.tile.is-done { border-style: solid; border-color: var(--star); }
+.tile-star { position: absolute; top: -10px; inset-inline-end: -10px; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%;
+  background: var(--star); color: #5a3d00; font: 700 15px/1 system-ui, sans-serif; box-shadow: 0 2px 3px #0006; transform: rotate(-12deg); }
+#lesson-count { margin: 10px 0 0; color: var(--chalk2); font-size: 14px; }
+
+/* השולחן: המחברת לצד המחשב */
+.desk { max-width: 1240px; margin: 26px auto 60px; padding: 0 16px; display: grid; gap: 22px; align-items: start; }
+@media (min-width: 1000px) { .desk { grid-template-columns: minmax(0, 1fr) 520px; } .computer-side { position: sticky; top: 12px; } }
+.computer-side .d32 { margin-top: 0; }
+.computer-side .d32-tv { max-width: none; }
+.computer-label { margin: 0 0 6px; color: var(--chalk2); font: 700 22px/1 'Amatic SC', cursive; }
+.computer-help { margin: 8px 0 0; color: var(--chalk2); font-size: 14px; }
+
+/* המחברת */
+.notebook { position: relative; background: var(--sheet); color: var(--pencil); border-radius: 4px; box-shadow: 0 10px 24px #0008;
+  background-image: linear-gradient(transparent 31px, var(--lines) 31px, var(--lines) 32px, transparent 32px), radial-gradient(rgba(90,60,20,.07) 1px, transparent 1px); background-size: 100% 32px, 4px 4px;
+  padding: 20px 22px 26px; padding-inline-start: 56px; line-height: 32px; }
+.notebook::before { content: ''; position: absolute; top: 0; bottom: 0; inset-inline-start: 42px; width: 2px; background: var(--margin); opacity: .7; }
+.notebook p { margin: 0 0 32px; }
+.lesson-head { margin-bottom: 8px; }
+.lesson-no { margin: 0; color: var(--red); font: 700 30px/32px 'Amatic SC', cursive; }
+.lesson-title { margin: 0 0 16px; font-size: clamp(24px, 4.6vw, 32px); line-height: 1.25; }
+.lesson-intro { font-size: 18px; }
+.lesson-h { margin: 8px 0 12px; font: 700 34px/32px 'Amatic SC', cursive; color: var(--red); }
+.notebook code { font: 700 .92em 'Courier New', monospace; background: #e6dbbd; padding: 0 3px; border-radius: 3px; }
+
+/* השלבים: נייר מחשב עם פסים */
+.lesson-steps { list-style: none; counter-reset: step; padding: 0; margin: 0 0 24px; }
+.step { counter-increment: step; position: relative; margin: 0 0 24px; }
+.step::before { content: counter(step); position: absolute; inset-inline-start: -44px; top: 8px; width: 30px; height: 30px; border-radius: 50%;
+  background: var(--red); color: #fff; display: grid; place-items: center; font: 700 15px/1 system-ui, sans-serif; }
+.printout { margin: 0 0 6px; padding: 8px 28px; font: 700 16px/24px 'Courier New', monospace; color: #1a1a1a; white-space: pre-wrap; overflow-wrap: anywhere;
+  background: repeating-linear-gradient(var(--bar) 0 24px, #fff 24px 48px); border-inline: 1px solid #d8d2bf; position: relative; text-align: left; }
+.printout::before, .printout::after { content: ''; position: absolute; top: 0; bottom: 0; width: 14px;
+  background: radial-gradient(circle at 7px 12px, var(--hole) 4px, transparent 5px) 0 0 / 14px 24px repeat-y; }
+.printout::before { left: 4px; } .printout::after { right: 4px; }
+.step-explain { line-height: 28px; margin-bottom: 0 !important; }
+.lesson-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 4px 0 8px !important; line-height: 1.3; }
+.lesson-btn { font: 700 15px/1 'IBM Plex Sans Hebrew', system-ui, sans-serif; border: 2px solid var(--pencil); background: #fff; color: var(--pencil);
+  border-radius: 8px; padding: 9px 12px; cursor: pointer; text-decoration: none; display: inline-block; box-shadow: 2px 2px 0 var(--pencil); }
+.lesson-btn:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--pencil); }
+.lesson-btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--pencil); }
+.lesson-type { background: var(--red); border-color: #7a1f14; color: #fff; box-shadow: 2px 2px 0 #7a1f14; }
+.lesson-copied { font-size: 14px; color: var(--soft); }
+
+/* מריצים: מסך קטן עם מה שיופיע */
+.lesson-run { margin-bottom: 8px; }
+.mini-screen { margin: 0 0 16px; background: #13d613; color: #032a03; font: 700 15px/22px 'Courier New', monospace; padding: 10px 14px; border-radius: 6px;
+  border: 8px solid #222; box-shadow: inset 0 0 14px #0005; white-space: pre-wrap; text-align: left; }
+
+/* פתק צהוב */
+.sticky-note { background: #fff3a8; margin: 8px 6px 32px; padding: 12px 16px; line-height: 1.6; box-shadow: 0 6px 10px #0003; transform: rotate(-1deg);
+  position: relative; border-radius: 2px; }
+.sticky-note::before { content: ''; position: absolute; top: -10px; inset-inline-start: 40%; width: 70px; height: 20px; background: #ffffff99; transform: rotate(3deg); }
+.sticky-note strong { font: 700 28px/1 'Amatic SC', cursive; color: var(--red); }
+.sticky-note p { margin: 4px 0 0; }
+
+/* אתגר: שיעורי בית */
+.homework { border: 2px dashed var(--red); border-radius: 10px; padding: 4px 16px 10px; margin-bottom: 32px; background: #f8efdc; line-height: 1.6; }
+.homework p { margin: 0 0 10px; }
+.solution summary { cursor: pointer; font-weight: 700; color: var(--red); padding: 6px 0; }
+
+/* סוף השיעור */
+.lesson-end { border-top: 3px double var(--pencil); padding-top: 14px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; line-height: 1.5; }
+.lesson-done.is-done { background: var(--star); border-color: #8a6400; color: #3a2800; box-shadow: 2px 2px 0 #8a6400; }
+.next-teaser { flex-basis: 100%; margin: 0 !important; color: var(--soft); font-style: italic; }
+.lesson-next { background: var(--pencil); color: #fff; }
+.lesson-prev { color: var(--soft); font-size: 15px; }
+@media (max-width: 600px) { .notebook { padding-inline-start: 44px; padding-inline-end: 14px; } .notebook::before { inset-inline-start: 32px; } .step::before { inset-inline-start: -38px; width: 26px; height: 26px; } }
+
+/* בטלפון ובחלון צר: המחשב דבוק למעלה, והמחברת נגללת מתחתיו. כך רואים מה קורה בזמן שקוראים */
+@media (max-width: 999px) {
+  .computer-side { order: -1; position: sticky; top: 0; z-index: 5; margin: 0 -16px; padding: 8px 16px 10px; background: var(--wall); box-shadow: 0 8px 12px -6px #000a; }
+  .computer-label, .computer-help { display: none; }
+  .computer-side .d32-tv { padding: 8px; }
+  .computer-side .d32-screen { font-size: clamp(9px, 2.4vw, 13px); }
+}
