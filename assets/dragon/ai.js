@@ -16,6 +16,7 @@ function count() { try { localStorage.setItem(DAY_KEY, JSON.stringify({ d: today
 const SAYS = {
   off: tr('העוזר נח כרגע, אולי נגמר התקציב החודשי שלו. בינתיים "🔍 בדיקת התוכנית" עובדת תמיד.', 'The helper is resting right now, maybe its monthly budget ran out. "🔍 Check the program" always works.'),
   busy: tr('היו הרבה שאלות בזמן קצר. נסו שוב בעוד כמה דקות.', 'Lots of questions in a short time. Try again in a few minutes.'),
+  resting: tr('העוזר נח להיום: היו היום הרבה שאלות מכל העולם. הוא חוזר מחר. בינתיים "🔍 בדיקת התוכנית" עובדת תמיד.', 'The helper is resting for today: lots of questions from around the world. It will be back tomorrow. "🔍 Check the program" always works.'),
   fail: tr('משהו השתבש בדרך לעוזר. נסו שוב.', 'Something went wrong on the way to the helper. Try again.'),
   limit: tr(`זה היה המקסימום להיום (${PER_DAY} שאלות). העוזר יחכה לכם מחר.`, `That's today's maximum (${PER_DAY} questions). The helper will be here tomorrow.`)
 };
