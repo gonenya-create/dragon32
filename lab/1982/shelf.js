@@ -215,7 +215,7 @@
       if (await loaded(bytes.length / 1.3)) {
         if (run) {
           await window.d32Type(RUNW + '\n');
-          status.textContent = mc ? (EN ? '"' + title + '" is running. Arrow keys move the basket. To leave: BREAK.' : '"' + title + '" רץ. החיצים מזיזים את הסל. ליציאה: BREAK.')
+          status.textContent = mc ? (EN ? '"' + title + '" is running. To leave: BREAK, or reload the page.' : '"' + title + '" רץ. ליציאה: BREAK, או טעינה מחדש של הדף.')
             : (EN ? '"' + title + '" is running. To stop: BREAK.' : '"' + title + '" רץ. לעצירה: BREAK.');
         } else status.textContent = EN ? '"' + title + '" is loaded. RUN starts it, LIST shows the code.' : '"' + title + '" נטען. RUN מפעיל, LIST מראה את הקוד.';
       } else status.textContent = failed();
