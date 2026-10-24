@@ -96,6 +96,10 @@ getdef		clr	CURTOL
 		clr	CURTOL+1
 		leay	5,x		; הגדלים, באותו סדר
 		leax	,s		; X = האינדקסים
+		bra	isl_9772_e	;@isl
+		fill	$ff,$9772-*	;@isl
+		jmp	fn_rnd	;@isl
+isl_9772_e	;@isl
 1		ldd	,x++		; האינדקס
 		cmpd	,y
 		bhs	ary_bs		; גדול מדי: ?BS

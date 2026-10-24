@@ -295,14 +295,14 @@ fn_mem		tfr	s,d		; S בכניסה פחות STREND, בלי סימן (קורא)
 		lbra	givu
 fn_varptr	lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את הארגומנטים בעצמה)
 		ldd	STREND		; משתנה שלא היה: נוצר, ואז ?FC (קורא)
-		pshs	d
-		clrb
 		bra	isl_9d3d_e	;@isl
 		fill	$ff,$9d3d-*	;@isl
 		jmp	irq	;@isl
 		fill	$ff,$9d46-*	;@isl
 		jmp	irqtk	;@isl
 isl_9d3d_e	;@isl
+		pshs	d
+		clrb
 		lbsr	ptrget
 		puls	d
 		cmpd	STREND
