@@ -3,10 +3,27 @@
 // המפתח נמצא רק ב-Vercel (ANTHROPIC_API_KEY). התקרה החודשית מוגדרת אצל Anthropic על המפתח הזה (10 דולר).
 // כאן יש עוד שתי שכבות שמירה: גבולות אורך לכל שדה, ומספר שאלות לכל כתובת IP (בזיכרון של השרת, הערכה בלבד).
 import Anthropic from '@anthropic-ai/sdk';
+import { neon } from '@neondatabase/serverless';
 
 const MODEL = 'claude-sonnet-5-5';
 const LIMITS = { question: 600, program: 8000, screen: 800, history: 6, turn: 2000 };
 const PER_IP_PER_HOUR = 20;
+// תקרה יומית לכל האתר יחד (כל הגולשים): שומרת על התקציב גם ביום עם הרבה מבקרים. אפשר לשנות ב-Vercel עם AI_DAILY_MAX.
+// בערך 2 סנט לשאלה, אז 150 שאלות הן בערך 3 דולר ביום לכל היותר. המונה נשמר במסד הנתונים של היכל התהילה.
+const DAILY_MAX = Number(process.env.AI_DAILY_MAX) || 150;
+const sql = process.env.DATABASE_URL ? neon(process.env.DATABASE_URL) : null;
+let tableReady = false;
+
+// מוסיף 1 למונה של היום (לפי שעון ישראל) ומחזיר אם עוד מותר לשאול. אם המסד לא זמין, לא חוסמים.
+async function underDailyCap() {
+  if (!sql) return true;
+  try {
+    if (!tableReady) { await sql`create table if not exists ai_usage (day date primary key, n integer not null)`; tableReady = true; }
+    const rows = await sql`insert into ai_usage (day, n) values ((now() at time zone 'Asia/Jerusalem')::date, 1)
+      on conflict (day) do update set n = ai_usage.n + 1 returning n`;
+    return rows[0].n <= DAILY_MAX;
+  } catch (error) { console.error('ai_usage', error.message); return true; }
+}
 // הכתובות שמותר להן לשאול את העוזר: הכתובת הראשית של הפרויקט (Vercel נותן אותה ב-VERCEL_PROJECT_PRODUCTION_URL,
 // וכשיחובר דומיין משלנו היא הופכת אליו), וכתובות הניסיון של הפרויקט
 const ALLOWED_ORIGINS = [process.env.VERCEL_PROJECT_PRODUCTION_URL, 'dragon1982.com', 'www.dragon1982.com', 'dragon32.vercel.app'].filter(Boolean).map(h => 'https://' + h);
@@ -66,6 +83,7 @@ export default async function handler(req, res) {
   if (recent.length >= PER_IP_PER_HOUR) { res.status(429).json({ error: 'busy' }); return; }
   recent.push(now);
   hits.set(ip, recent);
+  if (!(await underDailyCap())) { res.status(429).json({ error: 'resting' }); return; }
 
   const body = typeof req.body === 'object' && req.body ? req.body : {};
   const question = clip(body.question, LIMITS.question).trim();
