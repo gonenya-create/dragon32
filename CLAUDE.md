@@ -13,7 +13,7 @@ who grew up on this machine. Answer the owner in Hebrew, simply. He is not a pro
 - Every decision is judged by one question: does this bring us closer to the original?
 
 ## Hard rules
-- **Never infringe copyright.** No original ROM, no original games or software, no names, logos or graphics of others.
+- **Never infringe copyright.** No original ROM, no names, logos or graphics of others. Original era games or software only with the author's written permission, with credit, removed on request (Gonen, 23.10.2026).
 - **This repo is public.** No key, password or `.env` file ever goes into git. Keys live only in Vercel env.
 - **Merge to main only on the owner's "מזג" / "תמזג", written directly in this session.**
 - **Separate from the personal site** `gonenyarom.co.il` (repo `gonenyarom`, owned by the "Mac manager" session).

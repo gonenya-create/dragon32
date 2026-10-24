@@ -11,7 +11,7 @@ Read `docs/DRAGON-SESSION.md`, `docs/DRAGON-APP.md` (founding document and decis
 
 ## How Codex works here
 - **Read-only** unless the owner (Gonen) explicitly approved otherwise. Gonen talks to you through the Dragon Claude session.
-- **Never infringe copyright:** no original ROM, games or software, no names, logos or graphics of others.
+- **Never infringe copyright:** no original ROM, no names, logos or graphics of others; original era games or software only with the author's written permission, with credit, removed on request (Gonen, 23.10.2026).
 - **The original Dragon BASIC source** (github.com/davidlinsley/DragonBasic, published for archive and reference only) follows the two-room rule:
   - Whoever reads it reports **facts only, in their own words, with no code**.
   - Whoever reads it **never writes code for our machine**.

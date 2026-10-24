@@ -36,7 +36,7 @@ a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 </header>
 <main>
 <h1>What we are building now</h1>
-<p>The Dragon machine is a Dragon 32 whose chips are emulated in your browser: the 6809 CPU, memory, video and cassette, through Ciaran Anscomb's XRoar emulator. The ROM, the chip that holds the BASIC language, belongs to its rights holders. So we are writing our own ROM, from scratch, in the 6809's machine language.</p>
+<p>The Dragon machine is a Dragon 32 whose chips are emulated in your browser: the 6809 CPU, memory, video and cassette, through Ciaran Anscomb's XRoar emulator. The ROM, the chip that holds the BASIC language, belongs to its rights holders. So we are writing our own ROM in the 6809's machine language.</p>
 
 <h2>The goal</h2>
 <p>The real computer, as close as we know how, without copying the original code. Every decision is judged by one question: does this bring us closer to the original?</p>
@@ -44,7 +44,7 @@ a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 <h2>How we are building it</h2>
 <ul>
   <li><strong>The core:</strong> the BASIC that Microsoft published as open source (MIT licence). It gives us numbers, strings, variables and loops.</li>
-  <li><strong>Two rooms:</strong> I'm not a programmer; I build with AI. One AI agent reads the original and reports only facts, in its own words: what each command does, and at which memory addresses. A second agent writes the code without ever seeing the original. Same behaviour, our own code.</li>
+  <li><strong>Two rooms:</strong> I'm not a programmer; I build with AI. One AI agent reads the original and reports only facts, in its own words: what each command does, and at which memory addresses. A second agent writes the code without ever seeing the original. Behaviour as close to the original as we know how, our own code.</li>
   <li><strong>The books of the time:</strong> the manuals that came with the computer and BASIC books from those years.</li>
   <li><strong>The emulator's author:</strong> Ciaran Anscomb answered questions no book answers, such as the exact cassette speed.</li>
 </ul>

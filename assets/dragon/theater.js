@@ -456,6 +456,7 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
     if (seen || /#p=/.test(location.hash) || root.querySelector('.d32-welcome')) return;
     const card = document.createElement('div');
     card.className = 'd32-welcome';
+    card.dir = tr('rtl', 'ltr');
     card.setAttribute('role', 'dialog');
     card.setAttribute('aria-label', tr('ברוכים הבאים', 'Welcome'));
     card.innerHTML = '<p class="d32-welcome-title">' + tr('ברוכים הבאים ל-1982! מה עושים קודם?', 'Welcome to 1982! What first?') + '</p>'
