@@ -11,7 +11,13 @@
     ['draw', 'ציור על המסך', 'Screen drawing'],
     ['derby', 'מרוץ סוסים', 'Horse race'],
     // שפת מכונה (CLOADM ואז EXEC): נבנה מ-games/eggs (node games/eggs/build.mjs)
-    ['eggs', 'ביצי הדרקון (שפת מכונה)', 'Dragon Eggs (machine code)', 'm']
+    ['eggs', 'ביצי הדרקון (שפת מכונה)', 'Dragon Eggs (machine code)', 'm'],
+    // משחקים של אחרים, באישור המחבר ועם קרדיט (CLAUDE.md). 'a' = שפת מכונה שמתחילה לבד אחרי CLOADM.
+    // [מחבר, תיעוד (חובה לפי הרישיון), אתר המחבר או קוד המקור, רישיון נפרד אם יש]
+    ['blockdown', 'Blockdown (שפת מכונה)', 'Blockdown (machine code)', 'a',
+      ['Ciaran Anscomb, 2021', '/lab/1982/tapes/blockdown.html', 'https://www.6809.org.uk/blockdown/']],
+    ['dragontet', 'DragonTet (שפת מכונה)', 'DragonTet (machine code)', 'm',
+      ['Salva Kantero, 2025', '/lab/1982/tapes/dragontet-readme.txt', 'https://github.com/salvakantero/Dragontet', '/lab/1982/tapes/dragontet-license.txt']]
   ];
   // בלוק בקלטת: 55 3C סוג אורך נתונים סכום 55
   function block(type, data) {
@@ -22,15 +28,37 @@
   const box = document.getElementById('tapes');
   const status = document.getElementById('tape-status');
   if (!box) return;
-  for (const [id, he, en, kind] of TAPES) {
+  const buttons = [];
+  for (const [id, he, en, kind, credit] of TAPES) {
     const b = document.createElement('button');
     b.type = 'button';
     b.className = 'tape';
     b.innerHTML = '<span></span><small dir="ltr"></small>';
     b.querySelector('span').textContent = EN ? en : he;
-    b.querySelector('small').textContent = id.toUpperCase();
-    b.addEventListener('click', () => load(id, EN ? en : he, b, false, kind === 'm'));
-    box.appendChild(b);
+    b.querySelector('small').textContent = id.toUpperCase() + (kind ? ' · CLOADM' : '');
+    b.addEventListener('click', () => load(id, EN ? en : he, b, false, kind));
+    buttons.push(b);
+    if (!credit) { box.appendChild(b); continue; }
+    // קרדיט: מי כתב, התיעוד והרישיון שלו, והאתר שלו
+    const wrap = document.createElement('div');
+    wrap.className = 'tape-box';
+    const by = document.createElement('p');
+    by.className = 'tape-credit';
+    const docs = document.createElement('a'), site = document.createElement('a');
+    docs.href = credit[1];
+    docs.textContent = credit[3] ? (EN ? 'docs' : 'תיעוד') : (EN ? 'docs & licence' : 'תיעוד ורישיון');
+    site.href = credit[2];
+    site.textContent = credit[3] ? (EN ? 'source code' : 'קוד המקור') : (EN ? 'author' : 'המחבר');
+    site.rel = 'noopener';
+    by.append((EN ? 'By ' : 'מאת ') + credit[0] + ' · ', docs, ' · ', site);
+    if (credit[3]) {
+      const lic = document.createElement('a');
+      lic.href = credit[3];
+      lic.textContent = 'GPL v3';
+      by.append(' · ', lic);
+    }
+    wrap.append(b, by);
+    box.appendChild(wrap);
   }
   // הגיעו מהאפליקציה עם ?tape=guess: הקלטת נטענת לבד, ברגע שהמחשב מוכן
   const want = new URLSearchParams(location.search).get('tape');
@@ -39,7 +67,7 @@
     const go = setInterval(() => {
       if (!window.d32Ready) return;
       clearInterval(go);
-      setTimeout(() => load(TAPES[wanted][0], EN ? TAPES[wanted][2] : TAPES[wanted][1], box.children[wanted], true, TAPES[wanted][3] === 'm'), 2000);
+      setTimeout(() => load(TAPES[wanted][0], EN ? TAPES[wanted][2] : TAPES[wanted][1], buttons[wanted], true, TAPES[wanted][3]), 2000);
     }, 300);
   }
   let busy = false;
@@ -96,7 +124,7 @@
   const failed = () => EN ? 'The tape did not load. Try again.' : 'הקלטת לא נטענה. נסו שוב.';
   // auto: מהאפליקציה (?tape=), שם הנוחות: המחשב מקליד CLOAD ו-RUN. לחיצה במכונה: רק מכניסים את הקלטת לרשמקול,
   // ומקלידים בעצמנו, כמו ב-1982 (גונן, 22.10: "מכונת דראגון תהיה המקור... בלי הטבות")
-  // mc: קלטת של שפת מכונה: CLOADM, ואחרי ה-OK גם EXEC
+  // mc: קלטת של שפת מכונה: 'm' = CLOADM ואחרי ה-OK גם EXEC; 'a' = CLOADM, והמשחק מתחיל לבד
   async function load(id, title, button, auto, mc) {
     if (busy) return;
     try {
@@ -117,7 +145,10 @@
       document.querySelectorAll('.tape').forEach(t => t.classList.toggle('in', t === button));
       const [LOADW, RUNW] = mc ? ['CLOADM', 'EXEC'] : ['CLOAD', 'RUN'];
       if (!auto) {
-        status.textContent = EN ? 'The tape "' + title + '" is in the recorder. Type ' + LOADW + ', and after OK type ' + RUNW + '.'
+        status.textContent = mc === 'a'
+          ? (EN ? 'The tape "' + title + '" is in the recorder. Type CLOADM. The game starts by itself when it has loaded.'
+            : 'הקלטת "' + title + '" ברשמקול. הקלידו CLOADM. המשחק מתחיל לבד כשהטעינה נגמרת.')
+          : EN ? 'The tape "' + title + '" is in the recorder. Type ' + LOADW + ', and after OK type ' + RUNW + '.'
           : 'הקלטת "' + title + '" ברשמקול. הקלידו ' + LOADW + ', ואחרי ה-OK הקלידו ' + RUNW + '.';
         document.getElementById('canvas')?.focus({ preventScroll: true });
         return;
@@ -133,6 +164,10 @@
       await window.d32Type('CLS\n');
       await wait(300);
       await window.d32Type(LOADW + '\n');
+      if (mc === 'a') {   // אין OK: המשחק תופס את המחשב
+        status.textContent = EN ? 'Loading "' + title + '" from the tape. It starts by itself.' : 'טוען את "' + title + '" מהקלטת. הוא מתחיל לבד.';
+        return;
+      }
       if (await loaded(bytes.length / 1.3)) {
         if (run) {
           await window.d32Type(RUNW + '\n');
@@ -142,7 +177,7 @@
       } else status.textContent = failed();
     } catch (e) {
       status.textContent = failed();
-    } finally { busy = false; if (auto) insertLibrary(); }
+    } finally { busy = false; if (auto && mc !== 'a') insertLibrary(); }   // משחק שמתחיל לבד עוד קורא מהקלטת
   }
 
   // ---- הקלטות שלי: CSAVE מקליט לקובץ /out.cas (XRoar כותב אותו), ומכאן כל תוכנית נשמרת בדפדפן ----

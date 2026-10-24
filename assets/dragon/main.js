@@ -19,7 +19,8 @@ const SHELF = [
   ['QUIZ', tr('חידון חשבון', 'Maths quiz')],
   ['RPS', tr('אבן, נייר, מספריים', 'Rock, paper, scissors')],
   ['CAVE', tr('מערת הדרקון', 'Dragon cave')],
-  ['DRAW', tr('ציור על המסך', 'Screen drawing')]
+  ['DRAW', tr('ציור על המסך', 'Screen drawing')],
+  ['DERBY', tr('מרוץ סוסים', 'Horse race')]   // גם "תוכנית מעיתון" בעמוד; כאן כדי שגם בטלפון תהיה (גונן, 24.10)
 ];
 
 // מחסניות: משחקים גרפיים. כל אחת נטענת רק כשמכניסים אותה.

@@ -38,6 +38,10 @@ details.note summary { cursor: pointer; color: var(--ink); }
 .tapes { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-top: 8px; }
 .tape { border: 1.5px solid var(--line); border-radius: 10px; background: #1b1511; color: var(--ink); padding: 10px; font: inherit; cursor: pointer; text-align: start; display: flex; flex-direction: column; gap: 2px; }
 .tape small { color: var(--accent); font: 700 12px 'Courier New', monospace; }
+.tape-box { display: flex; flex-direction: column; gap: 4px; }
+.tape-box .tape { flex: 1; }
+.tape-credit { margin: 0; font-size: 12px; color: var(--muted, #b9a98f); }
+.tape-credit a { color: var(--accent); }
 .tape.in { border-color: var(--accent); background: #3a2a10; }
 .tape:focus-visible, .k:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 #tape-status { min-height: 1.5em; color: var(--accent); }
@@ -87,7 +91,7 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
   </div>
   <section class="shelf" aria-labelledby="shelf-title">
     <h2 id="shelf-title">Tape shelf</h2>
-    <p class="note">Tap a tape to put it in the cassette player. Type <code>CLOAD</code>, and after OK type <code>RUN</code>. Dragon Eggs is written in machine code: type <code>CLOADM</code>, and after OK type <code>EXEC</code>.</p>
+    <p class="note">Tap a tape to put it in the cassette player. Type <code>CLOAD</code>, and after OK type <code>RUN</code>. Dragon Eggs is written in machine code: type <code>CLOADM</code>, and after OK type <code>EXEC</code>. The machine-code games by other authors start by themselves after <code>CLOADM</code>, and are here with their authors' permission.</p>
     <details class="note how"><summary><strong>How did you load a game in 1982?</strong></summary>
       <p>Games were sold on audio cassettes. You put the tape in a cassette player wired to the computer and typed <code>CLOAD</code> ("load from cassette"). The computer listened to the tape for a few seconds and copied the game into memory. Then you typed <code>RUN</code> and the game started.</p>
       <p>Here you tap a tape to put it in the player, and type just like then.</p>
