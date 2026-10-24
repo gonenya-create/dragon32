@@ -1,0 +1,26 @@
+/* המדור "מה קראו בעלי Dragon": סיכומים שלנו של גיליונות Dragon User, וקישור לסריקה ב-archive.org. אותו עיצוב כמו יומן המסע */
+:root { --bg: #0e0b09; --ink: #efe6d2; --muted: #c9bba5; --line: #4a3d31; --accent: #f2c94c; --paper: #f3ead6; --paper-ink: #2a2119; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.7 'IBM Plex Sans Hebrew', system-ui, sans-serif; }
+header { display: flex; align-items: center; gap: 12px; padding: 10px 16px; flex-wrap: wrap; }
+header b { font-size: 18px; }
+.tag { font-size: 13px; padding: 3px 10px; border-radius: 999px; background: #3a2a10; color: var(--accent); }
+header a:first-of-type { margin-inline-start: auto; }
+header a { color: var(--ink); text-decoration: none; border: 1.5px solid var(--line); border-radius: 8px; padding: 6px 12px; font-size: 14px; }
+main { max-width: 720px; margin: 0 auto; padding: 8px 16px 40px; }
+h1 { font-size: 26px; line-height: 1.35; margin: 4px 0 14px; }
+h2 { font-size: 19px; margin: 26px 0 4px; color: var(--accent); }
+p { margin: 8px 0; }
+a { color: var(--accent); overflow-wrap: anywhere; }
+a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.muted { color: var(--muted); }
+.issue { font-size: 14px; font-weight: 700; color: var(--accent); margin-top: 18px; }
+.scan { margin-top: 28px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: #1c1610; }
+.credit { font-size: 14px; color: var(--muted); }
+.more { margin-top: 26px; }
+.issues { list-style: none; padding: 0; margin: 18px 0; display: grid; gap: 12px; }
+.issues a { display: block; text-decoration: none; color: var(--paper-ink); background: var(--paper); border-radius: 10px; padding: 14px 16px; box-shadow: 0 2px 0 #00000060; }
+.issues a:hover { filter: brightness(1.05); }
+.issues small { display: block; font: 700 12px 'Courier New', monospace; color: #7a4b10; }
+.issues strong { display: block; font-size: 18px; line-height: 1.4; margin-top: 2px; }
+.issues span { display: block; font-size: 15px; margin-top: 4px; }
