@@ -9,7 +9,9 @@
     ['rps', 'אבן, נייר, מספריים', 'Rock, paper, scissors'],
     ['cave', 'מערת הדרקון', 'Dragon cave'],
     ['draw', 'ציור על המסך', 'Screen drawing'],
-    ['derby', 'מרוץ סוסים', 'Horse race']
+    ['derby', 'מרוץ סוסים', 'Horse race'],
+    // שפת מכונה (CLOADM ואז EXEC): נבנה מ-games/eggs (node games/eggs/build.mjs)
+    ['eggs', 'ביצי הדרקון (שפת מכונה)', 'Dragon Eggs (machine code)', 'm']
   ];
   // בלוק בקלטת: 55 3C סוג אורך נתונים סכום 55
   function block(type, data) {
@@ -20,14 +22,14 @@
   const box = document.getElementById('tapes');
   const status = document.getElementById('tape-status');
   if (!box) return;
-  for (const [id, he, en] of TAPES) {
+  for (const [id, he, en, kind] of TAPES) {
     const b = document.createElement('button');
     b.type = 'button';
     b.className = 'tape';
     b.innerHTML = '<span></span><small dir="ltr"></small>';
     b.querySelector('span').textContent = EN ? en : he;
     b.querySelector('small').textContent = id.toUpperCase();
-    b.addEventListener('click', () => load(id, EN ? en : he, b, false));
+    b.addEventListener('click', () => load(id, EN ? en : he, b, false, kind === 'm'));
     box.appendChild(b);
   }
   // הגיעו מהאפליקציה עם ?tape=guess: הקלטת נטענת לבד, ברגע שהמחשב מוכן
@@ -37,7 +39,7 @@
     const go = setInterval(() => {
       if (!window.d32Ready) return;
       clearInterval(go);
-      setTimeout(() => load(TAPES[wanted][0], EN ? TAPES[wanted][2] : TAPES[wanted][1], box.children[wanted], true), 2000);
+      setTimeout(() => load(TAPES[wanted][0], EN ? TAPES[wanted][2] : TAPES[wanted][1], box.children[wanted], true, TAPES[wanted][3] === 'm'), 2000);
     }, 300);
   }
   let busy = false;
@@ -94,16 +96,17 @@
   const failed = () => EN ? 'The tape did not load. Try again.' : 'הקלטת לא נטענה. נסו שוב.';
   // auto: מהאפליקציה (?tape=), שם הנוחות: המחשב מקליד CLOAD ו-RUN. לחיצה במכונה: רק מכניסים את הקלטת לרשמקול,
   // ומקלידים בעצמנו, כמו ב-1982 (גונן, 22.10: "מכונת דראגון תהיה המקור... בלי הטבות")
-  async function load(id, title, button, auto) {
+  // mc: קלטת של שפת מכונה: CLOADM, ואחרי ה-OK גם EXEC
+  async function load(id, title, button, auto, mc) {
     if (busy) return;
     try {
       // הקלטת כמו קלטת אמיתית: מה שהמכונה עצמה כתבה עם CSAVE, בפורמט המכווץ (rom/tools/mktapes.mjs)
       const bytes = new Uint8Array(await (await fetch('/lab/1982/tapes/' + id + '.cas')).arrayBuffer());
-      await play(bytes, '/tape-' + id + '.cas', title, button, true, auto);
+      await play(bytes, '/tape-' + id + '.cas', title, button, true, auto, mc);
     } catch (e) { status.textContent = failed(); }
   }
   // מכניסים קלטת לרשמקול. auto: גם מקלידים CLOAD, ואם run גם RUN כשהטעינה נגמרת
-  async function play(bytes, path, title, button, run, auto) {
+  async function play(bytes, path, title, button, run, auto, mc) {
     if (busy) return;
     if (typeof Module === 'undefined' || !window.d32Ready) { status.textContent = EN ? 'The computer is still starting. Try again in a moment.' : 'המחשב עוד נדלק. נסו שוב בעוד רגע.'; return; }
     busy = true;
@@ -112,9 +115,10 @@
       FS.writeFile(path, bytes);
       Module.ccall('wasm_load_file', null, ['string', 'number', 'number'], [path, 2, 0]);
       document.querySelectorAll('.tape').forEach(t => t.classList.toggle('in', t === button));
+      const [LOADW, RUNW] = mc ? ['CLOADM', 'EXEC'] : ['CLOAD', 'RUN'];
       if (!auto) {
-        status.textContent = EN ? 'The tape "' + title + '" is in the recorder. Type CLOAD, and after OK type RUN.'
-          : 'הקלטת "' + title + '" ברשמקול. הקלידו CLOAD, ואחרי ה-OK הקלידו RUN.';
+        status.textContent = EN ? 'The tape "' + title + '" is in the recorder. Type ' + LOADW + ', and after OK type ' + RUNW + '.'
+          : 'הקלטת "' + title + '" ברשמקול. הקלידו ' + LOADW + ', ואחרי ה-OK הקלידו ' + RUNW + '.';
         document.getElementById('canvas')?.focus({ preventScroll: true });
         return;
       }
@@ -128,11 +132,12 @@
       await wait(400);
       await window.d32Type('CLS\n');
       await wait(300);
-      await window.d32Type('CLOAD\n');
+      await window.d32Type(LOADW + '\n');
       if (await loaded(bytes.length / 1.3)) {
         if (run) {
-          await window.d32Type('RUN\n');
-          status.textContent = EN ? '"' + title + '" is running. To stop: BREAK.' : '"' + title + '" רץ. לעצירה: BREAK.';
+          await window.d32Type(RUNW + '\n');
+          status.textContent = mc ? (EN ? '"' + title + '" is running. Arrow keys move the basket. To leave: BREAK.' : '"' + title + '" רץ. החיצים מזיזים את הסל. ליציאה: BREAK.')
+            : (EN ? '"' + title + '" is running. To stop: BREAK.' : '"' + title + '" רץ. לעצירה: BREAK.');
         } else status.textContent = EN ? '"' + title + '" is loaded. RUN starts it, LIST shows the code.' : '"' + title + '" נטען. RUN מפעיל, LIST מראה את הקוד.';
       } else status.textContent = failed();
     } catch (e) {

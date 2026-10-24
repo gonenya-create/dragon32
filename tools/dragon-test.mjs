@@ -1056,7 +1056,7 @@ if (part('real machine lab')) {
     const r = await p.goto(base.replace(/\/$/, '') + path);
     await p.waitForTimeout(3500);
     check(`${path} loads with the drawn keyboard`, r.status() === 200 && (await p.locator('.kbd .k').count()) > 50 && errs.length === 0, errs.join(' | '));
-    check(`${path} has the tape shelf (7 tapes)`, (await p.locator('#tapes .tape').count()) === 7);
+    check(`${path} has the tape shelf (8 tapes: 7 BASIC + Dragon Eggs)`, (await p.locator('#tapes .tape').count()) === 8);
     const b = await p.request.get(base.replace(/\/$/, '') + path + 'building/');
     check(`${path} links to "what we are building now", which loads`, b.status() === 200 && (await p.locator('main > p.note a[href="./building/"]').count()) === 1);
     await p.click('#full-open');
