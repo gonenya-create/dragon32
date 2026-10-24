@@ -677,12 +677,13 @@ a.d32-cart.is-more:focus-visible { outline: 3px solid var(--focus); outline-offs
 .d32-ai-form { flex-direction: row; }
 .d32-ai textarea { min-height: 64px; }
 /* ביקור ראשון: כרטיס קטן בתחתית המסך */
-.d32-welcome { position: absolute; z-index: 7; left: 50%; bottom: calc(var(--tvw, 600px) * 0.07); transform: translateX(-60%); width: min(92%, 560px); box-sizing: border-box; padding: 14px 16px 12px; border: 1.5px solid #f2c94c; border-radius: 12px; background: rgba(20, 16, 12, 0.94); color: #efe6d2; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5); direction: rtl; text-align: center; }
+.d32-welcome { position: absolute; z-index: 7; left: 50%; bottom: calc(var(--tvw, 600px) * 0.07); transform: translateX(-60%); width: min(92%, 560px); box-sizing: border-box; padding: 14px 16px 12px; border: 1.5px solid #f2c94c; border-radius: 12px; background: rgba(20, 16, 12, 0.94); color: #efe6d2; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5); text-align: center; }
 .d32-welcome-title { margin: 0 0 10px; font: 700 17px/1.4 var(--font-body); }
 .d32-welcome-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 .d32-welcome-btns button { padding: 8px 14px; border: 1.5px solid #6b5d4d; border-radius: 999px; background: #241e19; color: #efe6d2; font: 700 15px/1.2 var(--font-body); cursor: pointer; }
 .d32-welcome-btns button:hover, .d32-welcome-btns button:focus-visible { border-color: #f2c94c; outline: none; }
 .d32-welcome-x { position: absolute; top: 6px; left: 8px; border: 0; background: none; color: #c9bba5; font-size: 16px; cursor: pointer; }
+.d32-welcome[dir="ltr"] .d32-welcome-x { left: auto; right: 8px; }
 .d32.is-only .d32-welcome, .d32.is-cart .d32-welcome { display: none; }
 
 /* מסך בלבד שנפתח מהחלון הגדול לכתיבה: בלי השוליים של הסדנה (סבב 2 של הגולש העיוור) */
