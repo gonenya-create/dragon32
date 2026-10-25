@@ -63,6 +63,11 @@ async function toTab(page, id = 'program') {
   await page.waitForTimeout(300);
   const t = page.locator(`.d32-tab[data-tab="${id}"]`);
   if (await t.isVisible()) await t.click();
+  if (id === 'shelf') await openDrawers(page);
+}
+// מגירות המדף סגורות בכניסה (גונן, 25.10): פותחים אותן כמו שמשתמש היה לוחץ
+async function openDrawers(page) {
+  await page.evaluate(() => { for (const d of document.querySelectorAll('details.d32-drawer')) d.open = true; });
 }
 // מחסנית אחרת: קודם מוציאים את מה שבחריץ (בטלפון המגירה סגורה בזמן משחק), ואז בוחרים מהמדף
 async function pickCart(page, name) {
@@ -316,6 +321,11 @@ if (part('room /dragon/')) {
   await p.locator('.d32-power').click();
   await p.waitForFunction(() => /OK\s*$/.test(document.querySelector('#dragon-room .d32-out').textContent), null, { timeout: 4000 });
   check('room boots', /DRAGON 1982 BASIC 1\.0\n\(C\) 2026 GONEN YAROM[\s\S]*OK\s*$/.test(await p.locator('#dragon-room .d32-out').textContent()));
+  check('drawers start closed, each showing how many items it holds', await p.evaluate(() => {
+    const ds = [...document.querySelectorAll('#dragon-room details.d32-drawer')];
+    return ds.length === 3 && ds.every(d => !d.open) && ds.every(d => d.querySelector('.d32-drawer-count').textContent.trim() !== '');
+  }));
+  await openDrawers(p);
   check('room shelf has 7 tapes', (await p.locator('#dragon-room .d32-tape').count()) === 7);
   check('every tape has an "on the real machine" link', (await p.locator('#dragon-room .d32-tape-real[href^="/lab/1982/?tape="]').count()) === 7);
   const input = p.locator('#dragon-room .d32-input');
@@ -741,6 +751,7 @@ if (part('cartridge DRAGON CASTLE (full computer)')) {
   await p.waitForSelector('#dragon-room.is-ready');
   // במסך המלא המדף נמצא בלשונית "קלטות ומחסניות" של ארגז הכלים
   await p.locator('.d32-tab[data-tab="shelf"]').click();
+  await openDrawers(p);
   check('the shelf tab shows the cartridges', await p.locator('.d32-pane[data-pane="shelf"] .d32-cart').first().isVisible());
   await p.locator('.d32-cart:has-text("טירת הדרקון")').click();
   await p.waitForTimeout(800);
@@ -780,9 +791,9 @@ if (part('full computer /dragon/app/ (theater, coder, AI)')) {
   await p.waitForTimeout(1400);
   check('the full computer opens straight in full screen', await room.evaluate(e => e.classList.contains('is-theater')));
   check('top bar: brand and status "מוכן"', (await p.locator('.d32-bar-brand b').textContent()) === 'Dragon 1982' && /מוכן/.test(await p.locator('.d32-status').textContent()));
-  check('on a computer, "the journey" and "the history" links are visible under the helper', await p.locator('.d32-pages-side a[href="/story/"]').isVisible() && await p.locator('.d32-pages-side a[href="/dragon-history/"]').isVisible());
+  check('on a computer, all four pages (lessons, journey, magazine, history) are visible under the helper', (await Promise.all(['/lessons/', '/story/', '/magazine/', '/dragon-history/'].map(h => p.locator(`.d32-pages-side a[href="${h}"]`).isVisible()))).every(Boolean));
   check('toolbox has 3 tabs on a computer; the tapes are in the shelf tab', (await p.locator('.d32-tab:visible').count()) === 3 && (await p.locator('.d32-pane[data-pane="shelf"] .d32-tape').count()) >= 6);
-  await p.locator('.d32-tab[data-tab="shelf"]').click();
+  await p.locator('.d32-tab[data-tab="shelf"]').click(); await openDrawers(p);
   check('on a computer too, the shelf tab says how the Dragon machine differs from the app', await p.locator('.d32-pane[data-pane="shelf"] .d32-lab-shelf').isVisible() && /הכי קרוב למחשב המקורי/.test(await p.locator('.d32-pane[data-pane="shelf"] .d32-lab-shelf').textContent()));
   await p.locator('.d32-tab[data-tab="program"]').click();
   const tvBefore = await p.locator('.d32-tv').evaluate(e => e.getBoundingClientRect().width);
@@ -795,7 +806,7 @@ if (part('full computer /dragon/app/ (theater, coder, AI)')) {
   // קלטת על תוכנית שלא נשמרה: לחיצה ראשונה מזהירה, השנייה טוענת (דוח קודקס 17.10)
   await p.locator('.d32-input').fill('NEW'); await p.locator('.d32-input').press('Enter');
   await p.locator('.d32-input').fill('10 PRINT "MINE"'); await p.locator('.d32-input').press('Enter');
-  await p.locator('.d32-tab[data-tab="shelf"]').click();
+  await p.locator('.d32-tab[data-tab="shelf"]').click(); await openDrawers(p);
   await p.locator('.d32-tape:has-text("GUESS")').click();
   await p.waitForTimeout(400);
   check('a tape over an unsaved program warns first and does not load', await p.locator('.d32-tape-warn').isVisible() && !/CLOAD/.test(tail(await screenText(p), 3)));
@@ -803,7 +814,7 @@ if (part('full computer /dragon/app/ (theater, coder, AI)')) {
   await p.locator('.d32-tape-warn .d32-warn-save').click();
   check('"Save first" prepares CSAVE " and closes the warning', await p.locator('.d32-input').inputValue() === 'CSAVE "' && !(await p.locator('.d32-tape-warn').count()));
   await p.locator('.d32-input').fill('');
-  await p.locator('.d32-tab[data-tab="shelf"]').click();
+  await p.locator('.d32-tab[data-tab="shelf"]').click(); await openDrawers(p);
   await p.locator('.d32-tape:has-text("GUESS")').click();
   await p.waitForTimeout(300);
   await p.locator('.d32-tape-warn .d32-warn-go').click();
@@ -959,6 +970,7 @@ if (part('full computer /dragon/app/ (theater, coder, AI)')) {
   await ph.waitForTimeout(400);
   check('phone: a "stop" button on the screen stops a running program', stopShown && /BREAK IN \d+\nOK\s*$/.test(await ph.locator('#dragon-room .d32-out').textContent()), String(stopShown));
   await ph.locator('.d32-tab[data-tab="shelf"]').tap();
+  await openDrawers(ph);
   await ph.locator('button.d32-cart').first().tap();
   await ph.waitForTimeout(600);
   check('phone: while a cartridge plays the drawer closes and the game buttons show', !(await ph.locator('.d32-coder').isVisible()) && await ph.locator('.d32-pad-btn').first().isVisible());
@@ -1079,6 +1091,7 @@ if (part('real machine lab')) {
     await p.waitForTimeout(3500);
     check(`${path} loads with the drawn keyboard`, r.status() === 200 && (await p.locator('.kbd .k').count()) > 50 && errs.length === 0, errs.join(' | '));
     check(`${path} has the tape shelf (10 tapes: 7 BASIC, Dragon Eggs, Blockdown, DragonTet)`, (await p.locator('#tapes .tape').count()) === 10);
+    check(`${path} the cabinet drawers start closed`, await p.evaluate(() => [...document.querySelectorAll('#tapes details.drawer')].every(d => !d.open)));
     check(`${path} every machine-code game has a "how to play" box with keys and a way out`, await p.evaluate(() => {
       const boxes = [...document.querySelectorAll('[data-drawer="mc"] .tape-box')];
       return boxes.length === 3 && boxes.every(b => { const h = b.querySelector('details.howto'); return h && h.querySelectorAll('kbd').length >= 3 && h.querySelector('.howto-always'); });
@@ -1095,6 +1108,7 @@ if (part('real machine lab')) {
     check(`${path} leaving full screen brings the page back`, await p.evaluate(() => !document.body.classList.contains('full') && !!document.querySelector('.shelf').offsetParent));
     if (path === '/lab/1982/') {
       await p.waitForFunction(() => window.d32Ready, null, { timeout: 20000 });
+      await p.click('#tapes details.drawer[data-drawer="basic"] > summary');
       await p.click('#tapes .tape:has-text("GUESS")');
       await p.waitForTimeout(800);
       check('a tape click only puts the tape in the recorder (you type CLOAD yourself, like 1982)', await p.evaluate(() =>

@@ -485,6 +485,9 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
       if (w === 'play' || w === 'hello') {
         if (!coding) codeBtn.click();
         showTab(w === 'play' ? 'shelf' : 'commands');
+        // "לשחק במשחק": המגירות סגורות בכניסה, אז פותחים את מגירת המחסניות
+        const carts = w === 'play' && root.querySelector('.d32-drawer[data-drawer="carts"]');
+        if (carts) carts.open = true;
       }
       if (w === 'hello') root.d32.typeLines(['PRINT "HELLO, 1982!"'], () => input.focus({ preventScroll: true }));
       else if (w === 'guide') exit();
