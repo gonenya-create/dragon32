@@ -21,8 +21,15 @@
       ['Salva Kantero, 2025', '/lab/1982/tapes/dragontet-readme.txt', 'https://github.com/salvakantero/Dragontet', '/lab/1982/tapes/dragontet-license.txt']],
     // משחקי Ken Kalish: הוא רצה שהמשחקים שלו יהיו זמינים לכולם (L. Curtis Boyle, מייל 24.10.2026). קרדיט מלא, יורד לפי בקשה
     ['phantom', 'Phantom Slayer', 'Phantom Slayer', 'm',
+      ['Ken Kalish · Med Systems / Microdeal, 1983', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
+    ['ranger', 'Danger Ranger', 'Danger Ranger', 'a',
       ['Ken Kalish · Med Systems / Microdeal, 1983', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']]
   ];
+  // משחקים שצריכים ג'ויסטיק: כשהקלטת נטענת, החיצים במקלדת הופכים לג'ויסטיק הימני ו-Alt (Option במק) לכפתור שלו
+  const JOY = new Set(['ranger']);
+  function setJoy(on) {
+    try { Module.ccall('wasm_set_joystick_by_name', null, ['number', 'string'], [0, on ? 'kjoy0' : '']); } catch (e) {}
+  }
   // איך משחקים (גונן, 25.10: "לא בטוח שהמשתמשים יבינו איך משחקים"): תיבה נפתחת מתחת לכל משחק בשפת מכונה.
   // [מקש] נהיה מקש מצויר. המקשים לפי התיעוד של המחבר, ונבדקו במכונה. במק: BREAK הוא Esc, ו-CLEAR הוא Home (fn+←).
   const HOWTO = {
@@ -70,6 +77,19 @@
         '[↑] step forward, [↓] step back, [←] [→] turn.',
         'Hold [SPACE] to aim, release to fire. The pistol takes about 2 seconds to recharge.',
         '[1]–[6] set the phantom detector range; it beeps when one is near. If a phantom touches you, the game is over.']
+    },
+    // נבדק במכונה (25.10): צבע, רמה, ריצה, קפיצה, ירי, ניקוד, סוף משחק ושיא
+    ranger: {
+      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[Alt] הוא הכפתור שלו (במק: [Option]). בטלפון אי אפשר לשחק בו.',
+        'הטעינה ארוכה, כשלוש דקות, וכשהיא נגמרת המשחק מתחיל לבד. בוחרים צבע רקע: [1] שחור, [2] בהיר, [3] ירוק.',
+        'במסך הפתיחה לוחצים [Alt]. ב-SELECT LEVEL לוחצים [1], ושוב [Alt] כדי להתחיל.',
+        '[←] [→] רצים, [↑] קופצים, [↓] מתכופפים, [Alt] יורה.',
+        'אוספים את כל המפתחות ונזהרים מהעטלפים ומהעיניים שיורות מהצדדים. הכרית באמצע הקומה התחתונה מקפיצה חזרה למעלה.'],
+      en: ['In this game the arrow keys are a joystick and [Alt] is its button ([Option] on a Mac). It can\'t be played on a phone.',
+        'Loading takes about three minutes, and the game starts by itself when it ends. Pick a background colour: [1] black, [2] buff, [3] green.',
+        'On the title screen press [Alt]. At SELECT LEVEL press [1], then [Alt] again to start.',
+        '[←] [→] run, [↑] jump, [↓] duck, [Alt] fires.',
+        'Collect all the keys and watch out for the bats and the eyes that shoot from the sides. The pad in the middle of the bottom floor bounces you back to the top.']
     }
   };
   // מה המשחק, בשורה אחת מתחת לשם (גונן, 25.10: "לא מבינים מה זה המשחק"). השם עצמו נשאר כמו שהמחבר כתב
@@ -77,7 +97,8 @@
     eggs: ['תופסים בסל את הביצים שהדרקון מטיל. לשחקן אחד.', 'Catch the dragon\'s eggs in a basket. 1 player.'],
     blockdown: ['קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים.', 'Falling blocks: complete the lines. 1 or 2 players.'],
     dragontet: ['קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים.', 'Falling blocks: complete the lines. 1 or 2 players.'],
-    phantom: ['מבוך תלת-ממדי: צדים רוחות רפאים לפני שהן תופסות אתכם. לשחקן אחד.', '3D maze: hunt the phantoms before they catch you. 1 player.']
+    phantom: ['מבוך תלת-ממדי: צדים רוחות רפאים לפני שהן תופסות אתכם. לשחקן אחד.', '3D maze: hunt the phantoms before they catch you. 1 player.'],
+    ranger: ['רצים, קופצים ויורים: אוספים מפתחות ואוצרות בין עטלפים ועיניים. בג\'ויסטיק, במחשב בלבד.', 'Run, jump and shoot: collect keys and treasure past bats and eyes. Joystick, computer only.']
   };
   // שורה עם [מקשים]: כל מקש בתוך kbd. צירוף כמו [CLEAR]+[BREAK] נשאר יחד בשורה אחת
   function key(name) {
@@ -281,6 +302,7 @@
     try {
       // הקלטת כמו קלטת אמיתית: מה שהמכונה עצמה כתבה עם CSAVE, בפורמט המכווץ (rom/tools/mktapes.mjs)
       const bytes = new Uint8Array(await (await fetch('/lab/1982/tapes/' + id + '.cas')).arrayBuffer());
+      setJoy(JOY.has(id));
       await play(bytes, '/tape-' + id + '.cas', title, button, true, auto, mc);
     } catch (e) { status.textContent = failed(); }
   }
