@@ -30,6 +30,11 @@
   function setJoy(on) {
     try { Module.ccall('wasm_set_joystick_by_name', null, ['number', 'string'], [0, on ? 'kjoy0' : '']); } catch (e) {}
   }
+  // כל קלטת שנכנסת לרשמקול: ג'ויסטיק מהמקלדת רק למשחקי ג'ויסטיק, ולוח המשחק לטלפון (joypad.js) רק למשחקים שיש להם מקשים שם
+  function gameKeys(id) {
+    setJoy(JOY.has(id));
+    if (window.d32Pad) window.d32Pad(id);
+  }
   // איך משחקים (גונן, 25.10: "לא בטוח שהמשתמשים יבינו איך משחקים"): תיבה נפתחת מתחת לכל משחק בשפת מכונה.
   // [מקש] נהיה מקש מצויר. המקשים לפי התיעוד של המחבר, ונבדקו במכונה. במק: BREAK הוא Esc, ו-CLEAR הוא Home (fn+←).
   const HOWTO = {
@@ -80,15 +85,15 @@
     },
     // נבדק במכונה (25.10): צבע, רמה, ריצה, קפיצה, ירי, ניקוד, סוף משחק ושיא
     ranger: {
-      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[Alt] הוא הכפתור שלו (במק: [Option]). בטלפון אי אפשר לשחק בו.',
+      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[Alt] הוא הכפתור שלו (במק: [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
         'הטעינה ארוכה, כשלוש דקות, וכשהיא נגמרת המשחק מתחיל לבד. בוחרים צבע רקע: [1] שחור, [2] בהיר, [3] ירוק.',
         'במסך הפתיחה לוחצים [Alt]. ב-SELECT LEVEL לוחצים [1], ושוב [Alt] כדי להתחיל.',
-        '[←] [→] רצים, [↑] קופצים, [↓] מתכופפים, [Alt] יורה.',
+        '[←] [→] רצים, [↑] קופצים, [↓] מתכופפים, [Alt] יורה. [P] עוצר, ו-[Alt] ממשיך.',
         'אוספים את כל המפתחות ונזהרים מהעטלפים ומהעיניים שיורות מהצדדים. הכרית באמצע הקומה התחתונה מקפיצה חזרה למעלה.'],
-      en: ['In this game the arrow keys are a joystick and [Alt] is its button ([Option] on a Mac). It can\'t be played on a phone.',
+      en: ['In this game the arrow keys are a joystick and [Alt] is its button ([Option] on a Mac). On a phone there is a stick and a fire button under the screen.',
         'Loading takes about three minutes, and the game starts by itself when it ends. Pick a background colour: [1] black, [2] buff, [3] green.',
         'On the title screen press [Alt]. At SELECT LEVEL press [1], then [Alt] again to start.',
-        '[←] [→] run, [↑] jump, [↓] duck, [Alt] fires.',
+        '[←] [→] run, [↑] jump, [↓] duck, [Alt] fires. [P] pauses, and [Alt] carries on.',
         'Collect all the keys and watch out for the bats and the eyes that shoot from the sides. The pad in the middle of the bottom floor bounces you back to the top.']
     }
   };
@@ -98,7 +103,7 @@
     blockdown: ['קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים.', 'Falling blocks: complete the lines. 1 or 2 players.'],
     dragontet: ['קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים.', 'Falling blocks: complete the lines. 1 or 2 players.'],
     phantom: ['מבוך תלת-ממדי: צדים רוחות רפאים לפני שהן תופסות אתכם. לשחקן אחד.', '3D maze: hunt the phantoms before they catch you. 1 player.'],
-    ranger: ['רצים, קופצים ויורים: אוספים מפתחות ואוצרות בין עטלפים ועיניים. בג\'ויסטיק, במחשב בלבד.', 'Run, jump and shoot: collect keys and treasure past bats and eyes. Joystick, computer only.']
+    ranger: ['רצים, קופצים ויורים: אוספים מפתחות ואוצרות בין עטלפים ועיניים. בג\'ויסטיק.', 'Run, jump and shoot: collect keys and treasure past bats and eyes. Joystick.']
   };
   // שורה עם [מקשים]: כל מקש בתוך kbd. צירוף כמו [CLEAR]+[BREAK] נשאר יחד בשורה אחת
   function key(name) {
@@ -302,7 +307,7 @@
     try {
       // הקלטת כמו קלטת אמיתית: מה שהמכונה עצמה כתבה עם CSAVE, בפורמט המכווץ (rom/tools/mktapes.mjs)
       const bytes = new Uint8Array(await (await fetch('/lab/1982/tapes/' + id + '.cas')).arrayBuffer());
-      setJoy(JOY.has(id));
+      gameKeys(id);
       await play(bytes, '/tape-' + id + '.cas', title, button, true, auto, mc);
     } catch (e) { status.textContent = failed(); }
   }
@@ -431,7 +436,7 @@
       b.innerHTML = '<span></span><small dir="ltr"></small>';
       b.querySelector('span').textContent = EN ? 'My tape' : 'הקלטת שלי';
       b.querySelector('small').textContent = f.n;
-      b.addEventListener('click', () => play(tapeBytes([f]), '/mine.cas', f.n, b, false, false));
+      b.addEventListener('click', () => { gameKeys(null); play(tapeBytes([f]), '/mine.cas', f.n, b, false, false); });
       const down = document.createElement('button');
       down.type = 'button';
       down.className = 'mini';
@@ -524,7 +529,7 @@
     const go = setInterval(() => {
       if (!window.d32Ready) return;
       clearInterval(go);
-      setTimeout(() => { addTapes([f]); if (mineDrawer) mineDrawer.open = true; play(tapeBytes([f]), '/mine.cas', name, null, true, true); }, 2000);
+      setTimeout(() => { addTapes([f]); if (mineDrawer) mineDrawer.open = true; gameKeys(null); play(tapeBytes([f]), '/mine.cas', name, null, true, true); }, 2000);
     }, 300);
   }
   const mineName = new URLSearchParams(location.search).get('mine');
