@@ -1598,5 +1598,857 @@
    ],
    "nextTeaser": "That's it, you've finished all 20 lessons! You wrote a whole game with a dragon, a knight, gold, a score, lives and music, and you saved it to tape. You're a programmer now. The computer is waiting for your next idea, so type NEW and start building."
   }
+ },
+ {
+  "n": 21,
+  "he": {
+   "title": "שיעור 21: המסך הגרפי, ציור של כוכב צבעוני",
+   "intro": "עד עכשיו כתבנו אותיות על המסך. היום נעבור למסך הגרפי, ושם נצייר בנקודות ובקווים! נבנה כוכב ענק של קווים צבעוניים, עם מסגרת, ריבוע באמצע ונקודות שמפוזרות כמו כוכבים קטנים. בשנות השמונים ילדים העתיקו תוכניות ציור כאלה מתוך מגזינים, שורה אחרי שורה, ורק אחרי RUN ראו מה יצא.",
+   "steps": [
+    {
+     "code": "10 PMODE 3,1:PCLS 1:SCREEN 1,0",
+     "explain": "הפקודה PMODE 3,1 בוחרת מצב ציור עם 4 צבעים. אחריה PCLS 1 צובעת את כל הלוח בירוק. ואז SCREEN 1,0 מדליקה את המסך הגרפי, עם הצבעים ירוק, צהוב, כחול ואדום. המסך הוא 256 נקודות לרוחב ו-192 לגובה. הנקודה (0,0) נמצאת בפינה השמאלית העליונה."
+    },
+    {
+     "code": "20 C=2\n30 FOR X=0 TO 255 STEP 8\n40 COLOR C:LINE(X,0)-(255-X,191),PSET\n50 C=C+1:IF C>4 THEN C=2\n60 NEXT X",
+     "explain": "המשתנה C שומר את מספר הצבע, ומתחיל ב-2, צהוב. הלולאה קופצת בכל פעם 8 נקודות ימינה. הפקודה COLOR C בוחרת צבע, ואז LINE מותחת קו מלמעלה למטה, אל הצד השני של המסך. אחרי כל קו הצבע עולה באחד, ואחרי 4 חוזר ל-2. ככה מקבלים צהוב, כחול, אדום, וחוזר חלילה. דילגנו על ירוק כי הרקע ירוק, וקו ירוק לא היה נראה. כל הקווים עוברים דרך האמצע, כמו קרני שמש."
+    },
+    {
+     "code": "70 FOR Y=0 TO 191 STEP 8\n80 COLOR C:LINE(0,Y)-(255,191-Y),PSET\n90 C=C+1:IF C>4 THEN C=2\n100 NEXT Y",
+     "explain": "אותו טריק, אבל הפעם הקווים יוצאים מהצד השמאלי אל הצד הימני. הם ממלאים את החורים, ועכשיו יש לנו כוכב שלם."
+    },
+    {
+     "code": "110 COLOR 4:LINE(0,0)-(255,191),PSET,B\n120 COLOR 3:LINE(104,80)-(152,112),PSET,BF",
+     "explain": "כשמוסיפים B בסוף, הפקודה LINE לא מציירת קו אלא מלבן. כאן זו מסגרת אדומה סביב כל המסך. עם BF המלבן מלא, והפעם זה ריבוע כחול באמצע הכוכב."
+    },
+    {
+     "code": "130 FOR I=1 TO 60\n140 COLOR RND(3)+1:PSET(RND(256)-1,RND(192)-1)\n150 NEXT I\n160 GOTO 160",
+     "explain": "עכשיו 60 נקודות אקראיות. החישוב RND(3)+1 נותן 2, 3 או 4, כלומר צהוב, כחול או אדום. הפקודה PSET מציירת נקודה אחת במקום אקראי על המסך. בסוף, שורה 160 קופצת לעצמה שוב ושוב, כדי שהציור יישאר על המסך."
+    }
+   ],
+   "run": "הקלידו RUN. המסך יהפוך לירוק, ואז יופיעו קווים צהובים, כחולים ואדומים שיוצאים מהאמצע, כמו כוכב מנצנץ. אחר כך תופיע מסגרת אדומה, ריבוע כחול באמצע, ונקודות קטנות יתפזרו בכל מקום. לא צריך להקליד שום דבר. כדי לעצור, לחצו על Esc או על כפתור העצירה.",
+   "tip": "בלי שורה 160 התוכנית מסתיימת, והמחשב חוזר מיד למסך הטקסט, כך שהציור נעלם לפני שראיתם אותו. ציור צריך שורת סיום שמחכה!",
+   "challenge": "ציירו מנהרה: ריבועים מלאים אחד בתוך השני, וכל אחד בצבע אחר. רמז: השתמשו ב-BF, והקטינו את הריבוע בכל סיבוב של הלולאה.",
+   "challengeCode": [
+    "10 PMODE 3,1:PCLS 1:SCREEN 1,0",
+    "20 C=2",
+    "30 FOR S=0 TO 88 STEP 8",
+    "40 COLOR C:LINE(S+32,S)-(223-S,191-S),PSET,BF",
+    "50 C=C+1:IF C>4 THEN C=2",
+    "60 NEXT S",
+    "70 GOTO 70"
+   ],
+   "nextTeaser": "בשיעור הבא נלמד לצייר עיגולים ולמלא אותם בצבע, ונצייר פרצוף של דרקון מחייך מתחת לשמש!"
+  },
+  "en": {
+   "title": "Lesson 21: The Graphics Screen, a Colourful Star",
+   "intro": "Until now we wrote letters on the screen. Today we switch to the graphics screen and draw with dots and lines! We'll build a giant star of coloured lines, with a frame, a box in the middle and dots scattered like tiny stars. In the 1980s kids typed drawing programs like this from magazines, line by line, and only saw the result after RUN.",
+   "steps": [
+    {
+     "code": "10 PMODE 3,1:PCLS 1:SCREEN 1,0",
+     "explain": "PMODE 3,1 picks a drawing mode with 4 colours. PCLS 1 paints the whole canvas green. SCREEN 1,0 switches on the graphics screen, with the colours green, yellow, blue and red. The screen is 256 dots wide and 192 dots tall. The point (0,0) is in the top-left corner."
+    },
+    {
+     "code": "20 C=2\n30 FOR X=0 TO 255 STEP 8\n40 COLOR C:LINE(X,0)-(255-X,191),PSET\n50 C=C+1:IF C>4 THEN C=2\n60 NEXT X",
+     "explain": "C holds the colour number. It starts at 2, which is yellow. Each time round, the loop jumps 8 dots to the right. COLOR C picks the colour, then LINE draws a line from the top down to the opposite side of the screen. After each line the colour goes up by one, and after 4 it goes back to 2. So we get yellow, blue, red, and round again. We skip green because the background is green, and a green line would be invisible. All the lines cross the middle, like sun rays."
+    },
+    {
+     "code": "70 FOR Y=0 TO 191 STEP 8\n80 COLOR C:LINE(0,Y)-(255,191-Y),PSET\n90 C=C+1:IF C>4 THEN C=2\n100 NEXT Y",
+     "explain": "Same trick, but this time the lines go from the left edge to the right edge. They fill in the gaps, and now we have a whole star."
+    },
+    {
+     "code": "110 COLOR 4:LINE(0,0)-(255,191),PSET,B\n120 COLOR 3:LINE(104,80)-(152,112),PSET,BF",
+     "explain": "Add B at the end, and LINE draws a box instead of a line. Here it's a red frame around the whole screen. With BF the box is filled in, and this time it's a blue box in the middle of the star."
+    },
+    {
+     "code": "130 FOR I=1 TO 60\n140 COLOR RND(3)+1:PSET(RND(256)-1,RND(192)-1)\n150 NEXT I\n160 GOTO 160",
+     "explain": "Now come 60 random dots. RND(3)+1 gives 2, 3 or 4, which means yellow, blue or red. PSET draws one dot at a random spot on the screen. Finally, line 160 jumps to itself over and over, so the picture stays on the screen."
+    }
+   ],
+   "run": "Type RUN. The screen turns green, then yellow, blue and red lines shoot out from the middle like a sparkling star. Next comes a red frame and a blue box in the centre, and little dots sprinkle everywhere. You don't need to type anything. To stop, press Esc or the stop button.",
+   "tip": "Without line 160 the program ends and the computer jumps straight back to the text screen, so the picture vanishes before you see it. A drawing needs a waiting line at the end!",
+   "challenge": "Draw a tunnel: filled squares one inside another, each in a different colour. Hint: use BF, and make the square smaller each time round the loop.",
+   "challengeCode": [
+    "10 PMODE 3,1:PCLS 1:SCREEN 1,0",
+    "20 C=2",
+    "30 FOR S=0 TO 88 STEP 8",
+    "40 COLOR C:LINE(S+32,S)-(223-S,191-S),PSET,BF",
+    "50 C=C+1:IF C>4 THEN C=2",
+    "60 NEXT S",
+    "70 GOTO 70"
+   ],
+   "nextTeaser": "Next lesson we'll draw circles and fill them with paint, and make a smiling dragon face under the sun!"
+  }
+ },
+ {
+  "n": 22,
+  "he": {
+   "title": "שיעור 22: עיגולים וצבע, פרצוף של דרקון מחייך מתחת לשמש",
+   "intro": "בשיעור הקודם ציירנו קווים ונקודות. היום נכיר שתי פקודות חדשות: CIRCLE מצייר עיגול, ו-PAINT ממלא אותו בצבע כמו דלי צבע. נצייר יחד פרצוף ירוק של דרקון, עם קרניים צהובות, עיניים, חיוך, ושמש צהובה בשמיים!",
+   "steps": [
+    {
+     "code": "10 PMODE 3,1:PCLS 3:SCREEN 1,0\n20 COLOR 2:CIRCLE(226,30),18:PAINT(226,30),2,2",
+     "explain": "שורה 10 כבר מוכרת לכם: היא עוברת למסך הגרפי עם 4 צבעים וצובעת את כולו בכחול, כמו שמיים. בשורה 20 בוחרים צהוב עם COLOR 2. אחר כך הפקודה CIRCLE מציירת עיגול: המרכז הוא (226,30), למעלה מימין, והרדיוס הוא 18, כלומר המרחק מהמרכז עד הקצה. בסוף הפקודה PAINT שופכת צבע: מתחילים במרכז העיגול, צובעים בצהוב (2), ועוצרים כשנתקלים בקו צהוב (2). וזו השמש!"
+    },
+    {
+     "code": "30 COLOR 1:CIRCLE(128,104),70:PAINT(128,104),1,1",
+     "explain": "עכשיו הראש. בוחרים ירוק עם COLOR 1, ומציירים עיגול גדול באמצע המסך ברדיוס 70. אחר כך ממלאים אותו בירוק עם PAINT. שימו לב לשני המספרים בסוף: הראשון הוא צבע המילוי, והשני הוא צבע הגבול שבו עוצרים."
+    },
+    {
+     "code": "40 COLOR 2:LINE(80,52)-(88,8),PSET:LINE-(108,40),PSET:LINE-(80,52),PSET\n50 PAINT(92,33),2,2\n60 LINE(176,52)-(168,8),PSET:LINE-(148,40),PSET:LINE-(176,52),PSET\n70 PAINT(164,33),2,2",
+     "explain": "לכל דרקון מכבד את עצמו יש קרניים! בשורה 40 מציירים בצהוב משולש מ-3 קווים. הטריק: כש-LINE מתחיל במקף, הקו ממשיך מהנקודה שבה הקודם נגמר. הקו האחרון חוזר לנקודת ההתחלה, וכך המשולש סגור. בשורה 50 צובעים את המשולש מבפנים. שורות 60 ו-70 עושות אותו דבר לקרן הימנית, כמו תמונת מראה."
+    },
+    {
+     "code": "80 CIRCLE(102,72),12:PAINT(102,72),2,2:CIRCLE(154,72),12:PAINT(154,72),2,2\n90 COLOR 4:LINE(102,70)-(107,77),PSET,BF:LINE(154,70)-(159,77),PSET,BF",
+     "explain": "עכשיו העיניים. הצבע עדיין צהוב, אז שורה 80 מציירת שני עיגולים קטנים וממלאת אותם. בשורה 90 עוברים לאדום עם COLOR 4 ומציירים בכל עין מלבן מלא קטן עם BF. אלה האישונים, והם קצת בצד, כאילו הדרקון מציץ."
+    },
+    {
+     "code": "100 CIRCLE(128,120),34\n110 COLOR 1:LINE(92,85)-(164,124),PSET,BF\n120 COLOR 4:CIRCLE(116,104),3:CIRCLE(140,104),3",
+     "explain": "זה הטריק הכי חכם בשיעור! איך מציירים חיוך? בשורה 100 מציירים עיגול אדום שלם. בשורה 110 מכסים את החלק העליון שלו במלבן מלא ירוק, באותו צבע כמו הפנים. מה שנשאר בחוץ הוא רק הקשת התחתונה, וזה חיוך! בשורה 120 מוסיפים שני עיגולים אדומים קטנטנים, ואלה הנחיריים. אנחנו מציירים אותם אחרי המלבן, כדי שהוא לא יכסה אותם."
+    },
+    {
+     "code": "130 PLAY \"T4O3L8CEGEL4C\"\n140 GOTO 140",
+     "explain": "בשורה 130 הדרקון שר מנגינה קטנה ושמחה. שורה 140 קופצת לעצמה שוב ושוב. היא לא עושה כלום, אבל בזכותה התוכנית לא נגמרת, והציור נשאר על המסך."
+    }
+   ],
+   "run": "הקלידו RUN ולחצו Enter. המסך נצבע בכחול, ואז הציור נבנה חלק אחרי חלק: שמש צהובה, ראש ירוק, קרניים, עיניים, חיוך ונחיריים. בסוף תשמעו מנגינה קצרה. הציור נשאר על המסך עד שתלחצו על Esc, על BREAK או על כפתור \"עצירה\".",
+   "tip": "אם הפקודה PAINT צובעת את כל המסך, בדקו שני דברים. האחד: הצורה חייבת להיות סגורה לגמרי, כי דרך חור קטן הצבע בורח החוצה. השני: המספר האחרון ב-PAINT חייב להיות הצבע של הקו שמסביב. אם ציירתם קו צהוב וכתבתם גבול אדום, הצבע לא ימצא איפה לעצור.",
+   "challenge": "ציירו שמש גדולה ומחייכת באמצע המסך, עם קרניים, עיניים אדומות וחיוך, והשתמשו בטריק של המלבן המכסה. בונוס: נגנו מנגינה משלכם!",
+   "challengeCode": [
+    "10 PMODE 3,1:PCLS 3:SCREEN 1,0",
+    "20 COLOR 2:CIRCLE(128,96),50:PAINT(128,96),2,2",
+    "30 LINE(128,40)-(128,15),PSET:LINE(128,152)-(128,177),PSET",
+    "40 LINE(72,96)-(47,96),PSET:LINE(184,96)-(209,96),PSET",
+    "50 LINE(90,58)-(72,40),PSET:LINE(166,58)-(184,40),PSET",
+    "60 LINE(90,134)-(72,152),PSET:LINE(166,134)-(184,152),PSET",
+    "70 COLOR 4:CIRCLE(128,100),25",
+    "80 COLOR 2:LINE(100,70)-(156,108),PSET,BF",
+    "90 COLOR 4:CIRCLE(110,80),6:PAINT(110,80),4,4",
+    "100 CIRCLE(146,80),6:PAINT(146,80),4,4",
+    "110 PLAY \"T4O3L8GECEL4G\"",
+    "120 GOTO 120"
+   ],
+   "nextTeaser": "בשיעור הבא נכיר את DRAW, שפה קטנה של צב שמצייר: למעלה, ימינה, למטה. ככה נצייר בתים, כוכב וספירלה!"
+  },
+  "en": {
+   "title": "Lesson 22: Circles and paint, a smiling dragon face under the sun",
+   "intro": "Last time we drew lines and dots. Today we meet two new commands: CIRCLE draws a circle, and PAINT fills it like a bucket of paint. Together we'll draw a green dragon face with yellow horns, eyes, a big smile, and a yellow sun in the sky!",
+   "steps": [
+    {
+     "code": "10 PMODE 3,1:PCLS 3:SCREEN 1,0\n20 COLOR 2:CIRCLE(226,30),18:PAINT(226,30),2,2",
+     "explain": "You already know line 10. It switches to the 4-colour graphics screen and paints it all blue, like a sky. In line 20, COLOR 2 picks yellow. Then CIRCLE draws a circle. The centre is (226,30), top right, and the radius is 18, which is the distance from the centre to the edge. Finally PAINT pours paint. It starts in the middle, fills with yellow (2), and stops when it bumps into a yellow line (2). That's our sun!"
+    },
+    {
+     "code": "30 COLOR 1:CIRCLE(128,104),70:PAINT(128,104),1,1",
+     "explain": "Now the head. COLOR 1 picks green, and we draw a big circle in the middle of the screen with radius 70. Then PAINT fills it with green. Look at the two numbers at the end. The first is the fill colour, and the second is the border colour where the paint stops."
+    },
+    {
+     "code": "40 COLOR 2:LINE(80,52)-(88,8),PSET:LINE-(108,40),PSET:LINE-(80,52),PSET\n50 PAINT(92,33),2,2\n60 LINE(176,52)-(168,8),PSET:LINE-(148,40),PSET:LINE-(176,52),PSET\n70 PAINT(164,33),2,2",
+     "explain": "Every proper dragon has horns! Line 40 draws a yellow triangle from 3 lines. Here's the trick: when LINE starts with a minus sign, it carries on from where the last line ended. The last line goes back to the start, so the triangle is closed. Line 50 paints the inside. Lines 60 and 70 do the same for the right horn, like a mirror image."
+    },
+    {
+     "code": "80 CIRCLE(102,72),12:PAINT(102,72),2,2:CIRCLE(154,72),12:PAINT(154,72),2,2\n90 COLOR 4:LINE(102,70)-(107,77),PSET,BF:LINE(154,70)-(159,77),PSET,BF",
+     "explain": "Now the eyes. We're still drawing in yellow, so line 80 makes two small circles and fills them. Line 90 switches to red with COLOR 4 and draws a small filled box (BF) in each eye. Those are the pupils. They sit a little to one side, as if the dragon is peeking."
+    },
+    {
+     "code": "100 CIRCLE(128,120),34\n110 COLOR 1:LINE(92,85)-(164,124),PSET,BF\n120 COLOR 4:CIRCLE(116,104),3:CIRCLE(140,104),3",
+     "explain": "This is the cleverest trick in the lesson! How do you draw a smile? Line 100 draws a whole red circle. Line 110 covers its top part with a filled green box, the same colour as the face. Only the bottom curve is left showing, and that's a smile! Line 120 adds two tiny red circles for the nostrils. We draw them after the box so it doesn't cover them."
+    },
+    {
+     "code": "130 PLAY \"T4O3L8CEGEL4C\"\n140 GOTO 140",
+     "explain": "In line 130 the dragon sings a happy little tune. Line 140 jumps to itself again and again. It does nothing, but it keeps the program running, so the picture stays on the screen."
+    }
+   ],
+   "run": "Type RUN and press Enter. The screen turns blue, and the picture builds up piece by piece: yellow sun, green head, horns, eyes, smile and nostrils. Then you'll hear a short tune. The picture stays until you press Esc, BREAK or the \"stop\" button.",
+   "tip": "If PAINT floods the whole screen, check two things. First, the shape must be completely closed, because paint escapes through even a tiny gap. Second, the last number in PAINT must be the colour of the line around the shape. If you drew a yellow line but wrote red as the border, the paint never finds a place to stop.",
+   "challenge": "Draw a big smiling sun in the middle of the screen, with rays, red eyes and a smile, using the covering-box trick. Bonus: play a tune of your own!",
+   "challengeCode": [
+    "10 PMODE 3,1:PCLS 3:SCREEN 1,0",
+    "20 COLOR 2:CIRCLE(128,96),50:PAINT(128,96),2,2",
+    "30 LINE(128,40)-(128,15),PSET:LINE(128,152)-(128,177),PSET",
+    "40 LINE(72,96)-(47,96),PSET:LINE(184,96)-(209,96),PSET",
+    "50 LINE(90,58)-(72,40),PSET:LINE(166,58)-(184,40),PSET",
+    "60 LINE(90,134)-(72,152),PSET:LINE(166,134)-(184,152),PSET",
+    "70 COLOR 4:CIRCLE(128,100),25",
+    "80 COLOR 2:LINE(100,70)-(156,108),PSET,BF",
+    "90 COLOR 4:CIRCLE(110,80),6:PAINT(110,80),4,4",
+    "100 CIRCLE(146,80),6:PAINT(146,80),4,4",
+    "110 PLAY \"T4O3L8GECEL4G\"",
+    "120 GOTO 120"
+   ],
+   "nextTeaser": "Next time we'll meet DRAW, a little turtle language: up, right, down. We'll use it to draw houses, a star and a spiral!"
+  }
+ },
+ {
+  "n": 23,
+  "he": {
+   "title": "שיעור 23: שפת הצב, ציור עם מחרוזות DRAW",
+   "intro": "היום נלמד את המחשב שפת ציור קטנה: למעלה, ימינה, באלכסון. כמו צב שמחזיק עט ומקבל הוראות. נצייר שלושה בתים בגדלים שונים, כוכב וספירלה מרובעת, והכול כמעט בלי מספרי נקודות.",
+   "steps": [
+    {
+     "code": "10 PMODE 3,1:PCLS 1:SCREEN 1,0\n20 DRAW \"BM0,150C3R255\"",
+     "explain": "שורה 10 פותחת את המסך הגרפי בארבעה צבעים וצובעת אותו בירוק. בשורה 20 הפקודה DRAW מקבלת מחרוזת של הוראות. האותיות BM אומרות לקפוץ לנקודה 0,150 בלי לצייר. אחר כך C3 בוחר כחול, ו-R255 מצייר קו ימינה לאורך 255 נקודות. זה הרצפה של העולם שלנו."
+    },
+    {
+     "code": "30 H$=\"U20E12F12D20L24\"\n40 DRAW \"BM20,150C4S4\"+H$\n50 DRAW \"BM70,150C3S8\"+H$\n60 DRAW \"BM140,150C2S12\"+H$",
+     "explain": "הקסם כאן הוא שהבית שמור במשתנה H$. מה הצב עושה? עולה 20 (U), עולה באלכסון ימינה 12 (E) לחוד הגג, יורד באלכסון ימינה 12 (F), יורד 20 (D) וחוזר שמאלה 24 (L). את אותו בית מציירים שלוש פעמים, ורק משנים מקום, צבע וגודל. עם S4 הבית בגודל רגיל, עם S8 הוא כפול, ועם S12 הוא פי שלושה. ככה נוצרים בית אדום קטן, בית כחול בינוני ובית צהוב גדול."
+    },
+    {
+     "code": "70 DRAW \"S4C4BM164,150U24R12D24\"",
+     "explain": "עכשיו מוסיפים דלת אדומה לבית הגדול. שימו לב ל-S4 בהתחלה: המחשב זוכר את הגודל האחרון, ובלי זה הדלת הייתה יוצאת ענקית פי שלושה."
+    },
+    {
+     "code": "80 DRAW \"BM40,40C2U10D20U10L10R20L10E7G14E7H7F14\"",
+     "explain": "כוכב צהוב בשמיים. הצב עומד במרכז ומצייר פסים שיוצאים ממנו: קו עומד (למעלה, למטה, ובחזרה למרכז), קו שוכב, ושני אלכסונים עם E, G, H ו-F. יוצא כוכב עם שמונה קרניים."
+    },
+    {
+     "code": "90 DRAW \"BM96,40\"\n100 FOR L=4 TO 60 STEP 8\n110 A$=MID$(STR$(L),2):B$=MID$(STR$(L+4),2)\n120 DRAW \"C4R\"+A$+\"D\"+A$+\"L\"+B$+\"U\"+B$\n130 NEXT L",
+     "explain": "ספירלה! הצב קופץ לנקודה 96,40, ובכל סיבוב של הלולאה הולך ימינה, למטה, שמאלה ולמעלה. כל צלע קצת ארוכה מהקודמת, ולכן הקו מסתובב החוצה. בתוך מחרוזת אפשר לשים רק אותיות, ולכן הפקודה STR$ הופכת את המספר למילה. היא מוסיפה רווח בהתחלה, ו-MID$ מורידה אותו."
+    },
+    {
+     "code": "140 GOTO 140",
+     "explain": "לולאה שלא נגמרת, כדי שהציור יישאר על המסך. לוחצים Esc כדי לעצור."
+    }
+   ],
+   "run": "אחרי RUN המסך נצבע ירוק, ולמטה נמתח קו כחול. עליו עומדים שלושה בתים: אדום קטן, כחול בינוני וצהוב גדול עם דלת אדומה. למעלה משמאל מופיע כוכב צהוב, ולידו ספירלה מרובעת אדומה שהולכת וגדלה. אין צורך להקליד כלום. כדי לחזור לתוכנית לוחצים Esc.",
+   "tip": "גם הגודל S וגם הצבע C נשארים בתוקף עד שמשנים אותם. אם משהו יוצא פתאום ענק או בצבע לא נכון, בדקו מה היה בפקודת DRAW הקודמת.",
+   "challenge": "ציירו שלושה כוכבים שהולכים וגדלים, כל אחד בצבע אחר, מאותה מחרוזת כוכב. רמז: את המקום, הגודל והצבע אפשר לקרוא עם READ משורת DATA ישר לתוך משתני מילים.",
+   "challengeCode": [
+    "10 PMODE 3,1:PCLS 1:SCREEN 1,0",
+    "20 T$=\"U10D20U10L10R20L10E7G14E7H7F14\"",
+    "30 FOR I=1 TO 3",
+    "40 READ X$,S$,C$",
+    "50 DRAW \"BM\"+X$+\",96C\"+C$+\"S\"+S$+T$",
+    "60 NEXT I",
+    "70 GOTO 70",
+    "80 DATA 40,4,2,110,8,3,200,12,4"
+   ],
+   "nextTeaser": "בשיעור הבא נבנה תיבת נגינה: לוחצים 1, 2 או 3, שומעים מנגינה, והתווים מופיעים על חמשה."
+  },
+  "en": {
+   "title": "Lesson 23: Turtle Talk, drawing with DRAW strings",
+   "intro": "Today we teach the computer a tiny drawing language: up, right, diagonal. Think of a turtle holding a pen and following orders. We'll draw three houses in different sizes, a star and a square spiral, with hardly any coordinates.",
+   "steps": [
+    {
+     "code": "10 PMODE 3,1:PCLS 1:SCREEN 1,0\n20 DRAW \"BM0,150C3R255\"",
+     "explain": "Line 10 opens the 4-colour graphics screen and paints it green. In line 20, DRAW gets a string of orders. BM means jump to point 0,150 without drawing. Then C3 picks blue, and R255 draws a line 255 dots to the right. That's the ground of our little world."
+    },
+    {
+     "code": "30 H$=\"U20E12F12D20L24\"\n40 DRAW \"BM20,150C4S4\"+H$\n50 DRAW \"BM70,150C3S8\"+H$\n60 DRAW \"BM140,150C2S12\"+H$",
+     "explain": "The magic: the whole house is stored in H$. The turtle goes up 20 (U), diagonally up-right 12 (E) to the roof top, diagonally down-right 12 (F), down 20 (D) and back left 24 (L). We draw the same house three times and only change the place, colour and size. S4 is normal size, S8 is double, S12 is triple. So we get a small red house, a medium blue one and a big yellow one."
+    },
+    {
+     "code": "70 DRAW \"S4C4BM164,150U24R12D24\"",
+     "explain": "Now a red door for the big house. Notice the S4 at the start: the computer remembers the last size, and without it the door would come out three times too big."
+    },
+    {
+     "code": "80 DRAW \"BM40,40C2U10D20U10L10R20L10E7G14E7H7F14\"",
+     "explain": "A yellow star in the sky. The turtle stands in the middle and draws lines out from it: a standing line (up, down, back to the middle), a lying line, and two diagonals using E, G, H and F. The result is a star with eight points."
+    },
+    {
+     "code": "90 DRAW \"BM96,40\"\n100 FOR L=4 TO 60 STEP 8\n110 A$=MID$(STR$(L),2):B$=MID$(STR$(L+4),2)\n120 DRAW \"C4R\"+A$+\"D\"+A$+\"L\"+B$+\"U\"+B$\n130 NEXT L",
+     "explain": "A spiral! The turtle jumps to 96,40, and each time round the loop it goes right, down, left and up. Every side is a bit longer than the one before, so the line winds outward. A DRAW string can only hold text, so STR$ turns the number into a word. It adds a space at the front, and MID$ cuts it off."
+    },
+    {
+     "code": "140 GOTO 140",
+     "explain": "A never-ending loop that keeps the picture on screen. Press Esc to stop."
+    }
+   ],
+   "run": "After RUN the screen turns green and a blue line stretches across the bottom. Three houses stand on it: a small red one, a medium blue one and a big yellow one with a red door. Up on the left there's a yellow star, and next to it a red square spiral that keeps growing. Nothing to type. Press Esc to get back to your program.",
+   "tip": "Both the size S and the colour C stay switched on until you change them. If something suddenly comes out huge or in the wrong colour, check the DRAW command before it. In 1983, kids typing listings from magazines hunted for exactly this kind of bug.",
+   "challenge": "Draw three stars that get bigger, each in a different colour, all from the same star string. Hint: you can READ the place, size and colour from a DATA line straight into word variables.",
+   "challengeCode": [
+    "10 PMODE 3,1:PCLS 1:SCREEN 1,0",
+    "20 T$=\"U10D20U10L10R20L10E7G14E7H7F14\"",
+    "30 FOR I=1 TO 3",
+    "40 READ X$,S$,C$",
+    "50 DRAW \"BM\"+X$+\",96C\"+C$+\"S\"+S$+T$",
+    "60 NEXT I",
+    "70 GOTO 70",
+    "80 DATA 40,4,2,110,8,3,200,12,4"
+   ],
+   "nextTeaser": "Next time we build a music box: press 1, 2 or 3 to hear a tune while its notes appear on a stave."
+  }
+ },
+ {
+  "n": 24,
+  "he": {
+   "title": "שיעור 24: תיבת הנגינה של הדרקון",
+   "intro": "היום נבנה תיבת נגינה! לוחצים על 1, 2 או 3, והדרקון מנגן שיר ומצייר כל תו על חמשה, ממש כמו בתווים אמיתיים. נשתמש כאן ביחד ברשימות, ב-READ וב-DATA, בתעלולי מילים ובגרפיקה מהשיעורים הקודמים. ב-1983 ילדים העתיקו תוכניות כאלה שורה אחרי שורה מתוך עיתונים, ומספיקה הייתה אות אחת לא נכונה כדי שהשיר יישמע מוזר.",
+   "steps": [
+    {
+     "code": "10 DIM T$(3):FOR I=1 TO 3:READ T$(I):NEXT I\n160 DATA CCGGAAGFFEEDDC,EDCDEEEDDDEGG,CDECCDECEFGEFG",
+     "explain": "שלושת השירים גרים בשורה 160, כתובים פשוט כאותיות של תווים. שורה 10 יוצרת רשימה של שלוש מילים, מ-T$(1) עד T$(3), והפקודה READ מעתיקה לתוכה כל שיר בתורו. לא משנה שה-DATA נמצאת בסוף התוכנית, כי READ מוצאת אותה בכל מקום."
+    },
+    {
+     "code": "20 CLS:PRINT \"THE DRAGON MUSIC BOX\"\n30 PRINT:PRINT \"1 TWINKLE TWINKLE\":PRINT \"2 MARY HAD A LITTLE LAMB\":PRINT \"3 FRERE JACQUES\":PRINT:PRINT \"PRESS 1, 2 OR 3  (Q TO STOP)\"",
+     "explain": "התפריט: מנקים את המסך, כותבים כותרת ואת שמות שלושת השירים. כל PRINT ריק מוסיף שורה ריקה, כדי שיהיה מרווח ונעים לקרוא."
+    },
+    {
+     "code": "40 PMODE 3,1\n50 K$=INKEY$:IF K$=\"Q\" THEN END\n60 IF K$<\"1\" OR K$>\"3\" THEN 50",
+     "explain": "הפקודה PMODE 3,1 בוחרת את המסך הגרפי עם 4 צבעים, אבל עדיין רואים את התפריט, כי את המסך הגרפי נדליק רק אחר כך. בשורה 50 בודקים איזה מקש נלחץ, ואם זה Q התוכנית נגמרת. בשורה 60 משווים אותיות: כל מקש שקטן מ-\"1\" או גדול מ-\"3\" מחזיר אותנו לשורה 50 לחכות. כן, אפשר להשוות מילים עם הסימנים < ו-> !"
+    },
+    {
+     "code": "70 PCLS 1:SCREEN 1,0:COLOR 3\n80 FOR Y=66 TO 138 STEP 24:LINE(0,Y)-(255,Y),PSET:NEXT Y",
+     "explain": "צובעים את כל הדף בירוק, מדליקים את המסך הגרפי ובוחרים צבע כחול. הלולאה מציירת ארבעה קווים לרוחב המסך, בגבהים 66, 90, 114 ו-138, במרווח של 24 נקודות. זה החמשה שלנו (כמעט, כי בחמשה אמיתית יש חמישה קווים)."
+    },
+    {
+     "code": "90 M$=T$(VAL(K$)):X=16\n100 FOR I=1 TO LEN(M$)\n110 N$=MID$(M$,I,1):P=INSTR(\"CDEFGAB\",N$)\n120 COLOR 4:CIRCLE(X,150-P*12),5:PAINT(X,150-P*12),4,4\n130 PLAY \"T4O3L4\"+N$\n140 X=X+16:NEXT I\n150 GOTO 50",
+     "explain": "הפונקציה VAL הופכת את המקש \"2\" למספר 2, וכך בוחרים את השיר מהרשימה. המשתנה X אומר איפה יעמוד התו הראשון. הלולאה עוברת על השיר אות אחרי אות: MID$ לוקחת אות אחת, ו-INSTR מוצאת את המקום שלה במילה CDEFGAB, כך ש-C הוא 1 ו-B הוא 7. ככל שהמספר גדול יותר, התו עולה גבוה יותר במסך, בזכות החשבון 150-P*12. התו C יושב על הקו התחתון, התווים E, G ו-B על הקווים האחרים, והתווים D, F ו-A ברווחים שביניהם. מציירים עיגול אדום וממלאים אותו עם PAINT. בפקודה PLAY מדביקים עם סימן הפלוס את ההגדרות לתו: T4 זה הקצב, O3 זו האוקטבה, ו-L4 אומר שהתווים הם רבעים. אחר כך X זז 16 נקודות ימינה. בסוף השיר, שורה 150 חוזרת לחכות למקש הבא."
+    }
+   ],
+   "run": "מקלידים RUN. מופיע התפריט. לוחצים על 1: המסך נצבע ירוק, מופיעים ארבעה קווים כחולים, ותווים אדומים קופצים אחד אחד, כל אחד בדיוק כשהוא מתנגן. כשהשיר נגמר, התווים נשארים על המסך. התפריט מוסתר מאחורי הציור, אז זכרו: לוחצים 1, 2 או 3 לשיר נוסף (החמשה מתנקה קודם), ו-Q כדי לעצור.",
+   "tip": "בשירים שבשורת ה-DATA מותר לכתוב רק את האותיות C D E F G A B, בלי רווחים. הפסיק מפריד בין שיר לשיר, אז אסור לשים פסיק באמצע שיר. כל אות אחרת גורמת ל-INSTR להחזיר 0, התו נוחת מתחת לחמשה, והפקודה PLAY נעצרת עם הודעת שגיאה.",
+   "challenge": "הפכו את תיבת הנגינה לפסנתר קטן: לוחצים על אחת האותיות C, D, E, F, G, A או B, והתו מתנגן ומופיע על החמשה. כשהחמשה מתמלאת, מתחילים דף חדש. המקש Q עוצר.",
+   "challengeCode": [
+    "10 PMODE 3,1:PCLS 1:SCREEN 1,0:COLOR 3",
+    "20 FOR Y=66 TO 138 STEP 24:LINE(0,Y)-(255,Y),PSET:NEXT Y",
+    "30 X=16",
+    "40 K$=INKEY$:IF K$=\"Q\" THEN END",
+    "50 IF K$=\"\" THEN 40",
+    "60 P=INSTR(\"CDEFGAB\",K$):IF P=0 THEN 40",
+    "70 COLOR 4:CIRCLE(X,150-P*12),5:PAINT(X,150-P*12),4,4",
+    "80 PLAY \"T4O3L4\"+K$",
+    "90 X=X+16:IF X>240 THEN 10",
+    "100 GOTO 40"
+   ],
+   "nextTeaser": "בשיעור הבא: GET ו-PUT. נתפוס תמונה קטנה של דרקון ונחליק אותה בעדינות על המסך עם החצים!"
+  },
+  "en": {
+   "title": "Lesson 24: The Dragon Music Box",
+   "intro": "Today we build a music box! Press 1, 2 or 3 and the Dragon plays a tune, drawing every note on a stave as it plays, just like real sheet music. It brings together lists, READ and DATA, word tricks and graphics from earlier lessons. In 1983 kids copied programs like this line by line from magazines, and one wrong letter was enough to make the tune sound funny.",
+   "steps": [
+    {
+     "code": "10 DIM T$(3):FOR I=1 TO 3:READ T$(I):NEXT I\n160 DATA CCGGAAGFFEEDDC,EDCDEEEDDDEGG,CDECCDECEFGEFG",
+     "explain": "The three tunes live in line 160, written as plain note letters. Line 10 makes a list of three words, T$(1) to T$(3), and READ copies each tune into it in turn. It doesn't matter that the DATA is at the end of the program. READ finds it anywhere."
+    },
+    {
+     "code": "20 CLS:PRINT \"THE DRAGON MUSIC BOX\"\n30 PRINT:PRINT \"1 TWINKLE TWINKLE\":PRINT \"2 MARY HAD A LITTLE LAMB\":PRINT \"3 FRERE JACQUES\":PRINT:PRINT \"PRESS 1, 2 OR 3  (Q TO STOP)\"",
+     "explain": "The menu: clear the screen, print a title and the names of the three tunes. Each empty PRINT adds a blank line, so it's easy to read."
+    },
+    {
+     "code": "40 PMODE 3,1\n50 K$=INKEY$:IF K$=\"Q\" THEN END\n60 IF K$<\"1\" OR K$>\"3\" THEN 50",
+     "explain": "PMODE 3,1 chooses the 4-colour graphics mode, but we still see the menu, because we switch the graphics screen on later. Line 50 checks which key was pressed, and Q ends the program. Line 60 compares letters: any key smaller than \"1\" or bigger than \"3\" sends us back to line 50 to wait. Yes, you can compare words with < and > !"
+    },
+    {
+     "code": "70 PCLS 1:SCREEN 1,0:COLOR 3\n80 FOR Y=66 TO 138 STEP 24:LINE(0,Y)-(255,Y),PSET:NEXT Y",
+     "explain": "Paint the whole page green, switch on the graphics screen and pick blue. The loop draws four lines across the screen at heights 66, 90, 114 and 138, 24 dots apart. That's our stave (almost, since a real stave has five lines)."
+    },
+    {
+     "code": "90 M$=T$(VAL(K$)):X=16\n100 FOR I=1 TO LEN(M$)\n110 N$=MID$(M$,I,1):P=INSTR(\"CDEFGAB\",N$)\n120 COLOR 4:CIRCLE(X,150-P*12),5:PAINT(X,150-P*12),4,4\n130 PLAY \"T4O3L4\"+N$\n140 X=X+16:NEXT I\n150 GOTO 50",
+     "explain": "VAL turns the key \"2\" into the number 2, which picks the tune from the list. X is where the first note goes. The loop walks through the tune letter by letter. MID$ takes one letter, and INSTR finds its place in the word CDEFGAB, so C is 1 and B is 7. The bigger the number, the higher the note on screen, thanks to the sum 150-P*12. C sits on the bottom line. E, G and B sit on the other lines, and D, F and A sit in the spaces between. We draw a red circle and fill it with PAINT. In PLAY we glue the settings to the note with a plus sign. T4 is the speed, O3 is the octave, and L4 makes quarter notes. Then X moves 16 dots to the right. When the tune ends, line 150 goes back to wait for the next key."
+    }
+   ],
+   "run": "Type RUN. The menu appears. Press 1: the screen turns green, four blue lines appear, and red notes pop up one by one, each exactly as it plays. When the tune ends, the notes stay on screen. The menu is hidden behind the picture, so remember: press 1, 2 or 3 for another tune (the stave is cleaned first), and Q to stop.",
+   "tip": "Only the letters C D E F G A B may go in the DATA tunes, with no spaces. Commas separate one tune from the next, so never put a comma in the middle of a tune. Any other letter makes INSTR give 0, the note lands below the stave, and PLAY stops with an error message.",
+   "challenge": "Turn the music box into a little piano. Press one of the letters C, D, E, F, G, A or B, and that note plays and appears on the stave. When the stave is full, start a fresh page. Q stops.",
+   "challengeCode": [
+    "10 PMODE 3,1:PCLS 1:SCREEN 1,0:COLOR 3",
+    "20 FOR Y=66 TO 138 STEP 24:LINE(0,Y)-(255,Y),PSET:NEXT Y",
+    "30 X=16",
+    "40 K$=INKEY$:IF K$=\"Q\" THEN END",
+    "50 IF K$=\"\" THEN 40",
+    "60 P=INSTR(\"CDEFGAB\",K$):IF P=0 THEN 40",
+    "70 COLOR 4:CIRCLE(X,150-P*12),5:PAINT(X,150-P*12),4,4",
+    "80 PLAY \"T4O3L4\"+K$",
+    "90 X=X+16:IF X>240 THEN 10",
+    "100 GOTO 40"
+   ],
+   "nextTeaser": "Next time: GET and PUT. We grab a little dragon picture and slide it smoothly around the screen with the arrow keys!"
+  }
+ },
+ {
+  "n": 25,
+  "he": {
+   "title": "שיעור 25: הדרקון עף חלק עם GET ו-PUT",
+   "intro": "היום נצייר דרקון קטן, נשמור אותו בזיכרון כמו מדבקה, ונדביק אותו שוב ושוב במקום אחר. כך הוא יעוף על המסך עם החצים, בלי למחוק את כל המסך בכל צעד. לדרקון 32 לא היה שבב מיוחד לדמויות, ולכן הפקודות GET ו-PUT עשו את העבודה.",
+   "steps": [
+    {
+     "code": "10 PMODE 3,1:PCLS 1:SCREEN 1,0\n20 DIM D(20),B(20)\n30 GET(0,0)-(15,15),B",
+     "explain": "עוברים למסך הגרפי עם 4 צבעים וצובעים אותו בירוק. אחר כך מכינים שתי רשימות: ברשימה D נשמור את הדרקון, וברשימה B נשמור חתיכת רקע. הפקודה GET מצלמת ריבוע של 16 על 16 נקודות מהפינה, שעדיין ירוק לגמרי, ושומרת אותו ב-B. זה יהיה ה\"מחק\" שלנו."
+    },
+    {
+     "code": "40 COLOR 2:LINE(0,6)-(11,11),PSET,BF:LINE(10,2)-(15,7),PSET,BF\n50 DRAW \"C4BM3,6E4R3\":COLOR 4:PSET(13,4)\n60 GET(0,0)-(15,15),D:PUT(0,0)-(15,15),B",
+     "explain": "מציירים את הדרקון בפינה: מלבן צהוב לגוף ומלבן צהוב קטן לראש. הפקודה DRAW מציירת כנף אדומה: קופצת לנקודה, עולה באלכסון וממשיכה ימינה. נקודה אדומה אחת היא העין. עכשיו GET שומר את הדרקון ברשימה D, והפקודה PUT מדביקה מעליו את הרקע הירוק, כך שהפינה נקייה שוב."
+    },
+    {
+     "code": "70 COLOR 4:LINE(0,0)-(255,191),PSET,B\n80 X=120:Y=88",
+     "explain": "מציירים מסגרת אדומה סביב כל המסך. המשתנים X ו-Y אומרים איפה הדרקון נמצא, ובהתחלה הוא באמצע המסך."
+    },
+    {
+     "code": "90 PUT(X,Y)-(X+15,Y+15),D\n100 K$=INKEY$:IF K$=\"\" THEN 100\n110 PUT(X,Y)-(X+15,Y+15),B",
+     "explain": "הפקודה PUT מדביקה את הדרקון במקום שלו. אחר כך מחכים עד שנלחץ מקש. ברגע שנלחץ, מדביקים ריבוע ירוק מעל הדרקון כדי למחוק אותו, רגע לפני שהוא זז. ככה נמחק רק ריבוע קטן, ולא כל המסך, ולכן התנועה חלקה."
+    },
+    {
+     "code": "120 IF K$=CHR$(94) AND Y>4 THEN Y=Y-4\n130 IF K$=CHR$(10) AND Y<172 THEN Y=Y+4\n140 IF K$=CHR$(8) AND X>8 THEN X=X-8\n150 IF K$=CHR$(9) AND X<232 THEN X=X+8\n160 GOTO 90",
+     "explain": "לכל חץ יש קוד: 94 למעלה, 10 למטה, 8 שמאלה ו-9 ימינה. למעלה ולמטה הדרקון זז 4 נקודות, והצידה 8, כך שהוא נשאר בטורים מסודרים. הבדיקות עם Y>4 ו-X<232 שומרות שהוא לא יברח מהמסגרת. בסוף חוזרים לשורה 90 ומדביקים אותו במקום החדש."
+    }
+   ],
+   "run": "אחרי RUN המסך נהיה ירוק עם מסגרת אדומה, ובאמצע עומד דרקון צהוב עם כנף ועין אדומות. לחצו על החצים והוא יעוף לכל כיוון, עד המסגרת ולא יותר. כדי לעצור לוחצים Esc.",
+   "tip": "הריבוע ב-PUT חייב להיות באותו גודל כמו ב-GET. לכן כתוב X+15 ו-Y+15: מ-0 עד 15 יש בדיוק 16 נקודות. ואל תשכחו לכתוב את DIM לפני ה-GET, אחרת אין למחשב איפה לשמור את הציור.",
+   "challenge": "תנו לדרקון לירוק אש! כשלוחצים רווח, תופיע להבה אדומה מול הפה, יישמע צפצוף, והלהבה תיעלם.",
+   "challengeCode": [
+    "10 PMODE 3,1:PCLS 1:SCREEN 1,0",
+    "20 DIM D(20),B(20):GET(0,0)-(15,15),B",
+    "40 COLOR 2:LINE(0,6)-(11,11),PSET,BF:LINE(10,2)-(15,7),PSET,BF",
+    "50 DRAW \"C4BM3,6E4R3\":COLOR 4:PSET(13,4)",
+    "60 GET(0,0)-(15,15),D:PUT(0,0)-(15,15),B",
+    "70 COLOR 4:LINE(0,0)-(255,191),PSET,B:X=120:Y=88",
+    "90 PUT(X,Y)-(X+15,Y+15),D",
+    "100 K$=INKEY$:IF K$=\"\" THEN 100",
+    "105 IF K$=\" \" THEN COLOR 4:LINE(X+16,Y+5)-(X+22,Y+6),PSET,BF:SOUND 200,2:COLOR 1:LINE(X+16,Y+5)-(X+22,Y+6),PSET,BF:GOTO 100",
+    "110 PUT(X,Y)-(X+15,Y+15),B",
+    "120 IF K$=CHR$(94) AND Y>4 THEN Y=Y-4",
+    "130 IF K$=CHR$(10) AND Y<172 THEN Y=Y+4",
+    "140 IF K$=CHR$(8) AND X>8 THEN X=X-8",
+    "150 IF K$=CHR$(9) AND X<232 THEN X=X+8",
+    "160 GOTO 90"
+   ],
+   "nextTeaser": "בשיעור הבא נבנה מבוך קטן, והפקודה PPOINT תגלה מתי נגעתם בקיר!"
+  },
+  "en": {
+   "title": "Lesson 25: A Smooth-Flying Dragon with GET and PUT",
+   "intro": "Today we draw a little dragon, save it in memory like a sticker, and stick it down again and again somewhere else. That lets it fly around the screen with the arrow keys, without clearing the whole screen on every step. The Dragon 32 had no special sprite chip, so GET and PUT did the job.",
+   "steps": [
+    {
+     "code": "10 PMODE 3,1:PCLS 1:SCREEN 1,0\n20 DIM D(20),B(20)\n30 GET(0,0)-(15,15),B",
+     "explain": "We switch to the 4-colour graphics screen and paint it green. Then we make two lists: D will hold the dragon, and B will hold a piece of background. GET snaps a 16 by 16 square from the corner, which is still all green, and saves it in B. That's our \"eraser\"."
+    },
+    {
+     "code": "40 COLOR 2:LINE(0,6)-(11,11),PSET,BF:LINE(10,2)-(15,7),PSET,BF\n50 DRAW \"C4BM3,6E4R3\":COLOR 4:PSET(13,4)\n60 GET(0,0)-(15,15),D:PUT(0,0)-(15,15),B",
+     "explain": "We draw the dragon in the corner: a yellow box for the body and a small yellow box for the head. DRAW makes a red wing: it jumps to a spot, goes up diagonally, then right. One red dot is the eye. Now GET saves the dragon in D, and PUT sticks the green background over it, so the corner is clean again."
+    },
+    {
+     "code": "70 COLOR 4:LINE(0,0)-(255,191),PSET,B\n80 X=120:Y=88",
+     "explain": "A red frame goes around the whole screen. X and Y say where the dragon is, and it starts in the middle."
+    },
+    {
+     "code": "90 PUT(X,Y)-(X+15,Y+15),D\n100 K$=INKEY$:IF K$=\"\" THEN 100\n110 PUT(X,Y)-(X+15,Y+15),B",
+     "explain": "PUT sticks the dragon in its place. Then we wait for a key. As soon as one is pressed, we stick a green square over the dragon to erase it, just before it moves. Only one small square gets erased, not the whole screen, so the movement is smooth."
+    },
+    {
+     "code": "120 IF K$=CHR$(94) AND Y>4 THEN Y=Y-4\n130 IF K$=CHR$(10) AND Y<172 THEN Y=Y+4\n140 IF K$=CHR$(8) AND X>8 THEN X=X-8\n150 IF K$=CHR$(9) AND X<232 THEN X=X+8\n160 GOTO 90",
+     "explain": "Each arrow has a code: 94 up, 10 down, 8 left and 9 right. Up and down the dragon moves 4 dots, sideways 8, so it stays in neat columns. Checks like Y>4 and X<232 keep it inside the frame. Then back to line 90 to stick it down in its new spot."
+    }
+   ],
+   "run": "After RUN the screen turns green with a red frame, and a yellow dragon with a red wing and eye sits in the middle. Press the arrow keys and it flies in every direction, right up to the frame and no further. Press Esc to stop.",
+   "tip": "The square in PUT must be the same size as in GET. That's why it says X+15 and Y+15: from 0 to 15 is exactly 16 dots. And always put DIM before GET, or the computer has nowhere to keep the picture.",
+   "challenge": "Make the dragon breathe fire! When you press SPACE, a red flame appears in front of its mouth, it beeps, and the flame disappears.",
+   "challengeCode": [
+    "10 PMODE 3,1:PCLS 1:SCREEN 1,0",
+    "20 DIM D(20),B(20):GET(0,0)-(15,15),B",
+    "40 COLOR 2:LINE(0,6)-(11,11),PSET,BF:LINE(10,2)-(15,7),PSET,BF",
+    "50 DRAW \"C4BM3,6E4R3\":COLOR 4:PSET(13,4)",
+    "60 GET(0,0)-(15,15),D:PUT(0,0)-(15,15),B",
+    "70 COLOR 4:LINE(0,0)-(255,191),PSET,B:X=120:Y=88",
+    "90 PUT(X,Y)-(X+15,Y+15),D",
+    "100 K$=INKEY$:IF K$=\"\" THEN 100",
+    "105 IF K$=\" \" THEN COLOR 4:LINE(X+16,Y+5)-(X+22,Y+6),PSET,BF:SOUND 200,2:COLOR 1:LINE(X+16,Y+5)-(X+22,Y+6),PSET,BF:GOTO 100",
+    "110 PUT(X,Y)-(X+15,Y+15),B",
+    "120 IF K$=CHR$(94) AND Y>4 THEN Y=Y-4",
+    "130 IF K$=CHR$(10) AND Y<172 THEN Y=Y+4",
+    "140 IF K$=CHR$(8) AND X>8 THEN X=X-8",
+    "150 IF K$=CHR$(9) AND X<232 THEN X=X+8",
+    "160 GOTO 90"
+   ],
+   "nextTeaser": "Next time we build a tiny maze, and PPOINT will catch you the moment you touch a wall!"
+  }
+ },
+ {
+  "n": 26,
+  "he": {
+   "title": "שיעור 26: מבוך קטן עם קירות אסור לגעת עם PPOINT",
+   "intro": "היום נבנה מבוך אדום על דשא ירוק. אתם ריבוע כחול קטן, והמטרה היא להגיע לאוצר הצהוב בלי לגעת בקירות. המחשב יגלה כל נגיעה בעזרת פקודה חדשה, PPOINT, שבודקת איזה צבע יש בנקודה על המסך.",
+   "steps": [
+    {
+     "code": "10 PMODE 3,1:PCLS 1:SCREEN 1,0\n20 COLOR 4\n30 FOR I=1 TO 7:READ A,B,C,D:LINE(A,B)-(C,D),PSET,BF:NEXT I\n400 DATA 0,0,255,7,0,184,255,191,0,0,7,191,248,0,255,191,64,0,71,140,128,52,135,191,192,0,199,140",
+     "explain": "עוברים למסך הגרפי וצובעים אותו בירוק (1). אחר כך בוחרים אדום (4) ומציירים 7 מלבנים מלאים. כל מלבן לוקח מהשורה DATA ארבעה מספרים: פינה שמאלית עליונה ופינה ימנית תחתונה. ארבעת הראשונים הם המסגרת מסביב, ושלושת האחרונים הם הקירות בפנים: אחד יורד מלמעלה, אחד עולה מלמטה, ועוד אחד יורד מלמעלה."
+    },
+    {
+     "code": "40 COLOR 2:LINE(216,20)-(239,40),PSET,BF\n50 TIMER=0:BU=0\n60 X=24:Y=20\n70 COLOR 3:LINE(X,Y)-(X+5,Y+5),PSET,BF\n80 K$=INKEY$:IF K$=\"\" THEN 80",
+     "explain": "בצהוב (2) מציירים את האוצר בפינה הימנית העליונה. השעון TIMER מתאפס, וגם BU, שסופר כמה פעמים נתקלתם בקיר. הריבוע שלכם מתחיל במקום (24,20), והוא מצויר בכחול (3) בגודל 6 על 6 נקודות. בשורה 80 המחשב מחכה שתלחצו על מקש."
+    },
+    {
+     "code": "90 NX=X:NY=Y\n100 IF K$=CHR$(94) THEN NY=Y-4\n110 IF K$=CHR$(10) THEN NY=Y+4\n120 IF K$=CHR$(8) THEN NX=X-4\n130 IF K$=CHR$(9) THEN NX=X+4",
+     "explain": "עוד לא זזים! קודם מחשבים לאן רוצים ללכת. המשתנים NX ו-NY הם המקום החדש. לכל חץ יש קוד: 94 למעלה, 10 למטה, 8 שמאלה ו-9 ימינה. כל לחיצה מזיזה 4 נקודות."
+    },
+    {
+     "code": "140 P=PPOINT(NX,NY):Q=PPOINT(NX+5,NY):R=PPOINT(NX,NY+5):T=PPOINT(NX+5,NY+5)\n150 IF P=4 OR Q=4 OR R=4 OR T=4 THEN 200\n200 SOUND 30,3:BU=BU+1\n210 COLOR 1:LINE(X,Y)-(X+5,Y+5),PSET,BF:GOTO 60",
+     "explain": "זה הקסם של השיעור. הפקודה PPOINT בודקת איזה צבע יש בכל אחת מארבע הפינות של המקום החדש. אם באחת מהן יש אדום (4), זה קיר! קופצים לשורה 200: נשמע צפצוף, מוסיפים אחד למונה הנגיעות, מוחקים את הריבוע (צובעים אותו בירוק) וחוזרים להתחלה. השעון ממשיך לרוץ, אז כל נגיעה עולה לכם זמן."
+    },
+    {
+     "code": "160 COLOR 1:LINE(X,Y)-(X+5,Y+5),PSET,BF\n170 X=NX:Y=NY\n180 IF P=2 OR Q=2 OR R=2 OR T=2 THEN 300\n190 GOTO 70",
+     "explain": "אם אין קיר, אפשר לזוז. מוחקים את הריבוע הישן בירוק, ומעבירים את X ו-Y למקום החדש. אם אחת הפינות נגעה בצהוב (2), הגעתם לאוצר! אחרת חוזרים לשורה 70, מציירים את הריבוע ומחכים למקש הבא."
+    },
+    {
+     "code": "300 COLOR 3:LINE(X,Y)-(X+5,Y+5),PSET,BF:PLAY \"T5O3L8CEGL4O4C\"\n310 T=INT(TIMER/50)\n320 SCREEN 0,0:CLS:PRINT \"YOU ESCAPED THE MAZE!\":PRINT \"TIME:\";T;\"SECONDS\":PRINT \"BUMPS:\";BU\n330 END",
+     "explain": "ניצחון! הריבוע מצויר על האוצר ומתנגנת מנגינה קטנה. השעון סופר 50 פעמים בשנייה, לכן מחלקים ב-50 כדי לקבל שניות. בסוף חוזרים למסך הטקסט ורואים כמה זמן לקח וכמה פעמים נתקלתם בקיר."
+    }
+   ],
+   "run": "כתבו RUN ולחצו Enter. יופיע מבוך של קירות אדומים על רקע ירוק, ריבוע כחול בפינה השמאלית העליונה ואוצר צהוב בפינה הימנית העליונה. זוזו עם החצים. רמז לדרך: למטה מתחת לקיר הראשון, למעלה מעל הקיר השני, שוב למטה מתחת לשלישי, ואז למעלה אל האוצר. נגעתם בקיר? צפצוף, וחוזרים להתחלה. כשתגיעו לצהוב תשמעו מנגינה, ואחריה יופיעו הזמן ומספר הנגיעות.",
+   "tip": "בשנת 1983 ילדים הקלידו תוכניות שלמות מתוך מגזינים, ומספר אחד שגוי בשורת DATA היה מזיז קיר למקום מוזר. אם קיר נראה עקום או חוסם את הדרך, בדקו את שורה 400 מספר אחרי מספר. ועוד דבר: בודקים ארבע פינות כי פינה אחת לבד לא מספיקה. צד אחר של הריבוע עלול להיכנס לקיר.",
+   "challenge": "תוכנית חדשה: נחש אור! הנחש זוחל לבד ומשאיר אחריו שובל צהוב. החצים משנים לו כיוון. אם הוא נוגע בקיר האדום או בשובל של עצמו, המשחק נגמר. גם כאן PPOINT בודק: אם הצבע בנקודה הבאה הוא לא ירוק, זו התנגשות. כמה ארוך תצליחו לגדל אותו?",
+   "challengeCode": [
+    "10 PMODE 3,1:PCLS 1:SCREEN 1,0",
+    "20 COLOR 4:LINE(0,0)-(255,191),PSET,BF",
+    "30 COLOR 1:LINE(4,4)-(251,187),PSET,BF",
+    "40 X=128:Y=96:DX=2:DY=0:S=0",
+    "50 K$=INKEY$",
+    "60 IF K$=CHR$(94) THEN DX=0:DY=-2",
+    "70 IF K$=CHR$(10) THEN DX=0:DY=2",
+    "80 IF K$=CHR$(8) THEN DX=-2:DY=0",
+    "90 IF K$=CHR$(9) THEN DX=2:DY=0",
+    "100 X=X+DX:Y=Y+DY",
+    "110 IF PPOINT(X,Y)<>1 THEN 140",
+    "120 COLOR 2:LINE(X,Y)-(X+1,Y+1),PSET,BF:S=S+1",
+    "130 GOTO 50",
+    "140 SOUND 20,8:SCREEN 0,0:CLS:PRINT \"CRASH! LENGTH:\";S",
+    "150 END"
+   ],
+   "nextTeaser": "בשיעור הבא מתחילים משחק גרפי גדול: דרקון שעף מעל האדמה, בעזרת GET ו-PUT!"
+  },
+  "en": {
+   "title": "Lesson 26: A Tiny Maze with PPOINT (Don't Touch the Walls!)",
+   "intro": "Today we build a red maze on green grass. You are a little blue square, and your goal is to reach the yellow treasure without touching the walls. The computer spots every bump with a new command, PPOINT, which checks what colour a point on the screen is.",
+   "steps": [
+    {
+     "code": "10 PMODE 3,1:PCLS 1:SCREEN 1,0\n20 COLOR 4\n30 FOR I=1 TO 7:READ A,B,C,D:LINE(A,B)-(C,D),PSET,BF:NEXT I\n400 DATA 0,0,255,7,0,184,255,191,0,0,7,191,248,0,255,191,64,0,71,140,128,52,135,191,192,0,199,140",
+     "explain": "We switch to the graphics screen and paint it green (1). Then we pick red (4) and draw 7 filled boxes. Each box takes four numbers from the DATA line: the top-left corner and the bottom-right corner. The first four boxes are the border all around. The last three are the inside walls: one hangs down from the top, one rises from the bottom, and one more hangs down from the top."
+    },
+    {
+     "code": "40 COLOR 2:LINE(216,20)-(239,40),PSET,BF\n50 TIMER=0:BU=0\n60 X=24:Y=20\n70 COLOR 3:LINE(X,Y)-(X+5,Y+5),PSET,BF\n80 K$=INKEY$:IF K$=\"\" THEN 80",
+     "explain": "We draw the treasure in yellow (2) in the top-right corner. TIMER goes back to zero, and so does BU, which counts how many times you bump a wall. Your square starts at (24,20). It is drawn in blue (3) and is 6 by 6 dots. Line 80 waits for you to press a key."
+    },
+    {
+     "code": "90 NX=X:NY=Y\n100 IF K$=CHR$(94) THEN NY=Y-4\n110 IF K$=CHR$(10) THEN NY=Y+4\n120 IF K$=CHR$(8) THEN NX=X-4\n130 IF K$=CHR$(9) THEN NX=X+4",
+     "explain": "Don't move yet! First we work out where we WANT to go. NX and NY hold the new place. Each arrow has a code: 94 is up, 10 is down, 8 is left and 9 is right. Each press moves 4 dots."
+    },
+    {
+     "code": "140 P=PPOINT(NX,NY):Q=PPOINT(NX+5,NY):R=PPOINT(NX,NY+5):T=PPOINT(NX+5,NY+5)\n150 IF P=4 OR Q=4 OR R=4 OR T=4 THEN 200\n200 SOUND 30,3:BU=BU+1\n210 COLOR 1:LINE(X,Y)-(X+5,Y+5),PSET,BF:GOTO 60",
+     "explain": "Here's the magic of this lesson. PPOINT checks the colour at each of the four corners of the new place. If any corner is red (4), that's a wall! We jump to line 200. There's a beep, the bump counter goes up by one, the square is erased (painted green) and you go back to the start. The clock keeps ticking, so every bump costs you time."
+    },
+    {
+     "code": "160 COLOR 1:LINE(X,Y)-(X+5,Y+5),PSET,BF\n170 X=NX:Y=NY\n180 IF P=2 OR Q=2 OR R=2 OR T=2 THEN 300\n190 GOTO 70",
+     "explain": "No wall? Then we can move. We erase the old square in green and move X and Y to the new place. If a corner touched yellow (2), you reached the treasure! If not, we go back to line 70, draw the square and wait for the next key."
+    },
+    {
+     "code": "300 COLOR 3:LINE(X,Y)-(X+5,Y+5),PSET,BF:PLAY \"T5O3L8CEGL4O4C\"\n310 T=INT(TIMER/50)\n320 SCREEN 0,0:CLS:PRINT \"YOU ESCAPED THE MAZE!\":PRINT \"TIME:\";T;\"SECONDS\":PRINT \"BUMPS:\";BU\n330 END",
+     "explain": "Victory! The square is drawn on the treasure and a little tune plays. TIMER counts 50 times a second, so we divide by 50 to get seconds. Finally we go back to the text screen and show how long you took and how many bumps you had."
+    }
+   ],
+   "run": "Type RUN and press Enter. You'll see a maze of red walls on green, a blue square in the top-left corner and a yellow treasure in the top-right. Move with the arrow keys. A hint for the route: go down under the first wall, up over the second, down again under the third, then up to the treasure. Touch a wall and you hear a beep and go back to the start. Reach the yellow and a tune plays, and then your time and bumps appear.",
+   "tip": "In 1983, kids typed whole programs from magazines, and one wrong number in a DATA line could put a wall somewhere strange. If a wall looks wrong or blocks the path, check line 400 number by number. Also, we test four corners because one corner is not enough: another side of the square could slide into a wall.",
+   "challenge": "A new program: Light Snake! The snake crawls on its own and leaves a yellow trail. The arrows change its direction. If it touches the red wall or its own trail, the game is over. PPOINT checks this too: if the next point is not green, it's a crash. How long can you make it grow?",
+   "challengeCode": [
+    "10 PMODE 3,1:PCLS 1:SCREEN 1,0",
+    "20 COLOR 4:LINE(0,0)-(255,191),PSET,BF",
+    "30 COLOR 1:LINE(4,4)-(251,187),PSET,BF",
+    "40 X=128:Y=96:DX=2:DY=0:S=0",
+    "50 K$=INKEY$",
+    "60 IF K$=CHR$(94) THEN DX=0:DY=-2",
+    "70 IF K$=CHR$(10) THEN DX=0:DY=2",
+    "80 IF K$=CHR$(8) THEN DX=-2:DY=0",
+    "90 IF K$=CHR$(9) THEN DX=2:DY=0",
+    "100 X=X+DX:Y=Y+DY",
+    "110 IF PPOINT(X,Y)<>1 THEN 140",
+    "120 COLOR 2:LINE(X,Y)-(X+1,Y+1),PSET,BF:S=S+1",
+    "130 GOTO 50",
+    "140 SOUND 20,8:SCREEN 0,0:CLS:PRINT \"CRASH! LENGTH:\";S",
+    "150 END"
+   ],
+   "nextTeaser": "Next time we start a big graphics game: a dragon flying over the ground, with GET and PUT!"
+  }
+ },
+ {
+  "n": 27,
+  "he": {
+   "title": "משחק גרפי, חלק 1: דרקון עף מעל האדמה",
+   "intro": "היום מתחילים משחק גרפי חדש שייקרא בסוף DRAGFLY! נצייר דרקון צהוב קטן, נשמור אותו עם GET, ונעיף אותו למעלה ולמטה בשמיים כחולים מעל אדמה ירוקה. בשיעורים הבאים יגיעו מגדלים, ניקוד וצלילים.",
+   "steps": [
+    {
+     "code": "10 DIM D(20),B(20)\n30 PMODE 3,1:PCLS 3:SCREEN 1,0",
+     "explain": "מכינים שתי רשימות. ברשימה D נשמור את הדרקון, וברשימה B נשמור ריבוע של שמיים ריקים. אחר כך עוברים למסך הגרפי עם 4 צבעים, והפקודה PCLS 3 צובעת את כל המסך בכחול. אלה השמיים שלנו."
+    },
+    {
+     "code": "40 GET(0,0)-(15,15),B:COLOR 2:LINE(0,6)-(11,11),PSET,BF:LINE(10,2)-(15,7),PSET,BF\n50 DRAW \"C2BM3,6E4R3\":COLOR 3:PSET(13,4):GET(0,0)-(15,15),D:PUT(0,0)-(15,15),B",
+     "explain": "קודם שומרים ריבוע כחול ריק בגודל 16 על 16 ברשימה B. עכשיו מציירים בפינה את הדרקון: מלבן צהוב לגוף ומלבן צהוב קטן לראש. הפקודה DRAW מוסיפה כנף באלכסון, ונקודה כחולה אחת היא העין. הפקודה GET מצלמת את הדרקון לתוך D. בסוף מדביקים את הריבוע הכחול מעליו, והפינה שוב נקייה. זה טריק נחמד: ציירנו, צילמנו ומחקנו!"
+    },
+    {
+     "code": "60 COLOR 1:LINE(0,170)-(255,191),PSET,BF\n70 Y=80\n80 PUT(32,Y)-(47,Y+15),D",
+     "explain": "מלבן ירוק מלא בתחתית המסך הוא האדמה. המשתנה Y אומר כמה גבוה הדרקון, ומתחילים באמצע (80). עכשיו הפקודה PUT מדביקה את הדרקון בצד שמאל של המסך, בעמודה 32."
+    },
+    {
+     "code": "100 K$=INKEY$:NY=Y\n110 IF K$=CHR$(94) AND Y>8 THEN NY=Y-8\n120 IF K$=CHR$(10) AND Y<152 THEN NY=Y+8",
+     "explain": "בודקים איזה מקש נלחץ, בלי לחכות. המשתנה NY הוא המקום החדש של הדרקון. התו CHR$(94) הוא החץ למעלה, והתו CHR$(10) הוא החץ למטה. כל לחיצה מזיזה 8 נקודות. התנאים Y>8 ו-Y<152 שומרים שהדרקון לא יברח מהמסך למעלה ולא יתרסק באדמה."
+    },
+    {
+     "code": "130 IF NY<>Y THEN PUT(32,Y)-(47,Y+15),B:Y=NY\n230 PUT(32,Y)-(47,Y+15),D\n390 GOTO 100",
+     "explain": "אם הדרקון זז, מדביקים ריבוע שמיים ריק במקום הישן. כך הוא נמחק בלי להשאיר שובל. אחר כך מדביקים את הדרקון במקום החדש, וחוזרים לבדוק מקשים שוב ושוב. שמתם לב לחורים במספרי השורות? כמו ברשימות התוכניות שילדים העתיקו מהעיתונים ב-1983, השארנו מקום. שם ייכנסו המגדלים והניקוד בשיעורים הבאים."
+    }
+   ],
+   "run": "אחרי RUN המסך נצבע בכחול, למטה מופיעה אדמה ירוקה, ובצד שמאל עומד דרקון צהוב קטן עם כנף ועין. לחצו על החץ למעלה ועל החץ למטה, והדרקון יעוף. הוא נעצר ליד התקרה ומעל האדמה. כדי לעצור את התוכנית לוחצים Esc.",
+   "tip": "בפקודה PUT הריבוע חייב להיות באותו גודל כמו בפקודה GET: 16 על 16, כלומר מ-Y עד Y+15. אם תכתבו Y+16 או מספר אחר, המחשב יתלונן או שהדרקון ייראה משובש.",
+   "challenge": "תנו לדרקון לעוף גם ימינה ושמאלה! החץ שמאלה הוא CHR$(8), והחץ ימינה הוא CHR$(9). תצטרכו משתנה X לעמודה, בדיוק כמו Y לגובה.",
+   "challengeCode": [
+    "10 DIM D(20),B(20)",
+    "20 PMODE 3,1:PCLS 3:SCREEN 1,0",
+    "30 GET(0,0)-(15,15),B:COLOR 2:LINE(0,6)-(11,11),PSET,BF:LINE(10,2)-(15,7),PSET,BF",
+    "40 DRAW \"C2BM3,6E4R3\":COLOR 3:PSET(13,4):GET(0,0)-(15,15),D:PUT(0,0)-(15,15),B",
+    "50 COLOR 1:LINE(0,170)-(255,191),PSET,BF",
+    "60 X=32:Y=80",
+    "70 PUT(X,Y)-(X+15,Y+15),D",
+    "80 K$=INKEY$:NX=X:NY=Y",
+    "90 IF K$=CHR$(94) AND Y>8 THEN NY=Y-8",
+    "100 IF K$=CHR$(10) AND Y<152 THEN NY=Y+8",
+    "110 IF K$=CHR$(8) AND X>0 THEN NX=X-8",
+    "120 IF K$=CHR$(9) AND X<232 THEN NX=X+8",
+    "130 IF NX<>X OR NY<>Y THEN PUT(X,Y)-(X+15,Y+15),B:X=NX:Y=NY",
+    "140 PUT(X,Y)-(X+15,Y+15),D",
+    "150 GOTO 80"
+   ],
+   "nextTeaser": "בשיעור הבא מגיעים מגדלים שזזים לעבר הדרקון, ותצטרכו להתחמק מהם!"
+  },
+  "en": {
+   "title": "Graphics Game Part 1: A Dragon Flying Over the Ground",
+   "intro": "Today we start a new graphics game. In the end it will be called DRAGFLY! We'll draw a little yellow dragon, save it with GET, and fly it up and down through a blue sky above green ground. Towers, score and sounds come in the next lessons.",
+   "steps": [
+    {
+     "code": "10 DIM D(20),B(20)\n30 PMODE 3,1:PCLS 3:SCREEN 1,0",
+     "explain": "We make two lists. D will hold the dragon, and B will hold a square of empty sky. Then we switch to the 4-colour graphics screen, and PCLS 3 paints the whole screen blue. That's our sky."
+    },
+    {
+     "code": "40 GET(0,0)-(15,15),B:COLOR 2:LINE(0,6)-(11,11),PSET,BF:LINE(10,2)-(15,7),PSET,BF\n50 DRAW \"C2BM3,6E4R3\":COLOR 3:PSET(13,4):GET(0,0)-(15,15),D:PUT(0,0)-(15,15),B",
+     "explain": "First we save an empty blue 16x16 square into B. Then we draw the dragon in the corner: a yellow box for the body and a smaller yellow box for the head. DRAW adds a diagonal wing, and one blue dot is the eye. GET snaps a picture of the dragon into D. Finally we PUT the empty blue square on top, and the corner is clean again. A neat trick: draw it, snap it, wipe it!"
+    },
+    {
+     "code": "60 COLOR 1:LINE(0,170)-(255,191),PSET,BF\n70 Y=80\n80 PUT(32,Y)-(47,Y+15),D",
+     "explain": "A filled green box at the bottom is the ground. The variable Y says how high the dragon is, and we start in the middle (80). PUT pastes the dragon on the left side of the screen, at column 32."
+    },
+    {
+     "code": "100 K$=INKEY$:NY=Y\n110 IF K$=CHR$(94) AND Y>8 THEN NY=Y-8\n120 IF K$=CHR$(10) AND Y<152 THEN NY=Y+8",
+     "explain": "We check which key is pressed, without waiting. NY is the dragon's new place. CHR$(94) is the up arrow and CHR$(10) is the down arrow. Each press moves 8 dots. The checks Y>8 and Y<152 stop the dragon escaping off the top or crashing into the ground."
+    },
+    {
+     "code": "130 IF NY<>Y THEN PUT(32,Y)-(47,Y+15),B:Y=NY\n230 PUT(32,Y)-(47,Y+15),D\n390 GOTO 100",
+     "explain": "If the dragon moved, we paste an empty sky square over the old spot. That erases it without leaving a trail. Then we paste the dragon in its new spot and go back to check the keys again and again. Notice the gaps in the line numbers? Like the listings kids typed in from magazines in 1983, we left room. Towers and score will move in there in the next lessons."
+    }
+   ],
+   "run": "After RUN the screen turns blue, green ground appears at the bottom, and a small yellow dragon with a wing and an eye sits on the left. Press the up and down arrows and the dragon flies. It stops near the top and just above the ground. Press Esc to stop the program.",
+   "tip": "The square in PUT must be the same size as in GET: 16 by 16, so from Y to Y+15. If you type Y+16 or another number, the computer may complain or the dragon will look scrambled.",
+   "challenge": "Let the dragon fly left and right too! The left arrow is CHR$(8) and the right arrow is CHR$(9). You'll need a variable X for the column, just like Y for the height.",
+   "challengeCode": [
+    "10 DIM D(20),B(20)",
+    "20 PMODE 3,1:PCLS 3:SCREEN 1,0",
+    "30 GET(0,0)-(15,15),B:COLOR 2:LINE(0,6)-(11,11),PSET,BF:LINE(10,2)-(15,7),PSET,BF",
+    "40 DRAW \"C2BM3,6E4R3\":COLOR 3:PSET(13,4):GET(0,0)-(15,15),D:PUT(0,0)-(15,15),B",
+    "50 COLOR 1:LINE(0,170)-(255,191),PSET,BF",
+    "60 X=32:Y=80",
+    "70 PUT(X,Y)-(X+15,Y+15),D",
+    "80 K$=INKEY$:NX=X:NY=Y",
+    "90 IF K$=CHR$(94) AND Y>8 THEN NY=Y-8",
+    "100 IF K$=CHR$(10) AND Y<152 THEN NY=Y+8",
+    "110 IF K$=CHR$(8) AND X>0 THEN NX=X-8",
+    "120 IF K$=CHR$(9) AND X<232 THEN NX=X+8",
+    "130 IF NX<>X OR NY<>Y THEN PUT(X,Y)-(X+15,Y+15),B:X=NX:Y=NY",
+    "140 PUT(X,Y)-(X+15,Y+15),D",
+    "150 GOTO 80"
+   ],
+   "nextTeaser": "Next lesson, towers start moving toward the dragon, and you'll have to dodge them!"
+  }
+ },
+ {
+  "n": 28,
+  "he": {
+   "title": "שיעור 28: מגדלים שבאים מולכם",
+   "intro": "בשיעור הקודם הדרקון שלנו למד לעוף מעל האדמה. היום נוסיף לו מכשולים: מגדלים אדומים שמופיעים מימין וזזים לאט לאט אל הדרקון. פעם מגדל צומח מהאדמה, ופעם הוא תלוי מהשמיים. מתחילים מהתוכנית של השיעור הקודם: אם שמרתם אותה, טענו אותה עם CLOAD, ואם לא, הקלידו אותה שוב מהשיעור הקודם. אחר כך מוסיפים ומשנים רק את השורות שכאן.",
+   "steps": [
+    {
+     "code": "70 Y=80:GOSUB 600",
+     "explain": "זו שורה ששינינו. הוספנו בסוף את GOSUB 600, שקופץ לחלק שבונה מגדל חדש. ככה, עוד לפני שהמשחק מתחיל, כבר עומד מגדל ראשון בצד ימין."
+    },
+    {
+     "code": "600 TX=240:IF RND(2)=1 THEN T1=RND(80)+70:T2=169:C=15 ELSE T1=0:T2=RND(80)+20:C=0\n610 COLOR 4:LINE(TX,T1)-(TX+15,T2),PSET,BF:RETURN",
+     "explain": "כאן נולד מגדל. המשתנה TX הוא המקום שלו משמאל לימין, והוא מתחיל ב-240, ממש בקצה הימני. אחר כך הפקודה RND(2) מטילה מטבע. אם יצא 1, המגדל צומח מהאדמה: הוא מתחיל בגובה אקראי (T1) ונגמר בשורה 169, בדיוק מעל הדשא. אחרת המגדל תלוי מלמעלה: מתחיל ב-0 ונגמר בגובה אקראי (T2). את C נשמור לשיעור הבא. בשורה 610 מציירים מלבן אדום מלא ברוחב 16, וה-RETURN חוזר לשורה 70."
+    },
+    {
+     "code": "200 TX=TX-8:COLOR 4:LINE(TX,T1)-(TX+7,T2),PSET,BF\n210 COLOR 3:LINE(TX+16,T1)-(TX+23,T2),PSET,BF",
+     "explain": "זה הקסם של התנועה. בכל סיבוב המגדל זז 8 נקודות שמאלה. במקום לצייר את כולו מחדש, מוסיפים פס אדום צר בצד שמאל שלו, ומוחקים פס בצד ימין שלו, בצבע השמיים הכחול (3). המגדל נראה כאילו הוא זוחל שמאלה, והמחשב עובד הרבה פחות."
+    },
+    {
+     "code": "240 IF TX=0 THEN GOSUB 500\n500 COLOR 3:LINE(0,T1)-(15,T2),PSET,BF",
+     "explain": "כשהמגדל מגיע לקצה השמאלי (TX הוא 0), קופצים לשורה 500. היא מוחקת את המגדל הישן בכחול. שימו לב: אין בה RETURN! התוכנית פשוט ממשיכה לשורה 600, בונה מגדל חדש מימין, וה-RETURN של שורה 610 מחזיר אותה למשחק. ככה שתי משימות חולקות סוף אחד."
+    }
+   ],
+   "run": "הקלידו RUN. הדרקון מופיע משמאל, ומגדל אדום מופיע בקצה הימני. המגדל זז שמאלה, צעד אחרי צעד. כשהוא נעלם, מגיע מגדל חדש, פעם מלמטה ופעם מלמעלה. עם החץ למעלה והחץ למטה מזיזים את הדרקון. בינתיים הדרקון עובר דרך המגדלים בלי שום דבר רע. את ההתנגשות נלמד בשיעור הבא. לעצירה לוחצים Esc.",
+   "tip": "אל תוסיפו RETURN בסוף שורה 500! זה נראה כמו שכחה, אבל זה בכוונה. בלי RETURN התוכנית ממשיכה לשורה 600 ובונה מגדל חדש. ככה בדיוק עשו אז בתוכניות מהמגזינים, כדי לחסוך שורות וזיכרון.",
+   "challenge": "תנו למגדלים לרוץ מהר פי 2: שהם יזוזו 16 נקודות בכל סיבוב במקום 8. רמז: גם הפס האדום וגם הפס הכחול צריכים להיות עכשיו ברוחב 16.",
+   "challengeCode": [
+    "5 REM CHANGE THESE LINES IN THIS LESSON'S PROGRAM",
+    "200 TX=TX-16:COLOR 4:LINE(TX,T1)-(TX+15,T2),PSET,BF",
+    "210 COLOR 3:LINE(TX+16,T1)-(TX+31,T2),PSET,BF"
+   ],
+   "nextTeaser": "בשיעור הבא הדרקון כבר לא יעבור דרך מגדלים: נבדוק התנגשות עם PPOINT, נספור נקודות ונוסיף צלילים."
+  },
+  "en": {
+   "title": "Lesson 28: Towers Coming at You",
+   "intro": "Last lesson our dragon learned to fly above the ground. Today we give it obstacles: red towers that appear on the right and slide slowly toward the dragon. Sometimes a tower grows from the ground, sometimes it hangs from the sky. Start from last lesson's program: if you saved it, load it with CLOAD, and if not, type it in again from last lesson. Then add or change only the lines shown here.",
+   "steps": [
+    {
+     "code": "70 Y=80:GOSUB 600",
+     "explain": "This is a changed line. We added GOSUB 600 at the end, which jumps to the part that builds a new tower. So even before the game starts, the first tower is already standing on the right."
+    },
+    {
+     "code": "600 TX=240:IF RND(2)=1 THEN T1=RND(80)+70:T2=169:C=15 ELSE T1=0:T2=RND(80)+20:C=0\n610 COLOR 4:LINE(TX,T1)-(TX+15,T2),PSET,BF:RETURN",
+     "explain": "This is where a tower is born. TX is its position from left to right, and it starts at 240, right at the edge. Then RND(2) flips a coin. If it says 1, the tower grows from the ground: it starts at a random height (T1) and ends at row 169, just above the grass. Otherwise the tower hangs from above: it starts at 0 and ends at a random height (T2). We'll save C for next lesson. Line 610 draws a filled red box 16 wide, and RETURN goes back to line 70."
+    },
+    {
+     "code": "200 TX=TX-8:COLOR 4:LINE(TX,T1)-(TX+7,T2),PSET,BF\n210 COLOR 3:LINE(TX+16,T1)-(TX+23,T2),PSET,BF",
+     "explain": "Here's the movement trick. Each time round the loop, the tower moves 8 dots left. Instead of redrawing the whole thing, we add a thin red strip on its left side and wipe a strip off its right side in sky blue (3). The tower seems to crawl left, and the computer does much less work."
+    },
+    {
+     "code": "240 IF TX=0 THEN GOSUB 500\n500 COLOR 3:LINE(0,T1)-(15,T2),PSET,BF",
+     "explain": "When the tower reaches the left edge (TX is 0), we jump to line 500. It wipes the old tower away in blue. Notice: there's no RETURN there! The program simply carries on into line 600, builds a new tower on the right, and the RETURN in line 610 takes it back to the game. Two jobs share one ending."
+    }
+   ],
+   "run": "Type RUN. The dragon appears on the left, and a red tower appears at the right edge. The tower slides left, step by step. When it disappears, a new one arrives, sometimes from below, sometimes from above. Use the up and down arrows to move the dragon. For now the dragon flies straight through the towers and nothing bad happens. Crashing comes next lesson. Press Esc to stop.",
+   "tip": "Don't add a RETURN at the end of line 500! It looks like a mistake, but it's on purpose. Without RETURN the program runs on into line 600 and builds a new tower. Programs in the old magazines used tricks like this to save lines and memory.",
+   "challenge": "Make the towers twice as fast: let them move 16 dots each time instead of 8. Hint: the red strip and the blue strip both need to be 16 wide now.",
+   "challengeCode": [
+    "5 REM CHANGE THESE LINES IN THIS LESSON'S PROGRAM",
+    "200 TX=TX-16:COLOR 4:LINE(TX,T1)-(TX+15,T2),PSET,BF",
+    "210 COLOR 3:LINE(TX+16,T1)-(TX+31,T2),PSET,BF"
+   ],
+   "nextTeaser": "Next lesson the dragon can't fly through towers anymore: we'll check for crashes with PPOINT, keep score and add sounds."
+  }
+ },
+ {
+  "n": 29,
+  "he": {
+   "title": "משחק גרפי, חלק 3: בום! התנגשות, ניקוד וצלילים",
+   "intro": "עד עכשיו הדרקון עף דרך המגדלים כמו רוח רפאים. היום הוא סוף סוף יכול להיפגע! נלמד אותו לבדוק עם PPOINT אם הוא נגע במגדל אדום, נספור כל מגדל שעברנו, ונוסיף צפצופים ומנגינה עצובה כשהמשחק נגמר. מתחילים מהתוכנית של השיעור הקודם: אם שמרתם אותה, טענו אותה עם CLOAD והשם שבחרתם, ואם לא, הקלידו אותה שוב מהשיעור הקודם. ב-1983 ילדים הקלידו ככה משחקים מתוך מגזינים, שורה אחרי שורה.",
+   "steps": [
+    {
+     "code": "70 Y=80:SC=0:GOSUB 600",
+     "explain": "שינוי קטן בשורה 70: הוספנו את המשתנה SC, שסופר כמה מגדלים עברנו. בתחילת המשחק הוא שווה 0. מקלידים את כל השורה מחדש, והיא מחליפה את הישנה."
+    },
+    {
+     "code": "220 IF PPOINT(34,Y+C)=4 OR PPOINT(45,Y+C)=4 THEN 400",
+     "explain": "זה הלב של השיעור! הפקודה PPOINT בודקת איזה צבע יש בנקודה. אנחנו בודקים שתי נקודות על הדרקון, אחת מימין ואחת משמאל. אם באחת מהן יש אדום (4), סימן שהמגדל נגע בדרקון, וקופצים לשורה 400. ומה זה C? בשורה 600 קבענו אותו: 15 למגדל שעולה מהאדמה, כדי לבדוק את התחתית של הדרקון, ו-0 למגדל שיורד מהשמיים, כדי לבדוק את הראש."
+    },
+    {
+     "code": "400 SOUND 30,4:PLAY \"O2L4GECO1L2G\"\n410 SCREEN 0,0:CLS:PRINT \"GAME OVER!\":PRINT \"YOU PASSED\";SC;\"TOWERS\":END",
+     "explain": "אוי, פגענו. שורה 400 משמיעה צפצוף נמוך (SOUND 30,4), ואחריו מנגינה קטנה שיורדת למטה, כמו \"וואה-וואה-וואה\". שורה 410 חוזרת למסך הטקסט עם SCREEN 0,0, מנקה אותו ומספרת כמה מגדלים עברתם. הפקודה END עוצרת את התוכנית."
+    },
+    {
+     "code": "500 COLOR 3:LINE(0,T1)-(15,T2),PSET,BF:SC=SC+1:SOUND 200,1\n510 IF SC<32 THEN COLOR 2:LINE(SC*8-6,178)-(SC*8-2,184),PSET,BF",
+     "explain": "השורות האלה רצות כשמגדל מגיע לקצה השמאלי, כלומר עברנו אותו! שורה 500 מוחקת את שארית המגדל, כמו קודם, ועכשיו גם מוסיפה 1 ל-SC ומשמיעה צפצוף גבוה וקצר. שורה 510 מציירת ריבוע צהוב קטן על האדמה הירוקה, אחד לכל מגדל, כמו חריצים על מקל. המרחק בין ריבוע לריבוע הוא 8 נקודות, ולכן נכנסים בדיוק 31 ריבועים. אחרי זה המשחק ממשיך לספור, אבל לא מצייר עוד."
+    }
+   ],
+   "run": "הקלידו RUN. הדרקון מופיע, ואתם מזיזים אותו עם החץ למעלה והחץ למטה. כל מגדל שאתם עוברים משמיע \"ביפ\" ומוסיף ריבוע צהוב על הדשא. אם נגעתם במגדל: צפצוף נמוך, מנגינה עצובה, והמסך מתחלף לטקסט: GAME OVER! ומתחתיו למשל YOU PASSED 5 TOWERS. רוצים עוד סיבוב? הקלידו RUN שוב.",
+   "tip": "הסדר חשוב! שורה 220 חייבת לבוא לפני שורה 230. בשורה 230 אנחנו מדביקים את הדרקון מחדש עם PUT, ואם נדביק אותו קודם, הוא יכסה את האדום והבדיקה לא תמצא אותו. ועוד דבר: לכתוב PPOINT עם שתי אותיות P, כי POINT בלי P אחת היא פקודה אחרת, למסך הטקסט.",
+   "challenge": "הוסיפו חגיגה קטנה: כל 5 מגדלים, הדרקון ינגן מנגינה שמחה וקצרה. רמז: SC/5 שווה ל-INT(SC/5) רק כשהמספר SC מתחלק ב-5 בלי שארית.",
+   "challengeCode": [
+    "1 REM ADD LINE 520 TO THE LESSON 29 PROGRAM",
+    "520 IF SC/5=INT(SC/5) THEN PLAY \"O3L16CEGO4C\""
+   ],
+   "nextTeaser": "בשיעור האחרון נהפוך את זה למשחק אמיתי בשם DRAGFLY: מסך פתיחה עם DRAW ו-PLAY, מהירות שעולה, שיא, ושמירה עם CSAVE \"DRAGFLY\"!"
+  },
+  "en": {
+   "title": "Graphics game, part 3: Crash! Collision, score and sounds",
+   "intro": "Until now our dragon flew right through the towers like a ghost. Today it can finally get hit! We'll use PPOINT to check if the dragon touches a red tower, count every tower we pass, and add beeps plus a sad tune when the game ends. Start from last lesson's program: if you saved it, load it back with CLOAD and the name you chose; if not, type it in again from last lesson. In 1983, kids typed games in from magazines just like this, line by line.",
+   "steps": [
+    {
+     "code": "70 Y=80:SC=0:GOSUB 600",
+     "explain": "A small change to line 70: we added the variable SC, which counts how many towers we've passed. It starts at 0. Just type the whole line again and it replaces the old one."
+    },
+    {
+     "code": "220 IF PPOINT(34,Y+C)=4 OR PPOINT(45,Y+C)=4 THEN 400",
+     "explain": "This is the heart of the lesson! PPOINT tells us what colour a dot is. We check two dots on the dragon, one on the left and one on the right. If either one is red (4), a tower has touched the dragon, so we jump to line 400. And what is C? We set it in line 600: 15 for a tower growing up from the ground, so we check the dragon's bottom, and 0 for a tower hanging from the sky, so we check its head."
+    },
+    {
+     "code": "400 SOUND 30,4:PLAY \"O2L4GECO1L2G\"\n410 SCREEN 0,0:CLS:PRINT \"GAME OVER!\":PRINT \"YOU PASSED\";SC;\"TOWERS\":END",
+     "explain": "Ouch, we crashed. Line 400 plays a low buzz (SOUND 30,4) and then a little tune that goes down, like \"wah-wah-wah\". Line 410 switches back to the text screen with SCREEN 0,0, clears it and tells you how many towers you passed. END stops the program."
+    },
+    {
+     "code": "500 COLOR 3:LINE(0,T1)-(15,T2),PSET,BF:SC=SC+1:SOUND 200,1\n510 IF SC<32 THEN COLOR 2:LINE(SC*8-6,178)-(SC*8-2,184),PSET,BF",
+     "explain": "These lines run when a tower reaches the left edge, which means we got past it! Line 500 wipes away what's left of the tower, like before, but now it also adds 1 to SC and plays a short high beep. Line 510 draws a small yellow square on the green ground, one for each tower, like notches on a stick. The squares are 8 dots apart, so exactly 31 of them fit. After that the game keeps counting, but stops drawing."
+    }
+   ],
+   "run": "Type RUN. The dragon appears, and you move it with the up and down arrow keys. Every tower you pass goes \"beep\" and adds a yellow square on the grass. Touch a tower and you hear a low buzz and a sad tune, then the screen switches to text: GAME OVER! and below it something like YOU PASSED 5 TOWERS. Want another go? Type RUN again.",
+   "tip": "Order matters! Line 220 must come before line 230. Line 230 puts the dragon back with PUT, and if we did that first, the dragon would cover the red and the check would never find it. Also: spell PPOINT with two Ps. POINT with one P is a different command, for the text screen.",
+   "challenge": "Add a little party: every 5 towers, the dragon plays a short happy tune. Hint: SC/5 equals INT(SC/5) only when SC divides by 5 with nothing left over.",
+   "challengeCode": [
+    "1 REM ADD LINE 520 TO THE LESSON 29 PROGRAM",
+    "520 IF SC/5=INT(SC/5) THEN PLAY \"O3L16CEGO4C\""
+   ],
+   "nextTeaser": "In the last lesson we turn this into a real game called DRAGFLY: a DRAW and PLAY title screen, rising speed, a high score, and saving it with CSAVE \"DRAGFLY\"!"
+  }
+ },
+ {
+  "n": 30,
+  "he": {
+   "title": "שיעור 30: DRAGFLY, המשחק המלא",
+   "intro": "זה השיעור האחרון, ועכשיו נסיים את המשחק שלנו! נוסיף לו מסך פתיחה עם אותיות ענקיות ומנגינה, משחק שהולך ונעשה מהיר יותר, ומסך סיום עם שיא ושאלה אם לשחק שוב. התחילו מהתוכנית של השיעור הקודם: אם שמרתם אותה, טענו אותה עם CLOAD, ואם לא, הקלידו אותה מהשיעור הקודם. אחר כך הוסיפו או שנו רק את השורות שכאן.",
+   "steps": [
+    {
+     "code": "10 HS=0:DIM D(20),B(20)\n20 GOSUB 800\n70 Y=80:SC=0:SP=30:GOSUB 600",
+     "explain": "המשתנה HS שומר את השיא, והוא מתאפס רק פעם אחת, בתחילת התוכנית. שורה 20 קופצת למסך הפתיחה לפני שהמשחק מתחיל. בשורה 70 נוסף המשתנה SP, שקובע את המהירות. הוא מתחיל ב-30, וככל שהוא קטן יותר, המשחק מהיר יותר."
+    },
+    {
+     "code": "800 PMODE 3,1:PCLS 3:SCREEN 1,0\n810 DRAW \"C2S8BM48,60U12R5F2D8G2L5BM72,60U12R6D6L6F6BM96,60U12R6D12U6L6\"\n820 DRAW \"BM120,60R6U6L3BU6BR3L6D12BM144,60U12R6BD6BL6R4\"\n830 DRAW \"BM168,60U12BD12R6BM192,60BR3U6H3U3BR6D3G3S4\"\n840 COLOR 1:LINE(0,150)-(255,191),PSET,BF:COLOR 4:LINE(200,90)-(231,149),PSET,BF\n850 DRAW \"C2BM120,100U20G6BE6F6BM136,80D20H6BF6E6\":PLAY \"T5O3L8GEGL4O4CL8O3AGL2E\"\n860 IF INKEY$=\"\" THEN 860\n870 RETURN",
+     "explain": "זה מסך הפתיחה. בעזרת DRAW ובצבע צהוב (C2) אנחנו כותבים את המילה DRAGFLY אות אחרי אות. הפקודה S8 מגדילה כל אות פי 2, ו-BM קופץ לאות הבאה בלי לצייר. בסוף, S4 מחזיר לגודל רגיל. שורה 840 מציירת אדמה ירוקה ומגדל אדום. שורה 850 מציירת שני חצים, למעלה ולמטה, כדי להראות באילו מקשים משחקים, ומנגנת מנגינת פתיחה. שורה 860 מחכה למקש, ו-RETURN מתחיל את המשחק."
+    },
+    {
+     "code": "250 FOR W=1 TO SP:NEXT W\n520 IF SP>0 THEN SP=SP-2",
+     "explain": "שורה 250 היא לולאה שלא עושה כלום, רק סופרת. היא עוצרת את המשחק לרגע קטן. בכל פעם שעוברים מגדל, שורה 520 מקטינה את SP ב-2, ולכן ההמתנה מתקצרת והמגדלים מגיעים מהר יותר. כש-SP מגיע ל-0, זו המהירות הכי גבוהה."
+    },
+    {
+     "code": "400 SOUND 30,4:PLAY \"O2L4GECO1L2G\":IF SC>HS THEN HS=SC\n410 SCREEN 0,0:CLS:PRINT @ 103,\"*** GAME OVER ***\";\n420 PRINT @ 165,\"YOU PASSED\";SC;\"TOWERS\";:PRINT @ 231,\"HIGH SCORE\";HS;:PRINT @ 297,\"AGAIN? Y/N\";\n430 K$=INKEY$:IF K$=\"Y\" THEN 30\n440 IF K$<>\"N\" THEN 430\n450 CLS:PRINT \"THANKS FOR PLAYING DRAGFLY!\":END",
+     "explain": "כשנוגעים במגדל, שורה 400 בודקת אם הניקוד שלכם גבוה מהשיא. אם כן, יש שיא חדש! שורות 410 ו-420 כותבות באמצע המסך, בעזרת PRINT @, את הניקוד, את השיא ואת השאלה. שורה 430 מחכה למקש: על Y חוזרים לשורה 30 ומשחקים שוב, והשיא נשאר. על N שורה 450 נפרדת יפה. בכל מקש אחר שורה 440 ממשיכה לחכות."
+    }
+   ],
+   "run": "הקלידו RUN. תראו מסך כחול עם המילה DRAGFLY באותיות צהובות גדולות, אדמה ירוקה, מגדל אדום ושני חצים, ותשמעו מנגינה. לחצו על מקש כלשהו, ושחקו עם החץ למעלה והחץ למטה. שימו לב: אחרי כל מגדל המשחק קצת יותר מהיר! כשנפגעים, מופיעים הניקוד והשיא. הקלידו Y כדי לשחק שוב, או N כדי לסיים. עכשיו שמרו את המשחק: הקלידו CSAVE \"DRAGFLY\" ולחצו Enter. הקלטת תופיע על מדף הקלטות, ותישאר שם גם מחר. כדי לבדוק, הקלידו NEW (התוכנית נמחקת!), אחר כך CLOAD \"DRAGFLY\" ואז RUN, והמשחק חוזר. שם של קלטת יכול להיות עד 8 אותיות או ספרות באנגלית, ויש מקום לעד 6 קלטות.",
+   "tip": "השיא נשמר רק כל עוד התוכנית רצה. אם תעצרו ותקלידו RUN, הוא יתאפס. כדי לשמור עליו, ענו Y בסוף כל משחק. ואם מדף הקלטות מלא, מחקו קלטת ישנה עם הכפתור ✕ הקטן.",
+   "challenge": "שני פרסים קטנים לשחקנים: נגנו צליל חגיגי בכל פעם שעוברים עוד 10 מגדלים, וכתבו NEW HIGH SCORE! כשנשבר השיא.",
+   "challengeCode": [
+    "5 REM ADD OR CHANGE THESE LINES IN DRAGFLY",
+    "400 SOUND 30,4:PLAY \"O2L4GECO1L2G\":NH=0:IF SC>HS THEN HS=SC:NH=1",
+    "425 IF NH=1 THEN PRINT @ 359,\"NEW HIGH SCORE!\";",
+    "530 IF SC=INT(SC/10)*10 THEN PLAY \"O4L16CEGO5C\""
+   ],
+   "nextTeaser": "זהו, סיימתם את כל 30 השיעורים! התחלתם ב-PRINT ועכשיו כתבתם משחק שלם, עם גרפיקה, מוזיקה ושיא. ב-1983 ילדים הקלידו משחקים מתוך מגזינים, שורה אחרי שורה. אתם כבר יכולים לכתוב משחקים משלכם. הדרקון גאה בכם, ומחכה למשחק הבא שתמציאו!"
+  },
+  "en": {
+   "title": "Lesson 30: DRAGFLY, the Finished Game",
+   "intro": "This is the last lesson, and today we finish our game! We'll add a title screen with giant letters and a tune, a game that gets faster and faster, and a game-over screen with a high score and a 'play again?' question. Start from last lesson's program: CLOAD it if you saved it, or type it in from last lesson. Then add or change only the lines shown here.",
+   "steps": [
+    {
+     "code": "10 HS=0:DIM D(20),B(20)\n20 GOSUB 800\n70 Y=80:SC=0:SP=30:GOSUB 600",
+     "explain": "HS keeps the high score. It is set to 0 only once, at the very start. Line 20 jumps to the title screen before the game begins. Line 70 now has SP, the speed. It starts at 30, and the smaller it gets, the faster the game goes."
+    },
+    {
+     "code": "800 PMODE 3,1:PCLS 3:SCREEN 1,0\n810 DRAW \"C2S8BM48,60U12R5F2D8G2L5BM72,60U12R6D6L6F6BM96,60U12R6D12U6L6\"\n820 DRAW \"BM120,60R6U6L3BU6BR3L6D12BM144,60U12R6BD6BL6R4\"\n830 DRAW \"BM168,60U12BD12R6BM192,60BR3U6H3U3BR6D3G3S4\"\n840 COLOR 1:LINE(0,150)-(255,191),PSET,BF:COLOR 4:LINE(200,90)-(231,149),PSET,BF\n850 DRAW \"C2BM120,100U20G6BE6F6BM136,80D20H6BF6E6\":PLAY \"T5O3L8GEGL4O4CL8O3AGL2E\"\n860 IF INKEY$=\"\" THEN 860\n870 RETURN",
+     "explain": "This is the title screen. DRAW writes DRAGFLY letter by letter in yellow (C2). S8 makes every letter twice as big, and BM hops to the next letter without drawing. At the end, S4 sets the size back to normal. Line 840 draws green ground and a red tower. Line 850 draws an up arrow and a down arrow to show which keys you play with, then plays a title tune. Line 860 waits for any key, and RETURN starts the game."
+    },
+    {
+     "code": "250 FOR W=1 TO SP:NEXT W\n520 IF SP>0 THEN SP=SP-2",
+     "explain": "Line 250 is a loop that does nothing but count. It makes the game pause for a tiny moment. Every time you pass a tower, line 520 makes SP 2 smaller, so the pause gets shorter and the towers come faster. When SP reaches 0, that's top speed!"
+    },
+    {
+     "code": "400 SOUND 30,4:PLAY \"O2L4GECO1L2G\":IF SC>HS THEN HS=SC\n410 SCREEN 0,0:CLS:PRINT @ 103,\"*** GAME OVER ***\";\n420 PRINT @ 165,\"YOU PASSED\";SC;\"TOWERS\";:PRINT @ 231,\"HIGH SCORE\";HS;:PRINT @ 297,\"AGAIN? Y/N\";\n430 K$=INKEY$:IF K$=\"Y\" THEN 30\n440 IF K$<>\"N\" THEN 430\n450 CLS:PRINT \"THANKS FOR PLAYING DRAGFLY!\":END",
+     "explain": "When you hit a tower, line 400 checks whether your score beats the high score. If it does, you have a new record! Lines 410 and 420 use PRINT @ to write the score, the high score and a question in the middle of the screen. Line 430 waits for a key. Y jumps back to line 30 for a new game, and the high score stays. N goes to line 450, which says goodbye. Any other key, and line 440 just keeps waiting."
+    }
+   ],
+   "run": "Type RUN. You'll see a blue screen with DRAGFLY in big yellow letters, green ground, a red tower and two arrows, and you'll hear a tune. Press any key, then fly with the up and down arrows. Notice how the game speeds up after every tower! When you crash, you see your score and the high score. Type Y to play again or N to stop. Now save your game: type CSAVE \"DRAGFLY\" and press Enter. The tape appears on the tape shelf and will still be there tomorrow. To test it, type NEW (this wipes the program!), then CLOAD \"DRAGFLY\" and RUN, and your game is back. Tape names can be up to 8 letters or digits, and there is room for up to 6 tapes.",
+   "tip": "The high score only lasts while the program is running. If you stop it and type RUN, it goes back to 0. To keep it, answer Y at the end of each game. If the tape shelf is full, delete an old tape with its little ✕ button.",
+   "challenge": "Give players two little rewards: play a happy jingle every time they pass another 10 towers, and show NEW HIGH SCORE! when they beat the record.",
+   "challengeCode": [
+    "5 REM ADD OR CHANGE THESE LINES IN DRAGFLY",
+    "400 SOUND 30,4:PLAY \"O2L4GECO1L2G\":NH=0:IF SC>HS THEN HS=SC:NH=1",
+    "425 IF NH=1 THEN PRINT @ 359,\"NEW HIGH SCORE!\";",
+    "530 IF SC=INT(SC/10)*10 THEN PLAY \"O4L16CEGO5C\""
+   ],
+   "nextTeaser": "That's it, you finished all 30 lessons! You started with PRINT, and now you've written a whole game with graphics, music and a high score. In 1983, kids typed games from magazines line by line. You can already write your own. The dragon is proud of you, and can't wait to see the next game you invent!"
+  }
  }
 ]

@@ -1,4 +1,4 @@
-// כיתת הלימוד "לומדים בייסיק עם הדרקון": 20 שיעורים בשבע רמות (lessons/lessons.json, הטקסטים של המנהל העליון כמו שהם),
+// כיתת הלימוד "לומדים בייסיק עם הדרקון": 30 שיעורים בתשע רמות (lessons/lessons.json, הטקסטים של המנהל העליון כמו שהם),
 // לצד המחשב של האפליקציה. כל שורה: "הקלד בשבילי" (המחשב מקליד אותה) ו"העתקה". התקדמות: כוכב לכל שיעור שסיימתם,
 // נשמר בדפדפן הזה. השיעור הנוכחי בכתובת: #3 = שיעור 3.
 const EN = (document.documentElement.lang || '').startsWith('en');
@@ -78,9 +78,10 @@ function codeButtons(lines, { run = false, label } = {}) {
 const printout = lines => { const p = el('pre', 'printout'); p.dir = 'ltr'; p.lang = 'en'; p.textContent = lines.join('\n'); return p; };
 
 let LESSONS = [];
-// משחק "דרקון הזהב" (שיעורים 15-20) נבנה שיעור אחרי שיעור: כל שיעור מוסיף שורות או מחליף שורות (לפי מספר השורה).
-// "הקלד הכול והרץ" מקליד את כל המשחק עד עכשיו, והפתרון של האתגר נכנס לתוכו
-const BUILD_FROM = 15;
+// שני משחקים נבנים שיעור אחרי שיעור: "דרקון הזהב" (15-20) ו-DRAGFLY (27-30). כל שיעור מוסיף שורות או מחליף שורות
+// (לפי מספר השורה). "הקלד הכול והרץ" מקליד את כל המשחק עד עכשיו, והפתרון של האתגר נכנס לתוכו
+const GAMES = [[15, 20], [27, 30]];
+const gameOf = n => GAMES.find(([a, b]) => n >= a && n <= b);
 const lineNo = s => parseInt(s, 10);
 function merge(base, add) {
   const m = new Map(base.map(x => [lineNo(x), x]));
@@ -90,7 +91,8 @@ function merge(base, add) {
 const stepLines = l => l[L].steps.flatMap(s => s.code.split('\n').filter(Boolean));
 function program(n) {
   const own = stepLines(LESSONS[n - 1]);
-  return n > BUILD_FROM ? merge(program(n - 1), own) : own;
+  const g = gameOf(n);
+  return g && n > g[0] ? merge(program(n - 1), own) : own;
 }
 function current() {
   const n = parseInt(location.hash.slice(1), 10);
@@ -108,7 +110,9 @@ const LEVELS = [
   ['🔴', 'משחקים קטנים', 'Little games', 8, 10],
   ['🟣', 'מתכנתים', 'Programmers', 11, 14],
   ['⚫', 'בונים משחק: דרקון הזהב', 'Building a game: Dragon Gold', 15, 19],
-  ['🏆', 'הפרויקט הגמור', 'The finished project', 20, 20]
+  ['🏆', 'הפרויקט הגמור', 'The finished project', 20, 20],
+  ['🔷', 'גרפיקה וצלילים', 'Graphics and sound', 21, 26],
+  ['🐉', 'בונים משחק גרפי: DRAGFLY', 'Building a graphics game: DRAGFLY', 27, 30]
 ];
 function renderProgress(n) {
   const bar = document.getElementById('lesson-progress');
@@ -171,7 +175,7 @@ function render() {
       screen.textContent += (screen.textContent ? '\n' : '') + line;
     } else { screen = null; run.append(el('p', '', rich(line))); }
   }
-  const builds = n > BUILD_FROM;
+  const g = gameOf(n), builds = !!g && n > g[0];
   if (builds) {
     // הלוח מראה רק את השורות החדשות; כאן כל המשחק עד עכשיו
     const whole = el('details', 'whole-program');
@@ -187,7 +191,7 @@ function render() {
   const hw = el('section', 'homework');
   hw.append(el('h3', 'lesson-h', T('אתגר', 'Challenge')), el('p', '', rich(x.challenge)));
   const sol = el('details', 'solution');
-  const solution = n >= BUILD_FROM ? merge(program(n), x.challengeCode) : x.challengeCode;
+  const solution = g ? merge(program(n), x.challengeCode) : x.challengeCode;
   sol.append(el('summary', '', T('הצגת פתרון', 'Show a solution')), printout(x.challengeCode), codeButtons(solution, { run: true }));
   hw.append(sol);
   app.append(hw);

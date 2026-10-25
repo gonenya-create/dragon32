@@ -1066,7 +1066,7 @@ if (part('lessons and magazine')) {
   for (const path of ['/lessons/', '/en/lessons/']) {
     await p.goto(new URL(path + '#1', PAGE).href);
     await p.waitForSelector('.lesson-title', { timeout: 10000 });
-    check(`${path} shows 20 lesson tiles on a ladder of 7 levels`, (await p.locator('#lesson-progress .tile').count()) === 20 && (await p.locator('#lesson-progress .level').count()) === 7);
+    check(`${path} shows 30 lesson tiles on a ladder of 9 levels`, (await p.locator('#lesson-progress .tile').count()) === 30 && (await p.locator('#lesson-progress .level').count()) === 9);
     await p.click('.lesson-run .lesson-type');
     await p.waitForFunction(() => /BYE!\s*\nOK\s*$/.test(document.querySelector('#lesson-computer .d32-out').textContent), null, { timeout: 20000 }).catch(() => {});
     check(`${path} lesson 1: "type it all and RUN" runs the program`, /HELLO! I AM A DRAGON 32[\s\S]*7 X 6 = 42[\s\S]*BYE!/.test(await p.locator('#lesson-computer .d32-out').textContent()));
@@ -1080,6 +1080,14 @@ if (part('lessons and magazine')) {
   await p.click('.lesson-run .lesson-type');
   const gold = await p.waitForFunction(() => /\*\*\* DRAGON GOLD \*\*\*[\s\S]*PRESS ANY KEY TO START/.test(document.querySelector('#lesson-computer .d32-out').textContent), null, { timeout: 60000 }).then(() => true, () => false);
   check('/lessons/#20: "type it all and RUN" types the whole Dragon Gold game and its title screen appears', gold && (await p.locator('.whole-program pre').textContent()).split('\n').length === 42);
+  // DRAGFLY: שיעור 30 בונה על 27-29. כל המשחק (38 שורות) מוקלד ורץ בלי שגיאה
+  await p.goto(new URL('/lessons/#30', PAGE).href);
+  await p.waitForSelector('.lesson-title', { timeout: 10000 });
+  check('/lessons/#30 shows the whole DRAGFLY program so far (38 lines)', (await p.locator('.whole-program pre').textContent()).split('\n').length === 38);
+  await p.click('.lesson-run .lesson-type');
+  const typed = await p.waitForFunction(() => /\nRUN(\n|$)/.test(document.querySelector('#lesson-computer .d32-out').textContent), null, { timeout: 150000 }).then(() => true, () => false);
+  await p.waitForTimeout(5000);
+  check('/lessons/#30: "type it all and RUN" types DRAGFLY and it runs without an error', typed && await p.evaluate(() => !/ERROR/.test(document.querySelector('#lesson-computer .d32-out').textContent)));
   for (const path of ['/magazine/', '/magazine/du01/', '/en/magazine/', '/en/magazine/du01/']) {
     const r = await p.goto(new URL(path, PAGE).href);
     check(`${path} loads`, r.ok() && /archive\.org|Dragon User/.test(await p.content()));
