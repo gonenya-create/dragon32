@@ -79,7 +79,7 @@ ary_new		stx	ARYREC
 		addd	CURTOL
 		bcs	ary_om
 		pshs	d
-		bsr	reason
+		lbsr	reason
 		puls	d
 		std	STREND
 		subd	ARYREC		; האורך הכולל
@@ -95,11 +95,11 @@ ary_new		stx	ARYREC
 getdef		clr	CURTOL
 		clr	CURTOL+1
 		leay	5,x		; הגדלים, באותו סדר
-		leax	,s		; X = האינדקסים
 		bra	isl_9772_e	;@isl
 		fill	$ff,$9772-*	;@isl
 		jmp	fn_rnd	;@isl
 isl_9772_e	;@isl
+		leax	,s		; X = האינדקסים
 1		ldd	,x++		; האינדקס
 		cmpd	,y
 		bhs	ary_bs		; גדול מדי: ?BS

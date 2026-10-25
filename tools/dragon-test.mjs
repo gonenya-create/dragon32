@@ -1090,11 +1090,11 @@ if (part('real machine lab')) {
     const r = await p.goto(base.replace(/\/$/, '') + path);
     await p.waitForTimeout(3500);
     check(`${path} loads with the drawn keyboard`, r.status() === 200 && (await p.locator('.kbd .k').count()) > 50 && errs.length === 0, errs.join(' | '));
-    check(`${path} has the tape shelf (10 tapes: 7 BASIC, Dragon Eggs, Blockdown, DragonTet)`, (await p.locator('#tapes .tape').count()) === 10);
+    check(`${path} has the tape shelf (11 tapes: 7 BASIC, Dragon Eggs, Blockdown, DragonTet, Phantom Slayer)`, (await p.locator('#tapes .tape').count()) === 11);
     check(`${path} the cabinet drawers start closed`, await p.evaluate(() => [...document.querySelectorAll('#tapes details.drawer')].every(d => !d.open)));
     check(`${path} every machine-code game has a "how to play" box with keys and a way out`, await p.evaluate(() => {
       const boxes = [...document.querySelectorAll('[data-drawer="mc"] .tape-box')];
-      return boxes.length === 3 && boxes.every(b => { const h = b.querySelector('details.howto'); return h && h.querySelectorAll('kbd').length >= 3 && h.querySelector('.howto-always'); });
+      return boxes.length === 4 && boxes.every(b => { const h = b.querySelector('details.howto'); return h && h.querySelectorAll('kbd').length >= 3 && h.querySelector('.howto-always'); });
     }));
     const b = await p.request.get(base.replace(/\/$/, '') + path + 'building/');
     check(`${path} links to "what we are building now", which loads`, b.status() === 200 && (await p.locator('main > p.note a[href="./building/"]').count()) === 1);
