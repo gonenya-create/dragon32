@@ -16,6 +16,7 @@ programmer tools and an AI helper. Installable as an app.
 - Games by other authors on the Dragon machine's tape shelf, each under its author's own terms (not ours), with its documentation alongside:
   - **Blockdown** by Ciaran Anscomb (2021): "Redistribution encouraged! Just be sure to include the documentation" — `lab/1982/tapes/blockdown.html`, https://www.6809.org.uk/blockdown/
   - **DragonTet** v1.1 by Salva Kantero (2025): GPL v3 — `lab/1982/tapes/dragontet-readme.txt`, `dragontet-license.txt`, source https://github.com/salvakantero/Dragontet
+  - **Phantom Slayer** by Ken Kalish (Med Systems; Dragon version Microdeal, 1983): shared with permission. Ken Kalish wanted his Dragon and CoCo games to be freely available (via L. Curtis Boyle, http://www.lcurtisboyle.com/nitros9/interview.html). Removed on request.
 - A hobby tribute project. Not affiliated with, or endorsed by, Dragon Data Ltd.
 - Built by [Gonen Yarom](https://www.gonenyarom.co.il) with AI.
 - Code licence: [MIT](LICENSE). The licence covers the code only, not the name "Dragon 1982" or the domain.

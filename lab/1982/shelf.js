@@ -18,7 +18,10 @@
     ['blockdown', 'Blockdown', 'Blockdown', 'a',
       ['Ciaran Anscomb, 2021', '/lab/1982/tapes/blockdown.html', 'https://www.6809.org.uk/blockdown/']],
     ['dragontet', 'DragonTet', 'DragonTet', 'm',
-      ['Salva Kantero, 2025', '/lab/1982/tapes/dragontet-readme.txt', 'https://github.com/salvakantero/Dragontet', '/lab/1982/tapes/dragontet-license.txt']]
+      ['Salva Kantero, 2025', '/lab/1982/tapes/dragontet-readme.txt', 'https://github.com/salvakantero/Dragontet', '/lab/1982/tapes/dragontet-license.txt']],
+    // משחקי Ken Kalish: הוא רצה שהמשחקים שלו יהיו זמינים לכולם (L. Curtis Boyle, מייל 24.10.2026). קרדיט מלא, יורד לפי בקשה
+    ['phantom', 'Phantom Slayer', 'Phantom Slayer', 'm',
+      ['Ken Kalish · Med Systems / Microdeal, 1983', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']]
   ];
   // איך משחקים (גונן, 25.10: "לא בטוח שהמשתמשים יבינו איך משחקים"): תיבה נפתחת מתחת לכל משחק בשפת מכונה.
   // [מקש] נהיה מקש מצויר. המקשים לפי התיעוד של המחבר, ונבדקו במכונה. במק: BREAK הוא Esc, ו-CLEAR הוא Home (fn+←).
@@ -52,13 +55,29 @@
         '[←] [→] move, [↑] turns, [↓] drops faster. [W] [A] [S] [D] work too.',
         'Player two: [I] [J] [K] [L].',
         '[H] pauses, any key resumes. [X] goes back to the menu.']
+    },
+    // נבדק במכונה (25.10): בחירות, תנועה, כיוון וירי, רוחות שזזות, וסוף משחק עם הניקוד
+    phantom: {
+      he: ['אחרי הטעינה: [N] מדלג על ההוראות, [Y] מציג אותן (באנגלית). המשחק מתחיל בהדגמה, ואז מגיע מסך הבחירה.',
+        'במסך SELECT MAZE TYPE: [1] מבוך פתוח, [2] מבוך צפוף. אם המקש לא נקלט, לוחצים שוב.',
+        'במסך SELECT SPEED: [1] [2] [3] מהירות הרוחות, או [T] לאימון בלי רוחות. אחרי מנגינה קצרה מופיעה מפת המבוך.',
+        '[↑] צעד קדימה, [↓] צעד אחורה, [←] [→] מסתובבים.',
+        'מחזיקים [רווח] כדי לכוון, ומשחררים כדי לירות. האקדח נטען כ-2 שניות.',
+        '[1] עד [6] קובעים את טווח גלאי הרוחות, שמצפצף כשרוח קרובה. רוח שנוגעת בכם, המשחק נגמר.'],
+      en: ['After loading: [N] skips the instructions, [Y] shows them. A demo plays first, then the choices appear.',
+        'At SELECT MAZE TYPE: [1] open maze, [2] dense maze. If a key is missed, press it again.',
+        'At SELECT SPEED: [1] [2] [3] phantom speed, or [T] to practise without phantoms. A short tune plays, then the maze map.',
+        '[↑] step forward, [↓] step back, [←] [→] turn.',
+        'Hold [SPACE] to aim, release to fire. The pistol takes about 2 seconds to recharge.',
+        '[1]–[6] set the phantom detector range; it beeps when one is near. If a phantom touches you, the game is over.']
     }
   };
   // מה המשחק, בשורה אחת מתחת לשם (גונן, 25.10: "לא מבינים מה זה המשחק"). השם עצמו נשאר כמו שהמחבר כתב
   const DESC = {
     eggs: ['תופסים בסל את הביצים שהדרקון מטיל. לשחקן אחד.', 'Catch the dragon\'s eggs in a basket. 1 player.'],
     blockdown: ['קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים.', 'Falling blocks: complete the lines. 1 or 2 players.'],
-    dragontet: ['קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים.', 'Falling blocks: complete the lines. 1 or 2 players.']
+    dragontet: ['קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים.', 'Falling blocks: complete the lines. 1 or 2 players.'],
+    phantom: ['מבוך תלת-ממדי: צדים רוחות רפאים לפני שהן תופסות אתכם. לשחקן אחד.', '3D maze: hunt the phantoms before they catch you. 1 player.']
   };
   // שורה עם [מקשים]: כל מקש בתוך kbd. צירוף כמו [CLEAR]+[BREAK] נשאר יחד בשורה אחת
   function key(name) {
@@ -160,7 +179,12 @@
     const who = document.createElement('bdi');
     who.textContent = credit[0];
     if (!credit[2]) docs.textContent = EN ? 'source code' : 'קוד המקור';
-    by.append(EN ? 'By ' : 'מאת ', who, document.createElement('br'), docs);
+    if (credit[4] === 'kalish') {
+      // בלי תיעוד ורישיון: הרשות מהמחבר, והקישור לראיון שבו הוא אומר שירצה שישחקו בהם שוב
+      docs.textContent = EN ? 'with his permission' : 'באישורו';
+      docs.rel = 'noopener';
+      by.append(EN ? 'By ' : 'מאת ', who, document.createElement('br'), docs, EN ? ' · removed on request' : ' · יוסר לפי בקשה');
+    } else by.append(EN ? 'By ' : 'מאת ', who, document.createElement('br'), docs);
     if (credit[2]) by.append(' · ', site);
     if (credit[3]) {
       const lic = document.createElement('a');
