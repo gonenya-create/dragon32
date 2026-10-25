@@ -23,7 +23,10 @@
     ['phantom', 'Phantom Slayer', 'Phantom Slayer', 'm',
       ['Ken Kalish · Med Systems / Microdeal, 1983', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
     ['ranger', 'Danger Ranger', 'Danger Ranger', 'a',
-      ['Ken Kalish · Med Systems / Microdeal, 1983', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']]
+      ['Ken Kalish · Med Systems / Microdeal, 1983', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
+    // ההרפתקאות של Scott Adams: אישור בכתב (מייל 25.10.2026). קרדיט מלא וקישור ל-msadams.com, בלי שינויים, יורד לפי בקשה
+    ['adventureland', 'Adventureland', 'Adventureland', 'a',
+      ['Scott Adams · Adventure International, 1983', 'https://www.msadams.com/', null, null, 'adams']]
   ];
   // משחקים שצריכים ג'ויסטיק: כשהקלטת נטענת, החיצים במקלדת הופכים לג'ויסטיק הימני ו-Alt (Option במק) לכפתור שלו
   const JOY = new Set(['ranger']);
@@ -95,6 +98,23 @@
         'On the title screen press [Alt]. At SELECT LEVEL pick a level, [1] is the easiest, and the game starts at once. Don\'t press [P]: it pauses the game.',
         '[←] [→] run, [↑] jump, [↓] duck, [Alt] fires. [P] pauses, and [Alt] carries on.',
         'Collect all the keys and watch out for the bats and the eyes that shoot from the sides. The pad in the middle of the bottom floor bounces you back to the top.']
+    },
+    // נבדק במכונה (25.10): טעינה, שאלות הפתיחה, תנועה בין מקומות, טיפוס, מלאי וניקוד
+    adventureland: {
+      he: ['הטעינה לוקחת קצת פחות משתי דקות, והמשחק מתחיל לבד.',
+        'בהתחלה שלוש שאלות. על {DO YOU HAVE LOWERCASE?} עונים [N] ו[ENTER].',
+        'על {PRESS ENTER} לוחצים [ENTER], ועל {RESTORE A PREVIOUSLY SAVED GAME?} עונים [N] ו[ENTER].',
+        'משחק מילים באנגלית: כותבים פועל ושם עצם ולוחצים [ENTER]. למשל {CLIMB TREE} (לטפס על העץ), {GET AXE} (להרים את הגרזן), {LIGHT LAMP} (להדליק את המנורה).',
+        'שלוש האותיות הראשונות מספיקות: {LIG LAM}. הולכים בשש דרכים: {N S E W UP DOWN} (צפון, דרום, מזרח, מערב, למעלה, למטה).',
+        '{LOOK} מתאר שוב את המקום, {INVENTORY} מראה מה בידיים, {HELP} נותן רמז, {SCORE} מראה כמה אוצרות נאספו.',
+        'המטרה: למצוא 13 אוצרות, שמסומנים בכוכביות כמו {*GOLDEN FISH*}, ולהביא אותם למקום שבו שומרים אותם.'],
+      en: ['Loading takes a little under two minutes, and the game starts by itself.',
+        'Three questions first. At DO YOU HAVE LOWERCASE? answer [N] and [ENTER].',
+        'At PRESS ENTER press [ENTER], and at RESTORE A PREVIOUSLY SAVED GAME? answer [N] and [ENTER].',
+        'A word game: type a verb and a noun, then [ENTER]. For example CLIMB TREE, GET AXE, LIGHT LAMP.',
+        'The first three letters are enough: LIG LAM. There are six ways to go: N S E W UP DOWN.',
+        'LOOK describes the place again, INVENTORY shows what you carry, HELP gives a hint, SCORE shows your treasures.',
+        'The goal: find the 13 treasures, marked with stars like *GOLDEN FISH*, and bring them to where they are stored.']
     }
   };
   // מה המשחק, בשורה אחת מתחת לשם (גונן, 25.10: "לא מבינים מה זה המשחק"). השם עצמו נשאר כמו שהמחבר כתב
@@ -103,7 +123,8 @@
     blockdown: ['קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים.', 'Falling blocks: complete the lines. 1 or 2 players.'],
     dragontet: ['קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים.', 'Falling blocks: complete the lines. 1 or 2 players.'],
     phantom: ['מבוך תלת-ממדי: צדים רוחות רפאים לפני שהן תופסות אתכם. לשחקן אחד.', '3D maze: hunt the phantoms before they catch you. 1 player.'],
-    ranger: ['רצים, קופצים ויורים: אוספים מפתחות ואוצרות בין עטלפים ועיניים. בג\'ויסטיק.', 'Run, jump and shoot: collect keys and treasure past bats and eyes. Joystick.']
+    ranger: ['רצים, קופצים ויורים: אוספים מפתחות ואוצרות בין עטלפים ועיניים. בג\'ויסטיק.', 'Run, jump and shoot: collect keys and treasure past bats and eyes. Joystick.'],
+    adventureland: ['הרפתקת מילים: כותבים פקודות באנגלית ומחפשים 13 אוצרות. ההרפתקה הראשונה של Scott Adams.', 'A text adventure: type commands and hunt for 13 treasures. Scott Adams\' first adventure.']
   };
   // שורה עם [מקשים]: כל מקש בתוך kbd. צירוף כמו [CLEAR]+[BREAK] נשאר יחד בשורה אחת
   function key(name) {
@@ -114,8 +135,16 @@
   }
   function keyLine(text) {
     const li = document.createElement('li');
-    for (const part of text.split(/((?:\[[^\]]+\]\+)*\[[^\]]+\])/)) {
+    for (const part of text.split(/((?:\[[^\]]+\]\+)*\[[^\]]+\]|\{[^}]+\})/)) {
       if (!part) continue;
+      if (part[0] === '{') {   // {GET AXE}: פקודה באנגלית, נשארת שלמה ובסדר שלה גם בשורה בעברית
+        const en = document.createElement('bdi');
+        en.dir = 'ltr';
+        en.className = 'cmd';
+        en.textContent = part.slice(1, -1);
+        li.append(en);
+        continue;
+      }
       if (part[0] !== '[') { li.append(part); continue; }
       const keys = part.slice(1, -1).split(']+[');
       if (keys.length === 1) { li.append(key(keys[0])); continue; }
@@ -210,6 +239,11 @@
       docs.textContent = EN ? 'with his permission' : 'באישורו';
       docs.rel = 'noopener';
       by.append(EN ? 'By ' : 'מאת ', who, document.createElement('br'), docs, EN ? ' · removed on request' : ' · יוסר לפי בקשה');
+    } else if (credit[4] === 'adams') {
+      // הרשות של Scott Adams: קרדיט מלא וקישור לאתר שלו
+      docs.textContent = 'msadams.com';
+      docs.rel = 'noopener';
+      by.append(EN ? 'By ' : 'מאת ', who, document.createElement('br'), EN ? 'With his permission · ' : 'באישורו · ', docs, EN ? ' · removed on request' : ' · יוסר לפי בקשה');
     } else by.append(EN ? 'By ' : 'מאת ', who, document.createElement('br'), docs);
     if (credit[2]) by.append(' · ', site);
     if (credit[3]) {
