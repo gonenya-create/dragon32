@@ -238,6 +238,13 @@ isl_bac8	jmp	sndoff
 ; הבהוב הסמן (היעד של $8009)
 		jmp	blink
 
+; @island $BBC5
+; לולאת ההשהיה שבסוף ההבהוב: X סיבובים של 8 מחזורים, ו-X חוזר 0 (DRAGON-SPEC-ENTRIES 6: ‏1118 סיבובים = כ-10 אלפיות;
+; XRoar קורא לה delay_1ms, כמו $A7D3 ב-CoCo). Danger Ranger קורא לה ישר, עם X משלו
+isl_bbc5	leax	-1,x
+		bne	isl_bbc5
+		rts
+
 ; @island $BBE5
 ; (בבדיקות בלבד, tools/xr2.mjs מפנה את ה-JMP הזה למחסנית הבדיקות, שמקלידה את השורות. ב-ROM עצמו אין קוד בדיקות)
 ; סריקת המקלדת (היעד של $8006 ו-$A000)

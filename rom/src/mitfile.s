@@ -446,6 +446,12 @@ isl_bbb5_e	;@isl
 prtout		pshs	a,b,x
 		cmpa	#13
 		beq	2F
+		bra	isl_bbc5_e	;@isl
+		fill	$ff,$bbc5-*	;@isl
+isl_bbc5	leax	-1,x	;@isl
+		bne	isl_bbc5	;@isl
+		rts	;@isl
+isl_bbc5_e	;@isl
 		cmpa	#$20
 		blo	1F
 		inc	LPTPOS
@@ -458,13 +464,13 @@ prtout		pshs	a,b,x
 		clr	LPTPOS
 9		puls	a,b,x,pc
 2		tst	LPTPOS		; סוף שורה
-		bne	3F
-		lda	#$20
-		bsr	lpsend
 		bra	isl_bbe5_e	;@isl
 		fill	$ff,$bbe5-*	;@isl
 		jmp	keyindex	;@isl
 isl_bbe5_e	;@isl
+		bne	3F
+		lda	#$20
+		bsr	lpsend
 3		ldx	#LPEOL
 		ldb	,x+		; כמה בתים (עד 6)
 		beq	5F
@@ -603,13 +609,13 @@ efmo		lbra	err_fm		; ?FM קרוב (OPEN, CLOAD של ASCII)
 
 ; ---------- CLOSE [#התקן[,#התקן...]] (3.13) ----------
 close_st	beq	tclose		; בלי כלום: הכול
-1		lbsr	getdev
-		bsr	clsone
-		jsr	<chrgot
 		bra	isl_bcf5_e	;@isl
 		fill	$ff,$bcf5-*	;@isl
 		jmp	lpsend	;@isl
 isl_bcf5_e	;@isl
+1		lbsr	getdev
+		bsr	clsone
+		jsr	<chrgot
 		beq	9F		; ה-rts של tclose
 		lbsr	chkcom
 		bra	1B
@@ -624,14 +630,14 @@ clsone		jsr	HK_CLONE	; 9
 		clr	DEVNUM
 		inca
 		bne	9F
-		lda	FSTATE
-		cmpa	#2
-		bne	tcl1
-		tst	CBFCNT
 		bra	isl_bd1a_e	;@isl
 		fill	$ff,$bd1a-*	;@isl
 		jmp	prtout	;@isl
 isl_bd1a_e	;@isl
+		lda	FSTATE
+		cmpa	#2
+		bne	tcl1
+		tst	CBFCNT
 		beq	2F
 		lbsr	wbuf
 2		lda	#$ff
@@ -647,23 +653,23 @@ tcl1		clr	FSTATE		; C=0 (END)
 fn_eof		jsr	HK_EOF		; 15
 		lda	DEVNUM
 		pshs	a
-		lbsr	devfac		; B = DEVNUM
-		tstb
-		beq	1F
 		bra	isl_bd41_e	;@isl
 		fill	$ff,$bd41-*	;@isl
 		jmp	x_mux	;@isl
 isl_bd41_e	;@isl
+		lbsr	devfac		; B = DEVNUM
+		tstb
+		beq	1F
 		lbsr	chkin
 		clrb
 		tst	CBFCNT
-		bne	1F
-		decb
-1		puls	a
 		bra	isl_bd52_e	;@isl
 		fill	$ff,$bd52-*	;@isl
 		jmp	joyrd	;@isl
 isl_bd52_e	;@isl
+		bne	1F
+		decb
+1		puls	a
 		sta	DEVNUM
 		sex
 		lbra	givd
@@ -672,7 +678,7 @@ isl_bd52_e	;@isl
 ; דגל ASCII חובה (?FM). NEW, הקלטת פתוחה לקריאה, ושורה אחרי שורה כאילו הוקלדה (בלי הד). שורה בלי מספר: ?DS.
 ; בסוף הקובץ: סגור, ו-OK. שורה שנקטעה בסוף הקובץ הולכת לאיבוד
 cl_asc		tst	HASCII
-		lbeq	efmo
+		beq	efmo
 		lbsr	scrtch
 		lda	#$ff
 		sta	DEVNUM
@@ -725,18 +731,18 @@ clm_gap		ldd	HTYPE		; הכותרת תידרס בחוצץ: הסוג וה-ASCII נ
 		leay	-1,y
 		bra	2B
 3		stx	EXECJP
-		leas	2,s
-		lbra	tcl1
+		bra	isl_bddc_e	;@isl
 		fill	$ff,$bddc-*	;@isl
 		jmp	motoff	;@isl
+isl_bddc_e	;@isl
+		leas	2,s
+		lbra	tcl1
+		fill	$ff,$bde7-*	;@isl
+		jmp	tsync	;@isl
 ; trawd: שני בתים מהקלטת → D (הגבוה קודם)
 trawd		bsr	trawb
 		tfr	a,b
 		bsr	trawb
-		bra	isl_bde7_e	;@isl
-		fill	$ff,$bde7-*	;@isl
-		jmp	tsync	;@isl
-isl_bde7_e	;@isl
 		exg	a,b
 		rts
 ; trawb: בית מהקלטת. סוף הקובץ באמצע: ?IO
