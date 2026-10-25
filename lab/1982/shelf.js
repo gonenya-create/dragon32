@@ -20,6 +20,62 @@
     ['dragontet', 'DragonTet', 'DragonTet', 'm',
       ['Salva Kantero, 2025', '/lab/1982/tapes/dragontet-readme.txt', 'https://github.com/salvakantero/Dragontet', '/lab/1982/tapes/dragontet-license.txt']]
   ];
+  // איך משחקים (גונן, 25.10: "לא בטוח שהמשתמשים יבינו איך משחקים"): תיבה נפתחת מתחת לכל משחק בשפת מכונה.
+  // [מקש] נהיה מקש מצויר. המקשים לפי התיעוד של המחבר, ונבדקו במכונה. במק: BREAK הוא Esc, ו-CLEAR הוא Home (fn+←).
+  const HOWTO = {
+    eggs: {
+      he: ['מתחילים ב[רווח], או בכפתור של ג\'ויסטיק ימני.',
+        '[←] [→] מזיזים את הסל. תופסים את הביצים, אבל לא את כדורי האש.',
+        'ביצה שנשברת על האדמה, או אש בסל, עולות לב. יש 3 לבבות.',
+        'יציאה: [BREAK] (במק: [Esc]).'],
+      en: ['Start with [SPACE], or the right joystick\'s button.',
+        '[←] [→] move the basket. Catch the eggs, but not the fireballs.',
+        'An egg that breaks on the ground, or fire in the basket, costs a heart. You have 3.',
+        'Quit: [BREAK] (on a Mac: [Esc]).']
+    },
+    blockdown: {
+      he: ['מתחילים ב[רווח]. במסך הפתיחה [←] [→] מחליפים מסכים, ושם בוחרים שחקן אחד או שניים.',
+        '[Z] [C] שמאלה וימינה. [S] או [1] מסובבים. [X] מוריד מהר, [3] מפיל, [2] שומר חלק בצד.',
+        'שחקן שני: [M] [>] זזים, [K] או [7] מסובבים, [<] מוריד, [9] מפיל, [8] שומר.',
+        'הפסקה: [CLEAR]+[ENTER], ו[רווח] ממשיך. סיום משחק: [CLEAR]+[BREAK] (במק: [Home]+[Esc]).'],
+      en: ['Start with [SPACE]. On the title screens, [←] [→] switch pages; one or two players is chosen there.',
+        '[Z] [C] move. [S] or [1] turn. [X] soft drop, [3] hard drop, [2] hold a piece.',
+        'Player two: [M] [>] move, [K] or [7] turn, [<] soft drop, [9] hard drop, [8] hold.',
+        'Pause: [CLEAR]+[ENTER], [SPACE] resumes. End the game: [CLEAR]+[BREAK] (on a Mac: [Home]+[Esc]).']
+    },
+    dragontet: {
+      he: ['בתפריט בוחרים ב[↑] [↓] ומאשרים ב[ENTER].',
+        '[←] [→] מזיזים, [↑] מסובב, [↓] מוריד מהר. אפשר גם [W] [A] [S] [D].',
+        'שחקן שני: [I] [J] [K] [L].',
+        '[H] עוצר, וכל מקש ממשיך. [X] יוצא לתפריט.'],
+      en: ['In the menu, choose with [↑] [↓] and confirm with [ENTER].',
+        '[←] [→] move, [↑] turns, [↓] drops faster. [W] [A] [S] [D] work too.',
+        'Player two: [I] [J] [K] [L].',
+        '[H] pauses, any key resumes. [X] goes back to the menu.']
+    }
+  };
+  // שורה עם [מקשים]: כל מקש בתוך kbd. צירוף כמו [CLEAR]+[BREAK] נשאר יחד בשורה אחת
+  function key(name) {
+    const k = document.createElement('kbd');
+    k.textContent = name === 'רווח' && EN ? 'SPACE' : name;
+    if (/[\u0590-\u05ff]/.test(k.textContent)) k.className = 'he';
+    return k;
+  }
+  function keyLine(text) {
+    const li = document.createElement('li');
+    for (const part of text.split(/((?:\[[^\]]+\]\+)*\[[^\]]+\])/)) {
+      if (!part) continue;
+      if (part[0] !== '[') { li.append(part); continue; }
+      const keys = part.slice(1, -1).split(']+[');
+      if (keys.length === 1) { li.append(key(keys[0])); continue; }
+      const combo = document.createElement('span');
+      combo.className = 'combo';
+      combo.dir = EN ? 'ltr' : 'rtl'; // בעברית קוראים מימין: קודם CLEAR ואז BREAK
+      keys.forEach((n, i) => { if (i) combo.append('+'); combo.append(key(n)); });
+      li.append(combo);
+    }
+    return li;
+  }
   // בלוק בקלטת: 55 3C סוג אורך נתונים סכום 55
   function block(type, data) {
     let sum = type + data.length;
@@ -51,6 +107,17 @@
     grids[key] = d.querySelector('.tapes');
     remember(d);
     box.appendChild(d);
+  }
+  // עוד משחק טוב שלא על המדף: ב-Dunjunz יש חלקים מהמשחק המקורי של Bug-Byte בלי רשות, אז רק קישור לאתר של המחבר
+  {
+    const more = document.createElement('p');
+    more.className = 'tape-credit drawer-more';
+    const a = document.createElement('a');
+    a.href = 'https://www.6809.org.uk/dunjunz/';
+    a.rel = 'noopener';
+    a.textContent = 'Dunjunz';
+    more.append(EN ? 'More to play: ' : 'עוד משחק: ', a, EN ? ' by Ciaran Anscomb, on his own site.' : ' של Ciaran Anscomb, באתר שלו.');
+    grids.mc.after(more);
   }
   const mineDrawer = document.getElementById('drawer-mine');
   if (mineDrawer) { if ('mine' in drawerState) mineDrawer.open = drawerState.mine; remember(mineDrawer); }
@@ -90,6 +157,21 @@
       by.append(' · ', lic);
     }
     wrap.append(b, by);
+    const how = HOWTO[id];
+    if (how) {
+      const d = document.createElement('details');
+      d.className = 'howto';
+      const sm = document.createElement('summary');
+      sm.textContent = EN ? 'How to play' : 'איך משחקים';
+      const ul = document.createElement('ul');
+      for (const line of EN ? how.en : how.he) ul.appendChild(keyLine(line));
+      const always = document.createElement('li');
+      always.className = 'howto-always';
+      always.textContent = EN ? 'Stuck? Reloading the page always restarts the computer.' : 'נתקעתם? טעינה מחדש של הדף תמיד מפעילה את המחשב מחדש.';
+      ul.appendChild(always);
+      d.append(sm, ul);
+      wrap.appendChild(d);
+    }
     shelf.appendChild(wrap);
   }
   // הגיעו מהאפליקציה עם ?tape=guess: הקלטת נטענת לבד, ברגע שהמחשב מוכן
@@ -204,7 +286,7 @@
       if (await loaded(bytes.length / 1.3)) {
         if (run) {
           await window.d32Type(RUNW + '\n');
-          status.textContent = mc ? (EN ? '"' + title + '" is running. Arrow keys move the basket. To leave: BREAK.' : '"' + title + '" רץ. החיצים מזיזים את הסל. ליציאה: BREAK.')
+          status.textContent = mc ? (EN ? '"' + title + '" is running. To leave: BREAK, or reload the page.' : '"' + title + '" רץ. ליציאה: BREAK, או טעינה מחדש של הדף.')
             : (EN ? '"' + title + '" is running. To stop: BREAK.' : '"' + title + '" רץ. לעצירה: BREAK.');
         } else status.textContent = EN ? '"' + title + '" is loaded. RUN starts it, LIST shows the code.' : '"' + title + '" נטען. RUN מפעיל, LIST מראה את הקוד.';
       } else status.textContent = failed();

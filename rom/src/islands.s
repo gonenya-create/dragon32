@@ -204,6 +204,22 @@ isl_ba7e	stb	,x+
 		blo	isl_ba7e
 		rts
 
+; @island $9772
+; RND כפונקציה: הארגומנט ב-FAC, התוצאה ב-FAC (קורא 2.x). Phantom Slayer קורא לה ישר
+		jmp	fn_rnd
+
+; @island $B93E
+; קריאת בלוק מהקלטת, כמו $A006 (Dungeon Raid קורא לה ישר)
+		jmp	tblkrd
+
+; @island $BDDC
+; מנוע הקלטת כבוי, כמו $8018 (Dungeon Raid ו-Phantom Slayer)
+		jmp	motoff
+
+; @island $BDE7
+; מנוע דולק וסנכרון קריאה, כמו $8021 / $A004 (Dungeon Raid)
+		jmp	tsync
+
 ; @island $BAA0
 ; SOUND מאוגרים: B = המשך, הטון כבר ב-$8C (קורא 2.7). תוכנות בשפת מכונה קוראות לה ישר (למשל DragonTet, דרך CMOC)
 		jmp	sound2
