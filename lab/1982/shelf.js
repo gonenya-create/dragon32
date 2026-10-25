@@ -54,6 +54,12 @@
         '[H] pauses, any key resumes. [X] goes back to the menu.']
     }
   };
+  // מה המשחק, בשורה אחת מתחת לשם (גונן, 25.10: "לא מבינים מה זה המשחק"). השם עצמו נשאר כמו שהמחבר כתב
+  const DESC = {
+    eggs: ['תופסים בסל את הביצים שהדרקון מטיל. לשחקן אחד.', 'Catch the dragon\'s eggs in a basket. 1 player.'],
+    blockdown: ['קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים.', 'Falling blocks: complete the lines. 1 or 2 players.'],
+    dragontet: ['קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים.', 'Falling blocks: complete the lines. 1 or 2 players.']
+  };
   // שורה עם [מקשים]: כל מקש בתוך kbd. צירוף כמו [CLEAR]+[BREAK] נשאר יחד בשורה אחת
   function key(name) {
     const k = document.createElement('kbd');
@@ -100,7 +106,7 @@
     const d = document.createElement('details');
     d.className = 'drawer';
     d.dataset.drawer = key;
-    d.open = key in drawerState ? drawerState[key] : key === 'basic';
+    d.open = !!drawerState[key]; // סגורות בכניסה הראשונה (גונן, 25.10), ונזכרות אחר כך
     d.innerHTML = '<summary><span class="drawer-name"></span> <span class="drawer-count"></span></summary><div class="drawer-body"><div class="tapes"></div></div>';
     d.querySelector('.drawer-name').textContent = EN ? en : he;
     d.querySelector('.drawer-count').textContent = TAPES.filter(t => (t[3] ? 'mc' : 'basic') === key).length;
@@ -131,6 +137,12 @@
     b.innerHTML = '<span></span><small dir="ltr"></small>';
     b.querySelector('span').textContent = EN ? en : he;
     b.querySelector('small').textContent = id.toUpperCase() + (kind ? ' · CLOADM' : '');
+    if (DESC[id]) {
+      const t = document.createElement('span');
+      t.className = 'tape-desc';
+      t.textContent = DESC[id][EN ? 1 : 0];
+      b.querySelector('small').before(t);
+    }
     b.addEventListener('click', () => load(id, EN ? en : he, b, false, kind));
     buttons.push(b);
     if (!credit) { shelf.appendChild(b); continue; }

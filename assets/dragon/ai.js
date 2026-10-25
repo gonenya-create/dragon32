@@ -36,7 +36,7 @@ export function createAI({ root, machine, input, powerOn }) {
     </form>
     <label class="d32-ai-quick"><span class="visually-hidden">${tr('שאלה מוכנה', 'Ready-made question')}</span><select><option value="">💬 ${tr('שאלות מוכנות…', 'Ready-made questions…')}</option></select></label>
     <div class="d32-ai-log" aria-live="polite"></div>
-    <nav class="d32-pages d32-pages-side" aria-label="${tr('עוד באתר', 'More on the site')}"><a href="${tr('/story/', '/en/story/')}"><span aria-hidden="true">📜</span> ${tr('יומן המסע', 'The journey')}</a><a href="${tr('/dragon-history/', '/en/dragon-history/')}"><span aria-hidden="true">🐉</span> ${tr('ההיסטוריה של ה-<bdi dir="ltr">Dragon</bdi>', 'The history of the <bdi dir="ltr">Dragon</bdi>')}</a></nav>
+    <nav class="d32-pages d32-pages-side" aria-label="${tr('עוד באתר', 'More on the site')}"><a href="${tr('/lessons/', '/en/lessons/')}"><span aria-hidden="true">🎓</span> ${tr('לומדים בייסיק', 'Learn BASIC')}</a><a href="${tr('/story/', '/en/story/')}"><span aria-hidden="true">📜</span> ${tr('יומן המסע', 'The journey')}</a><a href="${tr('/magazine/', '/en/magazine/')}"><span aria-hidden="true">📰</span> ${tr('מה קראו בעלי <bdi dir="ltr">Dragon</bdi>', 'What Dragon Owners Were Reading')}</a><a href="${tr('/dragon-history/', '/en/dragon-history/')}"><span aria-hidden="true">🐉</span> ${tr('ההיסטוריה של ה-<bdi dir="ltr">Dragon</bdi>', 'The history of the <bdi dir="ltr">Dragon</bdi>')}</a></nav>
     <p class="d32-legal"><a href="${tr('/accessibility/', '/en/accessibility/')}">${tr('נגישות', 'Accessibility')}</a> · <a href="${tr('/privacy/', '/en/privacy/')}">${tr('פרטיות', 'Privacy')}</a></p>`;
   root.querySelector('.d32-helper').after(box);
   const log = box.querySelector('.d32-ai-log');
