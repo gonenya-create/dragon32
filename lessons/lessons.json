@@ -768,5 +768,835 @@
    ],
    "nextTeaser": "You finished the course! Save your program with CSAVE \"REACT\" so it's waiting for you tomorrow, and keep inventing. You're a real Dragon programmer now."
   }
+ },
+ {
+  "n": 11,
+  "he": {
+   "title": "רשימות עם DIM: הדרקון זוכר את החברים שלכם",
+   "intro": "עד עכשיו כל משתנה היה קופסה אחת עם ערך אחד. היום נבנה מדף שלם של קופסאות, שנקרא רשימה. נכתוב תוכנית ששואלת על חמישה חברים, מדפיסה אותם מהסוף להתחלה, ואז הדרקון בוחר אחד מהם בהגרלה!",
+   "steps": [
+    {
+     "code": "10 DIM F$(5)",
+     "explain": "הפקודה DIM מכינה רשימה. השם F$ מסתיים בסימן $, ולכן זו רשימה של מילים. כל קופסה מקבלת מספר בסוגריים: F$(1), F$(2) וכן הלאה. בעצם יש כאן קופסאות מ-0 עד 5, ואנחנו נשתמש ב-1 עד 5."
+    },
+    {
+     "code": "20 FOR I=1 TO 5\n30 INPUT \"NAME OF A FRIEND\";F$(I)\n40 NEXT I",
+     "explain": "לולאה שרצה חמש פעמים. בכל סיבוב המשתנה I גדל באחד, והשם שתקלידו נכנס לקופסה מספר I. בסיבוב הראשון הוא נכנס ל-F$(1), בשני ל-F$(2), וכך הלאה. שלוש שורות במקום חמש פקודות שאלה נפרדות!"
+    },
+    {
+     "code": "50 CLS\n60 PRINT \"YOUR FRIENDS BACKWARDS:\"",
+     "explain": "מנקים את המסך וכותבים כותרת, כדי שהרשימה תיראה מסודרת."
+    },
+    {
+     "code": "70 FOR I=5 TO 1 STEP -1\n80 PRINT I;F$(I)\n90 NEXT I",
+     "explain": "עכשיו הלולאה סופרת אחורה: 5, 4, 3, 2, 1. זה מה ש-STEP -1 עושה: בכל סיבוב יורדים באחד. בכל פעם מודפס מספר הקופסה והשם שבתוכה. הרשימה זוכרת הכול, אז אפשר לקרוא אותה באיזה סדר שרוצים."
+    },
+    {
+     "code": "100 R=RND(5)\n110 PRINT \"THE DRAGON PICKS... \";F$(R);\"!\"",
+     "explain": "הפונקציה RND(5) מגרילה מספר מ-1 עד 5 ושומרת אותו ב-R. אחר כך מדפיסים את מה שיש בקופסה מספר R. זה הקסם של רשימות: המספר בסוגריים יכול להיות משתנה, ולכן אפשר לבחור קופסה בהגרלה."
+    }
+   ],
+   "run": "אחרי שתקלידו RUN, המחשב ישאל חמש פעמים NAME OF A FRIEND?. הקלידו שם באנגלית ולחצו Enter, למשל DANA, ואחריו TOM, NOA, BEN ו-MAYA. אז המסך יתנקה, ותראו את השמות מהסוף להתחלה, כל אחד עם המספר שלו: 5 MAYA ועד 1 DANA. בסוף הדרקון יכריז על אחד מהם, למשל THE DRAGON PICKS... NOA!. הריצו שוב, ואולי הוא יבחר מישהו אחר.",
+   "tip": "המספר בסוגריים הוא מספר הקופסה. אחרי DIM F$(5) יש קופסאות מ-0 עד 5 בלבד, ולכן F$(6) לא קיימת, והמחשב יעצור עם הודעת שגיאה. רוצים יותר חברים? הגדילו את המספר ב-DIM וגם בלולאות.",
+   "challenge": "כתבו תוכנית ששואלת על ארבעה צבעים שאתם אוהבים. אחר כך, בכל לחיצה על מקש, הדרקון בוחר צבע אחר בהגרלה. לחיצה על Q מסיימת.",
+   "challengeCode": [
+    "10 DIM C$(4)",
+    "20 FOR I=1 TO 4",
+    "30 INPUT \"A COLOUR\";C$(I)",
+    "40 NEXT I",
+    "50 CLS",
+    "60 PRINT \"PRESS A KEY. Q TO STOP\"",
+    "70 K$=INKEY$",
+    "80 IF K$=\"\" THEN 70",
+    "90 IF K$=\"Q\" THEN 130",
+    "100 R=RND(4)",
+    "110 PRINT \"THE DRAGON LIKES \";C$(R)",
+    "120 GOTO 70",
+    "130 PRINT \"BYE!\""
+   ],
+   "nextTeaser": "בשיעור הבא נלמד את GOSUB ו-RETURN, ונכין כרטיס יום הולדת עם חלקים שחוזרים על עצמם."
+  },
+  "en": {
+   "title": "Lists with DIM: The Dragon Remembers Your Friends",
+   "intro": "Until now, every variable was one box holding one thing. Today we build a whole shelf of boxes, called a list. Our program asks for five friends, prints them backwards, and then the dragon picks one at random!",
+   "steps": [
+    {
+     "code": "10 DIM F$(5)",
+     "explain": "DIM gets a list ready. The name F$ ends with $, so this is a list of words. Each box has a number in brackets: F$(1), F$(2) and so on. There are really boxes 0 to 5, and we'll use 1 to 5."
+    },
+    {
+     "code": "20 FOR I=1 TO 5\n30 INPUT \"NAME OF A FRIEND\";F$(I)\n40 NEXT I",
+     "explain": "A loop that runs five times. Each time round, I goes up by one, and the name you type goes into box number I. First into F$(1), then F$(2), and so on. Three lines instead of five separate questions!"
+    },
+    {
+     "code": "50 CLS\n60 PRINT \"YOUR FRIENDS BACKWARDS:\"",
+     "explain": "Clear the screen and print a heading, so the list looks neat."
+    },
+    {
+     "code": "70 FOR I=5 TO 1 STEP -1\n80 PRINT I;F$(I)\n90 NEXT I",
+     "explain": "Now the loop counts down: 5, 4, 3, 2, 1. That's what STEP -1 does: it goes down by one each time. Each time it prints the box number and the name inside it. The list remembers everything, so you can read it in any order you like."
+    },
+    {
+     "code": "100 R=RND(5)\n110 PRINT \"THE DRAGON PICKS... \";F$(R);\"!\"",
+     "explain": "RND(5) picks a random number from 1 to 5 and stores it in R. Then we print whatever is in box number R. This is the magic of lists: the number in brackets can be a variable, so a random number can choose the box."
+    }
+   ],
+   "run": "Type RUN and the computer asks NAME OF A FRIEND? five times. Type a name and press Enter each time, for example DANA, TOM, NOA, BEN, MAYA. The screen clears and you see the names backwards, each with its number, from 5 MAYA down to 1 DANA. Then the dragon announces one, like THE DRAGON PICKS... NOA! Run it again and it may pick someone else.",
+   "tip": "The number in brackets is the box number. After DIM F$(5) there are only boxes 0 to 5, so F$(6) doesn't exist and the computer stops with an error. Want more friends? Make the number in DIM bigger, and change the loops too.",
+   "challenge": "Write a program that asks for four colours you like. Then, every time you press a key, the dragon picks one at random. Pressing Q stops it.",
+   "challengeCode": [
+    "10 DIM C$(4)",
+    "20 FOR I=1 TO 4",
+    "30 INPUT \"A COLOUR\";C$(I)",
+    "40 NEXT I",
+    "50 CLS",
+    "60 PRINT \"PRESS A KEY. Q TO STOP\"",
+    "70 K$=INKEY$",
+    "80 IF K$=\"\" THEN 70",
+    "90 IF K$=\"Q\" THEN 130",
+    "100 R=RND(4)",
+    "110 PRINT \"THE DRAGON LIKES \";C$(R)",
+    "120 GOTO 70",
+    "130 PRINT \"BYE!\""
+   ],
+   "nextTeaser": "Next time: GOSUB and RETURN, and a birthday card built from parts you can use again and again."
+  }
+ },
+ {
+  "n": 12,
+  "he": {
+   "title": "שיעור 12: כרטיס ברכה ליום הולדת",
+   "intro": "היום נבנה כרטיס ברכה שהמחשב מכין לבד: הוא שואל למי הכרטיס, מצייר מסגרת של כוכביות וגם מנגן את שיר יום ההולדת. נכיר את GOSUB ואת RETURN, שמאפשרים לכתוב חלק פעם אחת ולהשתמש בו שוב ושוב. בשנת 1983 ילדים העתיקו תוכניות כאלה מעיתונים, וכרטיס ברכה מנגן היה הפתעה מצוינת.",
+   "steps": [
+    {
+     "code": "10 CLS\n20 INPUT \"WHO IS THE CARD FOR\";N$\n30 CLS",
+     "explain": "קודם מנקים את המסך עם CLS. הפקודה INPUT שואלת למי הכרטיס ושומרת את השם במשתנה N$. אחר כך מנקים שוב, כדי שהכרטיס יופיע על מסך נקי."
+    },
+    {
+     "code": "40 GOSUB 100\n50 PRINT \"  HAPPY BIRTHDAY\"\n60 PRINT \"  DEAR \";N$;\"!\"\n70 GOSUB 100",
+     "explain": "זה הכרטיס עצמו. הפקודה GOSUB 100 אומרת למחשב: קפוץ לשורה 100, עשה את מה שכתוב שם, ותחזור לכאן. בין שתי הקפיצות מדפיסים את הברכה עם השם. כך מקבלים שורת כוכביות למעלה ושורה למטה, אבל כתבנו אותה רק פעם אחת."
+    },
+    {
+     "code": "80 GOSUB 200\n90 END",
+     "explain": "עכשיו קופצים לשורה 200 כדי לנגן את השיר. אחר כך הפקודה END עוצרת את התוכנית. היא חשובה מאוד: בלעדיה המחשב היה ממשיך ללכת ונכנס בטעות לשורה 100."
+    },
+    {
+     "code": "100 PRINT STRING$(20,\"*\")\n110 SOUND 150,1\n120 RETURN",
+     "explain": "זו תת-תוכנית, חלק קטן שעושה משימה אחת. הפקודה STRING$(20,\"*\") מכינה 20 כוכביות ברצף, והפקודה SOUND משמיעה צפצוף קצר. בסוף, RETURN מחזירה את המחשב לשורה שאחרי ה-GOSUB שקרא לה."
+    },
+    {
+     "code": "200 PLAY \"T5O2L8CCL4DCFL2EL8CCL4DCGL2F\"\n210 RETURN",
+     "explain": "תת-תוכנית שנייה, והפעם מוזיקלית. בתוך PLAY יש תווים: האות T קובעת קצב, האות O בוחרת אוקטבה, והאות L קובעת אורך (L8 קצר, L4 בינוני, L2 ארוך). התווים C C D C F E הם הפתיחה של שיר יום ההולדת. ושוב, RETURN מחזירה אותנו הביתה."
+    }
+   ],
+   "run": "כתבו RUN ולחצו Enter. המחשב ישאל WHO IS THE CARD FOR? הקלידו שם באותיות אנגליות, למשל DANA, ולחצו Enter. המסך יתנקה, תופיע שורת כוכביות עם צפצוף, הברכה HAPPY BIRTHDAY DEAR DANA!, עוד שורת כוכביות עם צפצוף, ואז יתנגן שיר יום ההולדת.",
+   "tip": "אל תשכחו את שורה 90! בלי END המחשב ממשיך לשורה 100, מדפיס עוד שורת כוכביות, ואז מגיע ל-RETURN בלי שמישהו קרא לו. הוא לא יודע לאן לחזור, ולכן מציג הודעת שגיאה.",
+   "challenge": "שדרגו את הכרטיס: בקשו גם את שם השולח, הוסיפו שורה עם LOVE FROM ושורת כוכביות שלישית מתחתיה. את שורת הכוכביות לא כותבים שוב, רק קוראים ל-GOSUB עוד פעם.",
+   "challengeCode": [
+    "10 CLS",
+    "20 INPUT \"WHO IS THE CARD FOR\";N$",
+    "30 INPUT \"WHO IS IT FROM\";F$",
+    "40 CLS",
+    "50 GOSUB 200",
+    "60 PRINT \"  HAPPY BIRTHDAY\"",
+    "70 PRINT \"  DEAR \";N$;\"!\"",
+    "80 GOSUB 200",
+    "90 PRINT \"  LOVE FROM \";F$",
+    "100 GOSUB 200",
+    "110 GOSUB 300",
+    "120 END",
+    "200 PRINT STRING$(20,\"*\"):SOUND 150,1",
+    "210 RETURN",
+    "300 PLAY \"T5O2L8CCL4DCFL2EL8CCL4DCGL2F\":RETURN"
+   ],
+   "nextTeaser": "בשיעור הבא נשחק עם מילים: נספור אותיות עם LEN ונחתוך מילים לחתיכות עם LEFT$, MID$ ו-RIGHT$."
+  },
+  "en": {
+   "title": "Lesson 12: A Birthday Card",
+   "intro": "Today we build a birthday card that the computer makes all by itself. It asks who the card is for, draws a border of stars, and plays Happy Birthday. We'll meet GOSUB and RETURN, which let you write a piece once and use it again and again. In 1983, kids typed programs like this from magazines, and a singing card made a great surprise.",
+   "steps": [
+    {
+     "code": "10 CLS\n20 INPUT \"WHO IS THE CARD FOR\";N$\n30 CLS",
+     "explain": "First we clear the screen with CLS. INPUT asks who the card is for and keeps the name in the variable N$. Then we clear the screen again, so the card appears on a clean screen."
+    },
+    {
+     "code": "40 GOSUB 100\n50 PRINT \"  HAPPY BIRTHDAY\"\n60 PRINT \"  DEAR \";N$;\"!\"\n70 GOSUB 100",
+     "explain": "This is the card itself. GOSUB 100 tells the computer: jump to line 100, do what it says there, then come back here. Between the two jumps we print the greeting with the name. So we get a row of stars on top and one below, but we only wrote it once."
+    },
+    {
+     "code": "80 GOSUB 200\n90 END",
+     "explain": "Now we jump to line 200 to play the song. Then END stops the program. It's very important: without it, the computer would keep walking and stumble into line 100 by mistake."
+    },
+    {
+     "code": "100 PRINT STRING$(20,\"*\")\n110 SOUND 150,1\n120 RETURN",
+     "explain": "This is a subroutine, a small part that does one job. STRING$(20,\"*\") makes 20 stars in a row, and SOUND plays a short beep. At the end, RETURN sends the computer back to the line after the GOSUB that called it."
+    },
+    {
+     "code": "200 PLAY \"T5O2L8CCL4DCFL2EL8CCL4DCGL2F\"\n210 RETURN",
+     "explain": "A second subroutine, and this one is musical. Inside PLAY are notes: T sets the speed, O picks the octave, and L sets the length (L8 short, L4 medium, L2 long). The notes C C D C F E are the start of Happy Birthday. And again, RETURN takes us back home."
+    }
+   ],
+   "run": "Type RUN and press Enter. The computer asks WHO IS THE CARD FOR? Type a name, for example DANA, and press Enter. The screen clears, a row of stars appears with a beep, then HAPPY BIRTHDAY DEAR DANA!, another row of stars with a beep, and then Happy Birthday plays.",
+   "tip": "Don't forget line 90! Without END, the computer carries on to line 100, prints another row of stars, and then reaches RETURN when nobody called it. It doesn't know where to go back to, so it shows an error message.",
+   "challenge": "Upgrade the card: also ask who it's from, add a LOVE FROM line, and put a third row of stars under it. Don't write the star line again. Just call GOSUB one more time.",
+   "challengeCode": [
+    "10 CLS",
+    "20 INPUT \"WHO IS THE CARD FOR\";N$",
+    "30 INPUT \"WHO IS IT FROM\";F$",
+    "40 CLS",
+    "50 GOSUB 200",
+    "60 PRINT \"  HAPPY BIRTHDAY\"",
+    "70 PRINT \"  DEAR \";N$;\"!\"",
+    "80 GOSUB 200",
+    "90 PRINT \"  LOVE FROM \";F$",
+    "100 GOSUB 200",
+    "110 GOSUB 300",
+    "120 END",
+    "200 PRINT STRING$(20,\"*\"):SOUND 150,1",
+    "210 RETURN",
+    "300 PLAY \"T5O2L8CCL4DCFL2EL8CCL4DCGL2F\":RETURN"
+   ],
+   "nextTeaser": "Next lesson we play with words: counting letters with LEN and chopping words into pieces with LEFT$, MID$ and RIGHT$."
+  }
+ },
+ {
+  "n": 13,
+  "he": {
+   "title": "שיעור 13: משחקים עם מילים",
+   "intro": "עד עכשיו המחשב עבד בעיקר עם מספרים. היום הוא ילמד לפרק מילים לאותיות! נבנה צעצוע מילים: תקלידו מילה, והדרקון יספור את האותיות שלה, יהפוך אותה, יבדוק אם היא פלינדרום ויבנה ממנה מדרגות.",
+   "steps": [
+    {
+     "code": "10 INPUT \"TYPE A WORD (OR STOP)\";W$\n20 IF W$=\"STOP\" THEN END",
+     "explain": "שורה 10 מבקשת מילה ושומרת אותה במשתנה W$. זוכרים? הסימן $ אומר שזו מילה ולא מספר. בשורה 20, אם הקלדתם STOP, הפקודה END עוצרת את התוכנית. ככה יש לנו דרך לצאת."
+    },
+    {
+     "code": "30 L=LEN(W$)\n40 PRINT \"IT HAS\";L;\"LETTERS\"\n50 PRINT \"FIRST LETTER: \";LEFT$(W$,1)\n60 PRINT \"LAST LETTER: \";RIGHT$(W$,1)",
+     "explain": "הפקודה LEN סופרת כמה אותיות יש במילה, והמספר נשמר ב-L. אחר כך LEFT$(W$,1) לוקחת אות אחת מההתחלה, ו-RIGHT$(W$,1) לוקחת אות אחת מהסוף. אם נכתוב 2 במקום 1, נקבל שתי אותיות."
+    },
+    {
+     "code": "70 R$=\"\"\n80 FOR I=L TO 1 STEP -1\n90 R$=R$+MID$(W$,I,1)\n100 NEXT I\n110 PRINT \"BACKWARDS: \";R$",
+     "explain": "כאן הקסם! בשורה 70 המשתנה R$ מתחיל ריק. הלולאה סופרת אחורה, מהאות האחרונה עד הראשונה, בזכות STEP -1. בכל סיבוב MID$(W$,I,1) שולפת אות אחת ממקום I, והסימן + מדביק אותה לסוף של R$. בסוף R$ הוא המילה הפוכה."
+    },
+    {
+     "code": "120 IF R$=W$ THEN PRINT \"A PALINDROME! SAME BOTH WAYS!\"",
+     "explain": "פלינדרום היא מילה שנקראת אותו דבר משני הכיוונים, כמו RADAR. אם המילה ההפוכה שווה למילה המקורית, המחשב מכריז על פלינדרום."
+    },
+    {
+     "code": "130 PRINT \"STAIRS:\"\n140 FOR I=1 TO L:PRINT LEFT$(W$,I):NEXT I\n150 GOTO 10",
+     "explain": "בכל סיבוב של הלולאה הפקודה LEFT$ לוקחת עוד אות אחת מההתחלה: קודם אות אחת, אחר כך שתיים, וכן הלאה. ככה נבנות מדרגות. שימו לב לנקודתיים: שלוש פקודות בשורה אחת! בסוף, GOTO 10 חוזר לשאול מילה חדשה."
+    }
+   ],
+   "run": "הקלידו RUN ולחצו Enter. כשהמחשב שואל, הקלידו DRAGON ולחצו Enter. תראו: IT HAS 6 LETTERS, האות הראשונה D, האחרונה N, ובהפוך NOGARD. אחריהן מדרגות: D, DR, DRA, DRAG, DRAGO, DRAGON. נסו גם את המילה RADAR או LEVEL, ותקבלו הודעת פלינדרום! כדי לסיים, הקלידו STOP.",
+   "tip": "השורה 70 חשובה! בלעדיה המשתנה R$ לא מתרוקן, והמילה ההפוכה החדשה תידבק לסוף של הקודמת. אם תמחקו אותה בניסיון, תראו בלגן של אותיות.",
+   "challenge": "בשנת 1983 ילדים העתיקו תוכניות שלמות מתוך מגזינים למחשבים, ואז שינו אותן כדי שיעשו משהו חדש. עכשיו תורכם: כתבו תוכנית שסופרת כמה תנועות (A, E, I, O, U) יש במילה. רמז: הפקודה INSTR בודקת אם אות נמצאת בתוך מילה.",
+   "challengeCode": [
+    "10 INPUT \"TYPE A WORD (OR STOP)\";W$",
+    "20 IF W$=\"STOP\" THEN END",
+    "30 V=0",
+    "40 FOR I=1 TO LEN(W$)",
+    "50 C$=MID$(W$,I,1)",
+    "60 IF INSTR(\"AEIOU\",C$)>0 THEN V=V+1",
+    "70 NEXT I",
+    "80 PRINT \"VOWELS:\";V",
+    "90 GOTO 10"
+   ],
+   "nextTeaser": "בשיעור הבא נלמד את הפקודות READ ו-DATA ונבנה חידון אמיתי עם שאלות ותשובות!"
+  },
+  "en": {
+   "title": "Lesson 13: Playing with Words",
+   "intro": "So far the computer has mostly worked with numbers. Today it learns to take words apart, letter by letter! We'll build a word toy: type a word, and the Dragon counts its letters, flips it backwards, checks if it's a palindrome and builds stairs out of it.",
+   "steps": [
+    {
+     "code": "10 INPUT \"TYPE A WORD (OR STOP)\";W$\n20 IF W$=\"STOP\" THEN END",
+     "explain": "Line 10 asks for a word and keeps it in W$. Remember, the $ means it holds a word, not a number. In line 20, if you typed STOP, END finishes the program. That's our way out."
+    },
+    {
+     "code": "30 L=LEN(W$)\n40 PRINT \"IT HAS\";L;\"LETTERS\"\n50 PRINT \"FIRST LETTER: \";LEFT$(W$,1)\n60 PRINT \"LAST LETTER: \";RIGHT$(W$,1)",
+     "explain": "LEN counts the letters in the word, and we keep that number in L. Then LEFT$(W$,1) takes one letter from the start, and RIGHT$(W$,1) takes one letter from the end. Put 2 instead of 1 and you get two letters."
+    },
+    {
+     "code": "70 R$=\"\"\n80 FOR I=L TO 1 STEP -1\n90 R$=R$+MID$(W$,I,1)\n100 NEXT I\n110 PRINT \"BACKWARDS: \";R$",
+     "explain": "Here's the magic! Line 70 starts R$ empty. The loop counts backwards, from the last letter to the first, thanks to STEP -1. Each time round, MID$(W$,I,1) pulls out one letter from position I, and + glues it onto the end of R$. At the end, R$ is the word backwards."
+    },
+    {
+     "code": "120 IF R$=W$ THEN PRINT \"A PALINDROME! SAME BOTH WAYS!\"",
+     "explain": "A palindrome is a word that reads the same both ways, like RADAR. If the backwards word equals the original, the computer announces it."
+    },
+    {
+     "code": "130 PRINT \"STAIRS:\"\n140 FOR I=1 TO L:PRINT LEFT$(W$,I):NEXT I\n150 GOTO 10",
+     "explain": "Each time round the loop, LEFT$ takes one more letter from the start: first one letter, then two, and so on. That builds the stairs. Notice the colons: three commands on one line! Finally GOTO 10 goes back to ask for a new word."
+    }
+   ],
+   "run": "Type RUN and press Enter. When it asks, type DRAGON and press Enter. You'll see IT HAS 6 LETTERS, first letter D, last letter N, and backwards NOGARD. Then the stairs: D, DR, DRA, DRAG, DRAGO, DRAGON. Try RADAR or LEVEL too, and you'll get the palindrome message! To finish, type STOP.",
+   "tip": "Line 70 matters! Without it, R$ never gets emptied, and each new backwards word gets glued onto the end of the old one. Delete it as an experiment and watch the letters pile up.",
+   "challenge": "In 1983, kids typed whole programs from computer magazines, then changed them to do something new. Your turn: write a program that counts the vowels (A, E, I, O, U) in a word. Hint: INSTR checks whether a letter is inside a word.",
+   "challengeCode": [
+    "10 INPUT \"TYPE A WORD (OR STOP)\";W$",
+    "20 IF W$=\"STOP\" THEN END",
+    "30 V=0",
+    "40 FOR I=1 TO LEN(W$)",
+    "50 C$=MID$(W$,I,1)",
+    "60 IF INSTR(\"AEIOU\",C$)>0 THEN V=V+1",
+    "70 NEXT I",
+    "80 PRINT \"VOWELS:\";V",
+    "90 GOTO 10"
+   ],
+   "nextTeaser": "Next lesson: READ and DATA, and we'll build a real quiz with questions and answers!"
+  }
+ },
+ {
+  "n": 14,
+  "he": {
+   "title": "שיעור 14: חידון עם READ ו-DATA",
+   "intro": "היום נבנה חידון אמיתי! המחשב ישאל ארבע שאלות, יבדוק כל תשובה, יספור נקודות ואפילו ינגן מנגינת ניצחון אם תענו על הכול נכון. הסוד הוא שתי פקודות חדשות: בעזרת READ המחשב קורא, ובעזרת DATA אנחנו שומרים לו מידע בתוך התוכנית.",
+   "steps": [
+    {
+     "code": "10 CLS:S=0\n20 FOR Q=1 TO 4",
+     "explain": "קודם מנקים את המסך. המשתנה S הוא הניקוד, והוא מתחיל באפס. אחר כך הלולאה FOR חוזרת 4 פעמים, פעם אחת לכל שאלה."
+    },
+    {
+     "code": "30 READ Q$,A$",
+     "explain": "זו הפקודה החדשה! בכל פעם ש-READ רצה, היא לוקחת את שני הערכים הבאים משורות ה-DATA, לפי הסדר. הראשון נכנס ל-Q$ (השאלה), והשני ל-A$ (התשובה הנכונה). בסיבוב הראשון היא קוראת את השאלה על העכביש, בשני את שאלת החשבון, וכן הלאה."
+    },
+    {
+     "code": "40 PRINT Q$;\n50 INPUT B$",
+     "explain": "המחשב מדפיס את השאלה. הנקודה-פסיק בסוף אומרת לו להישאר באותה שורה. אז INPUT מוסיף סימן שאלה ומחכה שתקלידו תשובה, והיא נשמרת ב-B$."
+    },
+    {
+     "code": "60 IF B$=A$ THEN PRINT \"CORRECT!\":S=S+1:GOTO 80\n70 PRINT \"NO, IT IS \";A$\n80 NEXT Q",
+     "explain": "כאן בודקים: האם התשובה שלכם (B$) שווה לתשובה הנכונה (A$)? אם כן, כתוב CORRECT, הניקוד גדל באחד, ו-GOTO מדלג על שורה 70. אם לא, שורה 70 מגלה לכם את התשובה הנכונה. בסוף, NEXT עוברת לשאלה הבאה."
+    },
+    {
+     "code": "90 PRINT \"YOU GOT\";S;\"OUT OF 4\"\n100 IF S=4 THEN PLAY \"O3L8CEGL4O4C\"",
+     "explain": "אחרי ארבע השאלות המחשב מראה כמה נקודות צברתם. ואם קיבלתם 4 מתוך 4, הפקודה PLAY מנגנת מנגינת ניצחון קצרה: שלושה תווים מהירים ואחד ארוך וגבוה."
+    },
+    {
+     "code": "110 DATA HOW MANY LEGS HAS A SPIDER,8\n120 DATA WHAT IS 7 X 8,56\n130 DATA WHAT COLOUR IS A BANANA,YELLOW\n140 DATA WHICH PLANET DO WE LIVE ON,EARTH",
+     "explain": "זה המחסן של החידון. כל שורת DATA מחזיקה שאלה, פסיק, ואחריו התשובה. המחשב לא מריץ את השורות האלה, הוא רק קורא מהן כש-READ מבקשת. רוצים חידון אחר? פשוט משנים את השאלות כאן!"
+    }
+   ],
+   "run": "אחרי RUN יופיע: HOW MANY LEGS HAS A SPIDER? הקלידו 8 ולחצו Enter, ויופיע CORRECT!. ככה עונים על כל השאלות: 56, אחר כך YELLOW, ובסוף EARTH. בסוף תראו YOU GOT 4 OUT OF 4 ותשמעו את המנגינה. נסו גם לטעות בכוונה, כדי לראות את המחשב מתקן אתכם.",
+   "tip": "המחשב מאוד קפדן: התשובה צריכה להיות בדיוק כמו ב-DATA. אם תכתבו EIGHT במקום 8, זה ייחשב טעות. ועוד דבר: אסור לשים פסיק בתוך שאלה, כי בשורת DATA הפסיק מפריד בין ערך לערך.",
+   "challenge": "שדרגו את החידון: שימו בשורת DATA הראשונה את מספר השאלות, כך שאפשר להוסיף שאלות בלי לשנות את הלולאה. ובסוף שאלו אם לשחק שוב. הפקודה RESTORE מחזירה את הקריאה לשורת ה-DATA הראשונה, כדי שהחידון יתחיל מההתחלה.",
+   "challengeCode": [
+    "10 CLS:S=0",
+    "20 READ N",
+    "30 FOR Q=1 TO N",
+    "40 READ Q$,A$",
+    "50 PRINT Q$;:INPUT B$",
+    "60 IF B$=A$ THEN PRINT \"CORRECT!\":S=S+1:GOTO 80",
+    "70 PRINT \"NO, IT IS \";A$",
+    "80 NEXT Q",
+    "90 PRINT \"YOU GOT\";S;\"OUT OF\";N",
+    "100 INPUT \"PLAY AGAIN (Y/N)\";Y$",
+    "110 IF Y$=\"Y\" THEN RESTORE:GOTO 10",
+    "120 DATA 3",
+    "130 DATA WHAT IS 9 X 9,81",
+    "140 DATA HOW MANY DAYS IN A WEEK,7",
+    "150 DATA WHAT DO DRAGONS BREATHE,FIRE"
+   ],
+   "nextTeaser": "בשיעור הבא מתחילים לבנות משחק אמיתי: נזיז את הדרקון על המסך עם מקשי החצים!"
+  },
+  "en": {
+   "title": "Lesson 14: A Quiz with READ and DATA",
+   "intro": "Today we build a real quiz! The computer asks four questions, checks every answer, keeps score, and even plays a victory tune if you get them all right. The secret is two new commands: DATA stores information inside your program, and READ picks it up.",
+   "steps": [
+    {
+     "code": "10 CLS:S=0\n20 FOR Q=1 TO 4",
+     "explain": "First we clear the screen. S is the score, and it starts at zero. Then the FOR loop repeats 4 times, once for each question."
+    },
+    {
+     "code": "30 READ Q$,A$",
+     "explain": "Here's the new command! Every time READ runs, it takes the next two values from the DATA lines, in order. The first goes into Q$ (the question), the second into A$ (the right answer). First time round it reads the spider question, second time the sum, and so on."
+    },
+    {
+     "code": "40 PRINT Q$;\n50 INPUT B$",
+     "explain": "The computer prints the question. The semicolon at the end keeps it on the same line. Then INPUT adds a question mark and waits for you to type an answer, which goes into B$."
+    },
+    {
+     "code": "60 IF B$=A$ THEN PRINT \"CORRECT!\":S=S+1:GOTO 80\n70 PRINT \"NO, IT IS \";A$\n80 NEXT Q",
+     "explain": "Now we check: is your answer (B$) the same as the right one (A$)? If yes, it prints CORRECT!, adds 1 to the score, and GOTO jumps over line 70. If not, line 70 tells you the right answer. Then NEXT moves on to the next question."
+    },
+    {
+     "code": "90 PRINT \"YOU GOT\";S;\"OUT OF 4\"\n100 IF S=4 THEN PLAY \"O3L8CEGL4O4C\"",
+     "explain": "After all four questions, the computer shows your score. And if you got 4 out of 4, PLAY gives you a little victory tune: three quick notes and one long high one."
+    },
+    {
+     "code": "110 DATA HOW MANY LEGS HAS A SPIDER,8\n120 DATA WHAT IS 7 X 8,56\n130 DATA WHAT COLOUR IS A BANANA,YELLOW\n140 DATA WHICH PLANET DO WE LIVE ON,EARTH",
+     "explain": "This is the quiz's storeroom. Each DATA line holds a question, a comma, then the answer. The computer never runs these lines; it just reads from them when READ asks. Want a different quiz? Just change the questions here! Back in 1983, kids typed programs like this out of magazines, then swapped in their own questions."
+    }
+   ],
+   "run": "After RUN you'll see: HOW MANY LEGS HAS A SPIDER? Type 8 and press Enter, and you'll get CORRECT!. Answer the rest the same way: 56, then YELLOW, then EARTH. At the end you'll see YOU GOT 4 OUT OF 4 and hear the tune. Try a wrong answer on purpose too, and watch the computer correct you.",
+   "tip": "The computer is very fussy: your answer must match the DATA exactly. Typing EIGHT instead of 8 counts as wrong. Also, never put a comma inside a question, because in a DATA line a comma separates one value from the next.",
+   "challenge": "Upgrade the quiz: put the number of questions in the first DATA line, so you can add questions without changing the loop. Then ask whether to play again at the end. RESTORE sends READ back to the first DATA line, so the quiz starts over.",
+   "challengeCode": [
+    "10 CLS:S=0",
+    "20 READ N",
+    "30 FOR Q=1 TO N",
+    "40 READ Q$,A$",
+    "50 PRINT Q$;:INPUT B$",
+    "60 IF B$=A$ THEN PRINT \"CORRECT!\":S=S+1:GOTO 80",
+    "70 PRINT \"NO, IT IS \";A$",
+    "80 NEXT Q",
+    "90 PRINT \"YOU GOT\";S;\"OUT OF\";N",
+    "100 INPUT \"PLAY AGAIN (Y/N)\";Y$",
+    "110 IF Y$=\"Y\" THEN RESTORE:GOTO 10",
+    "120 DATA 3",
+    "130 DATA WHAT IS 9 X 9,81",
+    "140 DATA HOW MANY DAYS IN A WEEK,7",
+    "150 DATA WHAT DO DRAGONS BREATHE,FIRE"
+   ],
+   "nextTeaser": "Next lesson we start building a real game: moving the dragon around the screen with the arrow keys!"
+  }
+ },
+ {
+  "n": 15,
+  "he": {
+   "title": "שיעור 15: הדרקון זז! משחק, חלק 1",
+   "intro": "היום מתחילים לבנות משחק אמיתי, בחמישה חלקים. בחלק הראשון נשים דרקון קטן על המסך ונזיז אותו עם מקשי החצים. ב-1983 ילדים הקלידו משחקים כאלה שורה אחרי שורה מתוך מגזינים, ועכשיו תורכם.",
+   "steps": [
+    {
+     "code": "30 CLS\n40 X=16:Y=8\n50 PRINT @ 0,\"MOVE THE DRAGON WITH THE ARROWS\";\n60 PRINT @ Y*32+X,\"D\";",
+     "explain": "קודם מנקים את המסך עם CLS. המשתנה X הוא העמודה (0 עד 31), והמשתנה Y הוא השורה (0 עד 15). לכן הדרקון מתחיל באמצע. בשורה 0 כותבים הוראה, ואז מציירים את הדרקון: האות D. כל שורה במסך היא 32 מקומות, ולכן המקום של הדרקון הוא Y*32+X. הנקודה-פסיק בסוף אומרת למחשב לא לרדת שורה."
+    },
+    {
+     "code": "100 K$=INKEY$:IF K$=\"\" THEN 100",
+     "explain": "זה הלב של המשחק. הפקודה INKEY$ בודקת איזה מקש נלחץ עכשיו, בלי לחכות ל-Enter. אם לא נלחץ כלום, המשתנה K$ ריק, וחוזרים שוב לשורה 100. ככה המחשב מחכה בסבלנות למקש."
+    },
+    {
+     "code": "110 PRINT @ Y*32+X,\" \";",
+     "explain": "לפני שזזים, מוחקים את הדרקון מהמקום הישן: כותבים עליו רווח. בלי השורה הזאת הדרקון היה משאיר אחריו שובל ארוך של אותיות D."
+    },
+    {
+     "code": "120 IF K$=CHR$(94) AND Y>1 THEN Y=Y-1\n130 IF K$=CHR$(10) AND Y<14 THEN Y=Y+1\n140 IF K$=CHR$(8) AND X>0 THEN X=X-1\n150 IF K$=CHR$(9) AND X<31 THEN X=X+1",
+     "explain": "כל מקש חץ שולח קוד משלו: למעלה 94, למטה 10, שמאלה 8 וימינה 9. הפקודה CHR$ הופכת את המספר לתו, כדי שאפשר יהיה להשוות. החלק שאחרי AND הוא הגדר: הדרקון לא עולה לשורת ההוראה, לא יורד מתחת לשורה 14, ולא בורח מהצדדים. כשעולים, Y קטן. כשהולכים ימינה, X גדל."
+    },
+    {
+     "code": "160 PRINT @ Y*32+X,\"D\";\n390 GOTO 100",
+     "explain": "מציירים את הדרקון במקום החדש, וחוזרים לחכות למקש הבא. למה דווקא 390? השארנו הרבה מספרים פנויים באמצע, כי בשיעורים הבאים נכניס שם אביר, זהב וניקוד."
+    }
+   ],
+   "run": "הקלידו RUN ולחצו Enter. למעלה תופיע ההוראה, ובאמצע המסך האות D. לחצו על מקשי החצים במקלדת, והדרקון יזוז. נסו להגיע לקצה: הוא ייעצר שם ולא יברח. כדי לעצור, לחצו Esc או על כפתור העצירה.",
+   "tip": "אל תשכחו את הנקודה-פסיק בסוף כל PRINT @. בלעדיה המחשב יורד לשורה הבאה, ובתחתית המסך כל התמונה עלולה לקפוץ למעלה.",
+   "challenge": "תנו לדרקון להשאיר עקבות! במקום רווח, שימו נקודה במקום הישן, והוסיפו צפצוף קטן בכל צעד.",
+   "challengeCode": [
+    "10 REM CHANGE LINE 110 AND ADD LINE 170",
+    "110 PRINT @ Y*32+X,\".\";",
+    "170 SOUND 200,1"
+   ],
+   "nextTeaser": "בשיעור הבא מגיע אביר שקופץ מקיר לקיר. היזהרו, דרקונים!"
+  },
+  "en": {
+   "title": "Lesson 15: The Dragon Moves! Game, Part 1",
+   "intro": "Today we start building a real game, in five parts. In part one we put a little dragon on the screen and move it with the arrow keys. In 1983, kids typed games like this line by line from magazines, and now it's your turn.",
+   "steps": [
+    {
+     "code": "30 CLS\n40 X=16:Y=8\n50 PRINT @ 0,\"MOVE THE DRAGON WITH THE ARROWS\";\n60 PRINT @ Y*32+X,\"D\";",
+     "explain": "First CLS clears the screen. X is the column (0 to 31) and Y is the row (0 to 15), so the dragon starts in the middle. Row 0 gets the instructions, then we draw the dragon: the letter D. Every screen row has 32 places, so the dragon's spot is Y*32+X. The semicolon at the end tells the computer not to jump to a new line."
+    },
+    {
+     "code": "100 K$=INKEY$:IF K$=\"\" THEN 100",
+     "explain": "This is the heart of the game. INKEY$ checks which key is pressed right now, without waiting for Enter. If nothing is pressed, K$ is empty and we go back to line 100 again. That's how the computer waits patiently for a key."
+    },
+    {
+     "code": "110 PRINT @ Y*32+X,\" \";",
+     "explain": "Before moving, we erase the dragon from its old spot by printing a space over it. Without this line, the dragon would leave a long trail of D's behind it."
+    },
+    {
+     "code": "120 IF K$=CHR$(94) AND Y>1 THEN Y=Y-1\n130 IF K$=CHR$(10) AND Y<14 THEN Y=Y+1\n140 IF K$=CHR$(8) AND X>0 THEN X=X-1\n150 IF K$=CHR$(9) AND X<31 THEN X=X+1",
+     "explain": "Each arrow key sends its own code: up is 94, down 10, left 8 and right 9. CHR$ turns the number into a character so we can compare. The part after AND is the fence: the dragon can't climb into the instruction row, can't go below row 14, and can't escape off the sides. Going up makes Y smaller. Going right makes X bigger."
+    },
+    {
+     "code": "160 PRINT @ Y*32+X,\"D\";\n390 GOTO 100",
+     "explain": "Draw the dragon in its new spot, then go back and wait for the next key. Why 390? We left lots of free numbers in between, because in the next lessons we'll fit a knight, gold and a score in there."
+    }
+   ],
+   "run": "Type RUN and press Enter. The instructions appear at the top, and a D sits in the middle of the screen. Press the arrow keys on your keyboard and the dragon moves. Try to reach the edge: it stops there and won't run away. To stop the program, press Esc or the stop button.",
+   "tip": "Don't forget the semicolon at the end of every PRINT @. Without it the computer moves to the next line, and at the bottom of the screen the whole picture can jump up.",
+   "challenge": "Make the dragon leave footprints! Instead of a space, put a dot in the old spot, and add a little beep on every step.",
+   "challengeCode": [
+    "10 REM CHANGE LINE 110 AND ADD LINE 170",
+    "110 PRINT @ Y*32+X,\".\";",
+    "170 SOUND 200,1"
+   ],
+   "nextTeaser": "Next lesson, a knight arrives, bouncing from wall to wall. Watch out, dragons!"
+  }
+ },
+ {
+  "n": 16,
+  "he": {
+   "title": "שיעור 16: אביר קופץ",
+   "intro": "בשיעור הקודם הדרקון שלנו למד לזוז עם החצים. היום נוסיף לו אויב: אביר שקופץ באלכסון על המסך ומתנגש בקירות כמו כדור. מתחילים מהתוכנית של השיעור הקודם: אם שמרתם אותה, טענו אותה עם CLOAD והשם שבחרתם, ואם לא, הקלידו אותה שוב מהשיעור הקודם. ב-1983 ילדים הקלידו משחקים ארוכים ממגזינים, שורה אחרי שורה, וגם אנחנו בונים כאן משחק לאט לאט.",
+   "steps": [
+    {
+     "code": "40 X=16:Y=8:EX=2:EY=2:DX=1:DY=1",
+     "explain": "זו שורה שמשנים. כדי לשנות שורה פשוט מקלידים אותה מחדש עם אותו מספר, והחדשה מחליפה את הישנה. נשארים X ו-Y של הדרקון, ונוספים משתנים לאביר: EX ו-EY הם המקום שלו, ו-DX ו-DY הם הכיוון. כשהם 1, האביר זז ימינה ולמטה."
+    },
+    {
+     "code": "50 PRINT @ 0,\"DRAGON D - DODGE THE KNIGHT K\";",
+     "explain": "גם את הכותרת משנים. עכשיו היא אומרת: הדרקון הוא D, וצריך להתחמק מהאביר K."
+    },
+    {
+     "code": "100 K$=INKEY$:IF K$=\"\" THEN 200",
+     "explain": "זה השינוי החכם של היום! קודם, כשלא לחצו על מקש, המחשב חיכה במקום. עכשיו הוא קופץ לשורה 200 וממשיך להזיז את האביר. ככה האביר לא מחכה לכם, הוא זז כל הזמן."
+    },
+    {
+     "code": "200 PRINT @ EY*32+EX,\" \";\n210 EX=EX+DX:EY=EY+DY\n220 IF EX=0 OR EX=31 THEN DX=-DX\n230 IF EY=1 OR EY=14 THEN DY=-DY",
+     "explain": "שורות חדשות. קודם מוחקים את האביר מהמקום הישן עם רווח. אחר כך מוסיפים לו את הכיוון, וכך הוא זז צעד באלכסון. כשהוא מגיע לקיר, הכיוון מתהפך: 1 הופך למינוס 1, וההפך. זה סוד הקפיצה!"
+    },
+    {
+     "code": "240 PRINT @ EY*32+EX,\"K\";\n250 PRINT @ Y*32+X,\"D\";:FOR W=1 TO 20:NEXT W",
+     "explain": "מציירים את האביר במקום החדש. אחר כך מציירים שוב את הדרקון, כי אולי האביר עבר עליו ומחק אותו. הלולאה עם W לא עושה כלום, רק סופרת עד 20, וזה מאט קצת את המשחק."
+    }
+   ],
+   "run": "הקלידו RUN ולחצו Enter. האביר K יתחיל לקפוץ באלכסון על המסך וינתר מהקירות, והדרקון D יזוז עם החצים. אם האביר עובר דרככם, עדיין לא קורה כלום. את ההתנגשות נלמד בשיעור הבא. כדי לעצור, לחצו Esc או על כפתור העצירה.",
+   "tip": "אם האביר זז רק כשאתם לוחצים על מקש, כנראה שבשורה 100 עדיין כתוב THEN 100. תקנו ל-THEN 200, בעזרת EDIT 100 או בהקלדה מחדש של כל השורה.",
+   "challenge": "קשה מדי להתחמק מאביר אחד? הוסיפו אביר שני, שמתחיל במקום אחר וזז בכיוון אחר!",
+   "challengeCode": [
+    "1 REM ADD THESE LINES TO THE PROGRAM",
+    "45 FX=20:FY=10:GX=-1:GY=1",
+    "241 PRINT @ FY*32+FX,\" \";",
+    "242 FX=FX+GX:FY=FY+GY",
+    "243 IF FX=0 OR FX=31 THEN GX=-GX",
+    "244 IF FY=1 OR FY=14 THEN GY=-GY",
+    "245 PRINT @ FY*32+FX,\"K\";"
+   ],
+   "nextTeaser": "בשיעור הבא: מה קורה כשהאביר תופס את הדרקון? וגם מטבעות זהב לאסוף ונקודות!"
+  },
+  "en": {
+   "title": "Lesson 16: A Bouncing Knight",
+   "intro": "Last lesson our dragon learned to move with the arrow keys. Today we give it an enemy: a knight that bounces diagonally around the screen, off the walls like a ball. Start from last lesson's program: if you saved it, load it with CLOAD and the name you chose; if not, type it in again from last lesson. In 1983 kids typed long games from magazines, line by line, and we're building ours step by step too.",
+   "steps": [
+    {
+     "code": "40 X=16:Y=8:EX=2:EY=2:DX=1:DY=1",
+     "explain": "This is a line we change. To change a line, just type it again with the same number, and the new one replaces the old one. X and Y for the dragon stay, and we add variables for the knight: EX and EY are where it is, and DX and DY are its direction. When they are 1, the knight moves right and down."
+    },
+    {
+     "code": "50 PRINT @ 0,\"DRAGON D - DODGE THE KNIGHT K\";",
+     "explain": "We change the title too. Now it says: you are the dragon D, and you must dodge the knight K."
+    },
+    {
+     "code": "100 K$=INKEY$:IF K$=\"\" THEN 200",
+     "explain": "This is today's clever change! Before, when no key was pressed, the computer just waited. Now it jumps to line 200 and moves the knight. So the knight doesn't wait for you, it keeps moving all the time."
+    },
+    {
+     "code": "200 PRINT @ EY*32+EX,\" \";\n210 EX=EX+DX:EY=EY+DY\n220 IF EX=0 OR EX=31 THEN DX=-DX\n230 IF EY=1 OR EY=14 THEN DY=-DY",
+     "explain": "New lines. First we erase the knight from its old spot with a space. Then we add its direction, so it takes one diagonal step. When it reaches a wall, the direction flips: 1 becomes minus 1, and back again. That's the secret of the bounce!"
+    },
+    {
+     "code": "240 PRINT @ EY*32+EX,\"K\";\n250 PRINT @ Y*32+X,\"D\";:FOR W=1 TO 20:NEXT W",
+     "explain": "We draw the knight in its new spot. Then we draw the dragon again, because the knight may have passed over it and wiped it out. The W loop does nothing but count to 20, which slows the game down a little."
+    }
+   ],
+   "run": "Type RUN and press Enter. The knight K starts bouncing diagonally around the screen, off the walls, and the dragon D moves with the arrows. If the knight passes through you, nothing happens yet. We'll add the crash in the next lesson. To stop, press Esc or the stop button.",
+   "tip": "If the knight only moves when you press a key, line 100 probably still says THEN 100. Fix it to THEN 200, with EDIT 100 or by typing the whole line again.",
+   "challenge": "Too easy to dodge one knight? Add a second knight that starts somewhere else and moves in a different direction!",
+   "challengeCode": [
+    "1 REM ADD THESE LINES TO THE PROGRAM",
+    "45 FX=20:FY=10:GX=-1:GY=1",
+    "241 PRINT @ FY*32+FX,\" \";",
+    "242 FX=FX+GX:FY=FY+GY",
+    "243 IF FX=0 OR FX=31 THEN GX=-GX",
+    "244 IF FY=1 OR FY=14 THEN GY=-GY",
+    "245 PRINT @ FY*32+FX,\"K\";"
+   ],
+   "nextTeaser": "Next lesson: what happens when the knight catches the dragon? Plus gold coins to collect and points to score!"
+  }
+ },
+ {
+  "n": 17,
+  "he": {
+   "title": "משחק, חלק 3: זהב, ניקוד והתנגשות",
+   "intro": "היום הדרקון שלנו מקבל סיבה לרוץ: זהב! נפזר מטבע $ במקום אקראי, נספור נקודות, ואם האביר תופס את הדרקון, המשחק נגמר. מתחילים מהתוכנית של השיעור הקודם: אם שמרתם אותה, טענו אותה עם CLOAD והשם ששמרתם. אם לא, הקלידו אותה שוב מהשיעור הקודם, ואז הוסיפו או החליפו רק את השורות שכאן.",
+   "steps": [
+    {
+     "code": "30 CLS:S=0\n50 GOSUB 600:GOSUB 700",
+     "explain": "המשתנה S הוא הניקוד, ובהתחלה הוא 0. שורה 50 החדשה מחליפה את שורת הכותרת הישנה: כשמקלידים שורה עם אותו מספר, היא מחליפה את הקודמת. עכשיו היא קופצת לשתי תת-תוכניות: 600 מניחה זהב, ו-700 כותבת את הניקוד."
+    },
+    {
+     "code": "600 GX=RND(32)-1:GY=RND(14):IF GX=X AND GY=Y THEN 600\n610 PRINT @ GY*32+GX,\"$\";:RETURN\n700 PRINT @ 0,\"SCORE\";S;:RETURN",
+     "explain": "שורה 600 בוחרת מקום אקראי לזהב: עמודה GX מ-0 עד 31, ושורה GY מ-1 עד 14. אם יצא בדיוק על הדרקון, מגרילים שוב. שורה 610 מציירת $ וחוזרת. שורה 700 כותבת למעלה את המילה SCORE ואחריה את הניקוד."
+    },
+    {
+     "code": "250 PRINT @ GY*32+GX,\"$\";:PRINT @ Y*32+X,\"D\";:FOR W=1 TO 20:NEXT W",
+     "explain": "האביר מוחק כל מקום שהוא עובר בו, וגם את הזהב! לכן בכל סיבוב מציירים את ה-$ מחדש, ואז את הדרקון, ומחכים רגע קטן."
+    },
+    {
+     "code": "300 IF EX=X AND EY=Y THEN 400\n400 PRINT @ 203,\"GAME OVER\";:END",
+     "explain": "זו ההתנגשות: אם האביר והדרקון באותה עמודה וגם באותה שורה, הם נפגשו. קופצים לשורה 400, שכותבת GAME OVER באמצע המסך, ו-END עוצר את התוכנית."
+    },
+    {
+     "code": "310 IF X=GX AND Y=GY THEN S=S+10:GOSUB 600:GOSUB 700",
+     "explain": "אם הדרקון עומד על הזהב, הוא אסף אותו! מוסיפים 10 נקודות, מניחים זהב חדש במקום אחר, וכותבים את הניקוד החדש. שורה 390 שולחת אותנו שוב ללולאה."
+    }
+   ],
+   "run": "הקלידו RUN. למעלה תראו SCORE 0, ובמקום אקראי מטבע $. זוזו עם החצים אל הזהב: הניקוד יעלה ב-10, וזהב חדש יופיע. אם האביר K נוגע בכם, יופיע GAME OVER והמשחק ייעצר. למשחק נוסף הקלידו שוב RUN.",
+   "tip": "אם מופיעה שגיאה ליד שורה 600 או 700, בדקו שלא שכחתם את RETURN בסוף. בלי RETURN המחשב לא יודע לחזור. ושימו לב לכתוב את הספרה 0 ולא את האות O.",
+   "challenge": "הוסיפו ניצחון: כשהניקוד מגיע ל-100, כתבו YOU WIN! עם צפצוף שמח, ועצרו את המשחק.",
+   "challengeCode": [
+    "10 REM ADD OR CHANGE THESE LINES",
+    "320 IF S>=100 THEN 500",
+    "500 PRINT @ 203,\"YOU WIN!\";:SOUND 200,10:END"
+   ],
+   "nextTeaser": "בשיעור הבא: לדרקון יהיו שלוש נשמות, מסך GAME OVER אמיתי, ושיא שצריך לשבור!"
+  },
+  "en": {
+   "title": "Game Part 3: Gold, Score and Collision",
+   "intro": "Today our dragon gets a reason to run: gold! We'll drop a $ coin in a random spot, count points, and if the knight catches the dragon, it's game over. Start from last lesson's program: if you saved it, load it with CLOAD and the name you used. If not, type it in again from last lesson, then add or change only the lines here. In 1983, kids improved magazine games exactly like this, a few lines at a time.",
+   "steps": [
+    {
+     "code": "30 CLS:S=0\n50 GOSUB 600:GOSUB 700",
+     "explain": "S is the score, and it starts at 0. The new line 50 replaces the old title line: typing a line with the same number swaps out the old one. Now it jumps to two subroutines: 600 places the gold, and 700 shows the score."
+    },
+    {
+     "code": "600 GX=RND(32)-1:GY=RND(14):IF GX=X AND GY=Y THEN 600\n610 PRINT @ GY*32+GX,\"$\";:RETURN\n700 PRINT @ 0,\"SCORE\";S;:RETURN",
+     "explain": "Line 600 picks a random spot for the gold: column GX from 0 to 31, row GY from 1 to 14. If it lands right on the dragon, it picks again. Line 610 draws the $ and goes back. Line 700 writes SCORE and the score at the top."
+    },
+    {
+     "code": "250 PRINT @ GY*32+GX,\"$\";:PRINT @ Y*32+X,\"D\";:FOR W=1 TO 20:NEXT W",
+     "explain": "The knight erases every spot it passes, even the gold! So each turn we redraw the $, then the dragon, then wait a tiny moment."
+    },
+    {
+     "code": "300 IF EX=X AND EY=Y THEN 400\n400 PRINT @ 203,\"GAME OVER\";:END",
+     "explain": "This is the collision: if the knight and the dragon share the same column AND the same row, they've met. We jump to line 400, which writes GAME OVER in the middle of the screen, and END stops the program."
+    },
+    {
+     "code": "310 IF X=GX AND Y=GY THEN S=S+10:GOSUB 600:GOSUB 700",
+     "explain": "If the dragon stands on the gold, it grabbed it! Add 10 points, place new gold somewhere else, and show the new score. Line 390 sends us around the loop again."
+    }
+   ],
+   "run": "Type RUN. You'll see SCORE 0 at the top and a $ coin somewhere. Move with the arrow keys to the gold: the score goes up by 10 and new gold appears. If the knight K touches you, GAME OVER appears and the game stops. To play again, type RUN.",
+   "tip": "If you get an error near line 600 or 700, check you didn't forget RETURN at the end. Without RETURN the computer can't find its way back. Also make sure you typed the number 0, not the letter O.",
+   "challenge": "Add a way to win: when the score reaches 100, show YOU WIN! with a happy beep and stop the game.",
+   "challengeCode": [
+    "10 REM ADD OR CHANGE THESE LINES",
+    "320 IF S>=100 THEN 500",
+    "500 PRINT @ 203,\"YOU WIN!\";:SOUND 200,10:END"
+   ],
+   "nextTeaser": "Next time: the dragon gets three lives, a real game over, and a high score to beat!"
+  }
+ },
+ {
+  "n": 18,
+  "he": {
+   "title": "שיעור 18: חיים, סוף משחק ושיא",
+   "intro": "עכשיו לדרקון יש שלושה חיים, ואביר אחד כבר לא מסיים את המשחק. בסוף נראה GAME OVER, נשמור את השיא ונשאל אם לשחק שוב. מתחילים מהתוכנית של שיעור 17: אם שמרתם אותה עם CSAVE, טענו אותה עם CLOAD והשם שבחרתם, ואם לא, הקלידו אותה מהשיעור הקודם. כדי לשנות שורה פשוט מקלידים אותה מחדש עם אותו מספר, והחדשה מחליפה את הישנה. ב-1983 ילדים הקלידו ככה משחקים שלמים מדפי מגזינים, שורה אחרי שורה.",
+   "steps": [
+    {
+     "code": "10 HS=0\n30 CLS:L=3:S=0",
+     "explain": "השורה החדשה 10 יוצרת את HS, השיא, ומתחילה אותו מאפס. בשורה 30 הוספנו את L=3, שלושה חיים. שימו לב ששורה 10 באה לפני 30, ולכן היא רצה רק פעם אחת, כשמקלידים RUN."
+    },
+    {
+     "code": "700 PRINT @ 0,\"SCORE\";S;\"  LIVES\";L;\"  HI\";HS;:RETURN",
+     "explain": "השורה העליונה במסך מראה עכשיו שלושה דברים: הניקוד, החיים והשיא. בכל פעם שמשהו משתנה, קוראים ל-GOSUB 700 והמספרים מתעדכנים."
+    },
+    {
+     "code": "400 L=L-1:GOSUB 700\n410 IF L=0 THEN 450",
+     "explain": "האביר תפס אתכם? מורידים חיים אחד ומעדכנים את השורה העליונה. אם נגמרו החיים, קופצים לשורה 450, לסוף המשחק."
+    },
+    {
+     "code": "420 EY=2:DY=1:EX=1:DX=1:IF X<16 THEN EX=30:DX=-1\n430 PRINT @ Y*32+X,\"D\";:FOR W=1 TO 300:NEXT W:GOTO 100",
+     "explain": "כדי שיהיה הוגן, שולחים את האביר רחוק. אם הדרקון בצד שמאל של המסך (X קטן מ-16), האביר מתחיל בצד ימין ונע שמאלה. אחרת הוא מתחיל משמאל ונע ימינה. אחר כך מציירים שוב את הדרקון, עוצרים רגע לנשום, וחוזרים למשחק."
+    },
+    {
+     "code": "450 IF S>HS THEN HS=S\n460 PRINT @ 203,\"GAME OVER\";:PRINT @ 263,\"HIGH SCORE\";HS;:PRINT @ 330,\"AGAIN? Y/N\";",
+     "explain": "אם הניקוד גבוה מהשיא, הוא נהיה השיא החדש. אחר כך כותבים באמצע המסך שהמשחק נגמר, מה השיא, ושואלים אם לשחק שוב."
+    },
+    {
+     "code": "490 K$=INKEY$:IF K$=\"Y\" THEN 30\n500 IF K$<>\"N\" THEN 490\n510 CLS:PRINT \"BYE!\":END",
+     "explain": "מחכים למקש. על Y קופצים לשורה 30, ולא ל-10, ולכן השיא נשמר בין משחקים! על N מנקים את המסך ונפרדים. כל מקש אחר? ממשיכים לחכות."
+    }
+   ],
+   "run": "הקלידו RUN. למעלה יופיע SCORE 0  LIVES 3  HI 0. אספו זהב כרגיל. כשהאביר נוגע בדרקון, מספר החיים יורד, יש הפסקה קצרה והאביר קופץ לצד השני. אחרי שלוש פגיעות יופיעו GAME OVER, השיא והשאלה AGAIN? Y/N. לחצו Y למשחק נוסף, ותראו שהשיא נשאר למעלה. לחצו N כדי לסיים ולראות BYE!",
+   "tip": "אל תכתבו HS=0 בשורה 30! שורה 30 רצה מחדש בכל משחק, והשיא היה נמחק כל פעם. בגלל זה הוא גר לבד בשורה 10.",
+   "challenge": "תנו לדרקון חיים בונוס על כל 50 נקודות, עם צפצוף שמח.",
+   "challengeCode": [
+    "1 REM ADD OR CHANGE THESE LINES IN THIS LESSON'S PROGRAM",
+    "310 IF X=GX AND Y=GY THEN GOSUB 800",
+    "800 S=S+10:IF S/50=INT(S/50) THEN L=L+1:SOUND 200,2",
+    "810 GOSUB 600:GOSUB 700:RETURN"
+   ],
+   "nextTeaser": "בשיעור הבא המשחק יתחיל לדבר: צלילים לזהב, לפגיעה ומנגינת פתיחה!"
+  },
+  "en": {
+   "title": "Lesson 18: Lives, Game Over and a High Score",
+   "intro": "Now the dragon gets three lives, so one knight no longer ends the game. At the end we show GAME OVER, keep a high score and ask if you want to play again. Start from lesson 17's program: if you saved it with CSAVE, load it with CLOAD and the name you chose, or type it in from last lesson. To change a line, just type it again with the same number, and the new one replaces the old. In 1983, kids typed whole games like this from magazine pages, one line at a time.",
+   "steps": [
+    {
+     "code": "10 HS=0\n30 CLS:L=3:S=0",
+     "explain": "New line 10 creates HS, the high score, starting at zero. In line 30 we added L=3: three lives. Notice line 10 comes before 30, so it only runs once, when you type RUN."
+    },
+    {
+     "code": "700 PRINT @ 0,\"SCORE\";S;\"  LIVES\";L;\"  HI\";HS;:RETURN",
+     "explain": "The top line now shows three things: score, lives and high score. Whenever something changes, GOSUB 700 updates the numbers."
+    },
+    {
+     "code": "400 L=L-1:GOSUB 700\n410 IF L=0 THEN 450",
+     "explain": "Caught by the knight? Lose one life and update the top line. If no lives are left, jump to line 450: the end of the game."
+    },
+    {
+     "code": "420 EY=2:DY=1:EX=1:DX=1:IF X<16 THEN EX=30:DX=-1\n430 PRINT @ Y*32+X,\"D\";:FOR W=1 TO 300:NEXT W:GOTO 100",
+     "explain": "To be fair, we send the knight far away. If the dragon is on the left half (X less than 16), the knight starts on the right and moves left. Otherwise it starts on the left and moves right. Then we redraw the dragon, pause a moment to catch our breath, and carry on."
+    },
+    {
+     "code": "450 IF S>HS THEN HS=S\n460 PRINT @ 203,\"GAME OVER\";:PRINT @ 263,\"HIGH SCORE\";HS;:PRINT @ 330,\"AGAIN? Y/N\";",
+     "explain": "If your score beats the high score, it becomes the new high score. Then we write GAME OVER and the high score in the middle of the screen, and ask if you want another go."
+    },
+    {
+     "code": "490 K$=INKEY$:IF K$=\"Y\" THEN 30\n500 IF K$<>\"N\" THEN 490\n510 CLS:PRINT \"BYE!\":END",
+     "explain": "Wait for a key. Y jumps to line 30, not 10, so the high score survives between games! N clears the screen and says goodbye. Any other key? Keep waiting."
+    }
+   ],
+   "run": "Type RUN. At the top you'll see SCORE 0  LIVES 3  HI 0. Collect gold as before. When the knight touches the dragon, your lives go down, there's a short pause and the knight jumps to the other side. After three hits you'll see GAME OVER, the high score and AGAIN? Y/N. Press Y to play again, and see that the high score stays at the top. Press N to finish and see BYE!",
+   "tip": "Don't put HS=0 in line 30! Line 30 runs again at the start of every game, so the high score would be wiped each time. That's why it lives alone in line 10.",
+   "challenge": "Give the dragon a bonus life for every 50 points, with a happy beep.",
+   "challengeCode": [
+    "1 REM ADD OR CHANGE THESE LINES IN THIS LESSON'S PROGRAM",
+    "310 IF X=GX AND Y=GY THEN GOSUB 800",
+    "800 S=S+10:IF S/50=INT(S/50) THEN L=L+1:SOUND 200,2",
+    "810 GOSUB 600:GOSUB 700:RETURN"
+   ],
+   "nextTeaser": "Next lesson the game finds its voice: sounds for gold, for getting caught, and a title tune!"
+  }
+ },
+ {
+  "n": 19,
+  "he": {
+   "title": "שיעור 19: צלילים ושיר פתיחה",
+   "intro": "המשחק שלנו כבר עובד, אבל הוא שקט לגמרי. היום נוסיף לו קול: שיר פתיחה, צפצוף כשאוספים זהב, צליל נמוך כשהאביר פוגע בכם, ומנגינה עצובה כשהמשחק נגמר. מתחילים מהתוכנית של השיעור הקודם: אם שמרתם אותה, טענו אותה עם CLOAD והשם ששמרתם. אם לא, הקלידו אותה שוב מהשיעור הקודם, ממש כמו ילדים ב-1983 שהעתיקו משחקים מדפי מגזין.",
+   "steps": [
+    {
+     "code": "20 PLAY \"T5O3L8CDEGL4EL8DEL2C\"",
+     "explain": "שורה חדשה, שיר פתיחה! הפקודה PLAY מנגנת תווים. האות T5 קובעת את הקצב, ו-O3 את האוקטבה. עם L8 התווים קצרים, עם L4 ארוכים יותר, ועם L2 ארוכים מאוד. שימו לב שזו האות O ולא אפס. השיר מתנגן פעם אחת, כשמפעילים את המשחק."
+    },
+    {
+     "code": "310 IF X=GX AND Y=GY THEN S=S+10:SOUND 200,1:GOSUB 600:GOSUB 700",
+     "explain": "משנים את שורה 310. הוספנו באמצע SOUND 200,1: צפצוף גבוה וקצר, כמו מטבע שנופל לכיס. המספר 200 הוא גובה הצליל, ו-1 הוא האורך."
+    },
+    {
+     "code": "400 SOUND 30,4:L=L-1:GOSUB 700",
+     "explain": "משנים את שורה 400. כשהאביר תופס את הדרקון, מתנגן קודם SOUND 30,4: צליל נמוך וארוך יותר. אאוץ'! צליל נמוך נשמע כמו משהו רע, וצליל גבוה כמו משהו טוב."
+    },
+    {
+     "code": "450 PLAY \"O2L4GECO1L2G\":IF S>HS THEN HS=S",
+     "explain": "משנים את שורה 450. לפני ההודעה על סוף המשחק מתנגנת מנגינה עצובה: התווים יורדים למטה, ובסוף O1 עובר לאוקטבה הכי נמוכה, עם תו ארוך."
+    }
+   ],
+   "run": "כתבו RUN. קודם תשמעו את שיר הפתיחה, ורק אחריו המסך יתנקה והמשחק יתחיל. זוזו עם החצים. כשתאספו $ תשמעו צפצוף, וכשהאביר K יפגע בכם תשמעו צליל נמוך. כשיגמרו החיים תתנגן המנגינה העצובה, ואז הקלידו Y כדי לשחק שוב או N כדי לסיים. בסיבוב השני אין שיר פתיחה, כי Y קופץ לשורה 30, אחרי השיר.",
+   "tip": "טעות נפוצה: להקליד אפס במקום האות O בתוך PLAY. אם המחשב כותב שגיאה בשורה 20 או 450, בדקו את זה עם LIST ותקנו עם EDIT.",
+   "challenge": "נגנו תרועה קטנה ושמחה בכל פעם שהניקוד מגיע ל-50, 100, 150 וכן הלאה.",
+   "challengeCode": [
+    "5 REM ADD OR CHANGE THESE LINES",
+    "310 IF X=GX AND Y=GY THEN 800",
+    "800 S=S+10:SOUND 200,1:GOSUB 600:GOSUB 700",
+    "810 IF S/50=INT(S/50) THEN PLAY \"O4L16CEG\"",
+    "820 GOTO 100"
+   ],
+   "nextTeaser": "בשיעור האחרון נלטש את \"זהב הדרקון\", נוסיף הוראות משחק, ונשמור אותו על קלטת עם CSAVE \"MYGAME\"."
+  },
+  "en": {
+   "title": "Lesson 19: Sound Effects and a Title Tune",
+   "intro": "Our game already works, but it is completely silent. Today we give it a voice: a title tune, a ping when you grab gold, a low buzz when the knight gets you, and a sad tune when the game ends. Start from last lesson's program: if you saved it, load it with CLOAD and the name you used. If not, type it in again from last lesson, just like kids in 1983 who copied games from magazine pages.",
+   "steps": [
+    {
+     "code": "20 PLAY \"T5O3L8CDEGL4EL8DEL2C\"",
+     "explain": "A new line: the title tune! PLAY plays musical notes. T5 sets the speed and O3 sets the octave. L8 makes short notes, L4 longer ones, and L2 very long ones. Careful: that's the letter O, not a zero. The tune plays once, when the game starts."
+    },
+    {
+     "code": "310 IF X=GX AND Y=GY THEN S=S+10:SOUND 200,1:GOSUB 600:GOSUB 700",
+     "explain": "Change line 310. We added SOUND 200,1 in the middle: a short, high ping, like a coin dropping into your pocket. 200 is how high the sound is, and 1 is how long it lasts."
+    },
+    {
+     "code": "400 SOUND 30,4:L=L-1:GOSUB 700",
+     "explain": "Change line 400. When the knight catches the dragon, SOUND 30,4 plays first: a low, longer sound. Ouch! Low sounds feel like bad news, and high sounds feel like good news."
+    },
+    {
+     "code": "450 PLAY \"O2L4GECO1L2G\":IF S>HS THEN HS=S",
+     "explain": "Change line 450. Before the game over message, a sad tune plays: the notes walk downwards, and at the end O1 drops to the lowest octave for one long note."
+    }
+   ],
+   "run": "Type RUN. First you'll hear the title tune, and only then the screen clears and the game starts. Move with the arrow keys. Grab a $ and you'll hear a ping. Get hit by the knight K and you'll hear a low buzz. When your lives run out the sad tune plays. Then type Y to play again or N to stop. On the second round there's no title tune, because Y jumps to line 30, after the tune.",
+   "tip": "Common mistake: typing a zero instead of the letter O inside PLAY. If the computer shows an error in line 20 or 450, check it with LIST and fix it with EDIT.",
+   "challenge": "Play a short, happy fanfare every time your score reaches 50, 100, 150 and so on.",
+   "challengeCode": [
+    "5 REM ADD OR CHANGE THESE LINES",
+    "310 IF X=GX AND Y=GY THEN 800",
+    "800 S=S+10:SOUND 200,1:GOSUB 600:GOSUB 700",
+    "810 IF S/50=INT(S/50) THEN PLAY \"O4L16CEG\"",
+    "820 GOTO 100"
+   ],
+   "nextTeaser": "In the final lesson we polish Dragon Gold, add instructions, and save it to tape with CSAVE \"MYGAME\"."
+  }
+ },
+ {
+  "n": 20,
+  "he": {
+   "title": "שיעור 20: דרקון הזהב, הגרסה המלוטשת, ושמירה על קלטת",
+   "intro": "זה השיעור האחרון, והמשחק שלנו נהיה משחק אמיתי! נוסיף לו מסך פתיחה עם שם, הוראות ומנגינה, ונגרום לאביר להיות מהיר יותר בכל פעם שאתם תופסים זהב. בסוף נשמור את המשחק על קלטת עם CSAVE, כדי שתוכלו לטעון אותו שוב מתי שתרצו. מתחילים מהתוכנית של השיעור הקודם: אם שמרתם אותה, טענו אותה עם CLOAD, ואם לא, הקלידו אותה מהשיעור הקודם.",
+   "steps": [
+    {
+     "code": "20 GOSUB 800",
+     "explain": "פעם השורה הזאת ניגנה את המנגינה. עכשיו היא קופצת לשורה 800, שם נמצא מסך הפתיחה החדש. המנגינה עוברת לשם. כשמסך הפתיחה נגמר, הפקודה RETURN מחזירה אותנו לכאן, והמשחק מתחיל."
+    },
+    {
+     "code": "800 CLS:PRINT @ 70,\"*** DRAGON GOLD ***\";\n810 PRINT @ 130,\"YOU ARE THE DRAGON  D\";:PRINT @ 162,\"GRAB THE GOLD $ = 10 POINTS\";\n820 PRINT @ 194,\"DODGE THE KNIGHT  K\";:PRINT @ 226,\"ARROW KEYS MOVE. YOU HAVE 3\";\n830 PRINT @ 258,\"LIVES. HE GETS FASTER!\";\n840 PRINT @ 357,\"PRESS ANY KEY TO START\";",
+     "explain": "זה מסך הפתיחה. הפקודה CLS מנקה את המסך, ואחריה PRINT @ כותב כל שורה במקום משלה. כל שורה במסך היא 32 מקומות, ולכן המספרים קופצים ב-32: ‏130, ‏162, ‏194... ככה מי שמשחק יודע מה לעשות עוד לפני שהוא מתחיל."
+    },
+    {
+     "code": "850 PLAY \"T5O3L8CDEGL4EL8DEL2C\"\n860 IF INKEY$=\"\" THEN 860\n870 RETURN",
+     "explain": "המנגינה מהשיעור הקודם עברה לכאן. שורה 860 בודקת שוב ושוב אם נלחץ מקש. כל עוד לא נלחץ כלום, היא קופצת לעצמה ומחכה. ברגע שלוחצים על מקש כלשהו, הפקודה RETURN חוזרת לשורה 30 והמשחק יוצא לדרך."
+    },
+    {
+     "code": "40 X=16:Y=8:EX=2:EY=2:DX=1:DY=1:SP=20\n250 PRINT @ GY*32+GX,\"$\";:PRINT @ Y*32+X,\"D\";:FOR W=1 TO SP:NEXT W\n310 IF X=GX AND Y=GY THEN S=S+10:SP=SP-2:SOUND 200,1:GOSUB 600:GOSUB 700",
+     "explain": "משתנה חדש: SP, המהירות. בשורה 250 הלולאה FOR סופרת עד SP כדי לחכות קצת. ככל ש-SP קטן יותר, ההמתנה קצרה יותר, והאביר זז מהר יותר. בשורה 310, על כל זהב שתופסים, SP קטן ב-2. בהתחלה הוא 20, ובכל משחק חדש שורה 40 מחזירה אותו ל-20."
+    },
+    {
+     "code": "510 CLS:PRINT \"THANKS FOR PLAYING!\":END",
+     "explain": "פרידה יפה יותר. מי שעונה N בסוף המשחק יקבל תודה, ולא רק \"ביי\"."
+    }
+   ],
+   "run": "הקלידו RUN. תופיע הכותרת *** DRAGON GOLD *** עם ההוראות, והמנגינה תתנגן. לחצו על מקש כלשהו, והמשחק מתחיל. תפסו זהב ותראו איך האביר מאיץ! עכשיו שומרים: עצרו את המשחק עם Esc, והקלידו בלי מספר שורה: CSAVE \"MYGAME\" ואז Enter. על מדף הקלטות תופיע קלטת חדשה בשם MYGAME. רוצים לבדוק? הקלידו NEW (התוכנית נמחקת, לא להיבהל!), ואז CLOAD \"MYGAME\". אחרי שהיא נטענת, הקלידו LIST כדי לראות את הקוד, ו-RUN כדי לשחק. הקלטת נשארת בדפדפן הזה גם מחר. ב-1983 ילדים שמרו כך את התוכניות שלהם על קלטות אמיתיות, ושלכם יושבת עכשיו על מדף משלה.",
+   "tip": "את CSAVE מקלידים בלי מספר שורה, אחרת היא נכנסת לתוכנית במקום לשמור אותה. לשם יש עד 8 אותיות או ספרות באנגלית, בלי רווחים. אפשר לשמור עד 6 קלטות. אם המדף מלא, הכפתור ✕ על \"הקלטת שלי\" מוחק קלטת ישנה: לחיצה ראשונה שואלת, והשנייה מוחקת.",
+   "challenge": "חתמו על המשחק! הוסיפו שורה שכותבת את השם שלכם במסך הפתיחה, בשורה הריקה שמעל PRESS ANY KEY. אחר כך שמרו את הגרסה החתומה עם CSAVE בשם חדש.",
+   "challengeCode": [
+    "1 REM ADD THIS LINE TO THE PROGRAM, PUT YOUR NAME INSTEAD OF NOA",
+    "835 PRINT @ 322,\"A GAME BY NOA\";"
+   ],
+   "nextTeaser": "זהו, סיימתם את כל 20 השיעורים! כתבתם משחק שלם, עם דרקון, אביר, זהב, ניקוד, חיים ומוזיקה, ושמרתם אותו על קלטת. עכשיו אתם מתכנתים. המחשב מחכה לרעיון הבא שלכם, אז הקלידו NEW ותתחילו לבנות."
+  },
+  "en": {
+   "title": "Lesson 20: Dragon Gold, Polished, and Saved to Tape",
+   "intro": "This is the last lesson, and our game is becoming a real game! We'll add a title screen with a name, instructions and a tune, and we'll make the knight speed up every time you grab gold. Then we'll save the game to tape with CSAVE, so you can load it again whenever you like. Start from last lesson's program: CLOAD it if you saved it, or type it in from last lesson.",
+   "steps": [
+    {
+     "code": "20 GOSUB 800",
+     "explain": "This line used to play the tune. Now it jumps to line 800, where our new title screen lives, and the tune moves there too. When the title screen is done, RETURN brings us back here and the game begins."
+    },
+    {
+     "code": "800 CLS:PRINT @ 70,\"*** DRAGON GOLD ***\";\n810 PRINT @ 130,\"YOU ARE THE DRAGON  D\";:PRINT @ 162,\"GRAB THE GOLD $ = 10 POINTS\";\n820 PRINT @ 194,\"DODGE THE KNIGHT  K\";:PRINT @ 226,\"ARROW KEYS MOVE. YOU HAVE 3\";\n830 PRINT @ 258,\"LIVES. HE GETS FASTER!\";\n840 PRINT @ 357,\"PRESS ANY KEY TO START\";",
+     "explain": "This is the title screen. CLS clears the screen, then PRINT @ writes each line in its own spot. Each screen row is 32 places wide, so the numbers jump by 32: 130, 162, 194... Now players know what to do before they even start."
+    },
+    {
+     "code": "850 PLAY \"T5O3L8CDEGL4EL8DEL2C\"\n860 IF INKEY$=\"\" THEN 860\n870 RETURN",
+     "explain": "Last lesson's tune moved here. Line 860 checks again and again for a key press. While nothing is pressed, it jumps back to itself and waits. As soon as you press any key, RETURN goes back to line 30 and the game starts."
+    },
+    {
+     "code": "40 X=16:Y=8:EX=2:EY=2:DX=1:DY=1:SP=20\n250 PRINT @ GY*32+GX,\"$\";:PRINT @ Y*32+X,\"D\";:FOR W=1 TO SP:NEXT W\n310 IF X=GX AND Y=GY THEN S=S+10:SP=SP-2:SOUND 200,1:GOSUB 600:GOSUB 700",
+     "explain": "A new variable: SP, the speed. In line 250 the FOR loop counts up to SP to wait a little. The smaller SP is, the shorter the wait, and the faster the knight moves. In line 310, every gold you grab makes SP 2 smaller. It starts at 20, and line 40 sets it back to 20 for every new game."
+    },
+    {
+     "code": "510 CLS:PRINT \"THANKS FOR PLAYING!\":END",
+     "explain": "A nicer goodbye. Anyone who answers N at the end gets a thank-you, not just \"BYE\"."
+    }
+   ],
+   "run": "Type RUN. You'll see the title *** DRAGON GOLD *** with the instructions, and the tune will play. Press any key and the game starts. Grab some gold and watch the knight speed up! Now let's save it: stop the game with Esc, then type, with no line number: CSAVE \"MYGAME\" and press Enter. A new tape called MYGAME appears on the tape shelf. Want to check? Type NEW (the program disappears, don't panic!), then CLOAD \"MYGAME\". Once it loads, type LIST to see the code and RUN to play. The tape stays in this browser, even tomorrow. In 1983, kids saved their programs like this on real cassette tapes, and now yours has its own spot on the shelf.",
+   "tip": "Type CSAVE without a line number, or it becomes part of the program instead of saving it. Names can be up to 8 letters or digits, with no spaces. You can keep up to 6 tapes. If the shelf is full, the small ✕ on \"my tape\" deletes an old one: the first click asks, the second one deletes.",
+   "challenge": "Sign your game! Add a line that writes your name on the title screen, in the empty row just above PRESS ANY KEY. Then save your signed version with CSAVE under a new name.",
+   "challengeCode": [
+    "1 REM ADD THIS LINE TO THE PROGRAM, PUT YOUR NAME INSTEAD OF NOA",
+    "835 PRINT @ 322,\"A GAME BY NOA\";"
+   ],
+   "nextTeaser": "That's it, you've finished all 20 lessons! You wrote a whole game with a dragon, a knight, gold, a score, lives and music, and you saved it to tape. You're a programmer now. The computer is waiting for your next idea, so type NEW and start building."
+  }
  }
 ]

@@ -1066,7 +1066,7 @@ if (part('lessons and magazine')) {
   for (const path of ['/lessons/', '/en/lessons/']) {
     await p.goto(new URL(path + '#1', PAGE).href);
     await p.waitForSelector('.lesson-title', { timeout: 10000 });
-    check(`${path} shows 10 lesson tiles`, (await p.locator('#lesson-progress .tile').count()) === 10);
+    check(`${path} shows 20 lesson tiles on a ladder of 7 levels`, (await p.locator('#lesson-progress .tile').count()) === 20 && (await p.locator('#lesson-progress .level').count()) === 7);
     await p.click('.lesson-run .lesson-type');
     await p.waitForFunction(() => /BYE!\s*\nOK\s*$/.test(document.querySelector('#lesson-computer .d32-out').textContent), null, { timeout: 20000 }).catch(() => {});
     check(`${path} lesson 1: "type it all and RUN" runs the program`, /HELLO! I AM A DRAGON 32[\s\S]*7 X 6 = 42[\s\S]*BYE!/.test(await p.locator('#lesson-computer .d32-out').textContent()));
@@ -1074,6 +1074,12 @@ if (part('lessons and magazine')) {
     check(`${path} finishing a lesson puts a star on its tile`, await p.locator('#lesson-progress .tile.is-done').count() === 1);
     await p.evaluate(() => localStorage.removeItem('d32-lessons-done'));
   }
+  // דרקון הזהב: שיעור 20 בונה על 15-19, ו"הקלד הכול והרץ" מקליד את כל המשחק (42 שורות) ומגיע למסך הפתיחה
+  await p.goto(new URL('/lessons/#20', PAGE).href);
+  await p.waitForSelector('.lesson-title', { timeout: 10000 });
+  await p.click('.lesson-run .lesson-type');
+  const gold = await p.waitForFunction(() => /\*\*\* DRAGON GOLD \*\*\*[\s\S]*PRESS ANY KEY TO START/.test(document.querySelector('#lesson-computer .d32-out').textContent), null, { timeout: 60000 }).then(() => true, () => false);
+  check('/lessons/#20: "type it all and RUN" types the whole Dragon Gold game and its title screen appears', gold && (await p.locator('.whole-program pre').textContent()).split('\n').length === 42);
   for (const path of ['/magazine/', '/magazine/du01/', '/en/magazine/', '/en/magazine/du01/']) {
     const r = await p.goto(new URL(path, PAGE).href);
     check(`${path} loads`, r.ok() && /archive\.org|Dragon User/.test(await p.content()));

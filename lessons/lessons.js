@@ -1,4 +1,4 @@
-// כיתת הלימוד "לומדים בייסיק עם הדרקון": 10 שיעורים (lessons/lessons.json, הטקסטים של המנהל העליון כמו שהם),
+// כיתת הלימוד "לומדים בייסיק עם הדרקון": 20 שיעורים בשבע רמות (lessons/lessons.json, הטקסטים של המנהל העליון כמו שהם),
 // לצד המחשב של האפליקציה. כל שורה: "הקלד בשבילי" (המחשב מקליד אותה) ו"העתקה". התקדמות: כוכב לכל שיעור שסיימתם,
 // נשמר בדפדפן הזה. השיעור הנוכחי בכתובת: #3 = שיעור 3.
 const EN = (document.documentElement.lang || '').startsWith('en');
@@ -78,6 +78,20 @@ function codeButtons(lines, { run = false, label } = {}) {
 const printout = lines => { const p = el('pre', 'printout'); p.dir = 'ltr'; p.lang = 'en'; p.textContent = lines.join('\n'); return p; };
 
 let LESSONS = [];
+// משחק "דרקון הזהב" (שיעורים 15-20) נבנה שיעור אחרי שיעור: כל שיעור מוסיף שורות או מחליף שורות (לפי מספר השורה).
+// "הקלד הכול והרץ" מקליד את כל המשחק עד עכשיו, והפתרון של האתגר נכנס לתוכו
+const BUILD_FROM = 15;
+const lineNo = s => parseInt(s, 10);
+function merge(base, add) {
+  const m = new Map(base.map(x => [lineNo(x), x]));
+  for (const x of add) m.set(lineNo(x), x);
+  return [...m.keys()].sort((a, b) => a - b).map(k => m.get(k));
+}
+const stepLines = l => l[L].steps.flatMap(s => s.code.split('\n').filter(Boolean));
+function program(n) {
+  const own = stepLines(LESSONS[n - 1]);
+  return n > BUILD_FROM ? merge(program(n - 1), own) : own;
+}
 function current() {
   const n = parseInt(location.hash.slice(1), 10);
   if (n >= 1 && n <= LESSONS.length) return n;
@@ -86,21 +100,44 @@ function current() {
   return next ? next.n : 1;
 }
 
+// סולם הרמות (המנהל העליון, 25.10): צבע, שם, ואילו שיעורים
+const LEVELS = [
+  ['🟢', 'צעדים ראשונים', 'First steps', 1, 2],
+  ['🟡', 'החלטות ולולאות', 'Decisions and loops', 3, 4],
+  ['🟠', 'צליל, צבע וציור', 'Sound, colour and drawing', 5, 7],
+  ['🔴', 'משחקים קטנים', 'Little games', 8, 10],
+  ['🟣', 'מתכנתים', 'Programmers', 11, 14],
+  ['⚫', 'בונים משחק: דרקון הזהב', 'Building a game: Dragon Gold', 15, 19],
+  ['🏆', 'הפרויקט הגמור', 'The finished project', 20, 20]
+];
 function renderProgress(n) {
   const bar = document.getElementById('lesson-progress');
   bar.textContent = '';
   const d = done();
-  for (const l of LESSONS) {
+  for (const [icon, he, en, from, to] of LEVELS) {
+    const ls = LESSONS.filter(l => l.n >= from && l.n <= to);
+    if (!ls.length) continue;
+    const row = el('div', 'level' + (n >= from && n <= to ? ' is-here' : ''));
+    const name = el('p', 'level-name', [el('span', 'level-icon', icon), ' ', T(he, en)]);
+    const range = el('bdi', 'level-range', from === to ? String(from) : from + '–' + to);
+    range.dir = 'ltr';
+    name.append(' ', range);
+    const tiles = el('div', 'level-tiles');
+    row.append(name, tiles);
+    bar.append(row);
+    for (const l of ls) tiles.append(tile(l, n, d));
+  }
+  const count = document.getElementById('lesson-count');
+  count.textContent = T(`סיימתם ${d.size} מתוך ${LESSONS.length}`, `${d.size} of ${LESSONS.length} done`);
+}
+function tile(l, n, d) {
     const a = el('a', 'tile' + (l.n === n ? ' is-current' : '') + (d.has(l.n) ? ' is-done' : ''));
     a.href = '#' + l.n;
     a.setAttribute('aria-label', T('שיעור ', 'Lesson ') + l.n + (d.has(l.n) ? T(' (סיימתם)', ' (done)') : ''));
     if (l.n === n) a.setAttribute('aria-current', 'step');
     a.append(el('span', 'tile-n', String(l.n)));
     if (d.has(l.n)) a.append(el('span', 'tile-star', '★'));
-    bar.append(a);
-  }
-  const count = document.getElementById('lesson-count');
-  count.textContent = T(`סיימתם ${d.size} מתוך ${LESSONS.length}`, `${d.size} of ${LESSONS.length} done`);
+    return a;
 }
 
 function render() {
@@ -134,7 +171,14 @@ function render() {
       screen.textContent += (screen.textContent ? '\n' : '') + line;
     } else { screen = null; run.append(el('p', '', rich(line))); }
   }
-  run.append(codeButtons(all, { run: true }));
+  const builds = n > BUILD_FROM;
+  if (builds) {
+    // הלוח מראה רק את השורות החדשות; כאן כל המשחק עד עכשיו
+    const whole = el('details', 'whole-program');
+    whole.append(el('summary', '', T('📜 כל התוכנית עד עכשיו', '📜 The whole program so far')), printout(program(n)));
+    run.append(el('p', '', rich(T('השורות של השיעור הזה נכנסות לתוכנית מהשיעור הקודם. הכפתור מקליד את כל המשחק מההתחלה.', 'This lesson\'s lines go into the program from the last lesson. The button types the whole game from the start.'))), whole);
+  }
+  run.append(codeButtons(builds ? program(n) : all, { run: true }));
   app.append(run);
 
   app.append(el('aside', 'sticky-note', [el('strong', '', T('טיפ', 'Tip')), el('p', '', rich(x.tip))]));
@@ -143,7 +187,8 @@ function render() {
   const hw = el('section', 'homework');
   hw.append(el('h3', 'lesson-h', T('אתגר', 'Challenge')), el('p', '', rich(x.challenge)));
   const sol = el('details', 'solution');
-  sol.append(el('summary', '', T('הצגת פתרון', 'Show a solution')), printout(x.challengeCode), codeButtons(x.challengeCode, { run: true }));
+  const solution = n >= BUILD_FROM ? merge(program(n), x.challengeCode) : x.challengeCode;
+  sol.append(el('summary', '', T('הצגת פתרון', 'Show a solution')), printout(x.challengeCode), codeButtons(solution, { run: true }));
   hw.append(sol);
   app.append(hw);
 
