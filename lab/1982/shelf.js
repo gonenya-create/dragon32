@@ -87,12 +87,12 @@
     ranger: {
       he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[Alt] הוא הכפתור שלו (במק: [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
         'הטעינה ארוכה, כשלוש דקות, וכשהיא נגמרת המשחק מתחיל לבד. בוחרים צבע רקע: [1] שחור, [2] בהיר, [3] ירוק.',
-        'במסך הפתיחה לוחצים [Alt]. ב-SELECT LEVEL לוחצים [1], ושוב [Alt] כדי להתחיל.',
+        'במסך הפתיחה לוחצים [Alt]. ב-SELECT LEVEL בוחרים שלב, [1] הכי קל, והמשחק מתחיל מיד. לא לוחצים [P], כי הוא עוצר את המשחק.',
         '[←] [→] רצים, [↑] קופצים, [↓] מתכופפים, [Alt] יורה. [P] עוצר, ו-[Alt] ממשיך.',
         'אוספים את כל המפתחות ונזהרים מהעטלפים ומהעיניים שיורות מהצדדים. הכרית באמצע הקומה התחתונה מקפיצה חזרה למעלה.'],
       en: ['In this game the arrow keys are a joystick and [Alt] is its button ([Option] on a Mac). On a phone there is a stick and a fire button under the screen.',
         'Loading takes about three minutes, and the game starts by itself when it ends. Pick a background colour: [1] black, [2] buff, [3] green.',
-        'On the title screen press [Alt]. At SELECT LEVEL press [1], then [Alt] again to start.',
+        'On the title screen press [Alt]. At SELECT LEVEL pick a level, [1] is the easiest, and the game starts at once. Don\'t press [P]: it pauses the game.',
         '[←] [→] run, [↑] jump, [↓] duck, [Alt] fires. [P] pauses, and [Alt] carries on.',
         'Collect all the keys and watch out for the bats and the eyes that shoot from the sides. The pad in the middle of the bottom floor bounces you back to the top.']
     }
