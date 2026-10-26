@@ -949,7 +949,9 @@ if (part('cartridge DRAGON DEEP (full computer)')) {
     await S3(() => [...document.querySelectorAll('.d32-cart')].find(e => /DEEP/.test(e.textContent)).click());
     await p.waitForFunction(() => document.querySelector('#dragon-room').d32Cart?.state?.t > 45);
     for (const k of keys) { await p.keyboard.press(k); await p.waitForTimeout(100); }
-    await p.keyboard.press('Space'); await p.waitForTimeout(150); await p.keyboard.press('ArrowUp'); await p.waitForTimeout(50); await p.keyboard.press('ArrowDown'); await p.waitForTimeout(150);
+    await p.keyboard.press('Space');
+    await p.waitForFunction(() => document.querySelector('#dragon-room').d32Cart.state.mode === 'play');
+    await p.evaluate(() => { document.querySelector('#dragon-room').d32Cart.state.intro = 0; }); await p.waitForTimeout(100);
   };
   const st = 'document.querySelector("#dragon-room").d32Cart.state';
   const ev = code => p.evaluate(`(() => { const s = ${st}; ${code} })()`);
@@ -1018,7 +1020,8 @@ if (part('cartridge DRAGON DEEP (full computer)')) {
   await S3(() => localStorage.setItem('d32-deep-save', JSON.stringify({ v: 3, floor: 2, hp: 5, coins: 1, score: 300, xp: 70, hasBow: false, arrows: 0, weapon: 'sword' })));
   await S3(() => [...document.querySelectorAll('.d32-cart')].find(e => /DEEP/.test(e.textContent)).click());
   await p.waitForFunction(() => document.querySelector('#dragon-room').d32Cart?.state?.t > 45);
-  await p.keyboard.press('ArrowUp'); await p.waitForTimeout(200);
+  await p.keyboard.press('ArrowUp');
+  await p.waitForFunction(() => document.querySelector('#dragon-room').d32Cart.state.mode === 'play', null, { timeout: 3000 }).catch(() => {});
   check('round 3: an older save (round 2) loads as NORMAL', await ev('return s.mode === "play" && s.floor === 2 && s.diff === 1 && s.lv === 2;'));
   await S3(() => localStorage.removeItem('d32-deep-save'));
   const longMsg = await p.evaluate(async () => (await import('/assets/dragon/carts/deep.js'))._test.messages().filter(m => m.length > 30));
