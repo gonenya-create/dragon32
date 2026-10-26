@@ -111,7 +111,9 @@ const FLOORS = [{ map: MAP1, pal: 1, style: 'brick' }, { map: MAP2, pal: 0, styl
 const LAST = FLOORS.length;
 const PAR = [300, 420, 480, 540, 600];        // שניות יעד לכל קומה: מתחת לזה בונוס מהירות
 const TORCH_FRAMES = 12000;                   // לפיד שלם: 4 דקות
-export const _test = { FLOORS, TORCH_FRAMES, PAR };   // לבדיקות האוטומטיות
+export const _test = { FLOORS, TORCH_FRAMES, PAR, messages: () => [
+  ...[1, 2, 3, 4, 5].map(f => floorMsg(f)), ...Object.keys(KINDS).flatMap(k => [KINDS[k].name + '!', KINDS[k].name.replace(/^AN? /, 'THE ') + ' HITS YOU!', KINDS[k].name.replace(/^AN? /, 'THE ') + ' IS GONE!', KINDS[k].name + ' IS DEFEATED!', guardMsg(k, false), guardMsg(k, true)]),
+  'GOLDEN TAPE! FIRE TO TAKE IT', 'STAIRS DOWN. FIRE TO GO DOWN', 'A POTION! P - BAG TO DRINK IT', 'THE KEY TURNS. THE DOOR OPENS!', 'A LOCKED DOOR. FIND THE KEY!', 'YOUR HEARTS ARE FULL', 'AN OLD IRON KEY!', 'A NEW TORCH!', 'A GOLD COIN!', 'THE TORCH IS DYING...'] };   // לבדיקות האוטומטיות
 let STYLE = 'brick';
 const wallC = () => STYLE === 'mine' || STYLE === 'lair' ? C3 : STYLE === 'library' ? C2 : C0, woodC = () => STYLE === 'mine' ? C0 : C3;
 // מספר קבוע לכל משבצת, כדי שהסלעים והלפידים יישארו באותו מקום בכל צעד
@@ -406,6 +408,9 @@ function reset(s) {
   newFloor(s);
 }
 const say = (s, text, t = 120) => { s.msg = text; s.msgT = t; };
+// כל ההודעות קצרות מ-31 תווים, כדי שייכנסו בשורה אחת ולא יגיעו למספר הקומה (tools/dragon-test.mjs בודק)
+const floorMsg = f => 'FLOOR ' + f + ' - ' + ['THE CASTLE CELLAR', 'THE CAVES', 'THE OLD MINE', 'THE WIZARD LIBRARY', 'THE DRAGON LAIR'][f - 1];
+const guardMsg = (k, last) => SHORT[k] + (last ? ' GUARDS THE TAPE!' : ' GUARDS THE STAIRS');
 // ההתקדמות נשמרת בדפדפן בתחילת כל קומה (מקומה 2), כדי שאפשר יהיה להמשיך מחר
 const SAVE = 'd32-deep-save';
 const loadSave = () => { try { return JSON.parse(localStorage.getItem(SAVE)); } catch (e) { return null; } };
@@ -414,8 +419,8 @@ const clearSave = () => { try { localStorage.removeItem(SAVE); } catch (e) {} };
 const bossOf = s => s.mobs.find(m => KINDS[m.k].boss && !m.dust);
 function startFloor(s, snd) {
   newFloor(s); s.mode = 'play'; s.t = 0; s.torch = 1; s.floorT = 0; s.paused = false;
-  if (s.floor > 1) writeSave(s);
-  say(s, 'FLOOR ' + s.floor + [' - THE CASTLE CELLAR', ' - THE CAVES. FIND THE KEY', ' - THE OLD MINE', ' - THE WIZARD LIBRARY', ' - THE DRAGON LAIR'][s.floor - 1], 180);
+  writeSave(s);   // נשמר בתחילת כל קומה, גם הראשונה
+  say(s, floorMsg(s.floor), 180);
   snd.tone(220, 120, 440);
 }
 const mobAt = (s, x, y) => s.mobs.find(m => !m.dust && m.x === x && m.y === y);
@@ -491,7 +496,7 @@ export default {
         startFloor(s, snd); return;
       }
       if (api.hit('fire') && s.t > 40) {
-        if (s.mode !== 'title') { s.mode = 'title'; s.t = 0; s.save = loadSave(); setPalette(1); STYLE = 'brick'; return; }
+        if (s.mode !== 'title') { s.mode = 'title'; s.t = 0; s.save = loadSave(); s.high = api.loadHigh('deep'); setPalette(1); STYLE = 'brick'; return; }
         reset(s); startFloor(s, snd);
       }
       return;
@@ -538,7 +543,7 @@ export default {
         if (k === 'p') { s.potions++; say(s, 'A POTION! P - BAG TO DRINK IT'); snd.tone(500, 150, 900); }
         if (k === 'k') { s.keys++; say(s, 'AN OLD IRON KEY!'); snd.tone(660, 200, 990); }
       }
-      if (nx === s.sx && ny === s.sy) say(s, bossOf(s) ? KINDS[bossOf(s).k].name + (s.floor === LAST ? ' GUARDS THE GOLDEN TAPE!' : ' GUARDS THE STAIRS!') : s.floor === LAST ? 'THE GOLDEN TAPE! FIRE TO TAKE IT' : 'STAIRS DOWN. FIRE TO GO DOWN', 200);
+      if (nx === s.sx && ny === s.sy) say(s, bossOf(s) ? guardMsg(bossOf(s).k, s.floor === LAST) : s.floor === LAST ? 'GOLDEN TAPE! FIRE TO TAKE IT' : 'STAIRS DOWN. FIRE TO GO DOWN', 200);
     };
     if (api.hit('left')) { s.dir = (s.dir + 3) % 4; s.dirty = true; snd.tone(300, 20); }
     if (api.hit('right')) { s.dir = (s.dir + 1) % 4; s.dirty = true; snd.tone(300, 20); }
@@ -606,10 +611,10 @@ export default {
     s.mobs = s.mobs.filter(m => !m.gone);
     if (s.hp <= 0) { s.mode = 'over'; s.t = 0; snd.tone(300, 600, 60); api.submitScore('deep', s.score); }
     if (s.dirty) render(s);
-    if (s.view) for (let i = 1; i < s.view.length && i <= light(s); i++) {
-      const c = s.view[i], m = mobAt(s, c.x, c.y);
-      if (m && !s.met.has(m.k)) { s.met.add(m.k); say(s, KINDS[m.k].name + '!', 120); snd.tone(520, 80, 780); }
-    }
+    const seenNow = [];
+    if (s.view) for (let i = 1; i < s.view.length && i <= light(s); i++) { const m = mobAt(s, s.view[i].x, s.view[i].y); if (m) seenNow.push(m); }
+    for (const m of s.mobs) if (!m.dust && Math.abs(m.x - s.x) + Math.abs(m.y - s.y) === 1) seenNow.push(m);
+    for (const m of seenNow) if (!s.met.has(m.k)) { s.met.add(m.k); if (s.msgT < 60) say(s, KINDS[m.k].name + '!', 120); snd.tone(520, 80, 780); }
   },
 
   draw(api) {
@@ -641,7 +646,7 @@ export default {
     for (const m of s.mobs) {
       if (m.dust || Math.abs(m.x - s.x) + Math.abs(m.y - s.y) !== 1) continue;
       const rel = ([0, 1, 2, 3].find(d => s.x + DX[d] === m.x && s.y + DY[d] === m.y) - s.dir + 4) % 4;
-      if (rel === 1) g.text('>>', 250, 70, C3, 'right'); else if (rel === 3) g.text('<<', 6, 70, C3); else if (rel === 2) g.text('BEHIND YOU!', 128, 134, C3, 'center');
+      if (rel === 1) g.sprite(ARROW[1], 236, 64, { 1: C3 }, false, 3); else if (rel === 3) g.sprite(ARROW[3], 6, 64, { 1: C3 }, false, 3); else if (rel === 2) { g.rect(92, 131, 72, 11, BLACK); g.text('BEHIND YOU!', 128, 133, C3, 'center'); }
     }
     // הבוס: פס חיים למעלה כשהוא בטווח הראייה
     const boss = s.mobs.find(m => KINDS[m.k].boss && !m.dust && s.view.some((c, i) => i && c.x === m.x && c.y === m.y));
@@ -655,10 +660,10 @@ export default {
 function bagItems(s) {
   const out = [{ icon: 'sword', name: 'SWORD', what: 'FIRE STRIKES' }];
   out.push({ icon: 'potion', name: 'POTION X' + s.potions, what: s.potions ? 'FIRE: DRINK, +2 HEARTS' : 'FIND THEM IN THE DEEP',
-    use: (s, snd) => { if (!s.potions) return; if (s.hp >= 5) { snd.tone(120, 60); return; } s.potions--; s.hp = Math.min(5, s.hp + 2); snd.tone(500, 150, 900); } });
+    use: (s, snd) => { if (!s.potions) return; if (s.hp >= 5) { say(s, 'YOUR HEARTS ARE FULL'); snd.tone(120, 60); return; } s.potions--; s.hp = Math.min(5, s.hp + 2); snd.tone(500, 150, 900); } });
   if (s.keys) out.push({ icon: 'key', name: 'KEY X' + s.keys, what: 'OPENS A LOCKED DOOR' });
   out.push({ icon: 'coin', name: 'COINS ' + s.coins, what: '50 POINTS EACH' });
-  for (const t of s.trophies) out.push({ icon: 'trophy', name: t, what: 'KEEPSAKE +300' });
+  if (s.trophies.length) out.push({ icon: 'trophy', name: 'KEEPSAKES X' + s.trophies.length, what: '+300 EACH IF YOU WIN' });
   return out;
 }
 function stand(g, rows, z, colors, realH, bob = 0) {
@@ -679,7 +684,7 @@ function drawHud(g, s) {
   g.sprite(COIN, 152, 157, { 1: C1, 2: C3 }, false); g.text(String(s.coins), 158, 158, C1);
   if (s.keys) g.sprite(KEY, 176, 158, { 1: C1 }, false);
   // מצפן ומספר קומה
-  g.text('N', 199, 156, C2, 'center'); g.sprite(ARROW[s.dir], 197, 164, { 1: C1 }, false);
+  g.sprite(ARROW[s.dir], 197, 155, { 1: C1 }, false); g.text(DIRS[s.dir][0], 199, 163, C2, 'center');
   g.text('L' + s.floor, 199, 176, C0, 'center');
   // מיני-מפה: 5×5 משבצות סביב השחקן, רק מה שכבר ראינו
   const MX = 212, MY = 155, CS = 7;
@@ -692,7 +697,7 @@ function drawHud(g, s) {
   }
   g.sprite(ARROW[s.dir], MX + 2 * CS + 1, MY + 2 * CS + 1, { 1: C1 }, false);
   const text = s.msgT ? s.msg : 'P: MAP, BAG AND HELP';
-  g.text(text.length > 31 ? text.slice(0, 31) : text, 100, 176, s.msgT ? C1 : C2, 'center');
+  g.text(text.slice(0, 30), 98, 176, s.msgT ? C1 : C2, 'center');
 }
 // תפריט עצירה: ארבעה דפים, ◀ ▶ עוברים ביניהם
 const PAGES = ['MAP', 'BAG', 'CREATURES', 'HOW TO PLAY'];
@@ -720,30 +725,30 @@ function drawPause(g, s) {
     const items = bagItems(s);
     items.slice(0, 9).forEach((it, i) => {
       const y = 28 + i * 13, sel = i === s.bagSel;
-      if (sel) g.rect(14, y - 2, 228, 11, C2);
+      if (sel) g.rect(14, y - 2, 228, 11, C1);
       const icon = { sword: [['.....1', '....1.', '...1..', '2.1...', '.2....', '2.2...'], { 1: C1, 2: C2 }], potion: [POTION, { 1: C1, 2: C3, 3: C3 }], key: [KEY, { 1: C1 }], coin: [COIN, { 1: C1, 2: C3 }], trophy: [['1.1.1', '11111', '.111.', '..1..', '.111.'], { 1: C1 }] }[it.icon];
       g.sprite(icon[0], 18, y, icon[1], false);
-      g.text(it.name, 30, y, sel ? C1 : C0); g.text(it.what, 240, y, sel ? C1 : C2, 'right');
+      g.text(it.name, 30, y, sel ? BLACK : C0); g.text(it.what, 240, y, sel ? BLACK : C2, 'right');
     });
     g.text('UP DOWN: CHOOSE   FIRE: USE', 128, 124, C2, 'center');
   } else if (s.page === 2) {
-    const ks = Object.keys(KINDS);
+    const ks = ['r', 'g', 'm', 'h', 'T', 'B', 'G', 'M', 'W', 'X'];
     ks.forEach((k, i) => {
       const K = KINDS[k], col = i % 2, row = i >> 1, x = 14 + col * 118, y = 26 + row * 22, known = s.met.has(k);
-      if (known) { const rows = K.rows, sc = Math.max(1, Math.floor(18 / rows.length)); g.sprite(rows, x, y, K.col(), false, sc > 1 ? 1 : 1); }
+      if (known) g.sprite(K.rows, x, y, K.col(), false);
       else g.text('?', x + 8, y + 4, C2, 'left', 2);
       g.text(known ? SHORT[k] : '???', x + 30, y + 2, known ? C1 : C2);
       if (known) g.text(K.blurb, x + 30, y + 11, C0);
     });
   } else {
-    const L = [['UP', 'STEP FORWARD'], ['DOWN', 'STEP BACK - DODGE A BLOW!'], ['LEFT RIGHT', 'TURN'], ['FIRE', 'STRIKE. ON STAIRS: GO DOWN'], ['P', 'THIS MENU. P AGAIN: PLAY ON'], ['ESC', 'LEAVE THE GAME (SAVED)']];
-    L.forEach(([k, t], i) => { g.text(k, 20, 32 + i * 16, C1); g.text(t, 90, 32 + i * 16, C0); });
+    const L = [['UP', 'STEP FORWARD'], ['DOWN', 'STEP BACK - DODGE A BLOW!'], ['LEFT RIGHT', 'TURN'], ['FIRE', 'STRIKE. ON STAIRS: GO DOWN'], ['P', 'THIS MENU, AND BACK'], ['ESC', 'LEAVE. SAVED EACH FLOOR']];
+    L.forEach(([k, t], i) => { g.text(k, 20, 30 + i * 15, C1); g.text(t, 90, 30 + i * 15, C0); });
     g.text('WHEN IT FLASHES, STEP BACK!', 128, 124, C3, 'center');
   }
 }
 function drawTitle(g, s) {
   g.clear(BLACK);
-  for (let i = 0; i < 60; i++) g.rect((i * 97) % W, (i * 53) % 70, 1, 1, i % 3 ? C2 : C1);
+  for (let i = 0; i < 60; i++) g.rect(hash(i, 1) * W, hash(i, 2) * 20 + (i % 2 ? 0 : 130), 1, 1, i % 3 ? C2 : C1);
   const p = s.titleP || 0;
   if (p === 0) {
     g.text('DRAGON', 128, 24, C3, 'center', 4);
@@ -753,7 +758,8 @@ function drawTitle(g, s) {
   } else if (p === 1) {
     g.text('HOW TO PLAY', 128, 12, C3, 'center', 2);
     const L = [['UP', 'STEP FORWARD'], ['DOWN', 'STEP BACK - DODGE!'], ['LEFT RIGHT', 'TURN'], ['FIRE', 'STRIKE / GO DOWN'], ['P', 'MAP, BAG AND HELP'], ['ESC', 'LEAVE THE GAME']];
-    L.forEach(([k, t], i) => { g.text(k, 30, 36 + i * 13, C1); g.text(t, 104, 36 + i * 13, C0); });
+    L.forEach(([k, t], i) => { g.text(k, 30, 34 + i * 12, C1); g.text(t, 104, 34 + i * 12, C0); });
+    g.text('IT FLASHES? STEP BACK!', 128, 110, C3, 'center');
   } else {
     g.text('MEET THE DEEP', 128, 12, C3, 'center', 2);
     const show = ['r', 'g', 'm', 'h', 'T'];

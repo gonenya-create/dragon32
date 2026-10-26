@@ -872,6 +872,8 @@ if (part('cartridge DRAGON DEEP (full computer)')) {
     const { _test } = await import('/assets/dragon/carts/deep.js');
     return _test.FLOORS.map(F => { const all = F.map.join(''); return { torches: all.split('t').length - 1, open: all.split('').filter(c => c !== '#').length, light: (all.split('t').length) * _test.TORCH_FRAMES / 50 }; });
   });
+  const longMsg = await p.evaluate(async () => (await import('/assets/dragon/carts/deep.js'))._test.messages().filter(m => m.length > 30));
+  check('every game message fits on one line (30 characters at most)', longMsg.length === 0, longMsg.join(' | '));
   check('balance: every floor has 2+ torches, and enough light to walk the whole maze twice', bal.every(f => f.torches >= 2 && f.light >= f.open * 2), JSON.stringify(bal));
   await p.keyboard.press('Escape');
   await p.close();
