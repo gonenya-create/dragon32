@@ -28,7 +28,9 @@
     ['adventureland', 'Adventureland', 'Adventureland', 'a',
       ['Scott Adams · Adventure International, 1983', 'https://www.msadams.com/', null, null, 'adams']],
     ['pirate', 'Pirate Adventure', 'Pirate Adventure', 'a',
-      ['Scott Adams · Adventure International, 1984', 'https://www.msadams.com/', null, null, 'adams']]
+      ['Scott Adams · Adventure International, 1984', 'https://www.msadams.com/', null, null, 'adams']],
+    ['mission', 'Secret Mission', 'Secret Mission', 'a',
+      ['Scott Adams · Adventure International', 'https://www.msadams.com/', null, null, 'adams']]
   ];
   // משחקים שצריכים ג'ויסטיק: כשהקלטת נטענת, החיצים במקלדת הופכים לג'ויסטיק הימני ו-Alt (Option במק) לכפתור שלו
   const JOY = new Set(['ranger']);
@@ -134,6 +136,23 @@
         'The first three letters are enough. There are six ways to go: N S E W UP DOWN.',
         'LOOK describes the place again, INVENTORY shows what you carry, HELP gives a hint, SCORE shows your treasures.',
         'The goal: reach the pirates\' island, find the treasures and bring them back to the flat, as the sign there says.']
+    },
+    // נבדק במכונה (26.10): טעינה, שאלות הפתיחה, מלאי, HELP, תנועה למסדרון, LOOK ו-SCORE
+    mission: {
+      he: ['הטעינה לוקחת קצת פחות משתי דקות, והמשחק מתחיל לבד.',
+        'בהתחלה שלוש שאלות. על {DO YOU HAVE LOWERCASE?} עונים [N] ו[ENTER].',
+        'על {PRESS ENTER} לוחצים [ENTER], ועל {RESTORE A PREVIOUSLY SAVED GAME?} עונים [N] ו[ENTER].',
+        'אתם סוכן חשאי בכור גרעיני אוטומטי, ומישהו הטמין בו פצצת זמן. מתחילים בחדר תדריך.',
+        'כותבים פועל ושם עצם באנגלית ולוחצים [ENTER]. למשל {GO WEST} (ללכת מערבה). שלוש האותיות הראשונות מספיקות. הולכים בשש דרכים: {N S E W UP DOWN}.',
+        '{LOOK} מתאר שוב את המקום, {INVENTORY} מראה מה בידיים, ו-{HELP} נותן רמז. כאן אין ניקוד: או שמצליחים, או ש...',
+        'יש לחץ של זמן: אל תתעכבו. הגלאי שבידיים זוהר בירוק כל עוד הפצצה לא עומדת להתפוצץ.'],
+      en: ['Loading takes a little under two minutes, and the game starts by itself.',
+        'Three questions first. At DO YOU HAVE LOWERCASE? answer [N] and [ENTER].',
+        'At PRESS ENTER press [ENTER], and at RESTORE A PREVIOUSLY SAVED GAME? answer [N] and [ENTER].',
+        'You are a secret agent in an automated nuclear reactor, and someone has planted a time bomb. You start in a briefing room.',
+        'Type a verb and a noun, then [ENTER]. For example GO WEST. The first three letters are enough. There are six ways to go: N S E W UP DOWN.',
+        'LOOK describes the place again, INVENTORY shows what you carry, and HELP gives a hint. There is no score here: either you make it, or...',
+        'Time is short, so don\'t dawdle. The detector you carry glows green while the bomb is still safe.']
     }
   };
   // מה המשחק, בשורה אחת מתחת לשם (גונן, 25.10: "לא מבינים מה זה המשחק"). השם עצמו נשאר כמו שהמחבר כתב
@@ -143,6 +162,7 @@
     dragontet: ['קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים.', 'Falling blocks: complete the lines. 1 or 2 players.'],
     phantom: ['מבוך תלת-ממדי: צדים רוחות רפאים לפני שהן תופסות אתכם. לשחקן אחד.', '3D maze: hunt the phantoms before they catch you. 1 player.'],
     ranger: ['רצים, קופצים ויורים: אוספים מפתחות ואוצרות בין עטלפים ועיניים. בג\'ויסטיק.', 'Run, jump and shoot: collect keys and treasure past bats and eyes. Joystick.'],
+    mission: ['הרפתקת מילים: סוכן חשאי צריך לעצור פצצת זמן בכור גרעיני. ההרפתקה השלישית של Scott Adams.', 'A text adventure: a secret agent must stop a time bomb in a nuclear reactor. Scott Adams\' third adventure.'],
     pirate: ['הרפתקת מילים: מדירה בלונדון לאי של פיראטים, בחיפוש אחרי אוצר. ההרפתקה השנייה של Scott Adams.', 'A text adventure: from a London flat to a pirates\' island, hunting for treasure. Scott Adams\' second adventure.'],
     adventureland: ['הרפתקת מילים: כותבים פקודות באנגלית ומחפשים 13 אוצרות. ההרפתקה הראשונה של Scott Adams.', 'A text adventure: type commands and hunt for 13 treasures. Scott Adams\' first adventure.']
   };
@@ -189,7 +209,7 @@
   // עם מספר הקלטות, ונפתחת בלחיצה. מה פתוח נזכר בדפדפן הזה. המגירה של "הקלטות שלי" כתובה בדף עצמו.
   const DRAWERS = [['basic', 'תוכניות BASIC', 'BASIC programs'], ['mc', 'משחקים בשפת מכונה', 'Machine-code games'], ['adv', 'משחקי הרפתקאות', 'Adventure games']];
   // הרפתקאות המילים במגירה משלהן (גונן, 26.10: "קטגוריית משחקי הרפתקאות"). הן עדיין קלטות של שפת מכונה
-  const ADV = new Set(['adventureland', 'pirate']);
+  const ADV = new Set(['adventureland', 'pirate', 'mission']);
   const drawerOf = t => ADV.has(t[0]) ? 'adv' : t[3] ? 'mc' : 'basic';
   const DKEY = 'd32-lab-drawers';
   let drawerState = {};
