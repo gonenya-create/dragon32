@@ -28,7 +28,8 @@ const CARTS = [
   ['TOWER', tr('מגדל הדרקון', 'Dragon Tower'), () => import('./carts/tower.js')],
   ['JUNGLE', tr('נדנדת הג\'ונגל', 'Jungle Swing'), () => import('./carts/jungle.js')],
   ['EGGS', tr('ביצי הדרקון', 'Dragon Eggs'), () => import('./carts/eggs.js')],
-  ['CASTLE', tr('טירת הדרקון', 'Dragon Castle'), () => import('./carts/castle.js'), 'full']
+  ['CASTLE', tr('טירת הדרקון', 'Dragon Castle'), () => import('./carts/castle.js'), 'full'],
+  ['DEEP', tr('מעמקי הדרקון', 'Dragon Deep'), () => import('./carts/deep.js'), 'full']
 ];
 const CART_SLOTS = 0;
 // המנוע יודע להיות גם גרסה בסיסית וגם המחשב המלא (data-edition="full": מסך מלא, כלים למתכנת, עוזר AI ומחסניות שיש רק שם).
