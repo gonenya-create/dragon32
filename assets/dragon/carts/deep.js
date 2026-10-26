@@ -12,11 +12,12 @@ const VIEW = 150;                         // גובה המבט; מתחתיו פ�
 // ---- המבוך של קומה 1 (מצויר ביד, כדי שלכל מקום יהיה אופי ושכולם ישחקו באותו מבוך) ----
 // # קיר  . רצפה  @ התחלה  S מדרגות  D דלת נעולה  c מטבע  t לפיד  p שיקוי  k מפתח
 // r עכברוש  g גובלין  m איש פטרייה  h רוח קטנה  T טרול  B מלך האוגרים  G גולם האבן  M מלך החפרפרות  W ספר הקסמים  X הדרקון
+// סבב 2: % קיר סדוק (FIRE פותח מעבר סודי)  $ אוצר נסתר  b קשת  a חצים  H סורג נעול (נפתח במפתח)  O כורה זקן  J אסיר (ידידים)
 const MAP1 = [
   '################',
   '#@..c#....g....#',
   '#.##.#.####.##.#',
-  '#.#..t.#..#..#.#',
+  '#.#..t.%..#..#.#',
   '#g#.####.c#.##.#',
   '#...#r...##....#',
   '###.#.####..#m.#',
@@ -37,15 +38,15 @@ const MAP2 = [
   '#.##.#.###.###.#',
   '#.#k.#...#...#.#',
   '#.#.####.###.#.#',
-  '#...#..m...#t..#',
+  '#..b#..m...#t..#',
   '#.###.####.###.#',
   '#.....#c.....#.#',
-  '#####.#.####.#.#',
+  '#%###.#.####.#.#',
   '#t..#...#..p.#.#',
   '#.#.#####.##.#.#',
-  '#.#...h......#.#',
-  '#.####.#####.#.#',
-  '#.c..#.#...#.###',
+  '#.#...h......#%#',
+  '#.####.#####.#$#',
+  '#.c.a#.#...#.###',
   '#.##...#.r..DGS#',
   '################'
 ];
@@ -65,8 +66,8 @@ const MAP3 = [
   '#.#.###.###.#.##',
   '#.#...#...#.T..#',
   '#.###.###.#.##.#',
-  '#.c...#...#..#.#',
-  '#.#####.#...#MS#',
+  '#.c...#%..#.O#.#',
+  '#a#####$#...#MS#',
   '################'
 ];
 // קומה 4: ספריית הקוסם. מדפי ספרים ונרות, מפתח ודלת, ובסוף ספר הקסמים המעופף שיורה אותיות
@@ -82,10 +83,10 @@ const MAP4 = [
   '#.###.######.#.#',
   '#..g#....h...#.#',
   '##.##.##.###.#.#',
-  '#p.#.t.#...#.#.#',
-  '#.##.#.###.#.#.#',
+  '#p.#.t.#...#.#H#',
+  '#.##.#.###.#.#J#',
   '#.c..#...T.#.###',
-  '#.####.#####DWS#',
+  '#a####k#####DWS#',
   '################'
 ];
 // קומה 5: מאורת הדרקון. קירות חרוכים, גחלים, עצמות וזהב. המפתח במערב, המאורה מאחורי הדלת, ושם הדרקון וקלטת הזהב
@@ -93,15 +94,15 @@ const MAP5 = [
   '################',
   '#@...#..T....h.#',
   '#.##.#.####.##.#',
-  '#.#..c.#..#..#.#',
+  '#.#..c.%..#..#.#',
   '#.#.####.##.##.#',
   '#.g...#...m....#',
   '####.##.#####.##',
   '#p...#....g.#..#',
   '#.####.##.#.#.##',
-  '#...h..#..#...t#',
+  '#...h..#a.#...t#',
   '#.###.####.###.#',
-  '#.t.#....c.#...#',
+  '#.t.#....c.#$%.#',
   '###.#.####.#####',
   '#k..#.#....#...#',
   '#.T.....#.D..XS#',
@@ -111,9 +112,14 @@ const FLOORS = [{ map: MAP1, pal: 1, style: 'brick' }, { map: MAP2, pal: 0, styl
 const LAST = FLOORS.length;
 const PAR = [300, 420, 480, 540, 600];        // שניות יעד לכל קומה: מתחת לזה בונוס מהירות
 const TORCH_FRAMES = 12000;                   // לפיד שלם: 4 דקות
+// רמה וניסיון (סבב 2): נקודות הניסיון הן הנקודות של כל אויב שמנצחים. כל רמה מוסיפה לב (עד 8), וכל שתי רמות מכה חזקה יותר
+const XPL = [0, 60, 160, 320, 560, 900, 1400, 2000];
+const levelOf = xp => XPL.filter(v => xp >= v).length;
+const maxHp = s => Math.min(8, 4 + s.lv);
+const swordDmg = s => 1 + ((s.lv - 1) >> 1);
 export const _test = { FLOORS, TORCH_FRAMES, PAR, messages: () => [
   ...[1, 2, 3, 4, 5].map(f => floorMsg(f)), ...Object.keys(KINDS).flatMap(k => [KINDS[k].name + '!', KINDS[k].name.replace(/^AN? /, 'THE ') + ' HITS YOU!', KINDS[k].name.replace(/^AN? /, 'THE ') + ' IS GONE!', KINDS[k].name + ' IS DEFEATED!', guardMsg(k, false), guardMsg(k, true)]),
-  'GOLDEN TAPE! FIRE TO TAKE IT', 'STAIRS DOWN. FIRE TO GO DOWN', 'A POTION! P - BAG TO DRINK IT', 'THE KEY TURNS. THE DOOR OPENS!', 'A LOCKED DOOR. FIND THE KEY!', 'YOUR HEARTS ARE FULL', 'AN OLD IRON KEY!', 'A NEW TORCH!', 'A GOLD COIN!', 'THE TORCH IS DYING...'] };   // לבדיקות האוטומטיות
+  'GOLDEN TAPE! FIRE TO TAKE IT', 'STAIRS DOWN. FIRE TO GO DOWN', 'A POTION! P - BAG TO DRINK IT', 'THE KEY TURNS. THE DOOR OPENS!', 'A LOCKED DOOR. FIND THE KEY!', 'YOUR HEARTS ARE FULL', 'AN OLD IRON KEY!', 'A BOW! P - BAG TO TAKE IT', 'FIVE ARROWS!', 'HIDDEN TREASURE! +200', 'THE BARS SWING OPEN!', 'LOCKED BARS. FIND A KEY!', 'A SECRET PASSAGE! +100', 'NO ARROWS LEFT. SWORD!', 'THE GOBLIN STEALS A COIN!', 'SPORES! YOU FEEL SLOW...', 'A GHOST BEHIND YOU!', 'LEVEL UP! NOW LEVEL 8', 'A FRIEND? WALK UP TO TALK', 'MINER: CRACKED WALLS HIDE GOLD', 'FREE AT LAST! TAKE THESE', 'THE MINER WAVES. GOOD LUCK!', 'OLD MINER RUNS OFF! -100', 'PRISONER RUNS OFF! -100', 'BOW IN HAND', 'A NEW TORCH!', 'A GOLD COIN!', 'THE TORCH IS DYING...'] };   // לבדיקות האוטומטיות
 let STYLE = 'brick';
 const wallC = () => STYLE === 'mine' || STYLE === 'lair' ? C3 : STYLE === 'library' ? C2 : C0, woodC = () => STYLE === 'mine' ? C0 : C3;
 // מספר קבוע לכל משבצת, כדי שהסלעים והלפידים יישארו באותו מקום בכל צעד
@@ -173,9 +179,16 @@ const DRAGON = [
   '........3333311111113.....33..', '.........333.....333......3..', '........000.......000.........'
 ];
 const TAPE = ['111111111', '133333331', '131.1.131', '133333331', '111111111'];
+const BOW = ['.11..', '1..1.', '1...1', '1...1', '1...1', '1..1.', '.11..'];
+const QUIVER = ['1.1.1', '1.1.1', '33333', '33333', '33333'];
+const GOLD = ['...1...', '..121..', '.11211.', '1112111'];
+// כורה זקן: קסדה עם פנס וזקן לבן (1 עור, 2 עיניים, 3 בגד, 0 פנס וזקן)
+const MINER = ['....333....', '...33033...', '...11111...', '...12121...', '...10001...', '....000....', '..3333333..', '.1.33333.1.', '1..33333..1', '...33.33...', '...3...3...', '..11...11..'];
+// אסיר: בגד מפוספס (1 עור, 2 עיניים, 3 פסים)
+const PRISONER = ['...1111...', '..111111..', '..121121..', '..111111..', '...1111...', '..333333..', '.10000001.', '1.333333.1', '..000000..', '..333333..', '..33..33..', '..11..11..'];
 // הצבעים של כל דמות הם פונקציה, כי בכל קומה ערכת הצבעים אחרת
 const KINDS = {
-  r: { name: 'A RAT', rows: RAT, h: 0.16, hp: 1, dmg: 1, speed: 60, pts: 10, col: () => ({ 3: C3, 1: C1, 2: C2 }) , blurb: 'QUICK. BITES.' },
+  r: { name: 'A RAT', rows: RAT, h: 0.16, hp: 1, dmg: 1, speed: 40, pts: 10, col: () => ({ 3: C3, 1: C1, 2: C2 }) , blurb: 'QUICK. BITES.' },
   g: { name: 'A GOBLIN', rows: GOBLIN, h: 0.5, hp: 2, dmg: 1, speed: 75, pts: 25, col: () => ({ 1: C0, 2: BLACK, 0: C1, 3: C3 }) , blurb: 'SNEAKY.' },
   m: { name: 'A MUSHROOM MAN', rows: MUSH, h: 0.55, hp: 3, dmg: 1, speed: 110, pts: 40, col: () => ({ 3: C3, 1: C1, 2: BLACK }) , blurb: 'SLOW, TOUGH.' },
   h: { name: 'A LITTLE GHOST', rows: GHOST, h: 0.6, hp: 2, dmg: 1, speed: 70, pts: 35, col: () => ({ 1: C1, 2: C2 }), ghost: true , blurb: 'IN THE WALLS.' },
@@ -184,6 +197,8 @@ const KINDS = {
   G: { name: 'THE STONE GOLEM', rows: GOLEM, h: 0.88, hp: 16, dmg: 2, speed: 95, pts: 450, col: () => ({ 1: C1, 2: C3, 0: BLACK }), boss: true , blurb: 'FLOOR 2 BOSS', trophy: 'GOLEM EYE' },
   W: { name: 'THE SPELL BOOK', rows: BOOK, h: 0.55, hp: 24, dmg: 2, speed: 70, pts: 800, col: () => ({ 1: C1, 3: C3, 2: BLACK, 0: C2 }), boss: true, fly: true , blurb: 'FLOOR 4 BOSS', trophy: 'MAGIC PAGE' },
   X: { name: 'THE DRAGON', rows: DRAGON, h: 0.95, hp: 30, dmg: 2, speed: 75, pts: 2000, col: () => ({ 3: C3, 1: C1, 2: C1, 0: C0 }), boss: true, fire: true , blurb: 'FLOOR 5 BOSS', trophy: 'DRAGON SCALE' },
+  O: { name: 'AN OLD MINER', rows: MINER, h: 0.62, hp: 1, dmg: 0, speed: 9999, pts: 0, col: () => ({ 1: C0, 2: BLACK, 3: C2, 0: C1 }), friend: true, blurb: 'A FRIEND' },
+  J: { name: 'A PRISONER', rows: PRISONER, h: 0.62, hp: 1, dmg: 0, speed: 9999, pts: 0, col: () => ({ 1: C0, 2: BLACK, 3: C2, 0: C1 }), friend: true, blurb: 'A FRIEND' },
   M: { name: 'THE MOLE KING', rows: MOLE, h: 0.85, hp: 20, dmg: 2, speed: 80, pts: 600, col: () => ({ 1: C0, 2: BLACK, 3: C2, 0: C1 }), boss: true , blurb: 'FLOOR 3 BOSS', trophy: 'MINER LAMP' }
 };
 const COIN = ['.11.', '1221', '1221', '.11.'];
@@ -365,6 +380,29 @@ function puddle(z) {
   const a = P(z), b = P(z + 0.6), y0 = a[3], y1 = b[3], w = (a[2] - a[0]) * 0.18;
   for (let y = Math.round(y1); y <= Math.round(y0); y++) { const t = (y - y1) / Math.max(1, y0 - y1), ww = w * Math.sin(t * Math.PI) * (0.6 + 0.4 * t); for (let x = Math.round(VX - ww); x <= Math.round(VX + ww); x++) if ((x + y) % 2 === 0) px(x + 18, y, C2); }
 }
+// קיר סדוק (סבב 2): סדק שחור מזוגזג באמצע הקיר, רמז שאפשר לפתוח אותו ב-FIRE
+function crackFront(z, light) {
+  if (shade(z, light) < 1) return;
+  const [x0, y0, x1, y1] = P(z), w = x1 - x0, h = y1 - y0;
+  let px0 = x0 + w * 0.5, py0 = y0 + h * 0.08;
+  for (let i = 1; i <= 7; i++) { const nx = x0 + w * (0.5 + (i % 2 ? 0.08 : -0.06) * (1 + i * 0.15)), ny = y0 + h * (0.08 + i * 0.12); line(px0, py0, nx, ny, BLACK); line(px0 + 1, py0, nx + 1, ny, BLACK); px0 = nx; py0 = ny; }
+  line(x0 + w * 0.5, y0 + h * 0.45, x0 + w * 0.68, y0 + h * 0.55, BLACK);
+}
+function crackSide(z0, z1, side, light) {
+  if (shade((z0 + z1) / 2, light) < 1) return;
+  const a = P(z0), b = P(z1), xa = side < 0 ? a[0] : a[2], xb = side < 0 ? b[0] : b[2];
+  const at = (t, u) => [lerp(xa, xb, t), lerp(lerp(a[1], b[1], t), lerp(a[3], b[3], t), u)];
+  let prev = at(0.5, 0.1);
+  for (let i = 1; i <= 6; i++) { const pt = at(0.5 + (i % 2 ? 0.12 : -0.1), 0.1 + i * 0.13); line(prev[0], prev[1], pt[0], pt[1], BLACK); prev = pt; }
+}
+// סורג: מסגרת ומוטות, ומאחוריהם חושך
+function barsFront(z, light) {
+  if (shade(z, light) < 1) return;
+  const [x0, y0, x1, y1] = P(z), w = x1 - x0;
+  polyFill([[x0 + 2, y0 + 2], [x1 - 2, y0 + 2], [x1 - 2, y1 - 1], [x0 + 2, y1 - 1]], BLACK, 4);
+  for (let i = 1; i < 7; i++) { const x = x0 + w * i / 7; line(x, y0, x, y1, C1); line(x + 1, y0, x + 1, y1, C2); }
+  line(x0, y0 + 2, x1, y0 + 2, C1); line(x0, y1 - 2, x1, y1 - 2, C1);
+}
 function floorCeil(zmax, light) {
   const far = P(zmax);
   if (STYLE === 'mine') {   // מסילה של עגלות מכרה, וקורות תקרה בכל עומק
@@ -386,7 +424,7 @@ function stairsAt(z) {
 }
 
 // ---- מצב המשחק ----
-const wallAt = (s, x, y) => x < 0 || y < 0 || x > 15 || y > 15 || s.map[y][x] === '#' || s.map[y][x] === 'D';
+const wallAt = (s, x, y) => x < 0 || y < 0 || x > 15 || y > 15 || '#D%H'.includes(s.map[y][x]);
 function newFloor(s) {
   const F = FLOORS[s.floor - 1];
   setPalette(F.pal); STYLE = F.style;
@@ -397,14 +435,16 @@ function newFloor(s) {
     const ch = s.map[y][x];
     if (ch === '@') { s.x = x; s.y = y; s.map[y][x] = '.'; }
     else if (KINDS[ch]) { s.mobs.push({ k: ch, x, y, hx: x, hy: y, hp: KINDS[ch].hp, cd: 30 + (x * 7 + y * 3) % 40, wind: 0, flash: 0, dust: 0 }); s.map[y][x] = '.'; }
-    else if ('ctpk'.includes(ch)) { s.items.push({ k: ch, x, y }); s.map[y][x] = '.'; }
+    else if ('ctpkab$'.includes(ch)) { s.items.push({ k: ch, x, y }); s.map[y][x] = '.'; }
     else if (ch === 'S') { s.sx = x; s.sy = y; s.map[y][x] = '.'; }
   }
   s.dir = 1; s.dirty = true;
+  s.secrets = 0; s.secretsTotal = s.map.flat().filter(c => c === '%').length; s.slow = 0; s.moveCd = 0; s.shot = null;
 }
 function reset(s) {
   s.hp = 5; s.torch = 1; s.coins = 0; s.score = 0; s.floor = 1; s.keys = 0; s.atkCd = 0; s.hurt = 0; s.msg = ''; s.msgT = 0; s.paused = false; s.steps = 0;
   s.potions = 0; s.trophies = []; s.met = new Set(); s.page = 0; s.bagSel = 0; s.floorT = 0; s.times = [];
+  s.xp = 0; s.lv = 1; s.hasBow = false; s.arrows = 0; s.weapon = 'sword';
   newFloor(s);
 }
 const say = (s, text, t = 120) => { s.msg = text; s.msgT = t; };
@@ -414,7 +454,7 @@ const guardMsg = (k, last) => SHORT[k] + (last ? ' GUARDS THE TAPE!' : ' GUARDS 
 // ההתקדמות נשמרת בדפדפן בתחילת כל קומה (מקומה 2), כדי שאפשר יהיה להמשיך מחר
 const SAVE = 'd32-deep-save';
 const loadSave = () => { try { return JSON.parse(localStorage.getItem(SAVE)); } catch (e) { return null; } };
-const writeSave = s => { try { localStorage.setItem(SAVE, JSON.stringify({ v: 2, floor: s.floor, hp: s.hp, coins: s.coins, score: s.score, potions: s.potions, trophies: s.trophies, met: [...s.met], times: s.times })); } catch (e) {} };
+const writeSave = s => { try { localStorage.setItem(SAVE, JSON.stringify({ v: 3, floor: s.floor, hp: s.hp, coins: s.coins, score: s.score, potions: s.potions, trophies: s.trophies, met: [...s.met], times: s.times, xp: s.xp, hasBow: s.hasBow, arrows: s.arrows, weapon: s.weapon })); } catch (e) {} };
 const clearSave = () => { try { localStorage.removeItem(SAVE); } catch (e) {} };
 const bossOf = s => s.mobs.find(m => KINDS[m.k].boss && !m.dust);
 function startFloor(s, snd) {
@@ -436,7 +476,8 @@ function layout(s) {
     if (cell.left === 2) s.seen.add((cx + DX[l]) + ',' + (cy + DY[l]));
     if (cell.right === 2) s.seen.add((cx + DX[r]) + ',' + (cy + DY[r]));
     out.push(cell);
-    if (wallAt(s, cx + DX[s.dir], cy + DY[s.dir])) { cell.front = 1; cell.door = s.map[cy + DY[s.dir]]?.[cx + DX[s.dir]] === 'D'; break; }
+    cell.lsec = s.map[cy + DY[l]]?.[cx + DX[l]] === '%'; cell.rsec = s.map[cy + DY[r]]?.[cx + DX[r]] === '%';
+    if (wallAt(s, cx + DX[s.dir], cy + DY[s.dir])) { const f = s.map[cy + DY[s.dir]]?.[cx + DX[s.dir]]; cell.front = 1; cell.door = f === 'D'; cell.secret = f === '%'; cell.bars = f === 'H'; break; }
   }
   return out;
 }
@@ -448,9 +489,9 @@ function render(s) {
   for (let i = L.length - 1; i >= 0; i--) {
     const c = L[i], z0 = i, z1 = i + 1;
     if (z0 > lt) continue;
-    if (c.front) frontWall(z1, lt, c.door);
-    if (c.left === 1) sideWall(z0, z1, -1, lt, c.x, c.y); else sideOpening(z0, z1, -1, lt);
-    if (c.right === 1) sideWall(z0, z1, 1, lt, c.x, c.y); else sideOpening(z0, z1, 1, lt);
+    if (c.front) { frontWall(z1, lt, c.door && !c.bars); if (c.secret) crackFront(z1, lt); if (c.bars) barsFront(z1, lt); }
+    if (c.left === 1) { sideWall(z0, z1, -1, lt, c.x, c.y); if (c.lsec) crackSide(z0, z1, -1, lt); } else sideOpening(z0, z1, -1, lt);
+    if (c.right === 1) { sideWall(z0, z1, 1, lt, c.x, c.y); if (c.rsec) crackSide(z0, z1, 1, lt); } else sideOpening(z0, z1, 1, lt);
     if (STYLE === 'cave' && i > 0 && shade(i, lt) > 1 && hash(c.x, c.y, 9) < 0.35) puddle(i);
     if (STYLE === 'lair' && i > 0 && shade(i, lt) > 1 && hash(c.x, c.y, 8) < 0.4) lairFloor(i + 0.5, c.x, c.y);
     if (i > 0 && c.x === s.sx && c.y === s.sy && s.floor < LAST) stairsAt(i);
@@ -458,6 +499,26 @@ function render(s) {
   s.dirty = false;
 }
 
+// פגיעה בדמות: ידיד בורח וזה עולה 100 נקודות; אויב מאבד חיים, ובניצחון נותן נקודות וניסיון
+function hit(s, m, dmg, snd, api) {
+  const K = KINDS[m.k];
+  if (K.friend) { m.dust = 30; s.score = Math.max(0, s.score - 100); say(s, SHORT[m.k] + ' RUNS OFF! -100'); snd.tone(200, 300, 90); return; }
+  m.hp -= dmg; m.flash = 8; snd.noise(60, 0.07); snd.tone(260, 60, 120);
+  if (m.hp > 0.01) return;
+  m.dust = 45; m.wind = 0; s.score += K.pts; snd.tone(600, 200, 100);
+  if (K.trophy) s.trophies.push(K.trophy);
+  say(s, K.boss ? K.name + ' IS DEFEATED!' : K.name.replace(/^AN? /, 'THE ') + ' IS GONE!');
+  s.xp += K.pts;
+  const lv = levelOf(s.xp);
+  if (lv > s.lv) { s.lv = lv; s.hp = Math.min(maxHp(s), s.hp + 1); say(s, 'LEVEL UP! NOW LEVEL ' + lv, 150); snd.tone(523, 120, 1046); }
+}
+// ידיד: בפעם הראשונה נותן מתנה ורמז
+function talk(s, m, snd) {
+  if (m.given) { say(s, m.k === 'O' ? 'THE MINER WAVES. GOOD LUCK!' : 'THANK YOU, FRIEND!'); return; }
+  m.given = true; snd.tone(660, 150, 990);
+  if (m.k === 'O') { s.torch = 1; s.dirty = true; say(s, 'MINER: CRACKED WALLS HIDE GOLD', 200); }
+  else { s.potions++; s.arrows += 5; say(s, 'FREE AT LAST! TAKE THESE', 200); }
+}
 // BFS: הצעד הבא של אויב לכיוון השחקן, והמרחק (-1 אם רחוק מדי)
 function stepToward(s, m, maxD) {
   const key = (x, y) => y * 16 + x, prev = new Map([[key(m.x, m.y), -1]]), q = [[m.x, m.y, 0]];
@@ -483,6 +544,10 @@ export default {
       'קרב: FIRE מכה בחרב. אויב שמהבהב עומד להכות: צעד אחורה ב-▼, והוא יחטיא.',
       'תפריט: P עוצר את המשחק ופותח מפה, תרמיל (שם שותים שיקוי), אלבום דמויות והוראות. ◀ ▶ מחליפים דף.',
       'הלפיד דועך עם הזמן, וכשהוא חלש רואים פחות. בכל קומה יש לפידים חדשים.',
+      'קשת: בקומה 2 מחכה קשת. בתרמיל בוחרים חרב או קשת, ואז FIRE יורה חץ לאורך המסדרון. לבוסים יש מגן מפני חצים.',
+      'ידידים: הכורה הזקן והאסיר לא תוקפים. הולכים אליהם כדי לדבר, ומקבלים מתנה. מכה בידיד עולה 100 נקודות.',
+      'סודות: קיר עם סדק אפשר לפתוח ב-FIRE. מאחוריו יש אוצר או קיצור דרך.',
+      'רמה: כל ניצחון נותן ניסיון. ברמה חדשה מקבלים עוד לב, ובכל שתי רמות המכה חזקה יותר.',
       'בכל קומה יש בוס ששומר על המדרגות. על המדרגות, FIRE יורד קומה. בקומות 2, 4 ו-5 צריך קודם מפתח לדלת נעולה.',
       'שמירה: ההתקדמות נשמרת בתחילת כל קומה. אחרי מוות, FIRE מנסה שוב את הקומה, ו-▼ מוותר ושומר את התוצאה.',
       'יציאה: Esc, או "הוצאת המחסנית".'],
@@ -491,6 +556,10 @@ export default {
       'An enemy that flashes is about to hit: step back with ▼ and it misses.',
       'P pauses and opens a menu: map, bag (drink potions there), the creature album and help. ◀ ▶ change page.',
       'The torch fades with time, and a weak torch shows less. Each floor has new torches.',
+      'Bow: a bow waits on floor 2. In the bag choose sword or bow; then FIRE shoots an arrow down the corridor. Bosses are shielded against arrows.',
+      'Friends: the old miner and the prisoner never attack. Walk up to them to talk and get a gift. Hitting a friend costs 100 points.',
+      'Secrets: a wall with a crack opens with FIRE. Behind it is treasure or a shortcut.',
+      'Level: every win gives experience. A new level gives another heart, and every two levels a stronger blow.',
       'Each floor has a boss guarding the stairs. On floors 2, 4 and 5 you need a key for a locked door first.',
       'Progress is saved at the start of each floor. After a death FIRE tries the floor again, ▼ gives up and keeps the score. Esc or "Eject cartridge" leaves.']
   },
@@ -509,7 +578,7 @@ export default {
     if (s.mode === 'over' && s.t > 40) {
       const v = loadSave();
       if (api.hit('fire') && v) {   // מנסים שוב את הקומה: הכל חוזר למה שהיה בתחילתה, ולפחות 3 לבבות
-        reset(s); Object.assign(s, { floor: v.floor, hp: Math.max(3, v.hp), coins: v.coins, score: v.score, potions: v.potions || 0, trophies: v.trophies || [], met: new Set(v.met || []), times: v.times || [] });
+        reset(s); Object.assign(s, { floor: v.floor, hp: Math.max(3, v.hp), coins: v.coins, score: v.score, potions: v.potions || 0, trophies: v.trophies || [], met: new Set(v.met || []), times: v.times || [], xp: v.xp || 0, lv: levelOf(v.xp || 0), hasBow: !!v.hasBow, arrows: v.arrows || 0, weapon: v.hasBow && v.weapon === 'bow' ? 'bow' : 'sword' });
         startFloor(s, snd); return;
       }
       if (api.hit('down') || (api.hit('fire') && !v)) {   // מוותרים: התוצאה נכנסת להיכל התהילה והשמירה נמחקת
@@ -520,7 +589,7 @@ export default {
     if (s.mode === 'title' || s.mode === 'over' || s.mode === 'won') {
       if (s.mode === 'title' && s.save && api.hit('up') && s.t > 40) {   // ממשיכים מהקומה שנשמרה
         const v = s.save; reset(s);
-        Object.assign(s, { floor: v.floor, hp: v.hp, coins: v.coins, score: v.score, potions: v.potions || 0, trophies: v.trophies || [], met: new Set(v.met || []), times: v.times || [] });
+        Object.assign(s, { floor: v.floor, hp: v.hp, coins: v.coins, score: v.score, potions: v.potions || 0, trophies: v.trophies || [], met: new Set(v.met || []), times: v.times || [], xp: v.xp || 0, lv: levelOf(v.xp || 0), hasBow: !!v.hasBow, arrows: v.arrows || 0, weapon: v.hasBow && v.weapon === 'bow' ? 'bow' : 'sword' });
         startFloor(s, snd); return;
       }
       if (api.hit('fire') && s.t > 40) {
@@ -557,14 +626,21 @@ export default {
     if (s.torch > 0 && s.torch < 0.2 && s.t % 600 === 0) say(s, 'THE TORCH IS DYING...');
 
     // תנועה וקרב
+    if (s.slow) s.slow--;
+    if (s.moveCd) s.moveCd--;
     const fx = s.x + DX[s.dir], fy = s.y + DY[s.dir], front = mobAt(s, fx, fy);
     const move = (nx, ny) => {
-      if (s.map[ny]?.[nx] === 'D') {
-        if (s.keys) { s.keys--; s.map[ny][nx] = '.'; s.dirty = true; say(s, 'THE KEY TURNS. THE DOOR OPENS!'); snd.tone(300, 300, 600); }
-        else { say(s, 'A LOCKED DOOR. FIND THE KEY!'); snd.tone(90, 80); }
+      const cell = s.map[ny]?.[nx];
+      if (cell === 'D' || cell === 'H') {   // דלת או סורג: נפתחים במפתח
+        if (s.keys) { s.keys--; s.map[ny][nx] = '.'; s.dirty = true; say(s, cell === 'H' ? 'THE BARS SWING OPEN!' : 'THE KEY TURNS. THE DOOR OPENS!'); snd.tone(300, 300, 600); }
+        else { say(s, cell === 'H' ? 'LOCKED BARS. FIND A KEY!' : 'A LOCKED DOOR. FIND THE KEY!'); snd.tone(90, 80); }
         return;
       }
-      if (wallAt(s, nx, ny) || mobAt(s, nx, ny)) { snd.tone(90, 40); return; }
+      const who = mobAt(s, nx, ny);
+      if (who && KINDS[who.k].friend) { talk(s, who, snd); return; }   // הולכים אל ידיד = מדברים איתו
+      if (wallAt(s, nx, ny) || who) { snd.tone(90, 40); return; }
+      if (s.slow && s.moveCd) return;   // נבגים: צעד רק פעם בכמה רגעים
+      if (s.slow) s.moveCd = 22;
       s.x = nx; s.y = ny; s.steps++; s.dirty = true; snd.noise(25, 0.025);
       const it = s.items.findIndex(i => i.x === nx && i.y === ny);
       if (it >= 0) {
@@ -573,6 +649,9 @@ export default {
         if (k === 't') { s.torch = 1; s.dirty = true; say(s, 'A NEW TORCH!'); snd.tone(440, 120, 880); }
         if (k === 'p') { s.potions++; say(s, 'A POTION! P - BAG TO DRINK IT'); snd.tone(500, 150, 900); }
         if (k === 'k') { s.keys++; say(s, 'AN OLD IRON KEY!'); snd.tone(660, 200, 990); }
+        if (k === 'b') { s.hasBow = true; s.arrows += 10; say(s, 'A BOW! P - BAG TO TAKE IT'); snd.tone(520, 220, 1040); }
+        if (k === 'a') { s.arrows += 5; say(s, 'FIVE ARROWS!'); snd.tone(700, 80, 900); }
+        if (k === '$') { s.coins += 3; s.score += 200; say(s, 'HIDDEN TREASURE! +200'); snd.tone(880, 300, 1760); }
       }
       if (nx === s.sx && ny === s.sy) say(s, bossOf(s) ? guardMsg(bossOf(s).k, s.floor === LAST) : s.floor === LAST ? 'GOLDEN TAPE! FIRE TO TAKE IT' : 'STAIRS DOWN. FIRE TO GO DOWN', 200);
     };
@@ -580,15 +659,20 @@ export default {
     if (api.hit('right')) { s.dir = (s.dir + 1) % 4; s.dirty = true; snd.tone(300, 20); }
     if (api.hit('up')) move(fx, fy);
     if (api.hit('down')) move(s.x - DX[s.dir], s.y - DY[s.dir]);
+    if (s.shot) {   // חץ באוויר: פוגע כשהוא מגיע
+      if (++s.shot.t >= s.shot.dist * 4) { const m = s.shot.target; s.shot = null; if (m && !m.dust && !m.gone) hit(s, m, KINDS[m.k].boss ? 0.5 : 1, snd, api); }
+    }
     if (api.hit('fire') && !s.atkCd) {
       s.atkCd = 18;
-      if (front) {
-        front.hp--; front.flash = 8; snd.noise(60, 0.07); snd.tone(260, 60, 120);
-        if (front.hp <= 0) {
-          front.dust = 45; front.wind = 0; s.score += KINDS[front.k].pts; snd.tone(600, 200, 100);
-          if (KINDS[front.k].trophy) s.trophies.push(KINDS[front.k].trophy);
-          say(s, KINDS[front.k].boss ? KINDS[front.k].name + ' IS DEFEATED!' : KINDS[front.k].name.replace(/^AN? /, 'THE ') + ' IS GONE!');
-        }
+      if (s.weapon === 'bow' && s.arrows > 0 && !s.shot) {   // קשת: החץ טס לאורך המסדרון אל הראשון שבדרך
+        s.arrows--; snd.tone(900, 60, 400);
+        let d = 1, x = s.x, y = s.y, target = null;
+        for (; d <= 5; d++) { x += DX[s.dir]; y += DY[s.dir]; if (wallAt(s, x, y)) break; const m = mobAt(s, x, y); if (m) { target = m; break; } }
+        s.shot = { t: 0, dist: Math.max(1, target ? d : d - 1), target };
+        if (!s.arrows) { s.weapon = 'sword'; say(s, 'NO ARROWS LEFT. SWORD!'); }
+      } else if (front) hit(s, front, swordDmg(s), snd, api);
+      else if (s.map[fy]?.[fx] === '%') {   // קיר סדוק: מעבר סודי
+        s.map[fy][fx] = '.'; s.secrets++; s.score += 100; s.dirty = true; say(s, 'A SECRET PASSAGE! +100'); snd.noise(200, 0.08); snd.tone(200, 400, 800);
       } else if (s.x === s.sx && s.y === s.sy && !bossOf(s)) {
         const secs = Math.round(s.floorT / 50); s.lastTime = secs; s.times.push(secs);
         s.speedBonus = Math.max(0, (PAR[s.floor - 1] - secs) * 2); s.score += 500 + s.hp * 100 + s.speedBonus; s.t = 0; snd.tone(440, 400, 1760);
@@ -602,21 +686,35 @@ export default {
       const K = KINDS[m.k];
       if (m.flash) m.flash--;
       if (m.dust) { if (--m.dust === 0) m.gone = true; continue; }
+      if (K.friend) continue;
       const adj = Math.abs(m.x - s.x) + Math.abs(m.y - s.y) === 1 && !wallAt(s, m.x, m.y);
       if (m.wind) {
         if (--m.wind === 0) {
-          if (adj) { s.hp -= K.dmg; s.hurt = 12; snd.noise(120, 0.09); snd.tone(300, 200, 80); say(s, K.name.replace(/^AN? /, 'THE ') + ' HITS YOU!', 60); }
+          if (adj && m.k === 'g' && s.coins) { s.coins--; m.flee = 8; say(s, 'THE GOBLIN STEALS A COIN!', 90); snd.tone(1200, 120, 600); }   // גובלין: גונב ובורח
+          else if (adj) {
+            s.hp -= K.dmg; s.hurt = 12; snd.noise(120, 0.09); snd.tone(300, 200, 80); say(s, K.name.replace(/^AN? /, 'THE ') + ' HITS YOU!', 60);
+            if (m.k === 'm') { s.slow = 300; say(s, 'SPORES! YOU FEEL SLOW...', 120); }   // פטרייה: ענן נבגים מאט
+          }
           else snd.tone(120, 60, 80);   // החטיא: השחקן נסוג בזמן
           m.cd = K.speed;
         }
         continue;
       }
       if (m.cd > 0) { m.cd--; continue; }
+      if (m.flee > 0) {   // בורח מהשחקן
+        const opts = [0, 1, 2, 3].map(d => [m.x + DX[d], m.y + DY[d]]).filter(([x, y]) => !wallAt(s, x, y) && !mobAt(s, x, y) && !(x === s.x && y === s.y));
+        opts.sort((a, b) => (Math.abs(b[0] - s.x) + Math.abs(b[1] - s.y)) - (Math.abs(a[0] - s.x) + Math.abs(a[1] - s.y)));
+        if (opts.length) { [m.x, m.y] = opts[0]; s.dirty = true; }
+        m.flee--; m.cd = K.speed >> 1; continue;
+      }
       if (adj) { m.wind = 40; snd.tone(150, 160, 95); continue; }
+      if (m.k === 'T') { m.cd = K.speed; continue; }   // טרול: לא זז, רק חוסם
       if (K.ghost) {   // רוח קטנה: מרחפת דרך קירות, ישר אל השחקן כשהוא קרוב
         const ddx = s.x - m.x, ddy = s.y - m.y, far = Math.abs(ddx) + Math.abs(ddy);
         let nx = m.x, ny = m.y;
-        if (far <= 9) { if (Math.abs(ddx) >= Math.abs(ddy)) nx += Math.sign(ddx); else ny += Math.sign(ddy); }
+        const bx = s.x - DX[s.dir], by = s.y - DY[s.dir];
+        if (far <= 6 && far > 1 && hash(m.x, m.y, s.t) < 0.18 && !wallAt(s, bx, by) && !mobAt(s, bx, by)) { nx = bx; ny = by; say(s, 'A GHOST BEHIND YOU!', 70); snd.tone(500, 200, 1000, 0.04); }   // רוח: מופיעה מאחור
+        else if (far <= 9) { if (Math.abs(ddx) >= Math.abs(ddy)) nx += Math.sign(ddx); else ny += Math.sign(ddy); }
         else { const d = (s.t + m.x * 5 + m.y * 11) % 4; nx += DX[d]; ny += DY[d]; }
         if (nx >= 1 && ny >= 1 && nx <= 14 && ny <= 14 && !(nx === s.x && ny === s.y) && !mobAt(s, nx, ny)) { m.x = nx; m.y = ny; s.dirty = true; }
         if (far <= 4 && s.t % 4 === 0) snd.tone(700, 60, 500, 0.02);   // צחקוק דק
@@ -645,7 +743,7 @@ export default {
     const seenNow = [];
     if (s.view) for (let i = 1; i < s.view.length && i <= light(s); i++) { const m = mobAt(s, s.view[i].x, s.view[i].y); if (m) seenNow.push(m); }
     for (const m of s.mobs) if (!m.dust && Math.abs(m.x - s.x) + Math.abs(m.y - s.y) === 1) seenNow.push(m);
-    for (const m of seenNow) if (!s.met.has(m.k)) { s.met.add(m.k); if (s.msgT < 60) say(s, KINDS[m.k].name + '!', 120); snd.tone(520, 80, 780); }
+    for (const m of seenNow) if (!s.met.has(m.k)) { s.met.add(m.k); if (s.msgT < 60) say(s, KINDS[m.k].friend ? 'A FRIEND? WALK UP TO TALK' : KINDS[m.k].name + '!', 120); snd.tone(520, 80, 780); }
   },
 
   draw(api) {
@@ -672,6 +770,7 @@ export default {
       if (K.fly && m.wind) for (let n = 0; n < 6; n++) { const t = ((40 - m.wind) / 40 + n / 6) % 1; g.text('ABCDEFGHJKLMNPRSTW'[(n * 5 + (s.t >> 3)) % 18], VX + (n - 2.5) * 30 * t, lerp(p0[1] + 30, VIEW - 20, t), n % 2 ? C1 : C3, 'center', 1 + Math.round(t)); }
     }
     if (s.floor === LAST && !bossOf(s)) { const i = s.view.findIndex((c, n) => n && c.x === s.sx && c.y === s.sy); if (i > 0 && i <= lt) stand(g, TAPE, i + 0.4, { 1: C1, 3: C3 }, 0.14, (Math.sin(s.t / 7) * 2) | 0); }
+    if (s.shot) { const z = 0.3 + s.shot.dist * s.shot.t / (s.shot.dist * 4), p = P(z), y = p[3] - (p[3] - p[1]) * 0.45, w = Math.max(2, (p[2] - p[0]) / 30); g.rect(VX - w, y, w * 2, 1, C1); g.rect(VX - w, y - 1, 1, 3, C3); }
     if (s.hurt) for (let y = 0; y < VIEW; y += 2) for (let x = (y >> 1) % 2; x < W; x += 6) g.rect(x, y, 1, 1, C3);
     // אויב שעומד לידנו אבל לא מלפנים: חץ שמראה מאיפה הוא מגיע
     for (const m of s.mobs) {
@@ -690,12 +789,15 @@ export default {
 
 // התרמיל: מה אספנו, כמה, ולמה זה משמש. use = מה FIRE עושה כשהשורה נבחרת
 function bagItems(s) {
-  const out = [{ icon: 'sword', name: 'SWORD', what: 'FIRE STRIKES' }];
+  const take = w => (s, snd) => { s.weapon = w; snd.tone(400, 60, 600); say(s, w === 'bow' ? 'BOW IN HAND' : 'SWORD IN HAND'); };
+  const out = [{ icon: 'sword', name: 'SWORD', what: s.weapon === 'sword' ? 'IN YOUR HAND' : 'FIRE: TAKE IT', use: take('sword') }];
+  if (s.hasBow) out.push({ icon: 'bow', name: 'BOW, ARROWS ' + s.arrows, what: s.weapon === 'bow' ? 'IN YOUR HAND' : s.arrows ? 'FIRE: TAKE IT' : 'NO ARROWS', use: (s, snd) => { if (s.arrows) take('bow')(s, snd); else snd.tone(120, 60); } });
   out.push({ icon: 'potion', name: 'POTION X' + s.potions, what: s.potions ? 'FIRE: DRINK, +2 HEARTS' : 'FIND THEM IN THE DEEP',
-    use: (s, snd) => { if (!s.potions) return; if (s.hp >= 5) { say(s, 'YOUR HEARTS ARE FULL'); snd.tone(120, 60); return; } s.potions--; s.hp = Math.min(5, s.hp + 2); snd.tone(500, 150, 900); } });
+    use: (s, snd) => { if (!s.potions) return; if (s.hp >= maxHp(s)) { say(s, 'YOUR HEARTS ARE FULL'); snd.tone(120, 60); return; } s.potions--; s.hp = Math.min(maxHp(s), s.hp + 2); snd.tone(500, 150, 900); } });
   if (s.keys) out.push({ icon: 'key', name: 'KEY X' + s.keys, what: 'OPENS A LOCKED DOOR' });
   out.push({ icon: 'coin', name: 'COINS ' + s.coins, what: '50 POINTS EACH' });
   if (s.trophies.length) out.push({ icon: 'trophy', name: 'KEEPSAKES X' + s.trophies.length, what: '+300 EACH IF YOU WIN' });
+  out.push({ icon: 'level', name: 'LEVEL ' + s.lv, what: s.lv >= XPL.length ? 'TOP LEVEL!' : 'XP ' + s.xp + ' / ' + XPL[s.lv] });
   return out;
 }
 function stand(g, rows, z, colors, realH, bob = 0) {
@@ -708,13 +810,16 @@ const ARROW = [['..1..', '.111.', '11111', '..1..', '..1..'], ['..1..', '..11.',
 function drawHud(g, s) {
   g.rect(0, VIEW, W, H - VIEW, BLACK);
   g.rect(0, VIEW + 1, W, 1, C2);
-  for (let i = 0; i < 5; i++) g.sprite(HEART, 6 + i * 9, 157, { 3: i < s.hp ? C3 : C2 }, false);
-  g.sprite(TORCH, 52, 155, { 1: C1, 2: C3, 3: C2 }, false);
-  g.rect(58, 159, 36, 5, C2); g.rect(58, 159, 36 * s.torch, 5, C1);
-  g.text('SWORD', 100, 158, C0);
-  if (s.potions) { g.sprite(POTION, 134, 156, { 1: C1, 2: C3, 3: C3 }, false); g.text(String(s.potions), 140, 158, C1); }
-  g.sprite(COIN, 152, 157, { 1: C1, 2: C3 }, false); g.text(String(s.coins), 158, 158, C1);
-  if (s.keys) g.sprite(KEY, 176, 158, { 1: C1 }, false);
+  for (let i = 0; i < maxHp(s); i++) g.sprite(HEART, 4 + i * 7, 157, { 3: i < s.hp ? C3 : C2 }, false);
+  g.sprite(TORCH, 62, 155, { 1: C1, 2: C3, 3: C2 }, false);
+  g.rect(68, 159, 26, 5, C2); g.rect(68, 159, 26 * s.torch, 5, C1);
+  if (s.weapon === 'bow') { g.sprite(BOW, 99, 155, { 1: C1 }, false); g.text(String(s.arrows), 106, 158, C1); }
+  else g.sprite(['.....1', '....1.', '...1..', '2.1...', '.2....', '2.2...'], 99, 156, { 1: C1, 2: C2 }, false);
+  g.text('LV' + s.lv, 118, 158, C0);
+  if (s.slow) g.text('SLOW', 118, 166, C3);
+  if (s.potions) { g.sprite(POTION, 138, 156, { 1: C1, 2: C3, 3: C3 }, false); g.text(String(s.potions), 144, 158, C1); }
+  g.sprite(COIN, 155, 157, { 1: C1, 2: C3 }, false); g.text(String(s.coins), 161, 158, C1);
+  if (s.keys) g.sprite(KEY, 178, 158, { 1: C1 }, false);
   // מצפן ומספר קומה
   g.sprite(ARROW[s.dir], 197, 155, { 1: C1 }, false); g.text(DIRS[s.dir][0], 199, 163, C2, 'center');
   g.text('L' + s.floor, 199, 176, C0, 'center');
@@ -733,7 +838,7 @@ function drawHud(g, s) {
 }
 // תפריט עצירה: ארבעה דפים, ◀ ▶ עוברים ביניהם
 const PAGES = ['MAP', 'BAG', 'CREATURES', 'HOW TO PLAY'];
-const SHORT = { r: 'RAT', g: 'GOBLIN', m: 'MUSHROOM', h: 'GHOST', T: 'TROLL', B: 'OGRE KING', G: 'STONE GOLEM', M: 'MOLE KING', W: 'SPELL BOOK', X: 'DRAGON' };
+const SHORT = { r: 'RAT', g: 'GOBLIN', m: 'MUSHROOM', h: 'GHOST', T: 'TROLL', B: 'OGRE KING', G: 'STONE GOLEM', M: 'MOLE KING', W: 'SPELL BOOK', X: 'DRAGON', O: 'OLD MINER', J: 'PRISONER' };
 function frame(g, title, s) {
   g.rect(0, 0, W, VIEW + 1, BLACK);
   g.rect(8, 4, 240, 1, C2); g.rect(8, 146, 240, 1, C2); g.rect(8, 4, 1, 143, C2); g.rect(247, 4, 1, 143, C2);
@@ -758,24 +863,24 @@ function drawPause(g, s) {
     items.slice(0, 9).forEach((it, i) => {
       const y = 28 + i * 13, sel = i === s.bagSel;
       if (sel) g.rect(14, y - 2, 228, 11, C1);
-      const icon = { sword: [['.....1', '....1.', '...1..', '2.1...', '.2....', '2.2...'], { 1: C1, 2: C2 }], potion: [POTION, { 1: C1, 2: C3, 3: C3 }], key: [KEY, { 1: C1 }], coin: [COIN, { 1: C1, 2: C3 }], trophy: [['1.1.1', '11111', '.111.', '..1..', '.111.'], { 1: C1 }] }[it.icon];
+      const icon = { sword: [['.....1', '....1.', '...1..', '2.1...', '.2....', '2.2...'], { 1: C1, 2: C2 }], potion: [POTION, { 1: C1, 2: C3, 3: C3 }], key: [KEY, { 1: C1 }], coin: [COIN, { 1: C1, 2: C3 }], trophy: [['1.1.1', '11111', '.111.', '..1..', '.111.'], { 1: C1 }], bow: [BOW, { 1: C1 }], level: [['..1..', '.111.', '11111', '..1..', '..1..'], { 1: C3 }] }[it.icon];
       g.sprite(icon[0], 18, y, icon[1], false);
       g.text(it.name, 30, y, sel ? BLACK : C0); g.text(it.what, 240, y, sel ? BLACK : C2, 'right');
     });
     g.text('UP DOWN: CHOOSE   FIRE: USE', 128, 124, C2, 'center');
   } else if (s.page === 2) {
-    const ks = ['r', 'g', 'm', 'h', 'T', 'B', 'G', 'M', 'W', 'X'];
+    const ks = ['r', 'g', 'm', 'h', 'T', 'O', 'J', 'B', 'G', 'M', 'W', 'X'];
     ks.forEach((k, i) => {
-      const K = KINDS[k], col = i % 2, row = i >> 1, x = 14 + col * 118, y = 26 + row * 22, known = s.met.has(k);
-      if (known) g.sprite(K.rows, x, y, K.col(), false);
-      else g.text('?', x + 8, y + 4, C2, 'left', 2);
-      g.text(known ? SHORT[k] : '???', x + 30, y + 2, known ? C1 : C2);
-      if (known) g.text(K.blurb, x + 30, y + 11, C0);
+      const K = KINDS[k], col = i % 2, row = i >> 1, x = 14 + col * 118, y = 25 + row * 18, known = s.met.has(k);
+      if (known) { const sk = K.rows.length > 16 ? K.rows.filter((_, i) => i % 2 === 0) : K.rows; g.sprite(sk, x, y, K.col(), false); }
+      else g.text('?', x + 6, y + 5, C2);
+      g.text(known ? SHORT[k] : '???', x + 30, y + (known ? 1 : 5), known ? C1 : C2);
+      if (known) g.text(K.blurb, x + 30, y + 10, K.friend ? C1 : C0);
     });
   } else {
-    const L = [['UP', 'STEP FORWARD'], ['DOWN', 'STEP BACK - DODGE A BLOW!'], ['LEFT RIGHT', 'TURN'], ['FIRE', 'STRIKE. ON STAIRS: GO DOWN'], ['P', 'THIS MENU, AND BACK'], ['ESC', 'LEAVE. SAVED EACH FLOOR']];
+    const L = [['UP', 'STEP FORWARD'], ['DOWN', 'STEP BACK - DODGE A BLOW!'], ['LEFT RIGHT', 'TURN'], ['FIRE', 'STRIKE. ON STAIRS: GO DOWN'], ['P', 'THIS MENU, AND BACK'], ['ESC', 'LEAVE. SAVED EACH FLOOR'], ['WALK UP', 'TALK TO A FRIEND']];
     L.forEach(([k, t], i) => { g.text(k, 20, 30 + i * 15, C1); g.text(t, 90, 30 + i * 15, C0); });
-    g.text('WHEN IT FLASHES, STEP BACK!', 128, 124, C3, 'center');
+    g.text('CRACKED WALL? FIRE AT IT!', 128, 132, C3, 'center');
   }
 }
 // לפני כל קומה: שם הקומה ומשפט אווירה, על רקע המבט הראשון
@@ -831,7 +936,8 @@ function drawEnd(g, s) {
     g.text('THE STAIRS LEAD DEEPER...', 128, 70, C0, 'center');
     const m = (s.lastTime / 60) | 0, sec = String(s.lastTime % 60).padStart(2, '0');
     g.text('TIME ' + m + ':' + sec + (s.speedBonus ? '   SPEED BONUS ' + s.speedBonus : ''), 128, 88, C1, 'center');
-    g.text('SCORE ' + s.score, 128, 110, C1, 'center', 2);
+    if (s.secretsTotal) g.text('SECRETS ' + s.secrets + '/' + s.secretsTotal, 128, 100, s.secrets === s.secretsTotal ? C1 : C2, 'center');
+    g.text('SCORE ' + s.score, 128, 118, C1, 'center', 2);
     if (s.t > 40 && (s.t >> 4) % 2) g.text('FIRE: DOWN TO FLOOR ' + (s.floor + 1), 128, 150, C2, 'center');
     return;
   }
