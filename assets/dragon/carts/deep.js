@@ -123,7 +123,8 @@ const DIFF = [
   { name: 'NORMAL', torch: 1, wind: 40, speed: 1, boss: 2, heart: 0, mult: 1, retry: 3 },
   { name: 'HARD', torch: 0.75, wind: 30, speed: 0.85, boss: 2, heart: 0, mult: 1.5, retry: 2 }
 ];
-const D = s => DIFF[s.diff ?? 1];
+const okDiff = d => [0, 1, 2].includes(d) ? d : 1;   // קושי שמור לא תקין (או שמירה מסבב 2) = NORMAL
+const D = s => DIFF[okDiff(s.diff)];
 const maxHp = s => Math.min(8, 4 + s.lv + D(s).heart);
 const spd = (s, K) => Math.round(K.speed * D(s).speed);
 const finalScore = s => Math.round(s.score * D(s).mult);
@@ -152,7 +153,7 @@ const trapPhase = (s, t) => (s.floorT + t.x * 37 + t.y * 11) % TRAP_CYCLE;
 const swordDmg = s => 1 + ((s.lv - 1) >> 1);
 export const _test = { FLOORS, TORCH_FRAMES, PAR, messages: () => [
   ...[1, 2, 3, 4, 5].map(f => floorMsg(f)), ...Object.keys(KINDS).flatMap(k => [KINDS[k].name + '!', KINDS[k].name.replace(/^AN? /, 'THE ') + ' HITS YOU!', KINDS[k].name.replace(/^AN? /, 'THE ') + ' IS GONE!', KINDS[k].name + ' IS DEFEATED!', guardMsg(k, false), guardMsg(k, true)]),
-  'GOLDEN TAPE! FIRE TO TAKE IT', 'STAIRS DOWN. FIRE TO GO DOWN', 'A POTION! P - BAG TO DRINK IT', 'THE KEY TURNS. THE DOOR OPENS!', 'A LOCKED DOOR. FIND THE KEY!', 'YOUR HEARTS ARE FULL', 'AN OLD IRON KEY!', 'A BOW! P - BAG TO TAKE IT', 'FIVE ARROWS!', 'HIDDEN TREASURE! +200', 'THE BARS SWING OPEN!', 'LOCKED BARS. FIND A KEY!', 'A SECRET PASSAGE! +100', 'NO ARROWS LEFT. SWORD!', 'THE GOBLIN STEALS A COIN!', 'SPORES! YOU FEEL SLOW...', 'A GHOST BEHIND YOU!', 'LEVEL UP! NOW LEVEL 8', 'A FRIEND? WALK UP TO TALK', 'MINER: CRACKED WALLS HIDE GOLD', 'FREE AT LAST! TAKE THESE', 'THE MINER WAVES. GOOD LUCK!', 'OLD MINER RUNS OFF! -100', 'PRISONER RUNS OFF! -100', 'BOW IN HAND', 'A NEW TORCH!', 'A GOLD COIN!', 'THE TORCH IS DYING...', ...TRAP_MSGS, 'A NOTE! FIRE TO READ IT', 'THANK YOU! COME AGAIN.', 'NOT ENOUGH COINS', 'YOU HAVE NO BOW YET', 'MERCHANT RUNS OFF! -100', 'MUSIC ON', 'MUSIC OFF', ...Object.values(NOTES).flat()], NOTES, DIFF, TUNES, TRAP_CYCLE };   // לבדיקות האוטומטיות
+  'GOLDEN TAPE! FIRE TO TAKE IT', 'STAIRS DOWN. FIRE TO GO DOWN', 'A POTION! P - BAG TO DRINK IT', 'THE KEY TURNS. THE DOOR OPENS!', 'A LOCKED DOOR. FIND THE KEY!', 'YOUR HEARTS ARE FULL', 'AN OLD IRON KEY!', 'A BOW! P - BAG TO TAKE IT', 'FIVE ARROWS!', 'HIDDEN TREASURE! +200', 'THE BARS SWING OPEN!', 'LOCKED BARS. FIND A KEY!', 'A SECRET PASSAGE! +100', 'NO ARROWS LEFT. SWORD!', 'THE GOBLIN STEALS A COIN!', 'SPORES! YOU FEEL SLOW...', 'A GHOST BEHIND YOU!', 'LEVEL UP! NOW LEVEL 8', 'A FRIEND? WALK UP TO TALK', 'MINER: CRACKED WALLS HIDE GOLD', 'FREE AT LAST! TAKE THESE', 'THE MINER WAVES. GOOD LUCK!', 'OLD MINER RUNS OFF! -100', 'PRISONER RUNS OFF! -100', 'BOW IN HAND', 'A NEW TORCH!', 'A GOLD COIN!', 'THE TORCH IS DYING...', ...TRAP_MSGS, 'A NOTE! FIRE TO READ IT', 'THANK YOU! COME AGAIN.', 'NOT ENOUGH COINS', 'YOU HAVE NO BOW YET', 'YOUR TORCH IS STILL BRIGHT', 'MERCHANT RUNS OFF! -100', 'MUSIC ON', 'MUSIC OFF', ...Object.values(NOTES).flat()], NOTES, DIFF, TUNES, TRAP_CYCLE };   // לבדיקות האוטומטיות
 let STYLE = 'brick';
 const wallC = () => STYLE === 'mine' || STYLE === 'lair' ? C3 : STYLE === 'library' ? C2 : C0, woodC = () => STYLE === 'mine' ? C0 : C3;
 // מספר קבוע לכל משבצת, כדי שהסלעים והלפידים יישארו באותו מקום בכל צעד
@@ -640,7 +641,7 @@ export default {
   init(api) {
     if (!img) { img = api.gfx.ctx.createImageData(W, VIEW); buf = new Uint32Array(img.data.buffer); }
     let diff = 1, music = true;
-    try { diff = Math.max(0, Math.min(2, +(localStorage.getItem(DIFF_KEY) ?? 1))); music = localStorage.getItem(MUSIC) !== 'off'; } catch (e) {}
+    try { diff = okDiff(parseInt(localStorage.getItem(DIFF_KEY), 10)); music = localStorage.getItem(MUSIC) !== 'off'; } catch (e) {}
     api.state = { mode: 'title', high: api.loadHigh('deep'), t: 0, save: loadSave(), titleP: 0, titleT: 0, diff, music };
     reset(api.state);
   },
@@ -657,7 +658,7 @@ export default {
     if (s.mode === 'over' && s.t > 40) {
       const v = loadSave();
       if (api.hit('fire') && v) {   // מנסים שוב את הקומה: הכל חוזר למה שהיה בתחילתה, ולפחות 3 לבבות
-        reset(s); Object.assign(s, { diff: v.diff ?? s.diff, floor: v.floor, hp: Math.max(DIFF[v.diff ?? s.diff].retry, v.hp), coins: v.coins, score: v.score, potions: v.potions || 0, trophies: v.trophies || [], met: new Set(v.met || []), times: v.times || [], xp: v.xp || 0, lv: levelOf(v.xp || 0), hasBow: !!v.hasBow, arrows: v.arrows || 0, weapon: v.hasBow && v.weapon === 'bow' ? 'bow' : 'sword' });
+        reset(s); Object.assign(s, { diff: okDiff(v.diff), floor: v.floor, hp: Math.max(DIFF[okDiff(v.diff)].retry, v.hp), coins: v.coins, score: v.score, potions: v.potions || 0, trophies: v.trophies || [], met: new Set(v.met || []), times: v.times || [], xp: v.xp || 0, lv: levelOf(v.xp || 0), hasBow: !!v.hasBow, arrows: v.arrows || 0, weapon: v.hasBow && v.weapon === 'bow' ? 'bow' : 'sword' });
         startFloor(s, snd); return;
       }
       if (api.hit('down') || (api.hit('fire') && !v)) {   // מוותרים: התוצאה נכנסת להיכל התהילה והשמירה נמחקת
@@ -668,7 +669,7 @@ export default {
     if (s.mode === 'title' || s.mode === 'over' || s.mode === 'won') {
       if (s.mode === 'title' && s.save && api.hit('up') && s.t > 40) {   // ממשיכים מהקומה שנשמרה
         const v = s.save; reset(s);
-        Object.assign(s, { diff: v.diff ?? s.diff, floor: v.floor, hp: v.hp, coins: v.coins, score: v.score, potions: v.potions || 0, trophies: v.trophies || [], met: new Set(v.met || []), times: v.times || [], xp: v.xp || 0, lv: levelOf(v.xp || 0), hasBow: !!v.hasBow, arrows: v.arrows || 0, weapon: v.hasBow && v.weapon === 'bow' ? 'bow' : 'sword' });
+        Object.assign(s, { diff: okDiff(v.diff), floor: v.floor, hp: v.hp, coins: v.coins, score: v.score, potions: v.potions || 0, trophies: v.trophies || [], met: new Set(v.met || []), times: v.times || [], xp: v.xp || 0, lv: levelOf(v.xp || 0), hasBow: !!v.hasBow, arrows: v.arrows || 0, weapon: v.hasBow && v.weapon === 'bow' ? 'bow' : 'sword' });
         startFloor(s, snd); return;
       }
       if (api.hit('fire') && s.t > 40) {
@@ -678,7 +679,7 @@ export default {
       return;
     }
     if (s.intro > 0) {
-      if (['up', 'down', 'left', 'right', 'fire', 'pause'].some(b => api.hit(b))) s.intro = 0; else { s.intro--; return; }
+      if (['up', 'down', 'left', 'right', 'fire', 'pause'].some(b => api.hit(b))) { s.intro = 0; return; } else { s.intro--; return; }
     }
     if (s.note) {   // קוראים פתק: כל מקש סוגר
       if (['up', 'down', 'left', 'right', 'fire', 'pause'].some(b => api.hit(b))) { s.note = null; snd.tone(300, 30); }
@@ -691,6 +692,7 @@ export default {
       if (api.hit('pause') || (api.hit('fire') && !it.cost)) { s.shop = null; say(s, 'THANK YOU! COME AGAIN.'); snd.tone(500, 60, 700); return; }
       if (api.hit('fire')) {
         if (it.bow && !s.hasBow) { say(s, 'YOU HAVE NO BOW YET'); snd.tone(120, 60); }
+        else if (it.full && it.full(s)) { say(s, 'YOUR TORCH IS STILL BRIGHT'); snd.tone(120, 60); }
         else if (s.coins < it.cost) { say(s, 'NOT ENOUGH COINS'); snd.tone(120, 60); }
         else { s.coins -= it.cost; it.buy(s); say(s, it.got); snd.tone(880, 60, 1320); }
       }
@@ -923,7 +925,7 @@ export default {
 const SHOP = [
   { name: 'POTION', cost: 3, got: 'A POTION! P - BAG TO DRINK IT', buy: s => { s.potions++; } },
   { name: 'FIVE ARROWS', cost: 2, bow: true, got: 'FIVE ARROWS!', buy: s => { s.arrows += 5; } },
-  { name: 'A NEW TORCH', cost: 2, got: 'A NEW TORCH!', buy: s => { s.torch = 1; s.dirty = true; } },
+  { name: 'A NEW TORCH', cost: 2, got: 'A NEW TORCH!', full: s => s.torch > 0.9, buy: s => { s.torch = 1; s.dirty = true; } },
   { name: 'LEAVE', cost: 0 }
 ];
 function drawShop(g, s) {
@@ -1042,8 +1044,8 @@ function drawPause(g, s) {
     g.text('YOU', 20, 60, C1); g.text('STAIRS', 20, 72, C3); g.text('DOOR', 20, 84, C1);
   } else if (s.page === 1) {
     const items = bagItems(s);
-    items.slice(0, 9).forEach((it, i) => {
-      const y = 28 + i * 13, sel = i === s.bagSel;
+    items.slice(0, 8).forEach((it, i) => {
+      const y = 28 + i * 12, sel = i === s.bagSel;
       if (sel) g.rect(14, y - 2, 228, 11, C1);
       const icon = { sword: [['.....1', '....1.', '...1..', '2.1...', '.2....', '2.2...'], { 1: C1, 2: C2 }], potion: [POTION, { 1: C1, 2: C3, 3: C3 }], key: [KEY, { 1: C1 }], coin: [COIN, { 1: C1, 2: C3 }], trophy: [['1.1.1', '11111', '.111.', '..1..', '.111.'], { 1: C1 }], bow: [BOW, { 1: C1 }], level: [['..1..', '.111.', '11111', '..1..', '..1..'], { 1: C3 }], music: [['..111', '..1.1', '..1.1', '111.1', '11.11'], { 1: C1 }] }[it.icon];
       g.sprite(icon[0], 18, y, icon[1], false);
@@ -1116,7 +1118,7 @@ function drawTitle(g, s) {
   if ((s.t >> 4) % 2) g.text('PRESS FIRE', 128, 122, C3, 'center', 2);
   g.text('LEFT RIGHT: ' + DIFF[s.diff ?? 1].name, 128, 140, s.diff === 2 ? C3 : C1, 'center');
   g.text('HIGH ' + s.high + '   DOWN: MORE', 128, 152, C2, 'center');
-  if (s.save) g.text('UP: GO ON FROM FLOOR ' + s.save.floor, 128, 166, C0, 'center');
+  if (s.save) g.text('UP: GO ON, FLOOR ' + s.save.floor + ', ' + DIFF[okDiff(s.save.diff)].name, 128, 166, C0, 'center');   // המשך = הרמה שנשמרה; ◀ ▶ רק למשחק חדש
   g.text('(C) 2026 GONEN YAROM', 128, 182, C2, 'center');
 }
 function drawEnd(g, s) {

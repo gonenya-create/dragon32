@@ -804,6 +804,7 @@ if (part('cartridge DRAGON DEEP (full computer)')) {
   check('each floor opens with its name and a line of story, and the game waits', await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return s.intro > 0; }));
   check('the app shows a Hebrew how-to under the game', await p.evaluate(() => { const h = document.querySelector('.d32-cart-help'); return h && !h.hidden && h.querySelectorAll('li').length >= 5 && /קלטת הזהב/.test(h.textContent); }));
   check('deep starts on floor 1 at the entrance, facing east, with a 3D view', a.mode === 'play' && a.x === 1 && a.y === 1 && a.dir === 1 && a.view > 1, JSON.stringify(a));
+  await p.keyboard.press('ArrowDown'); await p.waitForTimeout(100);   // המקש הראשון רק סוגר את מסך הקומה
   await p.keyboard.press('ArrowUp'); await p.waitForTimeout(100);
   check('up steps forward', (await S()).x === 2);
   await p.keyboard.press('ArrowLeft'); await p.waitForTimeout(100); await p.keyboard.press('ArrowUp'); await p.waitForTimeout(100);
@@ -847,15 +848,15 @@ if (part('cartridge DRAGON DEEP (full computer)')) {
   const open = await p.evaluate(() => document.querySelector('#dragon-room').d32Cart.state.map[14][12] === '.');
   check('floor 2: the door is locked without the key, and the key opens it', shut && open);
   await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.mobs = []; s.x = s.sx; s.y = s.sy; s.atkCd = 0; });
-  await p.keyboard.press('Space'); await p.waitForTimeout(900); await p.keyboard.press('Space'); await p.waitForTimeout(300);
+  await p.keyboard.press('Space'); await p.waitForTimeout(900); await p.keyboard.press('Space'); await p.waitForTimeout(300); await p.keyboard.press('ArrowDown'); await p.waitForTimeout(150);
   const f3 = await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return { floor: s.floor, trolls: s.mobs.filter(m => m.k === 'T').length, mole: s.mobs.some(m => m.k === 'M') }; });
   check('floor 3, the old mine: trolls and the Mole King', f3.floor === 3 && f3.trolls === 2 && f3.mole, JSON.stringify(f3));
   await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.mobs = []; s.x = s.sx; s.y = s.sy; s.atkCd = 0; });
-  await p.keyboard.press('Space'); await p.waitForTimeout(900); await p.keyboard.press('Space'); await p.waitForTimeout(300);
+  await p.keyboard.press('Space'); await p.waitForTimeout(900); await p.keyboard.press('Space'); await p.waitForTimeout(300); await p.keyboard.press('ArrowDown'); await p.waitForTimeout(150);
   const f4 = await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return { floor: s.floor, book: s.mobs.some(m => m.k === 'W'), door: s.map[14][12] === 'D' }; });
   check('floor 4, the wizard library: a locked door and the Spell Book', f4.floor === 4 && f4.book && f4.door, JSON.stringify(f4));
   await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.mobs = []; s.x = s.sx; s.y = s.sy; s.atkCd = 0; });
-  await p.keyboard.press('Space'); await p.waitForTimeout(900); await p.keyboard.press('Space'); await p.waitForTimeout(300);
+  await p.keyboard.press('Space'); await p.waitForTimeout(900); await p.keyboard.press('Space'); await p.waitForTimeout(300); await p.keyboard.press('ArrowDown'); await p.waitForTimeout(150);
   const f5 = await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return { floor: s.floor, dragon: s.mobs.some(m => m.k === 'X') }; });
   check('floor 5, the dragon lair: the Dragon', f5.floor === 5 && f5.dragon, JSON.stringify(f5));
   check('the progress is saved at the start of each floor', await p.evaluate(() => JSON.parse(localStorage.getItem('d32-deep-save') || '{}').floor === 5));
