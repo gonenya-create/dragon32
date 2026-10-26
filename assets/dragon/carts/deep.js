@@ -49,7 +49,12 @@ const MAP2 = [
   '#.##...#.r..DGS#',
   '################'
 ];
-const FLOORS = [{ map: MAP1, pal: 1 }, { map: MAP2, pal: 0 }];
+// לכל קומה עולם משלו (גונן: "כל הקומות נראות אותו דבר רק בצבע שונה?"): 1 מרתף לבנים עם לפידים, 2 מערה
+const FLOORS = [{ map: MAP1, pal: 1, style: 'brick' }, { map: MAP2, pal: 0, style: 'cave' }];
+let STYLE = 'brick';
+// מספר קבוע לכל משבצת, כדי שהסלעים והלפידים יישארו באותו מקום בכל צעד
+const hash = (x, y, k = 0) => { let h = (x * 374761393 + y * 668265263 + k * 2246822519) | 0; h = (h ^ (h >>> 13)) * 1274126177; return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
+const lerp = (a, b, t) => a + (b - a) * t;
 const DX = [0, 1, 0, -1], DY = [-1, 0, 1, 0];   // 0 צפון, 1 מזרח, 2 דרום, 3 מערב
 const DIRS = ['NORTH', 'EAST', 'SOUTH', 'WEST'];
 
@@ -125,11 +130,14 @@ function polyFill(pts, c, k) {
     for (let x = a; x <= b; x++) if (lit(x, y, k)) px(x, y, c);
   }
 }
-function sideWall(z0, z1, side, light) {
+function sideWall(z0, z1, side, light, cx = 0, cy = 0) {
   const a = P(z0), b = P(z1), xa = side < 0 ? a[0] : a[2], xb = side < 0 ? b[0] : b[2];
   const k = shade((z0 + z1) / 2, light);
   if (k <= 0) return;
   polyFill([[xa, a[1]], [xb, b[1]], [xb, b[3]], [xa, a[3]]], C0, k);
+  const at = (t, u) => [lerp(xa, xb, t), lerp(lerp(a[1], b[1], t), lerp(a[3], b[3], t), u)];
+  if (STYLE === 'cave') { caveLayers(at, cx * 2 + (side < 0 ? 0 : 1), cy); line(xa, a[1], xb, b[1], C2); line(xa, a[3], xb, b[3], C2); line(xb, b[1], xb, b[3], C2); stalactites(at, cx + side, cy); return; }
+  if (hash(cx, cy, side) < 0.3) wallTorch(at, z0 + 0.5, light);
   for (let r = 1; r < 6; r++) { const t = r / 6; line(xa, a[1] + (a[3] - a[1]) * t, xb, b[1] + (b[3] - b[1]) * t, C2); }
   for (let j = 0; j <= 4; j++) {
     const pp = P(z0 + (z1 - z0) * j / 4), x = side < 0 ? pp[0] : pp[2];
@@ -158,10 +166,56 @@ function frontWall(z, light, door) {
     return;
   }
   polyFill([[x0, y0], [x1, y0], [x1, y1], [x0, y1]], C0, k);
+  if (STYLE === 'cave') { const at = (t, u) => [lerp(x0, x1, t), lerp(y0, y1, u)]; caveRock(at, 99, z * 7 | 0); line(x0, y0, x1, y0, C2); line(x0, y1, x1, y1, C2); line(x0, y0, x0, y1, C2); line(x1, y0, x1, y1, C2); stalactites(at, 98, z * 5 | 0); return; }
   const h = (y1 - y0) / 6;
   for (let r = 1; r < 6; r++) line(x0, y0 + h * r, x1, y0 + h * r, C2);
   for (let r = 0; r < 6; r++) for (let x = x0 + (r % 2 ? h : 2 * h); x < x1 - 1; x += 2 * h) line(x, y0 + h * r, x, y0 + h * (r + 1), C2);
   line(x0, y0, x1, y0, C2); line(x0, y1, x1, y1, C2); line(x0, y0, x0, y1, C2); line(x1, y0, x1, y1, C2);
+}
+// סלע: גושים לא ישרים עם סדקים, במקום לבנים. at(t,u) ממפה נקודה על הקיר (0..1) למסך
+function caveRock(at, cx, cy) {
+  for (let n = 0; n < 7; n++) {
+    const t = hash(cx, cy, n * 3), u = hash(cx, cy, n * 3 + 1), r = 0.08 + hash(cx, cy, n * 3 + 2) * 0.1;
+    let prev = null;
+    for (let i = 0; i <= 6; i++) {
+      const ang = i / 6 * 6.283, rr = r * (0.7 + 0.6 * hash(cx + i, cy, n));
+      const pt = at(Math.min(1, Math.max(0, t + Math.cos(ang) * rr)), Math.min(1, Math.max(0, u + Math.sin(ang) * rr * 1.4)));
+      if (prev) line(prev[0], prev[1], pt[0], pt[1], C2);
+      prev = pt;
+    }
+  }
+  for (let n = 0; n < 3; n++) {   // סדק שיורד באלכסון
+    let t = hash(cx, cy, 40 + n), u = hash(cx, cy, 50 + n) * 0.5, prev = at(t, u);
+    for (let i = 0; i < 4; i++) { t += (hash(cx, cy, 60 + n * 4 + i) - 0.5) * 0.12; u += 0.1; const pt = at(Math.min(1, Math.max(0, t)), Math.min(1, u)); line(prev[0], prev[1], pt[0], pt[1], C2); prev = pt; }
+  }
+}
+// קיר מערה בצד: שכבות סלע גליות שמתכנסות לעומק (קווים מעטים, כדי שהקיר לא יהיה עמוס)
+function caveLayers(at, cx, cy) {
+  for (let n = 0; n < 4; n++) {
+    const u0 = 0.18 + n * 0.21 + (hash(cx, cy, 20 + n) - 0.5) * 0.08;
+    let prev = at(0, u0);
+    for (let i = 1; i <= 6; i++) { const t = i / 6, pt = at(t, u0 + Math.sin(t * 6 + n + cx) * 0.04 + (hash(cx, cy, 30 + n * 7 + i) - 0.5) * 0.04); line(prev[0], prev[1], pt[0], pt[1], C2); prev = pt; }
+  }
+}
+// נטיפים שתלויים מהתקרה, לאורך הקצה העליון של הקיר
+function stalactites(at, cx, cy) {
+  for (let n = 0; n < 5; n++) {
+    const t = (n + 0.2 + hash(cx, cy, 70 + n) * 0.6) / 5, len = 0.06 + hash(cx, cy, 80 + n) * 0.14;
+    const [x, y] = at(t, 0), [, y2] = at(t, len), [xl] = at(Math.max(0, t - 0.03), 0), [xr] = at(Math.min(1, t + 0.03), 0);
+    line(xl, y, x, y2, C1); line(xr, y, x, y2, C1);
+  }
+}
+// לפיד על קיר הלבנים: מוט ולהבה שמהבהבת (הלהבה מצוירת מחדש עם הלפיד שלך, אז היא נראית חיה בכל צעד)
+function wallTorch(at, z, light) {
+  if (shade(z, light) < 2) return;
+  const [x, y] = at(0.5, 0.36), [, y2] = at(0.5, 0.62), h = Math.max(3, y2 - y);
+  line(x, y, x, y + h, C3); line(x + 1, y, x + 1, y + h, C3);
+  for (let i = 0; i < h * 0.9; i++) { const w = Math.max(0.6, (h * 0.9 - i) * 0.45); line(x - w + 0.5, y - i, x + w + 0.5, y - i, i % 2 ? C1 : C3); }
+}
+// שלולית מים על רצפת המערה
+function puddle(z) {
+  const a = P(z), b = P(z + 0.6), y0 = a[3], y1 = b[3], w = (a[2] - a[0]) * 0.18;
+  for (let y = Math.round(y1); y <= Math.round(y0); y++) { const t = (y - y1) / Math.max(1, y0 - y1), ww = w * Math.sin(t * Math.PI) * (0.6 + 0.4 * t); for (let x = Math.round(VX - ww); x <= Math.round(VX + ww); x++) if ((x + y) % 2 === 0) px(x + 18, y, C2); }
 }
 function floorCeil(zmax, light) {
   const far = P(zmax);
@@ -182,7 +236,7 @@ function stairsAt(z) {
 const wallAt = (s, x, y) => x < 0 || y < 0 || x > 15 || y > 15 || s.map[y][x] === '#' || s.map[y][x] === 'D';
 function newFloor(s) {
   const F = FLOORS[s.floor - 1];
-  setPalette(F.pal);
+  setPalette(F.pal); STYLE = F.style;
   s.map = F.map.map(r => r.split(''));
   s.keys = 0;
   s.mobs = []; s.items = []; s.seen = new Set();
@@ -238,8 +292,9 @@ function render(s) {
     const c = L[i], z0 = i, z1 = i + 1;
     if (z0 > lt) continue;
     if (c.front) frontWall(z1, lt, c.door);
-    if (c.left === 1) sideWall(z0, z1, -1, lt); else sideOpening(z0, z1, -1, lt);
-    if (c.right === 1) sideWall(z0, z1, 1, lt); else sideOpening(z0, z1, 1, lt);
+    if (c.left === 1) sideWall(z0, z1, -1, lt, c.x, c.y); else sideOpening(z0, z1, -1, lt);
+    if (c.right === 1) sideWall(z0, z1, 1, lt, c.x, c.y); else sideOpening(z0, z1, 1, lt);
+    if (STYLE === 'cave' && i > 0 && shade(i, lt) > 1 && hash(c.x, c.y, 9) < 0.35) puddle(i);
     if (i > 0 && c.x === s.sx && c.y === s.sy) stairsAt(i);
   }
   s.dirty = false;
@@ -280,7 +335,7 @@ export default {
         reset(s); Object.assign(s, { floor: s.save.floor, hp: s.save.hp, coins: s.save.coins, score: s.save.score }); startFloor(s, snd); return;
       }
       if (api.hit('fire') && s.t > 40) {
-        if (s.mode !== 'title') { s.mode = 'title'; s.t = 0; s.save = loadSave(); setPalette(1); return; }
+        if (s.mode !== 'title') { s.mode = 'title'; s.t = 0; s.save = loadSave(); setPalette(1); STYLE = 'brick'; return; }
         reset(s); startFloor(s, snd);
       }
       return;
