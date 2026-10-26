@@ -1106,6 +1106,15 @@ if (part('real machine lab')) {
     check(`${path} loads with the drawn keyboard`, r.status() === 200 && (await p.locator('.kbd .k').count()) > 50 && errs.length === 0, errs.join(' | '));
     check(`${path} has the tape shelf (16 tapes: 7 BASIC, Dragon Eggs, Blockdown, DragonTet, Phantom Slayer, Danger Ranger, Adventureland, Pirate Adventure, Secret Mission, Voodoo Castle)`, (await p.locator('#tapes .tape').count()) === 16);
     check(`${path} the cabinet drawers start closed`, await p.evaluate(() => [...document.querySelectorAll('#tapes details.drawer')].every(d => !d.open)));
+    check(`${path} "type it in" drawer: 2 magazine pages; a page opens beside the machine (scan from archive.org, credit) and closes`, await p.evaluate(async () => {
+      const cards = document.querySelectorAll('[data-drawer="type"] .tape');
+      if (cards.length !== 2) return false;
+      document.querySelector('.tape[data-page="sketch"]').click();
+      const v = document.querySelector('.typein-view');
+      const ok = !v.hidden && /^https:\/\/archive\.org\/download\/Dragon_User_1983-09_Sunshine_Books_GB\/page\/n38_/.test(v.querySelector('.tv-scan img').src) && /R Steel/.test(v.textContent);
+      v.querySelector('.tv-close').click();
+      return ok && v.hidden;
+    }));
     check(`${path} the adventure games have their own drawer (Adventureland, Pirate Adventure, Secret Mission, Voodoo Castle)`, await p.evaluate(() =>
       [...document.querySelectorAll('[data-drawer="adv"] .tape small')].map(s => s.textContent.split(' ')[0]).join() === 'ADVENTURELAND,PIRATE,MISSION,VOODOO'));
     check(`${path} every machine-code game has a "how to play" box with keys and a way out`, await p.evaluate(() => {
