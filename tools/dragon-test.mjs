@@ -816,7 +816,19 @@ if (part('cartridge DRAGON DEEP (full computer)')) {
   check('the stairs stay shut while the Ogre King stands', (await S()).mode === 'play');
   await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.mobs = s.mobs.filter(o => o.k !== 'B'); s.atkCd = 0; });
   await p.keyboard.press('Space'); await p.waitForTimeout(300);
-  check('with the Ogre King gone, FIRE on the stairs clears floor 1', (await S()).mode === 'won');
+  check('with the Ogre King gone, FIRE on the stairs clears floor 1', (await S()).mode === 'next');
+  await p.waitForTimeout(900); await p.keyboard.press('Space'); await p.waitForTimeout(300);
+  const f2 = await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return { mode: s.mode, floor: s.floor, ghosts: s.mobs.filter(m => m.k === 'h').length, golem: s.mobs.some(m => m.k === 'G') }; });
+  check('floor 2: ghosts and the Stone Golem', f2.mode === 'play' && f2.floor === 2 && f2.ghosts === 2 && f2.golem, JSON.stringify(f2));
+  // הדלת נעולה בלי מפתח, ונפתחת עם המפתח
+  await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.mobs = []; s.x = 11; s.y = 14; s.dir = 1; s.dirty = true; });
+  await p.keyboard.press('ArrowUp'); await p.waitForTimeout(150);
+  const shut = await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return s.x === 11 && s.map[14][12] === 'D'; });
+  await p.evaluate(() => { document.querySelector('#dragon-room').d32Cart.state.keys = 1; });
+  await p.keyboard.press('ArrowUp'); await p.waitForTimeout(150);
+  const open = await p.evaluate(() => document.querySelector('#dragon-room').d32Cart.state.map[14][12] === '.');
+  check('floor 2: the door is locked without the key, and the key opens it', shut && open);
+  check('floor 2 progress is saved for next time', await p.evaluate(() => JSON.parse(localStorage.getItem('d32-deep-save') || '{}').floor === 2));
   await p.keyboard.press('Escape');
   await p.close();
 }

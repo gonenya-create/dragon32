@@ -1,15 +1,17 @@
 // מחסנית "DRAGON DEEP" (מעמקי הדרקון): משחק מבוך תלת-ממדי בגוף ראשון, ברוח משחקי המבוך של 1983. משחק מקורי.
 // גונן (26.10.2026): "משחק ברמה גבוהה לאפליקציה... רמה טופ", בגבולות של Dragon. התכנון: docs/DRAGON-GAME-DEEP.md.
-// זו הקומה הראשונה (שלב 1 לאישור גונן): מבוך 16×16 שמצויר ביד, לפיד שדועך, גובלינים, אנשי פטרייה ועכברושים,
-// קרב, מטבעות, שיקויים ולפידים, ובסוף מלך האוגרים ששומר על המדרגות למטה.
+// קומות (כל אחת מבוך 16×16 שמצויר ביד, בערכת צבעים משלה): 1 אבן, גובלינים, אנשי פטרייה ועכברושים, ובסוף מלך האוגרים;
+// 2 ירוקה, רוחות קטנות שעוברות דרך קירות, דלת נעולה ומפתח, ובסוף גולם האבן. ההתקדמות נשמרת בתחילת כל קומה.
 // שליטה: ▲ צעד קדימה, ▼ צעד אחורה (גם התחמקות ממכה), ◀ ▶ פנייה, FIRE מכה ויורד במדרגות, P מפה.
 import { W, H, PALETTES, BLACK } from '../gfx.js';
 
-const [C0, C1, C2, C3] = PALETTES[1];   // קומה 1: ערכת "אבן" (בז', תכלת, סגול, כתום)
+let [C0, C1, C2, C3] = PALETTES[1];   // הצבעים של הקומה הנוכחית (שתי הערכות של PMODE 3)
+const setPalette = i => { [C0, C1, C2, C3] = PALETTES[i]; };
 const VIEW = 150;                         // גובה המבט; מתחתיו פס המידע
 
 // ---- המבוך של קומה 1 (מצויר ביד, כדי שלכל מקום יהיה אופי ושכולם ישחקו באותו מבוך) ----
-// # קיר  . רצפה  @ התחלה  S מדרגות  c מטבע  t לפיד  p שיקוי  r עכברוש  g גובלין  m איש פטרייה  B מלך האוגרים
+// # קיר  . רצפה  @ התחלה  S מדרגות  D דלת נעולה  c מטבע  t לפיד  p שיקוי  k מפתח
+// r עכברוש  g גובלין  m איש פטרייה  h רוח קטנה  B מלך האוגרים  G גולם האבן
 const MAP1 = [
   '################',
   '#@..c#....g....#',
@@ -28,6 +30,26 @@ const MAP1 = [
   '#.c#...t..#..BS#',
   '################'
 ];
+// קומה 2: המפתח בצפון, הדלת בדרום-מזרח, ומאחוריה הגולם והמדרגות
+const MAP2 = [
+  '################',
+  '#@...#...h.....#',
+  '#.##.#.###.###.#',
+  '#.#k.#...#...#.#',
+  '#.#.####.###.#.#',
+  '#...#..m...#...#',
+  '#.###.####.###.#',
+  '#.....#c.....#.#',
+  '#####.#.####.#.#',
+  '#t..#...#..p.#.#',
+  '#.#.#####.##.#.#',
+  '#.#...h......#.#',
+  '#.####.#####.#.#',
+  '#.c..#.#...#.###',
+  '#.##...#.r..DGS#',
+  '################'
+];
+const FLOORS = [{ map: MAP1, pal: 1 }, { map: MAP2, pal: 0 }];
 const DX = [0, 1, 0, -1], DY = [-1, 0, 1, 0];   // 0 צפון, 1 מזרח, 2 דרום, 3 מערב
 const DIRS = ['NORTH', 'EAST', 'SOUTH', 'WEST'];
 
@@ -47,21 +69,35 @@ const OGRE = [
   '.113333333333333311.', '.11.3333333333333.110', '.11.3333333333333.000', '.11..33333333333..000', '.11..33333333333...0.', '.....333333.33333....',
   '.....3333....3333....', '.....111......111....', '....1111......1111...', '...11111......11111..'
 ];
+const GHOST = [
+  '.....111.....', '...1111111...', '..111111111..', '.11211111211.', '.11211111211.', '.11111111111.', '.11121112111.',
+  '..111222111..', '..111111111..', '...1111111...', '....111111...', '.....11111...', '......1111...', '.......111...',
+  '........11...', '.......11....'
+];
+const GOLEM = [
+  '......1111111......', '.....111111111.....', '.....1122111221....', '.....1122111221....', '.....111100111.....', '......1111111......',
+  '..1111111111111111.', '.11111101111011111.', '1111111111111111111', '1111.111110111.1111', '111..1111111111.111', '111..1101111111..111',
+  '11...1111111011..11', '.....1111111111.....', '.....1111..1111.....', '.....1110..0111.....', '....11111..11111....', '...111111..111111...'
+];
+// הצבעים של כל דמות הם פונקציה, כי בכל קומה ערכת הצבעים אחרת
 const KINDS = {
-  r: { name: 'A RAT', rows: RAT, h: 0.16, hp: 1, dmg: 1, speed: 60, pts: 10, colors: { 3: C3, 1: C1, 2: C2 } },
-  g: { name: 'A GOBLIN', rows: GOBLIN, h: 0.5, hp: 2, dmg: 1, speed: 75, pts: 25, colors: { 1: C0, 2: BLACK, 0: C1, 3: C3 } },
-  m: { name: 'A MUSHROOM MAN', rows: MUSH, h: 0.55, hp: 3, dmg: 1, speed: 110, pts: 40, colors: { 3: C3, 1: C1, 2: BLACK } },
-  B: { name: 'THE OGRE KING', rows: OGRE, h: 0.88, hp: 12, dmg: 2, speed: 85, pts: 300, colors: { 1: C0, 2: BLACK, 3: C3, 0: C1 }, boss: true }
+  r: { name: 'A RAT', rows: RAT, h: 0.16, hp: 1, dmg: 1, speed: 60, pts: 10, col: () => ({ 3: C3, 1: C1, 2: C2 }) },
+  g: { name: 'A GOBLIN', rows: GOBLIN, h: 0.5, hp: 2, dmg: 1, speed: 75, pts: 25, col: () => ({ 1: C0, 2: BLACK, 0: C1, 3: C3 }) },
+  m: { name: 'A MUSHROOM MAN', rows: MUSH, h: 0.55, hp: 3, dmg: 1, speed: 110, pts: 40, col: () => ({ 3: C3, 1: C1, 2: BLACK }) },
+  h: { name: 'A LITTLE GHOST', rows: GHOST, h: 0.6, hp: 2, dmg: 1, speed: 70, pts: 35, col: () => ({ 1: C1, 2: C2 }), ghost: true },
+  B: { name: 'THE OGRE KING', rows: OGRE, h: 0.88, hp: 12, dmg: 2, speed: 85, pts: 300, col: () => ({ 1: C0, 2: BLACK, 3: C3, 0: C1 }), boss: true },
+  G: { name: 'THE STONE GOLEM', rows: GOLEM, h: 0.88, hp: 16, dmg: 2, speed: 95, pts: 450, col: () => ({ 1: C1, 2: C3, 0: BLACK }), boss: true }
 };
 const COIN = ['.11.', '1221', '1221', '.11.'];
 const TORCH = ['.1.', '121', '.1.', '.3.', '.3.', '.3.'];
 const POTION = ['.1.', '.1.', '333', '323', '333'];
 const HEART = ['33.33', '33333', '33333', '.333.', '..3..'];
+const KEY = ['.11....', '1..1111', '.11.1.1'];
 
 // ---- המבט התלת-ממדי: מצויר לתוך מאגר פיקסלים, ורק כשמשהו משתנה (צעד, פנייה, לפיד) ----
 let img = null, buf = null;
 const RGBA = {};
-for (const c of [C0, C1, C2, C3, BLACK]) { const n = parseInt(c.slice(1), 16); RGBA[c] = (255 << 24) | ((n & 255) << 16) | (((n >> 8) & 255) << 8) | (n >> 16); }
+for (const c of [...PALETTES[0], ...PALETTES[1], BLACK]) { const n = parseInt(c.slice(1), 16); RGBA[c] = (255 << 24) | ((n & 255) << 16) | (((n >> 8) & 255) << 8) | (n >> 16); }
 const px = (x, y, c) => { x |= 0; y |= 0; if (x >= 0 && y >= 0 && x < W && y < VIEW) buf[y * W + x] = RGBA[c]; };
 function line(x0, y0, x1, y1, c, dot) {
   x0 = Math.round(x0); y0 = Math.round(y0); x1 = Math.round(x1); y1 = Math.round(y1);
@@ -108,9 +144,19 @@ function sideOpening(z0, z1, side, light) {
   if (k < 0) return;
   line(xa, b[1], xb, b[1], C2); line(xa, b[3], xb, b[3], C2); line(xb, b[1], xb, b[3], C2); line(xa, a[1], xa, a[3], C2);
 }
-function frontWall(z, light) {
+function frontWall(z, light, door) {
   const [x0, y0, x1, y1] = P(z), k = shade(z, light);
   if (k <= 0) return;
+  if (door) {   // דלת עץ עם מסגרת, קרשים וחור מנעול
+    polyFill([[x0, y0], [x1, y0], [x1, y1], [x0, y1]], C0, k);
+    const dx0 = x0 + (x1 - x0) * 0.22, dx1 = x1 - (x1 - x0) * 0.22, dy0 = y0 + (y1 - y0) * 0.12;
+    polyFill([[dx0, dy0], [dx1, dy0], [dx1, y1], [dx0, y1]], C3, Math.max(1, k));
+    for (let i = 1; i < 4; i++) { const x = dx0 + (dx1 - dx0) * i / 4; line(x, dy0, x, y1, C2); }
+    line(dx0, dy0, dx1, dy0, C1); line(dx0, dy0, dx0, y1, C1); line(dx1, dy0, dx1, y1, C1);
+    const kx = (dx0 + dx1) / 2 + (dx1 - dx0) * 0.3, ky = (dy0 + y1) / 2;
+    line(kx, ky - 2, kx, ky + 2, C1);
+    return;
+  }
   polyFill([[x0, y0], [x1, y0], [x1, y1], [x0, y1]], C0, k);
   const h = (y1 - y0) / 6;
   for (let r = 1; r < 6; r++) line(x0, y0 + h * r, x1, y0 + h * r, C2);
@@ -133,24 +179,39 @@ function stairsAt(z) {
 }
 
 // ---- מצב המשחק ----
-const wallAt = (s, x, y) => x < 0 || y < 0 || x > 15 || y > 15 || s.map[y][x] === '#';
+const wallAt = (s, x, y) => x < 0 || y < 0 || x > 15 || y > 15 || s.map[y][x] === '#' || s.map[y][x] === 'D';
 function newFloor(s) {
-  s.map = MAP1.map(r => r.split(''));
+  const F = FLOORS[s.floor - 1];
+  setPalette(F.pal);
+  s.map = F.map.map(r => r.split(''));
+  s.keys = 0;
   s.mobs = []; s.items = []; s.seen = new Set();
   for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
     const ch = s.map[y][x];
     if (ch === '@') { s.x = x; s.y = y; s.map[y][x] = '.'; }
     else if (KINDS[ch]) { s.mobs.push({ k: ch, x, y, hx: x, hy: y, hp: KINDS[ch].hp, cd: 30 + (x * 7 + y * 3) % 40, wind: 0, flash: 0, dust: 0 }); s.map[y][x] = '.'; }
-    else if ('ctp'.includes(ch)) { s.items.push({ k: ch, x, y }); s.map[y][x] = '.'; }
+    else if ('ctpk'.includes(ch)) { s.items.push({ k: ch, x, y }); s.map[y][x] = '.'; }
     else if (ch === 'S') { s.sx = x; s.sy = y; s.map[y][x] = '.'; }
   }
   s.dir = 1; s.dirty = true;
 }
 function reset(s) {
-  s.hp = 5; s.torch = 1; s.coins = 0; s.score = 0; s.floor = 1; s.atkCd = 0; s.hurt = 0; s.msg = ''; s.msgT = 0; s.paused = false; s.steps = 0;
+  s.hp = 5; s.torch = 1; s.coins = 0; s.score = 0; s.floor = 1; s.keys = 0; s.atkCd = 0; s.hurt = 0; s.msg = ''; s.msgT = 0; s.paused = false; s.steps = 0;
   newFloor(s);
 }
 const say = (s, text, t = 120) => { s.msg = text; s.msgT = t; };
+// ההתקדמות נשמרת בדפדפן בתחילת כל קומה (מקומה 2), כדי שאפשר יהיה להמשיך מחר
+const SAVE = 'd32-deep-save';
+const loadSave = () => { try { return JSON.parse(localStorage.getItem(SAVE)); } catch (e) { return null; } };
+const writeSave = s => { try { localStorage.setItem(SAVE, JSON.stringify({ floor: s.floor, hp: s.hp, coins: s.coins, score: s.score })); } catch (e) {} };
+const clearSave = () => { try { localStorage.removeItem(SAVE); } catch (e) {} };
+const bossOf = s => s.mobs.find(m => KINDS[m.k].boss && !m.dust);
+function startFloor(s, snd) {
+  newFloor(s); s.mode = 'play'; s.t = 0; s.torch = 1;
+  if (s.floor > 1) writeSave(s);
+  say(s, 'FLOOR ' + s.floor + (s.floor === 2 ? ' - FIND THE KEY' : ' - FIND THE STAIRS DOWN'), 180);
+  snd.tone(220, 120, 440);
+}
 const mobAt = (s, x, y) => s.mobs.find(m => !m.dust && m.x === x && m.y === y);
 const light = s => s.torch > 0 ? 1.2 + s.torch * 3 : 1;   // כמה עומקים הלפיד מאיר (לפיד גוסס: צעד אחד)
 
@@ -164,7 +225,7 @@ function layout(s) {
     if (cell.left === 2) s.seen.add((cx + DX[l]) + ',' + (cy + DY[l]));
     if (cell.right === 2) s.seen.add((cx + DX[r]) + ',' + (cy + DY[r]));
     out.push(cell);
-    if (wallAt(s, cx + DX[s.dir], cy + DY[s.dir])) { cell.front = 1; break; }
+    if (wallAt(s, cx + DX[s.dir], cy + DY[s.dir])) { cell.front = 1; cell.door = s.map[cy + DY[s.dir]]?.[cx + DX[s.dir]] === 'D'; break; }
   }
   return out;
 }
@@ -176,7 +237,7 @@ function render(s) {
   for (let i = L.length - 1; i >= 0; i--) {
     const c = L[i], z0 = i, z1 = i + 1;
     if (z0 > lt) continue;
-    if (c.front) frontWall(z1, lt);
+    if (c.front) frontWall(z1, lt, c.door);
     if (c.left === 1) sideWall(z0, z1, -1, lt); else sideOpening(z0, z1, -1, lt);
     if (c.right === 1) sideWall(z0, z1, 1, lt); else sideOpening(z0, z1, 1, lt);
     if (i > 0 && c.x === s.sx && c.y === s.sy) stairsAt(i);
@@ -206,18 +267,21 @@ export default {
 
   init(api) {
     if (!img) { img = api.gfx.ctx.createImageData(W, VIEW); buf = new Uint32Array(img.data.buffer); }
-    api.state = { mode: 'title', high: api.loadHigh('deep'), t: 0 };
+    api.state = { mode: 'title', high: api.loadHigh('deep'), t: 0, save: loadSave() };
     reset(api.state);
   },
 
   update(api) {
     const s = api.state, snd = api.sound;
     s.t++;
+    if (s.mode === 'next') { if (api.hit('fire') && s.t > 40) { s.floor++; startFloor(s, snd); } return; }
     if (s.mode === 'title' || s.mode === 'over' || s.mode === 'won') {
+      if (s.mode === 'title' && s.save && api.hit('up') && s.t > 40) {   // ממשיכים מהקומה שנשמרה
+        reset(s); Object.assign(s, { floor: s.save.floor, hp: s.save.hp, coins: s.save.coins, score: s.save.score }); startFloor(s, snd); return;
+      }
       if (api.hit('fire') && s.t > 40) {
-        if (s.mode !== 'title') { s.mode = 'title'; s.t = 0; return; }
-        reset(s); s.mode = 'play'; s.t = 0; snd.tone(220, 120, 440);
-        say(s, 'FLOOR 1 - FIND THE STAIRS DOWN', 160);
+        if (s.mode !== 'title') { s.mode = 'title'; s.t = 0; s.save = loadSave(); setPalette(1); return; }
+        reset(s); startFloor(s, snd);
       }
       return;
     }
@@ -236,6 +300,11 @@ export default {
     // תנועה וקרב
     const fx = s.x + DX[s.dir], fy = s.y + DY[s.dir], front = mobAt(s, fx, fy);
     const move = (nx, ny) => {
+      if (s.map[ny]?.[nx] === 'D') {
+        if (s.keys) { s.keys--; s.map[ny][nx] = '.'; s.dirty = true; say(s, 'THE KEY TURNS. THE DOOR OPENS!'); snd.tone(300, 300, 600); }
+        else { say(s, 'A LOCKED DOOR. FIND THE KEY!'); snd.tone(90, 80); }
+        return;
+      }
       if (wallAt(s, nx, ny) || mobAt(s, nx, ny)) { snd.tone(90, 40); return; }
       s.x = nx; s.y = ny; s.steps++; s.dirty = true; snd.noise(25, 0.025);
       const it = s.items.findIndex(i => i.x === nx && i.y === ny);
@@ -244,8 +313,9 @@ export default {
         if (k === 'c') { s.coins++; s.score += 50; say(s, 'A GOLD COIN!'); snd.tone(880, 60, 1320); }
         if (k === 't') { s.torch = 1; s.dirty = true; say(s, 'A NEW TORCH!'); snd.tone(440, 120, 880); }
         if (k === 'p') { s.hp = Math.min(5, s.hp + 2); say(s, 'A HEALING POTION!'); snd.tone(500, 150, 900); }
+        if (k === 'k') { s.keys++; say(s, 'AN OLD IRON KEY!'); snd.tone(660, 200, 990); }
       }
-      if (nx === s.sx && ny === s.sy) say(s, s.mobs.some(m => KINDS[m.k].boss && !m.dust) ? 'THE OGRE KING GUARDS THE STAIRS!' : 'STAIRS DOWN. FIRE TO GO DOWN', 200);
+      if (nx === s.sx && ny === s.sy) say(s, bossOf(s) ? KINDS[bossOf(s).k].name + ' GUARDS THE STAIRS!' : 'STAIRS DOWN. FIRE TO GO DOWN', 200);
     };
     if (api.hit('left')) { s.dir = (s.dir + 3) % 4; s.dirty = true; snd.tone(300, 20); }
     if (api.hit('right')) { s.dir = (s.dir + 1) % 4; s.dirty = true; snd.tone(300, 20); }
@@ -257,11 +327,12 @@ export default {
         front.hp--; front.flash = 8; snd.noise(60, 0.07); snd.tone(260, 60, 120);
         if (front.hp <= 0) {
           front.dust = 45; front.wind = 0; s.score += KINDS[front.k].pts; snd.tone(600, 200, 100);
-          say(s, KINDS[front.k].boss ? 'THE OGRE KING IS DEFEATED!' : KINDS[front.k].name.replace(/^AN? /, 'THE ') + ' IS GONE!');
+          say(s, KINDS[front.k].boss ? KINDS[front.k].name + ' IS DEFEATED!' : KINDS[front.k].name.replace(/^AN? /, 'THE ') + ' IS GONE!');
         }
-      } else if (s.x === s.sx && s.y === s.sy && !s.mobs.some(m => KINDS[m.k].boss && !m.dust)) {
-        s.mode = 'won'; s.t = 0; s.score += 500 + s.hp * 100; snd.tone(440, 400, 1760);
-        api.submitScore('deep', s.score);
+      } else if (s.x === s.sx && s.y === s.sy && !bossOf(s)) {
+        s.score += 500 + s.hp * 100; s.t = 0; snd.tone(440, 400, 1760);
+        if (s.floor < FLOORS.length) s.mode = 'next';
+        else { s.mode = 'won'; clearSave(); api.submitScore('deep', s.score); }
       } else snd.tone(200, 30, 160);
     }
 
@@ -270,7 +341,7 @@ export default {
       const K = KINDS[m.k];
       if (m.flash) m.flash--;
       if (m.dust) { if (--m.dust === 0) m.gone = true; continue; }
-      const adj = Math.abs(m.x - s.x) + Math.abs(m.y - s.y) === 1;
+      const adj = Math.abs(m.x - s.x) + Math.abs(m.y - s.y) === 1 && !wallAt(s, m.x, m.y);
       if (m.wind) {
         if (--m.wind === 0) {
           if (adj) { s.hp -= K.dmg; s.hurt = 12; snd.noise(120, 0.09); snd.tone(300, 200, 80); say(s, K.name.replace(/^AN? /, 'THE ') + ' HITS YOU!', 60); }
@@ -281,6 +352,15 @@ export default {
       }
       if (m.cd > 0) { m.cd--; continue; }
       if (adj) { m.wind = 40; snd.tone(150, 160, 95); continue; }
+      if (K.ghost) {   // רוח קטנה: מרחפת דרך קירות, ישר אל השחקן כשהוא קרוב
+        const ddx = s.x - m.x, ddy = s.y - m.y, far = Math.abs(ddx) + Math.abs(ddy);
+        let nx = m.x, ny = m.y;
+        if (far <= 9) { if (Math.abs(ddx) >= Math.abs(ddy)) nx += Math.sign(ddx); else ny += Math.sign(ddy); }
+        else { const d = (s.t + m.x * 5 + m.y * 11) % 4; nx += DX[d]; ny += DY[d]; }
+        if (nx >= 1 && ny >= 1 && nx <= 14 && ny <= 14 && !(nx === s.x && ny === s.y) && !mobAt(s, nx, ny)) { m.x = nx; m.y = ny; s.dirty = true; }
+        if (far <= 4 && s.t % 4 === 0) snd.tone(700, 60, 500, 0.02);   // צחקוק דק
+        m.cd = K.speed; continue;
+      }
       // רודפים מ-12 צעדים; רחוק יותר מסיירים במסדרונות, כדי שהקומה לא תהיה ריקה
       const path = stepToward(s, m, K.boss ? 3 : 12);
       if (!path && !K.boss) {
@@ -306,7 +386,7 @@ export default {
   draw(api) {
     const g = api.gfx, s = api.state;
     if (s.mode === 'title') return drawTitle(g, s);
-    if (s.mode === 'over' || s.mode === 'won') return drawEnd(g, s);
+    if (s.mode === 'over' || s.mode === 'won' || s.mode === 'next') return drawEnd(g, s);
     if (s.dirty || !s.view) render(s);
     g.ctx.putImageData(img, 0, 0);
     // חפצים ואויבים לאורך המסדרון, מהרחוק לקרוב
@@ -315,12 +395,12 @@ export default {
       const c = s.view[i];
       if (i > lt) continue;
       const it = s.items.find(o => o.x === c.x && o.y === c.y);
-      if (it) stand(g, it.k === 'c' ? COIN : it.k === 't' ? TORCH : POTION, i + 0.4, { 1: it.k === 'p' ? C1 : C1, 2: C3, 3: it.k === 't' ? C2 : C3 }, 0.12);
+      if (it) stand(g, it.k === 'c' ? COIN : it.k === 't' ? TORCH : it.k === 'k' ? KEY : POTION, i + 0.4, { 1: C1, 2: C3, 3: it.k === 't' ? C2 : C3 }, it.k === 'k' ? 0.06 : 0.12);
       const m = mobAt(s, c.x, c.y) || s.mobs.find(o => o.dust && o.x === c.x && o.y === c.y);
       if (!m) continue;
       const K = KINDS[m.k], z = i + 0.15;
       if (m.dust) { const p = P(z); for (let n = 0; n < 60; n++) { const a = n * 2.4 + m.dust * 0.3, r = (45 - m.dust) * 0.9 * ((n % 7) / 7 + 0.3); g.rect(VX + Math.cos(a) * r, p[3] - (p[3] - p[1]) * K.h * 0.5 + Math.sin(a) * r * 0.7, 1, 1, n % 3 ? C1 : C0); } continue; }
-      const cols = m.flash ? Object.fromEntries(Object.keys(K.colors).map(k => [k, C1])) : m.wind && (m.wind >> 2) % 2 ? Object.fromEntries(Object.keys(K.colors).map(k => [k, k === '2' ? BLACK : C3])) : K.colors;
+      const base = K.col(), cols = m.flash ? Object.fromEntries(Object.keys(base).map(k => [k, C1])) : m.wind && (m.wind >> 2) % 2 ? Object.fromEntries(Object.keys(base).map(k => [k, k === '2' ? BLACK : C3])) : base;
       stand(g, K.rows, z - (m.wind ? 0.05 : 0), cols, K.h, (Math.sin(s.t / 9 + m.x) * 1.2) | 0);
     }
     if (s.hurt) for (let y = 0; y < VIEW; y += 2) for (let x = (y >> 1) % 2; x < W; x += 6) g.rect(x, y, 1, 1, C3);
@@ -332,7 +412,7 @@ export default {
     }
     // הבוס: פס חיים למעלה כשהוא בטווח הראייה
     const boss = s.mobs.find(m => KINDS[m.k].boss && !m.dust && s.view.some((c, i) => i && c.x === m.x && c.y === m.y));
-    if (boss) { g.rect(0, 0, W, 20, BLACK); g.text('THE OGRE KING', 128, 3, C3, 'center'); g.rect(64, 12, 128, 5, C2); g.rect(64, 12, 128 * boss.hp / KINDS.B.hp, 5, C3); }
+    if (boss) { const K = KINDS[boss.k]; g.rect(0, 0, W, 20, BLACK); g.text(K.name, 128, 3, C3, 'center'); g.rect(64, 12, 128, 5, C2); g.rect(64, 12, 128 * boss.hp / K.hp, 5, C3); }
     drawHud(g, s);
     if (s.paused) drawMap(g, s);
   }
@@ -350,6 +430,7 @@ function drawHud(g, s) {
   g.sprite(TORCH, 52, 155, { 1: C1, 2: C3, 3: C2 }, false);
   g.rect(58, 159, 50, 5, C2); g.rect(58, 159, 50 * s.torch, 5, C1);
   g.text('SWORD', 116, 158, C0);
+  if (s.keys) g.sprite(KEY, 146, 168, { 1: C1 }, false);
   g.sprite(COIN, 156, 157, { 1: C1, 2: C3 }, false);
   g.text(String(s.coins), 164, 158, C1);
   g.text(DIRS[s.dir][0] + ' LEVEL ' + s.floor, 250, 158, C0, 'right');
@@ -360,11 +441,11 @@ function drawMap(g, s) {
   g.rect(40, 8, 176, 140, BLACK);
   g.rect(40, 8, 176, 1, C2); g.rect(40, 147, 176, 1, C2); g.rect(40, 8, 1, 140, C2); g.rect(215, 8, 1, 140, C2);
   g.rect(0, 0, W, 8, BLACK);
-  g.text('FLOOR 1 - MAP', 128, 12, C1, 'center');
+  g.text('FLOOR ' + s.floor + ' - MAP', 128, 12, C1, 'center');
   for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
     if (!s.seen.has(x + ',' + y)) continue;
     const X = 64 + x * 8, Y = 22 + y * 7.5;
-    if (s.map[y][x] === '#') g.rect(X, Y, 8, 7, C2); else g.rect(X + 3, Y + 3, 2, 2, C0);
+    if (s.map[y][x] === '#') g.rect(X, Y, 8, 7, C2); else if (s.map[y][x] === 'D') g.rect(X + 1, Y + 1, 6, 5, C1); else g.rect(X + 3, Y + 3, 2, 2, C0);
     if (x === s.sx && y === s.sy) g.rect(X + 1, Y + 1, 6, 5, C3);
   }
   g.rect(64 + s.x * 8 + 2, 22 + s.y * 7.5 + 2, 4, 4, C1);
@@ -379,13 +460,21 @@ function drawTitle(g, s) {
   g.text('THE DRAGON HAS TAKEN THE GOLDEN TAPE', 128, 104, C1, 'center');
   g.text('DOWN INTO THE DEEP. GO AND FIND IT.', 128, 116, C1, 'center');
   if ((s.t >> 4) % 2) g.text('PRESS FIRE', 128, 140, C3, 'center', 2);
-  g.text('HIGH ' + s.high, 128, 166, C2, 'center');
+  g.text('HIGH ' + s.high, 128, 156, C2, 'center');
+  if (s.save) g.text('UP: GO ON FROM FLOOR ' + s.save.floor, 128, 168, C0, 'center');
   g.text('(C) 2026 GONEN YAROM', 128, 182, C2, 'center');
 }
 function drawEnd(g, s) {
   g.clear(BLACK);
+  if (s.mode === 'next') {
+    g.text('FLOOR ' + s.floor + ' CLEARED!', 128, 40, C1, 'center', 2);
+    g.text('THE STAIRS LEAD DEEPER...', 128, 74, C0, 'center');
+    g.text('SCORE ' + s.score, 128, 110, C1, 'center', 2);
+    if (s.t > 40 && (s.t >> 4) % 2) g.text('FIRE: DOWN TO FLOOR ' + (s.floor + 1), 128, 150, C2, 'center');
+    return;
+  }
   if (s.mode === 'won') {
-    g.text('FLOOR 1 CLEARED!', 128, 40, C1, 'center', 2);
+    g.text('FLOOR ' + s.floor + ' CLEARED!', 128, 40, C1, 'center', 2);
     g.text('THE STAIRS LEAD DEEPER...', 128, 74, C0, 'center');
     g.text('MORE FLOORS ARE COMING SOON', 128, 88, C0, 'center');
   } else {
