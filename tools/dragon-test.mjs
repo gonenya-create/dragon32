@@ -796,11 +796,13 @@ if (part('cartridge DRAGON DEEP (full computer)')) {
   const tp0 = await p.evaluate(() => document.querySelector('#dragon-room').d32Cart.state.titleP);
   await p.keyboard.press('ArrowDown'); await p.waitForTimeout(100);
   const tp1 = await p.evaluate(() => document.querySelector('#dragon-room').d32Cart.state.titleP);
-  check('deep title: DOWN moves from the story to HOW TO PLAY', tp0 === 0 && tp1 === 1);
+  check('deep title: DOWN moves from the title to the story page (4 pages)', tp0 === 0 && tp1 === 1);
   await p.keyboard.press('ArrowDown'); await p.waitForTimeout(100); await p.keyboard.press('ArrowDown'); await p.waitForTimeout(100);
   await p.waitForFunction(() => document.querySelector('#dragon-room').d32Cart.state.t > 45);
   await p.keyboard.press('Space'); await p.waitForTimeout(200);
   const a = await S();
+  check('each floor opens with its name and a line of story, and the game waits', await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return s.intro > 0; }));
+  check('the app shows a Hebrew how-to under the game', await p.evaluate(() => { const h = document.querySelector('.d32-cart-help'); return h && !h.hidden && h.querySelectorAll('li').length >= 5 && /קלטת הזהב/.test(h.textContent); }));
   check('deep starts on floor 1 at the entrance, facing east, with a 3D view', a.mode === 'play' && a.x === 1 && a.y === 1 && a.dir === 1 && a.view > 1, JSON.stringify(a));
   await p.keyboard.press('ArrowUp'); await p.waitForTimeout(100);
   check('up steps forward', (await S()).x === 2);
@@ -868,12 +870,14 @@ if (part('cartridge DRAGON DEEP (full computer)')) {
   await p.keyboard.press('ArrowUp'); await p.waitForTimeout(300);
   check('an old save (before the bag) still goes on from its floor', await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return s.mode === 'play' && s.floor === 3 && s.potions === 0 && s.met instanceof Set; }));
   // אפשרות ב: מוות מחזיר לתחילת הקומה עם הניקוד של אז, ורק ויתור שולח להיכל התהילה
+  await p.keyboard.press('ArrowLeft'); await p.waitForTimeout(120);   // סוגרים את מסך הפתיחה של הקומה
   const before = await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.score += 777; s.hp = 0; return s.score; });
   await p.waitForTimeout(1100);
   const dead = await p.evaluate(() => document.querySelector('#dragon-room').d32Cart.state.mode);
   await p.keyboard.press('Space'); await p.waitForTimeout(300);
   const again = await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return { mode: s.mode, floor: s.floor, score: s.score, hp: s.hp }; });
   check('after death, FIRE tries the floor again from its start (score as it was, 3+ hearts)', dead === 'over' && again.mode === 'play' && again.floor === 3 && again.score === before - 777 && again.hp >= 3, JSON.stringify(again));
+  await p.keyboard.press('ArrowLeft'); await p.waitForTimeout(120);
   await p.evaluate(() => { document.querySelector('#dragon-room').d32Cart.state.hp = 0; });
   await p.waitForTimeout(1100); await p.keyboard.press('ArrowDown'); await p.waitForTimeout(300);
   check('after death, DOWN gives up: back to the title and the save is cleared', await p.evaluate(() => document.querySelector('#dragon-room').d32Cart.state.mode === 'title' && !localStorage.getItem('d32-deep-save')));

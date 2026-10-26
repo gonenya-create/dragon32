@@ -418,7 +418,7 @@ const writeSave = s => { try { localStorage.setItem(SAVE, JSON.stringify({ v: 2,
 const clearSave = () => { try { localStorage.removeItem(SAVE); } catch (e) {} };
 const bossOf = s => s.mobs.find(m => KINDS[m.k].boss && !m.dust);
 function startFloor(s, snd) {
-  newFloor(s); s.mode = 'play'; s.t = 0; s.torch = 1; s.floorT = 0; s.paused = false;
+  newFloor(s); s.mode = 'play'; s.t = 0; s.torch = 1; s.floorT = 0; s.paused = false; s.intro = 300;
   writeSave(s);   // נשמר בתחילת כל קומה, גם הראשונה
   say(s, floorMsg(s.floor), 180);
   snd.tone(220, 120, 440);
@@ -477,6 +477,23 @@ function stepToward(s, m, maxD) {
 export default {
   title: 'DRAGON DEEP',
   buttons: ['left', 'up', 'down', 'right', 'fire', 'pause'],
+  help: {
+    he: ['הסיפור: הדרקון לקח את קלטת הזהב, הקלטת הראשונה שהוקלטה אי פעם על Dragon, וירד איתה חמש קומות מתחת לטירה. צריך להחזיר אותה.',
+      'הליכה: ▲ צעד קדימה, ▼ צעד אחורה, ◀ ▶ פנייה.',
+      'קרב: FIRE מכה בחרב. אויב שמהבהב עומד להכות: צעד אחורה ב-▼, והוא יחטיא.',
+      'תפריט: P עוצר את המשחק ופותח מפה, תרמיל (שם שותים שיקוי), אלבום דמויות והוראות. ◀ ▶ מחליפים דף.',
+      'הלפיד דועך עם הזמן, וכשהוא חלש רואים פחות. בכל קומה יש לפידים חדשים.',
+      'בכל קומה יש בוס ששומר על המדרגות. על המדרגות, FIRE יורד קומה. בקומות 2, 4 ו-5 צריך קודם מפתח לדלת נעולה.',
+      'שמירה: ההתקדמות נשמרת בתחילת כל קומה. אחרי מוות, FIRE מנסה שוב את הקומה, ו-▼ מוותר ושומר את התוצאה.',
+      'יציאה: Esc, או "הוצאת המחסנית".'],
+    en: ['The dragon took the Golden Tape, the first tape ever recorded on a Dragon, five floors down under the castle. Bring it back.',
+      '▲ step forward, ▼ step back, ◀ ▶ turn. FIRE strikes with the sword; on the stairs FIRE goes down.',
+      'An enemy that flashes is about to hit: step back with ▼ and it misses.',
+      'P pauses and opens a menu: map, bag (drink potions there), the creature album and help. ◀ ▶ change page.',
+      'The torch fades with time, and a weak torch shows less. Each floor has new torches.',
+      'Each floor has a boss guarding the stairs. On floors 2, 4 and 5 you need a key for a locked door first.',
+      'Progress is saved at the start of each floor. After a death FIRE tries the floor again, ▼ gives up and keeps the score. Esc or "Eject cartridge" leaves.']
+  },
 
   init(api) {
     if (!img) { img = api.gfx.ctx.createImageData(W, VIEW); buf = new Uint32Array(img.data.buffer); }
@@ -488,7 +505,7 @@ export default {
     const s = api.state, snd = api.sound;
     s.t++;
     if (s.mode === 'next') { if (api.hit('fire') && s.t > 40) { s.floor++; startFloor(s, snd); } return; }
-    if (s.mode === 'title') { if (api.hit('down')) { s.titleP = ((s.titleP || 0) + 1) % 3; s.titleT = 0; snd.tone(330, 30); } else if (++s.titleT > 300) { s.titleP = ((s.titleP || 0) + 1) % 3; s.titleT = 0; } }
+    if (s.mode === 'title') { if (api.hit('down')) { s.titleP = ((s.titleP || 0) + 1) % 4; s.titleT = 0; snd.tone(330, 30); } else if (++s.titleT > 300) { s.titleP = ((s.titleP || 0) + 1) % 4; s.titleT = 0; } }
     if (s.mode === 'over' && s.t > 40) {
       const v = loadSave();
       if (api.hit('fire') && v) {   // מנסים שוב את הקומה: הכל חוזר למה שהיה בתחילתה, ולפחות 3 לבבות
@@ -511,6 +528,9 @@ export default {
         reset(s); startFloor(s, snd);
       }
       return;
+    }
+    if (s.intro > 0) {
+      if (['up', 'down', 'left', 'right', 'fire', 'pause'].some(b => api.hit(b))) s.intro = 0; else { s.intro--; return; }
     }
     if (api.hit('pause')) { s.paused = !s.paused; s.page = 0; s.bagSel = 0; snd.tone(330, 40); }
     if (s.paused) {   // תפריט עצירה: מפה, תרמיל, אלבום, הוראות. הלפיד לא דועך והאויבים לא זזים
@@ -664,6 +684,7 @@ export default {
     if (boss) { const K = KINDS[boss.k]; g.rect(0, 0, W, 20, BLACK); g.text(K.name, 128, 3, C3, 'center'); g.rect(64, 12, 128, 5, C2); g.rect(64, 12, 128 * boss.hp / K.hp, 5, C3); }
     drawHud(g, s);
     if (s.paused) drawPause(g, s);
+    else if (s.intro > 0) drawIntro(g, s);
   }
 };
 
@@ -757,6 +778,22 @@ function drawPause(g, s) {
     g.text('WHEN IT FLASHES, STEP BACK!', 128, 124, C3, 'center');
   }
 }
+// לפני כל קומה: שם הקומה ומשפט אווירה, על רקע המבט הראשון
+const INTRO = [
+  ['THE CASTLE CELLAR', 'COLD BRICKS AND OLD TORCHES.', 'SOMETHING SCRATCHES IN THE DARK.'],
+  ['THE CAVES', 'WATER DRIPS FROM THE STONE.', 'A KEY WAS LOST HERE LONG AGO.'],
+  ['THE OLD MINE', 'THE MINERS LEFT IN A HURRY.', 'NOBODY SAYS WHY.'],
+  ['THE WIZARD LIBRARY', 'THE BOOKS ARE STILL WHISPERING.', 'ONE OF THEM IS AWAKE.'],
+  ['THE DRAGON LAIR', 'THE AIR IS HOT. GOLD EVERYWHERE.', 'THE GOLDEN TAPE IS CLOSE.']
+];
+function drawIntro(g, s) {
+  const [name, a, b] = INTRO[s.floor - 1];
+  g.rect(20, 34, 216, 76, BLACK); g.rect(20, 34, 216, 1, C2); g.rect(20, 109, 216, 1, C2); g.rect(20, 34, 1, 76, C2); g.rect(235, 34, 1, 76, C2);
+  g.text('FLOOR ' + s.floor, 128, 42, C3, 'center');
+  g.text(name, 128, 54, C1, 'center', 2);
+  g.text(a, 128, 76, C0, 'center'); g.text(b, 128, 88, C0, 'center');
+  if ((s.t >> 4) % 2) g.text('ANY KEY TO GO ON', 128, 100, C2, 'center');
+}
 function drawTitle(g, s) {
   g.clear(BLACK);
   for (let i = 0; i < 60; i++) g.rect(hash(i, 1) * W, hash(i, 2) * 20 + (i % 2 ? 0 : 130), 1, 1, i % 3 ? C2 : C1);
@@ -766,7 +803,11 @@ function drawTitle(g, s) {
     g.text('DEEP', 128, 56, C0, 'center', 4);
     g.text('THE DRAGON HAS TAKEN THE GOLDEN TAPE', 128, 96, C1, 'center');
     g.text('DOWN INTO THE DEEP. GO AND FIND IT.', 128, 108, C1, 'center');
-  } else if (p === 1) {
+  } else if (p === 1) {   // הסיפור המלא
+    g.text('THE STORY', 128, 12, C3, 'center', 2);
+    ['IN 1982 THE VERY FIRST TAPE', 'EVER MADE ON A DRAGON', 'WAS RECORDED IN GOLD.', '', 'LAST NIGHT THE OLD DRAGON WOKE,', 'TOOK THE GOLDEN TAPE AND WENT', 'DOWN, FIVE FLOORS UNDER THE CASTLE.', '', 'TAKE A TORCH AND A SWORD.', 'BRING IT BACK.']
+      .forEach((t, i) => g.text(t, 128, 32 + i * 9, i < 3 ? C0 : i < 7 ? C1 : C3, 'center'));
+  } else if (p === 2) {
     g.text('HOW TO PLAY', 128, 12, C3, 'center', 2);
     const L = [['UP', 'STEP FORWARD'], ['DOWN', 'STEP BACK - DODGE!'], ['LEFT RIGHT', 'TURN'], ['FIRE', 'STRIKE / GO DOWN'], ['P', 'MAP, BAG AND HELP'], ['ESC', 'LEAVE THE GAME']];
     L.forEach(([k, t], i) => { g.text(k, 30, 34 + i * 12, C1); g.text(t, 104, 34 + i * 12, C0); });

@@ -82,6 +82,14 @@ export function createCartRunner(root, sound, { onEject, onScores }) {
   hint.hidden = true;
   hint.innerHTML = tr('שיא חדש! בוחרים שם של 3 אותיות: <b>▲ ▼</b> מחליפים את האות המהבהבת, <b>OK</b> עובר לאות הבאה, וה-<b>OK</b> השלישי שומר את השם.', 'New high score! Choose 3 letters: <b>▲ ▼</b> change the blinking letter, <b>OK</b> moves to the next one, and the third <b>OK</b> saves your name.');
   pad.appendChild(hint);
+  // הסבר מתחת למשחק (גונן, 26.10: "הסבר בעברית מתחת למסך המשחק"): למחסנית שמגדירה help: { he: [...], en: [...] }
+  const help = document.createElement('details');
+  help.className = 'd32-cart-help';
+  help.dir = tr('rtl', 'ltr');   // הכפתורים בשורה משמאל לימין, אבל ההסבר בכיוון של השפה
+  help.hidden = true;
+  help.innerHTML = '<summary></summary><ul></ul>';
+  help.querySelector('summary').textContent = tr('איך משחקים', 'How to play');
+  pad.appendChild(help);
   tv.after(pad);
 
   let gen = 0, want = [];
@@ -150,6 +158,17 @@ export function createCartRunner(root, sound, { onEject, onScores }) {
     const mod = (await loadModule()).default;
     if (my !== gen) return;   // בינתיים הוכנסה מחסנית אחרת או שהמחסנית הוצאה
     gameTitle = mod.title;
+    const lines = mod.help && (tr('he', 'en') === 'he' ? mod.help.he : mod.help.en);
+    help.hidden = !lines;
+    // מילים באנגלית וחיצים בתוך משפט בעברית: כל אחת מבודדת, כדי שהשורה לא תתהפך
+    help.querySelector('ul').replaceChildren(...(lines || []).map(t => {
+      const li = document.createElement('li');
+      for (const part of t.split(/([A-Za-z][A-Za-z0-9]*(?: [A-Za-z][A-Za-z0-9]*)*|[▲▼◀▶](?: [▲▼◀▶])*)/)) {
+        if (!part) continue;
+        if (/^[A-Za-z▲▼◀▶]/.test(part)) { const b = document.createElement('bdi'); b.dir = 'ltr'; b.textContent = part; li.append(b); } else li.append(part);
+      }
+      return li;
+    }));
     overlay = null;
     game = mod;
     // רק הכפתורים שהמשחק צריך מופיעים בטלפון
