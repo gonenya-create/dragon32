@@ -160,6 +160,7 @@ export function createCartRunner(root, sound, { onEject, onScores }) {
     gameTitle = mod.title;
     const lines = mod.help && (tr('he', 'en') === 'he' ? mod.help.he : mod.help.en);
     help.hidden = !lines;
+    dispatchEvent(new Event('resize'));   // במסך מלא: הגודל מחושב מחדש, עם המקום של ההסבר
     // מילים באנגלית וחיצים בתוך משפט בעברית: כל אחת מבודדת, כדי שהשורה לא תתהפך
     help.querySelector('ul').replaceChildren(...(lines || []).map(t => {
       const li = document.createElement('li');

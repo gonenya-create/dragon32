@@ -905,6 +905,11 @@ if (part('cartridge DRAGON DEEP (full computer)')) {
   await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.x = 6; s.y = 1; s.dir = 1; s.hasBow = true; s.arrows = 1; s.weapon = 'bow'; s.mobs = [{ k: 'g', x: 9, y: 1, hx: 9, hy: 1, hp: 2, cd: 9999, wind: 0, flash: 0, dust: 0 }]; s.atkCd = 0; s.dirty = true; });
   await p.keyboard.press('Space'); await p.waitForTimeout(500);
   check('round 2: an arrow hits the first enemy down the corridor; out of arrows = sword again', await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return s.mobs[0].hp === 1 && s.arrows === 0 && s.weapon === 'sword'; }));
+  // עם קשת ביד, FIRE על המדרגות יורד ולא יורה (ממצא הבודק)
+  const stairsBow = await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.mobs = s.mobs.filter(m => !m.boss && !'BGMWX'.includes(m.k)); s.hasBow = true; s.arrows = 3; s.weapon = 'bow'; s.x = s.sx; s.y = s.sy; s.atkCd = 0; s.shot = null; return s.floor; });
+  await p.keyboard.press('Space'); await p.waitForTimeout(150);
+  check('round 2: with the bow in hand, FIRE on the stairs goes down and spends no arrow', await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return s.mode === 'next' && s.arrows === 3; }));
+  await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.mode = 'play'; s.x = 6; s.y = 1; s.dir = 1; s.weapon = 'sword'; s.dirty = true; });
   // גובלין גונב מטבע ובורח
   await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.coins = 2; s.hp = 5; s.mobs = [{ k: 'g', x: s.x + 1, y: s.y, hx: 0, hy: 0, hp: 2, cd: 0, wind: 1, flash: 0, dust: 0 }]; });
   await p.waitForTimeout(120);

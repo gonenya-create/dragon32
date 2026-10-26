@@ -206,6 +206,7 @@ const TORCH = ['.1.', '121', '.1.', '.3.', '.3.', '.3.'];
 const POTION = ['.1.', '.1.', '333', '323', '333'];
 const HEART = ['33.33', '33333', '33333', '.333.', '..3..'];
 const KEY = ['.11....', '1..1111', '.11.1.1'];
+const ITEM_ROWS = { c: COIN, t: TORCH, k: KEY, p: POTION, b: BOW, a: QUIVER, $: GOLD };
 
 // ---- המבט התלת-ממדי: מצויר לתוך מאגר פיקסלים, ורק כשמשהו משתנה (צעד, פנייה, לפיד) ----
 let img = null, buf = null;
@@ -510,7 +511,7 @@ function hit(s, m, dmg, snd, api) {
   say(s, K.boss ? K.name + ' IS DEFEATED!' : K.name.replace(/^AN? /, 'THE ') + ' IS GONE!');
   s.xp += K.pts;
   const lv = levelOf(s.xp);
-  if (lv > s.lv) { s.lv = lv; s.hp = Math.min(maxHp(s), s.hp + 1); say(s, 'LEVEL UP! NOW LEVEL ' + lv, 150); snd.tone(523, 120, 1046); }
+  if (lv > s.lv) { s.hp = Math.min(maxHp({ lv }), s.hp + lv - s.lv); s.lv = lv; say(s, 'LEVEL UP! NOW LEVEL ' + lv, 150); snd.tone(523, 120, 1046); }
 }
 // ידיד: בפעם הראשונה נותן מתנה ורמז
 function talk(s, m, snd) {
@@ -547,7 +548,7 @@ export default {
       'קשת: בקומה 2 מחכה קשת. בתרמיל בוחרים חרב או קשת, ואז FIRE יורה חץ לאורך המסדרון. לבוסים יש מגן מפני חצים.',
       'ידידים: הכורה הזקן והאסיר לא תוקפים. הולכים אליהם כדי לדבר, ומקבלים מתנה. מכה בידיד עולה 100 נקודות.',
       'סודות: קיר עם סדק אפשר לפתוח ב-FIRE. מאחוריו יש אוצר או קיצור דרך.',
-      'רמה: כל ניצחון נותן ניסיון. ברמה חדשה מקבלים עוד לב, ובכל שתי רמות המכה חזקה יותר.',
+      'רמה: כל ניצחון נותן ניסיון. ברמה חדשה מקבלים עוד לב (עד 8 לבבות), ובכל שתי רמות המכה חזקה יותר.',
       'בכל קומה יש בוס ששומר על המדרגות. על המדרגות, FIRE יורד קומה. בקומות 2, 4 ו-5 צריך קודם מפתח לדלת נעולה.',
       'שמירה: ההתקדמות נשמרת בתחילת כל קומה. אחרי מוות, FIRE מנסה שוב את הקומה, ו-▼ מוותר ושומר את התוצאה.',
       'יציאה: Esc, או "הוצאת המחסנית".'],
@@ -559,7 +560,7 @@ export default {
       'Bow: a bow waits on floor 2. In the bag choose sword or bow; then FIRE shoots an arrow down the corridor. Bosses are shielded against arrows.',
       'Friends: the old miner and the prisoner never attack. Walk up to them to talk and get a gift. Hitting a friend costs 100 points.',
       'Secrets: a wall with a crack opens with FIRE. Behind it is treasure or a shortcut.',
-      'Level: every win gives experience. A new level gives another heart, and every two levels a stronger blow.',
+      'Level: every win gives experience. A new level gives another heart (up to 8), and every two levels a stronger blow.',
       'Each floor has a boss guarding the stairs. On floors 2, 4 and 5 you need a key for a locked door first.',
       'Progress is saved at the start of each floor. After a death FIRE tries the floor again, ▼ gives up and keeps the score. Esc or "Eject cartridge" leaves.']
   },
@@ -660,20 +661,25 @@ export default {
     if (api.hit('up')) move(fx, fy);
     if (api.hit('down')) move(s.x - DX[s.dir], s.y - DY[s.dir]);
     if (s.shot) {   // חץ באוויר: פוגע כשהוא מגיע
-      if (++s.shot.t >= s.shot.dist * 4) { const m = s.shot.target; s.shot = null; if (m && !m.dust && !m.gone) hit(s, m, KINDS[m.k].boss ? 0.5 : 1, snd, api); }
+      if (++s.shot.t >= s.shot.dist * 4) {
+        const sh = s.shot; s.shot = null; let x = sh.x, y = sh.y, m = null;
+        for (let d = 1; d <= sh.dist + 1 && !m; d++) { x += DX[sh.dir]; y += DY[sh.dir]; if (wallAt(s, x, y)) break; m = mobAt(s, x, y); }
+        if (m) hit(s, m, KINDS[m.k].boss ? 0.5 : 1, snd, api);
+      }
     }
     if (api.hit('fire') && !s.atkCd) {
       s.atkCd = 18;
-      if (s.weapon === 'bow' && s.arrows > 0 && !s.shot) {   // קשת: החץ טס לאורך המסדרון אל הראשון שבדרך
+      const onStairs = s.x === s.sx && s.y === s.sy && !bossOf(s), crack = s.map[fy]?.[fx] === '%';
+      if (s.weapon === 'bow' && s.arrows > 0 && !s.shot && !onStairs && !crack) {   // קשת: החץ טס לאורך המסדרון אל הראשון שבדרך
         s.arrows--; snd.tone(900, 60, 400);
         let d = 1, x = s.x, y = s.y, target = null;
         for (; d <= 5; d++) { x += DX[s.dir]; y += DY[s.dir]; if (wallAt(s, x, y)) break; const m = mobAt(s, x, y); if (m) { target = m; break; } }
-        s.shot = { t: 0, dist: Math.max(1, target ? d : d - 1), target };
+        s.shot = { t: 0, dist: Math.max(1, target ? d : d - 1), x: s.x, y: s.y, dir: s.dir };
         if (!s.arrows) { s.weapon = 'sword'; say(s, 'NO ARROWS LEFT. SWORD!'); }
-      } else if (front) hit(s, front, swordDmg(s), snd, api);
-      else if (s.map[fy]?.[fx] === '%') {   // קיר סדוק: מעבר סודי
+      } else if (front && !onStairs) hit(s, front, swordDmg(s), snd, api);
+      else if (crack) {   // קיר סדוק: מעבר סודי
         s.map[fy][fx] = '.'; s.secrets++; s.score += 100; s.dirty = true; say(s, 'A SECRET PASSAGE! +100'); snd.noise(200, 0.08); snd.tone(200, 400, 800);
-      } else if (s.x === s.sx && s.y === s.sy && !bossOf(s)) {
+      } else if (onStairs) {
         const secs = Math.round(s.floorT / 50); s.lastTime = secs; s.times.push(secs);
         s.speedBonus = Math.max(0, (PAR[s.floor - 1] - secs) * 2); s.score += 500 + s.hp * 100 + s.speedBonus; s.t = 0; snd.tone(440, 400, 1760);
         if (s.floor < LAST) s.mode = 'next';
@@ -758,7 +764,7 @@ export default {
       const c = s.view[i];
       if (i > lt) continue;
       const it = s.items.find(o => o.x === c.x && o.y === c.y);
-      if (it) stand(g, it.k === 'c' ? COIN : it.k === 't' ? TORCH : it.k === 'k' ? KEY : POTION, i + 0.4, { 1: C1, 2: C3, 3: it.k === 't' ? C2 : C3 }, it.k === 'k' ? 0.06 : 0.12);
+      if (it) stand(g, ITEM_ROWS[it.k], i + 0.4, { 1: C1, 2: C3, 3: it.k === 't' ? C2 : C3 }, it.k === 'k' ? 0.06 : it.k === 'b' ? 0.16 : 0.12);
       const m = mobAt(s, c.x, c.y) || s.mobs.find(o => o.dust && o.x === c.x && o.y === c.y);
       if (!m) continue;
       const K = KINDS[m.k], z = i + 0.15;
@@ -822,7 +828,7 @@ function drawHud(g, s) {
   if (s.keys) g.sprite(KEY, 178, 158, { 1: C1 }, false);
   // מצפן ומספר קומה
   g.sprite(ARROW[s.dir], 197, 155, { 1: C1 }, false); g.text(DIRS[s.dir][0], 199, 163, C2, 'center');
-  g.text('L' + s.floor, 199, 176, C0, 'center');
+  g.text('F' + s.floor, 199, 176, C0, 'center');
   // מיני-מפה: 5×5 משבצות סביב השחקן, רק מה שכבר ראינו
   const MX = 212, MY = 155, CS = 7;
   g.rect(MX - 1, MY - 1, CS * 5 + 2, CS * 5 + 2, C2); g.rect(MX, MY, CS * 5, CS * 5, BLACK);
@@ -830,7 +836,7 @@ function drawHud(g, s) {
     const x = s.x + dx, y = s.y + dy, X = MX + (dx + 2) * CS, Y = MY + (dy + 2) * CS;
     if (x < 0 || y < 0 || x > 15 || y > 15 || !s.seen.has(x + ',' + y)) continue;
     const ch = s.map[y][x];
-    if (ch === '#') g.rect(X, Y, CS, CS, C2); else if (ch === 'D') g.rect(X + 1, Y + 1, CS - 2, CS - 2, C1); else if (x === s.sx && y === s.sy) g.rect(X + 1, Y + 1, CS - 2, CS - 2, C3);
+    if (ch === '#' || ch === '%') g.rect(X, Y, CS, CS, C2); else if (ch === 'D' || ch === 'H') g.rect(X + 1, Y + 1, CS - 2, CS - 2, C1); else if (x === s.sx && y === s.sy) g.rect(X + 1, Y + 1, CS - 2, CS - 2, C3);
   }
   g.sprite(ARROW[s.dir], MX + 2 * CS + 1, MY + 2 * CS + 1, { 1: C1 }, false);
   const text = s.msgT ? s.msg : 'P: MAP, BAG AND HELP';
@@ -853,7 +859,7 @@ function drawPause(g, s) {
     for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
       if (!s.seen.has(x + ',' + y)) continue;
       const X = 68 + x * 7.5, Y = 26 + y * 7.4;
-      if (s.map[y][x] === '#') g.rect(X, Y, 7.5, 7.4, C2); else if (s.map[y][x] === 'D') g.rect(X + 1, Y + 1, 5, 5, C1); else g.rect(X + 3, Y + 3, 2, 2, C0);
+      if ('#%'.includes(s.map[y][x])) g.rect(X, Y, 7.5, 7.4, C2); else if ('DH'.includes(s.map[y][x])) g.rect(X + 1, Y + 1, 5, 5, C1); else g.rect(X + 3, Y + 3, 2, 2, C0);
       if (x === s.sx && y === s.sy) g.rect(X + 1, Y + 1, 5, 5, C3);
     }
     g.sprite(ARROW[s.dir], 68 + s.x * 7.5 + 1, 26 + s.y * 7.4 + 1, { 1: C1 }, false);

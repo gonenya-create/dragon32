@@ -335,8 +335,9 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
       root.style.setProperty('--fs', Math.min((sw - 28) / 19.6, (sw * 0.75 - 24) / (16 * 1.12)) + 'px');
       return;
     }
-    // בזמן משחק מחסנית יש מתחת למקלדת גם כפתור "הוצאת המחסנית": שומרים לו מקום, כדי שלא ייחתך
-    const avail = innerHeight - bar.offsetHeight - 40 - (cart ? 72 : 0);
+    // בזמן משחק מחסנית יש מתחת למסך "הוצאת המחסנית" ולפעמים "איך משחקים": שומרים להם מקום, כדי שהמסך לא יידחק למעלה
+    const cpad = cart ? root.querySelector('.d32-pad') : null;
+    const avail = innerHeight - bar.offsetHeight - 40 - (cpad ? cpad.offsetHeight + 12 : 0);
     // חלון התוכנית צריך לפחות 280 פיקסלים בצד; אם אין מקום, הוא נפתח מעל הטלוויזיה
     // בזמן משחק מחסנית הכלים מתקפלים, והטלוויזיה תופסת את כל הרוחב
     const room = coding && !cart ? innerWidth - 2 * (280 + 32) : innerWidth * 0.94;
