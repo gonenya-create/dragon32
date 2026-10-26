@@ -11,7 +11,7 @@ const VIEW = 150;                         // גובה המבט; מתחתיו פ�
 
 // ---- המבוך של קומה 1 (מצויר ביד, כדי שלכל מקום יהיה אופי ושכולם ישחקו באותו מבוך) ----
 // # קיר  . רצפה  @ התחלה  S מדרגות  D דלת נעולה  c מטבע  t לפיד  p שיקוי  k מפתח
-// r עכברוש  g גובלין  m איש פטרייה  h רוח קטנה  B מלך האוגרים  G גולם האבן
+// r עכברוש  g גובלין  m איש פטרייה  h רוח קטנה  T טרול  B מלך האוגרים  G גולם האבן  M מלך החפרפרות
 const MAP1 = [
   '################',
   '#@..c#....g....#',
@@ -50,8 +50,28 @@ const MAP2 = [
   '################'
 ];
 // לכל קומה עולם משלו (גונן: "כל הקומות נראות אותו דבר רק בצבע שונה?"): 1 מרתף לבנים עם לפידים, 2 מערה
-const FLOORS = [{ map: MAP1, pal: 1, style: 'brick' }, { map: MAP2, pal: 0, style: 'cave' }];
+// קומה 3: המכרה הישן. טרולים שחוסמים מסדרונות, ובסוף מלך החפרפרות
+const MAP3 = [
+  '################',
+  '#@..T.....#...m#',
+  '#.####.##.#.#..#',
+  '#.#..#..#...#.##',
+  '#.#.c##.####.r.#',
+  '#...#...#t...#.#',
+  '###.#.#.#.####.#',
+  '#p..#.#...#..g.#',
+  '#.###.#####.##.#',
+  '#...#...c...#..#',
+  '#.#.###.###.#.##',
+  '#.#...#...#.T..#',
+  '#.###.###.#.##.#',
+  '#.c...#...#..#.#',
+  '#.#####.#...#MS#',
+  '################'
+];
+const FLOORS = [{ map: MAP1, pal: 1, style: 'brick' }, { map: MAP2, pal: 0, style: 'cave' }, { map: MAP3, pal: 1, style: 'mine' }];
 let STYLE = 'brick';
+const wallC = () => STYLE === 'mine' ? C3 : C0, woodC = () => STYLE === 'mine' ? C0 : C3;
 // מספר קבוע לכל משבצת, כדי שהסלעים והלפידים יישארו באותו מקום בכל צעד
 const hash = (x, y, k = 0) => { let h = (x * 374761393 + y * 668265263 + k * 2246822519) | 0; h = (h ^ (h >>> 13)) * 1274126177; return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -84,14 +104,26 @@ const GOLEM = [
   '..1111111111111111.', '.11111101111011111.', '1111111111111111111', '1111.111110111.1111', '111..1111111111.111', '111..1101111111..111',
   '11...1111111011..11', '.....1111111111.....', '.....1111..1111.....', '.....1110..0111.....', '....11111..11111....', '...111111..111111...'
 ];
+const TROLL = [
+  '....11111....', '...1111111...', '...1211121...', '...1111111...', '....1...1....', '....11111....', '.11333333311.',
+  '1113333333111', '11.33333333.1', '11.33333333.3', '...3333333..3', '...333.333...', '...11...11...', '..111...111..'
+];
+// מלך החפרפרות: חפרפרת ענקית עם קסדת כורים ופנס, וטפרים גדולים (1 פרווה, 2 עיניים ואף, 3 קסדה, 0 פנס וטפרים)
+const MOLE = [
+  '.......333333......', '......33300333.....', '.....3333003333....', '....33333333333....', '....11111111111....', '...1112111112111...',
+  '...1111111111111...', '...1111122211111...', '....111112111111...', '..1111111111111111.', '.111111111111111111', '00.111111111111.00',
+  '000.1111111111.000', '.0..1111111111..0.', '....111111111111...', '....1111...11111...', '...00000...00000...'
+];
 // הצבעים של כל דמות הם פונקציה, כי בכל קומה ערכת הצבעים אחרת
 const KINDS = {
   r: { name: 'A RAT', rows: RAT, h: 0.16, hp: 1, dmg: 1, speed: 60, pts: 10, col: () => ({ 3: C3, 1: C1, 2: C2 }) },
   g: { name: 'A GOBLIN', rows: GOBLIN, h: 0.5, hp: 2, dmg: 1, speed: 75, pts: 25, col: () => ({ 1: C0, 2: BLACK, 0: C1, 3: C3 }) },
   m: { name: 'A MUSHROOM MAN', rows: MUSH, h: 0.55, hp: 3, dmg: 1, speed: 110, pts: 40, col: () => ({ 3: C3, 1: C1, 2: BLACK }) },
   h: { name: 'A LITTLE GHOST', rows: GHOST, h: 0.6, hp: 2, dmg: 1, speed: 70, pts: 35, col: () => ({ 1: C1, 2: C2 }), ghost: true },
+  T: { name: 'A TROLL', rows: TROLL, h: 0.78, hp: 5, dmg: 2, speed: 130, pts: 80, col: () => ({ 1: C0, 2: BLACK, 3: C3 }) },
   B: { name: 'THE OGRE KING', rows: OGRE, h: 0.88, hp: 12, dmg: 2, speed: 85, pts: 300, col: () => ({ 1: C0, 2: BLACK, 3: C3, 0: C1 }), boss: true },
-  G: { name: 'THE STONE GOLEM', rows: GOLEM, h: 0.88, hp: 16, dmg: 2, speed: 95, pts: 450, col: () => ({ 1: C1, 2: C3, 0: BLACK }), boss: true }
+  G: { name: 'THE STONE GOLEM', rows: GOLEM, h: 0.88, hp: 16, dmg: 2, speed: 95, pts: 450, col: () => ({ 1: C1, 2: C3, 0: BLACK }), boss: true },
+  M: { name: 'THE MOLE KING', rows: MOLE, h: 0.85, hp: 20, dmg: 2, speed: 80, pts: 600, col: () => ({ 1: C0, 2: BLACK, 3: C2, 0: C1 }), boss: true }
 };
 const COIN = ['.11.', '1221', '1221', '.11.'];
 const TORCH = ['.1.', '121', '.1.', '.3.', '.3.', '.3.'];
@@ -134,9 +166,10 @@ function sideWall(z0, z1, side, light, cx = 0, cy = 0) {
   const a = P(z0), b = P(z1), xa = side < 0 ? a[0] : a[2], xb = side < 0 ? b[0] : b[2];
   const k = shade((z0 + z1) / 2, light);
   if (k <= 0) return;
-  polyFill([[xa, a[1]], [xb, b[1]], [xb, b[3]], [xa, a[3]]], C0, k);
+  polyFill([[xa, a[1]], [xb, b[1]], [xb, b[3]], [xa, a[3]]], wallC(), k);
   const at = (t, u) => [lerp(xa, xb, t), lerp(lerp(a[1], b[1], t), lerp(a[3], b[3], t), u)];
   if (STYLE === 'cave') { caveLayers(at, cx * 2 + (side < 0 ? 0 : 1), cy); line(xa, a[1], xb, b[1], C2); line(xa, a[3], xb, b[3], C2); line(xb, b[1], xb, b[3], C2); stalactites(at, cx + side, cy); return; }
+  if (STYLE === 'mine') { mineWall(at, cx, cy, side); line(xa, a[1], xb, b[1], C2); line(xa, a[3], xb, b[3], C2); return; }
   if (hash(cx, cy, side) < 0.3) wallTorch(at, z0 + 0.5, light);
   for (let r = 1; r < 6; r++) { const t = r / 6; line(xa, a[1] + (a[3] - a[1]) * t, xb, b[1] + (b[3] - b[1]) * t, C2); }
   for (let j = 0; j <= 4; j++) {
@@ -148,7 +181,7 @@ function sideWall(z0, z1, side, light, cx = 0, cy = 0) {
 function sideOpening(z0, z1, side, light) {
   const a = P(z0), b = P(z1), xa = side < 0 ? a[0] : a[2], xb = side < 0 ? b[0] : b[2];
   const k = shade(z1, light) - 1;
-  if (k > 0) polyFill([[Math.min(xa, xb), b[1]], [Math.max(xa, xb), b[1]], [Math.max(xa, xb), b[3]], [Math.min(xa, xb), b[3]]], C0, k);
+  if (k > 0) polyFill([[Math.min(xa, xb), b[1]], [Math.max(xa, xb), b[1]], [Math.max(xa, xb), b[3]], [Math.min(xa, xb), b[3]]], wallC(), k);
   if (k < 0) return;
   line(xa, b[1], xb, b[1], C2); line(xa, b[3], xb, b[3], C2); line(xb, b[1], xb, b[3], C2); line(xa, a[1], xa, a[3], C2);
 }
@@ -165,7 +198,8 @@ function frontWall(z, light, door) {
     line(kx, ky - 2, kx, ky + 2, C1);
     return;
   }
-  polyFill([[x0, y0], [x1, y0], [x1, y1], [x0, y1]], C0, k);
+  polyFill([[x0, y0], [x1, y0], [x1, y1], [x0, y1]], wallC(), k);
+  if (STYLE === 'mine') { const at = (t, u) => [lerp(x0, x1, t), lerp(y0, y1, u)]; for (let n = 0; n < 40; n++) { const [x, y] = at(hash(n, z * 9 | 0, 1), hash(n, z * 9 | 0, 2)); px(x, y, C2); } for (const t of [0.04, 0.96]) { const [x] = at(t, 0); beam(x, y0, x, y1, (x1 - x0) / 40); } beam(x0, y0 + 1, x1, y0 + 1, (x1 - x0) / 40); line(x0, y1, x1, y1, C2); return; }
   if (STYLE === 'cave') { const at = (t, u) => [lerp(x0, x1, t), lerp(y0, y1, u)]; caveRock(at, 99, z * 7 | 0); line(x0, y0, x1, y0, C2); line(x0, y1, x1, y1, C2); line(x0, y0, x0, y1, C2); line(x1, y0, x1, y1, C2); stalactites(at, 98, z * 5 | 0); return; }
   const h = (y1 - y0) / 6;
   for (let r = 1; r < 6; r++) line(x0, y0 + h * r, x1, y0 + h * r, C2);
@@ -188,6 +222,19 @@ function caveRock(at, cx, cy) {
     let t = hash(cx, cy, 40 + n), u = hash(cx, cy, 50 + n) * 0.5, prev = at(t, u);
     for (let i = 0; i < 4; i++) { t += (hash(cx, cy, 60 + n * 4 + i) - 0.5) * 0.12; u += 0.1; const pt = at(Math.min(1, Math.max(0, t)), Math.min(1, u)); line(prev[0], prev[1], pt[0], pt[1], C2); prev = pt; }
   }
+}
+// קורת עץ עבה (בצבע עץ, עם קו צל)
+function beam(x0, y0, x1, y1, w) {
+  const n = Math.max(1, Math.round(w));
+  const vert = Math.abs(x1 - x0) < Math.abs(y1 - y0);
+  for (let i = 0; i < n; i++) vert ? line(x0 + i, y0, x1 + i, y1, woodC()) : line(x0, y0 + i, x1, y1 + i, woodC());
+  vert ? line(x0 + n, y0, x1 + n, y1, C2) : line(x0, y0 + n, x1, y1 + n, C2);
+}
+// קיר מכרה בצד: אדמה מנוקדת, וקורה שתומכת בתחילת כל קטע
+function mineWall(at, cx, cy, side) {
+  for (let n = 0; n < 24; n++) { const [x, y] = at(hash(cx, cy, n + side * 50), hash(cx, cy, n + 100 + side * 50)); px(x, y, C2); }
+  const [xa, ya] = at(0.02, 0), [, yb] = at(0.02, 1), [xb] = at(0.12, 0);
+  beam(xa, ya, xa, yb, Math.abs(xb - xa));
 }
 // קיר מערה בצד: שכבות סלע גליות שמתכנסות לעומק (קווים מעטים, כדי שהקיר לא יהיה עמוס)
 function caveLayers(at, cx, cy) {
@@ -219,6 +266,11 @@ function puddle(z) {
 }
 function floorCeil(zmax, light) {
   const far = P(zmax);
+  if (STYLE === 'mine') {   // מסילה של עגלות מכרה, וקורות תקרה בכל עומק
+    for (const off of [-30, 30]) line(VX + off * 2.2, VIEW - 1, VX + off * (far[2] - far[0]) / 256 * 2.2, far[3], C1);
+    for (let z = 0.25; z <= zmax; z += 0.5) { if (shade(z, light) <= 0) continue; const p = P(z), w = (p[2] - p[0]) / 256 * 80; line(VX - w, p[3], VX + w, p[3], woodC()); }
+    for (let z = 0; z <= zmax; z += 1) { if (shade(z, light) <= 0) continue; const p = P(z); beam(p[0], p[1], p[2], p[1], (p[2] - p[0]) / 50); }
+  }
   for (let i = -6; i <= 6; i++) {
     const xb = VX + i * 52;
     line(xb, VIEW - 1, VX + (xb - VX) * ((far[3] - VY) / (VIEW - 1 - VY)), far[3], C1, true);
@@ -263,7 +315,7 @@ const bossOf = s => s.mobs.find(m => KINDS[m.k].boss && !m.dust);
 function startFloor(s, snd) {
   newFloor(s); s.mode = 'play'; s.t = 0; s.torch = 1;
   if (s.floor > 1) writeSave(s);
-  say(s, 'FLOOR ' + s.floor + (s.floor === 2 ? ' - FIND THE KEY' : ' - FIND THE STAIRS DOWN'), 180);
+  say(s, 'FLOOR ' + s.floor + [' - THE CASTLE CELLAR', ' - THE CAVES. FIND THE KEY', ' - THE OLD MINE'][s.floor - 1], 180);
   snd.tone(220, 120, 440);
 }
 const mobAt = (s, x, y) => s.mobs.find(m => !m.dust && m.x === x && m.y === y);

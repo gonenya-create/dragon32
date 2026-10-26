@@ -828,7 +828,11 @@ if (part('cartridge DRAGON DEEP (full computer)')) {
   await p.keyboard.press('ArrowUp'); await p.waitForTimeout(150);
   const open = await p.evaluate(() => document.querySelector('#dragon-room').d32Cart.state.map[14][12] === '.');
   check('floor 2: the door is locked without the key, and the key opens it', shut && open);
-  check('floor 2 progress is saved for next time', await p.evaluate(() => JSON.parse(localStorage.getItem('d32-deep-save') || '{}').floor === 2));
+  await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.mobs = []; s.x = s.sx; s.y = s.sy; s.atkCd = 0; });
+  await p.keyboard.press('Space'); await p.waitForTimeout(900); await p.keyboard.press('Space'); await p.waitForTimeout(300);
+  const f3 = await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return { floor: s.floor, trolls: s.mobs.filter(m => m.k === 'T').length, mole: s.mobs.some(m => m.k === 'M') }; });
+  check('floor 3, the old mine: trolls and the Mole King', f3.floor === 3 && f3.trolls === 2 && f3.mole, JSON.stringify(f3));
+  check('the progress is saved at the start of each floor', await p.evaluate(() => JSON.parse(localStorage.getItem('d32-deep-save') || '{}').floor === 3));
   await p.keyboard.press('Escape');
   await p.close();
 }
