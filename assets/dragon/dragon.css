@@ -371,7 +371,8 @@ html.d32-booting .page { visibility: hidden; }
 .d32.is-theater .d32-pad { width: var(--tvw); max-width: none; box-sizing: border-box; }
 .d32.is-theater .d32-pad-btn { display: none; }
 .d32.is-theater .d32-eject { background: #241e19; color: #efe6d2; border-color: #6b5d4d; }
-.d32.is-theater .d32-cart-help { background: #241e19; color: #efe6d2; border-color: #6b5d4d; }
+/* במסך מלא ההוראות נמצאות בתוך המשחק (P), אז הקופסה לא תופסת מקום מתחת למסך */
+.d32.is-theater .d32-cart-help { display: none; }
 .d32.is-theater .d32-shelf { width: var(--tvw); max-width: none; margin-top: 26px; }
 .prose .d32.is-theater .d32-shelf-title { color: #e1d5c1; }
 @media (prefers-reduced-motion: reduce) { .d32.is-theater .d32-crt { animation: none; } .d32-key { transition: none; } }
