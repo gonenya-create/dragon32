@@ -10,7 +10,9 @@ const KEYS = {
   a: 'left', d: 'right', w: 'up', s: 'down', ' ': 'fire', Enter: 'fire', z: 'fire', x: 'fire', p: 'pause'
 };
 const PAD = [
-  ['left', '◀', tr('שמאלה', 'Left')], ['up', '▲', tr('למעלה', 'Up')], ['down', '▼', tr('למטה', 'Down')], ['right', '▶', tr('ימינה', 'Right')], ['fire', 'FIRE', tr('אש / קפיצה', 'Fire / jump')]
+  ['left', '◀', tr('שמאלה', 'Left')], ['up', '▲', tr('למעלה', 'Up')], ['down', '▼', tr('למטה', 'Down')], ['right', '▶', tr('ימינה', 'Right')], ['fire', 'FIRE', tr('אש / קפיצה', 'Fire / jump')],
+  // P: עצירה ותפריט. מופיע רק במשחק שמבקש אותו ב-buttons (DRAGON DEEP: מפה, תרמיל, דמויות והוראות), כדי שגם בטלפון יגיעו אליו
+  ['pause', 'P', tr('עצירה, מפה ותרמיל', 'Pause, map and bag')]
 ];
 
 export function createCartRunner(root, sound, { onEject, onScores }) {
@@ -25,7 +27,7 @@ export function createCartRunner(root, sound, { onEject, onScores }) {
   const pad = document.createElement('div');
   pad.className = 'd32-pad';
   pad.setAttribute('dir', 'ltr');
-  const held = { left: false, right: false, up: false, down: false, fire: false };
+  const held = { left: false, right: false, up: false, down: false, fire: false, pause: false };
   let edges = {};
   const buttons = {};
   for (const [name, label, aria] of PAD) {
@@ -101,7 +103,7 @@ export function createCartRunner(root, sound, { onEject, onScores }) {
     saveHigh() { /* השיאים נשמרים עכשיו דרך submitScore */ },
     // סוף משחק: אם התוצאה נכנסת לחמישייה, מבקשים שלוש אותיות ומראים את הטבלה
     // במסך השם צריך גם למעלה/למטה לבחירת אות, אז בטלפון מראים את כל הכפתורים
-    submitScore(id, score) { if (qualifies(id, score)) { overlay = createEntry(id, score, gameTitle); showButtons(PAD.map(x => x[0])); fireLabel('OK', tr('אישור', 'OK')); } },
+    submitScore(id, score) { if (qualifies(id, score)) { overlay = createEntry(id, score, gameTitle); showButtons(PAD.map(x => x[0]).filter(n => n !== 'pause')); fireLabel('OK', tr('אישור', 'OK')); } },
     get overlay() { return overlay; }
   };
 
@@ -151,7 +153,7 @@ export function createCartRunner(root, sound, { onEject, onScores }) {
     overlay = null;
     game = mod;
     // רק הכפתורים שהמשחק צריך מופיעים בטלפון
-    want = mod.buttons || PAD.map(x => x[0]);
+    want = mod.buttons || PAD.map(x => x[0]).filter(n => n !== 'pause');
     showButtons(want);
     gameFire();
     frame = 0; acc = 0; edges = {};

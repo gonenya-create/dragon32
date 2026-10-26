@@ -133,6 +133,7 @@ button.d32-cart:focus-visible { outline: 3px solid var(--focus); outline-offset:
 }
 .d32-pad-btn.is-down { background: var(--ink); color: var(--card); }
 .d32-pad-fire { flex-grow: 1.6; border-color: var(--red); color: var(--red); }
+.d32-pad-pause { flex-grow: 0.7; font-size: 15px; }
 .d32-pad-fire.is-down { background: var(--red); color: var(--on-red); }
 .d32-eject { flex: 1 0 100%; padding: 8px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); font: inherit; font-size: 15px; cursor: pointer; }
 .d32-hof-hint { flex: 1 0 100%; order: -1; margin: 0; padding: 10px 12px; border: 2px solid var(--red); border-radius: 8px; background: var(--card); color: var(--ink); font-size: 16px; line-height: 1.5; }

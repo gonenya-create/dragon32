@@ -37,7 +37,7 @@ const MAP2 = [
   '#.##.#.###.###.#',
   '#.#k.#...#...#.#',
   '#.#.####.###.#.#',
-  '#...#..m...#...#',
+  '#...#..m...#t..#',
   '#.###.####.###.#',
   '#.....#c.....#.#',
   '#####.#.####.#.#',
@@ -61,7 +61,7 @@ const MAP3 = [
   '###.#.#.#.####.#',
   '#p..#.#...#..g.#',
   '#.###.#####.##.#',
-  '#...#...c...#..#',
+  '#.t.#...c...#..#',
   '#.#.###.###.#.##',
   '#.#...#...#.T..#',
   '#.###.###.#.##.#',
@@ -82,7 +82,7 @@ const MAP4 = [
   '#.###.######.#.#',
   '#..g#....h...#.#',
   '##.##.##.###.#.#',
-  '#p.#...#...#.#.#',
+  '#p.#.t.#...#.#.#',
   '#.##.#.###.#.#.#',
   '#.c..#...T.#.###',
   '#.####.#####DWS#',
@@ -101,7 +101,7 @@ const MAP5 = [
   '#.####.##.#.#.##',
   '#...h..#..#...t#',
   '#.###.####.###.#',
-  '#...#....c.#...#',
+  '#.t.#....c.#...#',
   '###.#.####.#####',
   '#k..#.#....#...#',
   '#.T.....#.D..XS#',
@@ -109,6 +109,9 @@ const MAP5 = [
 ];
 const FLOORS = [{ map: MAP1, pal: 1, style: 'brick' }, { map: MAP2, pal: 0, style: 'cave' }, { map: MAP3, pal: 1, style: 'mine' }, { map: MAP4, pal: 0, style: 'library' }, { map: MAP5, pal: 0, style: 'lair' }];
 const LAST = FLOORS.length;
+const PAR = [300, 420, 480, 540, 600];        // שניות יעד לכל קומה: מתחת לזה בונוס מהירות
+const TORCH_FRAMES = 12000;                   // לפיד שלם: 4 דקות
+export const _test = { FLOORS, TORCH_FRAMES, PAR };   // לבדיקות האוטומטיות
 let STYLE = 'brick';
 const wallC = () => STYLE === 'mine' || STYLE === 'lair' ? C3 : STYLE === 'library' ? C2 : C0, woodC = () => STYLE === 'mine' ? C0 : C3;
 // מספר קבוע לכל משבצת, כדי שהסלעים והלפידים יישארו באותו מקום בכל צעד
@@ -170,16 +173,16 @@ const DRAGON = [
 const TAPE = ['111111111', '133333331', '131.1.131', '133333331', '111111111'];
 // הצבעים של כל דמות הם פונקציה, כי בכל קומה ערכת הצבעים אחרת
 const KINDS = {
-  r: { name: 'A RAT', rows: RAT, h: 0.16, hp: 1, dmg: 1, speed: 60, pts: 10, col: () => ({ 3: C3, 1: C1, 2: C2 }) },
-  g: { name: 'A GOBLIN', rows: GOBLIN, h: 0.5, hp: 2, dmg: 1, speed: 75, pts: 25, col: () => ({ 1: C0, 2: BLACK, 0: C1, 3: C3 }) },
-  m: { name: 'A MUSHROOM MAN', rows: MUSH, h: 0.55, hp: 3, dmg: 1, speed: 110, pts: 40, col: () => ({ 3: C3, 1: C1, 2: BLACK }) },
-  h: { name: 'A LITTLE GHOST', rows: GHOST, h: 0.6, hp: 2, dmg: 1, speed: 70, pts: 35, col: () => ({ 1: C1, 2: C2 }), ghost: true },
-  T: { name: 'A TROLL', rows: TROLL, h: 0.78, hp: 5, dmg: 2, speed: 130, pts: 80, col: () => ({ 1: C0, 2: BLACK, 3: C3 }) },
-  B: { name: 'THE OGRE KING', rows: OGRE, h: 0.88, hp: 12, dmg: 2, speed: 85, pts: 300, col: () => ({ 1: C0, 2: BLACK, 3: C3, 0: C1 }), boss: true },
-  G: { name: 'THE STONE GOLEM', rows: GOLEM, h: 0.88, hp: 16, dmg: 2, speed: 95, pts: 450, col: () => ({ 1: C1, 2: C3, 0: BLACK }), boss: true },
-  W: { name: 'THE SPELL BOOK', rows: BOOK, h: 0.55, hp: 24, dmg: 2, speed: 70, pts: 800, col: () => ({ 1: C1, 3: C3, 2: BLACK, 0: C2 }), boss: true, fly: true },
-  X: { name: 'THE DRAGON', rows: DRAGON, h: 0.95, hp: 30, dmg: 2, speed: 75, pts: 2000, col: () => ({ 3: C3, 1: C1, 2: C1, 0: C0 }), boss: true, fire: true },
-  M: { name: 'THE MOLE KING', rows: MOLE, h: 0.85, hp: 20, dmg: 2, speed: 80, pts: 600, col: () => ({ 1: C0, 2: BLACK, 3: C2, 0: C1 }), boss: true }
+  r: { name: 'A RAT', rows: RAT, h: 0.16, hp: 1, dmg: 1, speed: 60, pts: 10, col: () => ({ 3: C3, 1: C1, 2: C2 }) , blurb: 'QUICK. BITES.' },
+  g: { name: 'A GOBLIN', rows: GOBLIN, h: 0.5, hp: 2, dmg: 1, speed: 75, pts: 25, col: () => ({ 1: C0, 2: BLACK, 0: C1, 3: C3 }) , blurb: 'SNEAKY.' },
+  m: { name: 'A MUSHROOM MAN', rows: MUSH, h: 0.55, hp: 3, dmg: 1, speed: 110, pts: 40, col: () => ({ 3: C3, 1: C1, 2: BLACK }) , blurb: 'SLOW, TOUGH.' },
+  h: { name: 'A LITTLE GHOST', rows: GHOST, h: 0.6, hp: 2, dmg: 1, speed: 70, pts: 35, col: () => ({ 1: C1, 2: C2 }), ghost: true , blurb: 'IN THE WALLS.' },
+  T: { name: 'A TROLL', rows: TROLL, h: 0.78, hp: 5, dmg: 2, speed: 130, pts: 80, col: () => ({ 1: C0, 2: BLACK, 3: C3 }) , blurb: 'BLOCKS THE WAY' },
+  B: { name: 'THE OGRE KING', rows: OGRE, h: 0.88, hp: 12, dmg: 2, speed: 85, pts: 300, col: () => ({ 1: C0, 2: BLACK, 3: C3, 0: C1 }), boss: true , blurb: 'FLOOR 1 BOSS', trophy: 'OGRE CROWN' },
+  G: { name: 'THE STONE GOLEM', rows: GOLEM, h: 0.88, hp: 16, dmg: 2, speed: 95, pts: 450, col: () => ({ 1: C1, 2: C3, 0: BLACK }), boss: true , blurb: 'FLOOR 2 BOSS', trophy: 'GOLEM EYE' },
+  W: { name: 'THE SPELL BOOK', rows: BOOK, h: 0.55, hp: 24, dmg: 2, speed: 70, pts: 800, col: () => ({ 1: C1, 3: C3, 2: BLACK, 0: C2 }), boss: true, fly: true , blurb: 'FLOOR 4 BOSS', trophy: 'MAGIC PAGE' },
+  X: { name: 'THE DRAGON', rows: DRAGON, h: 0.95, hp: 30, dmg: 2, speed: 75, pts: 2000, col: () => ({ 3: C3, 1: C1, 2: C1, 0: C0 }), boss: true, fire: true , blurb: 'FLOOR 5 BOSS', trophy: 'DRAGON SCALE' },
+  M: { name: 'THE MOLE KING', rows: MOLE, h: 0.85, hp: 20, dmg: 2, speed: 80, pts: 600, col: () => ({ 1: C0, 2: BLACK, 3: C2, 0: C1 }), boss: true , blurb: 'FLOOR 3 BOSS', trophy: 'MINER LAMP' }
 };
 const COIN = ['.11.', '1221', '1221', '.11.'];
 const TORCH = ['.1.', '121', '.1.', '.3.', '.3.', '.3.'];
@@ -399,17 +402,18 @@ function newFloor(s) {
 }
 function reset(s) {
   s.hp = 5; s.torch = 1; s.coins = 0; s.score = 0; s.floor = 1; s.keys = 0; s.atkCd = 0; s.hurt = 0; s.msg = ''; s.msgT = 0; s.paused = false; s.steps = 0;
+  s.potions = 0; s.trophies = []; s.met = new Set(); s.page = 0; s.bagSel = 0; s.floorT = 0; s.times = [];
   newFloor(s);
 }
 const say = (s, text, t = 120) => { s.msg = text; s.msgT = t; };
 // ההתקדמות נשמרת בדפדפן בתחילת כל קומה (מקומה 2), כדי שאפשר יהיה להמשיך מחר
 const SAVE = 'd32-deep-save';
 const loadSave = () => { try { return JSON.parse(localStorage.getItem(SAVE)); } catch (e) { return null; } };
-const writeSave = s => { try { localStorage.setItem(SAVE, JSON.stringify({ floor: s.floor, hp: s.hp, coins: s.coins, score: s.score })); } catch (e) {} };
+const writeSave = s => { try { localStorage.setItem(SAVE, JSON.stringify({ v: 2, floor: s.floor, hp: s.hp, coins: s.coins, score: s.score, potions: s.potions, trophies: s.trophies, met: [...s.met], times: s.times })); } catch (e) {} };
 const clearSave = () => { try { localStorage.removeItem(SAVE); } catch (e) {} };
 const bossOf = s => s.mobs.find(m => KINDS[m.k].boss && !m.dust);
 function startFloor(s, snd) {
-  newFloor(s); s.mode = 'play'; s.t = 0; s.torch = 1;
+  newFloor(s); s.mode = 'play'; s.t = 0; s.torch = 1; s.floorT = 0; s.paused = false;
   if (s.floor > 1) writeSave(s);
   say(s, 'FLOOR ' + s.floor + [' - THE CASTLE CELLAR', ' - THE CAVES. FIND THE KEY', ' - THE OLD MINE', ' - THE WIZARD LIBRARY', ' - THE DRAGON LAIR'][s.floor - 1], 180);
   snd.tone(220, 120, 440);
@@ -467,11 +471,11 @@ function stepToward(s, m, maxD) {
 
 export default {
   title: 'DRAGON DEEP',
-  buttons: ['left', 'up', 'down', 'right', 'fire'],
+  buttons: ['left', 'up', 'down', 'right', 'fire', 'pause'],
 
   init(api) {
     if (!img) { img = api.gfx.ctx.createImageData(W, VIEW); buf = new Uint32Array(img.data.buffer); }
-    api.state = { mode: 'title', high: api.loadHigh('deep'), t: 0, save: loadSave() };
+    api.state = { mode: 'title', high: api.loadHigh('deep'), t: 0, save: loadSave(), titleP: 0, titleT: 0 };
     reset(api.state);
   },
 
@@ -479,9 +483,12 @@ export default {
     const s = api.state, snd = api.sound;
     s.t++;
     if (s.mode === 'next') { if (api.hit('fire') && s.t > 40) { s.floor++; startFloor(s, snd); } return; }
+    if (s.mode === 'title') { if (api.hit('down')) { s.titleP = ((s.titleP || 0) + 1) % 3; s.titleT = 0; snd.tone(330, 30); } else if (++s.titleT > 300) { s.titleP = ((s.titleP || 0) + 1) % 3; s.titleT = 0; } }
     if (s.mode === 'title' || s.mode === 'over' || s.mode === 'won') {
       if (s.mode === 'title' && s.save && api.hit('up') && s.t > 40) {   // ממשיכים מהקומה שנשמרה
-        reset(s); Object.assign(s, { floor: s.save.floor, hp: s.save.hp, coins: s.save.coins, score: s.save.score }); startFloor(s, snd); return;
+        const v = s.save; reset(s);
+        Object.assign(s, { floor: v.floor, hp: v.hp, coins: v.coins, score: v.score, potions: v.potions || 0, trophies: v.trophies || [], met: new Set(v.met || []), times: v.times || [] });
+        startFloor(s, snd); return;
       }
       if (api.hit('fire') && s.t > 40) {
         if (s.mode !== 'title') { s.mode = 'title'; s.t = 0; s.save = loadSave(); setPalette(1); STYLE = 'brick'; return; }
@@ -489,15 +496,27 @@ export default {
       }
       return;
     }
-    if (api.hit('pause')) { s.paused = !s.paused; snd.tone(330, 40); }
-    if (s.paused) return;
+    if (api.hit('pause')) { s.paused = !s.paused; s.page = 0; s.bagSel = 0; snd.tone(330, 40); }
+    if (s.paused) {   // תפריט עצירה: מפה, תרמיל, אלבום, הוראות. הלפיד לא דועך והאויבים לא זזים
+      if (api.hit('right')) { s.page = (s.page + 1) % 4; snd.tone(300, 20); }
+      if (api.hit('left')) { s.page = (s.page + 3) % 4; snd.tone(300, 20); }
+      if (s.page === 1) {
+        const n = bagItems(s).length;
+        if (api.hit('down')) s.bagSel = Math.min(n - 1, s.bagSel + 1);
+        if (api.hit('up')) s.bagSel = Math.max(0, s.bagSel - 1);
+        const it = bagItems(s)[s.bagSel];
+        if (api.hit('fire') && it && it.use) it.use(s, snd);
+      }
+      return;
+    }
+    s.floorT++;
     if (s.msgT) s.msgT--;
     if (s.hurt) s.hurt--;
     if (s.atkCd) s.atkCd--;
 
-    // הלפיד דועך: לפיד שלם מחזיק בערך שלוש דקות
+    // הלפיד דועך: לפיד שלם מחזיק 4 דקות (סבב 1: מאוזן לפי זמני הקומות, tools/dragon-test.mjs בודק)
     const before = Math.round(light(s) * 2);
-    if (s.torch > 0) s.torch = Math.max(0, s.torch - 1 / 9000);
+    if (s.torch > 0) s.torch = Math.max(0, s.torch - 1 / TORCH_FRAMES);
     if (Math.round(light(s) * 2) !== before) s.dirty = true;
     if (s.torch > 0 && s.torch < 0.2 && s.t % 600 === 0) say(s, 'THE TORCH IS DYING...');
 
@@ -516,7 +535,7 @@ export default {
         const k = s.items[it].k; s.items.splice(it, 1);
         if (k === 'c') { s.coins++; s.score += 50; say(s, 'A GOLD COIN!'); snd.tone(880, 60, 1320); }
         if (k === 't') { s.torch = 1; s.dirty = true; say(s, 'A NEW TORCH!'); snd.tone(440, 120, 880); }
-        if (k === 'p') { s.hp = Math.min(5, s.hp + 2); say(s, 'A HEALING POTION!'); snd.tone(500, 150, 900); }
+        if (k === 'p') { s.potions++; say(s, 'A POTION! P - BAG TO DRINK IT'); snd.tone(500, 150, 900); }
         if (k === 'k') { s.keys++; say(s, 'AN OLD IRON KEY!'); snd.tone(660, 200, 990); }
       }
       if (nx === s.sx && ny === s.sy) say(s, bossOf(s) ? KINDS[bossOf(s).k].name + (s.floor === LAST ? ' GUARDS THE GOLDEN TAPE!' : ' GUARDS THE STAIRS!') : s.floor === LAST ? 'THE GOLDEN TAPE! FIRE TO TAKE IT' : 'STAIRS DOWN. FIRE TO GO DOWN', 200);
@@ -531,12 +550,14 @@ export default {
         front.hp--; front.flash = 8; snd.noise(60, 0.07); snd.tone(260, 60, 120);
         if (front.hp <= 0) {
           front.dust = 45; front.wind = 0; s.score += KINDS[front.k].pts; snd.tone(600, 200, 100);
+          if (KINDS[front.k].trophy) s.trophies.push(KINDS[front.k].trophy);
           say(s, KINDS[front.k].boss ? KINDS[front.k].name + ' IS DEFEATED!' : KINDS[front.k].name.replace(/^AN? /, 'THE ') + ' IS GONE!');
         }
       } else if (s.x === s.sx && s.y === s.sy && !bossOf(s)) {
-        s.score += 500 + s.hp * 100; s.t = 0; snd.tone(440, 400, 1760);
+        const secs = Math.round(s.floorT / 50); s.lastTime = secs; s.times.push(secs);
+        s.speedBonus = Math.max(0, (PAR[s.floor - 1] - secs) * 2); s.score += 500 + s.hp * 100 + s.speedBonus; s.t = 0; snd.tone(440, 400, 1760);
         if (s.floor < LAST) s.mode = 'next';
-        else { s.mode = 'won'; clearSave(); api.submitScore('deep', s.score); }
+        else { s.mode = 'won'; s.score += s.trophies.length * 300; clearSave(); api.submitScore('deep', s.score); }
       } else snd.tone(200, 30, 160);
     }
 
@@ -585,6 +606,10 @@ export default {
     s.mobs = s.mobs.filter(m => !m.gone);
     if (s.hp <= 0) { s.mode = 'over'; s.t = 0; snd.tone(300, 600, 60); api.submitScore('deep', s.score); }
     if (s.dirty) render(s);
+    if (s.view) for (let i = 1; i < s.view.length && i <= light(s); i++) {
+      const c = s.view[i], m = mobAt(s, c.x, c.y);
+      if (m && !s.met.has(m.k)) { s.met.add(m.k); say(s, KINDS[m.k].name + '!', 120); snd.tone(520, 80, 780); }
+    }
   },
 
   draw(api) {
@@ -622,61 +647,132 @@ export default {
     const boss = s.mobs.find(m => KINDS[m.k].boss && !m.dust && s.view.some((c, i) => i && c.x === m.x && c.y === m.y));
     if (boss) { const K = KINDS[boss.k]; g.rect(0, 0, W, 20, BLACK); g.text(K.name, 128, 3, C3, 'center'); g.rect(64, 12, 128, 5, C2); g.rect(64, 12, 128 * boss.hp / K.hp, 5, C3); }
     drawHud(g, s);
-    if (s.paused) drawMap(g, s);
+    if (s.paused) drawPause(g, s);
   }
 };
 
+// התרמיל: מה אספנו, כמה, ולמה זה משמש. use = מה FIRE עושה כשהשורה נבחרת
+function bagItems(s) {
+  const out = [{ icon: 'sword', name: 'SWORD', what: 'FIRE STRIKES' }];
+  out.push({ icon: 'potion', name: 'POTION X' + s.potions, what: s.potions ? 'FIRE: DRINK, +2 HEARTS' : 'FIND THEM IN THE DEEP',
+    use: (s, snd) => { if (!s.potions) return; if (s.hp >= 5) { snd.tone(120, 60); return; } s.potions--; s.hp = Math.min(5, s.hp + 2); snd.tone(500, 150, 900); } });
+  if (s.keys) out.push({ icon: 'key', name: 'KEY X' + s.keys, what: 'OPENS A LOCKED DOOR' });
+  out.push({ icon: 'coin', name: 'COINS ' + s.coins, what: '50 POINTS EACH' });
+  for (const t of s.trophies) out.push({ icon: 'trophy', name: t, what: 'KEEPSAKE +300' });
+  return out;
+}
 function stand(g, rows, z, colors, realH, bob = 0) {
   const p = P(z), scale = Math.max(1, Math.round((p[3] - p[1]) * realH / rows.length));
   const w = rows[0].length * scale, h = rows.length * scale;
   g.sprite(rows, VX - w / 2, p[3] - h + bob, colors, false, scale);
 }
+// מצפן: חץ שמראה לאן פונים (המפה תמיד צפון למעלה)
+const ARROW = [['..1..', '.111.', '11111', '..1..', '..1..'], ['..1..', '..11.', '11111', '..11.', '..1..'], ['..1..', '..1..', '11111', '.111.', '..1..'], ['..1..', '.11..', '11111', '.11..', '..1..']];
 function drawHud(g, s) {
   g.rect(0, VIEW, W, H - VIEW, BLACK);
   g.rect(0, VIEW + 1, W, 1, C2);
   for (let i = 0; i < 5; i++) g.sprite(HEART, 6 + i * 9, 157, { 3: i < s.hp ? C3 : C2 }, false);
   g.sprite(TORCH, 52, 155, { 1: C1, 2: C3, 3: C2 }, false);
-  g.rect(58, 159, 50, 5, C2); g.rect(58, 159, 50 * s.torch, 5, C1);
-  g.text('SWORD', 116, 158, C0);
-  if (s.keys) g.sprite(KEY, 146, 168, { 1: C1 }, false);
-  g.sprite(COIN, 156, 157, { 1: C1, 2: C3 }, false);
-  g.text(String(s.coins), 164, 158, C1);
-  g.text(DIRS[s.dir][0] + ' LEVEL ' + s.floor, 250, 158, C0, 'right');
-  const text = s.msgT ? s.msg : 'FIRE STRIKES  DOWN STEPS BACK';
-  g.text(text, 128, 176, s.msgT ? C1 : C2, 'center');
-}
-function drawMap(g, s) {
-  g.rect(40, 8, 176, 140, BLACK);
-  g.rect(40, 8, 176, 1, C2); g.rect(40, 147, 176, 1, C2); g.rect(40, 8, 1, 140, C2); g.rect(215, 8, 1, 140, C2);
-  g.rect(0, 0, W, 8, BLACK);
-  g.text('FLOOR ' + s.floor + ' - MAP', 128, 12, C1, 'center');
-  for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
-    if (!s.seen.has(x + ',' + y)) continue;
-    const X = 64 + x * 8, Y = 22 + y * 7.5;
-    if (s.map[y][x] === '#') g.rect(X, Y, 8, 7, C2); else if (s.map[y][x] === 'D') g.rect(X + 1, Y + 1, 6, 5, C1); else g.rect(X + 3, Y + 3, 2, 2, C0);
-    if (x === s.sx && y === s.sy) g.rect(X + 1, Y + 1, 6, 5, C3);
+  g.rect(58, 159, 36, 5, C2); g.rect(58, 159, 36 * s.torch, 5, C1);
+  g.text('SWORD', 100, 158, C0);
+  if (s.potions) { g.sprite(POTION, 134, 156, { 1: C1, 2: C3, 3: C3 }, false); g.text(String(s.potions), 140, 158, C1); }
+  g.sprite(COIN, 152, 157, { 1: C1, 2: C3 }, false); g.text(String(s.coins), 158, 158, C1);
+  if (s.keys) g.sprite(KEY, 176, 158, { 1: C1 }, false);
+  // מצפן ומספר קומה
+  g.text('N', 199, 156, C2, 'center'); g.sprite(ARROW[s.dir], 197, 164, { 1: C1 }, false);
+  g.text('L' + s.floor, 199, 176, C0, 'center');
+  // מיני-מפה: 5×5 משבצות סביב השחקן, רק מה שכבר ראינו
+  const MX = 212, MY = 155, CS = 7;
+  g.rect(MX - 1, MY - 1, CS * 5 + 2, CS * 5 + 2, C2); g.rect(MX, MY, CS * 5, CS * 5, BLACK);
+  for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) {
+    const x = s.x + dx, y = s.y + dy, X = MX + (dx + 2) * CS, Y = MY + (dy + 2) * CS;
+    if (x < 0 || y < 0 || x > 15 || y > 15 || !s.seen.has(x + ',' + y)) continue;
+    const ch = s.map[y][x];
+    if (ch === '#') g.rect(X, Y, CS, CS, C2); else if (ch === 'D') g.rect(X + 1, Y + 1, CS - 2, CS - 2, C1); else if (x === s.sx && y === s.sy) g.rect(X + 1, Y + 1, CS - 2, CS - 2, C3);
   }
-  g.rect(64 + s.x * 8 + 2, 22 + s.y * 7.5 + 2, 4, 4, C1);
-  g.rect(0, 168, W, 24, BLACK);
-  g.text('P TO PLAY ON', 128, 176, C1, 'center');
+  g.sprite(ARROW[s.dir], MX + 2 * CS + 1, MY + 2 * CS + 1, { 1: C1 }, false);
+  const text = s.msgT ? s.msg : 'P: MAP, BAG AND HELP';
+  g.text(text.length > 31 ? text.slice(0, 31) : text, 100, 176, s.msgT ? C1 : C2, 'center');
+}
+// תפריט עצירה: ארבעה דפים, ◀ ▶ עוברים ביניהם
+const PAGES = ['MAP', 'BAG', 'CREATURES', 'HOW TO PLAY'];
+const SHORT = { r: 'RAT', g: 'GOBLIN', m: 'MUSHROOM', h: 'GHOST', T: 'TROLL', B: 'OGRE KING', G: 'STONE GOLEM', M: 'MOLE KING', W: 'SPELL BOOK', X: 'DRAGON' };
+function frame(g, title, s) {
+  g.rect(0, 0, W, VIEW + 1, BLACK);
+  g.rect(8, 4, 240, 1, C2); g.rect(8, 146, 240, 1, C2); g.rect(8, 4, 1, 143, C2); g.rect(247, 4, 1, 143, C2);
+  g.text(title, 128, 9, C1, 'center');
+  g.rect(9, 136, 238, 10, BLACK); g.text('LEFT RIGHT: PAGES   P: PLAY ON', 128, 138, C2, 'center');
+  for (let i = 0; i < 4; i++) g.rect(110 + i * 10, 19, 6, 2, i === s.page ? C1 : C2);
+}
+function drawPause(g, s) {
+  frame(g, PAGES[s.page], s);
+  if (s.page === 0) {
+    g.text('FLOOR ' + s.floor, 20, 30, C0);
+    for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
+      if (!s.seen.has(x + ',' + y)) continue;
+      const X = 68 + x * 7.5, Y = 26 + y * 7.4;
+      if (s.map[y][x] === '#') g.rect(X, Y, 7.5, 7.4, C2); else if (s.map[y][x] === 'D') g.rect(X + 1, Y + 1, 5, 5, C1); else g.rect(X + 3, Y + 3, 2, 2, C0);
+      if (x === s.sx && y === s.sy) g.rect(X + 1, Y + 1, 5, 5, C3);
+    }
+    g.sprite(ARROW[s.dir], 68 + s.x * 7.5 + 1, 26 + s.y * 7.4 + 1, { 1: C1 }, false);
+    g.text('YOU', 20, 60, C1); g.text('STAIRS', 20, 72, C3); g.text('DOOR', 20, 84, C1);
+  } else if (s.page === 1) {
+    const items = bagItems(s);
+    items.slice(0, 9).forEach((it, i) => {
+      const y = 28 + i * 13, sel = i === s.bagSel;
+      if (sel) g.rect(14, y - 2, 228, 11, C2);
+      const icon = { sword: [['.....1', '....1.', '...1..', '2.1...', '.2....', '2.2...'], { 1: C1, 2: C2 }], potion: [POTION, { 1: C1, 2: C3, 3: C3 }], key: [KEY, { 1: C1 }], coin: [COIN, { 1: C1, 2: C3 }], trophy: [['1.1.1', '11111', '.111.', '..1..', '.111.'], { 1: C1 }] }[it.icon];
+      g.sprite(icon[0], 18, y, icon[1], false);
+      g.text(it.name, 30, y, sel ? C1 : C0); g.text(it.what, 240, y, sel ? C1 : C2, 'right');
+    });
+    g.text('UP DOWN: CHOOSE   FIRE: USE', 128, 124, C2, 'center');
+  } else if (s.page === 2) {
+    const ks = Object.keys(KINDS);
+    ks.forEach((k, i) => {
+      const K = KINDS[k], col = i % 2, row = i >> 1, x = 14 + col * 118, y = 26 + row * 22, known = s.met.has(k);
+      if (known) { const rows = K.rows, sc = Math.max(1, Math.floor(18 / rows.length)); g.sprite(rows, x, y, K.col(), false, sc > 1 ? 1 : 1); }
+      else g.text('?', x + 8, y + 4, C2, 'left', 2);
+      g.text(known ? SHORT[k] : '???', x + 30, y + 2, known ? C1 : C2);
+      if (known) g.text(K.blurb, x + 30, y + 11, C0);
+    });
+  } else {
+    const L = [['UP', 'STEP FORWARD'], ['DOWN', 'STEP BACK - DODGE A BLOW!'], ['LEFT RIGHT', 'TURN'], ['FIRE', 'STRIKE. ON STAIRS: GO DOWN'], ['P', 'THIS MENU. P AGAIN: PLAY ON'], ['ESC', 'LEAVE THE GAME (SAVED)']];
+    L.forEach(([k, t], i) => { g.text(k, 20, 32 + i * 16, C1); g.text(t, 90, 32 + i * 16, C0); });
+    g.text('WHEN IT FLASHES, STEP BACK!', 128, 124, C3, 'center');
+  }
 }
 function drawTitle(g, s) {
   g.clear(BLACK);
   for (let i = 0; i < 60; i++) g.rect((i * 97) % W, (i * 53) % 70, 1, 1, i % 3 ? C2 : C1);
-  g.text('DRAGON', 128, 28, C3, 'center', 4);
-  g.text('DEEP', 128, 62, C0, 'center', 4);
-  g.text('THE DRAGON HAS TAKEN THE GOLDEN TAPE', 128, 104, C1, 'center');
-  g.text('DOWN INTO THE DEEP. GO AND FIND IT.', 128, 116, C1, 'center');
-  if ((s.t >> 4) % 2) g.text('PRESS FIRE', 128, 140, C3, 'center', 2);
-  g.text('HIGH ' + s.high, 128, 156, C2, 'center');
-  if (s.save) g.text('UP: GO ON FROM FLOOR ' + s.save.floor, 128, 168, C0, 'center');
+  const p = s.titleP || 0;
+  if (p === 0) {
+    g.text('DRAGON', 128, 24, C3, 'center', 4);
+    g.text('DEEP', 128, 56, C0, 'center', 4);
+    g.text('THE DRAGON HAS TAKEN THE GOLDEN TAPE', 128, 96, C1, 'center');
+    g.text('DOWN INTO THE DEEP. GO AND FIND IT.', 128, 108, C1, 'center');
+  } else if (p === 1) {
+    g.text('HOW TO PLAY', 128, 12, C3, 'center', 2);
+    const L = [['UP', 'STEP FORWARD'], ['DOWN', 'STEP BACK - DODGE!'], ['LEFT RIGHT', 'TURN'], ['FIRE', 'STRIKE / GO DOWN'], ['P', 'MAP, BAG AND HELP'], ['ESC', 'LEAVE THE GAME']];
+    L.forEach(([k, t], i) => { g.text(k, 30, 36 + i * 13, C1); g.text(t, 104, 36 + i * 13, C0); });
+  } else {
+    g.text('MEET THE DEEP', 128, 12, C3, 'center', 2);
+    const show = ['r', 'g', 'm', 'h', 'T'];
+    show.forEach((k, i) => { const K = KINDS[k], x = 14 + i * 48; g.sprite(K.rows, x, 34 + (16 - K.rows.length) * 2, K.col(), false, 2); g.text(SHORT[k], x + 12, 74, C1, 'center'); });
+    g.text('AND FIVE BOSSES...', 128, 92, C0, 'center');
+    for (let i = 0; i < 5; i++) g.text('?', 64 + i * 32, 104, C2, 'center', 2);
+  }
+  if ((s.t >> 4) % 2) g.text('PRESS FIRE', 128, 128, C3, 'center', 2);
+  g.text('HIGH ' + s.high + '   DOWN: MORE', 128, 152, C2, 'center');
+  if (s.save) g.text('UP: GO ON FROM FLOOR ' + s.save.floor, 128, 166, C0, 'center');
   g.text('(C) 2026 GONEN YAROM', 128, 182, C2, 'center');
 }
 function drawEnd(g, s) {
   g.clear(BLACK);
   if (s.mode === 'next') {
     g.text('FLOOR ' + s.floor + ' CLEARED!', 128, 40, C1, 'center', 2);
-    g.text('THE STAIRS LEAD DEEPER...', 128, 74, C0, 'center');
+    g.text('THE STAIRS LEAD DEEPER...', 128, 70, C0, 'center');
+    const m = (s.lastTime / 60) | 0, sec = String(s.lastTime % 60).padStart(2, '0');
+    g.text('TIME ' + m + ':' + sec + (s.speedBonus ? '   SPEED BONUS ' + s.speedBonus : ''), 128, 88, C1, 'center');
     g.text('SCORE ' + s.score, 128, 110, C1, 'center', 2);
     if (s.t > 40 && (s.t >> 4) % 2) g.text('FIRE: DOWN TO FLOOR ' + (s.floor + 1), 128, 150, C2, 'center');
     return;
@@ -687,6 +783,7 @@ function drawEnd(g, s) {
     g.sprite(TAPE, 101, 34, { 1: C1, 3: C3 }, false, 6);
     g.text('YOU BROUGHT BACK', 128, 78, C1, 'center', 2);
     g.text('THE GOLDEN TAPE!', 128, 96, C1, 'center', 2);
+    if (s.trophies.length) g.text('KEEPSAKES: ' + s.trophies.length + ' X 300', 128, 140, C0, 'center');
   } else {
     g.text('THE DEEP', 128, 40, C3, 'center', 3);
     g.text('HAS WON', 128, 70, C3, 'center', 3);
