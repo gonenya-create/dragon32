@@ -13,7 +13,8 @@
     blockdown: { dir: { up: 'S', down: 'X', left: 'Z', right: 'C' }, fire: 'space', label: ['רווח', 'SPACE'] },
     dragontet: { dir: ARROWS, fire: 'enter', label: ['ENTER', 'ENTER'] },
     phantom: { dir: ARROWS, fire: 'space', label: ['רווח', 'SPACE'] },
-    ranger: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] }
+    ranger: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
+    sketch: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] }   // הקלד בעצמך (typein.js): Sketching מצייר בג'ויסטיק
   };
   const css = document.createElement('style');
   css.textContent = `
