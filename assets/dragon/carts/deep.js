@@ -489,6 +489,17 @@ export default {
     s.t++;
     if (s.mode === 'next') { if (api.hit('fire') && s.t > 40) { s.floor++; startFloor(s, snd); } return; }
     if (s.mode === 'title') { if (api.hit('down')) { s.titleP = ((s.titleP || 0) + 1) % 3; s.titleT = 0; snd.tone(330, 30); } else if (++s.titleT > 300) { s.titleP = ((s.titleP || 0) + 1) % 3; s.titleT = 0; } }
+    if (s.mode === 'over' && s.t > 40) {
+      const v = loadSave();
+      if (api.hit('fire') && v) {   // מנסים שוב את הקומה: הכל חוזר למה שהיה בתחילתה, ולפחות 3 לבבות
+        reset(s); Object.assign(s, { floor: v.floor, hp: Math.max(3, v.hp), coins: v.coins, score: v.score, potions: v.potions || 0, trophies: v.trophies || [], met: new Set(v.met || []), times: v.times || [] });
+        startFloor(s, snd); return;
+      }
+      if (api.hit('down') || (api.hit('fire') && !v)) {   // מוותרים: התוצאה נכנסת להיכל התהילה והשמירה נמחקת
+        clearSave(); s.mode = 'title'; s.t = 0; s.save = null; setPalette(1); STYLE = 'brick'; api.submitScore('deep', s.score); s.high = api.loadHigh('deep'); return;
+      }
+      return;
+    }
     if (s.mode === 'title' || s.mode === 'over' || s.mode === 'won') {
       if (s.mode === 'title' && s.save && api.hit('up') && s.t > 40) {   // ממשיכים מהקומה שנשמרה
         const v = s.save; reset(s);
@@ -609,7 +620,7 @@ export default {
       m.cd = K.speed;
     }
     s.mobs = s.mobs.filter(m => !m.gone);
-    if (s.hp <= 0) { s.mode = 'over'; s.t = 0; snd.tone(300, 600, 60); api.submitScore('deep', s.score); }
+    if (s.hp <= 0) { s.mode = 'over'; s.t = 0; snd.tone(300, 600, 60); }   // היכל התהילה רק כשמסיימים או מוותרים (גונן, 26.10, אפשרות ב)
     if (s.dirty) render(s);
     const seenNow = [];
     if (s.view) for (let i = 1; i < s.view.length && i <= light(s); i++) { const m = mobAt(s, s.view[i].x, s.view[i].y); if (m) seenNow.push(m); }
@@ -791,8 +802,11 @@ function drawEnd(g, s) {
     g.text('THE GOLDEN TAPE!', 128, 96, C1, 'center', 2);
     if (s.trophies.length) g.text('KEEPSAKES: ' + s.trophies.length + ' X 300', 128, 140, C0, 'center');
   } else {
-    g.text('THE DEEP', 128, 40, C3, 'center', 3);
-    g.text('HAS WON', 128, 70, C3, 'center', 3);
+    g.text('THE DEEP', 128, 30, C3, 'center', 3);
+    g.text('HAS WON', 128, 60, C3, 'center', 3);
+    g.text('SCORE ' + s.score, 128, 100, C1, 'center', 2);
+    if (s.t > 40) { g.text('FIRE: TRY FLOOR ' + s.floor + ' AGAIN', 128, 140, (s.t >> 4) % 2 ? C1 : C0, 'center'); g.text('DOWN: GIVE UP AND SAVE THE SCORE', 128, 156, C2, 'center'); }
+    return;
   }
   g.text('SCORE ' + s.score, 128, 118, C1, 'center', 2);
   if (s.t > 40 && (s.t >> 4) % 2) g.text('PRESS FIRE', 128, 160, C2, 'center');

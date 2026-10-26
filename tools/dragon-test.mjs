@@ -867,6 +867,16 @@ if (part('cartridge DRAGON DEEP (full computer)')) {
   await p.waitForFunction(() => document.querySelector('#dragon-room').d32Cart?.state?.t > 45);
   await p.keyboard.press('ArrowUp'); await p.waitForTimeout(300);
   check('an old save (before the bag) still goes on from its floor', await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return s.mode === 'play' && s.floor === 3 && s.potions === 0 && s.met instanceof Set; }));
+  // אפשרות ב: מוות מחזיר לתחילת הקומה עם הניקוד של אז, ורק ויתור שולח להיכל התהילה
+  const before = await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.score += 777; s.hp = 0; return s.score; });
+  await p.waitForTimeout(1100);
+  const dead = await p.evaluate(() => document.querySelector('#dragon-room').d32Cart.state.mode);
+  await p.keyboard.press('Space'); await p.waitForTimeout(300);
+  const again = await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return { mode: s.mode, floor: s.floor, score: s.score, hp: s.hp }; });
+  check('after death, FIRE tries the floor again from its start (score as it was, 3+ hearts)', dead === 'over' && again.mode === 'play' && again.floor === 3 && again.score === before - 777 && again.hp >= 3, JSON.stringify(again));
+  await p.evaluate(() => { document.querySelector('#dragon-room').d32Cart.state.hp = 0; });
+  await p.waitForTimeout(1100); await p.keyboard.press('ArrowDown'); await p.waitForTimeout(300);
+  check('after death, DOWN gives up: back to the title and the save is cleared', await p.evaluate(() => document.querySelector('#dragon-room').d32Cart.state.mode === 'title' && !localStorage.getItem('d32-deep-save')));
   // איזון: בכל קומה יש לפחות 2 לפידים, והאור (התחלה + לפידים) מספיק לחקור את כל המבוך פעמיים בקצב של צעד בשנייה
   const bal = await p.evaluate(async () => {
     const { _test } = await import('/assets/dragon/carts/deep.js');
