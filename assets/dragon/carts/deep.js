@@ -11,7 +11,7 @@ const VIEW = 150;                         // גובה המבט; מתחתיו פ�
 
 // ---- המבוך של קומה 1 (מצויר ביד, כדי שלכל מקום יהיה אופי ושכולם ישחקו באותו מבוך) ----
 // # קיר  . רצפה  @ התחלה  S מדרגות  D דלת נעולה  c מטבע  t לפיד  p שיקוי  k מפתח
-// r עכברוש  g גובלין  m איש פטרייה  h רוח קטנה  T טרול  B מלך האוגרים  G גולם האבן  M מלך החפרפרות
+// r עכברוש  g גובלין  m איש פטרייה  h רוח קטנה  T טרול  B מלך האוגרים  G גולם האבן  M מלך החפרפרות  W ספר הקסמים
 const MAP1 = [
   '################',
   '#@..c#....g....#',
@@ -69,9 +69,28 @@ const MAP3 = [
   '#.#####.#...#MS#',
   '################'
 ];
-const FLOORS = [{ map: MAP1, pal: 1, style: 'brick' }, { map: MAP2, pal: 0, style: 'cave' }, { map: MAP3, pal: 1, style: 'mine' }];
+// קומה 4: ספריית הקוסם. מדפי ספרים ונרות, מפתח ודלת, ובסוף ספר הקסמים המעופף שיורה אותיות
+const MAP4 = [
+  '################',
+  '#@..#....h.....#',
+  '#.#.#.##.####..#',
+  '#.#...#..#..#..#',
+  '#.#####.##.g#.##',
+  '#...m...#..##..#',
+  '###.###.#.###k.#',
+  '#t..#c.......#.#',
+  '#.###.######.#.#',
+  '#..g#....h...#.#',
+  '##.##.##.###.#.#',
+  '#p.#...#...#.#.#',
+  '#.##.#.###.#.#.#',
+  '#.c..#...T.#.###',
+  '#.####.#####DWS#',
+  '################'
+];
+const FLOORS = [{ map: MAP1, pal: 1, style: 'brick' }, { map: MAP2, pal: 0, style: 'cave' }, { map: MAP3, pal: 1, style: 'mine' }, { map: MAP4, pal: 0, style: 'library' }];
 let STYLE = 'brick';
-const wallC = () => STYLE === 'mine' ? C3 : C0, woodC = () => STYLE === 'mine' ? C0 : C3;
+const wallC = () => STYLE === 'mine' ? C3 : STYLE === 'library' ? C2 : C0, woodC = () => STYLE === 'mine' ? C0 : C3;
 // מספר קבוע לכל משבצת, כדי שהסלעים והלפידים יישארו באותו מקום בכל צעד
 const hash = (x, y, k = 0) => { let h = (x * 374761393 + y * 668265263 + k * 2246822519) | 0; h = (h ^ (h >>> 13)) * 1274126177; return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -114,6 +133,12 @@ const MOLE = [
   '...1111111111111...', '...1111122211111...', '....111112111111...', '..1111111111111111.', '.111111111111111111', '00.111111111111.00',
   '000.1111111111.000', '.0..1111111111..0.', '....111111111111...', '....1111...11111...', '...00000...00000...'
 ];
+// ספר הקסמים המעופף: ספר פתוח עם עיניים, דפים שמתנפנפים כמו כנפיים (1 דפים, 3 כריכה, 2 עיניים, 0 אותיות)
+const BOOK = [
+  '..111111...111111..', '.11111111.11111111.', '1100110011100110011', '1111111111111111111', '1122211111111122211', '1122211111111122211',
+  '1111111111111111111', '1100110011100110011', '1111111110111111111', '1100110011100110011', '3333333333333333333', '.33333333.33333333.',
+  '...3333.....3333...'
+];
 // הצבעים של כל דמות הם פונקציה, כי בכל קומה ערכת הצבעים אחרת
 const KINDS = {
   r: { name: 'A RAT', rows: RAT, h: 0.16, hp: 1, dmg: 1, speed: 60, pts: 10, col: () => ({ 3: C3, 1: C1, 2: C2 }) },
@@ -123,6 +148,7 @@ const KINDS = {
   T: { name: 'A TROLL', rows: TROLL, h: 0.78, hp: 5, dmg: 2, speed: 130, pts: 80, col: () => ({ 1: C0, 2: BLACK, 3: C3 }) },
   B: { name: 'THE OGRE KING', rows: OGRE, h: 0.88, hp: 12, dmg: 2, speed: 85, pts: 300, col: () => ({ 1: C0, 2: BLACK, 3: C3, 0: C1 }), boss: true },
   G: { name: 'THE STONE GOLEM', rows: GOLEM, h: 0.88, hp: 16, dmg: 2, speed: 95, pts: 450, col: () => ({ 1: C1, 2: C3, 0: BLACK }), boss: true },
+  W: { name: 'THE SPELL BOOK', rows: BOOK, h: 0.55, hp: 24, dmg: 2, speed: 70, pts: 800, col: () => ({ 1: C1, 3: C3, 2: BLACK, 0: C2 }), boss: true, fly: true },
   M: { name: 'THE MOLE KING', rows: MOLE, h: 0.85, hp: 20, dmg: 2, speed: 80, pts: 600, col: () => ({ 1: C0, 2: BLACK, 3: C2, 0: C1 }), boss: true }
 };
 const COIN = ['.11.', '1221', '1221', '.11.'];
@@ -169,6 +195,7 @@ function sideWall(z0, z1, side, light, cx = 0, cy = 0) {
   polyFill([[xa, a[1]], [xb, b[1]], [xb, b[3]], [xa, a[3]]], wallC(), k);
   const at = (t, u) => [lerp(xa, xb, t), lerp(lerp(a[1], b[1], t), lerp(a[3], b[3], t), u)];
   if (STYLE === 'cave') { caveLayers(at, cx * 2 + (side < 0 ? 0 : 1), cy); line(xa, a[1], xb, b[1], C2); line(xa, a[3], xb, b[3], C2); line(xb, b[1], xb, b[3], C2); stalactites(at, cx + side, cy); return; }
+  if (STYLE === 'library') { shelves(at, cx * 2 + (side < 0 ? 0 : 1), cy, 8); line(xa, a[1], xb, b[1], C1); line(xa, a[3], xb, b[3], C1); line(xb, b[1], xb, b[3], C1); return; }
   if (STYLE === 'mine') { mineWall(at, cx, cy, side); line(xa, a[1], xb, b[1], C2); line(xa, a[3], xb, b[3], C2); return; }
   if (hash(cx, cy, side) < 0.3) wallTorch(at, z0 + 0.5, light);
   for (let r = 1; r < 6; r++) { const t = r / 6; line(xa, a[1] + (a[3] - a[1]) * t, xb, b[1] + (b[3] - b[1]) * t, C2); }
@@ -199,6 +226,7 @@ function frontWall(z, light, door) {
     return;
   }
   polyFill([[x0, y0], [x1, y0], [x1, y1], [x0, y1]], wallC(), k);
+  if (STYLE === 'library') { const at = (t, u) => [lerp(x0, x1, t), lerp(y0, y1, u)]; shelves(at, 77, z * 3 | 0, 14); line(x0, y0, x1, y0, C1); line(x0, y1, x1, y1, C1); line(x0, y0, x0, y1, C1); line(x1, y0, x1, y1, C1); if ((z | 0) % 2 === 0) candle(at(0.5, 0.86)[0], at(0.5, 0.86)[1], (y1 - y0) / 14); return; }
   if (STYLE === 'mine') { const at = (t, u) => [lerp(x0, x1, t), lerp(y0, y1, u)]; for (let n = 0; n < 40; n++) { const [x, y] = at(hash(n, z * 9 | 0, 1), hash(n, z * 9 | 0, 2)); px(x, y, C2); } for (const t of [0.04, 0.96]) { const [x] = at(t, 0); beam(x, y0, x, y1, (x1 - x0) / 40); } beam(x0, y0 + 1, x1, y0 + 1, (x1 - x0) / 40); line(x0, y1, x1, y1, C2); return; }
   if (STYLE === 'cave') { const at = (t, u) => [lerp(x0, x1, t), lerp(y0, y1, u)]; caveRock(at, 99, z * 7 | 0); line(x0, y0, x1, y0, C2); line(x0, y1, x1, y1, C2); line(x0, y0, x0, y1, C2); line(x1, y0, x1, y1, C2); stalactites(at, 98, z * 5 | 0); return; }
   const h = (y1 - y0) / 6;
@@ -222,6 +250,23 @@ function caveRock(at, cx, cy) {
     let t = hash(cx, cy, 40 + n), u = hash(cx, cy, 50 + n) * 0.5, prev = at(t, u);
     for (let i = 0; i < 4; i++) { t += (hash(cx, cy, 60 + n * 4 + i) - 0.5) * 0.12; u += 0.1; const pt = at(Math.min(1, Math.max(0, t)), Math.min(1, u)); line(prev[0], prev[1], pt[0], pt[1], C2); prev = pt; }
   }
+}
+// מדפי ספרים: ארבעה מדפים, ועליהם גבי ספרים צבעוניים בגבהים שונים. n = כמה ספרים בשורה
+function shelves(at, cx, cy, n) {
+  const rows = [0.08, 0.31, 0.54, 0.77, 1];
+  for (let r = 0; r < 4; r++) {
+    for (let i = 0; i < n; i++) {
+      const t0 = (i + 0.1) / n, t1 = (i + 0.8) / n, top = rows[r] + 0.04 + hash(cx, cy, r * 20 + i) * 0.08, c = [C0, C1, C3][(hash(cx, cy, r * 31 + i) * 3) | 0];
+      for (let k = 0; k <= 2; k++) { const t = lerp(t0, t1, k / 2), [x, y0] = at(t, top), [, y1] = at(t, rows[r + 1] - 0.01); line(x, y0, x, y1, c); }
+    }
+    const [xa, ya] = at(0, rows[r + 1]), [xb, yb] = at(1, rows[r + 1]);
+    line(xa, ya, xb, yb, C1);
+  }
+}
+// נר עם להבה קטנה
+function candle(x, y, h) {
+  line(x, y, x, y - h * 2, C1); line(x + 1, y, x + 1, y - h * 2, C1);
+  for (let i = 0; i < h * 1.4; i++) { const w = Math.max(0.5, (h * 1.4 - i) * 0.3); line(x - w + 0.5, y - h * 2 - i, x + w + 0.5, y - h * 2 - i, i % 2 ? C3 : C1); }
 }
 // קורת עץ עבה (בצבע עץ, עם קו צל)
 function beam(x0, y0, x1, y1, w) {
@@ -315,7 +360,7 @@ const bossOf = s => s.mobs.find(m => KINDS[m.k].boss && !m.dust);
 function startFloor(s, snd) {
   newFloor(s); s.mode = 'play'; s.t = 0; s.torch = 1;
   if (s.floor > 1) writeSave(s);
-  say(s, 'FLOOR ' + s.floor + [' - THE CASTLE CELLAR', ' - THE CAVES. FIND THE KEY', ' - THE OLD MINE'][s.floor - 1], 180);
+  say(s, 'FLOOR ' + s.floor + [' - THE CASTLE CELLAR', ' - THE CAVES. FIND THE KEY', ' - THE OLD MINE', ' - THE WIZARD LIBRARY'][s.floor - 1], 180);
   snd.tone(220, 120, 440);
 }
 const mobAt = (s, x, y) => s.mobs.find(m => !m.dust && m.x === x && m.y === y);
@@ -508,7 +553,9 @@ export default {
       const K = KINDS[m.k], z = i + 0.15;
       if (m.dust) { const p = P(z); for (let n = 0; n < 60; n++) { const a = n * 2.4 + m.dust * 0.3, r = (45 - m.dust) * 0.9 * ((n % 7) / 7 + 0.3); g.rect(VX + Math.cos(a) * r, p[3] - (p[3] - p[1]) * K.h * 0.5 + Math.sin(a) * r * 0.7, 1, 1, n % 3 ? C1 : C0); } continue; }
       const base = K.col(), cols = m.flash ? Object.fromEntries(Object.keys(base).map(k => [k, C1])) : m.wind && (m.wind >> 2) % 2 ? Object.fromEntries(Object.keys(base).map(k => [k, k === '2' ? BLACK : C3])) : base;
-      stand(g, K.rows, z - (m.wind ? 0.05 : 0), cols, K.h, (Math.sin(s.t / 9 + m.x) * 1.2) | 0);
+      const p0 = P(z), lift = K.fly ? -(p0[3] - p0[1]) * 0.28 + Math.sin(s.t / 6) * 3 : 0;
+      stand(g, K.rows, z - (m.wind ? 0.05 : 0), cols, K.h, ((Math.sin(s.t / 9 + m.x) * 1.2) | 0) + lift);
+      if (K.fly && m.wind) for (let n = 0; n < 6; n++) { const t = ((40 - m.wind) / 40 + n / 6) % 1; g.text('ABCDEFGHJKLMNPRSTW'[(n * 5 + (s.t >> 3)) % 18], VX + (n - 2.5) * 30 * t, lerp(p0[1] + 30, VIEW - 20, t), n % 2 ? C1 : C3, 'center', 1 + Math.round(t)); }
     }
     if (s.hurt) for (let y = 0; y < VIEW; y += 2) for (let x = (y >> 1) % 2; x < W; x += 6) g.rect(x, y, 1, 1, C3);
     // אויב שעומד לידנו אבל לא מלפנים: חץ שמראה מאיפה הוא מגיע
