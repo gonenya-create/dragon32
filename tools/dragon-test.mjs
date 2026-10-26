@@ -310,7 +310,7 @@ if (part('room /dragon/')) {
   const posted = [];
   await ctx.route('**/api/hof/', route => {
     if (route.request().method() === 'POST') { posted.push(route.request().postDataJSON()); return route.fulfill({ json: { rank: 3, tables: { eggs: [{ n: 'ACE', s: 99 }, { n: 'GON', s: 5 }] } } }); }
-    return route.fulfill({ json: { tables: { tower: [{ n: 'TOP', s: 4200 }], jungle: [], eggs: [{ n: 'ACE', s: 99 }], castle: [] } } });
+    return route.fulfill({ json: { tables: { tower: [{ n: 'TOP', s: 4200 }], jungle: [], eggs: [{ n: 'ACE', s: 99 }], castle: [], deep: [] } } });
   });
   const p = await ctx.newPage();
   p.on('pageerror', e => pageErrors.push(e.message));
@@ -332,7 +332,7 @@ if (part('room /dragon/')) {
   await input.fill('print 6*7'); await input.press('Enter'); await p.waitForTimeout(250);
   check('room PRINT works', / 42 \nOK$/.test(await p.locator('#dragon-room .d32-out').textContent()));
   check('room manual', (await p.locator('.d32-manual dt').count()) >= 8);
-  check('full shelf: all 4 cartridges, no links out', (await p.locator('button.d32-cart').count()) === 4 && (await p.locator('a.d32-cart.is-more').count()) === 0);
+  check('full shelf: all 5 cartridges, no links out', (await p.locator('button.d32-cart').count()) === 5 && (await p.locator('a.d32-cart.is-more').count()) === 0);
 
   // מחסנית: נכנסת, מסך כותרת, משחק עם "שחקן אוטומטי" שמזיז את הסל אל הביצים ומתרחק מאש
   await pickCart(p, 'EGGS');
@@ -777,6 +777,73 @@ if (part('cartridge DRAGON CASTLE (full computer)')) {
   await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; for (const k of s.room.keys) k.got = true; s.p.x = s.room.door.x; s.p.y = s.room.door.y + 16; s.p.mode = 'walk'; });
   await p.waitForTimeout(3500);
   check('all keys + door = next room', (await st()).room === 'CRUMBLING HALL', JSON.stringify(await st()));
+  await p.keyboard.press('Escape');
+  await p.close();
+}
+
+if (part('cartridge DRAGON DEEP (full computer)')) {
+  console.log('cartridge DRAGON DEEP (full computer)');
+  const p = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  p.on('pageerror', e => pageErrors.push(e.message));
+  await p.goto(base.replace(/\/$/, '') + '/');
+  await p.waitForSelector('#dragon-room.is-ready');
+  await p.locator('.d32-tab[data-tab="shelf"]').click();
+  await p.evaluate(() => [...document.querySelectorAll('.d32-cart')].find(e => /DEEP/.test(e.textContent)).click());
+  await p.waitForTimeout(800);
+  const S = () => p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return { mode: s.mode, x: s.x, y: s.y, dir: s.dir, hp: s.hp, score: s.score, mobs: s.mobs.length, paused: s.paused, view: s.view && s.view.length }; });
+  check('deep shows its title', (await S()).mode === 'title');
+  await p.waitForFunction(() => document.querySelector('#dragon-room').d32Cart.state.t > 45);
+  await p.keyboard.press('Space'); await p.waitForTimeout(200);
+  const a = await S();
+  check('deep starts on floor 1 at the entrance, facing east, with a 3D view', a.mode === 'play' && a.x === 1 && a.y === 1 && a.dir === 1 && a.view > 1, JSON.stringify(a));
+  await p.keyboard.press('ArrowUp'); await p.waitForTimeout(100);
+  check('up steps forward', (await S()).x === 2);
+  await p.keyboard.press('ArrowLeft'); await p.waitForTimeout(100); await p.keyboard.press('ArrowUp'); await p.waitForTimeout(100);
+  const b = await S();
+  check('a wall stops you (turned north into the wall)', b.dir === 0 && b.x === 2 && b.y === 1, JSON.stringify(b));
+  // קרב: מעמידים את השחקן מול הגובלין, מכים פעמיים, והוא נעלם
+  await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; const m = s.mobs.find(o => o.k === 'g'); m.cd = 9999; s.x = m.x - 1; s.y = m.y; s.dir = 1; s.dirty = true; });
+  const m0 = (await S()).mobs;
+  await p.keyboard.press('Space'); await p.waitForTimeout(450); await p.keyboard.press('Space'); await p.waitForTimeout(1200);
+  const c = await S();
+  check('two strikes defeat a goblin and give points', c.mobs === m0 - 1 && c.score >= 25, JSON.stringify(c));
+  await p.keyboard.press('p'); await p.waitForTimeout(100);
+  check('P opens the map and pauses', (await S()).paused);
+  await p.keyboard.press('p'); await p.waitForTimeout(100);
+  // המדרגות נעולות כל עוד מלך האוגרים חי; אחרי שהוא נופל, FIRE על המדרגות מסיים את הקומה
+  await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.x = s.sx; s.y = s.sy; s.dir = 3; s.mobs.find(o => o.k === 'B').cd = 9999; s.dirty = true; });
+  await p.keyboard.press('Space'); await p.waitForTimeout(300);
+  check('the stairs stay shut while the Ogre King stands', (await S()).mode === 'play');
+  await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.mobs = s.mobs.filter(o => o.k !== 'B'); s.atkCd = 0; });
+  await p.keyboard.press('Space'); await p.waitForTimeout(300);
+  check('with the Ogre King gone, FIRE on the stairs clears floor 1', (await S()).mode === 'next');
+  await p.waitForTimeout(900); await p.keyboard.press('Space'); await p.waitForTimeout(300);
+  const f2 = await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return { mode: s.mode, floor: s.floor, ghosts: s.mobs.filter(m => m.k === 'h').length, golem: s.mobs.some(m => m.k === 'G') }; });
+  check('floor 2: ghosts and the Stone Golem', f2.mode === 'play' && f2.floor === 2 && f2.ghosts === 2 && f2.golem, JSON.stringify(f2));
+  // הדלת נעולה בלי מפתח, ונפתחת עם המפתח
+  await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.mobs = []; s.x = 11; s.y = 14; s.dir = 1; s.dirty = true; });
+  await p.keyboard.press('ArrowUp'); await p.waitForTimeout(150);
+  const shut = await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return s.x === 11 && s.map[14][12] === 'D'; });
+  await p.evaluate(() => { document.querySelector('#dragon-room').d32Cart.state.keys = 1; });
+  await p.keyboard.press('ArrowUp'); await p.waitForTimeout(150);
+  const open = await p.evaluate(() => document.querySelector('#dragon-room').d32Cart.state.map[14][12] === '.');
+  check('floor 2: the door is locked without the key, and the key opens it', shut && open);
+  await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.mobs = []; s.x = s.sx; s.y = s.sy; s.atkCd = 0; });
+  await p.keyboard.press('Space'); await p.waitForTimeout(900); await p.keyboard.press('Space'); await p.waitForTimeout(300);
+  const f3 = await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return { floor: s.floor, trolls: s.mobs.filter(m => m.k === 'T').length, mole: s.mobs.some(m => m.k === 'M') }; });
+  check('floor 3, the old mine: trolls and the Mole King', f3.floor === 3 && f3.trolls === 2 && f3.mole, JSON.stringify(f3));
+  await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.mobs = []; s.x = s.sx; s.y = s.sy; s.atkCd = 0; });
+  await p.keyboard.press('Space'); await p.waitForTimeout(900); await p.keyboard.press('Space'); await p.waitForTimeout(300);
+  const f4 = await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return { floor: s.floor, book: s.mobs.some(m => m.k === 'W'), door: s.map[14][12] === 'D' }; });
+  check('floor 4, the wizard library: a locked door and the Spell Book', f4.floor === 4 && f4.book && f4.door, JSON.stringify(f4));
+  await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.mobs = []; s.x = s.sx; s.y = s.sy; s.atkCd = 0; });
+  await p.keyboard.press('Space'); await p.waitForTimeout(900); await p.keyboard.press('Space'); await p.waitForTimeout(300);
+  const f5 = await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return { floor: s.floor, dragon: s.mobs.some(m => m.k === 'X') }; });
+  check('floor 5, the dragon lair: the Dragon', f5.floor === 5 && f5.dragon, JSON.stringify(f5));
+  check('the progress is saved at the start of each floor', await p.evaluate(() => JSON.parse(localStorage.getItem('d32-deep-save') || '{}').floor === 5));
+  await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.mobs = []; s.x = s.sx; s.y = s.sy; s.atkCd = 0; });
+  await p.keyboard.press('Space'); await p.waitForTimeout(300);
+  check('with the Dragon gone, FIRE takes the Golden Tape: the game is won and the save is cleared', await p.evaluate(() => document.querySelector('#dragon-room').d32Cart.state.mode === 'won' && !localStorage.getItem('d32-deep-save')));
   await p.keyboard.press('Escape');
   await p.close();
 }
