@@ -52,6 +52,7 @@ details.note summary { cursor: pointer; color: var(--ink); }
 .drawer .tape-box:has(.howto[open]) { grid-column: 1 / -1; }
 .howto { border: 1px dashed #5a4430; border-radius: 8px; font-size: 13px; }
 .howto[open] { border-style: solid; background: #1b1511; }
+.howto .cmd { font-weight: 700; overflow-wrap: anywhere; }
 .howto > summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 6px; min-height: 32px; padding: 2px 8px; color: var(--accent); font-weight: 700; line-height: 1.25; }
 .howto > summary::-webkit-details-marker { display: none; }
 .howto > summary::before { content: '?'; display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: var(--accent); color: #1b1511; font: 700 12px 'Courier New', monospace; flex: none; }
