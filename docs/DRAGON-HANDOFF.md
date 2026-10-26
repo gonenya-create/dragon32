@@ -23,7 +23,7 @@
 - **דפי המעבדה** (he/en) מבקשים מבעלי מחשב אמיתי ארבע בדיקות: `PEEK(144)*256+PEEK(145)`, ‏`PEEK(287)`, ‏`LLIST` בלי מדפסת, ו-`DLOAD`.
 - **ארון הקלטות במכונה** (מגירות, סגורות כברירת מחדל):
   - BASIC: הקלטות שהמכונה עצמה שמרה ב-CSAVE (`rom/tools/mktapes.mjs`).
-  - משחקי שפת מכונה: ביצי הדרקון (שלנו), ‏Blockdown ‏(Ciaran Anscomb), ‏DragonTet ‏(Salva Kantero, GPL v3), ‏Phantom Slayer ו-Danger Ranger ‏(Ken Kalish, 1983, ברשותו דרך L. Curtis Boyle, יורדים לפי בקשה), ו-Adventureland ‏(Scott Adams, ‏Adventure International 1983, באישורו במייל 25.10, קרדיט וקישור ל-msadams.com, יורד לפי בקשה; הקלטת מ-archive.worldofdragon.org/browse/, תיקיית Adventure International UK; נבדק עד משחק אמיתי ב-Chrome וב-WebKit בגודל טלפון). מתחת לכל משחק תיבת "איך משחקים". ולמטה קישור ל-Dunjunz באתר של Ciaran (רק קישור, לא המשחק).
+  - משחקי שפת מכונה: ביצי הדרקון (שלנו), ‏Blockdown ‏(Ciaran Anscomb), ‏DragonTet ‏(Salva Kantero, GPL v3), ‏Phantom Slayer ו-Danger Ranger ‏(Ken Kalish, 1983, ברשותו דרך L. Curtis Boyle, יורדים לפי בקשה), ו-Adventureland ‏(Scott Adams, ‏Adventure International 1983, באישורו במייל 25.10, קרדיט וקישור ל-msadams.com, יורד לפי בקשה; הקלטת מ-archive.worldofdragon.org/browse/, תיקיית Adventure International UK; נבדק עד משחק אמיתי ב-Chrome וב-WebKit בגודל טלפון), ו-Pirate Adventure ‏(Scott Adams, 1984, אותה רשות ואותה תיקייה בארכיון, נבדק באותה דרך ב-26.10). מתחת לכל משחק תיבת "איך משחקים". ולמטה קישור ל-Dunjunz באתר של Ciaran (רק קישור, לא המשחק).
   - הקלטות שלי.
 - **הכיתה** (`/lessons/`, ‏`/en/lessons/`): 30 שיעורים וסולם של 9 דרגות. בשיעורים 15–20 בונים את המשחק Dragon Gold, ובשיעורים 27–30 את DRAGFLY. הטקסטים של המנהל העליון, כמו שהם (`tools/lessons-import.mjs`).
 - **מדור המגזין** (`/magazine/`, ‏`/en/magazine/`): "מה קראו בעלי ה-Dragon", עם פוסט du01.
@@ -125,7 +125,7 @@
 - **הקלדה בדפדפן:** הקלדה דרך כלי הדפדפן לא מגיעה ל-XRoar. משתמשים בפונקציה `press()` של המקלדת המצוירת.
 
 ## ממתין (25.10)
-- **Scott Adams:** אחרי Adventureland הבא בתור Pirate Adventure (באותה תיקייה בארכיון). לא להעלות את Questprobe (הדמויות של Marvel) ולא את Mysterious Adventures (של Brian Howarth). הרשות מכסה רק את ההרפתקאות של Scott.
+- **Scott Adams:** אחרי Adventureland ו-Pirate Adventure, ההרפתקאות הבאות שלו באותה תיקייה בארכיון (Secret Mission, Voodoo Castle וכו'), כל אחת באישור גונן. לא להעלות את Questprobe (הדמויות של Marvel) ולא את Mysterious Adventures (של Brian Howarth). הרשות מכסה רק את ההרפתקאות של Scott.
 - **משחקים בהמתנה, רק באישור גונן:**
   - **שלושה משחקים עם רשות בכתב:** ‏Dungeon Raid (צריך ג'ויסטיק) ו-Athletyx של Ken Kalish (דרך L. Curtis Boyle, ‏24.10), ו-Star Spores של David Shadoff (מייל ממנו, ‏25.10). ל-Athletyx ול-Star Spores יש טוען של Microdeal. היומן: `~/mac-tools/dragon-rights/permissions-log.md`. מחכים ל"איך ומתי" של גונן.
   - Star Spores: העבודה שהתחלנו נשמרה בצד. טבלת המצביעים ב-$A000 עם הערכים המקוריים, ‏($BBE5, ‏$B54A, ‏$BDE7, ‏$B93E, ‏$B999, ‏$BD52, ‏$BE68), וגושים ב-$B999 וב-$BE68. אחר כך הטוען קורא ל-$A529 ול-$B277, שעוד לא ידוע מה הן עושות. אם גונן יאשר, מתחילים מחדש מענף חדש.

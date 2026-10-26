@@ -26,7 +26,9 @@
       ['Ken Kalish · Med Systems / Microdeal, 1983', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
     // ההרפתקאות של Scott Adams: אישור בכתב (מייל 25.10.2026). קרדיט מלא וקישור ל-msadams.com, בלי שינויים, יורד לפי בקשה
     ['adventureland', 'Adventureland', 'Adventureland', 'a',
-      ['Scott Adams · Adventure International, 1983', 'https://www.msadams.com/', null, null, 'adams']]
+      ['Scott Adams · Adventure International, 1983', 'https://www.msadams.com/', null, null, 'adams']],
+    ['pirate', 'Pirate Adventure', 'Pirate Adventure', 'a',
+      ['Scott Adams · Adventure International, 1984', 'https://www.msadams.com/', null, null, 'adams']]
   ];
   // משחקים שצריכים ג'ויסטיק: כשהקלטת נטענת, החיצים במקלדת הופכים לג'ויסטיק הימני ו-Alt (Option במק) לכפתור שלו
   const JOY = new Set(['ranger']);
@@ -115,6 +117,23 @@
         'The first three letters are enough: LIG LAM. There are six ways to go: N S E W UP DOWN.',
         'LOOK describes the place again, INVENTORY shows what you carry, HELP gives a hint, SCORE shows your treasures.',
         'The goal: find the 13 treasures, marked with stars like *GOLDEN FISH*, and bring them to where they are stored.']
+    },
+    // נבדק במכונה (26.10): טעינה, שאלות הפתיחה, הרמת חפץ, מלאי, עלייה במדרגות, HELP וניקוד
+    pirate: {
+      he: ['הטעינה לוקחת קצת פחות משתי דקות, והמשחק מתחיל לבד.',
+        'בהתחלה שלוש שאלות. על {DO YOU HAVE LOWERCASE?} עונים [N] ו[ENTER].',
+        'על {PRESS ENTER} לוחצים [ENTER], ועל {RESTORE A PREVIOUSLY SAVED GAME?} עונים [N] ו[ENTER].',
+        'מתחילים בדירה בלונדון. כותבים פועל ושם עצם באנגלית ולוחצים [ENTER]. למשל {GET RUM} (לקחת את הרום), או {GO STAIRS} (לעלות במדרגות).',
+        'שלוש האותיות הראשונות מספיקות. הולכים בשש דרכים: {N S E W UP DOWN}.',
+        '{LOOK} מתאר שוב את המקום, {INVENTORY} מראה מה בידיים, {HELP} נותן רמז, {SCORE} מראה כמה אוצרות נאספו.',
+        'המטרה: להגיע לאי של הפיראטים, למצוא את האוצרות ולהביא אותם לדירה, כמו שכתוב על השלט שם.'],
+      en: ['Loading takes a little under two minutes, and the game starts by itself.',
+        'Three questions first. At DO YOU HAVE LOWERCASE? answer [N] and [ENTER].',
+        'At PRESS ENTER press [ENTER], and at RESTORE A PREVIOUSLY SAVED GAME? answer [N] and [ENTER].',
+        'You start in a flat in London. Type a verb and a noun, then [ENTER]. For example GET RUM or GO STAIRS.',
+        'The first three letters are enough. There are six ways to go: N S E W UP DOWN.',
+        'LOOK describes the place again, INVENTORY shows what you carry, HELP gives a hint, SCORE shows your treasures.',
+        'The goal: reach the pirates\' island, find the treasures and bring them back to the flat, as the sign there says.']
     }
   };
   // מה המשחק, בשורה אחת מתחת לשם (גונן, 25.10: "לא מבינים מה זה המשחק"). השם עצמו נשאר כמו שהמחבר כתב
@@ -124,6 +143,7 @@
     dragontet: ['קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים.', 'Falling blocks: complete the lines. 1 or 2 players.'],
     phantom: ['מבוך תלת-ממדי: צדים רוחות רפאים לפני שהן תופסות אתכם. לשחקן אחד.', '3D maze: hunt the phantoms before they catch you. 1 player.'],
     ranger: ['רצים, קופצים ויורים: אוספים מפתחות ואוצרות בין עטלפים ועיניים. בג\'ויסטיק.', 'Run, jump and shoot: collect keys and treasure past bats and eyes. Joystick.'],
+    pirate: ['הרפתקת מילים: מדירה בלונדון לאי של פיראטים, בחיפוש אחרי אוצר. ההרפתקה השנייה של Scott Adams.', 'A text adventure: from a London flat to a pirates\' island, hunting for treasure. Scott Adams\' second adventure.'],
     adventureland: ['הרפתקת מילים: כותבים פקודות באנגלית ומחפשים 13 אוצרות. ההרפתקה הראשונה של Scott Adams.', 'A text adventure: type commands and hunt for 13 treasures. Scott Adams\' first adventure.']
   };
   // שורה עם [מקשים]: כל מקש בתוך kbd. צירוף כמו [CLEAR]+[BREAK] נשאר יחד בשורה אחת
@@ -167,7 +187,10 @@
   if (!box) return;
   // ארון הקלטות (גונן, 24.10: "ככל שיהיו יותר משחקים אי אפשר יהיה להציג את כולם"): מגירה לכל סוג,
   // עם מספר הקלטות, ונפתחת בלחיצה. מה פתוח נזכר בדפדפן הזה. המגירה של "הקלטות שלי" כתובה בדף עצמו.
-  const DRAWERS = [['basic', 'תוכניות BASIC', 'BASIC programs'], ['mc', 'משחקים בשפת מכונה', 'Machine-code games']];
+  const DRAWERS = [['basic', 'תוכניות BASIC', 'BASIC programs'], ['mc', 'משחקים בשפת מכונה', 'Machine-code games'], ['adv', 'משחקי הרפתקאות', 'Adventure games']];
+  // הרפתקאות המילים במגירה משלהן (גונן, 26.10: "קטגוריית משחקי הרפתקאות"). הן עדיין קלטות של שפת מכונה
+  const ADV = new Set(['adventureland', 'pirate']);
+  const drawerOf = t => ADV.has(t[0]) ? 'adv' : t[3] ? 'mc' : 'basic';
   const DKEY = 'd32-lab-drawers';
   let drawerState = {};
   try { drawerState = JSON.parse(localStorage.getItem(DKEY)) || {}; } catch (e) {}
@@ -183,7 +206,7 @@
     d.open = !!drawerState[key]; // סגורות בכניסה הראשונה (גונן, 25.10), ונזכרות אחר כך
     d.innerHTML = '<summary><span class="drawer-name"></span> <span class="drawer-count"></span></summary><div class="drawer-body"><div class="tapes"></div></div>';
     d.querySelector('.drawer-name').textContent = EN ? en : he;
-    d.querySelector('.drawer-count').textContent = TAPES.filter(t => (t[3] ? 'mc' : 'basic') === key).length;
+    d.querySelector('.drawer-count').textContent = TAPES.filter(t => drawerOf(t) === key).length;
     grids[key] = d.querySelector('.tapes');
     remember(d);
     box.appendChild(d);
@@ -203,8 +226,9 @@
   if (mineDrawer) { if ('mine' in drawerState) mineDrawer.open = drawerState.mine; remember(mineDrawer); }
   const openDrawerOf = b => { const d = b && b.closest('details.drawer'); if (d) d.open = true; };
   const buttons = [];
-  for (const [id, he, en, kind, credit] of TAPES) {
-    const shelf = grids[kind ? 'mc' : 'basic'];
+  for (const t of TAPES) {
+    const [id, he, en, kind, credit] = t;
+    const shelf = grids[drawerOf(t)];
     const b = document.createElement('button');
     b.type = 'button';
     b.className = 'tape';
