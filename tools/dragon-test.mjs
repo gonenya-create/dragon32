@@ -940,6 +940,86 @@ if (part('cartridge DRAGON DEEP (full computer)')) {
   check('round 2: the prisoner\'s bars stay shut without a key and open with one', barsShut && await D(() => document.querySelector('#dragon-room').d32Cart.state.map[11][14] === '.'));
   await p.keyboard.press('ArrowUp'); await p.waitForTimeout(120); await p.keyboard.press('ArrowUp'); await p.waitForTimeout(120);
   check('round 2: the freed prisoner gives a potion and arrows', await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return s.mobs.find(m => m.k === 'J').given && s.potions >= 1; }));
+  // ---- סבב 3: קושי, מלכודות, סוחר, פתקים, מוזיקה ----
+  const S3 = f => p.evaluate(f);
+  const restart = async keys => {
+    await p.keyboard.press('Escape'); await p.waitForTimeout(300);
+    await S3(() => { localStorage.removeItem('d32-deep-save'); localStorage.removeItem('d32-deep-diff'); });
+    await S3(() => [...document.querySelectorAll('.d32-cart')].find(e => /DEEP/.test(e.textContent)).click());
+    await p.waitForFunction(() => document.querySelector('#dragon-room').d32Cart?.state?.t > 45);
+    for (const k of keys) { await p.keyboard.press(k); await p.waitForTimeout(100); }
+    await p.keyboard.press('Space'); await p.waitForTimeout(150); await p.keyboard.press('ArrowUp'); await p.waitForTimeout(50); await p.keyboard.press('ArrowDown'); await p.waitForTimeout(150);
+  };
+  const st = 'document.querySelector("#dragon-room").d32Cart.state';
+  const ev = code => p.evaluate(`(() => { const s = ${st}; ${code} })()`);
+  await restart(['ArrowLeft']);
+  check('round 3: LEFT on the title picks EASY: 6 hearts from the start, and the choice is remembered', await ev("return s.diff === 0 && s.hp === 6 && localStorage.getItem('d32-deep-diff') === '0';"));
+  await restart(['ArrowRight']);
+  const hard = await ev("const t0 = s.torch; return { diff: s.diff, hp: s.hp };");
+  await p.waitForTimeout(1000);
+  const burn = await ev("return 1 - s.torch;");
+  check('round 3: RIGHT picks HARD: 5 hearts, and the torch burns faster than on NORMAL', hard.diff === 2 && hard.hp === 5 && burn > 50 / 12000 * 1.1, JSON.stringify({ hard, burn }));
+  await restart([]);
+  check('round 3: NORMAL is the default', await ev('return s.diff === 1;'));
+  // פתק בקומה 1: (5,1), עומדים ב-(4,1) מול מזרח
+  await ev('s.mobs = []; s.x = 4; s.y = 1; s.dir = 1; s.atkCd = 0; s.dirty = true;');
+  await p.waitForTimeout(100); await p.keyboard.press('Space'); await p.waitForTimeout(150);
+  const note = await ev('return s.note && s.note[0];');
+  await p.keyboard.press('ArrowLeft'); await p.waitForTimeout(150);
+  check('round 3: FIRE at a note reads it, and any key closes it', note === 'TO WHOEVER COMES NEXT:' && await ev('return !s.note && s.dir === 1;'), String(note));
+  // קומה 2: קוצים ב-(12,1)
+  await ev("s.floor = 1; s.mode = 'next'; s.t = 99;"); await p.waitForTimeout(150); await p.keyboard.press('Space'); await p.waitForTimeout(200); await p.keyboard.press('ArrowLeft'); await p.waitForTimeout(100);
+  await ev('s.mobs = s.mobs.filter(m => m.k === "V"); s.x = 12; s.y = 1; s.hp = 5; const t = s.traps.find(t => t.x === 12 && t.y === 1); s.floorT = (150 * 9 + 20 - 12 * 37 - 11) % 150 + 150 * 9; s.dirty = true;');
+  await p.waitForTimeout(400);
+  const safe = await ev('return s.hp;');
+  await ev('s.floorT = 150 * 20 + ((125 - 12 * 37 - 11) % 150 + 150) % 150;');
+  await p.waitForTimeout(800);
+  check('round 3: spikes do nothing while down, and hit once when they rise under you', safe === 5 && await ev('return s.hp === 4;'), 'safe ' + safe);
+  // הסוחר בקומה 2: (1,14), עומדים ב-(1,13) מול דרום
+  await ev('s.x = 1; s.y = 13; s.dir = 2; s.coins = 5; s.potions = 0; s.hasBow = false; s.dirty = true;');
+  await p.keyboard.press('ArrowUp'); await p.waitForTimeout(150);
+  const shopOpen = await ev('return !!s.shop;');
+  await p.keyboard.press('Space'); await p.waitForTimeout(120);
+  const bought = await ev('return s.coins === 2 && s.potions === 1;');
+  await p.keyboard.press('ArrowDown'); await p.waitForTimeout(80); await p.keyboard.press('Space'); await p.waitForTimeout(120);
+  const noBow = await ev("return s.coins === 2 && s.msg === 'YOU HAVE NO BOW YET';");
+  await p.keyboard.press('Space'); await p.waitForTimeout(120); await p.keyboard.press('ArrowUp'); await p.waitForTimeout(80); await p.keyboard.press('Space'); await p.waitForTimeout(120);
+  const poor = await ev("return s.coins === 2 && s.potions === 1 && s.msg === 'NOT ENOUGH COINS';");
+  await p.keyboard.press('p'); await p.waitForTimeout(150);
+  check('round 3: the merchant opens a shop: a potion costs 3 coins, no arrows without a bow, no sale without coins, P leaves', shopOpen && bought && noBow && poor && await ev('return !s.shop && !s.paused;'), JSON.stringify({ shopOpen, bought, noBow, poor }));
+  // קומה 3: תקרה רעועה ב-(10,3)
+  await ev("s.floor = 2; s.mode = 'next'; s.t = 99;"); await p.waitForTimeout(150); await p.keyboard.press('Space'); await p.waitForTimeout(200); await p.keyboard.press('ArrowLeft'); await p.waitForTimeout(100);
+  await ev('s.mobs = []; s.x = 9; s.y = 3; s.dir = 1; s.hp = 5; s.dirty = true;');
+  await p.keyboard.press('ArrowUp'); await p.waitForTimeout(1400);
+  const stayed = await ev('return s.hp;');
+  await ev('s.x = 13; s.y = 2; s.dir = 2; s.hp = 5; s.dirty = true;');
+  await p.keyboard.press('ArrowUp'); await p.waitForTimeout(200); await p.keyboard.press('ArrowDown'); await p.waitForTimeout(1400);
+  check('round 3: a shaking ceiling hits you if you stay, and misses if you step away', stayed === 4 && await ev('return s.hp === 5 && s.traps.filter(t => t.k === "*" && t.done).length === 2;'), 'stayed ' + stayed);
+  // מוזיקה: כיבוי בתרמיל נזכר
+  await p.keyboard.press('p'); await p.waitForTimeout(150); await p.keyboard.press('ArrowRight'); await p.waitForTimeout(150);
+  for (let i = 0; i < 10; i++) { await p.keyboard.press('ArrowDown'); await p.waitForTimeout(60); }
+  await p.keyboard.press('Space'); await p.waitForTimeout(150); await p.keyboard.press('p'); await p.waitForTimeout(150);
+  check('round 3: music can be turned off in the bag, and that is remembered', await ev("return s.music === false && localStorage.getItem('d32-deep-music') === 'off';"));
+  await ev("localStorage.removeItem('d32-deep-music');");
+  // כל קומה אפשר לסיים בלי לדרוך על מלכודת ובלי לעבור דרך ידיד
+  const route = await p.evaluate(async () => {
+    const { _test } = await import('/assets/dragon/carts/deep.js');
+    return _test.FLOORS.map(f => {
+      const M = f.map.map(r => r.split('')), find = c => { const o = []; M.forEach((r, y) => r.forEach((ch, x) => ch === c && o.push([x, y]))); return o; };
+      const reach = open => { const st = find('@')[0], seen = new Set([st.join()]), q = [st]; while (q.length) { const [x, y] = q.shift(); for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const c = M[y + dy]?.[x + dx]; if (!c || '#%HN^*VOJ'.includes(c) || (c === 'D' && !open) || seen.has((x + dx) + ',' + (y + dy))) continue; seen.add((x + dx) + ',' + (y + dy)); q.push([x + dx, y + dy]); } } return seen; };
+      const shut = reach(false), all = reach(true);
+      return find('k').some(([x, y]) => shut.has(x + ',' + y)) || !find('D').length ? find('S').every(([x, y]) => all.has(x + ',' + y)) : false;
+    });
+  });
+  check('round 3: every floor can be finished without stepping on a trap', route.every(Boolean), JSON.stringify(route));
+  // שמירה ישנה (v3, בלי קושי) נטענת כ-NORMAL
+  await p.keyboard.press('Escape'); await p.waitForTimeout(300);
+  await S3(() => localStorage.setItem('d32-deep-save', JSON.stringify({ v: 3, floor: 2, hp: 5, coins: 1, score: 300, xp: 70, hasBow: false, arrows: 0, weapon: 'sword' })));
+  await S3(() => [...document.querySelectorAll('.d32-cart')].find(e => /DEEP/.test(e.textContent)).click());
+  await p.waitForFunction(() => document.querySelector('#dragon-room').d32Cart?.state?.t > 45);
+  await p.keyboard.press('ArrowUp'); await p.waitForTimeout(200);
+  check('round 3: an older save (round 2) loads as NORMAL', await ev('return s.mode === "play" && s.floor === 2 && s.diff === 1 && s.lv === 2;'));
+  await S3(() => localStorage.removeItem('d32-deep-save'));
   const longMsg = await p.evaluate(async () => (await import('/assets/dragon/carts/deep.js'))._test.messages().filter(m => m.length > 30));
   check('every game message fits on one line (30 characters at most)', longMsg.length === 0, longMsg.join(' | '));
   check('balance: every floor has 2+ torches, and enough light to walk the whole maze twice', bal.every(f => f.torches >= 2 && f.light >= f.open * 2), JSON.stringify(bal));

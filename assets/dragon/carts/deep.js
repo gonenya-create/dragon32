@@ -13,9 +13,10 @@ const VIEW = 150;                         // גובה המבט; מתחתיו פ�
 // # קיר  . רצפה  @ התחלה  S מדרגות  D דלת נעולה  c מטבע  t לפיד  p שיקוי  k מפתח
 // r עכברוש  g גובלין  m איש פטרייה  h רוח קטנה  T טרול  B מלך האוגרים  G גולם האבן  M מלך החפרפרות  W ספר הקסמים  X הדרקון
 // סבב 2: % קיר סדוק (FIRE פותח מעבר סודי)  $ אוצר נסתר  b קשת  a חצים  H סורג נעול (נפתח במפתח)  O כורה זקן  J אסיר (ידידים)
+// סבב 3: ^ מלכודת ברצפה (קוצים, ובספרייה רונה בוערת)  * תקרה שמתמוטטת  V סוחר (ידיד עם חנות)  N פתק על הקיר (FIRE קורא)
 const MAP1 = [
   '################',
-  '#@..c#....g....#',
+  '#@..cN....g....#',
   '#.##.#.####.##.#',
   '#.#..t.%..#..#.#',
   '#g#.####.c#.##.#',
@@ -27,27 +28,27 @@ const MAP1 = [
   '#.#.##.#g.#..#c#',
   '#.#....##.##.#.#',
   '#.####.#....r#.#',
-  '#...m#.#.##.##.#',
+  '#...m#.#.##.#N.#',
   '#.c#...t..#..BS#',
   '################'
 ];
 // קומה 2: המפתח בצפון, הדלת בדרום-מזרח, ומאחוריה הגולם והמדרגות
 const MAP2 = [
   '################',
-  '#@...#...h.....#',
+  '#@...#...h..^..#',
   '#.##.#.###.###.#',
   '#.#k.#...#...#.#',
   '#.#.####.###.#.#',
   '#..b#..m...#t..#',
   '#.###.####.###.#',
-  '#.....#c.....#.#',
+  '#.....Nc.....#.#',
   '#%###.#.####.#.#',
-  '#t..#...#..p.#.#',
+  '#t^.#...#..p.#.#',
   '#.#.#####.##.#.#',
   '#.#...h......#%#',
   '#.####.#####.#$#',
-  '#.c.a#.#...#.###',
-  '#.##...#.r..DGS#',
+  '#.c.a#.#.^.#.###',
+  '#V##...#.r..DGS#',
   '################'
 ];
 // לכל קומה עולם משלו (גונן: "כל הקומות נראות אותו דבר רק בצבע שונה?"): 1 מרתף לבנים עם לפידים, 2 מערה
@@ -56,7 +57,7 @@ const MAP3 = [
   '################',
   '#@..T.....#...m#',
   '#.####.##.#.#..#',
-  '#.#..#..#...#.##',
+  '#.#.V#..N.*.#*##',
   '#.#.c##.####.r.#',
   '#...#...#t...#.#',
   '###.#.#.#.####.#',
@@ -64,7 +65,7 @@ const MAP3 = [
   '#.###.#####.##.#',
   '#.t.#...c...#..#',
   '#.#.###.###.#.##',
-  '#.#...#...#.T..#',
+  '#.#...#.*.#.T..#',
   '#.###.###.#.##.#',
   '#.c...#%..#.O#.#',
   '#a#####$#...#MS#',
@@ -75,36 +76,36 @@ const MAP4 = [
   '################',
   '#@..#....h.....#',
   '#.#.#.##.####..#',
-  '#.#...#..#..#..#',
+  '#.#...#..#^.#.V#',
   '#.#####.##.g#.##',
   '#...m...#..##..#',
   '###.###.#.###k.#',
   '#t..#c.......#.#',
   '#.###.######.#.#',
-  '#..g#....h...#.#',
-  '##.##.##.###.#.#',
+  '#..g#.^..h...#.#',
+  '##.##.##.##N.#.#',
   '#p.#.t.#...#.#H#',
   '#.##.#.###.#.#J#',
-  '#.c..#...T.#.###',
+  '#.c^.#...T.#.###',
   '#a####k#####DWS#',
   '################'
 ];
 // קומה 5: מאורת הדרקון. קירות חרוכים, גחלים, עצמות וזהב. המפתח במערב, המאורה מאחורי הדלת, ושם הדרקון וקלטת הזהב
 const MAP5 = [
   '################',
-  '#@...#..T....h.#',
+  '#@...#..T..^.h.#',
   '#.##.#.####.##.#',
   '#.#..c.%..#..#.#',
   '#.#.####.##.##.#',
   '#.g...#...m....#',
   '####.##.#####.##',
-  '#p...#....g.#..#',
+  '#p...#.^..g.#..#',
   '#.####.##.#.#.##',
-  '#...h..#a.#...t#',
+  '#...h..#a.#.^.t#',
   '#.###.####.###.#',
   '#.t.#....c.#$%.#',
   '###.#.####.#####',
-  '#k..#.#....#...#',
+  '#k..N.#....#...#',
   '#.T.....#.D..XS#',
   '################'
 ];
@@ -115,11 +116,43 @@ const TORCH_FRAMES = 12000;                   // לפיד שלם: 4 דקות
 // רמה וניסיון (סבב 2): נקודות הניסיון הן הנקודות של כל אויב שמנצחים. כל רמה מוסיפה לב (עד 8), וכל שתי רמות מכה חזקה יותר
 const XPL = [0, 60, 160, 320, 560, 900, 1400, 2000];
 const levelOf = xp => XPL.filter(v => xp >= v).length;
-const maxHp = s => Math.min(8, 4 + s.lv);
+// רמות קושי (סבב 3): בוחרים במסך הפתיחה. torch = כמה זמן הלפיד מחזיק, wind = כמה זמן אויב מהבהב לפני מכה,
+// speed = קצב האויבים (קטן = מהיר), boss = כוח המכה של בוס, mult = מכפיל הניקוד בסוף, retry = לבבות אחרי מוות
+const DIFF = [
+  { name: 'EASY', torch: 1.4, wind: 56, speed: 1.15, boss: 1, heart: 1, mult: 0.5, retry: 3 },
+  { name: 'NORMAL', torch: 1, wind: 40, speed: 1, boss: 2, heart: 0, mult: 1, retry: 3 },
+  { name: 'HARD', torch: 0.75, wind: 30, speed: 0.85, boss: 2, heart: 0, mult: 1.5, retry: 2 }
+];
+const D = s => DIFF[s.diff ?? 1];
+const maxHp = s => Math.min(8, 4 + s.lv + D(s).heart);
+const spd = (s, K) => Math.round(K.speed * D(s).speed);
+const finalScore = s => Math.round(s.score * D(s).mult);
+// פתקים על הקירות: חוקר שירד לפניך משאיר סיפור ורמזים. המפתח: קומה,x,y של משבצת N
+const NOTES = {
+  '1,5,1': ['TO WHOEVER COMES NEXT:', 'THE TORCH WILL NOT LAST.', 'PICK UP EVERY ONE YOU SEE.', '- A LOST KNIGHT'],
+  '1,13,13': ['THE OGRE KING IS SLOW,', 'BUT HE HITS HARD.', 'WHEN HE FLASHES, STEP BACK!'],
+  '2,6,7': ['THE STONE GOLEM WAITS', 'BEHIND THE LOCKED DOOR.', 'THE KEY IS IN THE NORTH.'],
+  '3,8,3': ['THE CEILING HERE IS OLD.', 'IF IT SHAKES, MOVE!', 'THE OLD MINER KNOWS MORE.'],
+  '4,11,10': ['TWO KEYS IN THIS LIBRARY:', 'ONE FOR THE DOOR,', 'ONE FOR THE PRISONER.'],
+  '5,4,13': ['THE DRAGON BREATHES FIRE.', 'WHEN IT GLOWS, STEP BACK.', 'THE TAPE IS BEHIND IT.', '- THE LOST KNIGHT']
+};
+// מוזיקה (סבב 3): מנגינה מקורית קצרה לכל קומה, בצליל המרובע של ה-Dragon. n = חצאי טונים מעל base, null = שקט
+const TUNES = [
+  { step: 16, base: 220, n: [0, null, 3, null, 7, 5, 3, null, 2, null, -2, null, 0, null, null, null] },   // המרתף: איטי ומסתורי
+  { step: 14, base: 196, n: [0, 7, null, 5, 3, null, 5, null, 0, null, 10, 8, 7, null, null, null] },      // המערות: טיפות
+  { step: 12, base: 165, n: [0, 0, 3, 0, 5, 3, 0, null, 0, 0, 3, 7, 5, 3, 0, null] },                       // המכרה: קצב של עבודה
+  { step: 15, base: 247, n: [0, 4, 7, 11, 12, null, 11, 7, 9, null, 5, null, 4, null, null, null] },       // הספרייה: קסם
+  { step: 9, base: 110, n: [0, null, 0, 1, 0, null, 0, 3, 0, null, 0, 1, 7, 6, 5, null] }                  // המאורה: מהיר ומאיים
+];
+const BOSS_TUNE = { step: 8, base: 110, n: [0, 6, 0, 6, 1, 7, 1, 7] };
+const MUSIC = 'd32-deep-music', DIFF_KEY = 'd32-deep-diff';
+// מלכודות: מחזור של 3 שניות. עד 100 בטוח, 100-129 אזהרה (רואים ושומעים), 130-149 פוגע במי שעומד שם
+const TRAP_CYCLE = 150, TRAP_WARN = 100, TRAP_HIT = 130;
+const trapPhase = (s, t) => (s.floorT + t.x * 37 + t.y * 11) % TRAP_CYCLE;
 const swordDmg = s => 1 + ((s.lv - 1) >> 1);
 export const _test = { FLOORS, TORCH_FRAMES, PAR, messages: () => [
   ...[1, 2, 3, 4, 5].map(f => floorMsg(f)), ...Object.keys(KINDS).flatMap(k => [KINDS[k].name + '!', KINDS[k].name.replace(/^AN? /, 'THE ') + ' HITS YOU!', KINDS[k].name.replace(/^AN? /, 'THE ') + ' IS GONE!', KINDS[k].name + ' IS DEFEATED!', guardMsg(k, false), guardMsg(k, true)]),
-  'GOLDEN TAPE! FIRE TO TAKE IT', 'STAIRS DOWN. FIRE TO GO DOWN', 'A POTION! P - BAG TO DRINK IT', 'THE KEY TURNS. THE DOOR OPENS!', 'A LOCKED DOOR. FIND THE KEY!', 'YOUR HEARTS ARE FULL', 'AN OLD IRON KEY!', 'A BOW! P - BAG TO TAKE IT', 'FIVE ARROWS!', 'HIDDEN TREASURE! +200', 'THE BARS SWING OPEN!', 'LOCKED BARS. FIND A KEY!', 'A SECRET PASSAGE! +100', 'NO ARROWS LEFT. SWORD!', 'THE GOBLIN STEALS A COIN!', 'SPORES! YOU FEEL SLOW...', 'A GHOST BEHIND YOU!', 'LEVEL UP! NOW LEVEL 8', 'A FRIEND? WALK UP TO TALK', 'MINER: CRACKED WALLS HIDE GOLD', 'FREE AT LAST! TAKE THESE', 'THE MINER WAVES. GOOD LUCK!', 'OLD MINER RUNS OFF! -100', 'PRISONER RUNS OFF! -100', 'BOW IN HAND', 'A NEW TORCH!', 'A GOLD COIN!', 'THE TORCH IS DYING...'] };   // לבדיקות האוטומטיות
+  'GOLDEN TAPE! FIRE TO TAKE IT', 'STAIRS DOWN. FIRE TO GO DOWN', 'A POTION! P - BAG TO DRINK IT', 'THE KEY TURNS. THE DOOR OPENS!', 'A LOCKED DOOR. FIND THE KEY!', 'YOUR HEARTS ARE FULL', 'AN OLD IRON KEY!', 'A BOW! P - BAG TO TAKE IT', 'FIVE ARROWS!', 'HIDDEN TREASURE! +200', 'THE BARS SWING OPEN!', 'LOCKED BARS. FIND A KEY!', 'A SECRET PASSAGE! +100', 'NO ARROWS LEFT. SWORD!', 'THE GOBLIN STEALS A COIN!', 'SPORES! YOU FEEL SLOW...', 'A GHOST BEHIND YOU!', 'LEVEL UP! NOW LEVEL 8', 'A FRIEND? WALK UP TO TALK', 'MINER: CRACKED WALLS HIDE GOLD', 'FREE AT LAST! TAKE THESE', 'THE MINER WAVES. GOOD LUCK!', 'OLD MINER RUNS OFF! -100', 'PRISONER RUNS OFF! -100', 'BOW IN HAND', 'A NEW TORCH!', 'A GOLD COIN!', 'THE TORCH IS DYING...', ...TRAP_MSGS, 'A NOTE! FIRE TO READ IT', 'THANK YOU! COME AGAIN.', 'NOT ENOUGH COINS', 'YOU HAVE NO BOW YET', 'MERCHANT RUNS OFF! -100', 'MUSIC ON', 'MUSIC OFF', ...Object.values(NOTES).flat()], NOTES, DIFF, TUNES, TRAP_CYCLE };   // לבדיקות האוטומטיות
 let STYLE = 'brick';
 const wallC = () => STYLE === 'mine' || STYLE === 'lair' ? C3 : STYLE === 'library' ? C2 : C0, woodC = () => STYLE === 'mine' ? C0 : C3;
 // מספר קבוע לכל משבצת, כדי שהסלעים והלפידים יישארו באותו מקום בכל צעד
@@ -186,6 +219,8 @@ const GOLD = ['...1...', '..121..', '.11211.', '1112111'];
 const MINER = ['....333....', '...33033...', '...11111...', '...12121...', '...10001...', '....000....', '..3333333..', '.1.33333.1.', '1..33333..1', '...33.33...', '...3...3...', '..11...11..'];
 // אסיר: בגד מפוספס (1 עור, 2 עיניים, 3 פסים)
 const PRISONER = ['...1111...', '..111111..', '..121121..', '..111111..', '...1111...', '..333333..', '.10000001.', '1.333333.1', '..000000..', '..333333..', '..33..33..', '..11..11..'];
+// סוחר (סבב 3): כובע רחב ותרמיל גדול על הגב (1 עור, 2 עיניים, 3 כובע, 0 מעיל)
+const MERCHANT = ['...3333...', '.33333333.', '...1111...', '...1212...', '...1111...', '..000000..', '.10000003.', '1.000000.3', '..000000.3', '..000000..', '..00..00..', '..11..11..'];
 // הצבעים של כל דמות הם פונקציה, כי בכל קומה ערכת הצבעים אחרת
 const KINDS = {
   r: { name: 'A RAT', rows: RAT, h: 0.16, hp: 1, dmg: 1, speed: 40, pts: 10, col: () => ({ 3: C3, 1: C1, 2: C2 }) , blurb: 'QUICK. BITES.' },
@@ -198,6 +233,7 @@ const KINDS = {
   W: { name: 'THE SPELL BOOK', rows: BOOK, h: 0.55, hp: 24, dmg: 2, speed: 70, pts: 800, col: () => ({ 1: C1, 3: C3, 2: BLACK, 0: C2 }), boss: true, fly: true , blurb: 'FLOOR 4 BOSS', trophy: 'MAGIC PAGE' },
   X: { name: 'THE DRAGON', rows: DRAGON, h: 0.95, hp: 30, dmg: 2, speed: 75, pts: 2000, col: () => ({ 3: C3, 1: C1, 2: C1, 0: C0 }), boss: true, fire: true , blurb: 'FLOOR 5 BOSS', trophy: 'DRAGON SCALE' },
   O: { name: 'AN OLD MINER', rows: MINER, h: 0.62, hp: 1, dmg: 0, speed: 9999, pts: 0, col: () => ({ 1: C0, 2: BLACK, 3: C2, 0: C1 }), friend: true, blurb: 'A FRIEND' },
+  V: { name: 'A MERCHANT', rows: MERCHANT, h: 0.62, hp: 1, dmg: 0, speed: 9999, pts: 0, col: () => ({ 1: C0, 2: BLACK, 3: C3, 0: C1 }), friend: true, blurb: 'SELLS THINGS' },
   J: { name: 'A PRISONER', rows: PRISONER, h: 0.62, hp: 1, dmg: 0, speed: 9999, pts: 0, col: () => ({ 1: C0, 2: BLACK, 3: C2, 0: C1 }), friend: true, blurb: 'A FRIEND' },
   M: { name: 'THE MOLE KING', rows: MOLE, h: 0.85, hp: 20, dmg: 2, speed: 80, pts: 600, col: () => ({ 1: C0, 2: BLACK, 3: C2, 0: C1 }), boss: true , blurb: 'FLOOR 3 BOSS', trophy: 'MINER LAMP' }
 };
@@ -207,6 +243,14 @@ const POTION = ['.1.', '.1.', '333', '323', '333'];
 const HEART = ['33.33', '33333', '33333', '.333.', '..3..'];
 const KEY = ['.11....', '1..1111', '.11.1.1'];
 const ITEM_ROWS = { c: COIN, t: TORCH, k: KEY, p: POTION, b: BOW, a: QUIVER, $: GOLD };
+// מלכודות על הרצפה: קוצים (למטה חורים, באזהרה קצוות, ובמכה קוצים גבוהים), רונה, אבן שנופלת וערימת אבנים
+const HOLES = ['1.1.1.1.1', '.........', '1.1.1.1.1'];
+const TIPS = ['.1...1...1.', '11111111111'];
+const SPIKES = ['..1...1...1..', '..1...1...1..', '.111.111.111.', '.111.111.111.', '1111111111111'];
+const RUNE = ['..11111..', '.1..1..1.', '1..111..1', '.1..1..1.', '..11111..'];
+const ROCK = ['..111..', '.11111.', '1111211', '1121111', '.11111.'];
+const RUBBLE = ['...1..1...', '.1111.11..', '1111111111'];
+const NOTE_ICON = ['.111.', '.1.1.', '.1.1.', '11.11', '11.11'];
 
 // ---- המבט התלת-ממדי: מצויר לתוך מאגר פיקסלים, ורק כשמשהו משתנה (צעד, פנייה, לפיד) ----
 let img = null, buf = null;
@@ -396,6 +440,21 @@ function crackSide(z0, z1, side, light) {
   let prev = at(0.5, 0.1);
   for (let i = 1; i <= 6; i++) { const pt = at(0.5 + (i % 2 ? 0.12 : -0.1), 0.1 + i * 0.13); line(prev[0], prev[1], pt[0], pt[1], BLACK); prev = pt; }
 }
+// פתק על הקיר (סבב 3): דף בהיר מוצמד באמצע הקיר, עם שורות כתב
+function noteFront(z, light) {
+  const k = shade(z, light); if (k < 1) return;
+  const [x0, y0, x1, y1] = P(z), w = x1 - x0, h = y1 - y0, a = x0 + w * 0.38, b = x0 + w * 0.62, t = y0 + h * 0.3, u = y0 + h * 0.62;
+  polyFill([[a, t], [b, t], [b, u], [a, u]], C0, Math.max(2, k));
+  for (let i = 1; i < 5; i++) { const y = t + (u - t) * i / 5; line(a + 2, y, b - 2 - (i === 4 ? (b - a) * 0.3 : 0), y, C2); }
+  px((a + b) / 2, t + 1, C3); px((a + b) / 2 + 1, t + 1, C3);   // נעץ
+}
+function noteSide(z0, z1, side, light) {
+  if (shade((z0 + z1) / 2, light) < 1) return;
+  const a = P(z0), b = P(z1), xa = side < 0 ? a[0] : a[2], xb = side < 0 ? b[0] : b[2];
+  const at = (t, u) => [lerp(xa, xb, t), lerp(lerp(a[1], b[1], t), lerp(a[3], b[3], t), u)];
+  const q = [at(0.35, 0.3), at(0.65, 0.3), at(0.65, 0.62), at(0.35, 0.62)];
+  polyFill(q, C0, 3);
+}
 // סורג: מסגרת ומוטות, ומאחוריהם חושך
 function barsFront(z, light) {
   if (shade(z, light) < 1) return;
@@ -425,37 +484,40 @@ function stairsAt(z) {
 }
 
 // ---- מצב המשחק ----
-const wallAt = (s, x, y) => x < 0 || y < 0 || x > 15 || y > 15 || '#D%H'.includes(s.map[y][x]);
+const wallAt = (s, x, y) => x < 0 || y < 0 || x > 15 || y > 15 || '#D%HN'.includes(s.map[y][x]);
 function newFloor(s) {
   const F = FLOORS[s.floor - 1];
   setPalette(F.pal); STYLE = F.style;
   s.map = F.map.map(r => r.split(''));
   s.keys = 0;
-  s.mobs = []; s.items = []; s.seen = new Set();
+  s.mobs = []; s.items = []; s.seen = new Set(); s.traps = [];
   for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
     const ch = s.map[y][x];
     if (ch === '@') { s.x = x; s.y = y; s.map[y][x] = '.'; }
     else if (KINDS[ch]) { s.mobs.push({ k: ch, x, y, hx: x, hy: y, hp: KINDS[ch].hp, cd: 30 + (x * 7 + y * 3) % 40, wind: 0, flash: 0, dust: 0 }); s.map[y][x] = '.'; }
     else if ('ctpkab$'.includes(ch)) { s.items.push({ k: ch, x, y }); s.map[y][x] = '.'; }
     else if (ch === 'S') { s.sx = x; s.sy = y; s.map[y][x] = '.'; }
+    else if (ch === '^' || ch === '*') { s.traps.push({ k: ch, x, y, fall: 0, done: false, hitAt: -1 }); s.map[y][x] = '.'; }
   }
   s.dir = 1; s.dirty = true;
-  s.secrets = 0; s.secretsTotal = s.map.flat().filter(c => c === '%').length; s.slow = 0; s.moveCd = 0; s.shot = null;
+  s.secrets = 0; s.secretsTotal = s.map.flat().filter(c => c === '%').length; s.slow = 0; s.moveCd = 0; s.shot = null; s.shop = null; s.note = null; s.mt = 0;
 }
 function reset(s) {
   s.hp = 5; s.torch = 1; s.coins = 0; s.score = 0; s.floor = 1; s.keys = 0; s.atkCd = 0; s.hurt = 0; s.msg = ''; s.msgT = 0; s.paused = false; s.steps = 0;
   s.potions = 0; s.trophies = []; s.met = new Set(); s.page = 0; s.bagSel = 0; s.floorT = 0; s.times = [];
   s.xp = 0; s.lv = 1; s.hasBow = false; s.arrows = 0; s.weapon = 'sword';
+  s.hp = maxHp(s);
   newFloor(s);
 }
 const say = (s, text, t = 120) => { s.msg = text; s.msgT = t; };
+const TRAP_MSGS = ['SPIKES UNDER YOU! MOVE!', 'OUCH! SPIKES!', 'THE RUNE GLOWS! MOVE!', 'THE RUNE BURNS YOU!', 'THE CEILING SHAKES! MOVE!', 'A ROCK HITS YOU!'];
 // כל ההודעות קצרות מ-31 תווים, כדי שייכנסו בשורה אחת ולא יגיעו למספר הקומה (tools/dragon-test.mjs בודק)
 const floorMsg = f => 'FLOOR ' + f + ' - ' + ['THE CASTLE CELLAR', 'THE CAVES', 'THE OLD MINE', 'THE WIZARD LIBRARY', 'THE DRAGON LAIR'][f - 1];
 const guardMsg = (k, last) => SHORT[k] + (last ? ' GUARDS THE TAPE!' : ' GUARDS THE STAIRS');
 // ההתקדמות נשמרת בדפדפן בתחילת כל קומה (מקומה 2), כדי שאפשר יהיה להמשיך מחר
 const SAVE = 'd32-deep-save';
 const loadSave = () => { try { return JSON.parse(localStorage.getItem(SAVE)); } catch (e) { return null; } };
-const writeSave = s => { try { localStorage.setItem(SAVE, JSON.stringify({ v: 3, floor: s.floor, hp: s.hp, coins: s.coins, score: s.score, potions: s.potions, trophies: s.trophies, met: [...s.met], times: s.times, xp: s.xp, hasBow: s.hasBow, arrows: s.arrows, weapon: s.weapon })); } catch (e) {} };
+const writeSave = s => { try { localStorage.setItem(SAVE, JSON.stringify({ v: 4, diff: s.diff ?? 1, floor: s.floor, hp: s.hp, coins: s.coins, score: s.score, potions: s.potions, trophies: s.trophies, met: [...s.met], times: s.times, xp: s.xp, hasBow: s.hasBow, arrows: s.arrows, weapon: s.weapon })); } catch (e) {} };
 const clearSave = () => { try { localStorage.removeItem(SAVE); } catch (e) {} };
 const bossOf = s => s.mobs.find(m => KINDS[m.k].boss && !m.dust);
 function startFloor(s, snd) {
@@ -478,7 +540,8 @@ function layout(s) {
     if (cell.right === 2) s.seen.add((cx + DX[r]) + ',' + (cy + DY[r]));
     out.push(cell);
     cell.lsec = s.map[cy + DY[l]]?.[cx + DX[l]] === '%'; cell.rsec = s.map[cy + DY[r]]?.[cx + DX[r]] === '%';
-    if (wallAt(s, cx + DX[s.dir], cy + DY[s.dir])) { const f = s.map[cy + DY[s.dir]]?.[cx + DX[s.dir]]; cell.front = 1; cell.door = f === 'D'; cell.secret = f === '%'; cell.bars = f === 'H'; break; }
+    cell.lnote = s.map[cy + DY[l]]?.[cx + DX[l]] === 'N'; cell.rnote = s.map[cy + DY[r]]?.[cx + DX[r]] === 'N';
+    if (wallAt(s, cx + DX[s.dir], cy + DY[s.dir])) { const f = s.map[cy + DY[s.dir]]?.[cx + DX[s.dir]]; cell.front = 1; cell.door = f === 'D'; cell.secret = f === '%'; cell.bars = f === 'H'; cell.note = f === 'N'; break; }
   }
   return out;
 }
@@ -490,9 +553,9 @@ function render(s) {
   for (let i = L.length - 1; i >= 0; i--) {
     const c = L[i], z0 = i, z1 = i + 1;
     if (z0 > lt) continue;
-    if (c.front) { frontWall(z1, lt, c.door && !c.bars); if (c.secret) crackFront(z1, lt); if (c.bars) barsFront(z1, lt); }
-    if (c.left === 1) { sideWall(z0, z1, -1, lt, c.x, c.y); if (c.lsec) crackSide(z0, z1, -1, lt); } else sideOpening(z0, z1, -1, lt);
-    if (c.right === 1) { sideWall(z0, z1, 1, lt, c.x, c.y); if (c.rsec) crackSide(z0, z1, 1, lt); } else sideOpening(z0, z1, 1, lt);
+    if (c.front) { frontWall(z1, lt, c.door && !c.bars); if (c.secret) crackFront(z1, lt); if (c.bars) barsFront(z1, lt); if (c.note) noteFront(z1, lt); }
+    if (c.left === 1) { sideWall(z0, z1, -1, lt, c.x, c.y); if (c.lsec) crackSide(z0, z1, -1, lt); if (c.lnote) noteSide(z0, z1, -1, lt); } else sideOpening(z0, z1, -1, lt);
+    if (c.right === 1) { sideWall(z0, z1, 1, lt, c.x, c.y); if (c.rsec) crackSide(z0, z1, 1, lt); if (c.rnote) noteSide(z0, z1, 1, lt); } else sideOpening(z0, z1, 1, lt);
     if (STYLE === 'cave' && i > 0 && shade(i, lt) > 1 && hash(c.x, c.y, 9) < 0.35) puddle(i);
     if (STYLE === 'lair' && i > 0 && shade(i, lt) > 1 && hash(c.x, c.y, 8) < 0.4) lairFloor(i + 0.5, c.x, c.y);
     if (i > 0 && c.x === s.sx && c.y === s.sy && s.floor < LAST) stairsAt(i);
@@ -511,10 +574,11 @@ function hit(s, m, dmg, snd, api) {
   say(s, K.boss ? K.name + ' IS DEFEATED!' : K.name.replace(/^AN? /, 'THE ') + ' IS GONE!');
   s.xp += K.pts;
   const lv = levelOf(s.xp);
-  if (lv > s.lv) { s.hp = Math.min(maxHp({ lv }), s.hp + lv - s.lv); s.lv = lv; say(s, 'LEVEL UP! NOW LEVEL ' + lv, 150); snd.tone(523, 120, 1046); }
+  if (lv > s.lv) { s.hp = Math.min(maxHp({ lv, diff: s.diff }), s.hp + lv - s.lv); s.lv = lv; say(s, 'LEVEL UP! NOW LEVEL ' + lv, 150); snd.tone(523, 120, 1046); }
 }
 // ידיד: בפעם הראשונה נותן מתנה ורמז
 function talk(s, m, snd) {
+  if (m.k === 'V') { s.shop = { sel: 0 }; snd.tone(660, 80, 880); return; }   // סוחר: נפתחת החנות
   if (m.given) { say(s, m.k === 'O' ? 'THE MINER WAVES. GOOD LUCK!' : 'THANK YOU, FRIEND!'); return; }
   m.given = true; snd.tone(660, 150, 990);
   if (m.k === 'O') { s.torch = 1; s.dirty = true; say(s, 'MINER: CRACKED WALLS HIDE GOLD', 200); }
@@ -548,6 +612,10 @@ export default {
       'קשת: בקומה 2 מחכה קשת. בתרמיל בוחרים חרב או קשת, ואז FIRE יורה חץ לאורך המסדרון. לבוסים יש מגן מפני חצים.',
       'ידידים: הכורה הזקן והאסיר לא תוקפים. הולכים אליהם כדי לדבר, ומקבלים מתנה. מכה בידיד עולה 100 נקודות.',
       'סודות: קיר עם סדק אפשר לפתוח ב-FIRE. מאחוריו יש אוצר או קיצור דרך.',
+      'מלכודות: קוצים ורונות עולים כל כמה שניות, ולפני כן יש אזהרה. כשהתקרה רועדת, זזים מהר.',
+      'סוחר: בקומות 2 עד 4 יש סוחר. הולכים אליו, ובחנות קונים שיקוי, חצים או לפיד במטבעות.',
+      'פתקים: על חלק מהקירות יש פתק. FIRE מול הקיר קורא אותו.',
+      'קושי: במסך הפתיחה ◀ ▶ בוחרים EASY, NORMAL או HARD. בסוף הניקוד מוכפל לפי הקושי. את המוזיקה מכבים בתרמיל.',
       'רמה: כל ניצחון נותן ניסיון. ברמה חדשה מקבלים עוד לב (עד 8 לבבות), ובכל שתי רמות המכה חזקה יותר.',
       'בכל קומה יש בוס ששומר על המדרגות. על המדרגות, FIRE יורד קומה. בקומות 2, 4 ו-5 צריך קודם מפתח לדלת נעולה.',
       'שמירה: ההתקדמות נשמרת בתחילת כל קומה. אחרי מוות, FIRE מנסה שוב את הקומה, ו-▼ מוותר ושומר את התוצאה.',
@@ -560,6 +628,10 @@ export default {
       'Bow: a bow waits on floor 2. In the bag choose sword or bow; then FIRE shoots an arrow down the corridor. Bosses are shielded against arrows.',
       'Friends: the old miner and the prisoner never attack. Walk up to them to talk and get a gift. Hitting a friend costs 100 points.',
       'Secrets: a wall with a crack opens with FIRE. Behind it is treasure or a shortcut.',
+      'Traps: spikes and runes rise every few seconds, with a warning first. When the ceiling shakes, move fast.',
+      'Merchant: floors 2 to 4 have a merchant. Walk up to him and buy a potion, arrows or a torch with coins.',
+      'Notes: some walls have a note. FIRE at the wall reads it.',
+      'Difficulty: on the title screen ◀ ▶ choose EASY, NORMAL or HARD; the final score is multiplied by it. Music can be turned off in the bag.',
       'Level: every win gives experience. A new level gives another heart (up to 8), and every two levels a stronger blow.',
       'Each floor has a boss guarding the stairs. On floors 2, 4 and 5 you need a key for a locked door first.',
       'Progress is saved at the start of each floor. After a death FIRE tries the floor again, ▼ gives up and keeps the score. Esc or "Eject cartridge" leaves.']
@@ -567,7 +639,9 @@ export default {
 
   init(api) {
     if (!img) { img = api.gfx.ctx.createImageData(W, VIEW); buf = new Uint32Array(img.data.buffer); }
-    api.state = { mode: 'title', high: api.loadHigh('deep'), t: 0, save: loadSave(), titleP: 0, titleT: 0 };
+    let diff = 1, music = true;
+    try { diff = Math.max(0, Math.min(2, +(localStorage.getItem(DIFF_KEY) ?? 1))); music = localStorage.getItem(MUSIC) !== 'off'; } catch (e) {}
+    api.state = { mode: 'title', high: api.loadHigh('deep'), t: 0, save: loadSave(), titleP: 0, titleT: 0, diff, music };
     reset(api.state);
   },
 
@@ -575,22 +649,26 @@ export default {
     const s = api.state, snd = api.sound;
     s.t++;
     if (s.mode === 'next') { if (api.hit('fire') && s.t > 40) { s.floor++; startFloor(s, snd); } return; }
+    if (s.mode === 'title' && (api.hit('left') || api.hit('right'))) {   // רמת קושי
+      s.diff = (s.diff + (api.hit('right') ? 1 : 2)) % 3; snd.tone(440 + s.diff * 110, 40);
+      try { localStorage.setItem(DIFF_KEY, String(s.diff)); } catch (e) {}
+    }
     if (s.mode === 'title') { if (api.hit('down')) { s.titleP = ((s.titleP || 0) + 1) % 4; s.titleT = 0; snd.tone(330, 30); } else if (++s.titleT > 300) { s.titleP = ((s.titleP || 0) + 1) % 4; s.titleT = 0; } }
     if (s.mode === 'over' && s.t > 40) {
       const v = loadSave();
       if (api.hit('fire') && v) {   // מנסים שוב את הקומה: הכל חוזר למה שהיה בתחילתה, ולפחות 3 לבבות
-        reset(s); Object.assign(s, { floor: v.floor, hp: Math.max(3, v.hp), coins: v.coins, score: v.score, potions: v.potions || 0, trophies: v.trophies || [], met: new Set(v.met || []), times: v.times || [], xp: v.xp || 0, lv: levelOf(v.xp || 0), hasBow: !!v.hasBow, arrows: v.arrows || 0, weapon: v.hasBow && v.weapon === 'bow' ? 'bow' : 'sword' });
+        reset(s); Object.assign(s, { diff: v.diff ?? s.diff, floor: v.floor, hp: Math.max(DIFF[v.diff ?? s.diff].retry, v.hp), coins: v.coins, score: v.score, potions: v.potions || 0, trophies: v.trophies || [], met: new Set(v.met || []), times: v.times || [], xp: v.xp || 0, lv: levelOf(v.xp || 0), hasBow: !!v.hasBow, arrows: v.arrows || 0, weapon: v.hasBow && v.weapon === 'bow' ? 'bow' : 'sword' });
         startFloor(s, snd); return;
       }
       if (api.hit('down') || (api.hit('fire') && !v)) {   // מוותרים: התוצאה נכנסת להיכל התהילה והשמירה נמחקת
-        clearSave(); s.mode = 'title'; s.t = 0; s.save = null; setPalette(1); STYLE = 'brick'; api.submitScore('deep', s.score); s.high = api.loadHigh('deep'); return;
+        clearSave(); s.mode = 'title'; s.t = 0; s.save = null; setPalette(1); STYLE = 'brick'; api.submitScore('deep', finalScore(s)); s.high = api.loadHigh('deep'); return;
       }
       return;
     }
     if (s.mode === 'title' || s.mode === 'over' || s.mode === 'won') {
       if (s.mode === 'title' && s.save && api.hit('up') && s.t > 40) {   // ממשיכים מהקומה שנשמרה
         const v = s.save; reset(s);
-        Object.assign(s, { floor: v.floor, hp: v.hp, coins: v.coins, score: v.score, potions: v.potions || 0, trophies: v.trophies || [], met: new Set(v.met || []), times: v.times || [], xp: v.xp || 0, lv: levelOf(v.xp || 0), hasBow: !!v.hasBow, arrows: v.arrows || 0, weapon: v.hasBow && v.weapon === 'bow' ? 'bow' : 'sword' });
+        Object.assign(s, { diff: v.diff ?? s.diff, floor: v.floor, hp: v.hp, coins: v.coins, score: v.score, potions: v.potions || 0, trophies: v.trophies || [], met: new Set(v.met || []), times: v.times || [], xp: v.xp || 0, lv: levelOf(v.xp || 0), hasBow: !!v.hasBow, arrows: v.arrows || 0, weapon: v.hasBow && v.weapon === 'bow' ? 'bow' : 'sword' });
         startFloor(s, snd); return;
       }
       if (api.hit('fire') && s.t > 40) {
@@ -601,6 +679,22 @@ export default {
     }
     if (s.intro > 0) {
       if (['up', 'down', 'left', 'right', 'fire', 'pause'].some(b => api.hit(b))) s.intro = 0; else { s.intro--; return; }
+    }
+    if (s.note) {   // קוראים פתק: כל מקש סוגר
+      if (['up', 'down', 'left', 'right', 'fire', 'pause'].some(b => api.hit(b))) { s.note = null; snd.tone(300, 30); }
+      return;
+    }
+    if (s.shop) {   // החנות של הסוחר: ▲ ▼ בוחרים, FIRE קונה, P או LEAVE יוצאים
+      if (api.hit('down')) s.shop.sel = Math.min(SHOP.length - 1, s.shop.sel + 1);
+      if (api.hit('up')) s.shop.sel = Math.max(0, s.shop.sel - 1);
+      const it = SHOP[s.shop.sel];
+      if (api.hit('pause') || (api.hit('fire') && !it.cost)) { s.shop = null; say(s, 'THANK YOU! COME AGAIN.'); snd.tone(500, 60, 700); return; }
+      if (api.hit('fire')) {
+        if (it.bow && !s.hasBow) { say(s, 'YOU HAVE NO BOW YET'); snd.tone(120, 60); }
+        else if (s.coins < it.cost) { say(s, 'NOT ENOUGH COINS'); snd.tone(120, 60); }
+        else { s.coins -= it.cost; it.buy(s); say(s, it.got); snd.tone(880, 60, 1320); }
+      }
+      return;
     }
     if (api.hit('pause')) { s.paused = !s.paused; s.page = 0; s.bagSel = 0; snd.tone(330, 40); }
     if (s.paused) {   // תפריט עצירה: מפה, תרמיל, אלבום, הוראות. הלפיד לא דועך והאויבים לא זזים
@@ -622,7 +716,7 @@ export default {
 
     // הלפיד דועך: לפיד שלם מחזיק 4 דקות (סבב 1: מאוזן לפי זמני הקומות, tools/dragon-test.mjs בודק)
     const before = Math.round(light(s) * 2);
-    if (s.torch > 0) s.torch = Math.max(0, s.torch - 1 / TORCH_FRAMES);
+    if (s.torch > 0) s.torch = Math.max(0, s.torch - 1 / (TORCH_FRAMES * D(s).torch));
     if (Math.round(light(s) * 2) !== before) s.dirty = true;
     if (s.torch > 0 && s.torch < 0.2 && s.t % 600 === 0) say(s, 'THE TORCH IS DYING...');
 
@@ -654,6 +748,8 @@ export default {
         if (k === 'a') { s.arrows += 5; say(s, 'FIVE ARROWS!'); snd.tone(700, 80, 900); }
         if (k === '$') { s.coins += 3; s.score += 200; say(s, 'HIDDEN TREASURE! +200'); snd.tone(880, 300, 1760); }
       }
+      const rock = s.traps.find(t => t.k === '*' && t.x === nx && t.y === ny && !t.done && !t.fall);
+      if (rock) { rock.fall = 50; say(s, 'THE CEILING SHAKES! MOVE!', 60); snd.noise(300, 0.05); }
       if (nx === s.sx && ny === s.sy) say(s, bossOf(s) ? guardMsg(bossOf(s).k, s.floor === LAST) : s.floor === LAST ? 'GOLDEN TAPE! FIRE TO TAKE IT' : 'STAIRS DOWN. FIRE TO GO DOWN', 200);
     };
     if (api.hit('left')) { s.dir = (s.dir + 3) % 4; s.dirty = true; snd.tone(300, 20); }
@@ -669,22 +765,45 @@ export default {
     }
     if (api.hit('fire') && !s.atkCd) {
       s.atkCd = 18;
-      const onStairs = s.x === s.sx && s.y === s.sy && !bossOf(s), crack = s.map[fy]?.[fx] === '%';
-      if (s.weapon === 'bow' && s.arrows > 0 && !s.shot && !onStairs && !crack) {   // קשת: החץ טס לאורך המסדרון אל הראשון שבדרך
+      const onStairs = s.x === s.sx && s.y === s.sy && !bossOf(s), crack = s.map[fy]?.[fx] === '%', note = s.map[fy]?.[fx] === 'N';
+      if (s.weapon === 'bow' && s.arrows > 0 && !s.shot && !onStairs && !crack && !note) {   // קשת: החץ טס לאורך המסדרון אל הראשון שבדרך
         s.arrows--; snd.tone(900, 60, 400);
         let d = 1, x = s.x, y = s.y, target = null;
         for (; d <= 5; d++) { x += DX[s.dir]; y += DY[s.dir]; if (wallAt(s, x, y)) break; const m = mobAt(s, x, y); if (m) { target = m; break; } }
         s.shot = { t: 0, dist: Math.max(1, target ? d : d - 1), x: s.x, y: s.y, dir: s.dir };
         if (!s.arrows) { s.weapon = 'sword'; say(s, 'NO ARROWS LEFT. SWORD!'); }
       } else if (front && !onStairs) hit(s, front, swordDmg(s), snd, api);
+      else if (note) { s.note = NOTES[s.floor + ',' + fx + ',' + fy] || ['...']; s.atkCd = 0; snd.tone(700, 40, 900); }   // קוראים את הפתק
       else if (crack) {   // קיר סדוק: מעבר סודי
         s.map[fy][fx] = '.'; s.secrets++; s.score += 100; s.dirty = true; say(s, 'A SECRET PASSAGE! +100'); snd.noise(200, 0.08); snd.tone(200, 400, 800);
       } else if (onStairs) {
         const secs = Math.round(s.floorT / 50); s.lastTime = secs; s.times.push(secs);
         s.speedBonus = Math.max(0, (PAR[s.floor - 1] - secs) * 2); s.score += 500 + s.hp * 100 + s.speedBonus; s.t = 0; snd.tone(440, 400, 1760);
         if (s.floor < LAST) s.mode = 'next';
-        else { s.mode = 'won'; s.score += s.trophies.length * 300; clearSave(); api.submitScore('deep', s.score); }
+        else { s.mode = 'won'; s.score += s.trophies.length * 300; clearSave(); api.submitScore('deep', finalScore(s)); }
       } else snd.tone(200, 30, 160);
+    }
+
+    // פתק מולך: הודעה פעם אחת לכל מקום ומבט
+    if (s.map[s.y + DY[s.dir]]?.[s.x + DX[s.dir]] === 'N') { const k = s.x + ',' + s.y + ',' + s.dir; if (s.noteHint !== k) { s.noteHint = k; say(s, 'A NOTE! FIRE TO READ IT'); } }
+    // מלכודות (סבב 3)
+    for (const t of s.traps) {
+      const on = t.x === s.x && t.y === s.y, near = Math.abs(t.x - s.x) + Math.abs(t.y - s.y) <= 3;
+      if (t.k === '*') {   // תקרה רעועה: רועדת 50 תמונות ואז נופלת
+        if (!t.fall) continue;
+        if (--t.fall % 12 === 0 && t.fall) snd.noise(80, 0.03);
+        if (!t.fall) { t.done = true; snd.noise(250, 0.09); if (on) { s.hp--; s.hurt = 12; say(s, 'A ROCK HITS YOU!', 80); } }
+        continue;
+      }
+      const ph = trapPhase(s, t), cycle = Math.floor((s.floorT + t.x * 37 + t.y * 11) / TRAP_CYCLE), rune = STYLE === 'library';
+      if (ph === TRAP_WARN && near) snd.tone(rune ? 900 : 180, 60, rune ? 1400 : 120, 0.02);   // שומעים את המלכודת מתכוננת
+      if (ph === TRAP_WARN && on) say(s, rune ? 'THE RUNE GLOWS! MOVE!' : 'SPIKES UNDER YOU! MOVE!', 60);
+      if (ph >= TRAP_HIT && on && t.hitAt !== cycle) { t.hitAt = cycle; s.hp--; s.hurt = 12; snd.noise(100, 0.08); snd.tone(260, 150, 90); say(s, rune ? 'THE RUNE BURNS YOU!' : 'OUCH! SPIKES!', 80); }
+    }
+    // מוזיקה: מנגינה של הקומה, ומנגינה אחרת כשהבוס קרוב
+    if (s.music) {
+      const b = bossOf(s), tune = b && Math.abs(b.x - s.x) + Math.abs(b.y - s.y) <= 5 ? BOSS_TUNE : TUNES[s.floor - 1];
+      if (s.mt++ % tune.step === 0) { const n = tune.n[((s.mt / tune.step) | 0) % tune.n.length]; if (n !== null) snd.tone(tune.base * Math.pow(2, n / 12), tune.step * 17, 0, 0.012); }
     }
 
     // האויבים: מתקרבים, מתכוננים למכה (מהבהבים ונוהמים), ומכים אם השחקן לא התרחק
@@ -698,11 +817,11 @@ export default {
         if (--m.wind === 0) {
           if (adj && m.k === 'g' && s.coins) { s.coins--; m.flee = 8; say(s, 'THE GOBLIN STEALS A COIN!', 90); snd.tone(1200, 120, 600); }   // גובלין: גונב ובורח
           else if (adj) {
-            s.hp -= K.dmg; s.hurt = 12; snd.noise(120, 0.09); snd.tone(300, 200, 80); say(s, K.name.replace(/^AN? /, 'THE ') + ' HITS YOU!', 60);
+            s.hp -= K.boss ? D(s).boss : K.dmg; s.hurt = 12; snd.noise(120, 0.09); snd.tone(300, 200, 80); say(s, K.name.replace(/^AN? /, 'THE ') + ' HITS YOU!', 60);
             if (m.k === 'm') { s.slow = 300; say(s, 'SPORES! YOU FEEL SLOW...', 120); }   // פטרייה: ענן נבגים מאט
           }
           else snd.tone(120, 60, 80);   // החטיא: השחקן נסוג בזמן
-          m.cd = K.speed;
+          m.cd = spd(s, K);
         }
         continue;
       }
@@ -711,10 +830,10 @@ export default {
         const opts = [0, 1, 2, 3].map(d => [m.x + DX[d], m.y + DY[d]]).filter(([x, y]) => !wallAt(s, x, y) && !mobAt(s, x, y) && !(x === s.x && y === s.y));
         opts.sort((a, b) => (Math.abs(b[0] - s.x) + Math.abs(b[1] - s.y)) - (Math.abs(a[0] - s.x) + Math.abs(a[1] - s.y)));
         if (opts.length) { [m.x, m.y] = opts[0]; s.dirty = true; }
-        m.flee--; m.cd = K.speed >> 1; continue;
+        m.flee--; m.cd = spd(s, K) >> 1; continue;
       }
-      if (adj) { m.wind = 40; snd.tone(150, 160, 95); continue; }
-      if (m.k === 'T') { m.cd = K.speed; continue; }   // טרול: לא זז, רק חוסם
+      if (adj) { m.wind = D(s).wind; snd.tone(150, 160, 95); continue; }
+      if (m.k === 'T') { m.cd = spd(s, K); continue; }   // טרול: לא זז, רק חוסם
       if (K.ghost) {   // רוח קטנה: מרחפת דרך קירות, ישר אל השחקן כשהוא קרוב
         const ddx = s.x - m.x, ddy = s.y - m.y, far = Math.abs(ddx) + Math.abs(ddy);
         let nx = m.x, ny = m.y;
@@ -724,7 +843,7 @@ export default {
         else { const d = (s.t + m.x * 5 + m.y * 11) % 4; nx += DX[d]; ny += DY[d]; }
         if (nx >= 1 && ny >= 1 && nx <= 14 && ny <= 14 && !(nx === s.x && ny === s.y) && !mobAt(s, nx, ny)) { m.x = nx; m.y = ny; s.dirty = true; }
         if (far <= 4 && s.t % 4 === 0) snd.tone(700, 60, 500, 0.02);   // צחקוק דק
-        m.cd = K.speed; continue;
+        m.cd = spd(s, K); continue;
       }
       // רודפים מ-12 צעדים; רחוק יותר מסיירים במסדרונות, כדי שהקומה לא תהיה ריקה
       const path = stepToward(s, m, K.boss ? 3 : 12);
@@ -733,7 +852,7 @@ export default {
         const fwd = opts.filter(d => d !== ((m.face ?? 0) + 2) % 4);
         const pick = (fwd.length ? fwd : opts)[(s.t + m.x * 7 + m.y * 13) % (fwd.length || opts.length || 1)];
         if (pick !== undefined) { m.face = pick; m.x += DX[pick]; m.y += DY[pick]; s.dirty = true; }
-        m.cd = K.speed * 2;
+        m.cd = spd(s, K) * 2;
         continue;
       }
       if (path && path.d > 1) {
@@ -741,7 +860,7 @@ export default {
         if ((!K.boss || away <= 2) && !mobAt(s, path.nx, path.ny)) { m.x = path.nx; m.y = path.ny; s.dirty = true; }
         if (path.d <= 4 && s.t % 3 === 0) snd.tone(m.k === 'r' ? 900 : 110, 40, m.k === 'r' ? 1200 : 90, 0.03);   // שומעים אותו מתקרב
       }
-      m.cd = K.speed;
+      m.cd = spd(s, K);
     }
     s.mobs = s.mobs.filter(m => !m.gone);
     if (s.hp <= 0) { s.mode = 'over'; s.t = 0; snd.tone(300, 600, 60); }   // היכל התהילה רק כשמסיימים או מוותרים (גונן, 26.10, אפשרות ב)
@@ -763,6 +882,8 @@ export default {
     for (let i = s.view.length - 1; i >= 1; i--) {
       const c = s.view[i];
       if (i > lt) continue;
+      const tr = s.traps.find(o => o.x === c.x && o.y === c.y);
+      if (tr) drawTrap(g, s, tr, i + 0.45);
       const it = s.items.find(o => o.x === c.x && o.y === c.y);
       if (it) stand(g, ITEM_ROWS[it.k], i + 0.4, { 1: C1, 2: C3, 3: it.k === 't' ? C2 : C3 }, it.k === 'k' ? 0.06 : it.k === 'b' ? 0.16 : 0.12);
       const m = mobAt(s, c.x, c.y) || s.mobs.find(o => o.dust && o.x === c.x && o.y === c.y);
@@ -790,9 +911,41 @@ export default {
     drawHud(g, s);
     if (s.paused) drawPause(g, s);
     else if (s.intro > 0) drawIntro(g, s);
+    else if (s.shop) drawShop(g, s);
+    else if (s.note) drawNote(g, s);
+    // עומדים על מלכודת שמתכוננת: אזהרה בתחתית המבט
+    const under = !s.paused && s.traps.find(t => t.x === s.x && t.y === s.y && (t.k === '*' ? t.fall > 0 : trapPhase(s, t) >= TRAP_WARN));
+    if (under && (s.t >> 2) % 2) { g.rect(92, 131, 72, 11, BLACK); g.text('MOVE!', 128, 133, C3, 'center'); }
   }
 };
 
+// החנות של הסוחר (סבב 3): סוף סוף יש למטבעות שימוש
+const SHOP = [
+  { name: 'POTION', cost: 3, got: 'A POTION! P - BAG TO DRINK IT', buy: s => { s.potions++; } },
+  { name: 'FIVE ARROWS', cost: 2, bow: true, got: 'FIVE ARROWS!', buy: s => { s.arrows += 5; } },
+  { name: 'A NEW TORCH', cost: 2, got: 'A NEW TORCH!', buy: s => { s.torch = 1; s.dirty = true; } },
+  { name: 'LEAVE', cost: 0 }
+];
+function drawShop(g, s) {
+  g.rect(24, 22, 208, 106, BLACK); g.rect(24, 22, 208, 1, C2); g.rect(24, 127, 208, 1, C2); g.rect(24, 22, 1, 106, C2); g.rect(231, 22, 1, 106, C2);
+  g.sprite(MERCHANT, 32, 28, KINDS.V.col(), false);
+  g.text('THE MERCHANT', 50, 30, C1); g.text('WHAT WILL IT BE?', 50, 40, C0);
+  g.sprite(COIN, 196, 30, { 1: C1, 2: C3 }, false); g.text(String(s.coins), 204, 31, C1);
+  SHOP.forEach((it, i) => {
+    const y = 56 + i * 13, sel = i === s.shop.sel;
+    if (sel) g.rect(32, y - 2, 192, 11, C1);
+    g.text(it.name, 38, y, sel ? BLACK : C0);
+    if (it.cost) { g.text(it.cost + ' COINS', 218, y, sel ? BLACK : (s.coins >= it.cost ? C2 : C3), 'right'); }
+  });
+  g.text('UP DOWN: CHOOSE  FIRE: BUY', 128, 114, C2, 'center');
+}
+// פתק על הקיר, פתוח לקריאה
+function drawNote(g, s) {
+  const n = s.note.length, h = 24 + n * 11;
+  g.rect(28, 30, 200, h, C0); g.rect(30, 32, 196, h - 4, BLACK);
+  s.note.forEach((t, i) => g.text(t, 128, 40 + i * 11, i === n - 1 && t[0] === '-' ? C2 : C1, 'center'));
+  if ((s.t >> 4) % 2) g.text('ANY KEY', 128, 30 + h - 11, C2, 'center');
+}
 // התרמיל: מה אספנו, כמה, ולמה זה משמש. use = מה FIRE עושה כשהשורה נבחרת
 function bagItems(s) {
   const take = w => (s, snd) => { s.weapon = w; snd.tone(400, 60, 600); say(s, w === 'bow' ? 'BOW IN HAND' : 'SWORD IN HAND'); };
@@ -804,7 +957,30 @@ function bagItems(s) {
   out.push({ icon: 'coin', name: 'COINS ' + s.coins, what: '50 POINTS EACH' });
   if (s.trophies.length) out.push({ icon: 'trophy', name: 'KEEPSAKES X' + s.trophies.length, what: '+300 EACH IF YOU WIN' });
   out.push({ icon: 'level', name: 'LEVEL ' + s.lv, what: s.lv >= XPL.length ? 'TOP LEVEL!' : 'XP ' + s.xp + ' / ' + XPL[s.lv] });
+  out.push({ icon: 'music', name: s.music ? 'MUSIC ON' : 'MUSIC OFF', what: s.music ? 'FIRE: TURN IT OFF' : 'FIRE: TURN IT ON',
+    use: (s, snd) => { s.music = !s.music; s.mt = 0; snd.tone(600, 40); try { localStorage.setItem(MUSIC, s.music ? 'on' : 'off'); } catch (e) {} } });
   return out;
+}
+// מלכודת בעומק z: קוצים או רונה לפי השלב במחזור, תקרה רעועה עם סדק ואבן שנופלת
+function drawTrap(g, s, t, z) {
+  const p = P(z), H = p[3] - p[1];
+  if (t.k === '*') {
+    if (t.done) { stand(g, RUBBLE, z, { 1: C2 }, 0.07); return; }
+    const sh = t.fall ? ((s.t >> 1) % 2 ? 1 : -1) : 0;   // רועד
+    for (let i = -2; i <= 2; i++) line(VX + i * H / 18 + sh, p[1] + 1, VX + i * H / 14 + sh, p[1] + 3 + Math.abs(i) * H / 40, C2);
+    if (t.fall && t.fall < 16) stand(g, ROCK, z, { 1: C0, 2: C2 }, 0.1, -H * 0.85 * t.fall / 16);
+    return;
+  }
+  const ph = trapPhase(s, t);
+  if (STYLE === 'library') {   // רונה: עמומה, מהבהבת באזהרה, ובוערת במכה
+    const c = ph >= TRAP_HIT ? C3 : ph >= TRAP_WARN ? ((s.t >> 2) % 2 ? C1 : C3) : C2;
+    stand(g, RUNE, z, { 1: c }, 0.08);
+    if (ph >= TRAP_HIT) for (let n = 0; n < 12; n++) g.rect(VX + (hash(n, s.t >> 1, 3) - 0.5) * H * 0.3, p[3] - hash(n, s.t >> 1, 4) * H * 0.35, 1, 1, n % 2 ? C1 : C3);
+    return;
+  }
+  if (ph >= TRAP_HIT) stand(g, SPIKES, z, { 1: C0 }, 0.12);
+  else if (ph >= TRAP_WARN) stand(g, TIPS, z, { 1: C0 }, 0.05);
+  else stand(g, HOLES, z, { 1: C2 }, 0.05);
 }
 function stand(g, rows, z, colors, realH, bob = 0) {
   const p = P(z), scale = Math.max(1, Math.round((p[3] - p[1]) * realH / rows.length));
@@ -836,7 +1012,7 @@ function drawHud(g, s) {
     const x = s.x + dx, y = s.y + dy, X = MX + (dx + 2) * CS, Y = MY + (dy + 2) * CS;
     if (x < 0 || y < 0 || x > 15 || y > 15 || !s.seen.has(x + ',' + y)) continue;
     const ch = s.map[y][x];
-    if (ch === '#' || ch === '%') g.rect(X, Y, CS, CS, C2); else if (ch === 'D' || ch === 'H') g.rect(X + 1, Y + 1, CS - 2, CS - 2, C1); else if (x === s.sx && y === s.sy) g.rect(X + 1, Y + 1, CS - 2, CS - 2, C3);
+    if ('#%N'.includes(ch)) g.rect(X, Y, CS, CS, C2); else if (ch === 'D' || ch === 'H') g.rect(X + 1, Y + 1, CS - 2, CS - 2, C1); else if (x === s.sx && y === s.sy) g.rect(X + 1, Y + 1, CS - 2, CS - 2, C3);
   }
   g.sprite(ARROW[s.dir], MX + 2 * CS + 1, MY + 2 * CS + 1, { 1: C1 }, false);
   const text = s.msgT ? s.msg : 'P: MAP, BAG AND HELP';
@@ -844,7 +1020,7 @@ function drawHud(g, s) {
 }
 // תפריט עצירה: ארבעה דפים, ◀ ▶ עוברים ביניהם
 const PAGES = ['MAP', 'BAG', 'CREATURES', 'HOW TO PLAY'];
-const SHORT = { r: 'RAT', g: 'GOBLIN', m: 'MUSHROOM', h: 'GHOST', T: 'TROLL', B: 'OGRE KING', G: 'STONE GOLEM', M: 'MOLE KING', W: 'SPELL BOOK', X: 'DRAGON', O: 'OLD MINER', J: 'PRISONER' };
+const SHORT = { V: 'MERCHANT', r: 'RAT', g: 'GOBLIN', m: 'MUSHROOM', h: 'GHOST', T: 'TROLL', B: 'OGRE KING', G: 'STONE GOLEM', M: 'MOLE KING', W: 'SPELL BOOK', X: 'DRAGON', O: 'OLD MINER', J: 'PRISONER' };
 function frame(g, title, s) {
   g.rect(0, 0, W, VIEW + 1, BLACK);
   g.rect(8, 4, 240, 1, C2); g.rect(8, 146, 240, 1, C2); g.rect(8, 4, 1, 143, C2); g.rect(247, 4, 1, 143, C2);
@@ -859,7 +1035,7 @@ function drawPause(g, s) {
     for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
       if (!s.seen.has(x + ',' + y)) continue;
       const X = 68 + x * 7.5, Y = 26 + y * 7.4;
-      if ('#%'.includes(s.map[y][x])) g.rect(X, Y, 7.5, 7.4, C2); else if ('DH'.includes(s.map[y][x])) g.rect(X + 1, Y + 1, 5, 5, C1); else g.rect(X + 3, Y + 3, 2, 2, C0);
+      if ('#%N'.includes(s.map[y][x])) g.rect(X, Y, 7.5, 7.4, C2); else if ('DH'.includes(s.map[y][x])) g.rect(X + 1, Y + 1, 5, 5, C1); else g.rect(X + 3, Y + 3, 2, 2, C0);
       if (x === s.sx && y === s.sy) g.rect(X + 1, Y + 1, 5, 5, C3);
     }
     g.sprite(ARROW[s.dir], 68 + s.x * 7.5 + 1, 26 + s.y * 7.4 + 1, { 1: C1 }, false);
@@ -869,13 +1045,19 @@ function drawPause(g, s) {
     items.slice(0, 9).forEach((it, i) => {
       const y = 28 + i * 13, sel = i === s.bagSel;
       if (sel) g.rect(14, y - 2, 228, 11, C1);
-      const icon = { sword: [['.....1', '....1.', '...1..', '2.1...', '.2....', '2.2...'], { 1: C1, 2: C2 }], potion: [POTION, { 1: C1, 2: C3, 3: C3 }], key: [KEY, { 1: C1 }], coin: [COIN, { 1: C1, 2: C3 }], trophy: [['1.1.1', '11111', '.111.', '..1..', '.111.'], { 1: C1 }], bow: [BOW, { 1: C1 }], level: [['..1..', '.111.', '11111', '..1..', '..1..'], { 1: C3 }] }[it.icon];
+      const icon = { sword: [['.....1', '....1.', '...1..', '2.1...', '.2....', '2.2...'], { 1: C1, 2: C2 }], potion: [POTION, { 1: C1, 2: C3, 3: C3 }], key: [KEY, { 1: C1 }], coin: [COIN, { 1: C1, 2: C3 }], trophy: [['1.1.1', '11111', '.111.', '..1..', '.111.'], { 1: C1 }], bow: [BOW, { 1: C1 }], level: [['..1..', '.111.', '11111', '..1..', '..1..'], { 1: C3 }], music: [['..111', '..1.1', '..1.1', '111.1', '11.11'], { 1: C1 }] }[it.icon];
       g.sprite(icon[0], 18, y, icon[1], false);
       g.text(it.name, 30, y, sel ? BLACK : C0); g.text(it.what, 240, y, sel ? BLACK : C2, 'right');
     });
     g.text('UP DOWN: CHOOSE   FIRE: USE', 128, 124, C2, 'center');
   } else if (s.page === 2) {
-    const ks = ['r', 'g', 'm', 'h', 'T', 'O', 'J', 'B', 'G', 'M', 'W', 'X'];
+    // עשרה אויבים ובוסים בשני טורים, ומתחתם שורה של שלושת הידידים
+    const ks = ['r', 'g', 'm', 'h', 'T', 'B', 'G', 'M', 'W', 'X'];
+    ['O', 'J', 'V'].forEach((k, i) => {
+      const K = KINDS[k], x = 14 + i * 78, y = 118, known = s.met.has(k);
+      if (known) g.sprite(K.rows, x, y, K.col(), false); else g.text('?', x + 4, y + 3, C2);
+      g.text(known ? SHORT[k] : '???', x + 14, y + 3, known ? C1 : C2);
+    });
     ks.forEach((k, i) => {
       const K = KINDS[k], col = i % 2, row = i >> 1, x = 14 + col * 118, y = 25 + row * 18, known = s.met.has(k);
       if (known) { const sk = K.rows.length > 16 ? K.rows.filter((_, i) => i % 2 === 0) : K.rows; g.sprite(sk, x, y, K.col(), false); }
@@ -885,8 +1067,9 @@ function drawPause(g, s) {
     });
   } else {
     const L = [['UP', 'STEP FORWARD'], ['DOWN', 'STEP BACK - DODGE A BLOW!'], ['LEFT RIGHT', 'TURN'], ['FIRE', 'STRIKE. ON STAIRS: GO DOWN'], ['P', 'THIS MENU, AND BACK'], ['ESC', 'LEAVE. SAVED EACH FLOOR'], ['WALK UP', 'TALK TO A FRIEND']];
-    L.forEach(([k, t], i) => { g.text(k, 20, 30 + i * 15, C1); g.text(t, 90, 30 + i * 15, C0); });
-    g.text('CRACKED WALL? FIRE AT IT!', 128, 132, C3, 'center');
+    L.forEach(([k, t], i) => { g.text(k, 20, 28 + i * 12, C1); g.text(t, 90, 28 + i * 12, C0); });
+    g.text('CRACKED WALL OR A NOTE? FIRE!', 128, 114, C3, 'center');
+    g.text('SPIKES SHOW? STEP OFF!', 128, 125, C3, 'center');
   }
 }
 // לפני כל קומה: שם הקומה ומשפט אווירה, על רקע המבט הראשון
@@ -930,7 +1113,8 @@ function drawTitle(g, s) {
     g.text('AND FIVE BOSSES...', 128, 92, C0, 'center');
     for (let i = 0; i < 5; i++) g.text('?', 64 + i * 32, 104, C2, 'center', 2);
   }
-  if ((s.t >> 4) % 2) g.text('PRESS FIRE', 128, 128, C3, 'center', 2);
+  if ((s.t >> 4) % 2) g.text('PRESS FIRE', 128, 122, C3, 'center', 2);
+  g.text('LEFT RIGHT: ' + DIFF[s.diff ?? 1].name, 128, 140, s.diff === 2 ? C3 : C1, 'center');
   g.text('HIGH ' + s.high + '   DOWN: MORE', 128, 152, C2, 'center');
   if (s.save) g.text('UP: GO ON FROM FLOOR ' + s.save.floor, 128, 166, C0, 'center');
   g.text('(C) 2026 GONEN YAROM', 128, 182, C2, 'center');
@@ -954,10 +1138,12 @@ function drawEnd(g, s) {
     g.text('YOU BROUGHT BACK', 128, 78, C1, 'center', 2);
     g.text('THE GOLDEN TAPE!', 128, 96, C1, 'center', 2);
     if (s.trophies.length) g.text('KEEPSAKES: ' + s.trophies.length + ' X 300', 128, 140, C0, 'center');
+    if ((s.diff ?? 1) !== 1) g.text(D(s).name + ' X' + D(s).mult + ' = ' + finalScore(s), 128, 150, C3, 'center');
   } else {
     g.text('THE DEEP', 128, 30, C3, 'center', 3);
     g.text('HAS WON', 128, 60, C3, 'center', 3);
     g.text('SCORE ' + s.score, 128, 100, C1, 'center', 2);
+    if ((s.diff ?? 1) !== 1) g.text(D(s).name + ' X' + D(s).mult + ' = ' + finalScore(s), 128, 120, C3, 'center');
     if (s.t > 40) { g.text('FIRE: TRY FLOOR ' + s.floor + ' AGAIN', 128, 140, (s.t >> 4) % 2 ? C1 : C0, 'center'); g.text('DOWN: GIVE UP AND SAVE THE SCORE', 128, 156, C2, 'center'); }
     return;
   }
