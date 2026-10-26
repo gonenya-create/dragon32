@@ -313,7 +313,9 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
     const cart = root.classList.contains('is-cart');
     if (only) {
       // רק המסך, ביחס 4:3, על כל החלון. --tvw מחושב כך שהמסך (79% מהטלוויזיה) ממלא את החלון
-      const sw = Math.min(innerWidth, innerHeight * 4 / 3);
+      // בזמן משחק מחסנית "הוצאת המחסנית" יושב מתחת למסך: שומרים לו מקום, כדי שהמסך לא יידחק למעלה
+      const pad = cart ? root.querySelector('.d32-pad') : null;
+      const sw = Math.min(innerWidth, (innerHeight - (pad ? pad.offsetHeight + 12 : 0)) * 4 / 3);
       root.style.setProperty('--tvw', sw / 0.79 + 'px');
       root.style.setProperty('--sw', sw + 'px');   // רוחב המסך עצמו: בלי מסגרת העץ, אז הוא בדיוק ברוחב הזה
       root.style.setProperty('--fs', Math.min((sw - 28) / 19.6, (sw * 0.75 - 24) / (16 * 1.12)) + 'px');
@@ -333,8 +335,9 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
       root.style.setProperty('--fs', Math.min((sw - 28) / 19.6, (sw * 0.75 - 24) / (16 * 1.12)) + 'px');
       return;
     }
-    // בזמן משחק מחסנית יש מתחת למקלדת גם כפתור "הוצאת המחסנית": שומרים לו מקום, כדי שלא ייחתך
-    const avail = innerHeight - bar.offsetHeight - 40 - (cart ? 64 : 0);
+    // בזמן משחק מחסנית יש מתחת למסך "הוצאת המחסנית" ולפעמים "איך משחקים": שומרים להם מקום, כדי שהמסך לא יידחק למעלה
+    const cpad = cart ? root.querySelector('.d32-pad') : null;
+    const avail = innerHeight - bar.offsetHeight - 40 - (cpad ? cpad.offsetHeight + 12 : 0);
     // חלון התוכנית צריך לפחות 280 פיקסלים בצד; אם אין מקום, הוא נפתח מעל הטלוויזיה
     // בזמן משחק מחסנית הכלים מתקפלים, והטלוויזיה תופסת את כל הרוחב
     const room = coding && !cart ? innerWidth - 2 * (280 + 32) : innerWidth * 0.94;

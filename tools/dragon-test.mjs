@@ -886,6 +886,60 @@ if (part('cartridge DRAGON DEEP (full computer)')) {
     const { _test } = await import('/assets/dragon/carts/deep.js');
     return _test.FLOORS.map(F => { const all = F.map.join(''); return { torches: all.split('t').length - 1, open: all.split('').filter(c => c !== '#').length, light: (all.split('t').length) * _test.TORCH_FRAMES / 50 }; });
   });
+  // ---- סבב 2: קומה 1 מחדש לבדיקות ----
+  await p.keyboard.press('Escape'); await p.waitForTimeout(300);
+  await p.evaluate(() => localStorage.removeItem('d32-deep-save'));
+  await p.evaluate(() => [...document.querySelectorAll('.d32-cart')].find(e => /DEEP/.test(e.textContent)).click());
+  await p.waitForFunction(() => document.querySelector('#dragon-room').d32Cart?.state?.t > 45);
+  await p.keyboard.press('Space'); await p.waitForTimeout(150); await p.keyboard.press('ArrowLeft'); await p.waitForTimeout(100); await p.keyboard.press('ArrowRight'); await p.waitForTimeout(100);
+  const D = f => p.evaluate(f);
+  // קיר סדוק בקומה 1 (7,3): FIRE מולו פותח מעבר
+  await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.mobs = []; s.x = 6; s.y = 3; s.dir = 1; s.atkCd = 0; s.dirty = true; });
+  await p.keyboard.press('Space'); await p.waitForTimeout(150);
+  check('round 2: FIRE at a cracked wall opens a secret passage', await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return s.map[3][7] === '.' && s.secrets === 1; }));
+  // רמה: ניצחון שעובר את הסף מעלה רמה ומוסיף לב
+  await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.xp = 50; s.hp = 5; s.mobs = [{ k: 'g', x: s.x + 1, y: s.y, hx: 0, hy: 0, hp: 1, cd: 9999, wind: 0, flash: 0, dust: 0 }]; s.map[s.y][s.x + 1] = '.'; s.atkCd = 0; s.dirty = true; });
+  await p.keyboard.press('Space'); await p.waitForTimeout(150);
+  check('round 2: a win past the threshold levels up (level 2, room for 6 hearts)', await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return s.lv === 2 && s.hp === 6; }));
+  // קשת: חץ פוגע באויב שלושה צעדים קדימה; כשהחצים נגמרים חוזרים לחרב
+  await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.x = 6; s.y = 1; s.dir = 1; s.hasBow = true; s.arrows = 1; s.weapon = 'bow'; s.mobs = [{ k: 'g', x: 9, y: 1, hx: 9, hy: 1, hp: 2, cd: 9999, wind: 0, flash: 0, dust: 0 }]; s.atkCd = 0; s.dirty = true; });
+  await p.keyboard.press('Space'); await p.waitForTimeout(500);
+  check('round 2: an arrow hits the first enemy down the corridor; out of arrows = sword again', await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return s.mobs[0].hp === 1 && s.arrows === 0 && s.weapon === 'sword'; }));
+  // עם קשת ביד, FIRE על המדרגות יורד ולא יורה (ממצא הבודק)
+  const stairsBow = await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.mobs = s.mobs.filter(m => !m.boss && !'BGMWX'.includes(m.k)); s.hasBow = true; s.arrows = 3; s.weapon = 'bow'; s.x = s.sx; s.y = s.sy; s.atkCd = 0; s.shot = null; return s.floor; });
+  await p.keyboard.press('Space'); await p.waitForTimeout(150);
+  check('round 2: with the bow in hand, FIRE on the stairs goes down and spends no arrow', await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return s.mode === 'next' && s.arrows === 3; }));
+  await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.mode = 'play'; s.x = 6; s.y = 1; s.dir = 1; s.weapon = 'sword'; s.dirty = true; });
+  // גובלין גונב מטבע ובורח
+  await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.coins = 2; s.hp = 5; s.mobs = [{ k: 'g', x: s.x + 1, y: s.y, hx: 0, hy: 0, hp: 2, cd: 0, wind: 1, flash: 0, dust: 0 }]; });
+  await p.waitForTimeout(120);
+  check('round 2: a goblin steals a coin and runs, instead of hitting', await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return s.coins === 1 && s.hp === 5 && s.mobs[0].flee > 0; }));
+  // איש פטרייה: מכה מאטה
+  await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.mobs = [{ k: 'm', x: s.x + 1, y: s.y, hx: 0, hy: 0, hp: 3, cd: 0, wind: 1, flash: 0, dust: 0 }]; });
+  await p.waitForTimeout(120);
+  check('round 2: a mushroom man\'s blow leaves you slow', await D(() => document.querySelector('#dragon-room').d32Cart.state.slow > 0));
+  // טרול לא זז
+  await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.slow = 0; s.mobs = [{ k: 'T', x: 10, y: 1, hx: 10, hy: 1, hp: 5, cd: 0, wind: 0, flash: 0, dust: 0 }]; });
+  await p.waitForTimeout(800);
+  check('round 2: a troll stays put and blocks', await D(() => { const m = document.querySelector('#dragon-room').d32Cart.state.mobs[0]; return m.x === 10 && m.y === 1; }));
+  // ידיד: הליכה אליו נותנת מתנה פעם אחת; מכה בו עולה 100
+  await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.torch = 0.3; s.score = 500; s.mobs = [{ k: 'O', x: s.x + 1, y: s.y, hx: 0, hy: 0, hp: 1, cd: 0, wind: 0, flash: 0, dust: 0 }]; });
+  await p.keyboard.press('ArrowUp'); await p.waitForTimeout(150);
+  const gift = await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return s.torch > 0.95 && s.mobs[0].given; });
+  await D(() => { document.querySelector('#dragon-room').d32Cart.state.atkCd = 0; });
+  await p.keyboard.press('Space'); await p.waitForTimeout(150);
+  check('round 2: a friend gives a gift when you walk up; hitting a friend costs 100', gift && await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return s.score === 400 && s.mobs[0].dust > 0; }));
+  // קומה 4: הסורג נעול בלי מפתח
+  await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.floor = 3; s.mode = 'next'; s.t = 99; });
+  await p.waitForTimeout(150); await p.keyboard.press('Space'); await p.waitForTimeout(200); await p.keyboard.press('ArrowLeft'); await p.waitForTimeout(100);
+  await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.mobs = s.mobs.filter(m => m.k === 'J'); s.keys = 0; s.x = 14; s.y = 10; s.dir = 2; s.dirty = true; });
+  await p.keyboard.press('ArrowUp'); await p.waitForTimeout(120);
+  const barsShut = await D(() => document.querySelector('#dragon-room').d32Cart.state.map[11][14] === 'H');
+  await D(() => { document.querySelector('#dragon-room').d32Cart.state.keys = 1; });
+  await p.keyboard.press('ArrowUp'); await p.waitForTimeout(120);
+  check('round 2: the prisoner\'s bars stay shut without a key and open with one', barsShut && await D(() => document.querySelector('#dragon-room').d32Cart.state.map[11][14] === '.'));
+  await p.keyboard.press('ArrowUp'); await p.waitForTimeout(120); await p.keyboard.press('ArrowUp'); await p.waitForTimeout(120);
+  check('round 2: the freed prisoner gives a potion and arrows', await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return s.mobs.find(m => m.k === 'J').given && s.potions >= 1; }));
   const longMsg = await p.evaluate(async () => (await import('/assets/dragon/carts/deep.js'))._test.messages().filter(m => m.length > 30));
   check('every game message fits on one line (30 characters at most)', longMsg.length === 0, longMsg.join(' | '));
   check('balance: every floor has 2+ torches, and enough light to walk the whole maze twice', bal.every(f => f.torches >= 2 && f.light >= f.open * 2), JSON.stringify(bal));
