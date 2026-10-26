@@ -27,8 +27,9 @@
     // ההרפתקאות של Scott Adams: אישור בכתב (מייל 25.10.2026). קרדיט מלא וקישור ל-msadams.com, בלי שינויים, יורד לפי בקשה
     ['adventureland', 'Adventureland', 'Adventureland', 'a',
       ['Scott Adams · Adventure International, 1983', 'https://www.msadams.com/', null, null, 'adams']],
+    // על המסך: "BY ALEXIS AND SCOTT ADAMS"
     ['pirate', 'Pirate Adventure', 'Pirate Adventure', 'a',
-      ['Scott Adams · Adventure International, 1984', 'https://www.msadams.com/', null, null, 'adams']],
+      ['Alexis Adams & Scott Adams · Adventure International, 1984', 'https://www.msadams.com/', null, null, 'adams']],
     ['mission', 'Secret Mission', 'Secret Mission', 'a',
       ['Scott Adams · Adventure International', 'https://www.msadams.com/', null, null, 'adams']],
     // על המסך: "BY ALEXIS ADAMS". היא כתבה אותו עם Scott, והוא בסדרה שלו
@@ -113,14 +114,14 @@
         'על {PRESS ENTER} לוחצים [ENTER], ועל {RESTORE A PREVIOUSLY SAVED GAME?} עונים [N] ו[ENTER].',
         'משחק מילים באנגלית: כותבים פועל ושם עצם ולוחצים [ENTER]. למשל {CLIMB TREE} (לטפס על העץ), {GET AXE} (להרים את הגרזן), {LIGHT LAMP} (להדליק את המנורה).',
         'שלוש האותיות הראשונות מספיקות: {LIG LAM}. הולכים בשש דרכים: {N S E W UP DOWN} (צפון, דרום, מזרח, מערב, למעלה, למטה).',
-        '{LOOK} מתאר שוב את המקום, {INVENTORY} מראה מה בידיים, {HELP} נותן רמז, {SCORE} מראה כמה אוצרות נאספו.',
+        'תיאור המקום תמיד מופיע למעלה במסך. {INVENTORY} מראה מה בידיים, {HELP} נותן רמז, {SCORE} מראה כמה אוצרות נאספו.',
         'המטרה: למצוא 13 אוצרות, שמסומנים בכוכביות כמו {*GOLDEN FISH*}, ולהביא אותם למקום שבו שומרים אותם.'],
       en: ['Loading takes a little under two minutes, and the game starts by itself.',
         'Three questions first. At DO YOU HAVE LOWERCASE? answer [N] and [ENTER].',
         'At PRESS ENTER press [ENTER], and at RESTORE A PREVIOUSLY SAVED GAME? answer [N] and [ENTER].',
         'A word game: type a verb and a noun, then [ENTER]. For example CLIMB TREE, GET AXE, LIGHT LAMP.',
         'The first three letters are enough: LIG LAM. There are six ways to go: N S E W UP DOWN.',
-        'LOOK describes the place again, INVENTORY shows what you carry, HELP gives a hint, SCORE shows your treasures.',
+        'The description of the place always stays at the top of the screen. INVENTORY shows what you carry, HELP gives a hint, SCORE shows your treasures.',
         'The goal: find the 13 treasures, marked with stars like *GOLDEN FISH*, and bring them to where they are stored.']
     },
     // נבדק במכונה (26.10): טעינה, שאלות הפתיחה, הרמת חפץ, מלאי, עלייה במדרגות, HELP וניקוד
@@ -130,14 +131,14 @@
         'על {PRESS ENTER} לוחצים [ENTER], ועל {RESTORE A PREVIOUSLY SAVED GAME?} עונים [N] ו[ENTER].',
         'מתחילים בדירה בלונדון. כותבים פועל ושם עצם באנגלית ולוחצים [ENTER]. למשל {GET RUM} (לקחת את הרום), או {GO STAIRS} (לעלות במדרגות).',
         'שלוש האותיות הראשונות מספיקות. הולכים בשש דרכים: {N S E W UP DOWN}.',
-        '{LOOK} מתאר שוב את המקום, {INVENTORY} מראה מה בידיים, {HELP} נותן רמז, {SCORE} מראה כמה אוצרות נאספו.',
+        'תיאור המקום תמיד מופיע למעלה במסך. {INVENTORY} מראה מה בידיים, {HELP} נותן רמז, {SCORE} מראה כמה אוצרות נאספו.',
         'המטרה: להגיע לאי של הפיראטים, למצוא את האוצרות ולהביא אותם לדירה, כמו שכתוב על השלט שם.'],
       en: ['Loading takes a little under two minutes, and the game starts by itself.',
         'Three questions first. At DO YOU HAVE LOWERCASE? answer [N] and [ENTER].',
         'At PRESS ENTER press [ENTER], and at RESTORE A PREVIOUSLY SAVED GAME? answer [N] and [ENTER].',
         'You start in a flat in London. Type a verb and a noun, then [ENTER]. For example GET RUM or GO STAIRS.',
         'The first three letters are enough. There are six ways to go: N S E W UP DOWN.',
-        'LOOK describes the place again, INVENTORY shows what you carry, HELP gives a hint, SCORE shows your treasures.',
+        'The description of the place always stays at the top of the screen. INVENTORY shows what you carry, HELP gives a hint, SCORE shows your treasures.',
         'The goal: reach the pirates\' island, find the treasures and bring them back to the flat, as the sign there says.']
     },
     // נבדק במכונה (26.10): טעינה, שאלות הפתיחה, מלאי, HELP, תנועה למסדרון, LOOK ו-SCORE
@@ -147,14 +148,14 @@
         'על {PRESS ENTER} לוחצים [ENTER], ועל {RESTORE A PREVIOUSLY SAVED GAME?} עונים [N] ו[ENTER].',
         'אתם סוכן חשאי בכור גרעיני אוטומטי, ומישהו הטמין בו פצצת זמן. מתחילים בחדר תדריך.',
         'כותבים פועל ושם עצם באנגלית ולוחצים [ENTER]. למשל {GO WEST} (ללכת מערבה). שלוש האותיות הראשונות מספיקות. הולכים בשש דרכים: {N S E W UP DOWN}.',
-        '{LOOK} מתאר שוב את המקום, {INVENTORY} מראה מה בידיים, ו-{HELP} נותן רמז. כאן אין ניקוד: או שמצליחים, או ש...',
+        'תיאור המקום תמיד מופיע למעלה במסך. {INVENTORY} מראה מה בידיים, ו-{HELP} נותן רמז. כאן אין ניקוד: או שמצליחים, או ש...',
         'יש לחץ של זמן: אל תתעכבו. הגלאי שבידיים זוהר בירוק כל עוד הפצצה לא עומדת להתפוצץ.'],
       en: ['Loading takes a little under two minutes, and the game starts by itself.',
         'Three questions first. At DO YOU HAVE LOWERCASE? answer [N] and [ENTER].',
         'At PRESS ENTER press [ENTER], and at RESTORE A PREVIOUSLY SAVED GAME? answer [N] and [ENTER].',
         'You are a secret agent in an automated nuclear reactor, and someone has planted a time bomb. You start in a briefing room.',
         'Type a verb and a noun, then [ENTER]. For example GO WEST. The first three letters are enough. There are six ways to go: N S E W UP DOWN.',
-        'LOOK describes the place again, INVENTORY shows what you carry, and HELP gives a hint. There is no score here: either you make it, or...',
+        'The description of the place always stays at the top of the screen. INVENTORY shows what you carry, and HELP gives a hint. There is no score here: either you make it, or...',
         'Time is short, so don\'t dawdle. The detector you carry glows green while the bomb is still safe.']
     },
     // נבדק במכונה (26.10): טעינה, שאלות הפתיחה, פתיחת הארון, תנועה, הרמת הסכין ומלאי
@@ -164,14 +165,14 @@
         'על {PRESS ENTER} לוחצים [ENTER], ועל {RESTORE A PREVIOUSLY SAVED GAME?} עונים [N] ו[ENTER].',
         'הרוזן כריסטו קולל בקללת וודו, ואתם צריכים להסיר אותה. מתחילים בקפלה של הטירה, ליד ארון מתים סגור.',
         'כותבים פועל ושם עצם באנגלית ולוחצים [ENTER]. למשל {OPEN COFFIN} (לפתוח את הארון), {GO EAST} (ללכת מזרחה), {GET KNIFE} (להרים את הסכין). שלוש האותיות הראשונות מספיקות.',
-        'הולכים בשש דרכים: {N S E W UP DOWN}. {LOOK} מתאר שוב את המקום, ו-{INVENTORY} מראה מה בידיים.',
+        'תיאור המקום תמיד מופיע למעלה במסך. הולכים בשש דרכים: {N S E W UP DOWN}, ו-{INVENTORY} מראה מה בידיים.',
         'כאן אין ניקוד ו-{HELP} לא עוזר: בודקים כל חפץ ומנסים דברים.'],
       en: ['Loading takes a little under two minutes, and the game starts by itself.',
         'Three questions first. At DO YOU HAVE LOWERCASE? answer [N] and [ENTER].',
         'At PRESS ENTER press [ENTER], and at RESTORE A PREVIOUSLY SAVED GAME? answer [N] and [ENTER].',
         'Count Cristo has been cursed with a voodoo hex, and you must lift it. You start in the castle chapel, next to a closed coffin.',
         'Type a verb and a noun, then [ENTER]. For example OPEN COFFIN, GO EAST, GET KNIFE. The first three letters are enough.',
-        'There are six ways to go: N S E W UP DOWN. LOOK describes the place again, and INVENTORY shows what you carry.',
+        'The description of the place always stays at the top of the screen. There are six ways to go: N S E W UP DOWN, and INVENTORY shows what you carry.',
         'There is no score here and HELP doesn\'t help: examine everything and try things out.']
     }
   };
@@ -423,8 +424,8 @@
       const [LOADW, RUNW] = mc ? ['CLOADM', 'EXEC'] : ['CLOAD', 'RUN'];
       if (!auto) {
         status.textContent = mc === 'a'
-          ? (EN ? 'The tape "' + title + '" is in the recorder. Type CLOADM. The game starts by itself when it has loaded.'
-            : 'הקלטת "' + title + '" ברשמקול. הקלידו CLOADM. המשחק מתחיל לבד כשהטעינה נגמרת.')
+          ? (EN ? 'The tape "' + title + '" is in the recorder. Type CLOADM. Loading can take a few minutes: first S, then F and the tape\'s name, and the game starts by itself.'
+            : 'הקלטת "' + title + '" ברשמקול. הקלידו CLOADM. הטעינה יכולה לקחת כמה דקות: קודם S, אחר כך F ושם הקלטת, ואז המשחק מתחיל לבד.')
           : EN ? 'The tape "' + title + '" is in the recorder. Type ' + LOADW + ', and after OK type ' + RUNW + '.'
           : 'הקלטת "' + title + '" ברשמקול. הקלידו ' + LOADW + ', ואחרי ה-OK הקלידו ' + RUNW + '.';
         document.getElementById('canvas')?.focus({ preventScroll: true });
