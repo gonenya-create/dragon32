@@ -11,7 +11,7 @@ const VIEW = 150;                         // גובה המבט; מתחתיו פ�
 
 // ---- המבוך של קומה 1 (מצויר ביד, כדי שלכל מקום יהיה אופי ושכולם ישחקו באותו מבוך) ----
 // # קיר  . רצפה  @ התחלה  S מדרגות  D דלת נעולה  c מטבע  t לפיד  p שיקוי  k מפתח
-// r עכברוש  g גובלין  m איש פטרייה  h רוח קטנה  T טרול  B מלך האוגרים  G גולם האבן  M מלך החפרפרות  W ספר הקסמים
+// r עכברוש  g גובלין  m איש פטרייה  h רוח קטנה  T טרול  B מלך האוגרים  G גולם האבן  M מלך החפרפרות  W ספר הקסמים  X הדרקון
 const MAP1 = [
   '################',
   '#@..c#....g....#',
@@ -88,9 +88,29 @@ const MAP4 = [
   '#.####.#####DWS#',
   '################'
 ];
-const FLOORS = [{ map: MAP1, pal: 1, style: 'brick' }, { map: MAP2, pal: 0, style: 'cave' }, { map: MAP3, pal: 1, style: 'mine' }, { map: MAP4, pal: 0, style: 'library' }];
+// קומה 5: מאורת הדרקון. קירות חרוכים, גחלים, עצמות וזהב. המפתח במערב, המאורה מאחורי הדלת, ושם הדרקון וקלטת הזהב
+const MAP5 = [
+  '################',
+  '#@...#..T....h.#',
+  '#.##.#.####.##.#',
+  '#.#..c.#..#..#.#',
+  '#.#.####.##.##.#',
+  '#.g...#...m....#',
+  '####.##.#####.##',
+  '#p...#....g.#..#',
+  '#.####.##.#.#.##',
+  '#...h..#..#...t#',
+  '#.###.####.###.#',
+  '#...#....c.#...#',
+  '###.#.####.#####',
+  '#k..#.#....#...#',
+  '#.T.....#.D..XS#',
+  '################'
+];
+const FLOORS = [{ map: MAP1, pal: 1, style: 'brick' }, { map: MAP2, pal: 0, style: 'cave' }, { map: MAP3, pal: 1, style: 'mine' }, { map: MAP4, pal: 0, style: 'library' }, { map: MAP5, pal: 0, style: 'lair' }];
+const LAST = FLOORS.length;
 let STYLE = 'brick';
-const wallC = () => STYLE === 'mine' ? C3 : STYLE === 'library' ? C2 : C0, woodC = () => STYLE === 'mine' ? C0 : C3;
+const wallC = () => STYLE === 'mine' || STYLE === 'lair' ? C3 : STYLE === 'library' ? C2 : C0, woodC = () => STYLE === 'mine' ? C0 : C3;
 // מספר קבוע לכל משבצת, כדי שהסלעים והלפידים יישארו באותו מקום בכל צעד
 const hash = (x, y, k = 0) => { let h = (x * 374761393 + y * 668265263 + k * 2246822519) | 0; h = (h ^ (h >>> 13)) * 1274126177; return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -139,6 +159,14 @@ const BOOK = [
   '1111111111111111111', '1100110011100110011', '1111111110111111111', '1100110011100110011', '3333333333333333333', '.33333333.33333333.',
   '...3333.....3333...'
 ];
+// הדרקון: ראש עם קרניים ועיניים זוהרות, פה עם להבה, כנפיים פרושות וטפרים (3 קשקשים, 1 בטן ולהבה, 2 עיניים, 0 קרניים ושיניים)
+const DRAGON = [
+  '....0.............0....', '....00...........00....', '.....00.3333333.00.....', '......333333333333.....', '.....33322333332233....',
+  '.....33322333332233....', '.....3333333333333.....', '......3333111133.......', '......3301010103.......', '33.....33333333....33...',
+  '3333..3333333333.3333...', '333333331111111333333...', '.33333331111111333333...', '..333..3311111133.333...', '.......3311111133.......',
+  '.......33333333333......', '......333.....333.......', '.....0000.....0000......'
+];
+const TAPE = ['111111111', '133333331', '131.1.131', '133333331', '111111111'];
 // הצבעים של כל דמות הם פונקציה, כי בכל קומה ערכת הצבעים אחרת
 const KINDS = {
   r: { name: 'A RAT', rows: RAT, h: 0.16, hp: 1, dmg: 1, speed: 60, pts: 10, col: () => ({ 3: C3, 1: C1, 2: C2 }) },
@@ -149,6 +177,7 @@ const KINDS = {
   B: { name: 'THE OGRE KING', rows: OGRE, h: 0.88, hp: 12, dmg: 2, speed: 85, pts: 300, col: () => ({ 1: C0, 2: BLACK, 3: C3, 0: C1 }), boss: true },
   G: { name: 'THE STONE GOLEM', rows: GOLEM, h: 0.88, hp: 16, dmg: 2, speed: 95, pts: 450, col: () => ({ 1: C1, 2: C3, 0: BLACK }), boss: true },
   W: { name: 'THE SPELL BOOK', rows: BOOK, h: 0.55, hp: 24, dmg: 2, speed: 70, pts: 800, col: () => ({ 1: C1, 3: C3, 2: BLACK, 0: C2 }), boss: true, fly: true },
+  X: { name: 'THE DRAGON', rows: DRAGON, h: 0.95, hp: 30, dmg: 2, speed: 75, pts: 2000, col: () => ({ 3: C3, 1: C1, 2: C1, 0: C0 }), boss: true, fire: true },
   M: { name: 'THE MOLE KING', rows: MOLE, h: 0.85, hp: 20, dmg: 2, speed: 80, pts: 600, col: () => ({ 1: C0, 2: BLACK, 3: C2, 0: C1 }), boss: true }
 };
 const COIN = ['.11.', '1221', '1221', '.11.'];
@@ -195,6 +224,7 @@ function sideWall(z0, z1, side, light, cx = 0, cy = 0) {
   polyFill([[xa, a[1]], [xb, b[1]], [xb, b[3]], [xa, a[3]]], wallC(), k);
   const at = (t, u) => [lerp(xa, xb, t), lerp(lerp(a[1], b[1], t), lerp(a[3], b[3], t), u)];
   if (STYLE === 'cave') { caveLayers(at, cx * 2 + (side < 0 ? 0 : 1), cy); line(xa, a[1], xb, b[1], C2); line(xa, a[3], xb, b[3], C2); line(xb, b[1], xb, b[3], C2); stalactites(at, cx + side, cy); return; }
+  if (STYLE === 'lair') { lairWall(at, cx * 2 + (side < 0 ? 0 : 1), cy); line(xa, a[1], xb, b[1], C1); line(xa, a[3], xb, b[3], C1); line(xb, b[1], xb, b[3], C1); return; }
   if (STYLE === 'library') { shelves(at, cx * 2 + (side < 0 ? 0 : 1), cy, 8); line(xa, a[1], xb, b[1], C1); line(xa, a[3], xb, b[3], C1); line(xb, b[1], xb, b[3], C1); return; }
   if (STYLE === 'mine') { mineWall(at, cx, cy, side); line(xa, a[1], xb, b[1], C2); line(xa, a[3], xb, b[3], C2); return; }
   if (hash(cx, cy, side) < 0.3) wallTorch(at, z0 + 0.5, light);
@@ -226,6 +256,7 @@ function frontWall(z, light, door) {
     return;
   }
   polyFill([[x0, y0], [x1, y0], [x1, y1], [x0, y1]], wallC(), k);
+  if (STYLE === 'lair') { const at = (t, u) => [lerp(x0, x1, t), lerp(y0, y1, u)]; lairWall(at, 55, z * 3 | 0); line(x0, y0, x1, y0, C1); line(x0, y1, x1, y1, C1); line(x0, y0, x0, y1, C1); line(x1, y0, x1, y1, C1); return; }
   if (STYLE === 'library') { const at = (t, u) => [lerp(x0, x1, t), lerp(y0, y1, u)]; shelves(at, 77, z * 3 | 0, 14); line(x0, y0, x1, y0, C1); line(x0, y1, x1, y1, C1); line(x0, y0, x0, y1, C1); line(x1, y0, x1, y1, C1); if ((z | 0) % 2 === 0) candle(at(0.5, 0.86)[0], at(0.5, 0.86)[1], (y1 - y0) / 14); return; }
   if (STYLE === 'mine') { const at = (t, u) => [lerp(x0, x1, t), lerp(y0, y1, u)]; for (let n = 0; n < 40; n++) { const [x, y] = at(hash(n, z * 9 | 0, 1), hash(n, z * 9 | 0, 2)); px(x, y, C2); } for (const t of [0.04, 0.96]) { const [x] = at(t, 0); beam(x, y0, x, y1, (x1 - x0) / 40); } beam(x0, y0 + 1, x1, y0 + 1, (x1 - x0) / 40); line(x0, y1, x1, y1, C2); return; }
   if (STYLE === 'cave') { const at = (t, u) => [lerp(x0, x1, t), lerp(y0, y1, u)]; caveRock(at, 99, z * 7 | 0); line(x0, y0, x1, y0, C2); line(x0, y1, x1, y1, C2); line(x0, y0, x0, y1, C2); line(x1, y0, x1, y1, C2); stalactites(at, 98, z * 5 | 0); return; }
@@ -250,6 +281,20 @@ function caveRock(at, cx, cy) {
     let t = hash(cx, cy, 40 + n), u = hash(cx, cy, 50 + n) * 0.5, prev = at(t, u);
     for (let i = 0; i < 4; i++) { t += (hash(cx, cy, 60 + n * 4 + i) - 0.5) * 0.12; u += 0.1; const pt = at(Math.min(1, Math.max(0, t)), Math.min(1, u)); line(prev[0], prev[1], pt[0], pt[1], C2); prev = pt; }
   }
+}
+// קיר מאורה: סלע אדום עם סימני חריכה שחורים וגחלים צהובות שזוהרות בתוכו
+function lairWall(at, cx, cy) {
+  for (let n = 0; n < 5; n++) {
+    const t = hash(cx, cy, n), u = 0.3 + hash(cx, cy, n + 9) * 0.6, r = 0.06 + hash(cx, cy, n + 19) * 0.08;
+    for (let i = 0; i < 14; i++) { const ang = i / 14 * 6.283, [x0, y0] = at(t, u), [x1, y1] = at(Math.min(1, Math.max(0, t + Math.cos(ang) * r)), Math.min(1, Math.max(0, u + Math.sin(ang) * r * 1.6))); line(x0, y0, x1, y1, BLACK); }
+  }
+  for (let n = 0; n < 18; n++) { const [x, y] = at(hash(cx, cy, n + 40), hash(cx, cy, n + 60)); px(x, y, C1); px(x + 1, y, C1); }
+}
+// על רצפת המאורה: עצמות או ערימת זהב
+function lairFloor(z, cx, cy) {
+  const a = P(z), w = (a[2] - a[0]) / 256, y = a[3] - 2, off = (hash(cx, cy, 5) - 0.5) * 120 * w;
+  if (hash(cx, cy, 3) < 0.5) { line(VX + off - 14 * w, y, VX + off + 14 * w, y - 3 * w, C1); for (const e of [-14, 14]) { px(VX + off + e * w, y - 1, C1); px(VX + off + e * w, y + 1, C1); } }
+  else for (let i = 0; i < 10 * w + 3; i++) { const ww = (10 * w + 3 - i) * 1.6; line(VX + off - ww, y - i, VX + off + ww, y - i, i % 2 ? C1 : C3); }
 }
 // מדפי ספרים: ארבעה מדפים, ועליהם גבי ספרים צבעוניים בגבהים שונים. n = כמה ספרים בשורה
 function shelves(at, cx, cy, n) {
@@ -360,7 +405,7 @@ const bossOf = s => s.mobs.find(m => KINDS[m.k].boss && !m.dust);
 function startFloor(s, snd) {
   newFloor(s); s.mode = 'play'; s.t = 0; s.torch = 1;
   if (s.floor > 1) writeSave(s);
-  say(s, 'FLOOR ' + s.floor + [' - THE CASTLE CELLAR', ' - THE CAVES. FIND THE KEY', ' - THE OLD MINE', ' - THE WIZARD LIBRARY'][s.floor - 1], 180);
+  say(s, 'FLOOR ' + s.floor + [' - THE CASTLE CELLAR', ' - THE CAVES. FIND THE KEY', ' - THE OLD MINE', ' - THE WIZARD LIBRARY', ' - THE DRAGON LAIR'][s.floor - 1], 180);
   snd.tone(220, 120, 440);
 }
 const mobAt = (s, x, y) => s.mobs.find(m => !m.dust && m.x === x && m.y === y);
@@ -392,7 +437,8 @@ function render(s) {
     if (c.left === 1) sideWall(z0, z1, -1, lt, c.x, c.y); else sideOpening(z0, z1, -1, lt);
     if (c.right === 1) sideWall(z0, z1, 1, lt, c.x, c.y); else sideOpening(z0, z1, 1, lt);
     if (STYLE === 'cave' && i > 0 && shade(i, lt) > 1 && hash(c.x, c.y, 9) < 0.35) puddle(i);
-    if (i > 0 && c.x === s.sx && c.y === s.sy) stairsAt(i);
+    if (STYLE === 'lair' && i > 0 && shade(i, lt) > 1 && hash(c.x, c.y, 8) < 0.4) lairFloor(i + 0.5, c.x, c.y);
+    if (i > 0 && c.x === s.sx && c.y === s.sy && s.floor < LAST) stairsAt(i);
   }
   s.dirty = false;
 }
@@ -467,7 +513,7 @@ export default {
         if (k === 'p') { s.hp = Math.min(5, s.hp + 2); say(s, 'A HEALING POTION!'); snd.tone(500, 150, 900); }
         if (k === 'k') { s.keys++; say(s, 'AN OLD IRON KEY!'); snd.tone(660, 200, 990); }
       }
-      if (nx === s.sx && ny === s.sy) say(s, bossOf(s) ? KINDS[bossOf(s).k].name + ' GUARDS THE STAIRS!' : 'STAIRS DOWN. FIRE TO GO DOWN', 200);
+      if (nx === s.sx && ny === s.sy) say(s, bossOf(s) ? KINDS[bossOf(s).k].name + (s.floor === LAST ? ' GUARDS THE GOLDEN TAPE!' : ' GUARDS THE STAIRS!') : s.floor === LAST ? 'THE GOLDEN TAPE! FIRE TO TAKE IT' : 'STAIRS DOWN. FIRE TO GO DOWN', 200);
     };
     if (api.hit('left')) { s.dir = (s.dir + 3) % 4; s.dirty = true; snd.tone(300, 20); }
     if (api.hit('right')) { s.dir = (s.dir + 1) % 4; s.dirty = true; snd.tone(300, 20); }
@@ -483,7 +529,7 @@ export default {
         }
       } else if (s.x === s.sx && s.y === s.sy && !bossOf(s)) {
         s.score += 500 + s.hp * 100; s.t = 0; snd.tone(440, 400, 1760);
-        if (s.floor < FLOORS.length) s.mode = 'next';
+        if (s.floor < LAST) s.mode = 'next';
         else { s.mode = 'won'; clearSave(); api.submitScore('deep', s.score); }
       } else snd.tone(200, 30, 160);
     }
@@ -555,8 +601,10 @@ export default {
       const base = K.col(), cols = m.flash ? Object.fromEntries(Object.keys(base).map(k => [k, C1])) : m.wind && (m.wind >> 2) % 2 ? Object.fromEntries(Object.keys(base).map(k => [k, k === '2' ? BLACK : C3])) : base;
       const p0 = P(z), lift = K.fly ? -(p0[3] - p0[1]) * 0.28 + Math.sin(s.t / 6) * 3 : 0;
       stand(g, K.rows, z - (m.wind ? 0.05 : 0), cols, K.h, ((Math.sin(s.t / 9 + m.x) * 1.2) | 0) + lift);
+      if (K.fire && m.wind && m.wind < 24) { const t = (24 - m.wind) / 24; for (let y = VIEW - 1; y > VIEW - 1 - t * 110; y -= 2) for (let x = (y >> 1) % 3; x < W; x += 3) if (hash(x, y, s.t >> 2) < 0.55) g.rect(x, y, 2, 2, hash(x, y, 7) < 0.5 ? C1 : C3); }
       if (K.fly && m.wind) for (let n = 0; n < 6; n++) { const t = ((40 - m.wind) / 40 + n / 6) % 1; g.text('ABCDEFGHJKLMNPRSTW'[(n * 5 + (s.t >> 3)) % 18], VX + (n - 2.5) * 30 * t, lerp(p0[1] + 30, VIEW - 20, t), n % 2 ? C1 : C3, 'center', 1 + Math.round(t)); }
     }
+    if (s.floor === LAST && !bossOf(s)) { const i = s.view.findIndex((c, n) => n && c.x === s.sx && c.y === s.sy); if (i > 0 && i <= lt) stand(g, TAPE, i + 0.4, { 1: C1, 3: C3 }, 0.14, (Math.sin(s.t / 7) * 2) | 0); }
     if (s.hurt) for (let y = 0; y < VIEW; y += 2) for (let x = (y >> 1) % 2; x < W; x += 6) g.rect(x, y, 1, 1, C3);
     // אויב שעומד לידנו אבל לא מלפנים: חץ שמראה מאיפה הוא מגיע
     for (const m of s.mobs) {
@@ -627,10 +675,12 @@ function drawEnd(g, s) {
     if (s.t > 40 && (s.t >> 4) % 2) g.text('FIRE: DOWN TO FLOOR ' + (s.floor + 1), 128, 150, C2, 'center');
     return;
   }
-  if (s.mode === 'won') {
-    g.text('FLOOR ' + s.floor + ' CLEARED!', 128, 40, C1, 'center', 2);
-    g.text('THE STAIRS LEAD DEEPER...', 128, 74, C0, 'center');
-    g.text('MORE FLOORS ARE COMING SOON', 128, 88, C0, 'center');
+  if (s.mode === 'won') {   // הסוף: קלטת הזהב חוזרת הביתה
+    for (let i = 0; i < 50; i++) g.rect((i * 97) % W, (i * 53 + s.t) % H, 1, 1, i % 2 ? C1 : C3);
+    g.text('THE DRAGON IS DEFEATED!', 128, 16, C3, 'center');
+    g.sprite(TAPE, 101, 34, { 1: C1, 3: C3 }, false, 6);
+    g.text('YOU BROUGHT BACK', 128, 78, C1, 'center', 2);
+    g.text('THE GOLDEN TAPE!', 128, 96, C1, 'center', 2);
   } else {
     g.text('THE DEEP', 128, 40, C3, 'center', 3);
     g.text('HAS WON', 128, 70, C3, 'center', 3);
