@@ -792,9 +792,17 @@ if (part('cartridge DRAGON DEEP (full computer)')) {
   await p.waitForTimeout(800);
   const S = () => p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return { mode: s.mode, x: s.x, y: s.y, dir: s.dir, hp: s.hp, score: s.score, mobs: s.mobs.length, paused: s.paused, view: s.view && s.view.length }; });
   check('deep shows its title', (await S()).mode === 'title');
+  // סבב 1: מסכי פתיחה, ▼ עובר ביניהם
+  const tp0 = await p.evaluate(() => document.querySelector('#dragon-room').d32Cart.state.titleP);
+  await p.keyboard.press('ArrowDown'); await p.waitForTimeout(100);
+  const tp1 = await p.evaluate(() => document.querySelector('#dragon-room').d32Cart.state.titleP);
+  check('deep title: DOWN moves from the title to the story page (4 pages)', tp0 === 0 && tp1 === 1);
+  await p.keyboard.press('ArrowDown'); await p.waitForTimeout(100); await p.keyboard.press('ArrowDown'); await p.waitForTimeout(100);
   await p.waitForFunction(() => document.querySelector('#dragon-room').d32Cart.state.t > 45);
   await p.keyboard.press('Space'); await p.waitForTimeout(200);
   const a = await S();
+  check('each floor opens with its name and a line of story, and the game waits', await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return s.intro > 0; }));
+  check('the app shows a Hebrew how-to under the game', await p.evaluate(() => { const h = document.querySelector('.d32-cart-help'); return h && !h.hidden && h.querySelectorAll('li').length >= 5 && /קלטת הזהב/.test(h.textContent); }));
   check('deep starts on floor 1 at the entrance, facing east, with a 3D view', a.mode === 'play' && a.x === 1 && a.y === 1 && a.dir === 1 && a.view > 1, JSON.stringify(a));
   await p.keyboard.press('ArrowUp'); await p.waitForTimeout(100);
   check('up steps forward', (await S()).x === 2);
@@ -806,9 +814,19 @@ if (part('cartridge DRAGON DEEP (full computer)')) {
   const m0 = (await S()).mobs;
   await p.keyboard.press('Space'); await p.waitForTimeout(450); await p.keyboard.press('Space'); await p.waitForTimeout(1200);
   const c = await S();
+  check('meeting a goblin for the first time names it and puts it in the album', await p.evaluate(() => document.querySelector('#dragon-room').d32Cart.state.met.has('g')));
   check('two strikes defeat a goblin and give points', c.mobs === m0 - 1 && c.score >= 25, JSON.stringify(c));
   await p.keyboard.press('p'); await p.waitForTimeout(100);
   check('P opens the map and pauses', (await S()).paused);
+  // סבב 1: תפריט העצירה — ◀ ▶ דפים, הלפיד לא דועך, ושיקוי בתרמיל משמש רק כששותים אותו
+  const tor0 = await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.potions = 1; s.hp = 2; return s.torch; });
+  await p.keyboard.press('ArrowRight'); await p.waitForTimeout(150);
+  const bag = await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return { page: s.page, torch: s.torch }; });
+  check('pause menu: RIGHT goes to the BAG page, and the torch does not burn while paused', bag.page === 1 && bag.torch === tor0, JSON.stringify(bag));
+  await p.keyboard.press('ArrowDown'); await p.waitForTimeout(100); await p.keyboard.press('Space'); await p.waitForTimeout(150);
+  check('bag: FIRE on the potion drinks it (+2 hearts)', await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return s.hp === 4 && s.potions === 0; }));
+  await p.keyboard.press('ArrowRight'); await p.waitForTimeout(100); await p.keyboard.press('ArrowRight'); await p.waitForTimeout(150);
+  check('pause menu has 4 pages (map, bag, creatures, how to play)', (await p.evaluate(() => document.querySelector('#dragon-room').d32Cart.state.page)) === 3);
   await p.keyboard.press('p'); await p.waitForTimeout(100);
   // המדרגות נעולות כל עוד מלך האוגרים חי; אחרי שהוא נופל, FIRE על המדרגות מסיים את הקומה
   await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.x = s.sx; s.y = s.sy; s.dir = 3; s.mobs.find(o => o.k === 'B').cd = 9999; s.dirty = true; });
@@ -844,6 +862,33 @@ if (part('cartridge DRAGON DEEP (full computer)')) {
   await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.mobs = []; s.x = s.sx; s.y = s.sy; s.atkCd = 0; });
   await p.keyboard.press('Space'); await p.waitForTimeout(300);
   check('with the Dragon gone, FIRE takes the Golden Tape: the game is won and the save is cleared', await p.evaluate(() => document.querySelector('#dragon-room').d32Cart.state.mode === 'won' && !localStorage.getItem('d32-deep-save')));
+  // שמירה ישנה, מלפני התרמיל, ממשיכה בלי לקרוס
+  await p.keyboard.press('Escape'); await p.waitForTimeout(300);
+  await p.evaluate(() => localStorage.setItem('d32-deep-save', JSON.stringify({ floor: 3, hp: 4, coins: 2, score: 900 })));
+  await p.evaluate(() => [...document.querySelectorAll('.d32-cart')].find(e => /DEEP/.test(e.textContent)).click());
+  await p.waitForFunction(() => document.querySelector('#dragon-room').d32Cart?.state?.t > 45);
+  await p.keyboard.press('ArrowUp'); await p.waitForTimeout(300);
+  check('an old save (before the bag) still goes on from its floor', await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return s.mode === 'play' && s.floor === 3 && s.potions === 0 && s.met instanceof Set; }));
+  // אפשרות ב: מוות מחזיר לתחילת הקומה עם הניקוד של אז, ורק ויתור שולח להיכל התהילה
+  await p.keyboard.press('ArrowLeft'); await p.waitForTimeout(120);   // סוגרים את מסך הפתיחה של הקומה
+  const before = await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.score += 777; s.hp = 0; return s.score; });
+  await p.waitForTimeout(1100);
+  const dead = await p.evaluate(() => document.querySelector('#dragon-room').d32Cart.state.mode);
+  await p.keyboard.press('Space'); await p.waitForTimeout(300);
+  const again = await p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return { mode: s.mode, floor: s.floor, score: s.score, hp: s.hp }; });
+  check('after death, FIRE tries the floor again from its start (score as it was, 3+ hearts)', dead === 'over' && again.mode === 'play' && again.floor === 3 && again.score === before - 777 && again.hp >= 3, JSON.stringify(again));
+  await p.keyboard.press('ArrowLeft'); await p.waitForTimeout(120);
+  await p.evaluate(() => { document.querySelector('#dragon-room').d32Cart.state.hp = 0; });
+  await p.waitForTimeout(1100); await p.keyboard.press('ArrowDown'); await p.waitForTimeout(300);
+  check('after death, DOWN gives up: back to the title and the save is cleared', await p.evaluate(() => document.querySelector('#dragon-room').d32Cart.state.mode === 'title' && !localStorage.getItem('d32-deep-save')));
+  // איזון: בכל קומה יש לפחות 2 לפידים, והאור (התחלה + לפידים) מספיק לחקור את כל המבוך פעמיים בקצב של צעד בשנייה
+  const bal = await p.evaluate(async () => {
+    const { _test } = await import('/assets/dragon/carts/deep.js');
+    return _test.FLOORS.map(F => { const all = F.map.join(''); return { torches: all.split('t').length - 1, open: all.split('').filter(c => c !== '#').length, light: (all.split('t').length) * _test.TORCH_FRAMES / 50 }; });
+  });
+  const longMsg = await p.evaluate(async () => (await import('/assets/dragon/carts/deep.js'))._test.messages().filter(m => m.length > 30));
+  check('every game message fits on one line (30 characters at most)', longMsg.length === 0, longMsg.join(' | '));
+  check('balance: every floor has 2+ torches, and enough light to walk the whole maze twice', bal.every(f => f.torches >= 2 && f.light >= f.open * 2), JSON.stringify(bal));
   await p.keyboard.press('Escape');
   await p.close();
 }

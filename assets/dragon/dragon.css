@@ -133,10 +133,16 @@ button.d32-cart:focus-visible { outline: 3px solid var(--focus); outline-offset:
 }
 .d32-pad-btn.is-down { background: var(--ink); color: var(--card); }
 .d32-pad-fire { flex-grow: 1.6; border-color: var(--red); color: var(--red); }
+.d32-pad-pause { flex-grow: 0.7; font-size: 15px; }
 .d32-pad-fire.is-down { background: var(--red); color: var(--on-red); }
 .d32-eject { flex: 1 0 100%; padding: 8px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); font: inherit; font-size: 15px; cursor: pointer; }
 .d32-hof-hint { flex: 1 0 100%; order: -1; margin: 0; padding: 10px 12px; border: 2px solid var(--red); border-radius: 8px; background: var(--card); color: var(--ink); font-size: 16px; line-height: 1.5; }
 .d32-hof-hint[hidden] { display: none; }
+.d32-cart-help { flex: 1 0 100%; margin: 0; padding: 8px 12px; border: 1.5px dashed var(--line); border-radius: 8px; background: var(--card); color: var(--ink); font-size: 15px; line-height: 1.6; }
+.d32-cart-help[hidden] { display: none; }
+.d32-cart-help summary { cursor: pointer; font-weight: 700; }
+.d32-cart-help ul { margin: 6px 0 0; padding-inline-start: 20px; }
+.d32.is-phone .d32-cart-help { background: #2a2119; color: #efe6d2; border-color: #4a3d31; }
 .d32-pad-btn:focus-visible, .d32-eject:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 /* בזמן משחק, הכפתורים של ה-BASIC והמדפים לא רלוונטיים */
 .d32.is-cart .d32-try, .d32.is-cart .d32-tip { display: none; }
@@ -365,6 +371,7 @@ html.d32-booting .page { visibility: hidden; }
 .d32.is-theater .d32-pad { width: var(--tvw); max-width: none; box-sizing: border-box; }
 .d32.is-theater .d32-pad-btn { display: none; }
 .d32.is-theater .d32-eject { background: #241e19; color: #efe6d2; border-color: #6b5d4d; }
+.d32.is-theater .d32-cart-help { background: #241e19; color: #efe6d2; border-color: #6b5d4d; }
 .d32.is-theater .d32-shelf { width: var(--tvw); max-width: none; margin-top: 26px; }
 .prose .d32.is-theater .d32-shelf-title { color: #e1d5c1; }
 @media (prefers-reduced-motion: reduce) { .d32.is-theater .d32-crt { animation: none; } .d32-key { transition: none; } }

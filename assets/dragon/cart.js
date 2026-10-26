@@ -10,7 +10,9 @@ const KEYS = {
   a: 'left', d: 'right', w: 'up', s: 'down', ' ': 'fire', Enter: 'fire', z: 'fire', x: 'fire', p: 'pause'
 };
 const PAD = [
-  ['left', '◀', tr('שמאלה', 'Left')], ['up', '▲', tr('למעלה', 'Up')], ['down', '▼', tr('למטה', 'Down')], ['right', '▶', tr('ימינה', 'Right')], ['fire', 'FIRE', tr('אש / קפיצה', 'Fire / jump')]
+  ['left', '◀', tr('שמאלה', 'Left')], ['up', '▲', tr('למעלה', 'Up')], ['down', '▼', tr('למטה', 'Down')], ['right', '▶', tr('ימינה', 'Right')], ['fire', 'FIRE', tr('אש / קפיצה', 'Fire / jump')],
+  // P: עצירה ותפריט. מופיע רק במשחק שמבקש אותו ב-buttons (DRAGON DEEP: מפה, תרמיל, דמויות והוראות), כדי שגם בטלפון יגיעו אליו
+  ['pause', 'P', tr('עצירה, מפה ותרמיל', 'Pause, map and bag')]
 ];
 
 export function createCartRunner(root, sound, { onEject, onScores }) {
@@ -25,7 +27,7 @@ export function createCartRunner(root, sound, { onEject, onScores }) {
   const pad = document.createElement('div');
   pad.className = 'd32-pad';
   pad.setAttribute('dir', 'ltr');
-  const held = { left: false, right: false, up: false, down: false, fire: false };
+  const held = { left: false, right: false, up: false, down: false, fire: false, pause: false };
   let edges = {};
   const buttons = {};
   for (const [name, label, aria] of PAD) {
@@ -80,6 +82,14 @@ export function createCartRunner(root, sound, { onEject, onScores }) {
   hint.hidden = true;
   hint.innerHTML = tr('שיא חדש! בוחרים שם של 3 אותיות: <b>▲ ▼</b> מחליפים את האות המהבהבת, <b>OK</b> עובר לאות הבאה, וה-<b>OK</b> השלישי שומר את השם.', 'New high score! Choose 3 letters: <b>▲ ▼</b> change the blinking letter, <b>OK</b> moves to the next one, and the third <b>OK</b> saves your name.');
   pad.appendChild(hint);
+  // הסבר מתחת למשחק (גונן, 26.10: "הסבר בעברית מתחת למסך המשחק"): למחסנית שמגדירה help: { he: [...], en: [...] }
+  const help = document.createElement('details');
+  help.className = 'd32-cart-help';
+  help.dir = tr('rtl', 'ltr');   // הכפתורים בשורה משמאל לימין, אבל ההסבר בכיוון של השפה
+  help.hidden = true;
+  help.innerHTML = '<summary></summary><ul></ul>';
+  help.querySelector('summary').textContent = tr('איך משחקים', 'How to play');
+  pad.appendChild(help);
   tv.after(pad);
 
   let gen = 0, want = [];
@@ -101,7 +111,7 @@ export function createCartRunner(root, sound, { onEject, onScores }) {
     saveHigh() { /* השיאים נשמרים עכשיו דרך submitScore */ },
     // סוף משחק: אם התוצאה נכנסת לחמישייה, מבקשים שלוש אותיות ומראים את הטבלה
     // במסך השם צריך גם למעלה/למטה לבחירת אות, אז בטלפון מראים את כל הכפתורים
-    submitScore(id, score) { if (qualifies(id, score)) { overlay = createEntry(id, score, gameTitle); showButtons(PAD.map(x => x[0])); fireLabel('OK', tr('אישור', 'OK')); } },
+    submitScore(id, score) { if (qualifies(id, score)) { overlay = createEntry(id, score, gameTitle); showButtons(PAD.map(x => x[0]).filter(n => n !== 'pause')); fireLabel('OK', tr('אישור', 'OK')); } },
     get overlay() { return overlay; }
   };
 
@@ -148,10 +158,21 @@ export function createCartRunner(root, sound, { onEject, onScores }) {
     const mod = (await loadModule()).default;
     if (my !== gen) return;   // בינתיים הוכנסה מחסנית אחרת או שהמחסנית הוצאה
     gameTitle = mod.title;
+    const lines = mod.help && (tr('he', 'en') === 'he' ? mod.help.he : mod.help.en);
+    help.hidden = !lines;
+    // מילים באנגלית וחיצים בתוך משפט בעברית: כל אחת מבודדת, כדי שהשורה לא תתהפך
+    help.querySelector('ul').replaceChildren(...(lines || []).map(t => {
+      const li = document.createElement('li');
+      for (const part of t.split(/([A-Za-z][A-Za-z0-9]*(?: [A-Za-z][A-Za-z0-9]*)*|[▲▼◀▶](?: [▲▼◀▶])*)/)) {
+        if (!part) continue;
+        if (/^[A-Za-z▲▼◀▶]/.test(part)) { const b = document.createElement('bdi'); b.dir = 'ltr'; b.textContent = part; li.append(b); } else li.append(part);
+      }
+      return li;
+    }));
     overlay = null;
     game = mod;
     // רק הכפתורים שהמשחק צריך מופיעים בטלפון
-    want = mod.buttons || PAD.map(x => x[0]);
+    want = mod.buttons || PAD.map(x => x[0]).filter(n => n !== 'pause');
     showButtons(want);
     gameFire();
     frame = 0; acc = 0; edges = {};
