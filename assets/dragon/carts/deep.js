@@ -15,7 +15,7 @@ const MAP1 = [
   '#@..c#....g....#',
   '#.##.#.####.##.#',
   '#.#..t.#..#..#.#',
-  '#.#.####.c#.##.#',
+  '#g#.####.c#.##.#',
   '#...#r...##....#',
   '###.#.####..#m.#',
   '#c..#....p#.####',
@@ -48,10 +48,10 @@ const OGRE = [
   '.....3333....3333....', '.....111......111....', '....1111......1111...', '...11111......11111..'
 ];
 const KINDS = {
-  r: { name: 'A RAT', rows: RAT, h: 0.16, hp: 1, dmg: 1, speed: 34, pts: 10, colors: { 3: C3, 1: C1, 2: C2 } },
-  g: { name: 'A GOBLIN', rows: GOBLIN, h: 0.5, hp: 2, dmg: 1, speed: 46, pts: 25, colors: { 1: C0, 2: BLACK, 0: C1, 3: C3 } },
-  m: { name: 'A MUSHROOM MAN', rows: MUSH, h: 0.55, hp: 3, dmg: 1, speed: 80, pts: 40, colors: { 3: C3, 1: C1, 2: BLACK } },
-  B: { name: 'THE OGRE KING', rows: OGRE, h: 0.88, hp: 12, dmg: 2, speed: 64, pts: 300, colors: { 1: C0, 2: BLACK, 3: C3, 0: C1 }, boss: true }
+  r: { name: 'A RAT', rows: RAT, h: 0.16, hp: 1, dmg: 1, speed: 60, pts: 10, colors: { 3: C3, 1: C1, 2: C2 } },
+  g: { name: 'A GOBLIN', rows: GOBLIN, h: 0.5, hp: 2, dmg: 1, speed: 75, pts: 25, colors: { 1: C0, 2: BLACK, 0: C1, 3: C3 } },
+  m: { name: 'A MUSHROOM MAN', rows: MUSH, h: 0.55, hp: 3, dmg: 1, speed: 110, pts: 40, colors: { 3: C3, 1: C1, 2: BLACK } },
+  B: { name: 'THE OGRE KING', rows: OGRE, h: 0.88, hp: 12, dmg: 2, speed: 85, pts: 300, colors: { 1: C0, 2: BLACK, 3: C3, 0: C1 }, boss: true }
 };
 const COIN = ['.11.', '1221', '1221', '.11.'];
 const TORCH = ['.1.', '121', '.1.', '.3.', '.3.', '.3.'];
@@ -280,8 +280,17 @@ export default {
         continue;
       }
       if (m.cd > 0) { m.cd--; continue; }
-      if (adj) { m.wind = 28; snd.tone(150, 160, 95); continue; }
-      const path = stepToward(s, m, K.boss ? 3 : 7);
+      if (adj) { m.wind = 40; snd.tone(150, 160, 95); continue; }
+      // רודפים מ-12 צעדים; רחוק יותר מסיירים במסדרונות, כדי שהקומה לא תהיה ריקה
+      const path = stepToward(s, m, K.boss ? 3 : 12);
+      if (!path && !K.boss) {
+        const opts = [0, 1, 2, 3].filter(d => !wallAt(s, m.x + DX[d], m.y + DY[d]) && !mobAt(s, m.x + DX[d], m.y + DY[d]) && !(m.x + DX[d] === s.x && m.y + DY[d] === s.y));
+        const fwd = opts.filter(d => d !== ((m.face ?? 0) + 2) % 4);
+        const pick = (fwd.length ? fwd : opts)[(s.t + m.x * 7 + m.y * 13) % (fwd.length || opts.length || 1)];
+        if (pick !== undefined) { m.face = pick; m.x += DX[pick]; m.y += DY[pick]; s.dirty = true; }
+        m.cd = K.speed * 2;
+        continue;
+      }
       if (path && path.d > 1) {
         const away = Math.abs(path.nx - m.hx) + Math.abs(path.ny - m.hy);
         if ((!K.boss || away <= 2) && !mobAt(s, path.nx, path.ny)) { m.x = path.nx; m.y = path.ny; s.dirty = true; }
