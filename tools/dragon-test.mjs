@@ -929,7 +929,7 @@ if (part('cartridge DRAGON DEEP (full computer)')) {
   const gift = await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return s.torch > 0.95 && s.mobs[0].given; });
   await D(() => { document.querySelector('#dragon-room').d32Cart.state.atkCd = 0; });
   await p.keyboard.press('Space'); await p.waitForTimeout(150);
-  check('round 2: a friend gives a gift when you walk up; hitting a friend costs 100', gift && await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return s.score === 400 && s.mobs[0].dust > 0; }));
+  check('a friend gives a gift when you walk up; FIRE at a friend talks and never hurts (Gonen, 27.10)', gift && await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return s.score === 500 && !s.mobs[0].dust && s.msg === 'THE MINER WAVES. GOOD LUCK!'; }));
   // קומה 4: הסורג נעול בלי מפתח
   await D(() => { const s = document.querySelector('#dragon-room').d32Cart.state; s.floor = 3; s.mode = 'next'; s.t = 99; });
   await p.waitForTimeout(150); await p.keyboard.press('Space'); await p.waitForTimeout(200); await p.keyboard.press('ArrowLeft'); await p.waitForTimeout(100);

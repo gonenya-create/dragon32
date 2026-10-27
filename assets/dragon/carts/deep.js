@@ -153,7 +153,7 @@ const trapPhase = (s, t) => (s.floorT + t.x * 37 + t.y * 11) % TRAP_CYCLE;
 const swordDmg = s => 1 + ((s.lv - 1) >> 1);
 export const _test = { FLOORS, TORCH_FRAMES, PAR, messages: () => [
   ...[1, 2, 3, 4, 5].map(f => floorMsg(f)), ...Object.keys(KINDS).flatMap(k => [KINDS[k].name + '!', KINDS[k].name.replace(/^AN? /, 'THE ') + ' HITS YOU!', KINDS[k].name.replace(/^AN? /, 'THE ') + ' IS GONE!', KINDS[k].name + ' IS DEFEATED!', guardMsg(k, false), guardMsg(k, true)]),
-  'GOLDEN TAPE! FIRE TO TAKE IT', 'STAIRS DOWN. FIRE TO GO DOWN', 'A POTION! P - BAG TO DRINK IT', 'THE KEY TURNS. THE DOOR OPENS!', 'A LOCKED DOOR. FIND THE KEY!', 'YOUR HEARTS ARE FULL', 'AN OLD IRON KEY!', 'A BOW! P - BAG TO TAKE IT', 'FIVE ARROWS!', 'HIDDEN TREASURE! +200', 'THE BARS SWING OPEN!', 'LOCKED BARS. FIND A KEY!', 'A SECRET PASSAGE! +100', 'NO ARROWS LEFT. SWORD!', 'THE GOBLIN STEALS A COIN!', 'SPORES! YOU FEEL SLOW...', 'A GHOST BEHIND YOU!', 'LEVEL UP! NOW LEVEL 8', 'A FRIEND? WALK UP TO TALK', 'MINER: CRACKED WALLS HIDE GOLD', 'FREE AT LAST! TAKE THESE', 'THE MINER WAVES. GOOD LUCK!', 'OLD MINER RUNS OFF! -100', 'PRISONER RUNS OFF! -100', 'BOW IN HAND', 'A NEW TORCH!', 'A GOLD COIN!', 'THE TORCH IS DYING...', ...TRAP_MSGS, 'A NOTE! FIRE TO READ IT', 'THANK YOU! COME AGAIN.', 'NOT ENOUGH COINS', 'YOU HAVE NO BOW YET', 'YOUR TORCH IS STILL BRIGHT', 'MERCHANT RUNS OFF! -100', 'MUSIC ON', 'MUSIC OFF', ...Object.values(NOTES).flat()], NOTES, DIFF, TUNES, TRAP_CYCLE };   // לבדיקות האוטומטיות
+  'GOLDEN TAPE! FIRE TO TAKE IT', 'STAIRS DOWN. FIRE TO GO DOWN', 'A POTION! P - BAG TO DRINK IT', 'THE KEY TURNS. THE DOOR OPENS!', 'A LOCKED DOOR. FIND THE KEY!', 'YOUR HEARTS ARE FULL', 'AN OLD IRON KEY!', 'A BOW! P - BAG TO TAKE IT', 'FIVE ARROWS!', 'HIDDEN TREASURE! +200', 'THE BARS SWING OPEN!', 'LOCKED BARS. FIND A KEY!', 'A SECRET PASSAGE! +100', 'NO ARROWS LEFT. SWORD!', 'THE GOBLIN STEALS A COIN!', 'SPORES! YOU FEEL SLOW...', 'A GHOST BEHIND YOU!', 'LEVEL UP! NOW LEVEL 8', 'A FRIEND? WALK UP TO TALK', 'MINER: CRACKED WALLS HIDE GOLD', 'FREE AT LAST! TAKE THESE', 'THE MINER WAVES. GOOD LUCK!', 'BOW IN HAND', 'A NEW TORCH!', 'A GOLD COIN!', 'THE TORCH IS DYING...', ...TRAP_MSGS, 'A NOTE! FIRE TO READ IT', 'THANK YOU! COME AGAIN.', 'NOT ENOUGH COINS', 'YOU HAVE NO BOW YET', 'YOUR TORCH IS STILL BRIGHT', 'MUSIC ON', 'MUSIC OFF', ...Object.values(NOTES).flat()], NOTES, DIFF, TUNES, TRAP_CYCLE };   // לבדיקות האוטומטיות
 let STYLE = 'brick';
 const wallC = () => STYLE === 'mine' || STYLE === 'lair' ? C3 : STYLE === 'library' ? C2 : C0, woodC = () => STYLE === 'mine' ? C0 : C3;
 // מספר קבוע לכל משבצת, כדי שהסלעים והלפידים יישארו באותו מקום בכל צעד
@@ -564,10 +564,10 @@ function render(s) {
   s.dirty = false;
 }
 
-// פגיעה בדמות: ידיד בורח וזה עולה 100 נקודות; אויב מאבד חיים, ובניצחון נותן נקודות וניסיון
+// פגיעה בדמות: אויב מאבד חיים, ובניצחון נותן נקודות וניסיון. בידיד אי אפשר לפגוע (גונן, 27.10: FIRE מול ידיד = שיחה)
 function hit(s, m, dmg, snd, api) {
   const K = KINDS[m.k];
-  if (K.friend) { m.dust = 30; s.score = Math.max(0, s.score - 100); say(s, SHORT[m.k] + ' RUNS OFF! -100'); snd.tone(200, 300, 90); return; }
+  if (K.friend) return;
   m.hp -= dmg; m.flash = 8; snd.noise(60, 0.07); snd.tone(260, 60, 120);
   if (m.hp > 0.01) return;
   m.dust = 45; m.wind = 0; s.score += K.pts; snd.tone(600, 200, 100);
@@ -611,7 +611,7 @@ export default {
       'תפריט: P עוצר את המשחק ופותח מפה, תרמיל (שם שותים שיקוי), אלבום דמויות והוראות. ◀ ▶ מחליפים דף.',
       'הלפיד דועך עם הזמן, וכשהוא חלש רואים פחות. בכל קומה יש לפידים חדשים.',
       'קשת: בקומה 2 מחכה קשת. בתרמיל בוחרים חרב או קשת, ואז FIRE יורה חץ לאורך המסדרון. לבוסים יש מגן מפני חצים.',
-      'ידידים: הכורה הזקן והאסיר לא תוקפים. הולכים אליהם כדי לדבר, ומקבלים מתנה. מכה בידיד עולה 100 נקודות.',
+      'ידידים: הכורה הזקן והאסיר לא תוקפים. הולכים אליהם כדי לדבר, ומקבלים מתנה. גם FIRE מולם פותח שיחה, ואי אפשר לפגוע בהם.',
       'סודות: קיר עם סדק אפשר לפתוח ב-FIRE. מאחוריו יש אוצר או קיצור דרך.',
       'מלכודות: קוצים ורונות עולים כל כמה שניות, ולפני כן יש אזהרה. כשהתקרה רועדת, זזים מהר.',
       'סוחר: בקומות 2 עד 4 יש סוחר. הולכים אליו, ובחנות קונים שיקוי, חצים או לפיד במטבעות.',
@@ -627,7 +627,7 @@ export default {
       'P pauses and opens a menu: map, bag (drink potions there), the creature album and help. ◀ ▶ change page.',
       'The torch fades with time, and a weak torch shows less. Each floor has new torches.',
       'Bow: a bow waits on floor 2. In the bag choose sword or bow; then FIRE shoots an arrow down the corridor. Bosses are shielded against arrows.',
-      'Friends: the old miner and the prisoner never attack. Walk up to them to talk and get a gift. Hitting a friend costs 100 points.',
+      'Friends: the old miner and the prisoner never attack. Walk up to them to talk and get a gift. FIRE in front of them also talks; friends cannot be hurt.',
       'Secrets: a wall with a crack opens with FIRE. Behind it is treasure or a shortcut.',
       'Traps: spikes and runes rise every few seconds, with a warning first. When the ceiling shakes, move fast.',
       'Merchant: floors 2 to 4 have a merchant. Walk up to him and buy a potion, arrows or a torch with coins.',
@@ -762,13 +762,14 @@ export default {
       if (++s.shot.t >= s.shot.dist * 4) {
         const sh = s.shot; s.shot = null; let x = sh.x, y = sh.y, m = null;
         for (let d = 1; d <= sh.dist + 1 && !m; d++) { x += DX[sh.dir]; y += DY[sh.dir]; if (wallAt(s, x, y)) break; m = mobAt(s, x, y); }
-        if (m) hit(s, m, KINDS[m.k].boss ? 0.5 : 1, snd, api);
+        if (m && !KINDS[m.k].friend) hit(s, m, KINDS[m.k].boss ? 0.5 : 1, snd, api);
       }
     }
     if (api.hit('fire') && !s.atkCd) {
       s.atkCd = 18;
       const onStairs = s.x === s.sx && s.y === s.sy && !bossOf(s), crack = s.map[fy]?.[fx] === '%', note = s.map[fy]?.[fx] === 'N';
-      if (s.weapon === 'bow' && s.arrows > 0 && !s.shot && !onStairs && !crack && !note) {   // קשת: החץ טס לאורך המסדרון אל הראשון שבדרך
+      if (front && KINDS[front.k].friend) { talk(s, front, snd); s.atkCd = 0; }   // ידיד מולך: FIRE מדבר איתו
+      else if (s.weapon === 'bow' && s.arrows > 0 && !s.shot && !onStairs && !crack && !note) {   // קשת: החץ טס לאורך המסדרון אל הראשון שבדרך
         s.arrows--; snd.tone(900, 60, 400);
         let d = 1, x = s.x, y = s.y, target = null;
         for (; d <= 5; d++) { x += DX[s.dir]; y += DY[s.dir]; if (wallAt(s, x, y)) break; const m = mobAt(s, x, y); if (m) { target = m; break; } }
