@@ -1309,6 +1309,35 @@ if (part('english')) {
 }
 
 // המחשב האמיתי (ניסוי): XRoar עם ה-ROM שלנו עולה, והמקלדת המצוירת מקלידה בו
+if (part('adverts gallery')) {
+  // גלריית הפרסומות של Dragon Data (גונן, 27.10): רשת כרטיסים, דף לכל פרסומת, קרדיט וקישור לארכיון, תרגום מלא רק בעברית
+  console.log('\nadverts gallery');
+  const { ADVERTS } = await import('./adverts/data.mjs');
+  const p = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  p.on('pageerror', e => pageErrors.push(e.message));
+  const bad = []; p.on('response', r => { if (r.status() >= 400 && new URL(r.url()).host === new URL(PAGE).host) bad.push(r.status() + ' ' + r.url()); });
+  for (const [base, he] of [['/adverts/', true], ['/en/adverts/', false]]) {
+    await p.goto(new URL(base, PAGE).href);
+    const cards = await p.$$eval('.ad-card', as => as.map(a => ({ href: a.getAttribute('href'), img: a.querySelector('img').complete && a.querySelector('img').naturalWidth > 0 })));
+    check(`${base} shows all ${ADVERTS.length} adverts in order, each with its picture`, cards.length === ADVERTS.length && cards.every((c, i) => c.href === base + ADVERTS[i].id + '/' && c.img), JSON.stringify(cards));
+    check(`${base} thanks the Dragon Data Archive and Dan at the Retro Collective at the top`, /Dragon Data Archive[\s\S]*Retro Collective/.test(await p.locator('.thanks').textContent()));
+    check(`${base} 3 cards in a row on a computer`, await p.evaluate(() => getComputedStyle(document.querySelector('.ad-grid')).gridTemplateColumns.split(' ').length === 3));
+    for (const a of ADVERTS) {
+      const r = await p.goto(new URL(base + a.id + '/', PAGE).href);
+      const info = await p.evaluate(() => ({ archive: document.querySelector('.btns a[href*="dragondata.co.uk"]')?.getAttribute('href'), tr: !!document.querySelector('details.ad-tr'), credit: document.querySelector('.credit')?.textContent || '', img: document.querySelector('.ad-big img').complete && document.querySelector('.ad-big img').naturalWidth > 0, og: document.querySelector('meta[property="og:image"]')?.content || '' }));
+      check(`${base}${a.id}/ opens directly, links to its page in the archive, credits it${he ? ', and has the full Hebrew translation' : ', with no translation button'}`, r.ok() && info.archive === a.archive && /Dragon Data Archive/.test(info.credit) && info.img && info.tr === he && info.og.endsWith('/adverts/img/' + a.images[0]), JSON.stringify(info));
+    }
+  }
+  await p.goto(new URL('/adverts/before-we-made-it-clever/', PAGE).href);
+  await p.click('details.ad-tr summary');
+  check('the Hebrew translation opens and keeps English words in their own direction (bdi)', await p.evaluate(() => document.querySelector('details.ad-tr').open && document.querySelectorAll('details.ad-tr bdi').length > 10));
+  await p.setViewportSize({ width: 390, height: 844 });
+  await p.goto(new URL('/adverts/', PAGE).href);
+  check('/adverts/ on a phone: one card per row and no sideways scrolling', await p.evaluate(() => getComputedStyle(document.querySelector('.ad-grid')).gridTemplateColumns.split(' ').length === 1 && document.documentElement.scrollWidth <= innerWidth + 1));
+  check('the gallery pages load every file (no missing pictures or styles)', bad.length === 0, bad.join(' '));
+  await p.close();
+}
+
 if (part('lessons and magazine')) {
   console.log('\nlessons and magazine');
   const p = await browser.newPage({ viewport: { width: 1280, height: 900 } });
