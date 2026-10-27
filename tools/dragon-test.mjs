@@ -1429,14 +1429,52 @@ if (part('cartridge JUNGLE KING')) {
   const { solve } = await import('./king/bot.mjs');
   const { _test: KT } = await import('../assets/dragon/carts/king.js');
   const route = KT.SCREENS.map((sc, i) => { const r = solve(i); return { id: sc.id, ok: r.ok, sec: r.ok ? r.frames / 50 : null, time: sc.time }; });
-  check('the robot finishes every one of the 12 screens, each in less than half its time', route.every(r => r.ok && r.sec < r.time / 2), JSON.stringify(route.filter(r => !r.ok || r.sec >= r.time / 2)));
+  check(`the robot finishes every one of the ${KT.SCREENS.length} screens (5 worlds), each in less than half its time`, KT.SCREENS.length === 30 && route.every(r => r.ok && r.sec < r.time / 2), JSON.stringify(route.filter(r => !r.ok || r.sec >= r.time / 2)));
   // זורק החביות בפינה (גונן, 27.10: "בדונקי לא היה אפשר להגיע לקוף"): PIP לא מגיע אליו, והחביות מתגלגלות על הקומה של היציאה
   const { reachTop, barrelRows } = await import('./king/bot.mjs');
   const thr = KT.SCREENS.map((sc, i) => [sc, i]).filter(([sc]) => sc.map[0].includes('K'));
   const reach = thr.map(([sc, i]) => ({ id: sc.id, top: reachTop(i).top }));
-  check('in every screen with a barrel thrower, it sits on its own ledge where PIP can never get to', thr.length === 5 && reach.every(r => !r.top), JSON.stringify(reach));
+  check('in every screen with a barrel thrower, it sits on its own ledge where PIP can never get to', thr.length === 7 && reach.every(r => !r.top), JSON.stringify(reach));
   const flow = thr.filter(([sc]) => sc.dir !== 0).map(([sc, i]) => { const er = sc.map.findLastIndex(r => r.includes('E')) + 1; return { id: sc.id, er, rows: barrelRows(i) }; });
-  check('the barrels roll down onto the top floor, where PIP walks to the exit', flow.length === 4 && flow.every(f => f.rows.includes(f.er)), JSON.stringify(flow));
+  check('the barrels roll down onto the top floor, where PIP walks to the exit', flow.length === 5 && flow.every(f => f.rows.includes(f.er)), JSON.stringify(flow));
+  // סבב 2 (27.10): הנהרות, הכוורות והמערות. כל תכונה חדשה נבדקת על הפיזיקה עצמה
+  const ksnd = { tone() {}, note() {} };
+  const at = id => { const s = KT.newState(1); KT.loadScreen(s, KT.SCREENS.findIndex(x => x.id === id)); s.mode = 'play'; return s; };
+  const run = (s, n, inp = {}) => { let ev = null; for (let i = 0; i < n; i++) ev = KT.step(s, inp, ksnd) || ev; return ev; };
+  { const s = at('3-1'); s.noEnemies = true; const lg = s.L.logs[0]; lg.x = lg.b - 0.2; run(s, 2);
+    check('3-1: at the end of the river the current sinks the log, and it comes back at the start', lg.down > 0 && lg.x <= lg.a + 1); }
+  { const s = at('3-2'); const f = s.L.fish[0]; s.p.inv = 0; f.t = 27; s.p.x = f.x0 + f.dx * 0.5; s.p.y = KT.WATER + 2 - f.h + 8; s.p.mode = 'air'; s.p.vy = 0;
+    check('3-2: a fish jumping out of the water hits PIP', run(s, 2) === 'die'); }
+  { const s = at('3-3'); s.noEnemies = true; s.p.mode = 'climb'; s.p.x = 13 * 8 + 4; s.p.y = KT.OY + 14 * 8; const y0 = s.p.y; run(s, 15);
+    check('3-3: on a rope inside the waterfall, PIP who stops climbing slides down', s.p.y > y0 + 8, s.p.y - y0); }
+  { const s = at('3-4'); s.noEnemies = true; const r = s.L.raft; run(s, 1); s.p.x = r.x; s.p.y = r.y - 5; s.p.mode = 'walk'; const x0 = s.p.x; const ev = run(s, 120);
+    check('3-4: the barrel raft carries PIP down the river', ev !== 'die' && s.p.x > x0 + 50 && s.p.mode === 'walk', JSON.stringify({ dx: s.p.x - x0, mode: s.p.mode })); }
+  { const s = at('3-5'); s.p.inv = 1e9; const b = s.L.beavers[0]; s.p.mode = 'climb'; s.p.x = b.c * 8 + 4; s.p.y = KT.OY + (b.a + 2) * 8; run(s, 100);
+    const cut = s.L.grid[b.a][b.c] === '.'; run(s, 420);
+    check('3-5: a beaver gnaws the rope PIP stays on until it snaps, and later it grows back', cut && s.L.grid[b.a][b.c] === '|'); }
+  { const s = at('3-6'); s.noEnemies = true; run(s, 2); const x0 = s.L.guard.logs[0].x; run(s, 60);
+    check('3-6: the logs circle around the whirlpool', Math.abs(s.L.guard.logs[0].x - x0) > 10); }
+  { const a = at('4-1'), b = at('4-1'); a.noEnemies = b.noEnemies = true; b.L.sticky.push({ x: b.p.x, y: b.p.y, t: 999 }); b.L.sticky.push({ x: b.p.x + 12, y: b.p.y, t: 999 });
+    const xa = a.p.x, xb = b.p.x; run(a, 12, { right: 1 }); run(b, 12, { right: 1 });
+    check('4-2: honey on the shelf is sticky: PIP walks at less than half speed', (b.p.x - xb) < (a.p.x - xa) * 0.6, JSON.stringify([a.p.x - xa, b.p.x - xb])); }
+  { const s = at('4-3'); s.noEnemies = true; const u = s.L.lifts[0]; u.wait = 0; u.vy = -u.sp; s.p.x = u.x; s.p.y = u.y; s.p.mode = 'walk'; const y0 = s.p.y; run(s, 40);
+    check('4-3: a wax lift carries PIP up', s.p.y < y0 - 10 && s.p.mode === 'walk', s.p.y - y0); }
+  { const s = at('4-5'); const pot = s.L.pots[0], bee = s.L.bees[0]; s.p.inv = 0; s.p.x = pot.x; s.p.y = pot.y; s.p.mode = 'walk'; run(s, 2); const slept = s.L.sleep > 0;
+    s.p.x = bee.x; s.p.y = bee.y + 8;
+    check('4-5: the smoke pot puts the bees to sleep, and a sleeping bee does not sting', slept && run(s, 3) !== 'die'); }
+  { const s = at('4-6'); s.noEnemies = true; const closed = !s.gateOpen; for (const j of s.L.jars) { s.p.x = j.x; s.p.y = j.y; s.p.mode = 'walk'; run(s, 2); }
+    check("4-6: the queen's gate stays shut until PIP takes all 3 honey jars", closed && s.gateOpen); }
+  { const s = at('5-1'); s.noEnemies = true; const r0 = KT.lightR(s); run(s, 500); const r1 = KT.lightR(s); const t = s.L.torches[0]; s.p.x = t.x; s.p.y = t.y; s.p.mode = 'walk'; run(s, 2);
+    check('5-1: in the dark the torch burns down and lights less; a new torch lights it up again', r1 < r0 - 10 && KT.lightR(s) > r0 - 3, JSON.stringify([r0, r1, KT.lightR(s)])); }
+  { const s = at('5-2'); s.p.inv = 1e9; const b = s.L.bats[0]; s.p.x = b.x + 10; s.p.y = b.y + 30; s.p.mode = 'air'; s.p.vy = 0; run(s, 2);
+    check('5-2: a bat dives when the torch light reaches it', b.mode === 'dive'); }
+  { const s = at('5-3'); s.p.inv = 1e9; const st = s.L.stones[0]; s.p.x = st.x; s.p.y = KT.OY + 20 * 8; s.p.mode = 'walk'; run(s, 2); const shook = st.mode === 'shake'; run(s, 40);
+    check('5-3: a stalactite shakes and falls when PIP passes under it', shook && (st.mode === 'fall' || st.mode === 'gone')); }
+  { const a = at('5-6'), b = at('5-6'); a.p.inv = b.p.inv = 1e9;
+    for (const s of [a, b]) { s.p.x = s.L.guard.x + 70; s.p.y = s.L.guard.y; s.p.mode = 'walk'; }
+    for (let i = 0; i < 70; i++) KT.step(a, { left: i % 2 ? 0 : 0 } && { left: 1 }, ksnd);
+    for (let i = 0; i < 160; i++) KT.step(b, { left: (i % 40) < 18 ? 1 : 0 }, ksnd);
+    check('5-6: walking on and on near the sleeping bear wakes it; walk, stop, walk does not', a.L.guard.mode !== 'sleep' && b.L.guard.mode === 'sleep', JSON.stringify([a.L.guard.mode, b.L.guard.mode, b.L.guard.noise])); }
 }
 
 if (part('adverts gallery')) {

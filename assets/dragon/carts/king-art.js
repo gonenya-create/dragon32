@@ -89,3 +89,46 @@ export const TINY = {
   '8': ['yyy', 'y.y', 'yyy', 'y.y', 'yyy'], '9': ['yyy', 'y.y', 'yyy', '..y', 'yyy'], '-': ['...', '...', 'yyy', '...', '...'], ' ': ['...'],
   'T': ['yyy', '.y.', '.y.', '.y.', '.y.'], 'H': ['y.y', 'y.y', 'yyy', 'y.y', 'y.y'], 'U': ['y.y', 'y.y', 'y.y', 'y.y', 'yyy'], 'R': ['yy.', 'y.y', 'yy.', 'y.y', 'y.y'], 'Y': ['y.y', 'y.y', '.y.', '.y.', '.y.']
 };
+
+// ---------- עולם 3, הנהרות ----------
+// דג קופץ: k גוף, f סנפירים וזנב, e עין. פונה ימינה
+export const FISH = [
+  ['..kkkk..f', '.kkkkkkff', 'kekkkkkf.', '.kkkkkkff', '..fkkf..f'],
+  ['...kkk...', '.kkkkkk.f', 'kekkkkkff', '.kkkkkk.f', '...ff....']
+];
+// בונה: k פרווה, t שיניים וזנב שטוח, e עין. שתי תמונות: לעיסה
+export const BEAVER = [
+  ['..kkk...', '.kkekk..', 'kkkkkkt.', 'kkkkkk..', '.kkkkk..', 'kk..kktt', 'k...kttt'],
+  ['..kkk...', '.kkekk..', 'kkkkkk.t', 'kkkkkkt.', '.kkkkk..', '.kk.kktt', 'kk..kttt']
+];
+// רפסודת חבית: חבית שוכבת על המים, עם חישוקים
+export const RAFT = ['..yyyyyyyyyy..', '.yrryrrrryrry.', 'yrrryrrrryrrry', 'yrrryrrrryrrry', '.yrryrrrryrry.', '..yyyyyyyyyy..'];
+
+// ---------- עולם 4, הכוורות ----------
+// דבורה: k גוף, s פסים, w כנפיים (שתי תמונות של משק כנפיים)
+export const BEE = [['.ww.', 'wwkks', '.kskk', '..k..'], ['....', '.kks', 'wkskk', 'ww.k.']].map(f => f.map(r => r.padEnd(5, '.')));
+// מלכת הדבורים: גדולה, עם כתר
+export const QUEEN = [
+  ['....w.w.w.....', '....wwwww.....', '.ww.kkkkk.ww..', 'wwwkkeekkkwww.', 'ww.kkkkkkk.ww.', '...kssskkkk...', '...kkkkssskk..', '....kssskkkk..', '.....kkkk.kk..', '.......k....k.'],
+  ['....w.w.w.....', '....wwwww.....', '....kkkkk.....', '.wwkkeekkkww..', 'wwwkkkkkkkwww.', 'ww.sssskkkk.w.', '...kkkkssskk..', '....kssskkkk..', '.....kkkk.kk..', '.......k....k.']
+];
+// צנצנת דבש: y דבש, r מכסה, b זכוכית
+export const JAR = ['.rrr.', 'b...b', 'byyyb', 'byyyb', '.bbb.'];
+// עציץ עשן
+export const SMOKE_POT = ['.k.k..', '..k.k.', 'rrrrrr', '.rrrr.', '.rrrr.', '..rr..'];
+export const DROP = ['y', 'y', 'y'];
+
+// ---------- עולם 5, המערות ----------
+// עטלף: תלוי (מקופל), ובמעוף (שתי תמונות של כנפיים). k גוף, w כנפיים, e עיניים
+export const BAT_HANG = ['.kk.', 'wkkw', 'wekw', '.ww.', '..w.'];
+export const BAT_FLY = [['w......w', 'ww.kk.ww', '.wkekww.', '...ww...'], ['........', '..wkkw..', 'wwkekkww', 'w......w']];
+// נטיף: r סלע, y קצה
+export const STALAC = ['rrr', 'rrr', '.r.', '.r.', '.y.'];
+// לפיד: f להבה, y אור, r מקל
+export const TORCH = [['.f.', 'fyf', '.y.', '.r.', '.r.', '.r.'], ['f..', 'yf.', '.yf', '.r.', '.r.', '.r.']];
+export const WORM = ['yyy', 'g.g'];
+// דוב ישן ודוב ער: k פרווה, t אף ובטן, e עין
+export const BEAR = [
+  ['....kk....kk..', '...kkkkkkkkkk.', '..kkkkkkkkkkkk', '.kkkkkkkkkkkkk', 'kkkkkkkkkkkttk', 'kkkkkkkkkkkkk.', '.kk.kk..kk.kk.'],
+  ['..........kk.k', '.........kkkkk', '..kkkkkkkkekkt', '.kkkkkkkkkkktt', 'kkkkkkkkkkkkk.', 'kkkkkkkkkkkk..', 'kkkkkkkkkkkk..', '.kk..kk..kk...', '.kk..kk..kk...']
+];

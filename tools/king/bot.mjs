@@ -15,17 +15,18 @@ function clone(s) {
   s.L.grid = g; s.L.sc = sc; c.L.grid = g; c.L.sc = sc;
   return c;
 }
-const movers = s => s.L.vines.length + s.L.logs.length + s.L.lilies.length + s.L.crocs.length + (s.L.guard && s.L.guard.kind === 'croc' ? 1 : 0);
+const movers = s => s.L.lifts.length + s.L.drips.length + s.L.vines.length + s.L.logs.length + s.L.lilies.length + s.L.crocs.length + (s.L.raft ? 1 : 0) + (s.L.guard && (s.L.guard.kind === 'croc' || s.L.guard.kind === 'whirl') ? 1 : 0);
 function key(s) {
   const p = s.p;
   let k = p.mode + ':' + Math.round(p.x / 2) + ',' + Math.round(p.y / 2) + ':' + Math.round(p.vy);
   if (p.mode === 'swing') k += ':v' + s.L.vines.indexOf(p.vine) + ',' + Math.round(p.vd / 4);
   if (movers(s)) k += ':t' + (Math.floor(s.L.t / 10) % 120);
+  if (s.L.jars.length) k += ':j' + s.L.jars.map(j => j.got ? 1 : 0).join('');
   return k;
 }
 
 export function solve(idx, { limit = 3000000, diff = 1 } = {}) {
-  const s0 = _test.newState(diff); _test.loadScreen(s0, idx); s0.noEnemies = true; s0.gateOpen = true;
+  const s0 = _test.newState(diff); _test.loadScreen(s0, idx); s0.noEnemies = true; s0.gateOpen = !s0.L.jars.length;   // אצל המלכה: צריך לאסוף את הצנצנות
   const seen = new Set([key(s0)]);
   let frontier = [{ s: s0, path: [] }], nodes = 0, secret = null;
   while (frontier.length && nodes < limit) {
