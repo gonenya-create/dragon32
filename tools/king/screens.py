@@ -33,14 +33,14 @@ block(m, 2, 3, 26, 27, 'E'); put(m, 3, 12, 'K'); put(m, 19, 3, 'P')
 put(m, 19, 28, 'T'); put(m, 11, 28, 'T'); put(m, 7, 3, 'T')
 add('1-1', 'THE FIRST STEP', m, time=60, rate=240, dir=1)
 
-# 1-2: mushrooms lift PIP to islands; a gap at the top; a snake on the floor
+# 1-2: the near mushroom only reaches a side island (a tape piece, no way on). The far mushroom lifts PIP to the islands;
+# jump between them, then the island mushroom up to the top, and left past the monkey's barrels to the exit
 m = new(); walls(m)
-plat(m, 12, 3, 10); plat(m, 12, 13, 20); plat(m, 13, 24, 29); plat(m, 5, 2, 13); plat(m, 5, 17, 29)
-rope(m, 19, 13, 19)
-put(m, 19, 7, 'M'); put(m, 11, 9, 'M'); put(m, 19, 23, 'M')
-block(m, 3, 4, 28, 29, 'E'); put(m, 4, 22, 'K'); put(m, 19, 3, 'P'); put(m, 19, 14, 'S')
-put(m, 11, 17, 'T'); put(m, 12, 28, 'T'); put(m, 4, 3, 'T')
-add('1-2', 'MUSHROOM HOP', m, time=60, rate=220, dir=-1)
+plat(m, 12, 2, 7); plat(m, 12, 13, 19); plat(m, 12, 22, 29); plat(m, 5, 4, 18)
+put(m, 19, 4, 'M'); put(m, 11, 14, 'M'); put(m, 19, 27, 'M')
+block(m, 3, 4, 4, 5, 'E'); put(m, 4, 16, 'K'); put(m, 19, 2, 'P'); put(m, 19, 14, 'S')
+put(m, 11, 3, 'T'); put(m, 11, 29, 'T'); put(m, 4, 10, 'T')
+add('1-2', 'MUSHROOM HOP', m, time=60, rate=200, dir=-1)
 
 # 1-3: four full crossings, two gaps, two snakes
 m = new(); walls(m)
