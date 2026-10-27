@@ -506,7 +506,7 @@ function newFloor(s) {
 function reset(s) {
   s.hp = 5; s.torch = 1; s.coins = 0; s.score = 0; s.floor = 1; s.keys = 0; s.atkCd = 0; s.hurt = 0; s.msg = ''; s.msgT = 0; s.paused = false; s.steps = 0;
   s.potions = 0; s.trophies = []; s.met = new Set(); s.page = 0; s.bagSel = 0; s.floorT = 0; s.times = [];
-  s.xp = 0; s.lv = 1; s.hasBow = false; s.arrows = 0; s.weapon = 'sword';
+  s.xp = 0; s.lv = 1; s.hasBow = false; s.arrows = 0; s.weapon = 'sword'; s.sub = 0;
   s.hp = maxHp(s);
   newFloor(s);
 }
@@ -518,7 +518,7 @@ const guardMsg = (k, last) => SHORT[k] + (last ? ' GUARDS THE TAPE!' : ' GUARDS 
 // ההתקדמות נשמרת בדפדפן בתחילת כל קומה (מקומה 2), כדי שאפשר יהיה להמשיך מחר
 const SAVE = 'd32-deep-save';
 const loadSave = () => { try { return JSON.parse(localStorage.getItem(SAVE)); } catch (e) { return null; } };
-const writeSave = s => { try { localStorage.setItem(SAVE, JSON.stringify({ v: 4, diff: s.diff ?? 1, floor: s.floor, hp: s.hp, coins: s.coins, score: s.score, potions: s.potions, trophies: s.trophies, met: [...s.met], times: s.times, xp: s.xp, hasBow: s.hasBow, arrows: s.arrows, weapon: s.weapon })); } catch (e) {} };
+const writeSave = s => { try { localStorage.setItem(SAVE, JSON.stringify({ v: 4, diff: s.diff ?? 1, floor: s.floor, hp: s.hp, coins: s.coins, score: s.score, potions: s.potions, trophies: s.trophies, met: [...s.met], times: s.times, xp: s.xp, hasBow: s.hasBow, arrows: s.arrows, weapon: s.weapon, sub: s.sub || 0 })); } catch (e) {} };   // sub: הניקוד הכי גבוה של הריצה הזו שכבר נשלח להיכל התהילה
 const clearSave = () => { try { localStorage.removeItem(SAVE); } catch (e) {} };
 const bossOf = s => s.mobs.find(m => KINDS[m.k].boss && !m.dust);
 function startFloor(s, snd) {
@@ -619,7 +619,7 @@ export default {
       'קושי: במסך הפתיחה ◀ ▶ בוחרים EASY, NORMAL או HARD. בסוף הניקוד מוכפל לפי הקושי. את המוזיקה מכבים בתרמיל.',
       'רמה: כל ניצחון נותן ניסיון. ברמה חדשה מקבלים עוד לב (עד 8 לבבות), ובכל שתי רמות המכה חזקה יותר.',
       'בכל קומה יש בוס ששומר על המדרגות. על המדרגות, FIRE יורד קומה. בקומות 2, 4 ו-5 צריך קודם מפתח לדלת נעולה.',
-      'שמירה: ההתקדמות נשמרת בתחילת כל קומה. אחרי מוות, FIRE מנסה שוב את הקומה, ו-▼ מוותר ושומר את התוצאה.',
+      'שמירה: ההתקדמות נשמרת לבד בתחילת כל קומה. בפעם הבאה, במסך הפתיחה FIRE (או ▲) ממשיך מהקומה שנשמרה. משחק חדש: P, ואז FIRE לאישור (השמירה נמחקת רק אז). אחרי מוות, FIRE מנסה שוב את הקומה, ו-▼ מוותר ושולח את התוצאה להיכל התהילה, והשמירה נשארת.',
       'יציאה: Esc, או "הוצאת המחסנית".'],
     en: ['The dragon took the Golden Tape, the first tape ever recorded on a Dragon, five floors down under the castle. Bring it back.',
       '▲ step forward, ▼ step back, ◀ ▶ turn. FIRE strikes with the sword; on the stairs FIRE goes down.',
@@ -635,7 +635,7 @@ export default {
       'Difficulty: on the title screen ◀ ▶ choose EASY, NORMAL or HARD; the final score is multiplied by it. Music can be turned off in the bag.',
       'Level: every win gives experience. A new level gives another heart (up to 8), and every two levels a stronger blow.',
       'Each floor has a boss guarding the stairs. On floors 2, 4 and 5 you need a key for a locked door first.',
-      'Progress is saved at the start of each floor. After a death FIRE tries the floor again, ▼ gives up and keeps the score. Esc or "Eject cartridge" leaves.']
+      'Progress is saved by itself at the start of each floor. Next time, FIRE (or ▲) on the title goes on from the saved floor. New game: P, then FIRE to confirm (only then is the save erased). After a death FIRE tries the floor again; ▼ gives up and sends the score to the hall of fame, and the save stays. Esc or "Eject cartridge" leaves.']
   },
 
   init(api) {
@@ -650,7 +650,17 @@ export default {
     const s = api.state, snd = api.sound;
     s.t++;
     if (s.mode === 'next') { if (api.hit('fire') && s.t > 40) { s.floor++; startFloor(s, snd); } return; }
-    if (s.mode === 'title' && (api.hit('left') || api.hit('right'))) {   // רמת קושי
+    // משחק חדש כשיש שמירה (גונן, 27.10: FIRE במסך הפתיחה דרס לו את השמירה של קומה 2): שואלים קודם.
+    // FIRE מאשר ומוחק את השמירה; ◀ ▶ בוחרים קושי; כל מקש אחר מבטל והשמירה נשארת.
+    if (s.mode === 'title' && s.askNew) {
+      s.askT++;
+      if (api.hit('left') || api.hit('right')) { s.diff = (s.diff + (api.hit('right') ? 1 : 2)) % 3; snd.tone(440 + s.diff * 110, 40); try { localStorage.setItem(DIFF_KEY, String(s.diff)); } catch (e) {} return; }
+      if (api.hit('fire') && s.askT > 30) { s.askNew = false; clearSave(); s.save = null; reset(s); startFloor(s, snd); return; }
+      if (['up', 'down', 'pause'].some(b => api.hit(b)) || (api.hit('fire') && s.askT <= 30)) { s.askNew = false; snd.tone(300, 40); }
+      return;
+    }
+    if (s.mode === 'title' && s.save && api.hit('pause') && s.t > 40) { s.askNew = true; s.askT = 0; try { s.diff = okDiff(parseInt(localStorage.getItem(DIFF_KEY), 10)); } catch (e) {} snd.tone(250, 60); return; }
+    if (s.mode === 'title' && !s.save && (api.hit('left') || api.hit('right'))) {   // רמת קושי (עם שמירה: במסך NEW GAME)
       s.diff = (s.diff + (api.hit('right') ? 1 : 2)) % 3; snd.tone(440 + s.diff * 110, 40);
       try { localStorage.setItem(DIFF_KEY, String(s.diff)); } catch (e) {}
     }
@@ -658,18 +668,21 @@ export default {
     if (s.mode === 'over' && s.t > 40) {
       const v = loadSave();
       if (api.hit('fire') && v) {   // מנסים שוב את הקומה: הכל חוזר למה שהיה בתחילתה, ולפחות 3 לבבות
-        reset(s); Object.assign(s, { diff: okDiff(v.diff), floor: v.floor, hp: Math.max(DIFF[okDiff(v.diff)].retry, v.hp), coins: v.coins, score: v.score, potions: v.potions || 0, trophies: v.trophies || [], met: new Set(v.met || []), times: v.times || [], xp: v.xp || 0, lv: levelOf(v.xp || 0), hasBow: !!v.hasBow, arrows: v.arrows || 0, weapon: v.hasBow && v.weapon === 'bow' ? 'bow' : 'sword' });
+        reset(s); Object.assign(s, { diff: okDiff(v.diff), floor: v.floor, hp: Math.max(DIFF[okDiff(v.diff)].retry, v.hp), coins: v.coins, score: v.score, potions: v.potions || 0, trophies: v.trophies || [], met: new Set(v.met || []), times: v.times || [], xp: v.xp || 0, lv: levelOf(v.xp || 0), hasBow: !!v.hasBow, arrows: v.arrows || 0, weapon: v.hasBow && v.weapon === 'bow' ? 'bow' : 'sword', sub: v.sub || 0 });
         startFloor(s, snd); return;
       }
-      if (api.hit('down') || (api.hit('fire') && !v)) {   // מוותרים: התוצאה נכנסת להיכל התהילה והשמירה נמחקת
-        clearSave(); s.mode = 'title'; s.t = 0; s.save = null; setPalette(1); STYLE = 'brick'; api.submitScore('deep', finalScore(s)); s.high = api.loadHigh('deep'); return;
+      if (api.hit('down') || (api.hit('fire') && !v)) {   // מוותרים: התוצאה נכנסת להיכל התהילה. השמירה נשארת (גונן, 27.10): בפעם הבאה ממשיכים מתחילת הקומה
+        // אותה ריצה לא נכנסת להיכל התהילה (וגם לטבלה העולמית) פעמיים: שולחים רק ניקוד גבוה ממה שכבר נשלח
+        const fs = finalScore(s);
+        if (fs > ((v && v.sub) || 0)) { api.submitScore('deep', fs); if (v) try { localStorage.setItem(SAVE, JSON.stringify({ ...v, sub: fs })); } catch (e) {} }
+        s.mode = 'title'; s.t = 0; s.save = loadSave(); setPalette(1); STYLE = 'brick'; s.high = api.loadHigh('deep'); return;
       }
       return;
     }
     if (s.mode === 'title' || s.mode === 'over' || s.mode === 'won') {
-      if (s.mode === 'title' && s.save && api.hit('up') && s.t > 40) {   // ממשיכים מהקומה שנשמרה
+      if (s.mode === 'title' && s.save && (api.hit('up') || api.hit('fire')) && s.t > 40) {   // ממשיכים מהקומה שנשמרה: ▲ או FIRE (FIRE כבר לא דורס את השמירה)
         const v = s.save; reset(s);
-        Object.assign(s, { diff: okDiff(v.diff), floor: v.floor, hp: v.hp, coins: v.coins, score: v.score, potions: v.potions || 0, trophies: v.trophies || [], met: new Set(v.met || []), times: v.times || [], xp: v.xp || 0, lv: levelOf(v.xp || 0), hasBow: !!v.hasBow, arrows: v.arrows || 0, weapon: v.hasBow && v.weapon === 'bow' ? 'bow' : 'sword' });
+        Object.assign(s, { diff: okDiff(v.diff), floor: v.floor, hp: v.hp, coins: v.coins, score: v.score, potions: v.potions || 0, trophies: v.trophies || [], met: new Set(v.met || []), times: v.times || [], xp: v.xp || 0, lv: levelOf(v.xp || 0), hasBow: !!v.hasBow, arrows: v.arrows || 0, weapon: v.hasBow && v.weapon === 'bow' ? 'bow' : 'sword', sub: v.sub || 0 });
         startFloor(s, snd); return;
       }
       if (api.hit('fire') && s.t > 40) {
@@ -783,7 +796,7 @@ export default {
         const secs = Math.round(s.floorT / 50); s.lastTime = secs; s.times.push(secs);
         s.speedBonus = Math.max(0, (PAR[s.floor - 1] - secs) * 2); s.score += 500 + s.hp * 100 + s.speedBonus; s.t = 0; snd.tone(440, 400, 1760);
         if (s.floor < LAST) s.mode = 'next';
-        else { s.mode = 'won'; s.score += s.trophies.length * 300; clearSave(); api.submitScore('deep', finalScore(s)); }
+        else { s.mode = 'won'; s.score += s.trophies.length * 300; clearSave(); if (finalScore(s) > (s.sub || 0)) api.submitScore('deep', finalScore(s)); }
       } else snd.tone(200, 30, 160);
     }
 
@@ -1093,6 +1106,14 @@ function drawIntro(g, s) {
 }
 function drawTitle(g, s) {
   g.clear(BLACK);
+  if (s.askNew) {   // לפני משחק חדש: השמירה תימחק רק אם מאשרים
+    g.text('NEW GAME?', 128, 30, C3, 'center', 3);
+    g.text('YOUR SAVE ON FLOOR ' + s.save.floor + ' WILL BE LOST', 128, 72, C0, 'center');
+    g.text('LEFT RIGHT: ' + DIFF[s.diff ?? 1].name, 128, 96, s.diff === 2 ? C3 : C1, 'center');
+    if (s.askT > 30 && (s.askT >> 4) % 2) g.text('FIRE: YES, NEW GAME', 128, 124, C3, 'center');
+    g.text('UP: NO, KEEP MY SAVE', 128, 142, C1, 'center');
+    return;
+  }
   for (let i = 0; i < 60; i++) g.rect(hash(i, 1) * W, hash(i, 2) * 20 + (i % 2 ? 0 : 130), 1, 1, i % 3 ? C2 : C1);
   const p = s.titleP || 0;
   if (p === 0) {
@@ -1116,10 +1137,15 @@ function drawTitle(g, s) {
     g.text('AND FIVE BOSSES...', 128, 92, C0, 'center');
     for (let i = 0; i < 5; i++) g.text('?', 64 + i * 32, 104, C2, 'center', 2);
   }
-  if ((s.t >> 4) % 2) g.text('PRESS FIRE', 128, 122, C3, 'center', 2);
-  g.text('LEFT RIGHT: ' + DIFF[s.diff ?? 1].name, 128, 140, s.diff === 2 ? C3 : C1, 'center');
+  if (s.save) {   // יש שמירה: FIRE ממשיך, ומשחק חדש רק דרך P ושאלה
+    if ((s.t >> 4) % 2) g.text('FIRE: GO ON', 128, 122, C3, 'center', 2);
+    g.text('FLOOR ' + s.save.floor + ', ' + DIFF[okDiff(s.save.diff)].name, 128, 140, C1, 'center');
+  } else {
+    if ((s.t >> 4) % 2) g.text('PRESS FIRE', 128, 122, C3, 'center', 2);
+    g.text('LEFT RIGHT: ' + DIFF[s.diff ?? 1].name, 128, 140, s.diff === 2 ? C3 : C1, 'center');
+  }
   g.text('HIGH ' + s.high + '   DOWN: MORE', 128, 152, C2, 'center');
-  if (s.save) g.text('UP: GO ON, FLOOR ' + s.save.floor + ', ' + DIFF[okDiff(s.save.diff)].name, 128, 166, C0, 'center');   // המשך = הרמה שנשמרה; ◀ ▶ רק למשחק חדש
+  if (s.save) g.text('P: NEW GAME', 128, 166, C0, 'center');   // המשך = הרמה שנשמרה; את הקושי של משחק חדש בוחרים במסך NEW GAME
   g.text('(C) 2026 GONEN YAROM', 128, 182, C2, 'center');
 }
 function drawEnd(g, s) {
@@ -1147,7 +1173,7 @@ function drawEnd(g, s) {
     g.text('HAS WON', 128, 60, C3, 'center', 3);
     g.text('SCORE ' + s.score, 128, 100, C1, 'center', 2);
     if ((s.diff ?? 1) !== 1) g.text(D(s).name + ' X' + D(s).mult + ' = ' + finalScore(s), 128, 120, C3, 'center');
-    if (s.t > 40) { g.text('FIRE: TRY FLOOR ' + s.floor + ' AGAIN', 128, 140, (s.t >> 4) % 2 ? C1 : C0, 'center'); g.text('DOWN: GIVE UP AND SAVE THE SCORE', 128, 156, C2, 'center'); }
+    if (s.t > 40) { g.text('FIRE: TRY FLOOR ' + s.floor + ' AGAIN', 128, 140, (s.t >> 4) % 2 ? C1 : C0, 'center'); g.text('DOWN: GIVE UP AND SAVE THE SCORE', 128, 156, C2, 'center'); g.text('(FLOOR ' + s.floor + ' STAYS SAVED)', 128, 168, C2, 'center'); }
     return;
   }
   g.text('SCORE ' + s.score, 128, 118, C1, 'center', 2);

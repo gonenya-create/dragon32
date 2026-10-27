@@ -881,7 +881,43 @@ if (part('cartridge DRAGON DEEP (full computer)')) {
   await p.keyboard.press('ArrowLeft'); await p.waitForTimeout(120);
   await p.evaluate(() => { document.querySelector('#dragon-room').d32Cart.state.hp = 0; });
   await p.waitForTimeout(1100); await p.keyboard.press('ArrowDown'); await p.waitForTimeout(300);
-  check('after death, DOWN gives up: back to the title and the save is cleared', await p.evaluate(() => document.querySelector('#dragon-room').d32Cart.state.mode === 'title' && !localStorage.getItem('d32-deep-save')));
+  check('after death, DOWN gives up: back to the title, and the save stays (Gonen, 27.10)', await p.evaluate(() => document.querySelector('#dragon-room').d32Cart.state.mode === 'title' && JSON.parse(localStorage.getItem('d32-deep-save') || '{}').floor === 3));
+  // השמירה לא נדרסת (גונן, 27.10): עם שמירה, FIRE במסך הפתיחה ממשיך; משחק חדש רק ב-P ואז FIRE לאישור
+  const DS = () => p.evaluate(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return { mode: s.mode, floor: s.floor, ask: !!s.askNew, save: JSON.parse(localStorage.getItem('d32-deep-save') || 'null')?.floor ?? null }; });
+  await p.keyboard.press('Escape'); await p.waitForTimeout(300);   // "בפעם הבאה": מכניסים את המחסנית מחדש
+  await p.evaluate(() => [...document.querySelectorAll('.d32-cart')].find(e => /DEEP/.test(e.textContent)).click());
+  await p.waitForFunction(() => document.querySelector('#dragon-room').d32Cart?.state?.t > 45);
+  await p.keyboard.press('Space'); await p.waitForTimeout(300);
+  const goOn = await DS();
+  check('with a save, FIRE on the title goes on from the saved floor (it no longer starts over)', goOn.mode === 'play' && goOn.floor === 3 && goOn.save === 3, JSON.stringify(goOn));
+  await p.keyboard.press('Escape'); await p.waitForTimeout(300);
+  await p.evaluate(() => [...document.querySelectorAll('.d32-cart')].find(e => /DEEP/.test(e.textContent)).click());
+  await p.waitForFunction(() => document.querySelector('#dragon-room').d32Cart?.state?.t > 45);
+  await p.keyboard.press('p'); await p.waitForTimeout(150);
+  const asked = await DS();
+  await p.keyboard.press('ArrowUp'); await p.waitForTimeout(150);
+  const kept = await DS();
+  check('with a save, P asks "NEW GAME?" and UP says no: still on the title, the save stays', asked.ask && asked.mode === 'title' && !kept.ask && kept.mode === 'title' && kept.save === 3, JSON.stringify([asked, kept]));
+  await p.keyboard.press('p'); await p.waitForTimeout(60); await p.keyboard.press('Space'); await p.waitForTimeout(150);
+  const quick = await DS();
+  check('a quick FIRE right after P does not erase the save (only a deliberate FIRE does) and closes the question', quick.mode === 'title' && !quick.ask && quick.save === 3, JSON.stringify(quick));
+  await p.keyboard.press('p'); await p.waitForTimeout(800); await p.keyboard.press('Space'); await p.waitForTimeout(300);
+  const fresh = await DS();
+  check('P and then FIRE starts a new game on floor 1 (only then is the old save replaced)', fresh.mode === 'play' && fresh.floor === 1 && fresh.save === 1, JSON.stringify(fresh));
+  // הסוקר (27.10): אותה ריצה לא נכנסת להיכל התהילה (והטבלה העולמית) פעמיים. ויתור שולח רק ניקוד גבוה ממה שכבר נשלח בריצה הזו
+  await p.evaluate(() => { const api = document.querySelector('#dragon-room').d32Cart; window.__sent = []; window.__origSubmit = api.submitScore; api.submitScore = (id, sc) => window.__sent.push(sc); });
+  const dieAndGiveUp = async score => {
+    await p.keyboard.press('ArrowLeft'); await p.waitForTimeout(120);
+    await p.evaluate(sc => { const s = document.querySelector('#dragon-room').d32Cart.state; s.score = sc; s.hp = 0; }, score);
+    await p.waitForFunction(() => { const s = document.querySelector('#dragon-room').d32Cart.state; return s.mode === 'over' && s.t > 45; });
+    await p.keyboard.press('ArrowDown'); await p.waitForTimeout(200);
+    await p.evaluate(() => { document.querySelector('#dragon-room').d32Cart.state.t = 50; });
+    await p.keyboard.press('Space'); await p.waitForTimeout(250);   // ממשיכים מהשמירה, כמו שחקן שחוזר
+    return p.evaluate(() => ({ sent: [...window.__sent], sub: JSON.parse(localStorage.getItem('d32-deep-save') || '{}').sub, mode: document.querySelector('#dragon-room').d32Cart.state.mode }));
+  };
+  const g1 = await dieAndGiveUp(500), g2 = await dieAndGiveUp(500), g3 = await dieAndGiveUp(900);
+  check('giving up twice with the same score sends it to the hall of fame once; a better score is sent again', g1.sent.length === 1 && g1.sub === g1.sent[0] && g2.sent.length === 1 && g3.sent.length === 2 && g3.sub === g3.sent[1] && g3.mode === 'play', JSON.stringify([g1, g2, g3]));
+  await p.evaluate(() => { document.querySelector('#dragon-room').d32Cart.submitScore = window.__origSubmit; });
   // איזון: בכל קומה יש לפחות 2 לפידים, והאור (התחלה + לפידים) מספיק לחקור את כל המבוך פעמיים בקצב של צעד בשנייה
   const bal = await p.evaluate(async () => {
     const { _test } = await import('/assets/dragon/carts/deep.js');
