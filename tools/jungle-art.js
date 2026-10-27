@@ -135,4 +135,99 @@ function roots() {
   g.text('TIME 72', W - 3, 185, B2, 'right');
 }
 
-({ roots })[scene]();
+// ---------- מסך 1-5: הפיר העמוק (אותו עולם, מבנה אחר: פיר צר, מטפסים רק בחבלים, חביות נופלות ישר) ----------
+const LEDGE_L = ['00000000', '33033033', '33333333', '3233323.', '33323...', '2323....', '.2......', '........'];
+// קיר עבה: קליפה כהה (רוב הפיקסלים שחורים), כדי שהפיר יבלוט ולא יהיה רעש
+const dim = t => t.map((r, y) => r.split('').map((c, x) => c === '3' ? (((x * 2 + y) % 5) ? '.' : '3') : c === '0' ? '2' : c === '2' ? (((x + y) % 2) ? '.' : '2') : c).join(''));
+const BARK_DIM = BARK.map(dim);
+function bigBark(x0, x1) {
+  for (let ty = 1; ty < 23; ty++) for (let tx = 0; x0 + tx * 8 < x1; tx++) put(BARK_DIM[(tx * 3 + ty) % 2], x0 + tx * 8, 2 + ty * 8, (tx + ty) % 3 === 0);
+  for (let i = 0; i < 9; i++) { const cx = x0 + 10 + (i * 37) % Math.max(1, x1 - x0 - 20), cy = 24 + (i * 53) % 150; for (let a = 0; a < 6.3; a += 0.5) px(cx + Math.cos(a) * 4, cy + Math.sin(a) * 2, B3); px(cx, cy, B2); }   // קשרים בעץ
+}
+function shaft() {
+  g.clear(BLACK);
+  grain(80, 176);
+  bigBark(0, 80); bigBark(176, 256);
+  // קו אור על שפת הקירות, כדי שהפיר ייראה עמוק
+  for (let y = 10; y < 182; y++) { px(79, y, (y % 3) ? B0 : B3); px(176, y, (y % 3) ? B3 : B2); }
+  // מדפי שורש שבולטים מהקירות, לסירוגין
+  const L = [[80, 150, 4, false], [136, 124, 5, true], [80, 98, 3, false], [128, 72, 6, true], [80, 46, 5, false]];
+  for (const [x, y, n, right] of L) for (let i = 0; i < n; i++) {
+    const xx = right ? 176 - (i + 1) * 8 : x + i * 8;
+    if (i === n - 1) put(LEDGE_L, xx, y, !right); else put(ROOT[(i + y) % 3], xx, y);
+    if (i === 1) { put(FLOOR2, xx, y + 7); }
+  }
+  // חבלים תלויים באמצע הפיר
+  rope(112, 10, 140); rope(150, 30, 176, true); rope(100, 56, 92);
+  // דמויות
+  put(PIP_CLIMB, 106, 100);
+  put(SNAKE, 140, 86);
+  put(MONKEY, 132, 58);
+  put(BARREL_SIDE, 116, 26); for (let k = 0; k < 3; k++) px(120, 18 - k * 3, B2);   // חבית נופלת, עם קווי תנועה
+  put(BARREL_SIDE, 140, 154);
+  put(MUSH, 82, 88);
+  put(TAPE, 90, 140);
+  // מעבר סודי: סדק בקיר השמאלי
+  for (let y = 112; y < 132; y++) { const w = 3 - Math.abs(y - 122) / 4; for (let x = 74 - w; x < 80; x++) px(x, y, BLACK); }
+  for (let y = 114; y < 130; y += 3) px(72, y, B1);
+  // גושי אדמה נושרים
+  for (const [x, y] of [[126, 40], [128, 46], [158, 120], [96, 166]]) { px(x, y, B3); px(x + 1, y, B2); }
+  for (const [x, y] of [[96, 30], [160, 60], [150, 110], [90, 170]]) put(GLOW, x, y);
+  hudBar('1-5', 'THE DEEP SHAFT', B3, B1, B0, B2, COL);
+}
+
+// ---------- מסך 5-2: מערת העטלפים (עולם אחר: ערכה 0, חושך, רואים רק סביב הלפיד של PIP) ----------
+const [G0, G1, G2, G3] = PALETTES[0];   // ירוק, צהוב, כחול, אדום
+const C5 = { 0: G1, 1: G3, 2: G2, 3: G3, k: BLACK, g: G0, y: G1, b: G2, r: G3 };
+const ROCK = [
+  ['11111111'.replace(/1/g, 'y'), 'ybbybbby', 'bbbbbbbb', 'bkbbbkbb', 'bbbbbbbb', 'bbkbbbbk', 'b.b.b.b.', '.b.b.b.b'],
+  ['yyyyyyyy', 'bybbbybb', 'bbbbbbbb', 'bbbkbbbb', 'kbbbbbkb', 'bbbbbbbb', '.b.b.b.b', 'b.b.b.b.']
+];
+const STALAC = ['bbbbbb', 'bbkbbb', '.bbbb.', '.bbb..', '..bb..', '..b...', '..b...'];
+const BATW = ['r.......r', 'rr.....rr', 'rrr.k.rrr', '.rrrrrrr.', '..r.r.r..'];
+const PIP_TORCH = [
+  '..........y.', '....yyyy.yry', '...yyyyyy.r.', '..rrrrrrrr.r', '.yyyyyyyyyyr', '....yyyy...r', '....yyky...r', '....yyyy..r.',
+  '.....yy...r.', '...rrrrrrrr.', '..rrrrrr....', '..ryrrrr....', '....rrrr....', '...bbbbbb...', '...bb..bb...', '..bb....bb..', '.bb......bb.', '.rr......rr.'
+];
+function rockRow(x0, n, y) { for (let i = 0; i < n; i++) put(ROCK[(i + y) % 2], x0 + i * 8, y, false, C5); }
+function cave() {
+  g.clear(BLACK);
+  // רקע: סלע מנוקד עמום
+  for (let y = 10; y < 182; y++) for (let x = 0; x < W; x++) if ((((x * 73856093) ^ (y * 19349663)) >>> 0) % 41 === 0) px(x, y, G2);
+  // תקרה עם נטיפים, רצפה ומדפי סלע
+  rockRow(0, 32, 10); for (let x = 6; x < 250; x += 19 + (x % 7)) put(STALAC, x, 18, false, C5);
+  rockRow(0, 32, 170);
+  rockRow(16, 9, 138); rockRow(152, 10, 118); rockRow(24, 8, 88); rockRow(128, 12, 58);
+  // ליאנות בתוך המערה (שורשים שחדרו מלמעלה)
+  for (const [x, a, b] of [[96, 146, 170], [176, 126, 170], [60, 96, 138], [200, 66, 118], [140, 18, 58]]) {
+    for (let y = a; y <= b; y++) { px(x, y, G0); if ((y - a) % 8 === 3) { px(x - 1, y, G0); px(x - 2, y - 1, G0); } if ((y - a) % 8 === 7) { px(x + 1, y, G0); px(x + 2, y - 1, G0); } }
+  }
+  put(PIP_TORCH, 70, 120, false, C5);
+  put(BATW, 120, 104, false, C5); put(BATW, 40, 66, false, C5); put(BATW, 214, 36, false, C5); put(BATW, 170, 90, true, C5);
+  put(BARREL, 180, 108, false, { 0: G1, 2: G2, 3: G3 });
+  put(['yyyyyyyyyy', 'y........y'.replace(/\./g, 'r'), 'yrkkrrkkry', 'yrrrrrrrry', 'yyyyyyyyyy'], 210, 52, false, C5);
+  // אבן נופלת
+  put(['.bb.', 'bbbb', 'bkbb', '.bb.'], 104, 40, false, C5); px(105, 34, G2); px(106, 30, G2);
+  // החושך: רואים רק סביב הלפיד. טבעת מנוקדת בשוליים
+  const LX = 84, LY = 120, R1 = 58, R2 = 76;
+  const img = g.ctx.getImageData(0, 0, W, H);
+  for (let y = 10; y < 182; y++) for (let x = 0; x < W; x++) {
+    const d = Math.hypot(x - LX, (y - LY) * 1.1);
+    if (d > R2 || (d > R1 && (x + y) % 2)) { const i = (y * W + x) * 4; img.data[i] = img.data[i + 1] = img.data[i + 2] = 0; }
+  }
+  g.ctx.putImageData(img, 0, 0);
+  // בחושך רואים רק עיניים של עטלפים רחוקים
+  for (const [x, y] of [[44, 68], [46, 68], [218, 38], [220, 38], [174, 92], [176, 92], [140, 150], [142, 150]]) px(x, y, G1);
+  hudBar('5-2', 'THE BAT CAVE', G3, G1, G0, G2, C5);
+}
+
+function hudBar(code, name, cCode, cName, cScore, cTime, cols) {
+  g.rect(0, 0, W, 10, BLACK); g.rect(0, 182, W, 10, BLACK);
+  g.text(code, 3, 2, cCode); g.text(name, 27, 2, cName); g.text('004250', W - 3, 2, cScore, 'right');
+  const LIFE = ['.000.', '33333', '.000.', '.111.', '.2.2.'];
+  for (let i = 0; i < 3; i++) put(LIFE, 3 + i * 8, 184, false, cols);
+  for (let i = 0; i < 3; i++) g.rect(104 + i * 7, 186, 5, 3, i < 2 ? cScore : cTime);
+  g.text('TIME 72', W - 3, 185, cTime, 'right');
+}
+
+({ roots, shaft, cave })[scene]();
