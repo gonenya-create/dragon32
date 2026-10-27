@@ -1590,6 +1590,10 @@ if (part('real machine lab')) {
     await p.waitForTimeout(400); await p.keyboard.press('Space'); await p.waitForTimeout(100);
     const plain = await p.evaluate(() => ({ joy: window.d32Joy, keys: window.__k.splice(0) }));
     check('/lab/1982/ other games: Space stays a space', plain.joy === false && plain.keys.join() === ' ', JSON.stringify(plain));
+    await p.evaluate(() => { const t = [...document.querySelectorAll('[data-drawer="mc"] .tape')].find(e => /DUNGEON/.test(e.textContent)); (t.querySelector('.tape-box') || t).click(); });
+    await p.waitForTimeout(400); await p.keyboard.press('Space'); await p.waitForTimeout(100);
+    const dr = await p.evaluate(() => { const box = [...document.querySelectorAll('[data-drawer="mc"] .tape-box')].find(b => /DUNGEON/.test(b.textContent)); return { joy: window.d32Joy, keys: window.__k.splice(0), credit: box.querySelector('.tape-credit').textContent, size: FS.stat('/tape-dungeon.cas').size }; });
+    check('/lab/1982/ Dungeon Raid (Ken Kalish): the original tape goes in the recorder, the arrows and Space become the joystick, and the credit says "with his permission · removed on request"', dr.joy === true && dr.keys.join() === 'Alt' && dr.size === 34819 && /Ken Kalish/.test(dr.credit) && /באישורו|with his permission/.test(dr.credit) && /יוסר לפי בקשה|removed on request/.test(dr.credit), JSON.stringify(dr));
     await p.close();
   }
   for (const path of ['/lab/1982/', '/en/lab/1982/']) {
@@ -1599,7 +1603,7 @@ if (part('real machine lab')) {
     const r = await p.goto(base.replace(/\/$/, '') + path);
     await p.waitForTimeout(3500);
     check(`${path} loads with the drawn keyboard`, r.status() === 200 && (await p.locator('.kbd .k').count()) > 50 && errs.length === 0, errs.join(' | '));
-    check(`${path} has the tape shelf (16 tapes: 7 BASIC, Dragon Eggs, Blockdown, DragonTet, Phantom Slayer, Danger Ranger, Adventureland, Pirate Adventure, Secret Mission, Voodoo Castle)`, (await p.locator('#tapes .tape').count()) === 16);
+    check(`${path} has the tape shelf (17 tapes: 7 BASIC, Dragon Eggs, Blockdown, DragonTet, Phantom Slayer, Danger Ranger, Dungeon Raid, Adventureland, Pirate Adventure, Secret Mission, Voodoo Castle)`, (await p.locator('#tapes .tape').count()) === 17);
     check(`${path} the cabinet drawers start closed`, await p.evaluate(() => [...document.querySelectorAll('#tapes details.drawer')].every(d => !d.open)));
     check(`${path} "type it in" drawer: 2 magazine pages; a page opens beside the machine (scan from archive.org, credit) and closes`, await p.evaluate(async () => {
       const cards = document.querySelectorAll('[data-drawer="type"] .tape');
@@ -1614,7 +1618,7 @@ if (part('real machine lab')) {
       [...document.querySelectorAll('[data-drawer="adv"] .tape small')].map(s => s.textContent.split(' ')[0]).join() === 'ADVENTURELAND,PIRATE,MISSION,VOODOO'));
     check(`${path} every machine-code game has a "how to play" box with keys and a way out`, await p.evaluate(() => {
       const boxes = [...document.querySelectorAll('[data-drawer="mc"] .tape-box, [data-drawer="adv"] .tape-box')];
-      return boxes.length === 9 && boxes.every(b => { const h = b.querySelector('details.howto'); return h && h.querySelectorAll('kbd').length >= 3 && h.querySelector('.howto-always'); });
+      return boxes.length === 10 && boxes.every(b => { const h = b.querySelector('details.howto'); return h && h.querySelectorAll('kbd').length >= 3 && h.querySelector('.howto-always'); });
     }));
     const b = await p.request.get(base.replace(/\/$/, '') + path + 'building/');
     check(`${path} links to "what we are building now", which loads`, b.status() === 200 && (await p.locator('main > p.note a[href="./building/"]').count()) === 1);

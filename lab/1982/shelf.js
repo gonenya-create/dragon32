@@ -24,6 +24,9 @@
       ['Ken Kalish · Med Systems / Microdeal, 1983', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
     ['ranger', 'Danger Ranger', 'Danger Ranger', 'a',
       ['Ken Kalish · Med Systems / Microdeal, 1983', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
+    // נכתב רק ל-Dragon (Curtis Boyle: "Dungeon Raid & Athletyx were exclusively Dragon titles"). על המסך: (C)1983, ו-COPYRIGHT 1984 של Microdeal
+    ['dungeon', 'Dungeon Raid', 'Dungeon Raid', 'a',
+      ['Ken Kalish · Microdeal, 1983–84', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
     // ההרפתקאות של Scott Adams: אישור בכתב (מייל 25.10.2026). קרדיט מלא וקישור ל-msadams.com, בלי שינויים, יורד לפי בקשה
     ['adventureland', 'Adventureland', 'Adventureland', 'a',
       ['Scott Adams · Adventure International, 1983', 'https://www.msadams.com/', null, null, 'adams']],
@@ -37,7 +40,7 @@
       ['Alexis Adams & Scott Adams · Adventure International', 'https://www.msadams.com/', null, null, 'adams']]
   ];
   // משחקים שצריכים ג'ויסטיק: כשהקלטת נטענת, החיצים במקלדת הופכים לג'ויסטיק הימני ו-Alt (Option במק) לכפתור שלו
-  const JOY = new Set(['ranger']);
+  const JOY = new Set(['ranger', 'dungeon']);
   function setJoy(on) {
     try { Module.ccall('wasm_set_joystick_by_name', null, ['number', 'string'], [0, on ? 'kjoy0' : '']); } catch (e) {}
     window.d32Joy = !!on;
@@ -92,6 +95,21 @@
         '[←] [→] move, [↑] turns, [↓] drops faster. [W] [A] [S] [D] work too.',
         'Player two: [I] [J] [K] [L].',
         '[H] pauses, any key resumes. [X] goes back to the menu.']
+    },
+    // נבדק במכונה (27.10): צבע, רמה, המנגינה ואחריה FIRE, תנועה, ירי ונקודות, פגיעה ביצור וגל ההדף, החיים
+    dungeon: {
+      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
+        'הטעינה ארוכה, כארבע דקות, והמשחק מתחיל לבד. אחרי הלוגו של Microdeal בוחרים צבע: [1] שחור, [2] בהיר, [3] ירוק.',
+        'במסך הפתיחה לוחצים [רווח]. ב-SELECT LEVEL בוחרים רמה: [1] הכי קלה, עד [3].',
+        'מתנגנת מנגינה קצרה. כשהיא נגמרת לוחצים [רווח] כדי לצאת לדרך. גם אחרי שנפגעים לוחצים [רווח] כדי להמשיך.',
+        '[←] [→] זזים לצדדים, [↓] רצים מהר יותר במסדרון, [↑] לאט יותר. [רווח] יורה למטה, אל היצורים ואל הדלתות הנעולות.',
+        'נזהרים מהנחשים, מה-OAFS ומה-SNAPPERS, ומגל ההדף של יצור שמתפוצץ. אל תירו בכפילים שנראים כמוכם: זה עולה בחיים. הכוכביות למעלה הן החיים, והמספר מימין הוא הזמן.'],
+      en: ['In this game the arrow keys are a joystick and [Space] is its button (or [Alt], [Option] on a Mac). On a phone there is a stick and a fire button under the screen.',
+        'Loading is long, about four minutes, and the game starts by itself. After the Microdeal logo pick a colour: [1] black, [2] buff, [3] green.',
+        'On the title screen press [Space]. At SELECT LEVEL pick a level: [1] is the easiest, up to [3].',
+        'A short tune plays. When it ends, press [Space] to set off. After you are hit, press [Space] again to go on.',
+        '[←] [→] move sideways, [↓] run faster down the corridor, [↑] slower. [Space] fires downwards, at the creatures and at locked doors.',
+        'Watch out for the snakes, oafs and snappers, and for the shock wave of a creature that blows up. Don\'t shoot the clones that look like you: that costs a life. The stars at the top are your lives, and the number on the right is the time.']
     },
     // נבדק במכונה (25.10): בחירות, תנועה, כיוון וירי, רוחות שזזות, וסוף משחק עם הניקוד
     phantom: {
@@ -196,6 +214,7 @@
     blockdown: ['קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים.', 'Falling blocks: complete the lines. 1 or 2 players.'],
     dragontet: ['קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים.', 'Falling blocks: complete the lines. 1 or 2 players.'],
     phantom: ['מבוך תלת-ממדי: צדים רוחות רפאים לפני שהן תופסות אתכם. לשחקן אחד.', '3D maze: hunt the phantoms before they catch you. 1 player.'],
+    dungeon: ['רצים במסדרונות של מבוך ויורים ביצורים ובדלתות, נגד השעון. בג\'ויסטיק. נכתב רק ל-Dragon.', 'Race down dungeon corridors, shooting creatures and doors against the clock. Joystick. Written only for the Dragon.'],
     ranger: ['רצים, קופצים ויורים: אוספים מפתחות ואוצרות בין עטלפים ועיניים. בג\'ויסטיק.', 'Run, jump and shoot: collect keys and treasure past bats and eyes. Joystick.'],
     voodoo: ['הרפתקת מילים: מסירים קללת וודו מהרוזן כריסטו, בטירה מלאת סודות. ההרפתקה הרביעית בסדרה.', 'A text adventure: lift a voodoo curse from Count Cristo in a castle full of secrets. The fourth adventure in the series.'],
     mission: ['הרפתקת מילים: סוכן חשאי צריך לעצור פצצת זמן בכור גרעיני. ההרפתקה השלישית של Scott Adams.', 'A text adventure: a secret agent must stop a time bomb in a nuclear reactor. Scott Adams\' third adventure.'],
