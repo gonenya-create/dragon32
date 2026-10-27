@@ -40,7 +40,10 @@
   d.addEventListener('toggle', () => {
     try { state = JSON.parse(localStorage.getItem(DKEY)) || {}; state.type = d.open; localStorage.setItem(DKEY, JSON.stringify(state)); } catch (e) {}
   });
-  cabinet.insertBefore(d, mine);
+  // הסדר הכרונולוגי של הארון (גונן, 27.10): אחרי ההרפתקאות של 1983–84, לפני המשחקים החדשים מהקהילה
+  const after = document.querySelector('#tapes [data-drawer="community"]');
+  if (after) after.before(d); else cabinet.insertBefore(d, mine);
+  const yr = document.createElement('span'); yr.className = 'yr'; yr.dir = 'ltr'; yr.textContent = '1983'; d.querySelector('summary').appendChild(yr);
   const grid = d.querySelector('.tapes');
 
   // חלון העמוד: הסריקה מהקורא של archive.org, הקרדיט, וקישורים אם הקורא לא נטען

@@ -29,15 +29,15 @@
       ['Ken Kalish · Microdeal, 1983–84', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
     // ההרפתקאות של Scott Adams: אישור בכתב (מייל 25.10.2026). קרדיט מלא וקישור ל-msadams.com, בלי שינויים, יורד לפי בקשה
     ['adventureland', 'Adventureland', 'Adventureland', 'a',
-      ['Scott Adams · Adventure International, 1983', 'https://www.msadams.com/', null, null, 'adams']],
+      ['Scott Adams · Adventure International, 1979 · color: Roger Schrag', 'https://www.msadams.com/', null, null, 'adams']],
     // על המסך: "BY ALEXIS AND SCOTT ADAMS"
     ['pirate', 'Pirate Adventure', 'Pirate Adventure', 'a',
-      ['Alexis Adams & Scott Adams · Adventure International, 1984', 'https://www.msadams.com/', null, null, 'adams']],
+      ['Alexis Adams & Scott Adams · Adventure International, 1979 · color: Roger Schrag', 'https://www.msadams.com/', null, null, 'adams']],
     ['mission', 'Secret Mission', 'Secret Mission', 'a',
-      ['Scott Adams · Adventure International', 'https://www.msadams.com/', null, null, 'adams']],
+      ['Scott Adams · Adventure International, 1979 · color: Roger Schrag', 'https://www.msadams.com/', null, null, 'adams']],
     // על המסך: "BY ALEXIS ADAMS". היא כתבה אותו עם Scott, והוא בסדרה שלו
     ['voodoo', 'Voodoo Castle', 'Voodoo Castle', 'a',
-      ['Alexis Adams & Scott Adams · Adventure International', 'https://www.msadams.com/', null, null, 'adams']]
+      ['Alexis Adams & Scott Adams · Adventure International, 1979 · color: Roger Schrag', 'https://www.msadams.com/', null, null, 'adams']]
   ];
   // משחקים שצריכים ג'ויסטיק: כשהקלטת נטענת, החיצים במקלדת הופכים לג'ויסטיק הימני ו-Alt (Option במק) לכפתור שלו
   const JOY = new Set(['ranger', 'dungeon']);
@@ -262,12 +262,16 @@
   const box = document.getElementById('tapes');
   const status = document.getElementById('tape-status');
   if (!box) return;
-  // ארון הקלטות (גונן, 24.10: "ככל שיהיו יותר משחקים אי אפשר יהיה להציג את כולם"): מגירה לכל סוג,
-  // עם מספר הקלטות, ונפתחת בלחיצה. מה פתוח נזכר בדפדפן הזה. המגירה של "הקלטות שלי" כתובה בדף עצמו.
-  const DRAWERS = [['basic', 'תוכניות BASIC', 'BASIC programs'], ['mc', 'משחקים בשפת מכונה', 'Machine-code games'], ['adv', 'משחקי הרפתקאות', 'Adventure games']];
-  // הרפתקאות המילים במגירה משלהן (גונן, 26.10: "קטגוריית משחקי הרפתקאות"). הן עדיין קלטות של שפת מכונה
-  const ADV = new Set(['adventureland', 'pirate', 'mission', 'voodoo']);
-  const drawerOf = t => ADV.has(t[0]) ? 'adv' : t[3] ? 'mc' : 'basic';
+  // ארון הקלטות (גונן, 27.10): ארון רזה, מגירות לפי סדר כרונולוגי, ובכל מגירה המשחקים לפי השנה. לחיצה על משחק פותחת
+  // את דף המשחק ליד המכונה (המכונה נשארת על המסך, קטנה יותר), ולכל משחק כתובת משלו: /lab/1982/<slug>/.
+  // הנתונים בקטלוג (games.js). מה פתוח נזכר בדפדפן הזה. המגירה של "הקלטות שלי" כתובה בדף עצמו.
+  // XRoar כותב "XRoar" בכותרת הדף כשהוא נדלק. הכותרת נשארת שלנו (בדף של משחק: שם המשחק, גם כשמשתפים קישור)
+  { const td = Object.getOwnPropertyDescriptor(Document.prototype, 'title');
+    if (td && td.set) Object.defineProperty(document, 'title', { configurable: true, get() { return td.get.call(document); }, set(v) { if (v !== 'XRoar') td.set.call(document, v); } }); }
+  const G = window.D32_GAMES || { drawers: [], games: {} };
+  const BASE = EN ? '/en/lab/1982/' : '/lab/1982/';
+  const meta = id => G.games[id] || {};
+  const L2 = (pair) => pair ? pair[EN ? 1 : 0] : '';
   const DKEY = 'd32-lab-drawers';
   let drawerState = {};
   try { drawerState = JSON.parse(localStorage.getItem(DKEY)) || {}; } catch (e) {}
@@ -275,57 +279,72 @@
     drawerState[d.dataset.drawer] = d.open;
     try { localStorage.setItem(DKEY, JSON.stringify(drawerState)); } catch (e) {}
   });
+  // שנה או טווח שנים: תגית משמאל לימין, כדי שבעברית "1983–84" לא יתהפך (גונן, 27.10)
+  const yearChip = y => { const s = document.createElement('span'); s.className = 'yr'; s.dir = 'ltr'; s.textContent = y; return s; };
+  const yearKey = id => parseInt(meta(id).year, 10) || 9999;
   const grids = {};
-  for (const [key, he, en] of DRAWERS) {
+  for (const dr of G.drawers) {
+    if (dr.key === 'type') continue;   // typein.js בונה אותה, ושם אותה במקום שלה בסדר
+    const ids = TAPES.filter(t => meta(t[0]).drawer === dr.key).map(t => t[0]);
     const d = document.createElement('details');
     d.className = 'drawer';
-    d.dataset.drawer = key;
-    d.open = !!drawerState[key]; // סגורות בכניסה הראשונה (גונן, 25.10), ונזכרות אחר כך
-    d.innerHTML = '<summary><span class="drawer-name"></span> <span class="drawer-count"></span></summary><div class="drawer-body"><div class="tapes"></div></div>';
-    d.querySelector('.drawer-name').textContent = EN ? en : he;
-    d.querySelector('.drawer-count').textContent = TAPES.filter(t => drawerOf(t) === key).length;
-    grids[key] = d.querySelector('.tapes');
+    d.dataset.drawer = dr.key;
+    d.open = !!drawerState[dr.key];   // סגורות בכניסה הראשונה (גונן, 25.10), ונזכרות אחר כך
+    d.innerHTML = '<summary><span class="drawer-name"></span> <span class="drawer-count"></span></summary><div class="drawer-body"></div>';
+    d.querySelector('.drawer-name').textContent = EN ? dr.en : dr.he;
+    d.querySelector('.drawer-count').textContent = ids.length;
+    if (dr.years) d.querySelector('summary').appendChild(yearChip(dr.years));
+    const body = d.querySelector('.drawer-body');
+    if (dr.note) {
+      const p = document.createElement('p');
+      p.className = 'drawer-note';
+      p.textContent = L2(dr.note);
+      if (dr.link) { const a = document.createElement('a'); a.href = dr.link; a.rel = 'noopener'; a.textContent = dr.link.replace(/^https?:\/\/(www\.)?|\/$/g, ''); p.append(' ', a); }
+      body.appendChild(p);
+    }
+    for (const [g, he, en] of dr.groups || [[null]]) {
+      if (g) { const h = document.createElement('p'); h.className = 'drawer-group'; h.textContent = EN ? en : he; body.appendChild(h); }
+      const list = document.createElement('div');
+      list.className = 'rows';
+      body.appendChild(list);
+      grids[dr.key + (g ? ':' + g : '')] = list;
+    }
     remember(d);
     box.appendChild(d);
   }
   // עוד משחק טוב שלא על המדף: ב-Dunjunz יש חלקים מהמשחק המקורי של Bug-Byte בלי רשות, אז רק קישור לאתר של המחבר
-  {
+  if (grids.community) {
     const more = document.createElement('p');
-    more.className = 'tape-credit drawer-more';
+    more.className = 'drawer-note drawer-more';
     const a = document.createElement('a');
     a.href = 'https://www.6809.org.uk/dunjunz/';
     a.rel = 'noopener';
     a.textContent = 'Dunjunz';
     more.append(EN ? 'More to play: ' : 'עוד משחק: ', a, EN ? ' by Ciaran Anscomb, on his own site.' : ' של Ciaran Anscomb, באתר שלו.');
-    grids.mc.after(more);
+    grids.community.after(more);
   }
   const mineDrawer = document.getElementById('drawer-mine');
   if (mineDrawer) { if ('mine' in drawerState) mineDrawer.open = drawerState.mine; remember(mineDrawer); }
   const openDrawerOf = b => { const d = b && b.closest('details.drawer'); if (d) d.open = true; };
-  const buttons = [];
-  for (const t of TAPES) {
-    const [id, he, en, kind, credit] = t;
-    const shelf = grids[drawerOf(t)];
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'tape';
-    b.innerHTML = '<span></span><small dir="ltr"></small>';
-    b.querySelector('span').textContent = EN ? en : he;
-    b.querySelector('small').textContent = id.toUpperCase() + (kind ? ' · CLOADM' : '');
-    if (DESC[id]) {
-      const t = document.createElement('span');
-      t.className = 'tape-desc';
-      t.textContent = DESC[id][EN ? 1 : 0];
-      b.querySelector('small').before(t);
-    }
-    b.addEventListener('click', () => load(id, EN ? en : he, b, false, kind));
-    buttons.push(b);
-    if (!credit) { shelf.appendChild(b); continue; }
-    // קרדיט: מי כתב, התיעוד והרישיון שלו, והאתר שלו
-    const wrap = document.createElement('div');
-    wrap.className = 'tape-box';
+  // צלמית: חלק קטן מצילום המסך של המשחק (מהמכונה שלנו), מוגדל בפיקסלים חדים
+  function icon(id) {
+    const m = meta(id), s = document.createElement('span');
+    s.className = 'ic';
+    if (m.icon) { const [x, y, w] = m.icon, k = 32 / w; s.style.backgroundImage = 'url(/lab/1982/shots/' + id + '.png)'; s.style.backgroundSize = (256 * k) + 'px ' + (192 * k) + 'px'; s.style.backgroundPosition = (-x * k) + 'px ' + (-y * k) + 'px'; }
+    return s;
+  }
+  // הקרדיט: מי כתב, והרשות (או התיעוד והרישיון)
+  function creditLine(id, credit) {
     const by = document.createElement('p');
     by.className = 'tape-credit';
+    if (!credit) {   // שלנו: תוכנית BASIC מתוך האפליקציה
+      const a = document.createElement('a');
+      a.href = 'https://github.com/gonenya-create/dragon32/blob/main/assets/dragon/tapes/' + id + '.bas';
+      a.rel = 'noopener';
+      a.textContent = EN ? 'the program on GitHub' : 'התוכנית ב-GitHub';
+      by.append(EN ? 'By Dragon 1982 (Gonen Yarom), 2026 · ' : 'מאת Dragon 1982 (גונן ירום), 2026 · ', a);
+      return by;
+    }
     const docs = document.createElement('a'), site = document.createElement('a');
     docs.href = credit[1];
     docs.textContent = credit[3] ? (EN ? 'docs' : 'תיעוד') : (EN ? 'docs & licence' : 'תיעוד ורישיון');
@@ -339,38 +358,204 @@
       // בלי תיעוד ורישיון: הרשות מהמחבר, והקישור לראיון שבו הוא אומר שירצה שישחקו בהם שוב
       docs.textContent = EN ? 'with his permission' : 'באישורו';
       docs.rel = 'noopener';
-      by.append(EN ? 'By ' : 'מאת ', who, document.createElement('br'), docs, EN ? ' · removed on request' : ' · יוסר לפי בקשה');
+      by.append(EN ? 'By ' : 'מאת ', who, ' · ', docs, EN ? ' · removed on request' : ' · יוסר לפי בקשה');
     } else if (credit[4] === 'adams') {
-      // הרשות של Scott Adams: קרדיט מלא וקישור לאתר שלו
       docs.textContent = 'msadams.com';
       docs.rel = 'noopener';
-      by.append(EN ? 'By ' : 'מאת ', who, document.createElement('br'), EN ? 'With his permission · ' : 'באישורו · ', docs, EN ? ' · removed on request' : ' · יוסר לפי בקשה');
-    } else by.append(EN ? 'By ' : 'מאת ', who, document.createElement('br'), docs);
+      by.append(EN ? 'By ' : 'מאת ', who, ' · ', EN ? 'with his permission · ' : 'באישורו · ', docs, EN ? ' · removed on request' : ' · יוסר לפי בקשה');
+    } else by.append(EN ? 'By ' : 'מאת ', who, ' · ', docs);
     if (credit[2]) by.append(' · ', site);
-    if (credit[3]) {
-      const lic = document.createElement('a');
-      lic.href = credit[3];
-      lic.textContent = 'GPL v3';
-      by.append(' · ', lic);
-    }
-    wrap.append(b, by);
-    const how = HOWTO[id];
-    if (how) {
-      const d = document.createElement('details');
-      d.className = 'howto';
-      const sm = document.createElement('summary');
-      sm.textContent = EN ? 'How to play' : 'איך משחקים';
+    if (credit[3]) { const lic = document.createElement('a'); lic.href = credit[3]; lic.textContent = 'GPL v3'; by.append(' · ', lic); }
+    return by;
+  }
+  // שורה בארון: צלמית, שם, תגית אחת ושנה
+  const buttons = [];
+  const order = TAPES.map((t, i) => [t, i]).sort((a, b) => (yearKey(a[0][0]) - yearKey(b[0][0])) || (a[1] - b[1]));
+  for (const [t, i] of order) {
+    const [id, he, en, kind] = t, m = meta(id);
+    const list = grids[m.drawer + (m.group ? ':' + m.group : '')];
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'tape row';
+    b.dataset.id = id;
+    const nm = document.createElement('bdi');
+    nm.className = 'nm';
+    nm.textContent = EN ? en : he;
+    const tg = document.createElement('span');
+    tg.className = 'tg';
+    tg.textContent = L2(m.tag);
+    const txt = document.createElement('span');
+    txt.className = 'txt';
+    const line = document.createElement('span');
+    line.className = 'meta';
+    line.append(tg);
+    if (m.year) line.appendChild(yearChip(m.year));
+    txt.append(nm, line);
+    b.append(icon(id), txt);
+    b.addEventListener('click', () => openGame(id, true));
+    buttons[i] = b;
+    if (list) list.appendChild(b);
+  }
+  // ---------- דף המשחק: נפתח במקום הארון, והמכונה נשארת ----------
+  const shelfSec = box.closest('.shelf');
+  const view = document.createElement('div');
+  view.className = 'game-view';
+  view.hidden = true;
+  shelfSec.appendChild(view);
+  const statusHome = status && status.parentNode, statusNext = status && status.nextSibling;
+  const baseTitle = document.title;
+  const T2 = (he, en) => EN ? en : he;
+  function loadSteps(id, kind) {
+    const m = meta(id), steps = [];
+    steps.push(T2('לוחצים על הכפתור האדום, והקלטת נכנסת לרשמקול.', 'Press the red button, and the tape goes into the recorder.'));
+    if (!kind) steps.push(T2('מקלידים {CLOAD} ו-[ENTER]. אחרי כמה שניות מופיע OK.', 'Type {CLOAD} and [ENTER]. After a few seconds OK appears.'), T2('מקלידים {RUN} ו-[ENTER].', 'Type {RUN} and [ENTER].'));
+    else if (kind === 'm') steps.push(T2('מקלידים {CLOADM} ו-[ENTER]. כשמופיע OK, מקלידים {EXEC} ו-[ENTER].', 'Type {CLOADM} and [ENTER]. When OK appears, type {EXEC} and [ENTER].'));
+    else steps.push(T2('מקלידים {CLOADM} ו-[ENTER]. קודם מופיע S, ואחר כך F ושם הקלטת. כשהטעינה נגמרת, המשחק מתחיל לבד.', 'Type {CLOADM} and [ENTER]. First S appears, then F and the tape\'s name. When loading ends, the game starts by itself.'));
+    if (m.load && L2(m.load)) steps.push(T2('הטעינה לוקחת ' + m.load[0] + ', כמו קלטת אמיתית.', 'Loading takes ' + m.load[1] + ', like a real tape.'));
+    return steps;
+  }
+  function playLines(id, kind) {
+    if (HOWTO[id]) return EN ? HOWTO[id].en : HOWTO[id].he;
+    // תוכניות ה-BASIC שלנו: עונים במקלדת, ואחר כך קוראים את הקוד
+    return [T2('התוכנית שואלת, ואתם עונים במקלדת ולוחצים [ENTER].', 'The program asks, and you answer on the keyboard and press [ENTER].'),
+      T2('[BREAK] עוצר. {LIST} מראה את כל הקוד, ו-{RUN} מריץ שוב.', '[BREAK] stops it. {LIST} shows the whole program, and {RUN} runs it again.'),
+      T2('אפשר לשנות שורה: מקלידים אותה מחדש עם אותו מספר, ומריצים.', 'You can change a line: type it again with the same number, and run it.')];
+  }
+  function openGame(id, push) {
+    const t = TAPES.find(x => x[0] === id), m = meta(id);
+    if (!t) return;
+    const [, he, en, kind, credit] = t, name = EN ? en : he, b = buttons[TAPES.indexOf(t)];
+    view.textContent = '';
+    const back = document.createElement('button');
+    back.type = 'button';
+    back.className = 'gv-back';
+    back.textContent = T2('→ חזרה לארון', '← Back to the cabinet');
+    back.addEventListener('click', () => closeGame(true));
+    const top = document.createElement('div');
+    top.className = 'gv-top';
+    const info = document.createElement('div');
+    info.className = 'gv-info';
+    const h = document.createElement('h3');
+    h.className = 'gv-title';
+    h.innerHTML = '<bdi></bdi>';
+    h.firstChild.textContent = name;
+    const desc = document.createElement('p');
+    desc.className = 'gv-desc';
+    desc.textContent = DESC[id] ? DESC[id][EN ? 1 : 0] : L2(m.about && [m.about.he[0], m.about.en[0]]);
+    const tags = document.createElement('p');
+    tags.className = 'gv-tags';
+    for (const x of [L2(m.tag), L2(m.players)]) if (x) { const s = document.createElement('span'); s.textContent = x; tags.appendChild(s); }
+    if (m.year) tags.appendChild(yearChip(m.year));
+    if (m.load && L2(m.load)) { const s = document.createElement('span'); s.textContent = T2('טעינה: ', 'Loading: ') + L2(m.load); tags.appendChild(s); }
+    const go = document.createElement('button');
+    go.type = 'button';
+    go.className = 'gv-go';
+    go.textContent = T2('▶ הכנס את הקלטת לרשמקול', '▶ Put the tape in the recorder');
+    go.addEventListener('click', () => load(id, name, b, false, kind));
+    info.append(h, desc, tags, go);
+    if (status) info.appendChild(status);
+    const pic = document.createElement('img');
+    pic.className = 'gv-shot';
+    pic.src = '/lab/1982/shots/' + id + '.png';
+    pic.alt = T2('צילום מסך מהמשחק, מהמכונה שלנו', 'A screenshot of the game, from our machine');
+    pic.width = 256; pic.height = 192;
+    top.append(info, pic);
+    // שלוש לשוניות: איך טוענים, איך משחקים, על המשחק
+    const tabs = document.createElement('div');
+    tabs.className = 'gv-tabs';
+    tabs.setAttribute('role', 'tablist');
+    const panes = [];
+    const mk = (label, fill) => {
+      const tb = document.createElement('button');
+      tb.type = 'button';
+      tb.setAttribute('role', 'tab');
+      tb.textContent = label;
+      const pane = document.createElement('div');
+      pane.className = 'gv-pane';
+      pane.setAttribute('role', 'tabpanel');
+      fill(pane);
+      tb.addEventListener('click', () => { tabs.querySelectorAll('button').forEach(x => x.setAttribute('aria-selected', x === tb ? 'true' : 'false')); panes.forEach(p => { p.hidden = p !== pane; }); });
+      tabs.appendChild(tb);
+      panes.push(pane);
+    };
+    mk(T2('איך טוענים', 'How to load'), pane => { const ol = document.createElement('ol'); for (const s of loadSteps(id, kind)) ol.appendChild(keyLine(s)); pane.appendChild(ol); });
+    mk(T2('איך משחקים', 'How to play'), pane => {
       const ul = document.createElement('ul');
-      for (const line of EN ? how.en : how.he) ul.appendChild(keyLine(line));
+      ul.className = 'howto-list';
+      for (const s of playLines(id, kind)) ul.appendChild(keyLine(s));
       const always = document.createElement('li');
       always.className = 'howto-always';
-      always.textContent = EN ? 'Stuck? Reloading the page always restarts the computer.' : 'נתקעתם? טעינה מחדש של הדף תמיד מפעילה את המחשב מחדש.';
+      always.textContent = T2('נתקעתם? טעינה מחדש של הדף תמיד מפעילה את המחשב מחדש.', 'Stuck? Reloading the page always restarts the computer.');
       ul.appendChild(always);
-      d.append(sm, ul);
-      wrap.appendChild(d);
-    }
-    shelf.appendChild(wrap);
+      pane.appendChild(ul);
+    });
+    mk(T2('על המשחק', 'About'), pane => { for (const s of (m.about ? m.about[EN ? 'en' : 'he'] : [])) { const p = document.createElement('p'); p.textContent = s; pane.appendChild(p); } });
+    view.append(back, top, tabs, ...panes, creditLine(id, credit));
+    tabs.firstChild.click();
+    view.hidden = false;
+    document.body.classList.add('game-open');
+    buttons.forEach(x => x && x.classList.toggle('sel', x === b));
+    document.title = name + ' — Dragon 1982';
+    if (push && m.slug) history.pushState({ game: id }, '', BASE + m.slug + '/');
+    if (innerWidth < 1100 && push) view.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
+  function closeGame(push) {
+    view.hidden = true;
+    document.body.classList.remove('game-open');
+    if (status && statusHome) statusHome.insertBefore(status, statusNext);
+    document.title = baseTitle;
+    if (push) history.pushState({}, '', BASE);
+    const sel = buttons.find(x => x && x.classList.contains('sel'));
+    if (sel) { openDrawerOf(sel); sel.focus({ preventScroll: true }); }
+  }
+  const slugNow = () => { const p = location.pathname; return p.startsWith(BASE) ? p.slice(BASE.length).replace(/\/.*$/, '') : ''; };
+  const idOfSlug = s => Object.keys(G.games).find(k => G.games[k].slug === s);
+  window.addEventListener('popstate', () => { const id = idOfSlug(slugNow()); if (id) openGame(id, false); else if (!view.hidden) closeGame(false); });
+  { const id = document.body.dataset.game || idOfSlug(slugNow()); if (id) openGame(id, false); }
+  window.d32OpenGame = id => openGame(id, true);
+  // העיצוב של הארון ושל דף המשחק (פעם אחת לשני הדפים, עברית ואנגלית)
+  const css = document.createElement('style');
+  css.textContent = `
+.drawer summary .yr { margin-inline-start: auto; }
+.yr { direction: ltr; unicode-bidi: isolate; font: 700 12px/1.6 'Courier New', monospace; color: var(--accent, #f2d23a); border: 1px solid #6a5434; border-radius: 999px; padding: 0 8px; white-space: nowrap; }
+.drawer-note { margin: 2px 4px 8px; font-size: 14px; color: #b9a98f; line-height: 1.5; }
+.drawer-note a { color: var(--accent, #f2d23a); }
+.drawer-group { margin: 10px 4px 4px; font-size: 13px; font-weight: 700; color: #d8c8a8; }
+.rows { display: grid; gap: 2px; }
+.tape.row { display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 10px; width: 100%; text-align: start; padding: 6px 8px; min-height: 44px; border-radius: 8px; border: 1px solid transparent; background: transparent; box-shadow: none; }
+.tape.row:hover, .tape.row.sel { background: #2a2119; border-color: #4a3a2a; }
+.tape.row .txt { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-width: 0; flex: 1; }
+.tape.row .nm { font-weight: 700; line-height: 1.25; }
+.tape.row .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.tape.row .tg { font-size: 12px; color: #b9a98f; }
+.ic { flex: 0 0 32px; width: 32px; height: 24px; border-radius: 4px; background: #2b2a26 no-repeat; image-rendering: pixelated; box-shadow: 0 0 0 1px #00000080; }
+.game-view { margin-top: 8px; border: 2px solid #5a4430; border-radius: 14px; background: linear-gradient(#2b2018, #1f1712); padding: 12px 14px; }
+.gv-back { background: none; border: 0; color: var(--accent, #f2d23a); font: inherit; font-size: 15px; padding: 4px 0; cursor: pointer; min-height: 36px; }
+.gv-top { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap-reverse; }
+.gv-info { flex: 1 1 240px; min-width: 0; }
+.gv-title { margin: 0; font-size: 26px; line-height: 1.2; }
+.gv-desc { margin: 4px 0 8px; color: #d8c8a8; }
+.gv-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; }
+.gv-tags > span:not(.yr) { font-size: 12px; color: #b9a98f; border: 1px solid #4a3a2a; border-radius: 999px; padding: 0 8px; }
+.gv-go { display: block; width: 100%; border: 0; border-radius: 12px; background: #e0503c; color: #fff; font: inherit; font-weight: 800; font-size: 18px; padding: 12px; box-shadow: 0 4px 0 #6d160b; cursor: pointer; }
+.gv-go:active { transform: translateY(2px); box-shadow: 0 2px 0 #6d160b; }
+.gv-info #tape-status { margin: 8px 0 0; }
+.gv-shot { flex: 0 1 300px; width: 300px; max-width: 100%; height: auto; image-rendering: pixelated; border-radius: 6px; border: 1px solid #4a3a2a; background: #000; }
+.gv-tabs { display: flex; gap: 6px; margin-top: 14px; border-bottom: 1px solid #4a3a2a; flex-wrap: wrap; }
+.gv-tabs button { font: inherit; font-size: 14px; font-weight: 700; color: #b9a98f; background: transparent; border: 1px solid #4a3a2a; border-bottom: 0; border-radius: 8px 8px 0 0; padding: 6px 12px; cursor: pointer; min-height: 36px; }
+.gv-tabs button[aria-selected="true"] { background: #2a2119; color: var(--accent, #f2d23a); }
+.gv-pane { padding: 10px 2px 4px; line-height: 1.7; }
+.gv-pane ol, .gv-pane ul { margin: 0; padding-inline-start: 22px; display: grid; gap: 6px; }
+.gv-pane p { margin: 0 0 8px; }
+.game-view .tape-credit { margin: 10px 0 0; padding-top: 8px; border-top: 1px solid #4a3a2a; }
+body.game-open .shelf > :not(.game-view) { display: none; }
+@media (min-width: 1100px) {
+  body.game-open .info, body.game-open main > p.note:first-child { display: none; }
+  body.game-open main { grid-template-columns: minmax(520px, 1fr) min(720px, calc((100vh - 370px) * 4 / 3 + 28px), calc(100vw - 640px)) 0; }
+  body.game-open .shelf { grid-column: 1; }
+}
+`;
+  document.head.appendChild(css);
   // הגיעו מהאפליקציה עם ?tape=guess: הקלטת נטענת לבד, ברגע שהמחשב מוכן
   const want = new URLSearchParams(location.search).get('tape');
   const wanted = TAPES.findIndex(t => t[0] === want);

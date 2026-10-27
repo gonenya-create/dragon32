@@ -1,0 +1,620 @@
+// קטלוג המשחקים של ארון הקלטות (גונן, 27.10: "מחסנית רזה, ממוינת לקטגוריות, וכשבוחרים משחק נפתח דף משחק").
+// מגירות לפי סדר כרונולוגי, ובכל מגירה המשחקים לפי השנה. לכל משחק כתובת משלו: /lab/1982/<slug>/ (וגם /en/...).
+// הקובץ הוא JSON אחרי השורה הראשונה של הקוד, כדי ש-tools/lab/games-pages.mjs יקרא אותו בלי דפדפן.
+window.D32_GAMES = {
+  "drawers": [
+    {
+      "key": "adams",
+      "he": "ההרפתקאות של Scott Adams",
+      "en": "Scott Adams' adventures",
+      "years": "1979",
+      "note": [
+        "Scott Adams הביא את הרפתקאות המילים למחשבים הביתיים. הקלטות האלה הן גרסת ה-Color Computer, ש-Roger Schrag העביר לצבע, והיא רצה גם על ה-Dragon. כאן באישורו.",
+        "Scott Adams brought text adventures to home computers. These tapes are the Color Computer versions, converted to colour by Roger Schrag, which also ran on the Dragon. Here with his permission."
+      ],
+      "link": "https://www.msadams.com/"
+    },
+    {
+      "key": "period",
+      "he": "משחקים מהתקופה",
+      "en": "Games from the time",
+      "years": "1983–84",
+      "note": [
+        "משחקים מקצועיים שנמכרו ל-Dragon בזמנו, על קלטות. כאן באישור המחברים.",
+        "Professional games sold for the Dragon at the time, on tape. Here with the authors' permission."
+      ]
+    },
+    {
+      "key": "type",
+      "he": "הקלד בעצמך",
+      "en": "Type it in",
+      "years": "1983"
+    },
+    {
+      "key": "community",
+      "he": "משחקים חדשים מהקהילה",
+      "en": "New games from the community",
+      "years": "2021–2025",
+      "note": [
+        "מתכנתים מכל העולם עדיין כותבים משחקים ל-Dragon. כאן באישורם.",
+        "Programmers around the world still write games for the Dragon. Here with their permission."
+      ]
+    },
+    {
+      "key": "ours",
+      "he": "מתוצרת Dragon 1982",
+      "en": "Made by Dragon 1982",
+      "years": "2026",
+      "note": [
+        "כתבנו בעצמנו, למכונה הזאת.",
+        "We wrote these ourselves, for this machine."
+      ],
+      "groups": [
+        [
+          "mc",
+          "משחקים",
+          "Games"
+        ],
+        [
+          "basic",
+          "תוכניות BASIC קצרות: לשחק, לקרוא את הקוד ולשנות",
+          "Short BASIC programs: play them, read the code, change it"
+        ]
+      ]
+    }
+  ],
+  "games": {
+    "phantom": {
+      "slug": "phantom-slayer",
+      "drawer": "period",
+      "year": "1983",
+      "tag": [
+        "מבוך תלת-ממדי",
+        "3D maze"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כדקה וחצי",
+        "about a minute and a half"
+      ],
+      "about": {
+        "he": [
+          "Ken Kalish כתב אותו ב-1982 למחשב CoCo של Tandy, וחברת Med Systems הוציאה אותו. Microdeal הוציאה את גרסת ה-Dragon ב-1983.",
+          "מבוך בתלת-ממד: צדים רוחות רפאים לפני שהן תופסות אתכם."
+        ],
+        "en": [
+          "Ken Kalish wrote it in 1982 for the Tandy Color Computer, published by Med Systems. Microdeal brought out the Dragon version in 1983.",
+          "A 3D maze: hunt the phantoms before they catch you."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        256
+      ]
+    },
+    "ranger": {
+      "slug": "danger-ranger",
+      "drawer": "period",
+      "year": "1983",
+      "tag": [
+        "ג'ויסטיק",
+        "joystick"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כשלוש דקות",
+        "about three minutes"
+      ],
+      "about": {
+        "he": [
+          "עוד משחק של Ken Kalish, ש-Microdeal הוציאה ל-Dragon ב-1983.",
+          "רצים בין קומות של מבוך, קופצים, יורים ואוספים מפתחות ואוצרות, בזמן שעטלפים ועיניים יורות מהצדדים."
+        ],
+        "en": [
+          "Another Ken Kalish game, brought out for the Dragon by Microdeal in 1983.",
+          "Run through the floors of a maze, jump, shoot and collect keys and treasure, while bats fly and eyes shoot from the sides."
+        ]
+      },
+      "icon": [
+        26,
+        26,
+        48
+      ]
+    },
+    "dungeon": {
+      "slug": "dungeon-raid",
+      "drawer": "period",
+      "year": "1983–84",
+      "tag": [
+        "ג'ויסטיק",
+        "joystick"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כארבע דקות",
+        "about four minutes"
+      ],
+      "about": {
+        "he": [
+          "Ken Kalish כתב אותו רק ל-Dragon, ו-Microdeal מקורנוול הוציאה אותו. על מסך הפתיחה כתוב 1983, ועל המסך של Microdeal כתוב 1984.",
+          "בספטמבר 1984 הוא היה רביעי ברשימת המשחקים הנמכרים ל-Dragon."
+        ],
+        "en": [
+          "Ken Kalish wrote it for the Dragon only, and Microdeal of Cornwall published it. The title screen says 1983, and Microdeal's screen says 1984.",
+          "In September 1984 it was number four in the Dragon best-seller list."
+        ]
+      },
+      "icon": [
+        118,
+        56,
+        48
+      ]
+    },
+    "adventureland": {
+      "slug": "adventureland",
+      "drawer": "adams",
+      "year": "1979",
+      "tag": [
+        "הרפתקת מילים",
+        "text adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "קצת פחות משתי דקות",
+        "a little under two minutes"
+      ],
+      "about": {
+        "he": [
+          "ההרפתקה הראשונה של Scott Adams, מ-1978: אחד ממשחקי ההרפתקה הראשונים שנמכרו למחשבים ביתיים. על המסך: COPYRIGHT ADAMS 1979, והמרה לצבע של Roger Schrag.",
+          "כותבים פקודות קצרות באנגלית, ומחפשים 13 אוצרות בארץ של קסמים."
+        ],
+        "en": [
+          "Scott Adams' first adventure, from 1978: one of the first adventure games sold for home computers. The screen says COPYRIGHT ADAMS 1979, with the colour conversion by Roger Schrag.",
+          "Type short commands in English and hunt for 13 treasures in a land of magic."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        256
+      ]
+    },
+    "pirate": {
+      "slug": "pirate-adventure",
+      "drawer": "adams",
+      "year": "1979",
+      "tag": [
+        "הרפתקת מילים",
+        "text adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "קצת פחות משתי דקות",
+        "a little under two minutes"
+      ],
+      "about": {
+        "he": [
+          "ההרפתקה השנייה בסדרה. Alexis Adams כתבה אותה יחד עם Scott, וכך כתוב במשחק. על המסך: COPYRIGHT ADAMS 1979, והמרה לצבע של Roger Schrag.",
+          "מדירה בלונדון לאי של פיראטים, בחיפוש אחרי אוצר."
+        ],
+        "en": [
+          "The second adventure in the series. Alexis Adams wrote it with Scott, as the game says. The screen says COPYRIGHT ADAMS 1979, with the colour conversion by Roger Schrag.",
+          "From a London flat to a pirates' island, hunting for treasure."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        256
+      ]
+    },
+    "mission": {
+      "slug": "secret-mission",
+      "drawer": "adams",
+      "year": "1979",
+      "tag": [
+        "הרפתקת מילים",
+        "text adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כשתי דקות",
+        "about two minutes"
+      ],
+      "about": {
+        "he": [
+          "ההרפתקה השלישית של Scott Adams, מ-1979. בהתחלה נקראה Mission Impossible. המרה לצבע של Roger Schrag.",
+          "סוכן חשאי צריך לעצור פצצת זמן בכור גרעיני."
+        ],
+        "en": [
+          "Scott Adams' third adventure, from 1979. At first it was called Mission Impossible. Colour conversion by Roger Schrag.",
+          "A secret agent must stop a time bomb in a nuclear reactor."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        256
+      ]
+    },
+    "voodoo": {
+      "slug": "voodoo-castle",
+      "drawer": "adams",
+      "year": "1979",
+      "tag": [
+        "הרפתקת מילים",
+        "text adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "קצת פחות משתי דקות",
+        "a little under two minutes"
+      ],
+      "about": {
+        "he": [
+          "ההרפתקה הרביעית בסדרה, מ-1979. Alexis Adams כתבה אותה, וכך כתוב במשחק. המרה לצבע של Roger Schrag.",
+          "מסירים קללת וודו מהרוזן כריסטו, בטירה מלאת סודות."
+        ],
+        "en": [
+          "The fourth adventure in the series, from 1979. Alexis Adams wrote it, as the game says. Colour conversion by Roger Schrag.",
+          "Lift a voodoo curse from Count Cristo, in a castle full of secrets."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        256
+      ]
+    },
+    "blockdown": {
+      "slug": "blockdown",
+      "drawer": "community",
+      "year": "2021",
+      "tag": [
+        "קוביות",
+        "blocks"
+      ],
+      "players": [
+        "1–2 שחקנים",
+        "1–2 players"
+      ],
+      "load": [
+        "כדקה",
+        "about a minute"
+      ],
+      "about": {
+        "he": [
+          "Ciaran Anscomb, שכתב את XRoar (האמולטור שעליו המכונה שלנו רצה), כתב גם את המשחק הזה ל-Dragon ב-2021.",
+          "קוביות נופלות: משלימים שורות. אפשר לשחק לבד או שניים."
+        ],
+        "en": [
+          "Ciaran Anscomb, who wrote XRoar (the emulator our machine runs on), also wrote this game for the Dragon in 2021.",
+          "Falling blocks: complete the lines. Play alone or with a friend."
+        ]
+      },
+      "icon": [
+        92,
+        40,
+        48
+      ]
+    },
+    "dragontet": {
+      "slug": "dragontet",
+      "drawer": "community",
+      "year": "2025",
+      "tag": [
+        "קוביות",
+        "blocks"
+      ],
+      "players": [
+        "1–2 שחקנים",
+        "1–2 players"
+      ],
+      "load": [
+        "כדקה וחצי",
+        "about a minute and a half"
+      ],
+      "about": {
+        "he": [
+          "Salva Kantero כתב אותו ב-2025, בשפת C, בקוד פתוח (GPL v3).",
+          "קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים."
+        ],
+        "en": [
+          "Salva Kantero wrote it in 2025, in C, as open source (GPL v3).",
+          "Falling blocks: complete the lines. 1 or 2 players."
+        ]
+      },
+      "icon": [
+        60,
+        12,
+        64
+      ]
+    },
+    "eggs": {
+      "slug": "dragon-eggs",
+      "drawer": "ours",
+      "group": "mc",
+      "year": "2026",
+      "tag": [
+        "פעולה",
+        "action"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כחצי דקה",
+        "about half a minute"
+      ],
+      "about": {
+        "he": [
+          "המשחק הראשון שכתבנו בשפת מכונה למכונה הזאת, ב-2026. הקוד פתוח, ב-GitHub.",
+          "הדרקון מטיל ביצים, ואתם תופסים אותן בסל."
+        ],
+        "en": [
+          "The first game we wrote in machine code for this machine, in 2026. The code is open, on GitHub.",
+          "The dragon lays eggs, and you catch them in a basket."
+        ]
+      },
+      "icon": [
+        116,
+        0,
+        48
+      ]
+    },
+    "guess": {
+      "slug": "guess-the-number",
+      "drawer": "ours",
+      "group": "basic",
+      "year": "2026",
+      "tag": [
+        "BASIC",
+        "BASIC"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "שניות",
+        "seconds"
+      ],
+      "about": {
+        "he": [
+          "המחשב חושב על מספר בין 1 ל-100, ואתם מנחשים. אחרי כל ניחוש הוא אומר גבוה יותר או נמוך יותר.",
+          "11 שורות של BASIC. אחרי שמשחקים, LIST מראה את כל הקוד."
+        ],
+        "en": [
+          "The computer thinks of a number from 1 to 100, and you guess. After each guess it says higher or lower.",
+          "11 lines of BASIC. After playing, LIST shows the whole program."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        256
+      ]
+    },
+    "lander": {
+      "slug": "moon-lander",
+      "drawer": "ours",
+      "group": "basic",
+      "year": "2026",
+      "tag": [
+        "BASIC",
+        "BASIC"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "שניות",
+        "seconds"
+      ],
+      "about": {
+        "he": [
+          "נוחתים על הירח: בכל תור מחליטים כמה דלק לשרוף, ומנסים לנחות במהירות קטנה מ-5.",
+          "18 שורות של BASIC."
+        ],
+        "en": [
+          "Land on the Moon: each turn you decide how much fuel to burn, and try to touch down at a speed under 5.",
+          "18 lines of BASIC."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        256
+      ]
+    },
+    "quiz": {
+      "slug": "maths-quiz",
+      "drawer": "ours",
+      "group": "basic",
+      "year": "2026",
+      "tag": [
+        "BASIC",
+        "BASIC"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "שניות",
+        "seconds"
+      ],
+      "about": {
+        "he": [
+          "עשר שאלות חיבור וחיסור, ובסוף הציון.",
+          "14 שורות של BASIC."
+        ],
+        "en": [
+          "Ten addition and subtraction questions, and your score at the end.",
+          "14 lines of BASIC."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        256
+      ]
+    },
+    "rps": {
+      "slug": "rock-paper-scissors",
+      "drawer": "ours",
+      "group": "basic",
+      "year": "2026",
+      "tag": [
+        "BASIC",
+        "BASIC"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "שניות",
+        "seconds"
+      ],
+      "about": {
+        "he": [
+          "אבן, נייר, מספריים נגד המחשב. מי שמגיע ראשון ל-3 ניצחונות.",
+          "19 שורות של BASIC."
+        ],
+        "en": [
+          "Rock, paper, scissors against the computer. First to 3 wins.",
+          "19 lines of BASIC."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        256
+      ]
+    },
+    "cave": {
+      "slug": "dragon-cave",
+      "drawer": "ours",
+      "group": "basic",
+      "year": "2026",
+      "tag": [
+        "BASIC",
+        "BASIC"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "שניות",
+        "seconds"
+      ],
+      "about": {
+        "he": [
+          "הרפתקה קטנה: מערה חשוכה, עשן יוצא ממנה, ואתם בוחרים מה לעשות.",
+          "31 שורות של BASIC."
+        ],
+        "en": [
+          "A little adventure: a dark cave with smoke coming out, and you choose what to do.",
+          "31 lines of BASIC."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        256
+      ]
+    },
+    "draw": {
+      "slug": "screen-drawing",
+      "drawer": "ours",
+      "group": "basic",
+      "year": "2026",
+      "tag": [
+        "BASIC",
+        "BASIC"
+      ],
+      "players": [
+        "",
+        ""
+      ],
+      "load": [
+        "שניות",
+        "seconds"
+      ],
+      "about": {
+        "he": [
+          "ציור בצבעים על מסך הגרפיקה: שמש, שמיים ועוד, עם PMODE, CIRCLE ו-LINE.",
+          "21 שורות של BASIC. משנים מספר, ורואים מה משתנה בציור."
+        ],
+        "en": [
+          "A colour drawing on the graphics screen: a sun, the sky and more, with PMODE, CIRCLE and LINE.",
+          "21 lines of BASIC. Change a number and see what changes in the picture."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        256
+      ]
+    },
+    "derby": {
+      "slug": "horse-race",
+      "drawer": "ours",
+      "group": "basic",
+      "year": "2026",
+      "tag": [
+        "BASIC",
+        "BASIC"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "שניות",
+        "seconds"
+      ],
+      "about": {
+        "he": [
+          "מהמרים על אחד משלושה סוסים, ורואים את המרוץ על המסך.",
+          "18 שורות של BASIC."
+        ],
+        "en": [
+          "Bet on one of three horses, and watch the race on the screen.",
+          "18 lines of BASIC."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        256
+      ]
+    }
+  }
+};

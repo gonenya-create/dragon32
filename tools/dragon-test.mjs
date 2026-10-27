@@ -1609,18 +1609,18 @@ if (part('real machine lab')) {
     const p = await browser.newPage({ viewport: { width: 1000, height: 900 } });
     await p.goto(base.replace(/\/$/, '') + '/lab/1982/'); await p.waitForTimeout(3500);
     await p.evaluate(() => { const c = document.getElementById('canvas'); window.__k = []; c.addEventListener('keydown', e => window.__k.push(e.key)); });
-    await p.evaluate(() => { const t = [...document.querySelectorAll('[data-drawer="mc"] .tape')].find(e => /RANGER/.test(e.textContent)); (t.querySelector('.tape-box') || t).click(); });
+    await p.evaluate(() => { const t = document.querySelector('.tape.row[data-id="ranger"]'); t.click(); document.querySelector('.gv-go').click(); });
     await p.waitForTimeout(400);
     await p.focus('#canvas').catch(() => {}); await p.keyboard.press('Space'); await p.waitForTimeout(100);
     const joyKeys = await p.evaluate(() => ({ joy: window.d32Joy, keys: window.__k.splice(0) }));
     check('/lab/1982/ joystick game (Danger Ranger): Space fires as the joystick button (Alt) and does not reach the machine as a space', joyKeys.joy === true && joyKeys.keys.join() === 'Alt', JSON.stringify(joyKeys));
-    await p.evaluate(() => { const t = [...document.querySelectorAll('[data-drawer="mc"] .tape')].find(e => /EGGS/.test(e.textContent)); (t.querySelector('.tape-box') || t).click(); });
+    await p.evaluate(() => { const t = document.querySelector('.tape.row[data-id="eggs"]'); t.click(); document.querySelector('.gv-go').click(); });
     await p.waitForTimeout(400); await p.keyboard.press('Space'); await p.waitForTimeout(100);
     const plain = await p.evaluate(() => ({ joy: window.d32Joy, keys: window.__k.splice(0) }));
     check('/lab/1982/ other games: Space stays a space', plain.joy === false && plain.keys.join() === ' ', JSON.stringify(plain));
-    await p.evaluate(() => { const t = [...document.querySelectorAll('[data-drawer="mc"] .tape')].find(e => /DUNGEON/.test(e.textContent)); (t.querySelector('.tape-box') || t).click(); });
+    await p.evaluate(() => { const t = document.querySelector('.tape.row[data-id="dungeon"]'); t.click(); document.querySelector('.gv-go').click(); });
     await p.waitForTimeout(400); await p.keyboard.press('Space'); await p.waitForTimeout(100);
-    const dr = await p.evaluate(() => { const box = [...document.querySelectorAll('[data-drawer="mc"] .tape-box')].find(b => /DUNGEON/.test(b.textContent)); return { joy: window.d32Joy, keys: window.__k.splice(0), credit: box.querySelector('.tape-credit').textContent, size: FS.stat('/tape-dungeon.cas').size }; });
+    const dr = await p.evaluate(() => { return { joy: window.d32Joy, keys: window.__k.splice(0), credit: document.querySelector('.game-view .tape-credit').textContent, size: FS.stat('/tape-dungeon.cas').size }; });
     check('/lab/1982/ Dungeon Raid (Ken Kalish): the original tape goes in the recorder, the arrows and Space become the joystick, and the credit says "with his permission · removed on request"', dr.joy === true && dr.keys.join() === 'Alt' && dr.size === 34819 && /Ken Kalish/.test(dr.credit) && /באישורו|with his permission/.test(dr.credit) && /יוסר לפי בקשה|removed on request/.test(dr.credit), JSON.stringify(dr));
     await p.close();
   }
@@ -1631,7 +1631,7 @@ if (part('real machine lab')) {
     const r = await p.goto(base.replace(/\/$/, '') + path);
     await p.waitForTimeout(3500);
     check(`${path} loads with the drawn keyboard`, r.status() === 200 && (await p.locator('.kbd .k').count()) > 50 && errs.length === 0, errs.join(' | '));
-    check(`${path} has the tape shelf (17 tapes: 7 BASIC, Dragon Eggs, Blockdown, DragonTet, Phantom Slayer, Danger Ranger, Dungeon Raid, Adventureland, Pirate Adventure, Secret Mission, Voodoo Castle)`, (await p.locator('#tapes .tape').count()) === 17);
+    check(`${path} has the tape shelf (17 tapes: 7 BASIC, Dragon Eggs, Blockdown, DragonTet, Phantom Slayer, Danger Ranger, Dungeon Raid, Adventureland, Pirate Adventure, Secret Mission, Voodoo Castle)`, (await p.locator('#tapes .tape.row').count()) === 17);
     check(`${path} the cabinet drawers start closed`, await p.evaluate(() => [...document.querySelectorAll('#tapes details.drawer')].every(d => !d.open)));
     check(`${path} "type it in" drawer: 2 magazine pages; a page opens beside the machine (scan from archive.org, credit) and closes`, await p.evaluate(async () => {
       const cards = document.querySelectorAll('[data-drawer="type"] .tape');
@@ -1642,12 +1642,34 @@ if (part('real machine lab')) {
       v.querySelector('.tv-close').click();
       return ok && v.hidden;
     }));
-    check(`${path} the adventure games have their own drawer (Adventureland, Pirate Adventure, Secret Mission, Voodoo Castle)`, await p.evaluate(() =>
-      [...document.querySelectorAll('[data-drawer="adv"] .tape small')].map(s => s.textContent.split(' ')[0]).join() === 'ADVENTURELAND,PIRATE,MISSION,VOODOO'));
-    check(`${path} every machine-code game has a "how to play" box with keys and a way out`, await p.evaluate(() => {
-      const boxes = [...document.querySelectorAll('[data-drawer="mc"] .tape-box, [data-drawer="adv"] .tape-box')];
-      return boxes.length === 10 && boxes.every(b => { const h = b.querySelector('details.howto'); return h && h.querySelectorAll('kbd').length >= 3 && h.querySelector('.howto-always'); });
-    }));
+    // הארון החדש (גונן, 27.10): מגירות לפי סדר כרונולוגי, השנים בתגית משמאל לימין, ובכל מגירה המשחקים לפי השנה
+    const cab = await p.evaluate(() => ({
+      drawers: [...document.querySelectorAll('.cabinet details.drawer')].map(d => d.dataset.drawer),
+      years: [...document.querySelectorAll('.cabinet details.drawer > summary .yr')].map(y => [y.textContent, getComputedStyle(y).direction]),
+      rows: Object.fromEntries([...document.querySelectorAll('.cabinet details.drawer')].map(d => [d.dataset.drawer, [...d.querySelectorAll('.tape.row')].map(r => r.dataset.id)])),
+      icons: [...document.querySelectorAll('.tape.row .ic')].every(i => /shots\//.test(i.style.backgroundImage)) }));
+    check(`${path} the cabinet: drawers in time order (Scott Adams 1979, games from the time, type it in, the community, ours, my tapes), the years left to right, rows by year, an icon from each game's screen`,
+      cab.drawers.join() === 'adams,period,type,community,ours,mine' && cab.years.map(y => y[0]).join() === '1979,1983–84,1983,2021–2025,2026' && cab.years.every(y => y[1] === 'ltr')
+      && cab.rows.adams.join() === 'adventureland,pirate,mission,voodoo' && cab.rows.period.join() === 'phantom,ranger,dungeon' && cab.rows.community.join() === 'blockdown,dragontet' && cab.rows.ours.length === 8 && cab.rows.ours[0] === 'eggs' && cab.icons, JSON.stringify(cab));
+    // דף משחק ליד המכונה, עם כתובת משלו; "חזרה לארון" חוזר
+    const gv = await p.evaluate(async () => {
+      const out = [];
+      for (const r of document.querySelectorAll('.tape.row')) {
+        r.click(); await new Promise(f => setTimeout(f, 30));
+        const v = document.querySelector('.game-view'), tabs = [...v.querySelectorAll('.gv-tabs button')], panes = [...v.querySelectorAll('.gv-pane')];
+        out.push({ id: r.dataset.id, url: location.pathname, open: !v.hidden && document.body.classList.contains('game-open'), tabs: tabs.length, load: panes[0].querySelectorAll('li').length, play: panes[1].querySelectorAll('li').length, about: panes[2].querySelectorAll('p').length, credit: !!v.querySelector('.tape-credit'), go: !!v.querySelector('.gv-go') });
+        v.querySelector('.gv-back').click();
+      }
+      return { out, after: location.pathname, closed: !document.body.classList.contains('game-open') };
+    });
+    const pre = path;
+    check(`${path} every game opens its own page beside the machine, at its own address, with the 3 tabs (how to load, how to play, about), the red button and the credit; "back to the cabinet" returns`,
+      gv.out.length === 17 && gv.out.every(g => g.open && g.url.startsWith(pre) && g.url.length > pre.length + 3 && g.tabs === 3 && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go) && gv.after === pre && gv.closed, JSON.stringify(gv.out.filter(g => !(g.open && g.tabs === 3 && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go)).slice(0, 3)));
+    const direct = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    const dres = await direct.goto(base.replace(/\/$/, '') + path + 'dungeon-raid/'); await direct.waitForTimeout(1500);
+    const dd = await direct.evaluate(() => ({ open: document.body.classList.contains('game-open'), name: document.querySelector('.gv-title')?.textContent, title: document.title, og: document.querySelector('meta[property="og:title"]')?.content, shot: document.querySelector('.gv-shot').complete && document.querySelector('.gv-shot').naturalWidth === 256 }));
+    check(`${path}dungeon-raid/ opens the machine with the Dungeon Raid page already open (its own title for sharing, and a screenshot from our machine)`, dres.status() === 200 && dd.open && dd.name === 'Dungeon Raid' && /^Dungeon Raid — Dragon 1982/.test(dd.title) && /Dungeon Raid/.test(dd.og) && dd.shot, JSON.stringify(dd));
+    await direct.close();
     const b = await p.request.get(base.replace(/\/$/, '') + path + 'building/');
     check(`${path} links to "what we are building now", which loads`, b.status() === 200 && (await p.locator('main > p.note a[href="./building/"]').count()) === 1);
     await p.click('#full-open');
@@ -1660,11 +1682,10 @@ if (part('real machine lab')) {
     check(`${path} leaving full screen brings the page back`, await p.evaluate(() => !document.body.classList.contains('full') && !!document.querySelector('.shelf').offsetParent));
     if (path === '/lab/1982/') {
       await p.waitForFunction(() => window.d32Ready, null, { timeout: 20000 });
-      await p.click('#tapes details.drawer[data-drawer="basic"] > summary');
-      await p.click('#tapes .tape:has-text("GUESS")');
+      await p.evaluate(() => { document.querySelector('.tape.row[data-id="guess"]').click(); document.querySelector('.gv-go').click(); });
       await p.waitForTimeout(800);
-      check('a tape click only puts the tape in the recorder (you type CLOAD yourself, like 1982)', await p.evaluate(() =>
-        document.querySelector('#tapes .tape.in small')?.textContent === 'GUESS' && /CLOAD/.test(document.getElementById('tape-status').textContent)
+      check('the red button only puts the tape in the recorder (you type CLOAD yourself, like 1982)', await p.evaluate(() =>
+        document.querySelector('#tapes .tape.in')?.dataset.id === 'guess' && /CLOAD/.test(document.getElementById('tape-status').textContent)
         && FS.stat('/tape-guess.cas').size > 280 && !(window.d32Screen?.() || []).some(r => r.startsWith('CLOAD'))) && errs.length === 0, errs.join(' | '));
       // הקלטת היא מה שהמכונה עצמה שמרה (פורמט מכווץ): מקלידים CLOAD, אחרי OK את RUN, והמשחק על המסך
       await p.evaluate(() => window.d32Type('CLOAD\n'));
@@ -1678,8 +1699,8 @@ if (part('real machine lab')) {
       // מהאפליקציה: ?tape=lander טוען את הקלטת לבד
       const q = await browser.newPage({ viewport: { width: 1000, height: 900 } });
       await q.goto(base.replace(/\/$/, '') + path + '?tape=lander');
-      await q.waitForFunction(() => document.querySelector('#tapes .tape.in small')?.textContent === 'LANDER', null, { timeout: 30000 }).catch(() => {});
-      check('?tape=lander from the app loads that tape by itself', await q.evaluate(() => document.querySelector('#tapes .tape.in small')?.textContent === 'LANDER'));
+      await q.waitForFunction(() => document.querySelector('#tapes .tape.in')?.dataset.id === 'lander', null, { timeout: 30000 }).catch(() => {});
+      check('?tape=lander from the app loads that tape by itself', await q.evaluate(() => document.querySelector('#tapes .tape.in')?.dataset.id === 'lander'));
       await q.close();
       // מהאפליקציה: ?mine=APPPROG — תוכנית מ"הקלטות שלי" של האפליקציה, כקלטת טקסט (כמו CSAVE "X",A), נטענת ורצה
       const a = await browser.newPage({ viewport: { width: 1000, height: 900 } });
