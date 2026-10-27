@@ -7,7 +7,7 @@ const sql = process.env.DATABASE_URL ? neon(process.env.DATABASE_URL) : null;
 
 const ALLOWED_ORIGINS = [process.env.VERCEL_PROJECT_PRODUCTION_URL, 'dragon1982.com', 'www.dragon1982.com', 'dragon32.vercel.app'].filter(Boolean).map(h => 'https://' + h);
 // התקרה לכל משחק: ניקוד מעל זה לא אמיתי (נדיב מאוד ביחס למה שאפשר להשיג)
-const GAMES = { tower: 200000, jungle: 200000, eggs: 50000, castle: 200000, deep: 100000 };
+const GAMES = { tower: 200000, jungle: 200000, eggs: 50000, castle: 200000, deep: 100000, king: 400000 };
 const SIZE = 10;
 // צירופים גסים לא נכנסים לטבלה; במקומם "???"
 const RUDE = new Set(['ASS', 'CUM', 'DIK', 'DIC', 'FAG', 'FCK', 'FUC', 'FUK', 'FKU', 'KKK', 'NIG', 'NGR', 'SEX', 'TIT', 'XXX', 'NAZ', 'SS', 'PUS', 'COK', 'WTF', 'CNT', 'KYS']);

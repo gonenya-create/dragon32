@@ -1345,6 +1345,92 @@ if (part('english')) {
 }
 
 // המחשב האמיתי (ניסוי): XRoar עם ה-ROM שלנו עולה, והמקלדת המצוירת מקלידה בו
+if (part('cartridge JUNGLE KING')) {
+  // JUNGLE KING, סבב 1 (גונן, 27.10): המנוע, עולמות 1 ו-2 (12 מסכים), שמירה בטוחה, ורובוט שעובר כל מסך
+  console.log('\ncartridge JUNGLE KING');
+  const p = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  p.on('pageerror', e => pageErrors.push(e.message));
+  await p.goto(base.replace(/\/$/, '') + '/');
+  await p.evaluate(() => { localStorage.removeItem('d32-king-save'); localStorage.removeItem('d32-king-diff'); });
+  await p.reload(); await p.waitForSelector('#dragon-room.is-ready');
+  await p.locator('.d32-tab[data-tab="shelf"]').click();
+  const open = () => p.evaluate(() => [...document.querySelectorAll('.d32-cart')].find(e => /KING/.test(e.textContent)).click());
+  await open();
+  await p.waitForFunction(() => document.querySelector('#dragon-room').d32Cart?.state?.t > 45);
+  const K = (code = '') => p.evaluate(`(async () => { const m = await import('/assets/dragon/carts/king.js'); const s = document.querySelector('#dragon-room').d32Cart.state; ${code} })()`);
+  const press = async (key, ms = 120) => { await p.keyboard.down(key); await p.waitForTimeout(ms); await p.keyboard.up(key); await p.waitForTimeout(40); };
+  check('jungle king is on the shelf and shows its title', await K('return s.mode === "title" && !s.save;'));
+  await press('Space');
+  const started = await K('return { mode: s.mode, world: s.world, save: JSON.parse(localStorage.getItem("d32-king-save") || "null") };');
+  check('FIRE starts a new game: the tree map of world 1, and the game is saved at the start of the world', started.mode === 'map' && started.world === 1 && started.save && started.save.world === 1, JSON.stringify(started));
+  await K('s.t = 40;'); await press('Space'); await K('s.t = 80;'); await p.waitForTimeout(150);
+  check('FIRE on the map shows screen 1-1 and the game starts', await K('return s.mode === "play" && s.L.sc.id === "1-1";'));
+  await K('s.noEnemies = true;');
+  const x0 = await K('return s.p.x;'); await press('ArrowRight', 400);
+  check('right arrow walks PIP to the right', (await K('return s.p.x;')) > x0 + 15);
+  await K('s.p.vy = 0;'); await p.keyboard.press('Space'); await p.waitForTimeout(100);
+  const air = await K('return s.p.mode;'); await p.waitForTimeout(900);
+  check('FIRE jumps, and PIP lands again', air === 'air' && (await K('return s.p.mode;')) === 'walk');
+  // טיפוס: החבל בעמודה 26, מהרצפה לשורש בשורה 15
+  await K('s.p.x = 26 * 8 + 4; s.p.y = 170; s.p.mode = "walk";');
+  await p.keyboard.down('ArrowUp'); await p.waitForTimeout(1200); await p.keyboard.up('ArrowUp'); await p.waitForTimeout(80);
+  check('UP climbs the rope and PIP stands on the root above', await K('return s.p.mode === "walk" && s.p.y === 130;'), await K('return JSON.stringify(s.p);'));
+  await K('s.p.x = 26 * 8 + 4; s.p.y = 130;'); await press('ArrowDown', 300);
+  check('DOWN on a root over a rope climbs down', await K('return s.p.mode === "climb";'));
+  // חלק קלטת
+  const tp = await K('const t = s.L.tapes[0]; s.p.mode = "walk"; s.p.x = t.x; s.p.y = t.y + 8; return s.score;');
+  await p.waitForTimeout(100);
+  check('touching a tape piece collects it (+250)', await K(`return s.got === 1 && s.score === ${tp} + 250;`));
+  // חבית פוגעת
+  await K('s.noEnemies = false; s.p.mode = "walk"; s.p.x = 120; s.p.y = 170; s.L.barrels.push({ x: 122, y: 170, vx: -1, vy: 0, mode: "roll", rot: 0 });');
+  await p.waitForTimeout(150);
+  const hurt = await K('return s.mode;'); await p.waitForTimeout(1700);
+  check('a barrel hits PIP: one life less and the screen starts again', hurt === 'dying' && await K('return s.lives === 2 && (s.mode === "intro" || s.mode === "play");'));
+  // יציאה
+  await K('s.mode = "play"; s.noEnemies = true; s.p.x = 6 * 8 + 8; s.p.y = 50; s.p.mode = "walk";'); await p.waitForTimeout(150);
+  check('reaching the arrow at the top clears the screen (time bonus)', await K('return s.mode === "clear";'));
+  await K('s.t = 200; s.bonusShown = s.bonus;'); await press('Space'); await p.waitForTimeout(100);
+  check('after the tally, the next screen (1-2)', await K('return s.L.sc.id === "1-2";'));
+  // פטרייה
+  await K('s.mode = "play"; s.noEnemies = true; const m0 = s.L.mush[0]; s.p.mode = "air"; s.p.x = m0.x; s.p.y = m0.y - 14; s.p.vy = 1; s.p.fallY = s.p.y;'); await p.waitForTimeout(100);
+  check('landing on a mushroom bounces PIP high', await K('return s.p.mode === "air" && s.p.vy < -3;'));
+  // ליאנה, מים, ושער השומר
+  await K('m._test.loadScreen(s, 6); s.mode = "play"; s.noEnemies = true; const v = s.L.vines[0], a = v.amp * Math.sin(v.ph); s.p.mode = "air"; s.p.vy = 0.1; s.p.grabCd = 0; s.p.x = v.px + Math.sin(a) * v.len; s.p.y = v.py + Math.cos(a) * v.len + 14;');
+  await p.waitForTimeout(100);
+  check('jumping into a swinging vine grabs it', await K('return s.p.mode === "swing";'));
+  await p.waitForTimeout(500); await p.keyboard.press('Space'); await p.waitForTimeout(60);
+  check('FIRE lets go of the vine and PIP flies on with the swing', await K('return s.p.mode === "air" && Math.abs(s.p.vx) > 0.3;'));
+  await K('s.p.mode = "air"; s.p.x = 120; s.p.y = 150; s.p.vy = 2; s.p.fallY = 150;'); await p.waitForTimeout(150);
+  check('falling into the water costs a life (SPLASH)', await K('return s.mode === "dying" && s.why === "SPLASH!";'));
+  await p.waitForTimeout(1600);
+  await K('m._test.loadScreen(s, 5); s.mode = "play"; s.noEnemies = false; s.p.x = 12 * 8; s.p.y = 170; s.p.mode = "walk"; s.p.inv = 99999;');
+  await p.waitForFunction(() => document.querySelector('#dragon-room').d32Cart.state.gateOpen, null, { timeout: 30000 }).catch(() => {});
+  check('1-6: after PIP dodges the giant barrel three times on the floor, the gate opens', await K('return s.gateOpen && s.passes === 3;'));
+  // שמירה בטוחה, כמו ב-DRAGON DEEP
+  await p.keyboard.press('Escape'); await p.waitForTimeout(200);
+  await p.evaluate(() => localStorage.setItem('d32-king-save', JSON.stringify({ v: 1, diff: 1, world: 2, lives: 4, score: 5000, tapes: 9, sub: 0 })));
+  await open(); await p.waitForFunction(() => document.querySelector('#dragon-room').d32Cart?.state?.t > 45);
+  await press('Space');
+  check('with a save, FIRE on the title goes on from the saved world (world 2)', await K('return s.mode === "map" && s.world === 2 && s.score === 5000;'));
+  await p.keyboard.press('Escape'); await p.waitForTimeout(200);
+  await open(); await p.waitForFunction(() => document.querySelector('#dragon-room').d32Cart?.state?.t > 45);
+  await press('p'); const asked = await K('return !!s.askNew;'); await press('ArrowUp');
+  check('with a save, P asks "NEW GAME?" and UP keeps the save', asked && await K('return !s.askNew && s.mode === "title" && JSON.parse(localStorage.getItem("d32-king-save")).world === 2;'));
+  await press('p'); await p.waitForTimeout(800); await press('Space');
+  check('P and then FIRE starts a new game in world 1', await K('return s.mode === "map" && s.world === 1 && JSON.parse(localStorage.getItem("d32-king-save")).world === 1;'));
+  // טלפון: הכפתורים של המשחק, כולל P, ועל הכפתור האדום כתוב JUMP
+  await p.setViewportSize({ width: 390, height: 844 });
+  const pad = await p.evaluate(() => ({ shown: [...document.querySelectorAll('.d32-pad-btn')].filter(b => !b.hidden).map(b => b.dataset.pad), fire: document.querySelector('.d32-pad-fire').textContent }));
+  check('on a phone: arrows, JUMP and P buttons', ['left', 'up', 'down', 'right', 'fire', 'pause'].every(b => pad.shown.includes(b)) && pad.fire === 'JUMP', JSON.stringify(pad));
+  await p.keyboard.press('Escape'); await p.evaluate(() => localStorage.removeItem('d32-king-save'));
+  await p.close();
+  // הרובוט: כל מסך אפשר לסיים, בפחות מחצי מהזמן של המסך
+  const { solve } = await import('./king/bot.mjs');
+  const { _test: KT } = await import('../assets/dragon/carts/king.js');
+  const route = KT.SCREENS.map((sc, i) => { const r = solve(i); return { id: sc.id, ok: r.ok, sec: r.ok ? r.frames / 50 : null, time: sc.time }; });
+  check('the robot finishes every one of the 12 screens, each in less than half its time', route.every(r => r.ok && r.sec < r.time / 2), JSON.stringify(route.filter(r => !r.ok || r.sec >= r.time / 2)));
+}
+
 if (part('adverts gallery')) {
   // גלריית הפרסומות של Dragon Data (גונן, 27.10): רשת כרטיסים, דף לכל פרסומת, קרדיט וקישור לארכיון, תרגום מלא רק בעברית
   console.log('\nadverts gallery');
