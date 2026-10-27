@@ -60,6 +60,7 @@
 
   function joy(on, id) {
     try { Module.ccall('wasm_set_joystick_by_name', null, ['number', 'string'], [0, on ? 'kjoy0' : '']); } catch (e) {}
+    window.d32Joy = !!on;   // גם רווח יורה (shelf.js)
     if (window.d32Pad) window.d32Pad(on ? id : null);
   }
   let open = null;

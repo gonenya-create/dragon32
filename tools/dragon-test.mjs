@@ -1507,6 +1507,22 @@ if (part('lessons and magazine')) {
 
 if (part('real machine lab')) {
   console.log('real machine lab');
+  {
+    // גם רווח יורה במשחקי ג'ויסטיק (גונן, 27.10: Option במק פותח את החלון המהיר של Claude): הקלטת של Danger Ranger מדליקה את הג'ויסטיק מהמקלדת
+    const p = await browser.newPage({ viewport: { width: 1000, height: 900 } });
+    await p.goto(base.replace(/\/$/, '') + '/lab/1982/'); await p.waitForTimeout(3500);
+    await p.evaluate(() => { const c = document.getElementById('canvas'); window.__k = []; c.addEventListener('keydown', e => window.__k.push(e.key)); });
+    await p.evaluate(() => { const t = [...document.querySelectorAll('[data-drawer="mc"] .tape')].find(e => /RANGER/.test(e.textContent)); (t.querySelector('.tape-box') || t).click(); });
+    await p.waitForTimeout(400);
+    await p.focus('#canvas').catch(() => {}); await p.keyboard.press('Space'); await p.waitForTimeout(100);
+    const joyKeys = await p.evaluate(() => ({ joy: window.d32Joy, keys: window.__k.splice(0) }));
+    check('/lab/1982/ joystick game (Danger Ranger): Space fires as the joystick button (Alt) and does not reach the machine as a space', joyKeys.joy === true && joyKeys.keys.join() === 'Alt', JSON.stringify(joyKeys));
+    await p.evaluate(() => { const t = [...document.querySelectorAll('[data-drawer="mc"] .tape')].find(e => /EGGS/.test(e.textContent)); (t.querySelector('.tape-box') || t).click(); });
+    await p.waitForTimeout(400); await p.keyboard.press('Space'); await p.waitForTimeout(100);
+    const plain = await p.evaluate(() => ({ joy: window.d32Joy, keys: window.__k.splice(0) }));
+    check('/lab/1982/ other games: Space stays a space', plain.joy === false && plain.keys.join() === ' ', JSON.stringify(plain));
+    await p.close();
+  }
   for (const path of ['/lab/1982/', '/en/lab/1982/']) {
     const p = await browser.newPage({ viewport: { width: 1000, height: 900 } });
     const errs = [];

@@ -40,6 +40,20 @@
   const JOY = new Set(['ranger']);
   function setJoy(on) {
     try { Module.ccall('wasm_set_joystick_by_name', null, ['number', 'string'], [0, on ? 'kjoy0' : '']); } catch (e) {}
+    window.d32Joy = !!on;
+  }
+  // גם רווח יורה במשחקי ג'ויסטיק (גונן, 27.10): במק, לחיצה כפולה על Option פותחת לפעמים תוכנה אחרת (למשל החלון המהיר של Claude).
+  // כשהג'ויסטיק מהמקלדת פעיל, רווח לא מגיע למחשב כרווח: הוא נשלח ככפתור הג'ויסטיק (Alt), בדיוק כמו בלוח המשחק בטלפון
+  window.addEventListener('keydown', e => spaceFire(e, 'keydown'), true);
+  window.addEventListener('keyup', e => spaceFire(e, 'keyup'), true);
+  function spaceFire(e, type) {
+    if (!window.d32Joy || e.code !== 'Space' || !e.isTrusted) return;
+    const t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    if (type === 'keydown' && e.repeat) return;
+    const canvas = document.getElementById('canvas');
+    if (canvas) canvas.dispatchEvent(new KeyboardEvent(type, { key: 'Alt', code: 'AltLeft', bubbles: true, cancelable: true }));
   }
   // כל קלטת שנכנסת לרשמקול: ג'ויסטיק מהמקלדת רק למשחקי ג'ויסטיק, ולוח המשחק לטלפון (joypad.js) רק למשחקים שיש להם מקשים שם
   function gameKeys(id) {
@@ -96,15 +110,15 @@
     },
     // נבדק במכונה (25.10): צבע, רמה, ריצה, קפיצה, ירי, ניקוד, סוף משחק ושיא
     ranger: {
-      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[Alt] הוא הכפתור שלו (במק: [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
+      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
         'הטעינה ארוכה, כשלוש דקות, וכשהיא נגמרת המשחק מתחיל לבד. בוחרים צבע רקע: [1] שחור, [2] בהיר, [3] ירוק.',
-        'במסך הפתיחה לוחצים [Alt]. ב-SELECT LEVEL בוחרים שלב, [1] הכי קל, והמשחק מתחיל מיד. לא לוחצים [P], כי הוא עוצר את המשחק.',
-        '[←] [→] רצים, [↑] קופצים, [↓] מתכופפים, [Alt] יורה. [P] עוצר, ו-[Alt] ממשיך.',
+        'במסך הפתיחה לוחצים [רווח]. ב-SELECT LEVEL בוחרים שלב, [1] הכי קל, והמשחק מתחיל מיד. לא לוחצים [P], כי הוא עוצר את המשחק.',
+        '[←] [→] רצים, [↑] קופצים, [↓] מתכופפים, [רווח] או [Alt] יורה. [P] עוצר, ו-[רווח] ממשיך.',
         'אוספים את כל המפתחות ונזהרים מהעטלפים ומהעיניים שיורות מהצדדים. הכרית באמצע הקומה התחתונה מקפיצה חזרה למעלה.'],
-      en: ['In this game the arrow keys are a joystick and [Alt] is its button ([Option] on a Mac). On a phone there is a stick and a fire button under the screen.',
+      en: ['In this game the arrow keys are a joystick and [Space] is its button (or [Alt], [Option] on a Mac). On a phone there is a stick and a fire button under the screen.',
         'Loading takes about three minutes, and the game starts by itself when it ends. Pick a background colour: [1] black, [2] buff, [3] green.',
-        'On the title screen press [Alt]. At SELECT LEVEL pick a level, [1] is the easiest, and the game starts at once. Don\'t press [P]: it pauses the game.',
-        '[←] [→] run, [↑] jump, [↓] duck, [Alt] fires. [P] pauses, and [Alt] carries on.',
+        'On the title screen press [Space]. At SELECT LEVEL pick a level, [1] is the easiest, and the game starts at once. Don\'t press [P]: it pauses the game.',
+        '[←] [→] run, [↑] jump, [↓] duck, [Space] or [Alt] fires. [P] pauses, and [Space] carries on.',
         'Collect all the keys and watch out for the bats and the eyes that shoot from the sides. The pad in the middle of the bottom floor bounces you back to the top.']
     },
     // נבדק במכונה (25.10): טעינה, שאלות הפתיחה, תנועה בין מקומות, טיפוס, מלאי וניקוד
