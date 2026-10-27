@@ -43,17 +43,20 @@ export const SNAKE_UP = ['.ss.', 'sess', '.ss.', '.st.', '..s.', '.s..', '.s..',
 export const MUSH = ['..rrrr..', '.rryrrr.', 'ryrrryrr', 'rrrrrrrr', '.r.r.r..', '...yy...', '...yy...', '..yyyy..'];
 export const MUSH_SQ = ['........', '........', '..rrrr..', 'rryrrryr', 'rrrrrrrr', '.r.r.r..', '..yyyy..', '..yyyy..'];
 export const TAPE = ['yyyyy', 'yryry', 'yyyyy'];
-export const CROC = [   // תנין: k גוף, t שיניים ובטן, e עין
-  ['.......kk...', '......kekk..', 'kk..kkkkkkk.', 'kkkkkkkkkkkk', '.tttttttttt.'],
-  ['.........kk.', '...k....kek.', '..ktk..kkkk.', 'k..t.kkkkkk.', 'kkk.kkkkkkk.', '.kkkttttttt.']
+// תנין: k גוף, t שיניים ובטן, e עין. גב עם קשקשים, ראש מימין; כשהפה פתוח רואים שתי שורות שיניים אדומות (גונן: "מה יש במים? לא כל כך ברור")
+export const CROC = [
+  ['..k.k.k.k...', '.kkkkkkkkkk.', 'kkkkkkkkkkek', 'kkkkkkkkkkkk', '.ttttttttttt', '............'],
+  ['..........k.', '..k.k.k..kek', '.kkkkkkkk.tt', 'kkkkkkkkk...', 'kkkkkkkkkttt', '.ttttttt....']
 ];
 export const BIG_CROC_HEAD = [
   ['...kk...', '..kekk..', '.kkkkkkk', 'kkkkkkkk', 'tttttttt', '.k.k.k..'],
   ['..kk....', '.kekk...', 'kkkk.t.t', 'kkkkttt.', 'kkkk....', 'kkkkttt.', '.kkk.t.t']
 ];
-export const FROG = [['e..e', 'kkkk', 'kttk', 'k..k'], ['e..e', 'kkkk', 'kttk', '.kk.', 'k..k']];
+// צפרדע: עיניים בולטות למעלה, רגליים מקופלות
+export const FROG = [['.e..e.', 'kkkkkk', 'kkttkk', 'k.tt.k', 'kk..kk'], ['.e..e.', 'kkkkkk', '.kttk.', 'k....k', 'k....k', '......']];
 export const MOSQ = [['m.m', '.n.'], ['...', 'mnm']];
-export const LILY = ['.kkkkk', 'kkkkkk'];
+// עלה לוטוס: עגול עם חריץ, ופרח אדום קטן
+export const LILY = ['...f....', '.kk.kkk.', 'kkkkkkkk', '.kkkkkk.'];
 export const LOG = ['.yyyyyyyyy.', 'yrryrrryrry', '.yyyyyyyyy.'];
 export const BEETLE = ['...kkkk..', '.kkhkhkk.', 'kkhkkkhkk', 'kkkkkkkkr', '.k.k.k.k.'];
 export const BIG_BARREL = ['..yyyy..', '.yrrrry.', 'yrrrrrry', 'yyyyyyyy', 'yrryrrry', 'yrryrrry', 'yyyyyyyy', 'yrrryrry', 'yrrryrry', 'yyyyyyyy', 'yrrrrrry', '.yrrrry.', '..yyyy..', '........'];
@@ -77,4 +80,12 @@ export const TILES = {
   branchEnd: ['..yy', '.yrr', 'rrrr', 'rryr', '..r.', '....', '....', '....'],
   bankTop: ['yyyy', 'ryrr', 'rrrr', 'rrry', 'rrrr', 'yrrr', 'rrrr', 'rryr'],
   bank: ['rrrr', 'rrry', 'rrrr', 'yrrr', 'rrrr', 'rryr', 'rrrr', 'rrrr']
+};
+
+// ---------- ספרות זעירות (3×5) לשורת המצב, כמו ב-Donkey King ----------
+export const TINY = {
+  '0': ['yyy', 'y.y', 'y.y', 'y.y', 'yyy'], '1': ['.y.', 'yy.', '.y.', '.y.', 'yyy'], '2': ['yyy', '..y', 'yyy', 'y..', 'yyy'], '3': ['yyy', '..y', '.yy', '..y', 'yyy'],
+  '4': ['y.y', 'y.y', 'yyy', '..y', '..y'], '5': ['yyy', 'y..', 'yyy', '..y', 'yyy'], '6': ['yyy', 'y..', 'yyy', 'y.y', 'yyy'], '7': ['yyy', '..y', '..y', '.y.', '.y.'],
+  '8': ['yyy', 'y.y', 'yyy', 'y.y', 'yyy'], '9': ['yyy', 'y.y', 'yyy', '..y', 'yyy'], '-': ['...', '...', 'yyy', '...', '...'], ' ': ['...'],
+  'T': ['yyy', '.y.', '.y.', '.y.', '.y.'], 'H': ['y.y', 'y.y', 'yyy', 'y.y', 'y.y'], 'U': ['y.y', 'y.y', 'y.y', 'y.y', 'yyy'], 'R': ['yy.', 'y.y', 'yy.', 'y.y', 'y.y'], 'Y': ['y.y', 'y.y', '.y.', '.y.', '.y.']
 };

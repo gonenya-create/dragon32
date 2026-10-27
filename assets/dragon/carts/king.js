@@ -28,12 +28,12 @@ function colors(w) {
   const tape = { y: Y, r: R }, barrel = { y: Y, r: R }, mush = { r: R, y: Y }, log = { y: Y, r: R };
   if (w === 2) return {
     bg: G, txt: [Y, R, B], pip: { h: Y, b: R, s: R, p: B, e: G }, monkey: { f: R, c: Y, n: B, e: G }, barrel, mush, tape, tapeOff: { y: B, r: B }, log,
-    snake: { s: B, e: Y, t: R }, croc: { k: Y, t: R, e: B }, frog: { k: G, t: Y, e: R }, mosq: { m: R, n: Y }, lily: { k: Y }, splash: { c: Y },
+    snake: { s: B, e: Y, t: R }, croc: { k: Y, t: R, e: B }, frog: { k: R, t: Y, e: B }, mosq: { m: R, n: Y }, lily: { k: Y, f: R }, splash: { c: Y },
     beetle: { k: B, h: Y, r: R }, bongo: { f: B, c: Y, n: R, e: G }, tile: { r: R, y: Y, g: B }, rope: [Y, R], water: B, wave: Y, leaf: B, leafEdge: Y, vine: B, vineLeaf: Y
   };
   return {
     bg: B, txt: [Y, R, G], pip: { h: Y, b: R, s: R, p: G, e: B }, monkey: { f: G, c: Y, n: R, e: B }, barrel, mush, tape, tapeOff: { y: G, r: G }, log,
-    snake: { s: G, e: Y, t: R }, croc: { k: Y, t: R, e: B }, frog: { k: G, t: Y, e: R }, mosq: { m: R, n: Y }, lily: { k: G }, splash: { c: Y },
+    snake: { s: G, e: Y, t: R }, croc: { k: Y, t: R, e: B }, frog: { k: G, t: Y, e: R }, mosq: { m: R, n: Y }, lily: { k: G, f: R }, splash: { c: Y },
     beetle: { k: G, h: Y, r: R }, bongo: { f: G, c: Y, n: R, e: B }, tile: { r: R, y: Y, g: G }, rope: [Y, G], water: B, wave: Y, leaf: G, leafEdge: Y, vine: G, vineLeaf: Y
   };
 }
@@ -44,6 +44,8 @@ function loadScreen(s, idx) {
   const sc = SCREENS[idx];
   // דמות שעומדת במים (תנין, בול עץ, עלה, השומר בביצות): מתחתיה מים
   const grid = sc.map.map(r => r.split('').map(ch => ch === 'R' ? '|' : 'COLl'.includes(ch) || (ch === 'G' && sc.guard === 'croc') ? '~' : ENT.includes(ch) ? '.' : ch));
+  // זורק החביות בשורה 0: יושב על מדף משלו בפינה למעלה, ש-PIP לא מגיע אליו (גונן, 27.10: כמו הגורילה ב-Donkey King)
+  grid[0].forEach((ch, c) => { if (sc.map[0][c] === 'K') grid[0][c] = grid[0][c - 1] === '#' || grid[0][c + 1] === '#' ? '#' : '='; });
   const L = { idx, sc, grid, world: +sc.id[0], tapes: [], throwers: [], snakes: [], ropeSnakes: [], mush: [], vines: [], crocs: [], frogs: [],
     lilies: [], logs: [], swarms: [], barrels: [], guard: null, fx: [], t: 0 };
   let vi = 0, li = 0, fi = 0;
@@ -51,7 +53,7 @@ function loadScreen(s, idx) {
     const cx = c * T + 4, fy = OY + (r + 1) * T;
     if (ch === 'P') L.start = { x: cx, y: fy };
     else if (ch === 'T') L.tapes.push({ x: cx, y: OY + r * T + 6, got: false });
-    else if (ch === 'K') L.throwers.push({ x: cx, y: fy, dir: sc.dir ?? -1, cd: 60, anim: 0 });
+    else if (ch === 'K') L.throwers.push({ x: cx, y: r === 0 ? OY : fy, dir: sc.dir ?? -1, cd: 60, anim: 0 });
     else if (ch === 'S') { const [a, b] = span(grid, c, r + 1); L.snakes.push({ x: cx, y: fy, dir: 1, a: a * T + 8, b: b * T, f: 0 }); }
     else if (ch === 'R') { const [a, b] = ropeSpan(grid, c, r); L.ropeSnakes.push({ x: cx, y: OY + r * T, dir: 1, a: OY + a * T + 6, b: OY + (b + 1) * T - 2, top: OY + a * T, rest: 0, f: 0 }); }
     else if (ch === 'M') L.mush.push({ x: cx, y: fy, sq: 0 });
@@ -260,7 +262,7 @@ function enemies(s, snd, d) {
     if (--k.cd <= 0) {
       k.cd = Math.round((s.L.sc.rate || 200) * d.rate * (s.hurry ? 0.5 : 1)); k.anim = 20;
       if (k.dir === 0) L.barrels.push({ x: s.L.sc.dropX || k.x, y: OY + 4, vx: 0, vy: 0, mode: 'drop', rot: 0 });
-      else L.barrels.push({ x: k.x + k.dir * 8, y: k.y, vx: k.dir * 1.0 * d.spd, vy: 0, mode: 'roll', rot: 0 });
+      else L.barrels.push({ x: k.x + k.dir * 8, y: k.y, vx: k.dir * 1.0 * d.spd, vy: 0, mode: 'roll', rot: 0, keep: true });
       snd.tone(160, 60);
     }
   }
@@ -275,7 +277,7 @@ function enemies(s, snd, d) {
       if (!isTop(tile(s, col(b.x), r))) { b.mode = 'fall'; b.vy = 0.5; }
     } else if (b.mode === 'fall') {
       b.vy = Math.min(MAXF, b.vy + GRAV); const ny = b.y + b.vy;
-      for (let r = row(b.y); r <= row(ny); r++) { const ty = OY + r * T; if (ty > b.y && ty <= ny && isTop(tile(s, col(b.x), r))) { b.y = ty; b.mode = 'roll'; b.vx = -b.vx || d.spd; snd.tone(110, 40); break; } }
+      for (let r = row(b.y); r <= row(ny); r++) { const ty = OY + r * T; if (ty > b.y && ty <= ny && isTop(tile(s, col(b.x), r))) { b.y = ty; b.mode = 'roll'; b.vx = b.keep ? b.vx : (-b.vx || d.spd); b.keep = false; snd.tone(110, 40); break; } }
       if (b.mode === 'fall') b.y = ny;
       if (b.mode === 'fall' && tile(s, col(b.x), row(b.y - 2)) === '~') {
         if (s.L.sc.id === '2-5') { b.mode = 'float'; b.y = WATER + 2; b.vx = -0.3; b.life = 900; } else b.gone = true;
@@ -317,7 +319,7 @@ function enemies(s, snd, d) {
     const cyc = f.t % 120;
     if (cyc === 80) f.from = f.x, f.to = f.x === f.a ? f.b : f.a;
     if (cyc >= 80 && f.from !== undefined) { const k = (cyc - 80) / 40; f.x = f.from + (f.to - f.from) * k; f.hop = Math.sin(k * Math.PI) * 14; if (cyc === 119) f.x = f.to; } else f.hop = 0;
-    if (hit(p, f.x - 3, f.y - 4 - f.hop, f.x + 3, f.y - f.hop)) hurt = true;
+    if (hit(p, f.x - 5, f.y - 5 - f.hop, f.x + 5, f.y - f.hop)) hurt = true;
   }
   // נחילי יתושים
   for (const q of L.swarms) {
@@ -379,43 +381,66 @@ const lx = x => Math.round(x / 2);
 function sprC(l, rows, cx, fy, cols, flip) { l.sprite(rows, Math.round(cx / 2 - rows[0].length / 2), Math.round(fy - rows.length), cols, flip, 1); }
 function sprAt(l, rows, sx, sy, cols, flip) { l.sprite(rows, lx(sx), Math.round(sy), cols, flip, 1); }
 
+// המשטחים בסגנון העדין (גונן, 27.10: "הכל גס וגדול מדי"; המידות כמו ב-Donkey King על ה-Dragon): קווים ברוחב פיקסל,
+// ורוב השטח נשאר רקע. שורש: קו אור צהוב, שפה אדומה, שני שורשים דקים קלועים, ושורשונים שמשתלשלים. ענף בביצה: זרד דק עם עלים.
+// גוש (גדה, קיר הפיר): קו מתאר ומרקם דליל, לא מילוי מלא.
 function drawStatic(s) {
   const key = s.L.sc.id;
   if (stat && statKey === key) return stat;
   const cv = document.createElement('canvas'); cv.width = LW; cv.height = H;
   const ctx = cv.getContext('2d');
   const px = (x, y, c) => { ctx.fillStyle = c; ctx.fillRect(x, y, 1, 1); };
-  const put = (rows, x, y, cols, flip) => { for (let r = 0; r < rows.length; r++) for (let c = 0; c < rows[r].length; c++) { const ch = rows[r][c]; if (ch === '.') continue; const cc = cols[ch]; if (!cc) continue; ctx.fillStyle = cc; ctx.fillRect(x + (flip ? rows[r].length - 1 - c : c), y + r, 1, 1); } };
   const w = s.L.world, C = colors(w), TC = C.tile, g = s.L.grid;
-  const at = (c, r) => (r < 0 || r >= ROWS || c < 0 || c >= COLS) ? '#' : g[r][c];
+  const at = (c, r) => (r < 0) ? '.' : (r >= ROWS || c < 0 || c >= COLS) ? '#' : g[r][c];
+  const top = ch => ch === '=' || ch === '#';
   ctx.fillStyle = C.bg; ctx.fillRect(0, 0, LW, H);
-  if (w === 2) {   // חופת עלים למעלה
-    for (let x = 0; x < LW; x++) for (let y = OY; y < OY + 12; y++) { const d = (y - OY) - 5 - 3 * Math.sin(x / 7); if (d < 0) px(x, y, (d > -1.5 && x % 2) ? C.leafEdge : C.leaf); }
-  }
+  // שורש או ענף דק לאורך אריח אחד (4 פיקסלים רחבים), y = ראש האריח
+  const thin = (c, r) => {
+    const y = OY + r * T, l = top(at(c - 1, r)) || c === 0, rr = top(at(c + 1, r)) || c === COLS - 1;
+    for (let i = 0; i < 4; i++) {
+      const x = c * 4 + i;
+      if (w === 1) {
+        px(x, y, x % 9 === 3 ? TC.g : TC.y); px(x, y + 1, TC.r);
+        const k = Math.sin(x / 2.2), a1 = Math.round(1.5 + 1.5 * k), a2 = Math.round(1.5 - 1.5 * k);
+        px(x, y + 2 + a1, TC.r); px(x, y + 2 + a2, TC.r);
+        if (x % 5) px(x, y + 5, TC.r);
+        if (x % 13 === 7) { const n = 2 + (x % 3); for (let j = 1; j <= n; j++) px(x, y + 5 + j, TC.r); px(x, y + 6 + n, TC.y); }
+      } else {
+        px(x, y, TC.y); px(x, y + 1, TC.r); if ((x + 1) % 3) px(x, y + 2, TC.r);
+        if (x % 11 === 5) { px(x, y + 3, TC.r); px(x - 1, y + 4, TC.y); px(x + 1, y + 4, TC.y); px(x, y + 5, TC.y); }
+        if (x % 7 === 2 && r > 0) { px(x, y - 1, TC.r); px(x + 1, y - 2, TC.y); }
+      }
+    }
+    if (!l) for (let k = 0; k < (w === 1 ? 6 : 3); k++) px(c * 4, y + k, TC.r);   // קצה מסוקס
+    if (!rr) for (let k = 0; k < (w === 1 ? 6 : 3); k++) px(c * 4 + 3, y + k, TC.r);
+  };
+  // גוש: קו מתאר בצדדים החשופים, ומרקם דליל בפנים
+  const mass = (c, r) => {
+    const y0 = OY + r * T, upOpen = !top(at(c, r - 1)) && at(c, r - 1) !== 'c', lOpen = !(at(c - 1, r) === '#' || at(c - 1, r) === 'c'), rOpen = !(at(c + 1, r) === '#' || at(c + 1, r) === 'c');
+    for (let j = 0; j < T; j++) for (let i = 0; i < 4; i++) {
+      const x = c * 4 + i, y = y0 + j;
+      if (upOpen && j === 0) px(x, y, TC.y);
+      else if ((upOpen && j === 1) || (lOpen && i === 0) || (rOpen && i === 3)) px(x, y, TC.r);
+      else if ((x + y * 2) % 9 === 0 && y % 2) px(x, y, TC.r);
+      else if ((x * 5 + y * 3) % 29 === 0) px(x, y, TC.y);
+    }
+  };
   for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
     const ch = g[r][c], x = c * 4, y = OY + r * T;
     if (ch === '#') {
-      const above = at(c, r - 1), top = !isSolid(above) && above !== 'c';
-      if (w === 1) { const deep = isSolid(at(c - 1, r)) && isSolid(at(c + 1, r)) && isSolid(at(c - 2, r)) && isSolid(at(c + 2, r)); put(top && c > 1 && c < 30 ? A.TILES.floor[c % 2] : (deep ? A.TILES.barkDeep : A.TILES.bark)[(c + r) % 2], x, y, TC, (c + r) % 3 === 0); }
-      else put(top ? A.TILES.bankTop : A.TILES.bank, x, y, TC, c % 2 === 0);
-    } else if (ch === '=') {
-      const l = at(c - 1, r) === '=' || isSolid(at(c - 1, r)), rr = at(c + 1, r) === '=' || isSolid(at(c + 1, r));
-      if (w === 1) {
-        if (!l) put(A.TILES.rootEnd, x, y, TC); else if (!rr) put(A.TILES.rootEnd, x, y, TC, true); else put(A.TILES.root[(c * 5 + r * 3) % 4], x, y, TC);
-        if ((c * 7 + r) % 5 === 1) for (let k = 7; k < 10 + (c % 4); k++) px(x + 1 + ((k >> 1) % 2), y + k, TC.r);   // שורשון
-      } else {
-        if (!l) put(A.TILES.branchEnd, x, y, TC); else if (!rr) put(A.TILES.branchEnd, x, y, TC, true); else put(A.TILES.branch[c % 2], x, y, TC);
-      }
-    } else if (ch === '|') {
-      for (let k = 0; k < T; k++) { px(x + 1, y + k, C.rope[0]); if ((y + k) % 4 === 0) px(x + 2, y + k, C.rope[1]); }
+      // קרקע של שורה אחת (רצפת השורשים): שורש דק כמו כל קומה. אחרת: גוש
+      if (r === ROWS - 1 && !top(at(c, r - 1)) && w === 1) thin(c, r); else mass(c, r);
+    } else if (ch === '=') thin(c, r);
+    else if (ch === '|') {
+      for (let k = 0; k < T; k++) { px(x + 1, y + k, C.rope[0]); if ((y + k) % 4 === 0) px(x + ((y + k) % 8 ? 2 : 0), y + k, C.rope[1]); }
     } else if (ch === 'c') {
-      put(w === 1 ? A.TILES.bark[0] : A.TILES.bank, x, y, TC);
-      for (let k = 1; k < 8; k++) px(x + 1 + (k % 2), y + k, C.bg);   // הסדק: רמז קטן
+      mass(c, r);
+      for (let k = 1; k < 8; k++) px(x + 1 + (k % 2), y + k, TC.r);   // הסדק: רמז קטן
     } else if (ch === '~') {
-      ctx.fillStyle = C.water; ctx.fillRect(x, y + (at(c, r - 1) === '~' ? 0 : 3), 4, T);
+      ctx.fillStyle = C.water; ctx.fillRect(x, y + (at(c, r - 1) === '~' ? 0 : 1), 4, T);
     }
   }
-  if (w === 2) for (let c = 0; c < COLS; c++) for (let r = 1; r < ROWS; r++) if (g[r][c] === '#' && !isSolid(g[r - 1][c]) && c % 3 === 1) { for (let k = 1; k < 8 + (c % 3); k++) px(c * 4 + 1, OY + r * T - k, C.tile.y); px(c * 4 + 1, OY + r * T - 9 - (c % 3), C.tile.r); }   // קני סוף
+  if (w === 2) for (let c = 0; c < COLS; c++) for (let r = 1; r < ROWS; r++) if (g[r][c] === '#' && !top(g[r - 1][c]) && c % 3 === 1) { for (let k = 1; k < 6 + (c % 3); k++) px(c * 4 + 1, OY + r * T - k, C.tile.y); px(c * 4 + 1, OY + r * T - 7 - (c % 3), C.tile.r); }   // קני סוף דקים
   stat = cv; statKey = key;
   return cv;
 }
@@ -424,7 +449,7 @@ function drawPlay(g, s) {
   const l = L(), Lv = s.L, p = s.p, C = colors(Lv.world);
   l.ctx.drawImage(drawStatic(s), 0, 0);
   // מים חיים: קו גלים צהוב
-  if (Lv.world === 2) for (let x = 0; x < LW; x++) { if (tile(s, col(x * 2), row(WATER + 1)) !== '~') continue; l.rect(x, WATER + 3 + Math.round(Math.sin((x * 2 + Lv.t) / 6)), 1, 1, C.wave); }
+  if (Lv.world === 2) for (let x = 0; x < LW; x++) { if (tile(s, col(x * 2), row(WATER + 1)) !== '~') continue; if (x % 3) l.rect(x, WATER + 1 + Math.round(Math.sin((x * 2 + Lv.t) / 6)), 1, 1, C.wave); }
   // יציאה: חץ מהבהב, ושער סגור עד שהשומר מנוצח
   for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) if (Lv.grid[r][c] === 'E' && (Lv.grid[r - 1] || [])[c] !== 'E' && Lv.grid[r][c - 1] !== 'E') {
     const x = c * 4 + 4, y = OY + r * T;
@@ -436,7 +461,7 @@ function drawPlay(g, s) {
     const a = vineAngle(v), ex = v.px + Math.sin(a) * v.len, ey = v.py + Math.cos(a) * v.len;
     for (let t = 0; t <= 1; t += 1 / v.len) l.rect(lx(v.px + (ex - v.px) * t), Math.round(v.py + (ey - v.py) * t), 1, 1, C.vine);
     for (let t = 0.15; t < 0.95; t += 0.12) { const x = lx(v.px + (ex - v.px) * t), y = Math.round(v.py + (ey - v.py) * t), sd = (t * 9 | 0) % 2 ? 1 : -1; l.rect(x + sd, y, 1, 1, C.vineLeaf); }
-    l.rect(lx(v.px) - 1, v.py - 1, 3, 2, C.txt[0]);
+    for (let k = -4; k <= 4; k++) { l.rect(lx(v.px) + k, v.py - 2, 1, 1, C.tile.y); l.rect(lx(v.px) + k, v.py - 1, 1, 1, C.tile.r); }   // הענף שהליאנה תלויה ממנו
   }
   for (const m of Lv.mush) sprC(l, m.sq ? A.MUSH_SQ : A.MUSH, m.x, m.y, C.mush);
   for (const tp of Lv.tapes) if (!tp.got) sprC(l, A.TAPE, tp.x, tp.y + 2 + ((Lv.t >> 4) % 2), C.tape);
@@ -477,13 +502,19 @@ function drawPlay(g, s) {
   if (s.paused) drawPause(l, s, C);
   flush(g);
 }
+// שורת המצב: ספרות זעירות (3×5) בשורה התחתונה, כמו ב-Donkey King. למעלה יושב זורק החביות
+function tiny(l, str, x, y, color, align = 'left') {
+  const w = str.length * 4 - 1; let cx = align === 'right' ? x - w + 1 : x;
+  for (const ch of str) { const rows = A.TINY[ch]; if (rows) l.sprite(rows, cx, y, { y: color }, false, 1); cx += 4; }
+}
 function drawHud(l, s, C) {
-  l.rect(0, 0, LW, OY, C.bg); l.rect(0, 180, LW, H - 180, C.bg);
-  l.text(s.L.sc.id, 1, 2, C.txt[1]); l.text(String(s.score).padStart(6, '0'), LW - 1, 2, C.txt[0], 'right');
-  for (let i = 0; i < Math.min(5, s.lives); i++) l.sprite(A.PIP.life, 1 + i * 5, 184, C.pip, false, 1);
-  for (let i = 0; i < 3; i++) l.sprite(A.TAPE, 50 + i * 7, 185, i < s.got ? C.tape : C.tapeOff, false, 1);
+  l.rect(0, 180, LW, H - 180, C.bg);
+  for (let i = 0; i < Math.min(5, s.lives); i++) l.sprite(A.PIP.life, 1 + i * 5, 185, C.pip, false, 1);
+  tiny(l, s.L.sc.id, 28, 185, C.txt[1]);
+  for (let i = 0; i < 3; i++) l.sprite(A.TAPE, 44 + i * 7, 186, i < s.got ? C.tape : C.tapeOff, false, 1);
+  tiny(l, String(s.score).padStart(6, '0'), 70, 185, C.txt[0]);
   const sec = Math.ceil(s.time / 50);
-  l.text(s.hurry ? 'HURRY' : 'T ' + sec, LW - 1, 184, s.hurry || sec <= 10 ? C.txt[1] : C.txt[0], 'right');
+  tiny(l, s.hurry ? 'HURRY' : 'T ' + sec, LW - 1, 185, s.hurry || sec <= 10 ? C.txt[1] : C.txt[0], 'right');
 }
 function drawPause(l, s, C) {
   l.rect(6, 28, 116, 134, C.bg); l.rect(6, 28, 116, 1, C.txt[0]); l.rect(6, 161, 116, 1, C.txt[0]);

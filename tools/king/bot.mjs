@@ -48,12 +48,41 @@ export function solve(idx, { limit = 3000000, diff = 1 } = {}) {
   return { ok: false, nodes, secret };
 }
 
+// זורק החביות לא בהישג יד (גונן, 27.10: "בדונקי לא היה אפשר להגיע לקוף"): חיפוש מלא, בלי לעצור ביציאה,
+// ובשום מצב PIP לא עומד בשורות העליונות (0 או 1), שם יושב הזורק
+export function reachTop(idx, { limit = 3000000 } = {}) {
+  const s0 = _test.newState(1); _test.loadScreen(s0, idx); s0.noEnemies = true; s0.gateOpen = false;
+  const seen = new Set([key(s0)]);
+  let frontier = [s0], nodes = 0, best = s0.p.y;
+  while (frontier.length && nodes < limit) {
+    const next = [];
+    for (const s of frontier) for (let a = 0; a < ACTS.length; a++) {
+      const c = clone(s); let ev = null;
+      for (let f = 0; f < HOLD && !ev; f++) ev = _test.step(c, { ...ACTS[a], fire: f === 0 && !!ACTS[a].fire }, snd);
+      nodes++;
+      if (ev === 'die') continue;
+      if (c.p.mode === 'walk') best = Math.min(best, c.p.y);
+      const k = key(c); if (seen.has(k)) continue; seen.add(k); next.push(c);
+    }
+    frontier = next;
+  }
+  return { top: best <= _test.OY + _test.T, best, nodes, done: !frontier.length };
+}
+// החביות זורמות במסלול של PIP: מריצים את הזורק דקה וחצי, ורושמים על אילו שורות חביות התגלגלו
+export function barrelRows(idx, frames = 4500) {
+  const s = _test.newState(1); _test.loadScreen(s, idx); s.p.inv = 1e9; s.p.x = 4; s.p.y = _test.OY + 20 * _test.T;
+  const rows = new Set();
+  for (let f = 0; f < frames; f++) { _test.step(s, {}, snd); s.p.mode = 'walk'; s.p.x = 4; s.p.y = _test.OY + 20 * _test.T; for (const b of s.L.barrels) if (b.mode === 'roll') rows.add(Math.round((b.y - _test.OY) / _test.T)); }
+  return [...rows].sort((a, b) => a - b);
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const only = process.argv[2];
   for (let i = 0; i < _test.SCREENS.length; i++) {
     const sc = _test.SCREENS[i];
     if (only && sc.id !== only) continue;
     const t0 = Date.now(), r = solve(i);
-    console.log(`${sc.id} ${sc.name.padEnd(18)} ${r.ok ? 'OK  ' + (r.frames / 50).toFixed(1) + 's of ' + sc.time + 's' : 'NO PATH'}  nodes ${r.nodes}${r.secret ? '  secret reachable' : ''}  (${((Date.now() - t0) / 1000).toFixed(1)}s)`);
+    const thrower = sc.map[0].includes('K'), top = thrower ? reachTop(i) : null, rows = thrower ? barrelRows(i) : null;
+    console.log(`${sc.id} ${sc.name.padEnd(18)} ${r.ok ? 'OK  ' + (r.frames / 50).toFixed(1) + 's of ' + sc.time + 's' : 'NO PATH'}  nodes ${r.nodes}${r.secret ? '  secret reachable' : ''}${thrower ? '  thrower ' + (top.top ? 'REACHABLE' : 'out of reach') + (top.done ? '' : ' (search cut)') + '  barrels on rows ' + rows.join(',') : ''}  (${((Date.now() - t0) / 1000).toFixed(1)}s)`);
   }
 }

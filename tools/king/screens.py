@@ -2,6 +2,9 @@
 # Redesign (Gonen, 27.10: "אלה לא מסכים פשוטים מדי?"): every floor crosses the whole width (the rope up is always on the
 # other side), gaps to jump, torn ropes, two kinds of danger per screen, tape pieces off the main path; in the swamps two
 # crossings: over the water, then up and back over it on branches and vines.
+# Fine look (Gonen, 27.10: "הכל גס וגדול מדי", the model is Donkey King on the Dragon): no thick side walls, so the screen
+# is open and barrels drop off the floor ends. The barrel thrower (K) sits on its own ledge in row 0, in a top corner, where
+# PIP can never reach it; its barrels roll down the zigzag against PIP's way up (the bot checks both).
 # Run: python3 tools/king/screens.py > assets/dragon/carts/king-screens.js
 import json, sys
 W, H = 32, 21
@@ -15,7 +18,9 @@ def rope(m, c, r0, r1, gap=()):
     for r in range(r0, r1 + 1):
         if r not in gap: m[r][c] = '|'
 def put(m, r, c, ch): m[r][c] = ch
-def walls(m): block(m, 0, 20, 0, 1); block(m, 0, 20, 30, 31); plat(m, 20, 0, 31, '#')
+def walls(m): plat(m, 20, 0, 31, '#')   # only the ground: the sides are open
+# the thrower's ledge: row 0 in a corner, out of reach (32 px above the top floor, and PIP jumps 26)
+def ledge(m, c0, c1, k): plat(m, 0, c0, c1); put(m, 0, k, 'K')
 def swamp(m, l_top, l_end, r_top, r_start):
     block(m, l_top, 20, 0, l_end); block(m, r_top, 20, r_start, 31); block(m, 18, 20, l_end + 1, r_start - 1, '~')
 S = []
@@ -29,27 +34,27 @@ def add(id, name, m, **meta):
 m = new(); walls(m)
 plat(m, 16, 2, 12); plat(m, 16, 15, 25); plat(m, 12, 6, 29); plat(m, 8, 2, 26); plat(m, 4, 5, 27)
 rope(m, 24, 17, 19); rope(m, 7, 13, 15); rope(m, 25, 9, 11); rope(m, 6, 5, 7)
-block(m, 2, 3, 26, 27, 'E'); put(m, 3, 12, 'K'); put(m, 19, 3, 'P')
+block(m, 2, 3, 26, 27, 'E'); ledge(m, 26, 31, 29); put(m, 19, 3, 'P')
 put(m, 19, 28, 'T'); put(m, 11, 28, 'T'); put(m, 7, 3, 'T')
-add('1-1', 'THE FIRST STEP', m, time=60, rate=240, dir=1)
+add('1-1', 'THE FIRST STEP', m, time=60, rate=240, dir=-1)
 
 # 1-2: the near mushroom only reaches a side island (a tape piece, no way on). The far mushroom lifts PIP to the islands;
 # jump between them, then the island mushroom up to the top, and left past the monkey's barrels to the exit
 m = new(); walls(m)
 plat(m, 12, 2, 7); plat(m, 12, 13, 19); plat(m, 12, 22, 29); plat(m, 5, 4, 18)
 put(m, 19, 4, 'M'); put(m, 11, 14, 'M'); put(m, 19, 27, 'M')
-block(m, 3, 4, 4, 5, 'E'); put(m, 4, 16, 'K'); put(m, 19, 2, 'P'); put(m, 19, 14, 'S')
+block(m, 3, 4, 4, 5, 'E'); ledge(m, 0, 5, 2); put(m, 19, 2, 'P'); put(m, 19, 14, 'S')
 put(m, 11, 3, 'T'); put(m, 11, 29, 'T'); put(m, 4, 10, 'T')
-add('1-2', 'MUSHROOM HOP', m, time=60, rate=200, dir=-1)
+add('1-2', 'MUSHROOM HOP', m, time=60, rate=200, dir=1)
 
 # 1-3: four full crossings, two gaps, two snakes
 m = new(); walls(m)
 plat(m, 16, 2, 16); plat(m, 16, 19, 27); plat(m, 12, 4, 10); plat(m, 12, 13, 29); plat(m, 8, 2, 28); plat(m, 4, 6, 29)
 rope(m, 26, 17, 19); rope(m, 5, 13, 15); rope(m, 28, 9, 11, gap=(10,)); rope(m, 7, 5, 7)
-block(m, 2, 3, 28, 29, 'E'); put(m, 3, 9, 'K'); put(m, 19, 4, 'P')
+block(m, 2, 3, 28, 29, 'E'); ledge(m, 26, 31, 29); put(m, 19, 4, 'P')
 put(m, 11, 20, 'S'); put(m, 7, 15, 'S')
 put(m, 15, 3, 'T'); put(m, 7, 3, 'T'); put(m, 19, 29, 'T')
-add('1-3', 'THE TANGLED ROOTS', m, time=60, rate=170, dir=1)
+add('1-3', 'THE TANGLED ROOTS', m, time=60, rate=170, dir=-1)
 
 # 1-4: snakes everywhere; the snakes on the ropes rest at the top
 m = new(); walls(m)
@@ -67,7 +72,7 @@ plat(m, 16, 10, 14); plat(m, 12, 17, 21); plat(m, 8, 10, 14); plat(m, 4, 17, 21)
 rope(m, 13, 17, 19); rope(m, 17, 13, 15); rope(m, 14, 9, 11); rope(m, 17, 5, 7)
 put(m, 10, 14, 'R')
 block(m, 6, 7, 9, 9, 'c')
-block(m, 2, 3, 20, 21, 'E'); put(m, 3, 19, 'K'); put(m, 19, 11, 'P')
+block(m, 2, 3, 20, 21, 'E'); put(m, 0, 25, 'K'); put(m, 19, 11, 'P')
 put(m, 15, 10, 'T'); put(m, 11, 21, 'T'); put(m, 19, 20, 'T')
 add('1-5', 'THE DEEP SHAFT', m, time=60, rate=140, dir=0, dropX=126)
 
@@ -120,7 +125,7 @@ m = new(); swamp(m, 16, 3, 12, 28)
 plat(m, 12, 26, 27); rope(m, 27, 13, 17)
 put(m, 18, 7, 'l'); put(m, 18, 15, 'l'); put(m, 18, 22, 'l')
 plat(m, 7, 24, 31); rope(m, 30, 8, 11); put(m, 0, 21, 'V')
-plat(m, 7, 10, 18); put(m, 6, 11, 'K'); plat(m, 7, 2, 6)
+plat(m, 7, 10, 18); ledge(m, 4, 9, 6); plat(m, 7, 2, 6)
 block(m, 5, 6, 2, 3, 'E'); put(m, 15, 1, 'P')
 put(m, 16, 10, 'T'); put(m, 15, 20, 'T'); put(m, 11, 29, 'T')
 add('2-5', 'THE SINKING LOGS', m, time=90, rate=280, dir=1, logs=[[5, 12], [13, 20], [19, 25]], vines=[50])

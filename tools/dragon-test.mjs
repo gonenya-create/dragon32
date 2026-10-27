@@ -1430,6 +1430,13 @@ if (part('cartridge JUNGLE KING')) {
   const { _test: KT } = await import('../assets/dragon/carts/king.js');
   const route = KT.SCREENS.map((sc, i) => { const r = solve(i); return { id: sc.id, ok: r.ok, sec: r.ok ? r.frames / 50 : null, time: sc.time }; });
   check('the robot finishes every one of the 12 screens, each in less than half its time', route.every(r => r.ok && r.sec < r.time / 2), JSON.stringify(route.filter(r => !r.ok || r.sec >= r.time / 2)));
+  // זורק החביות בפינה (גונן, 27.10: "בדונקי לא היה אפשר להגיע לקוף"): PIP לא מגיע אליו, והחביות מתגלגלות על הקומה של היציאה
+  const { reachTop, barrelRows } = await import('./king/bot.mjs');
+  const thr = KT.SCREENS.map((sc, i) => [sc, i]).filter(([sc]) => sc.map[0].includes('K'));
+  const reach = thr.map(([sc, i]) => ({ id: sc.id, top: reachTop(i).top }));
+  check('in every screen with a barrel thrower, it sits on its own ledge where PIP can never get to', thr.length === 5 && reach.every(r => !r.top), JSON.stringify(reach));
+  const flow = thr.filter(([sc]) => sc.dir !== 0).map(([sc, i]) => { const er = sc.map.findLastIndex(r => r.includes('E')) + 1; return { id: sc.id, er, rows: barrelRows(i) }; });
+  check('the barrels roll down onto the top floor, where PIP walks to the exit', flow.length === 4 && flow.every(f => f.rows.includes(f.er)), JSON.stringify(flow));
 }
 
 if (part('adverts gallery')) {
