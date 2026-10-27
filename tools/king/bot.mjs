@@ -69,6 +69,24 @@ export function reachTop(idx, { limit = 3000000 } = {}) {
   }
   return { top: best <= _test.OY + _test.T, best, nodes, done: !frontier.length };
 }
+// סדק סודי (אחד בכל עולם): חיפוש בלי חיות עד שנוגעים בסדק
+export function reachSecret(idx, { limit = 3000000 } = {}) {
+  const s0 = _test.newState(1); _test.loadScreen(s0, idx); s0.noEnemies = true; s0.gateOpen = false;
+  const seen = new Set([key(s0)]); let frontier = [s0], nodes = 0, depth = 0;
+  while (frontier.length && nodes < limit) {
+    const next = []; depth++;
+    for (const s of frontier) for (let a = 0; a < ACTS.length; a++) {
+      const c = clone(s); let ev = null;
+      for (let f = 0; f < HOLD && !ev; f++) ev = _test.step(c, { ...ACTS[a], fire: f === 0 && !!ACTS[a].fire }, snd);
+      nodes++;
+      if (ev === 'secret') return { ok: true, sec: depth * HOLD / 50, nodes };
+      if (ev === 'die') continue;
+      const k = key(c); if (seen.has(k)) continue; seen.add(k); next.push(c);
+    }
+    frontier = next;
+  }
+  return { ok: false, nodes };
+}
 // החביות זורמות במסלול של PIP: מריצים את הזורק דקה וחצי, ורושמים על אילו שורות חביות התגלגלו
 export function barrelRows(idx, frames = 4500) {
   const s = _test.newState(1); _test.loadScreen(s, idx); s.p.inv = 1e9; s.p.x = 4; s.p.y = _test.OY + 20 * _test.T;

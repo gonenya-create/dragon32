@@ -17,10 +17,10 @@ const DIFF = [
 ];
 const WORLDS = [null, { pal: 1, name: 'ROOTS', first: 0 }, { pal: 0, name: 'SWAMPS', first: 6 }, { pal: 1, name: 'RIVERS', first: 12 }, { pal: 0, name: 'HIVES', first: 18 }, { pal: 0, name: 'CAVES', first: 24 }, { pal: 1, name: 'BRANCHES', first: 30 }, { pal: 0, name: 'TREETOP', first: 35 }];
 const ROUND_WORLDS = 7;   // כל העץ: שבעה עולמות, 40 מסכים (סבב 3, 27.10)
-const SAVE = 'd32-king-save', DIFF_KEY = 'd32-king-diff';
+const SAVE = 'd32-king-save', DIFF_KEY = 'd32-king-diff', MUSIC_KEY = 'd32-king-music';
 const okDiff = d => (d === 0 || d === 1 || d === 2) ? d : 1;
-// THE KING RETURNS: בכל סיבוב נוסף הכל מהיר יותר, הזמן קצר יותר, והניקוד מוכפל יותר
-const D = s => { const b = DIFF[okDiff(s.diff)], k = s.loop | 0; return k ? { ...b, spd: b.spd * (1 + 0.15 * k), rate: b.rate / (1 + 0.2 * k), time: b.time * Math.pow(0.9, k), mult: b.mult + k } : b; };
+// THE KING RETURNS: בכל סיבוב נוסף הכל מהיר יותר, הזמן קצר יותר, והניקוד מוכפל יותר. ההאצה נעצרת אחרי הסיבוב הרביעי
+const D = s => { const b = DIFF[okDiff(s.diff)], k = Math.min(3, s.loop | 0); return k ? { ...b, spd: b.spd * (1 + 0.15 * k), rate: b.rate / (1 + 0.2 * k), time: b.time * Math.pow(0.9, k), mult: b.mult + k } : b; };
 
 // ---------- צבעים לפי עולם: ערכה 0 של PMODE 3 (ירוק, צהוב, כחול, אדום), ואחד מהם הוא הרקע ----------
 // עולם 1 (שורשים): רקע כחול. עולם 2 (ביצות): רקע ירוק. מסך הפתיחה והמפה: כמו עולם 1
@@ -160,7 +160,8 @@ function span(grid, c, r) {
 function surface(grid, c) { for (let r = 0; r < ROWS; r++) if (grid[r][c] === '~') return OY + r * T; return WATER; }
 function ropeSpan(grid, c, r) { let a = r, b = r; while (a > 0 && grid[a - 1][c] === '|') a--; while (b < ROWS - 1 && grid[b + 1][c] === '|') b++; return [a, b]; }
 const col = x => Math.floor(x / T), row = y => Math.floor((y - OY) / T);
-function tile(s, c, r) { if (c < 0 || c >= COLS || r >= ROWS) return '#'; if (r < 0) return '.'; return s.L.grid[r][c]; }
+// מתחת למסך אין כלום (הסוקר, 27.10): מי שנופל מהתחתית מאבד חיים, ולא נוחת על רצפה סמויה
+function tile(s, c, r) { if (c < 0 || c >= COLS) return '#'; if (r < 0 || r >= ROWS) return '.'; return s.L.grid[r][c]; }
 const isSolid = ch => ch === '#';
 const isTop = ch => ch === '#' || ch === '=' || ch === 'h' || ch === 'b';
 const isRope = ch => ch === '|';
@@ -295,7 +296,7 @@ function step(s, inp, snd) {
   const wf = windNow(L);
   if (wf) { if (p.mode === 'walk') p.x = Math.max(4, Math.min(W - 4, p.x + wf)); else if (p.mode === 'air') p.vx += wf * 0.06; else if (p.mode === 'swing' && p.vine) p.vine.amp = Math.min(0.95, p.vine.amp + 0.0015); }
   // קרש בגשר החבלים: מי שעומד עליו, אחרי רגע הוא נופל
-  if (p.mode === 'walk') { const r = row(p.y + 0.5), c = col(p.x); if (tile(s, c, r) === 'b' && Math.abs(p.y - (OY + r * T)) < 0.6) { let pk = L.planks.find(k => k.r === r && k.c === c); if (!pk) L.planks.push(pk = { r, c, t: 0, gone: 0 }); if (++pk.t > 22) { L.grid[r][c] = '.'; pk.gone = 300; pk.t = 0; stat = null; snd.tone(140, 60, 60); } } }
+  if (p.mode === 'walk') { const r = row(p.y + 0.5), c = col(p.x); if (tile(s, c, r) === 'b' && Math.abs(p.y - (OY + r * T)) < 0.6) { let pk = L.planks.find(k => k.r === r && k.c === c); if (!pk) L.planks.push(pk = { r, c, t: 0, gone: 0 }); pk.on = L.t; if (++pk.t > 22) { L.grid[r][c] = '.'; pk.gone = 300; pk.t = 0; stat = null; snd.tone(140, 60, 60); } } }
   // המערבולת (השומר של עולם 3) מושכת אליה את מי שבאוויר מעל המים
   if (L.guard && L.guard.kind === 'whirl' && p.mode === 'air' && Math.abs(p.x - L.guard.x) < L.guard.R + 24) p.vx += Math.sign(L.guard.x - p.x) * 0.035;
   // מים, ונפילה מחוץ למסך
@@ -367,7 +368,7 @@ function movers(s, snd, d) {
   for (const f of L.fx) f.t--;
   L.fx = L.fx.filter(f => f.t > 0);
   for (const w of L.sways) { const nx = w.x0 + w.amp * Math.sin(L.t * 2 * Math.PI / w.per); w.vx = nx - w.x; w.x = nx; }   // ענף ברוח, או ענן שזז
-  for (const pk of L.planks) if (pk.gone && !--pk.gone) { L.grid[pk.r][pk.c] = 'b'; stat = null; }   // קרש בגשר חוזר
+  for (const pk of L.planks) { if (pk.gone && !--pk.gone) { L.grid[pk.r][pk.c] = 'b'; stat = null; } else if (!pk.gone && pk.t && L.t - (pk.on || 0) > 1) pk.t--; }   // קרש בגשר חוזר; עמידה קצרה נשכחת
   for (const u of L.lifts) {   // מעלית שעווה: עולה ויורדת, ועוצרת רגע בכל קצה
     if (u.wait) { if (!--u.wait) u.vy = u.y <= u.top ? u.sp : -u.sp; continue; }
     u.y += u.vy; if (u.y <= u.top) { u.y = u.top; u.wait = 50; u.vy = 0; } else if (u.y >= u.bot) { u.y = u.bot; u.wait = 50; u.vy = 0; }
@@ -469,10 +470,10 @@ function enemies(s, snd, d) {
   }
   // קופים שזורקים קוקוסים בקשת אל המקום של PIP, וגשם קוקוסים מלמעלה (מסתתרים מתחת לענפים)
   for (const k of L.nutters) { if (k.anim) k.anim--; if (--k.cd <= 0) { k.cd = Math.round((L.sc.coco || 150) * d.rate); k.anim = 16; const dx = p.x - k.x; L.nuts.push({ x: k.x, y: k.y - 10, vx: Math.max(-2, Math.min(2, dx / 45)), vy: -3 }); snd.tone(260, 40); } }
-  if (L.sc.rain && L.t % Math.round(L.sc.rain * d.rate) === 0) L.nuts.push({ x: 12 + ((L.t * 97) % 232), y: OY - 6, vx: 0, vy: 0 });
+  if (L.sc.rain && L.t % Math.round(L.sc.rain * d.rate) === 0) L.nuts.push({ x: 12 + ((L.t * 97) % 232), y: OY - 6, vx: 0, vy: 0, rain: true });
   for (const n of L.nuts) {
     n.vy = Math.min(MAXF, n.vy + GRAV * 0.8); const ny = n.y + n.vy; n.x += n.vx; let land = false;
-    if (n.vy > 0) for (let r = row(n.y); r <= row(ny); r++) { const ty = OY + r * T; if (ty > n.y && ty <= ny && (isTop(tile(s, col(n.x), r)) || tile(s, col(n.x), r) === 'f')) { land = true; break; } }
+    if (n.vy > 0) for (let r = row(n.y); r <= row(ny); r++) { const ty = OY + r * T; const tc = tile(s, col(n.x), r); if (ty > n.y && ty <= ny && (tc === 'f' || tc === '#' || (!n.rain && isTop(tc)))) { land = true; break; } }   // גשם עובר דרך המדפים, ונעצר רק בגג עלים או בקרקע
     if (land || ny > OY + ROWS * T || n.x < -8 || n.x > W + 8) { n.gone = true; L.fx.push({ k: 'splash', x: n.x, y: ny - 4, t: 10 }); } else n.y = ny;
     if (!n.gone && hit(p, n.x - 3, n.y - 4, n.x + 3, n.y)) hurt = true;
   }
@@ -481,7 +482,7 @@ function enemies(s, snd, d) {
   for (const q of L.parrots) {
     q.t++; const k = q.t % q.per;
     if (k === 0) { q.dir = Math.floor(q.t / q.per) % 2 ? -1 : 1; q.x = q.dir > 0 ? -12 : W + 12; }
-    q.x += q.dir * 2 * d.spd; q.y = q.y0 + Math.max(0, 22 - Math.abs(q.x - p.x) / 3) * (Math.abs(q.x - p.x) < 70 ? 1 : 0);
+    q.x += q.dir * 2 * d.spd; { const f = Math.max(0, 1 - Math.abs(q.x - p.x) / 70); q.y = q.y0 + Math.max(0, Math.min(10, p.y - 8 - q.y0)) * f; }   // צולל קצת, עד הגובה של PIP בקומה שמתחתיו. קופצים מעליו בזמן הנכון
     if (Math.abs(q.x - p.x) < 8 && Math.abs(q.y - (p.y - 8)) < 9) hurt = true;
   }
   // השומרים של BONGO: שני קופים גדולים שמחליפים מקומות על הרצפה, ונחים רגע בכל צד
@@ -499,7 +500,11 @@ function enemies(s, snd, d) {
     bg.t++; if (bg.flash) bg.flash--;
     if (bg.mode === 'fight') {
       bg.x = bg.hx + 30 * Math.sin(bg.t / 70);
-      if (--bg.cd <= 0) { bg.cd = Math.round(170 * d.rate); bg.dir = -bg.dir; L.barrels.push({ x: bg.x + bg.dir * 14, y: bg.y, vx: bg.dir * 1.0 * d.spd, vy: 0, mode: 'roll', rot: 0, keep: true }); snd.tone(130, 90); }
+      if (--bg.cd <= 0) {
+        bg.cd = Math.round(170 * d.rate); bg.n = (bg.n || 0) + 1;
+        if (bg.n % 3 === 0 && L.seesaw) { L.barrels.push({ x: L.seesaw.x + (bg.n % 2 ? -3 : 3), y: bg.y, vx: 0, vy: 0, mode: 'drop', rot: 0 }); snd.tone(90, 140, 60); }   // חבית שנופלת ישר על אמצע הנדנדה: אין מקום בטוח
+        else { bg.dir = -bg.dir; L.barrels.push({ x: bg.x + bg.dir * 14, y: bg.y, vx: bg.dir * 1.0 * d.spd, vy: 0, mode: 'roll', rot: 0, keep: true }); snd.tone(130, 90); }
+      }
     } else if (bg.mode === 'flee') { bg.x += 2; bg.y -= 0.6; if (bg.x > W + 30) { bg.mode = 'gone'; } }
     if (L.gold && L.gold.y < L.gold.ty) L.gold.y = Math.min(L.gold.ty, L.gold.y + 1.5);   // קלטת הזהב נופלת אל הנדנדה
     const ss = L.seesaw;
@@ -520,18 +525,18 @@ function enemies(s, snd, d) {
       }
     }
   }
-  // עטלפים: תלויים בשקט עד שהאור של הלפיד מגיע אליהם, ואז מזנקים אל PIP וחוזרים
+  // עטלפים (מזנקים רק כשהאור באמת מגיע אליהם): תלויים בשקט עד שהאור של הלפיד מגיע אליהם, ואז מזנקים אל PIP וחוזרים
   const lr = lightR(s);
   for (const b of L.bats) {
     if (b.cd) b.cd--;
-    if (b.mode === 'hang') { if (!b.cd && Math.hypot(b.x - p.x, (b.y - (p.y - 8)) * 2) < (b.range || lr * 2)) { b.mode = 'dive'; b.k = 0; b.tx = p.x; b.ty = p.y - 8; snd.tone(1500, 40, 2000); } }
+    if (b.mode === 'hang') { if (!b.cd && Math.hypot(b.x - p.x, b.y - (p.y - 8)) < (b.range || lr + 8)) { b.mode = 'dive'; b.k = 0; b.tx = p.x; b.ty = p.y - 8; snd.tone(1500, 40, 2000); } }
     else if (b.mode === 'dive') { b.k += 0.022 * d.spd; const k = Math.min(1, b.k); b.x = b.hx + (b.tx - b.hx) * k; b.y = b.hy + (b.ty - b.hy) * Math.sin(k * Math.PI / 2) + Math.sin(k * 12) * 3; if (k >= 1) { b.mode = 'back'; b.k = 0; } }
     else { b.k += 0.015; const k = Math.min(1, b.k); b.x = b.tx + (b.hx - b.tx) * k; b.y = b.ty + (b.hy - b.ty) * k; if (k >= 1) { b.mode = 'hang'; b.cd = 120; b.x = b.hx; b.y = b.hy; } }
     if (b.mode !== 'hang' && Math.abs(b.x - p.x) < 8 && Math.abs(b.y - (p.y - 8)) < 8) hurt = true;
   }
   // נטיפים: כש-PIP עובר מתחת, הנטיף רועד רגע ונופל. אחר כך צומח מחדש
   for (const st of L.stones) {
-    if (st.mode === 'hang') { if (Math.abs(st.x - p.x) < 14 && p.y > st.y) { st.mode = 'shake'; st.k = Math.round(22 / d.spd); snd.tone(80, 60); } }
+    if (st.mode === 'hang') { if (Math.abs(st.x - p.x) < 14 && p.y > st.y && p.y - st.y < 40) { st.mode = 'shake'; st.k = Math.round(22 / d.spd); snd.tone(80, 60); } }
     else if (st.mode === 'shake') { if (--st.k <= 0) { st.mode = 'fall'; st.vy = 0; } }
     else if (st.mode === 'fall') {
       st.vy = Math.min(MAXF, st.vy + GRAV); const ny = st.y + st.vy; let land = null;
@@ -577,7 +582,7 @@ function enemies(s, snd, d) {
     if (b.cut) { if (!--b.cut) { for (let r = b.a; r <= b.b; r++) L.grid[r][b.c] = '|'; stat = null; b.chew = 0; } continue; }
     const on = p.mode === 'climb' && col(p.x) === b.c && row(p.y - 8) >= b.a - 1 && row(p.y - 8) <= b.b + 1;
     if (on) { b.chew++; if (b.chew % 12 === 0) snd.tone(120 + (b.chew % 24) * 4, 20); } else b.chew = Math.max(0, b.chew - 2);
-    if (b.chew > (L.sc.chew || 90) / d.spd) {
+    if (b.chew > (L.sc.chew || 90)) {   // לא תלוי במהירות: טיפוס רצוף תמיד מספיק
       for (let r = b.a; r <= b.b; r++) L.grid[r][b.c] = '.'; stat = null; b.cut = 360; snd.tone(300, 150, 80); msg(s, 'SNAP!');
       if (on) { p.mode = 'air'; p.vy = 0; p.fallY = p.y; p.grabCd = 20; }
     }
@@ -630,7 +635,9 @@ const TUNES = [null,
   [[392, 1], [392, 1], [523, 1], [392, 1], [659, 1], [587, 1], [523, 2], [392, 2]],
   [[523, 1], [659, 1], [784, 1], [1047, 2], [784, 1], [880, 1], [1047, 3]]];
 const VICTORY = [[523, 1], [523, 1], [523, 1], [659, 2], [587, 1], [659, 1], [784, 3], [659, 1], [784, 1], [1047, 4]];
-function play(snd, tune, beat = 0.14) { if (!snd || !snd.note) return; let t = 0; for (const [f, n] of tune) { snd.note(f, t, beat * n * 0.9); t += beat * n; } }
+// המוזיקה נדלקת ונכבית בתפריט P (▼), ונזכרת בדפדפן
+let musicOn = true;
+function play(snd, tune, beat = 0.14) { if (!musicOn || !snd || !snd.note) return; let t = 0; for (const [f, n] of tune) { snd.note(f, t, beat * n * 0.9); t += beat * n; } }
 function startWorld(s) {
   s.idx = WORLDS[s.world].first;
   writeSave(s);
@@ -876,6 +883,7 @@ function drawPause(l, s, C) {
     l.text('HOW TO PLAY', 64, 34, C.txt[1], 'center');
     ['ARROWS: WALK, CLIMB', 'FIRE: JUMP', 'ON A VINE, FIRE', 'LETS GO', '', 'REACH THE ARROW', 'AT THE TOP.', '3 TAPE PIECES', 'IN EVERY SCREEN.'].forEach((t, i) => l.text(t, 64, 50 + i * 10, i < 4 ? C.txt[0] : C.txt[2], 'center'));
   }
+  l.text('DOWN: MUSIC ' + (musicOn ? 'ON' : 'OFF'), 64, 142, musicOn ? C.txt[0] : C.txt[1], 'center');
   l.text('LR: PAGE  P: PLAY', 64, 152, C.txt[2], 'center');
 }
 // מפת העץ: שבעה עולמות מלמטה למעלה, ו-PIP בעולם הנוכחי
@@ -912,6 +920,13 @@ function drawTitle(g, s) {
   } else if (pg === 2) {
     l.text('HOW TO PLAY', 64, 10, R, 'center', 2);
     ['ARROWS: WALK, CLIMB', 'FIRE: JUMP', 'ON A VINE, FIRE', 'LETS GO', 'P: MAP AND HELP', '', 'JUMP OVER', 'THE BARRELS!'].forEach((t, i) => l.text(t, 64, 32 + i * 10, i < 5 ? Y : R, 'center'));
+  } else if (pg === 4) {   // החיות של העולמות 3 עד 7, בצבעים של מסך הפתיחה (ערכה 0 בלבד)
+    l.text('DEEPER IN THE TREE', 64, 8, R, 'center');
+    const B = PALETTES[0][2];
+    const who = [[A.FISH[0], { k: Y, f: R, e: B }, 'FISH'], [A.BEAVER[0], { k: R, t: Y, e: B }, 'BEAVER'], [A.BEE[0], { k: Y, s: R, w: G2, e: B }, 'BEE'],
+      [A.BAT_FLY[0], { k: R, w: G2, e: Y }, 'BAT'], [A.BEAR[0], { k: R, t: Y, e: G2 }, 'BEAR'], [A.COCONUT, { k: R, t: Y }, 'COCONUT'],
+      [A.PARROT[0], { k: R, w: G2, e: Y, b: Y }, 'PARROT'], [A.APE[0], { f: G2, c: Y, n: R, e: B }, 'BIG APE'], [A.QUEEN[0], { k: Y, s: R, w: G2, e: B }, 'QUEEN']];
+    who.forEach(([rows, cols, name], i) => { const cx = [22, 64, 106][i % 3], fy = 36 + Math.floor(i / 3) * 24; l.sprite(rows, Math.round(cx - rows[0].length / 2), fy - rows.length, cols, false, 1); l.text(name, cx, fy + 2, Y, 'center'); });
   } else {
     l.text('MEET THE JUNGLE', 64, 8, R, 'center');
     const W1 = colors(1), W2 = colors(2);
@@ -975,10 +990,15 @@ function drawEnd(g, s) {
     l.text('SCORE ' + s.score, 64, 116, R, 'center');
   } else if (s.mode === 'win') {
     l.text('YOU DID IT!', 64, 14, Y, 'center', 2);
-    l.sprite(A.TAPE, 54, 36, C.tape, false, 4);
-    ['BIG BONGO RAN AWAY.', 'THE GOLDEN TAPE', 'IS BACK!'].forEach((t, i) => l.text(t, 64, 56 + i * 10, i ? G2 : Y, 'center'));
+    if (s.tapes >= 120) {   // הסוף המיוחד: BONGO חוזר, מוריד את הכתר ונותן אותו ל-PIP
+      l.sprite(A.BIG_BONGO, 30, 32, C.bongo, false, 1); l.sprite(A.PIP.stand, 84, 39, C.pip, false, 1);
+      for (let k = 0; k < 5; k++) l.rect(84 + k, 34 - (k % 2), 1, 2, C.txt[0]);
+      ['ALL 120 PIECES!', 'BONGO GIVES PIP', 'HIS CROWN. +20000'].forEach((t, i) => l.text(t, 64, 58 + i * 10, i ? R : Y, 'center'));
+    } else {
+      l.sprite(A.TAPE, 54, 36, C.tape, false, 4);
+      ['BIG BONGO RAN AWAY.', 'THE GOLDEN TAPE', 'IS BACK!'].forEach((t, i) => l.text(t, 64, 56 + i * 10, i ? G2 : Y, 'center'));
+    }
     l.text('TAPE PIECES ' + s.tapes + '/120', 64, 92, s.tapes >= 120 ? R : G2, 'center');
-    if (s.tapes >= 120) l.text('ALL OF THEM! A TRUE EXPLORER', 64, 102, R, 'center');
     l.text('SCORE ' + s.score, 64, 116, R, 'center');
     if (D(s).mult !== 1) l.text(D(s).name + ' X' + D(s).mult + ' = ' + finalScore(s), 64, 126, R, 'center');
     l.text('THE KING RETURNS...', 64, 144, Y, 'center');
@@ -988,12 +1008,6 @@ function drawEnd(g, s) {
     l.text('SCORE ' + s.score, 64, 84, Y, 'center');
     if (D(s).mult !== 1) l.text(D(s).name + ' X' + D(s).mult + ' = ' + finalScore(s), 64, 100, R, 'center');
     l.text('YOUR WORLD IS SAVED', 64, 124, G2, 'center');
-  } else {
-    l.text('WELL DONE, PIP!', 64, 26, Y, 'center');
-    ['YOU CLIMBED ROOTS,', 'SWAMPS, RIVERS,', 'HIVES AND CAVES.', '', 'THE BRANCHES ARE', 'STILL GROWING...'].forEach((t, i) => l.text(t, 64, 44 + i * 10, i < 3 ? Y : G2, 'center'));
-    l.text('SCORE ' + s.score, 64, 112, R, 'center');
-    if (D(s).mult !== 1) l.text(D(s).name + ' X' + D(s).mult + ' = ' + finalScore(s), 64, 124, R, 'center');
-    l.text('SAVED FOR WORLD ' + (ROUND_WORLDS + 1), 64, 140, G2, 'center');
   }
   if (s.mode !== 'clear' && s.mode !== 'win' && s.t > 50 && (s.t >> 4) % 2) l.text('FIRE: TITLE', 64, 164, Y, 'center');
   flush(g);
@@ -1022,7 +1036,7 @@ export default {
       'הענפים: קופים זורקים קוקוסים, ענפים מתנדנדים ברוח, וקרשים בגשר החבלים נופלים אחרי רגע. בצמרת: משבי רוח, תוכים, עננים שזזים.',
       'הקרב: BIG BONGO זורק חביות. חבית שמגיעה לנדנדה נחה על הקצה. קופצים ונוחתים על הקצה השני, והחבית עפה אל BONGO. שלוש פגיעות, והקלטת חוזרת.',
       'אחרי הניצחון: THE KING RETURNS, סיבוב נוסף ומהיר יותר. מי שאוסף את כל 120 החלקים מקבל סוף מיוחד.',
-      'P עוצר ופותח מפה והוראות. Esc או "הוצאת המחסנית" יוצאים.'],
+      'P עוצר ופותח מפה והוראות. בתפריט, ▼ מדליק ומכבה את המוזיקה. Esc או "הוצאת המחסנית" יוצאים.'],
     en: ['BIG BONGO, the king of the monkeys, stole the Golden Tape and took it to the top of the Great Tree. PIP, a small explorer, climbs to bring it back.',
       'Walk: ◀ ▶. Climb a rope: ▲ ▼. Jump: FIRE (also off a rope, with ◀ or ▶).',
       'Swinging vine: jump to it and PIP holds on. FIRE lets go and the swing carries on. Let go at the right moment.',
@@ -1040,7 +1054,7 @@ export default {
       'Branches: monkeys throw coconuts, branches sway in the wind, and the planks of the rope bridge fall after a moment. Treetop: gusts of wind, parrots, moving clouds.',
       'The fight: BIG BONGO throws barrels. A barrel that reaches the seesaw rests on its end. Jump and land on the other end, and the barrel flies back at BONGO. Three hits and the tape is back.',
       'After you win: THE KING RETURNS, another, faster round. Collect all 120 pieces for a special ending.',
-      'P pauses and shows the map and help. Esc or "Eject cartridge" leaves.']
+      'P pauses and shows the map and help. In that menu, ▼ turns the music on or off. Esc or "Eject cartridge" leaves.']
   },
 
   init(api) {
@@ -1048,6 +1062,7 @@ export default {
     try { diff = okDiff(parseInt(localStorage.getItem(DIFF_KEY), 10)); } catch (e) {}
     api.state = { mode: 'title', t: 0, titleP: 0, titleT: 0, high: api.loadHigh('king'), save: loadSave(), diff, world: 1, score: 0, lives: 3 };
     stat = null; statKey = '';
+    try { musicOn = localStorage.getItem(MUSIC_KEY) !== 'off'; } catch (e) {}
   },
 
   update(api) {
@@ -1061,7 +1076,7 @@ export default {
         if (['up', 'down', 'pause'].some(b => api.hit(b)) || api.hit('fire')) { s.askNew = false; snd.tone(300, 40); }
         return;
       }
-      if (api.hit('down')) { s.titleP = (s.titleP + 1) % 4; s.titleT = 0; snd.tone(330, 30); } else if (++s.titleT > 300) { s.titleP = (s.titleP + 1) % 4; s.titleT = 0; }
+      if (api.hit('down')) { s.titleP = (s.titleP + 1) % 5; s.titleT = 0; snd.tone(330, 30); } else if (++s.titleT > 300) { s.titleP = (s.titleP + 1) % 5; s.titleT = 0; }
       if (s.save && api.hit('pause') && s.t > 40) { s.askNew = true; s.askT = 0; try { s.diff = okDiff(parseInt(localStorage.getItem(DIFF_KEY), 10)); } catch (e) {} snd.tone(250, 60); return; }
       if (!s.save && (api.hit('left') || api.hit('right'))) { s.diff = (s.diff + (api.hit('right') ? 1 : 2)) % 3; snd.tone(440 + s.diff * 110, 40); try { localStorage.setItem(DIFF_KEY, String(s.diff)); } catch (e) {} }
       if (s.t > 40 && s.save && s.save.world > ROUND_WORLDS && (api.hit('fire') || api.hit('up'))) { s.soon = 120; snd.tone(200, 120); return; }
@@ -1078,13 +1093,25 @@ export default {
     if (s.mode === 'intro') { if (s.t > 75 || (s.t > 15 && api.hit('fire'))) { s.mode = 'play'; s.t = 0; snd.tone(523, 60); } return; }
     if (s.mode === 'play') {
       if (api.hit('pause')) { s.paused = !s.paused; s.page = 0; snd.tone(600, 40); return; }
-      if (s.paused) { if (api.hit('left') || api.hit('right')) s.page = ((s.page || 0) + 1) % 2; if (api.hit('fire')) s.paused = false; return; }
+      if (s.paused) {
+        if (api.hit('left') || api.hit('right')) s.page = ((s.page || 0) + 1) % 2;
+        if (api.hit('down')) { musicOn = !musicOn; try { localStorage.setItem(MUSIC_KEY, musicOn ? 'on' : 'off'); } catch (e) {} if (musicOn) play(snd, TUNES[s.world] || TUNES[1]); else snd.tone(200, 60); }
+        if (api.hit('fire')) s.paused = false;
+        return;
+      }
       if (s.msgT > 0) s.msgT--;
       const inp = { left: api.input.left, right: api.input.right, up: api.input.up, down: api.input.down, fire: api.hit('fire') };
       const ev = step(s, inp, snd);
       if (s.score >= s.nextLife) { s.lives++; s.nextLife += 10000; msg(s, 'EXTRA LIFE!'); snd.tone(700, 200, 1400); }
       if (ev === 'die') { s.mode = 'dying'; s.t = 0; }
-      else if (ev === 'win') { s.tapes += s.got; s.mode = 'win'; s.t = 0; play(snd, VICTORY, 0.16); endScore(api, s); }
+      else if (ev === 'win') {
+        s.tapes += s.got; s.mode = 'win'; s.t = 0; play(snd, VICTORY, 0.16);
+        if (s.tapes >= 120) s.score += 20000;   // הסוף המיוחד: כל 120 החלקים
+        endScore(api, s);
+        // השמירה כבר מחכה לסיבוב הבא, גם אם סוגרים את האתר במסך הניצחון
+        const keep = { world: s.world, loop: s.loop, tapes: s.tapes, lives: s.lives };
+        Object.assign(s, { world: 1, loop: (s.loop | 0) + 1, tapes: 0, lives: s.lives + 1 }); writeSave(s); Object.assign(s, keep);
+      }
       else if (ev === 'exit' || ev === 'secret') {
         s.secretGot = ev === 'secret';
         if (ev === 'secret') { s.lives++; s.score += 1000; }
@@ -1105,14 +1132,14 @@ export default {
       if (s.bonusShown < s.bonus) { const k = Math.min(10, s.bonus - s.bonusShown); s.bonusShown += k; s.score += k; if (s.t % 3 === 0) snd.tone(1000, 15); }
       else if (s.t > 60 && (s.t > 140 || api.hit('fire'))) {
         const next = s.idx + 1;
-        if (next >= SCREENS.length) { s.mode = 'end'; s.t = 0; endScore(api, s); return; }
+        if (next >= SCREENS.length) { s.mode = 'over'; s.t = 0; endScore(api, s); return; }   // לא קורה: ל-7-5 אין יציאה
         const nw = +SCREENS[next].id[0];
         if (nw !== s.world) { s.world = nw; startWorld(s); } else { s.idx = next; startScreen(s); }
       }
       return;
     }
     if (s.mode === 'win') {   // THE KING RETURNS: סיבוב נוסף, מהיר יותר, עם הניקוד והחיים
-      if (s.t > 120 && api.hit('fire')) { s.loop = (s.loop | 0) + 1; s.world = 1; s.lives++; startWorld(s); }
+      if (s.t > 120 && api.hit('fire')) { s.loop = (s.loop | 0) + 1; s.world = 1; s.lives++; s.tapes = 0; startWorld(s); }   // חלקי הקלטת נספרים מחדש בכל סיבוב
       return;
     }
     if (s.mode === 'over' || s.mode === 'end') {
@@ -1130,10 +1157,10 @@ export default {
   }
 };
 // סוף משחק (גם אחרי שהמשחק נגמר וגם בסוף הסבב): לתוצאות. אותה ריצה לא נכנסת פעמיים להיכל התהילה
+// ריצה אחת = רישום אחד (הסוקר, 27.10): הסוף הראשון שלה, ניצחון או סוף משחק, נכנס להיכל התהילה, ואחריו כבר לא
 function endScore(api, s) {
   const fs = finalScore(s), v = loadSave();
-  if (fs > ((v && v.sub) || s.sub || 0)) { api.submitScore('king', fs); s.sub = fs; if (v) try { localStorage.setItem(SAVE, JSON.stringify({ ...v, sub: fs })); } catch (e) {} }
-  if (s.mode === 'end') { s.world = ROUND_WORLDS + 1; writeSave(s); }
+  if (!((v && v.sub) || s.sub)) { api.submitScore('king', fs); s.sub = fs; if (v) try { localStorage.setItem(SAVE, JSON.stringify({ ...v, sub: fs })); } catch (e) {} }
 }
 
 // לבדיקות: הפיזיקה בלי ציור

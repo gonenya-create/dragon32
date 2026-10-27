@@ -96,20 +96,22 @@
         'Player two: [I] [J] [K] [L].',
         '[H] pauses, any key resumes. [X] goes back to the menu.']
     },
-    // נבדק במכונה (27.10): צבע, רמה, המנגינה ואחריה FIRE, תנועה, ירי ונקודות, פגיעה ביצור וגל ההדף, החיים
+    // נבדק במכונה (27.10): צבע, רמה, המנגינה ואחריה FIRE, תנועה, ירי ונקודות, פגיעה ביצור וגל ההדף, החיים. סוף החיים (בקוד, $2BBB): מחכה למקש דרך POLCAT; C ממשיך ($2FED), כל מקש אחר מתחיל מחדש ($2FDD)
     dungeon: {
       he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
         'הטעינה ארוכה, כארבע דקות, והמשחק מתחיל לבד. אחרי הלוגו של Microdeal בוחרים צבע: [1] שחור, [2] בהיר, [3] ירוק.',
         'במסך הפתיחה לוחצים [רווח]. ב-SELECT LEVEL בוחרים רמה: [1] הכי קלה, עד [3].',
         'מתנגנת מנגינה קצרה. כשהיא נגמרת לוחצים [רווח] כדי לצאת לדרך. גם אחרי שנפגעים לוחצים [רווח] כדי להמשיך.',
         '[←] [→] זזים לצדדים, [↓] רצים מהר יותר במסדרון, [↑] לאט יותר. [רווח] יורה למטה, אל היצורים ואל הדלתות הנעולות.',
-        'נזהרים מהנחשים, מה-OAFS ומה-SNAPPERS, ומגל ההדף של יצור שמתפוצץ. אל תירו בכפילים שנראים כמוכם: זה עולה בחיים. הכוכביות למעלה הן החיים, והמספר מימין הוא הזמן.'],
+        'נזהרים מהנחשים, מה-OAFS ומה-SNAPPERS, ומגל ההדף של יצור שמתפוצץ. אל תירו בכפילים שנראים כמוכם: זה עולה בחיים. הכוכביות למעלה הן החיים, והמספר מימין הוא הזמן.',
+        'כשנגמרים החיים המשחק נעצר ומחכה למקש: [C] ממשיך מאותו מקום במבוך (הניקוד מתחיל מאפס), וכל מקש אחר מתחיל מההתחלה. אין מסך סיום: כך Ken Kalish בנה אותו.'],
       en: ['In this game the arrow keys are a joystick and [Space] is its button (or [Alt], [Option] on a Mac). On a phone there is a stick and a fire button under the screen.',
         'Loading is long, about four minutes, and the game starts by itself. After the Microdeal logo pick a colour: [1] black, [2] buff, [3] green.',
         'On the title screen press [Space]. At SELECT LEVEL pick a level: [1] is the easiest, up to [3].',
         'A short tune plays. When it ends, press [Space] to set off. After you are hit, press [Space] again to go on.',
         '[←] [→] move sideways, [↓] run faster down the corridor, [↑] slower. [Space] fires downwards, at the creatures and at locked doors.',
-        'Watch out for the snakes, oafs and snappers, and for the shock wave of a creature that blows up. Don\'t shoot the clones that look like you: that costs a life. The stars at the top are your lives, and the number on the right is the time.']
+        'Watch out for the snakes, oafs and snappers, and for the shock wave of a creature that blows up. Don\'t shoot the clones that look like you: that costs a life. The stars at the top are your lives, and the number on the right is the time.',
+        'When the last life is gone the game stops and waits for a key: [C] carries on from the same place in the dungeon (the score starts again from zero), and any other key starts again from the beginning. There is no end screen: that is how Ken Kalish made it.']
     },
     // נבדק במכונה (25.10): בחירות, תנועה, כיוון וירי, רוחות שזזות, וסוף משחק עם הניקוד
     phantom: {

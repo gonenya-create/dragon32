@@ -155,6 +155,7 @@ for c0 in (7, 12, 17, 22): plat(m, 17, c0, c0 + 1)
 for c in (10, 15, 20): put(m, 18, c, 'J')
 plat(m, 9, 20, 31); rope(m, 29, 10, 15); plat(m, 9, 12, 16); plat(m, 9, 0, 8)
 put(m, 18, 18, 'J'); put(m, 18, 10, 'J')
+block(m, 7, 8, 31, 31, 'c')   # secret: the far end of the high branch
 block(m, 7, 8, 2, 3, 'E'); put(m, 15, 2, 'P')
 put(m, 15, 13, 'T'); put(m, 15, 30, 'T'); put(m, 8, 14, 'T')
 add('3-2', 'JUMPING FISH', m, time=60, fish=[[28, 34, 130], [-28, 34, 150], [28, 34, 170], [-24, 64, 160], [24, 64, 190]])
@@ -240,6 +241,7 @@ plat(m, 16, 0, 25); plat(m, 16, 8, 14, 'h'); plat(m, 12, 5, 31); plat(m, 12, 15,
 rope(m, 23, 17, 19); rope(m, 7, 13, 15); rope(m, 24, 9, 11); rope(m, 5, 5, 7)
 plat(m, 20, 14, 20, 'h')
 for c, r in ((16, 9), (10, 9), (22, 9), (16, 13)): put(m, r, c, 'Z')
+block(m, 10, 11, 31, 31, 'c')   # secret: past the rope, at the end of the shelf
 block(m, 2, 3, 28, 29, 'E'); put(m, 19, 2, 'P')
 put(m, 15, 11, 'T'); put(m, 11, 30, 'T'); put(m, 7, 9, 'T')
 add('4-4', 'THE STICKY HALL', m, time=75, bees=[[64, 40, 0.012], [64, 40, 0.012], [64, 40, 0.012], [30, 20, 0.03]])
@@ -293,6 +295,7 @@ plat(m, 16, 3, 31); plat(m, 12, 0, 27); plat(m, 8, 4, 31); plat(m, 4, 0, 25)
 rope(m, 5, 17, 19); rope(m, 25, 13, 15); rope(m, 6, 9, 11); rope(m, 27, 5, 7)
 for (r, c) in ((17, 12), (17, 20), (13, 8), (13, 16), (13, 22), (9, 12), (9, 19), (5, 9), (5, 16), (5, 23), (1, 14)): put(m, r, c, 'v')
 put(m, 11, 14, 'I')
+block(m, 6, 7, 31, 31, 'c')   # secret: in the dark, past the rope
 block(m, 2, 3, 2, 3, 'E'); put(m, 19, 28, 'P')
 put(m, 15, 30, 'T'); put(m, 11, 1, 'T'); put(m, 3, 18, 'T')
 add('5-3', 'FALLING STONES', m, time=60, dark=1, torch=30)
@@ -353,7 +356,8 @@ add('6-2', 'SWAYING BRANCHES', m, time=60, sways=[[4, 56, 260], [4, 60, 230], [4
 m = new(); walls(m)
 plat(m, 16, 3, 31); plat(m, 12, 0, 27); plat(m, 8, 4, 31); plat(m, 4, 0, 25)
 rope(m, 5, 17, 19); rope(m, 25, 13, 15); rope(m, 6, 9, 11); rope(m, 23, 5, 7)
-for (r, c0) in ((18, 10), (18, 20), (14, 8), (14, 18), (10, 12), (10, 22), (6, 9), (6, 17)): plat(m, r, c0, c0 + 2, 'f')   # leaf roofs: stop coconuts, not PIP
+for (r, c0) in ((18, 10), (18, 20), (14, 8), (14, 18), (10, 12), (10, 22), (6, 9), (6, 17), (2, 8), (2, 17)): plat(m, r, c0, c0 + 2, 'f')   # leaf roofs: stop coconuts, not PIP (the rain falls through the shelves)
+block(m, 10, 11, 0, 0, 'c')   # secret: past the rope, at the left end
 block(m, 2, 3, 2, 3, 'E'); put(m, 19, 28, 'P')
 put(m, 15, 30, 'T'); put(m, 11, 1, 'T'); put(m, 7, 30, 'T')
 add('6-3', 'COCONUT RAIN', m, time=60, rain=26)
@@ -382,6 +386,7 @@ add('6-5', "BONGO'S GUARDS", m, time=75, guard='apes')
 m = new(); walls(m)
 plat(m, 16, 0, 12); plat(m, 16, 16, 31); plat(m, 12, 2, 13); plat(m, 12, 17, 29); plat(m, 8, 0, 11); plat(m, 8, 15, 31); plat(m, 4, 3, 28)
 rope(m, 24, 17, 19); rope(m, 4, 13, 15); rope(m, 27, 9, 11); rope(m, 6, 5, 7)
+block(m, 10, 11, 2, 2, 'c')   # secret: the left end of the windy branch
 block(m, 2, 3, 25, 26, 'E'); put(m, 19, 2, 'P')
 put(m, 15, 14, 'T'); put(m, 11, 15, 'T'); put(m, 7, 13, 'T')
 add('7-1', 'ABOVE THE LEAVES', m, time=60, wind=[240, 110, 0.55])
@@ -416,7 +421,7 @@ add('7-4', 'THE LAST VINE', m, time=75, vines=[84, 84, 84, 84], wind=[300, 90, 0
 # 7-5: the king's crown. BIG BONGO throws barrels down the branches; a barrel that reaches the seesaw rests on one end.
 # Land on the other end and the barrel flies back at him. Three hits: he runs away and leaves the Golden Tape
 m = new(); walls(m)
-plat(m, 1, 12, 19); put(m, 0, 16, 'G')
+plat(m, 2, 12, 19); put(m, 1, 16, 'G')
 plat(m, 6, 6, 25); plat(m, 11, 2, 29); plat(m, 16, 4, 27)
 rope(m, 5, 17, 19); rope(m, 26, 12, 15)
 put(m, 19, 16, '^'); put(m, 19, 3, 'P')

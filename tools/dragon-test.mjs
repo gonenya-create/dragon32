@@ -1419,6 +1419,12 @@ if (part('cartridge JUNGLE KING')) {
   check('with a save, P asks "NEW GAME?" and UP keeps the save', asked && await K('return !s.askNew && s.mode === "title" && JSON.parse(localStorage.getItem("d32-king-save")).world === 2;'));
   await press('p'); await p.waitForTimeout(800); await press('Space');
   check('P and then FIRE starts a new game in world 1', await K('return s.mode === "map" && s.world === 1 && JSON.parse(localStorage.getItem("d32-king-save")).world === 1;'));
+  // מוזיקה בתפריט P (סגירת המשחק, 27.10): ▼ מכבה ומדליק, ונזכר בדפדפן. ועמוד שני של חיות במסך הפתיחה
+  await K('s.mode = "play"; s.paused = false; m._test.loadScreen(s, 0); s.world = 1;'); await press('p'); await press('ArrowDown');
+  const musicOff = await p.evaluate(() => localStorage.getItem('d32-king-music')); await press('ArrowDown'); const musicOn = await p.evaluate(() => localStorage.getItem('d32-king-music')); await press('p');
+  check('in the P menu, DOWN turns the music off and on, and the browser remembers it', musicOff === 'off' && musicOn === 'on', JSON.stringify([musicOff, musicOn]));
+  await K('s.mode = "title"; s.titleP = 4; s.titleT = 0; s.askNew = false;'); await p.waitForTimeout(300);
+  check('the title shows a second page of animals (worlds 3-7) without errors', await K('return s.mode === "title" && s.titleP === 4;') && pageErrors.length === 0);
   // טלפון: הכפתורים של המשחק, כולל P, ועל הכפתור האדום כתוב JUMP
   await p.setViewportSize({ width: 390, height: 844 });
   const pad = await p.evaluate(() => ({ shown: [...document.querySelectorAll('.d32-pad-btn')].filter(b => !b.hidden).map(b => b.dataset.pad), fire: document.querySelector('.d32-pad-fire').textContent }));
@@ -1468,7 +1474,7 @@ if (part('cartridge JUNGLE KING')) {
     check('5-1: in the dark the torch burns down and lights less; a new torch lights it up again', r1 < r0 - 10 && KT.lightR(s) > r0 - 3, JSON.stringify([r0, r1, KT.lightR(s)])); }
   { const s = at('5-2'); s.p.inv = 1e9; const b = s.L.bats[0]; s.p.x = b.x + 10; s.p.y = b.y + 30; s.p.mode = 'air'; s.p.vy = 0; run(s, 2);
     check('5-2: a bat dives when the torch light reaches it', b.mode === 'dive'); }
-  { const s = at('5-3'); s.p.inv = 1e9; const st = s.L.stones[0]; s.p.x = st.x; s.p.y = KT.OY + 20 * 8; s.p.mode = 'walk'; run(s, 2); const shook = st.mode === 'shake'; run(s, 40);
+  { const s = at('5-3'); s.p.inv = 1e9; const st = s.L.stones.find(k => k.hy > KT.OY + 16 * 8); s.p.x = st.x; s.p.y = KT.OY + 20 * 8; s.p.mode = 'walk'; run(s, 2); const shook = st.mode === 'shake'; run(s, 40);
     check('5-3: a stalactite shakes and falls when PIP passes under it', shook && (st.mode === 'fall' || st.mode === 'gone')); }
   { const a = at('5-6'), b = at('5-6'); a.p.inv = b.p.inv = 1e9;
     for (const s of [a, b]) { s.p.x = s.L.guard.x + 70; s.p.y = s.L.guard.y; s.p.mode = 'walk'; }
@@ -1484,7 +1490,7 @@ if (part('cartridge JUNGLE KING')) {
     const [rr, rc] = s.L.grid.flatMap((r, ri) => r.map((ch, c) => ch === 'f' ? [ri, c] : null)).filter(Boolean)[0];
     s.L.nuts = [{ x: rc * 8 + 4, y: KT.OY + (rr - 3) * 8, vx: 0, vy: 0 }]; const nut = s.L.nuts[0]; let lowest = 0; for (let i = 0; i < 40; i++) { run(s, 1); if (s.L.nuts.includes(nut)) lowest = nut.y; }
     check('6-3: coconuts rain from the treetop, and a leaf roof stops them', rained && !s.L.nuts.includes(nut) && lowest <= KT.OY + rr * 8, JSON.stringify({ rained, lowest, roof: KT.OY + rr * 8 })); }
-  { const s = at('6-4'); s.noEnemies = true; s.p.x = 10 * 8 + 4; s.p.y = KT.OY + 15 * 8; s.p.mode = 'walk'; run(s, 30); const fell = s.L.grid[15][10] === '.'; run(s, 320);
+  { const s = at('6-4'); s.noEnemies = true; s.p.x = 10 * 8 + 4; s.p.y = KT.OY + 15 * 8; s.p.mode = 'walk'; run(s, 30); const fell = s.L.grid[15][10] === '.'; s.p.x = 20; s.p.y = KT.OY + 15 * 8; s.p.mode = 'walk'; run(s, 320);
     check('6-4: a plank of the rope bridge falls a moment after PIP stands on it, and comes back later', fell && s.L.grid[15][10] === 'b'); }
   { const s = at('6-5'); s.p.inv = 0; const a = s.L.guard.apes[0]; s.p.x = a.x; s.p.y = s.L.guard.y; s.p.mode = 'walk';
     check("6-5: BONGO's big monkeys hurt PIP when they touch him", run(s, 2) === 'die'); }
@@ -1498,6 +1504,28 @@ if (part('cartridge JUNGLE KING')) {
     check("7-5: barrels on the seesaw fly back at BIG BONGO; after 3 hits he runs, and the Golden Tape wins the game", g.hits === 3 && ev === 'win', JSON.stringify({ hits: g.hits, ev, n })); }
   { const a = at('1-1'), b = at('1-1'); b.loop = 1; const ta = a.time, tb = KT.newState(1); tb.loop = 1; KT.loadScreen(tb, 0);
     check('THE KING RETURNS: the next round is faster, with less time', tb.time < ta); }
+  // תיקונים אחרי הסוקר החיצוני (27.10)
+  { const { reachSecret } = await import('./king/bot.mjs'); const per = ['1-5', '2-4', '3-2', '4-4', '5-3', '6-3', '7-1'].map(id => ({ id, ok: reachSecret(KT.SCREENS.findIndex(x => x.id === id)).ok }));
+    check('every world has a secret crack, and PIP can reach it', per.every(r => r.ok), JSON.stringify(per)); }
+  { const r = ['5-5', '6-4', '7-3', '7-4'].map(id => { const s = at(id); s.noEnemies = true; const x0 = s.p.x; let ev = null; for (let i = 0; i < 300 && ev !== 'die'; i++) ev = KT.step(s, { [id === '5-5' || id === '7-3' || id === '7-4' ? 'right' : 'right']: 1 }, ksnd) || ev; if (ev !== 'die') { s.p.x = 128; s.p.y = KT.OY + 10 * 8; s.p.mode = 'air'; s.p.vy = 0; s.p.fallY = s.p.y; for (let i = 0; i < 200 && ev !== 'die'; i++) ev = KT.step(s, {}, ksnd) || ev; } return { id, ev }; });
+    check('falling off the bottom of a screen with no floor costs a life (no hidden floor under the screen)', r.every(x => x.ev === 'die'), JSON.stringify(r)); }
+  { const s = at('6-3'); s.p.inv = 1e9; s.p.x = 4; const free = { x: 30 * 8 + 4, y: KT.OY + 2 * 8, vx: 0, vy: 0, rain: true }, roof = { x: 9 * 8 + 4, y: KT.OY, vx: 0, vy: 0, rain: true }; s.L.nuts = [free, roof]; let deepest = 0, roofLow = 0;
+    for (let i = 0; i < 90; i++) { run(s, 1); if (s.L.nuts.includes(free)) deepest = free.y; if (s.L.nuts.includes(roof)) roofLow = roof.y; }
+    check('6-3: the coconut rain falls through the shelves, and only the leaf roofs stop it', deepest > KT.OY + 12 * 8 && roofLow <= KT.OY + 2 * 8 + 1, JSON.stringify({ deepest, roofLow })); }
+  { const s = at('7-2'); s.p.inv = 0; const q = s.L.parrots[0]; s.p.x = 128; s.p.y = KT.OY + 16 * 8; s.p.mode = 'walk'; q.t = q.per - 1; let ev = null; for (let i = 0; i < 200 && ev !== 'die'; i++) ev = KT.step(s, {}, ksnd) || ev;
+    check('7-2: a parrot dives down to a walking PIP and hits him', ev === 'die'); }
+  { const s = at('5-2'); s.p.inv = 1e9; const b = s.L.bats[0], far = KT.lightR(s) + 30; s.p.x = b.x + far; s.p.y = b.y + 8; s.p.mode = 'air'; s.p.vy = 0; run(s, 2); const dark = b.mode;
+    s.p.x = b.x + 20; run(s, 2);
+    check('5-2: a bat stays put in the dark, and dives once the torch light reaches it', dark === 'hang' && b.mode === 'dive', JSON.stringify([dark, b.mode])); }
+  { const s = at('5-3'); s.p.inv = 1e9; const st = s.L.stones.find(k => k.hy < KT.OY + 8 * 8); s.p.x = st.x; s.p.y = KT.OY + 20 * 8; s.p.mode = 'walk'; run(s, 3);
+    check('5-3: a stalactite does not fall for PIP several floors below it', st.mode === 'hang'); }
+  { const s = at('7-5'); s.p.inv = 0; s.p.x = s.L.seesaw.x; s.p.y = s.L.seesaw.y; s.p.mode = 'walk'; let ev = null; for (let i = 0; i < 1500 && ev !== 'die'; i++) { ev = KT.step(s, {}, ksnd) || ev; s.L.barrels = s.L.barrels.filter(b => b.mode !== 'rest'); }
+    check("7-5: the middle of the seesaw is not a safe spot any more (BONGO drops barrels straight down on it), and his crown fits on the screen", ev === 'die' && s.L.guard.y - 22 >= 0, JSON.stringify({ ev, top: s.L.guard.y - 22 })); }
+  { const D = l => { const s = KT.newState(1); s.loop = l; KT.loadScreen(s, 0); return s.time; };
+    check('THE KING RETURNS stops speeding up after round 4', D(3) === D(9) && D(3) < D(2)); }
+  { const s = KT.newState(2); s.loop = 3; KT.loadScreen(s, KT.SCREENS.findIndex(x => x.id === '3-5')); s.mode = 'play'; s.p.inv = 1e9; const b = s.L.beavers[0]; s.p.mode = 'climb'; s.p.x = b.c * 8 + 4; s.p.y = KT.OY + (b.b + 1) * 8 + 2;
+    let top = false; for (let i = 0; i < 120 && !top; i++) { KT.step(s, { up: 1 }, ksnd); if (s.p.mode === 'walk' && s.p.y <= KT.OY + b.a * 8) top = true; }
+    check('3-5: a straight climb always beats the beaver, even on HARD in round 4', top && s.L.grid[b.a][b.c] === '|'); }
 }
 
 if (part('adverts gallery')) {
