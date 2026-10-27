@@ -56,7 +56,7 @@ const T = {
   }
 };
 
-function head(t, { title, desc, url, image }) {
+function head(t, { title, desc, url, image, ogTitle = title, ogDesc = desc }) {
   return `<!doctype html>
 <html lang="${t.lang}" dir="${t.dir}">
 <head>
@@ -69,8 +69,8 @@ function head(t, { title, desc, url, image }) {
 <link rel="alternate" hreflang="${t.otherLang}" href="${SITE}${url.replace(t.base, t.other)}">
 <link rel="alternate" hreflang="x-default" href="${SITE}${t.lang === 'he' ? url : url.replace(t.base, t.other)}">
 <meta property="og:type" content="article">
-<meta property="og:title" content="${esc(title)}">
-<meta property="og:description" content="${esc(desc)}">
+<meta property="og:title" content="${esc(ogTitle)}">
+<meta property="og:description" content="${esc(ogDesc)}">
 <meta property="og:url" content="${SITE}${url}">
 <meta property="og:image" content="${SITE}${image}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -110,7 +110,11 @@ function gallery(t) {
   <span class="scan-title">${txt(t, L.title)}</span>
 </a></li>`;
   }).join('\n');
-  return head(t, { title: t.page, desc: t.desc, url, image: '/assets/scans/img/at-last.jpg' }) + mast(t) + `
+  // Link previews of the Hebrew gallery are bilingual: the link is shared with English speakers too (Gonen, 27.10).
+  const en = T.en, bi = t.lang === 'he';
+  return head(t, { title: t.page, desc: t.desc, url, image: '/assets/scans/img/at-last.jpg',
+    ogTitle: bi ? `${en.title} · ${t.title} — Dragon 1982` : t.page,
+    ogDesc: bi ? `${en.desc} ${t.desc}` : t.desc }) + mast(t) + `
 <div class="story">
 <p class="standfirst">${txt(t, t.lead)}</p>
 <p class="thanks">${t.thanks}</p>
