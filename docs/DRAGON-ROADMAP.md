@@ -25,7 +25,8 @@
 - הכתובות: ‎/adverts/ ו-‎/en/adverts/, ודף לכל פרסומת (למשל ‎/adverts/before-we-made-it-clever/), עם תמונה משלה לשיתוף.
 - שש פרסומות בפתיחה: "Before we made it clever", ‏"At last", החוברת "Fire Your Imagination", המחירון של 23 במאי 1983, הדוכן ב-Earls Court ב-1984, ו-Touchmaster.
 - הכללים (מסמך הכללים של המנהל, ~/mac-tools/dragon-rights/gallery-spec.md): קרדיט וקישור לדף המקורי ב-Dragon Data Archive בכל פרסומת, תודה ל-Dan מ-Retro Collective בראש הדף, עיצוב כמו בדף המגזין, 3 כרטיסים בשורה במחשב ואחד בטלפון, תגית סוג (פרסומת, חוברת, עלון, מחירון), סדר לפי זמן, שנה רק אם נבדקה, תקציר ותרגום נאמנים לטקסט, כפתור "התרגום המלא" רק בעברית.
-- איך מוסיפים פרסומת: רשומה ב-tools/adverts/data.mjs, תמונות ב-adverts/img/, ואז node tools/adverts/build.mjs.
+- איך מוסיפים פרסומת: רשומה ב-tools/adverts/data.mjs, תמונות ב-assets/scans/img/, ואז node tools/adverts/build.mjs. לפני ההגשה: cd tools && node adverts/adblock-check.mjs (ראו "חוסמי פרסומות" ב-DRAGON-SESSION.md).
+- **27.10, חוסמי פרסומות:** ב-Chrome של גונן (Adblock Plus) הגלריה הופיעה ריקה. הסיבה: שמות כמו ad-card ברשימת החסימה, והתמונות בתיקייה /adverts/. תוקן: השמות scan-, התמונות והעיצוב ב-assets/scans/, ובדיקה עם חוסם אמיתי לפני כל מיזוג.
 - **"חמישי של Dragon"** (גונן, 27.10): בכל שבוע, עד רביעי, מכינים את גיליון המגזין ואת הפרסומת החדשה, ושניהם עולים במיזוג אחד. המנהל בוחר את שניהם במוצאי שבת. הפוסט יוצא בחמישי ב-20:00.
 
 ## הבא בתור

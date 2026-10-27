@@ -16,6 +16,12 @@ const bidi = s => { let out = '', at = 0; for (const m of String(s).matchAll(LAT
 // פסקה שמתחילה ב-**...** : החלק הזה מודגש
 const strong = (s, f) => { const m = /^\*\*(.+?)\*\*(.*)$/s.exec(s); return m ? `<b>${f(m[1])}</b>${f(m[2])}` : f(s); };
 
+// חשוב (27.10.2026): חוסמי פרסומות מסתירים שמות פנימיים כמו ad-card ו-ad-grid, וחוסמים כל קובץ בתיקייה /adverts/.
+// לכן: השמות בדפים מתחילים ב-scan-, והתמונות והעיצוב נמצאים ב-/assets/scans/. כתובות הדפים עצמם נשארות /adverts/ (את הדף עצמו לא חוסמים).
+// אין להשתמש ב-ad, ads או advert בשמות פנימיים או בתיקיות של קבצים. הבדיקה: cd tools && node adverts/adblock-check.mjs
+// צבע התגית לפי סוג הפריט (פסי הצבע של ה-Dragon). השם לפי הצבע, לא לפי הסוג, כדי שלא יהיה tag-ad
+const TAG = { ad: 'blue', brochure: 'green', leaflet: 'red', prices: 'yellow' };
+
 const T = {
   he: {
     dir: 'rtl', lang: 'he', base: '/adverts/', other: '/en/adverts/', otherLang: 'en', otherName: 'English',
@@ -70,7 +76,7 @@ function head(t, { title, desc, url, image }) {
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;700&amp;family=Rubik:wght@400;700;900&amp;display=swap">
 <link rel="stylesheet" href="/magazine/magazine.css">
-<link rel="stylesheet" href="/adverts/adverts.css">
+<link rel="stylesheet" href="/assets/scans/scans.css">
 </head>
 <body>
 <nav class="site" aria-label="${t.navLabel}">
@@ -78,10 +84,10 @@ function head(t, { title, desc, url, image }) {
   <a href="${url.replace(t.base, t.other)}" lang="${t.otherLang}" hreflang="${t.otherLang}">${t.otherName}</a>
 ${t.nav.map(([h, n]) => `  <a href="${h}">${n}</a>`).join('\n')}
 </nav>
-<main class="sheet ads">
+<main class="sheet scans">
 `;
 }
-const foot = t => `<p class="ads-more">${t.more} <a href="${t.mag[0]}">${t.mag[1]}</a> · <a href="${t.typein[0]}">${t.typein[1]}</a></p>
+const foot = t => `<p class="scans-more">${t.more} <a href="${t.mag[0]}">${t.mag[1]}</a> · <a href="${t.typein[0]}">${t.typein[1]}</a></p>
 </main>
 </body>
 </html>
@@ -98,17 +104,17 @@ function gallery(t) {
   const url = t.base;
   const cards = ADVERTS.map(a => {
     const L = a[t.lang];
-    return `<li><a class="ad-card" href="${t.base}${a.id}/" id="${a.id}">
-  <span class="ad-thumb"><img src="/adverts/img/${a.id}-card.jpg" alt=""></span>
-  <span class="ad-meta"><span class="tag tag-${a.kind}">${t.kinds[a.kind]}</span> <span class="ad-year">${esc(year(a, t))}</span></span>
-  <span class="ad-title">${txt(t, L.title)}</span>
+    return `<li><a class="scan-card" href="${t.base}${a.id}/" id="${a.id}">
+  <span class="scan-thumb"><img src="/assets/scans/img/${a.id}-card.jpg" alt=""></span>
+  <span class="scan-meta"><span class="tag tag-${TAG[a.kind]}">${t.kinds[a.kind]}</span> <span class="scan-year">${esc(year(a, t))}</span></span>
+  <span class="scan-title">${txt(t, L.title)}</span>
 </a></li>`;
   }).join('\n');
-  return head(t, { title: t.page, desc: t.desc, url, image: '/adverts/img/at-last.jpg' }) + mast(t) + `
+  return head(t, { title: t.page, desc: t.desc, url, image: '/assets/scans/img/at-last.jpg' }) + mast(t) + `
 <div class="story">
 <p class="standfirst">${txt(t, t.lead)}</p>
 <p class="thanks">${t.thanks}</p>
-<ul class="ad-grid">
+<ul class="scan-grid">
 ${cards}
 </ul>
 </div>
@@ -118,42 +124,48 @@ ${cards}
 function advert(t, a, i) {
   const L = a[t.lang], url = `${t.base}${a.id}/`;
   const prev = ADVERTS[i - 1], next = ADVERTS[i + 1];
-  const imgs = a.images.map((f, n) => `<img src="/adverts/img/${f}" alt="${esc(t.img(n + 1))}"${n ? ' loading="lazy"' : ''}>`).join('\n  ');
+  const imgs = a.images.map((f, n) => `<img src="/assets/scans/img/${f}" alt="${esc(t.img(n + 1))}"${n ? ' loading="lazy"' : ''}>`).join('\n  ');
   const facts = L.facts.map(([k, v]) => `<li><b>${txt(t, k)}:</b> ${txt(t, v)}</li>`).join('\n  ');
   const body = t.lang === 'he'
-    ? `<p class="ad-summary">${bidi(L.summary)}</p>
- <p class="ad-original">${t.original}: <bdi lang="en">${esc(a.original)}</bdi></p>
+    ? `<p class="scan-summary">${bidi(L.summary)}</p>
+ <p class="scan-original">${t.original}: <bdi lang="en">${esc(a.original)}</bdi></p>
  <ul class="facts">
   ${facts}
  </ul>
- <details class="ad-tr"><summary>${t.translation}</summary>
+ <details class="scan-tr"><summary>${t.translation}</summary>
   ${L.translation.map(p => `<p>${strong(p, bidi)}</p>`).join('\n  ')}
  </details>`
-    : `<p class="ad-summary">${esc(L.context)}</p>
+    : `<p class="scan-summary">${esc(L.context)}</p>
  <ul class="facts">
   ${facts}
  </ul>`;
-  return head(t, { title: `${L.title.replace(/"/g, '')} — ${t.title}`, desc: t.lang === 'he' ? L.summary : L.context, url, image: `/adverts/img/${a.images[0]}` }) + mast(t, false) + `
+  return head(t, { title: `${L.title.replace(/"/g, '')} — ${t.title}`, desc: t.lang === 'he' ? L.summary : L.context, url, image: `/assets/scans/img/${a.images[0]}` }) + mast(t, false) + `
 <div class="story">
-<p class="ad-back"><a href="${t.base}">${t.back}</a></p>
-<article class="ad-detail" id="${a.id}">
- <div class="ad-big">
+<p class="scan-back"><a href="${t.base}">${t.back}</a></p>
+<article class="scan-detail" id="${a.id}">
+ <div class="scan-big">
   ${imgs}
  </div>
- <div class="ad-text">
- <p class="ad-kicker"><span class="tag tag-${a.kind}">${t.kinds[a.kind]}</span> ${esc(year(a, t))}</p>
+ <div class="scan-text">
+ <p class="scan-kicker"><span class="tag tag-${TAG[a.kind]}">${t.kinds[a.kind]}</span> ${esc(year(a, t))}</p>
  <h1>${txt(t, L.title)}</h1>
  ${body}
  <p class="btns"><a class="main" href="${t.tryHref}">${t.tryIt}</a> <a href="${a.archive}" rel="noopener">${t.source}</a></p>
  <p class="credit">${t.credit[a.source]}</p>
  </div>
 </article>
-<nav class="ad-pager" aria-label="${t.pager}">${prev ? `<a href="${t.base}${prev.id}/">${t.prev}</a>` : '<span></span>'}${next ? `<a href="${t.base}${next.id}/">${t.next}</a>` : '<span></span>'}</nav>
+<nav class="scan-pager" aria-label="${t.pager}">${prev ? `<a href="${t.base}${prev.id}/">${t.prev}</a>` : '<span></span>'}${next ? `<a href="${t.base}${next.id}/">${t.next}</a>` : '<span></span>'}</nav>
 </div>
 ` + foot(t);
 }
 
-const write = (path, html) => { const f = join(ROOT, path); mkdirSync(dirname(f), { recursive: true }); writeFileSync(f, html); };
+// שמירה מפני חוסמי פרסומות: הבנייה נעצרת אם שם פנימי (class / id) כולל ad / ads / advert, או אם קובץ נטען מהתיקייה /adverts/
+const BAD_NAME = /(^|[-_\s])(ad|ads|advert\w*)([-_\s]|$)|^advert/i;
+function guard(path, html) {
+  for (const [, kind, v] of html.matchAll(/\s(class|id)="([^"]*)"/g)) for (const n of v.split(/\s+/)) if (BAD_NAME.test(n)) throw new Error(`${path}: ${kind}="${n}" — חוסמי פרסומות מסתירים שמות כאלה. בחרו שם אחר (למשל scan-...)`);
+  for (const [, , v] of html.matchAll(/\s(src|href)="([^"]*)"/g)) if (/\/adverts\/.*\.\w+$/.test(v.replace(/^https?:\/\/[^/]+/, '')) && !/dragondata\.co\.uk/.test(v)) throw new Error(`${path}: ${v} — קובץ בתיקייה /adverts/ נחסם. שימו אותו ב-/assets/scans/`);
+}
+const write = (path, html) => { guard(path, html); const f = join(ROOT, path); mkdirSync(dirname(f), { recursive: true }); writeFileSync(f, html); };
 for (const t of Object.values(T)) {
   write(`${t.base}index.html`, gallery(t));
   ADVERTS.forEach((a, i) => write(`${t.base}${a.id}/index.html`, advert(t, a, i)));

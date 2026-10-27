@@ -1318,23 +1318,32 @@ if (part('adverts gallery')) {
   const bad = []; p.on('response', r => { if (r.status() >= 400 && new URL(r.url()).host === new URL(PAGE).host) bad.push(r.status() + ' ' + r.url()); });
   for (const [base, he] of [['/adverts/', true], ['/en/adverts/', false]]) {
     await p.goto(new URL(base, PAGE).href);
-    const cards = await p.$$eval('.ad-card', as => as.map(a => ({ href: a.getAttribute('href'), img: a.querySelector('img').complete && a.querySelector('img').naturalWidth > 0 })));
+    const cards = await p.$$eval('.scan-card', as => as.map(a => ({ href: a.getAttribute('href'), img: a.querySelector('img').complete && a.querySelector('img').naturalWidth > 0 })));
     check(`${base} shows all ${ADVERTS.length} adverts in order, each with its picture`, cards.length === ADVERTS.length && cards.every((c, i) => c.href === base + ADVERTS[i].id + '/' && c.img), JSON.stringify(cards));
     check(`${base} thanks the Dragon Data Archive and Dan at the Retro Collective at the top`, /Dragon Data Archive[\s\S]*Retro Collective/.test(await p.locator('.thanks').textContent()));
-    check(`${base} 3 cards in a row on a computer`, await p.evaluate(() => getComputedStyle(document.querySelector('.ad-grid')).gridTemplateColumns.split(' ').length === 3));
+    check(`${base} 3 cards in a row on a computer`, await p.evaluate(() => getComputedStyle(document.querySelector('.scan-grid')).gridTemplateColumns.split(' ').length === 3));
     for (const a of ADVERTS) {
       const r = await p.goto(new URL(base + a.id + '/', PAGE).href);
-      const info = await p.evaluate(() => ({ archive: document.querySelector('.btns a[href*="dragondata.co.uk"]')?.getAttribute('href'), tr: !!document.querySelector('details.ad-tr'), credit: document.querySelector('.credit')?.textContent || '', img: document.querySelector('.ad-big img').complete && document.querySelector('.ad-big img').naturalWidth > 0, og: document.querySelector('meta[property="og:image"]')?.content || '' }));
-      check(`${base}${a.id}/ opens directly, links to its page in the archive, credits it${he ? ', and has the full Hebrew translation' : ', with no translation button'}`, r.ok() && info.archive === a.archive && /Dragon Data Archive/.test(info.credit) && info.img && info.tr === he && info.og.endsWith('/adverts/img/' + a.images[0]), JSON.stringify(info));
+      const info = await p.evaluate(() => ({ archive: document.querySelector('.btns a[href*="dragondata.co.uk"]')?.getAttribute('href'), tr: !!document.querySelector('details.scan-tr'), credit: document.querySelector('.credit')?.textContent || '', img: document.querySelector('.scan-big img').complete && document.querySelector('.scan-big img').naturalWidth > 0, og: document.querySelector('meta[property="og:image"]')?.content || '' }));
+      check(`${base}${a.id}/ opens directly, links to its page in the archive, credits it${he ? ', and has the full Hebrew translation' : ', with no translation button'}`, r.ok() && info.archive === a.archive && /Dragon Data Archive/.test(info.credit) && info.img && info.tr === he && info.og.endsWith('/assets/scans/img/' + a.images[0]), JSON.stringify(info));
     }
   }
   await p.goto(new URL('/adverts/before-we-made-it-clever/', PAGE).href);
-  await p.click('details.ad-tr summary');
-  check('the Hebrew translation opens and keeps English words in their own direction (bdi)', await p.evaluate(() => document.querySelector('details.ad-tr').open && document.querySelectorAll('details.ad-tr bdi').length > 10));
+  await p.click('details.scan-tr summary');
+  check('the Hebrew translation opens and keeps English words in their own direction (bdi)', await p.evaluate(() => document.querySelector('details.scan-tr').open && document.querySelectorAll('details.scan-tr bdi').length > 10));
   await p.setViewportSize({ width: 390, height: 844 });
   await p.goto(new URL('/adverts/', PAGE).href);
-  check('/adverts/ on a phone: one card per row and no sideways scrolling', await p.evaluate(() => getComputedStyle(document.querySelector('.ad-grid')).gridTemplateColumns.split(' ').length === 1 && document.documentElement.scrollWidth <= innerWidth + 1));
+  check('/adverts/ on a phone: one card per row and no sideways scrolling', await p.evaluate(() => getComputedStyle(document.querySelector('.scan-grid')).gridTemplateColumns.split(' ').length === 1 && document.documentElement.scrollWidth <= innerWidth + 1));
   check('the gallery pages load every file (no missing pictures or styles)', bad.length === 0, bad.join(' '));
+  // חוסמי פרסומות (27.10): אף שם פנימי עם ad / ads / advert, ואף קובץ מהתיקייה /adverts/. הבדיקה המלאה עם חוסם אמיתי: adverts/adblock-check.mjs
+  const names = [], files = [];
+  for (const path of ['/adverts/', '/en/adverts/', ...ADVERTS.flatMap(a => ['/adverts/' + a.id + '/', '/en/adverts/' + a.id + '/'])]) {
+    await p.goto(new URL(path, PAGE).href);
+    const r = await p.evaluate(() => ({ names: [...document.querySelectorAll('[class],[id]')].flatMap(e => [...e.classList, e.id].filter(Boolean)), files: [...document.querySelectorAll('img[src],link[href],script[src]')].map(e => new URL(e.src || e.href, location.href)).filter(u => u.host === location.host).map(u => u.pathname) }));
+    names.push(...r.names.filter(n => /(^|[-_])(ad|ads|advert\w*)([-_]|$)|^advert/i.test(n)).map(n => path + ' ' + n));
+    files.push(...r.files.filter(f => f.startsWith('/adverts/') && /\.\w+$/.test(f)).map(f => path + ' ' + f));
+  }
+  check('the gallery has no ad-blocker names (ad / ads / advert) and loads no file from /adverts/', names.length === 0 && files.length === 0, [...new Set(names)].concat(files).slice(0, 8).join(' | '));
   await p.close();
 }
 

@@ -2,7 +2,7 @@
 // הכללים (גונן, 27.10.2026, ~/mac-tools/dragon-rights/gallery-spec.md): שנה רק אם בדקנו אותה, תקציר ותרגום נאמנים לטקסט,
 // בלי להוסיף עובדות, וקרדיט + קישור לדף המקורי ב-Dragon Data Archive (הרשות: Richard, 27.10.2026).
 // הסדר ברשימה = הסדר בגלריה (לפי זמן: הפרסומות בלי שנה ממוקמות לפי מה שכתוב בהן, למשל המחיר).
-// פרסומת חדשה בכל שבוע: מוסיפים כאן רשומה, שמים את התמונות ב-adverts/img/, ומריצים: node tools/adverts/build.mjs
+// פרסומת חדשה בכל שבוע: מוסיפים כאן רשומה, שמים את התמונות ב-assets/scans/img/ (לא בתיקייה adverts: חוסמי פרסומות חוסמים אותה), ומריצים: node tools/adverts/build.mjs
 //
 // שדות: id (גם הכתובת: /adverts/<id>/), kind (ad / brochure / leaflet / prices), year (null אם לא נבדקה),
 // archive (הדף אצל Richard), source (scan = סריקה של Dan, archive = העותק של הארכיון, ia = Internet Archive),
