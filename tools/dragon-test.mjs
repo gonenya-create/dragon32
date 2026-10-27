@@ -332,7 +332,7 @@ if (part('room /dragon/')) {
   await input.fill('print 6*7'); await input.press('Enter'); await p.waitForTimeout(250);
   check('room PRINT works', / 42 \nOK$/.test(await p.locator('#dragon-room .d32-out').textContent()));
   check('room manual', (await p.locator('.d32-manual dt').count()) >= 8);
-  check('full shelf: all 5 cartridges, no links out', (await p.locator('button.d32-cart').count()) === 5 && (await p.locator('a.d32-cart.is-more').count()) === 0);
+  check('full shelf: all 6 cartridges (with JUNGLE KING), no links out', (await p.locator('button.d32-cart').count()) === 6 && (await p.locator('a.d32-cart.is-more').count()) === 0);
 
   // מחסנית: נכנסת, מסך כותרת, משחק עם "שחקן אוטומטי" שמזיז את הסל אל הביצים ומתרחק מאש
   await pickCart(p, 'EGGS');
