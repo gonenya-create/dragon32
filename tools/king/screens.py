@@ -123,7 +123,7 @@ plat(m, 7, 24, 31); rope(m, 30, 8, 11); put(m, 0, 21, 'V')
 plat(m, 7, 10, 18); put(m, 6, 11, 'K'); plat(m, 7, 2, 6)
 block(m, 5, 6, 2, 3, 'E'); put(m, 15, 1, 'P')
 put(m, 16, 10, 'T'); put(m, 15, 20, 'T'); put(m, 11, 29, 'T')
-add('2-5', 'THE SINKING LOGS', m, time=75, rate=200, dir=1, logs=[[5, 12], [13, 20], [19, 25]], vines=[50])
+add('2-5', 'THE SINKING LOGS', m, time=90, rate=280, dir=1, logs=[[5, 12], [13, 20], [19, 25]], vines=[50])
 
 # 2-6: the old croc. Run on its back while its mouth is shut; then back over on a high vine, past a mosquito swarm
 m = new(); swamp(m, 15, 5, 15, 26)
