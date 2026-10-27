@@ -2,7 +2,7 @@
 // BIG BONGO, מלך הקופים, גנב את קלטת הזהב ועלה לצמרת העץ הגדול. PIP מטפס מהשורשים: 40 מסכים בשבעה עולמות.
 // סבב 1: המנוע, ועולמות 1 (שורשים) ו-2 (ביצות), 12 מסכים. מראה של Dragon: ערכה של PMODE 3 לכל עולם ושחור, הכל מצויר ביד.
 // שליטה: ◀ ▶ הליכה, ▲ ▼ טיפוס, FIRE קפיצה (על ליאנה: שחרור), P תפריט.
-import { W, H, PALETTES, BLACK } from '../gfx.js';
+import { W, H, PALETTES, createGfx } from '../gfx.js';
 import * as A from './king-art.js';
 import { SCREENS } from './king-screens.js';
 
@@ -19,17 +19,21 @@ const SAVE = 'd32-king-save', DIFF_KEY = 'd32-king-diff';
 const okDiff = d => (d === 0 || d === 1 || d === 2) ? d : 1;
 const D = s => DIFF[okDiff(s.diff)];
 
-// ---------- צבעים לפי עולם ----------
+// ---------- צבעים לפי עולם: ערכה 0 של PMODE 3 (ירוק, צהוב, כחול, אדום), ואחד מהם הוא הרקע ----------
+// עולם 1 (שורשים): רקע כחול. עולם 2 (ביצות): רקע ירוק. מסך הפתיחה והמפה: כמו עולם 1
 function colors(w) {
-  const [c0, c1, c2, c3] = PALETTES[WORLDS[w].pal];
-  const k = BLACK;
-  if (w === 1) return { c: [c0, c1, c2, c3], pip: { h: c0, b: c3, s: c1, p: c2, k }, monkey: { f: c2, h: c0, k }, barrel: { h: c0, s: c3, p: c2 },
-    snake: { c: c1, k, r: c3, h: c1 }, mush: { f: c2, h: c0, k }, tape: { b: c3, h: c0, k }, glow: { c: c1 }, beetle: { c: c1, h: c0, r: c3, k },
-    splash: { c: c1 }, hud: [c3, c1, c0, c2], rope: [c0, c3], life: { h: c0, b: c3, s: c1, p: c2 } };
-  return { c: [c0, c1, c2, c3], pip: { h: c1, b: c3, s: c3, p: c2, k }, monkey: { f: c3, h: c1, k }, barrel: { h: c1, s: c3, p: c2 },
-    snake: { c: c0, k, r: c3, h: c0 }, mush: { f: c3, h: c1, k }, tape: { b: c3, h: c1, k }, glow: { c: c1 }, croc: { g: c0, y: c1, k },
-    frog: { g: c0, y: c1, k }, mosq: { b: c2, r: c3 }, lily: { g: c0, y: c1 }, log: { y: c1, r: c3 }, splash: { c: c1 },
-    hud: [c3, c1, c0, c2], rope: [c0, c0], life: { h: c1, b: c3, s: c3, p: c2 } };
+  const [G, Y, B, R] = PALETTES[0];
+  const tape = { y: Y, r: R }, barrel = { y: Y, r: R }, mush = { r: R, y: Y }, log = { y: Y, r: R };
+  if (w === 2) return {
+    bg: G, txt: [Y, R, B], pip: { h: Y, b: R, s: R, p: B, e: G }, monkey: { f: R, c: Y, n: B, e: G }, barrel, mush, tape, tapeOff: { y: B, r: B }, log,
+    snake: { s: B, e: Y, t: R }, croc: { k: G, t: Y, e: R }, frog: { k: G, t: Y, e: R }, mosq: { m: R, n: Y }, lily: { k: Y }, splash: { c: Y },
+    beetle: { k: B, h: Y, r: R }, bongo: { f: B, c: Y, n: R, e: G }, tile: { r: R, y: Y, g: B }, rope: [Y, R], water: B, wave: Y, leaf: B, leafEdge: Y, vine: B, vineLeaf: Y
+  };
+  return {
+    bg: B, txt: [Y, R, G], pip: { h: Y, b: R, s: R, p: G, e: B }, monkey: { f: G, c: Y, n: R, e: B }, barrel, mush, tape, tapeOff: { y: G, r: G }, log,
+    snake: { s: G, e: Y, t: R }, croc: { k: G, t: Y, e: R }, frog: { k: G, t: Y, e: R }, mosq: { m: R, n: Y }, lily: { k: G }, splash: { c: Y },
+    beetle: { k: G, h: Y, r: R }, bongo: { f: G, c: Y, n: R, e: B }, tile: { r: R, y: Y, g: G }, rope: [Y, G], water: B, wave: Y, leaf: G, leafEdge: Y, vine: G, vineLeaf: Y
+  };
 }
 
 // ---------- המפה ----------
@@ -330,7 +334,7 @@ function enemies(s, snd, d) {
     const bx = g.bx;
     const side = Math.sign(bx - p.x);
     if (g.side && side && side !== g.side && !s.gateOpen && p.y > OY + 16 * T && p.mode !== 'climb') {   // נספר רק כש-PIP למטה, בדרך של החבית (גם בקפיצה מעליה)
-       s.passes++; snd.tone(600 + s.passes * 100, 80); fx(s, p.x, p.y - 24, s.passes + '/3'); if (s.passes >= (s.L.sc.passes || 3)) { s.gateOpen = true; msg(s, 'THE GATE IS OPEN!'); snd.tone(500, 300, 1000); } }
+       s.passes++; snd.tone(600 + s.passes * 100, 80); fx(s, p.x, p.y - 24, s.passes + '/3'); if (s.passes >= (s.L.sc.passes || 3)) { s.gateOpen = true; msg(s, 'GATE OPEN!'); snd.tone(500, 300, 1000); } }
     if (side) g.side = side;
     if (hit(p, bx - 6, g.y - 11, bx + 6, g.y) || hit(p, g.x - 9, g.y - 7 - g.hop, g.x + 9, g.y - g.hop)) hurt = true;
   }
@@ -359,261 +363,241 @@ function startScreen(s) {
   s.mode = 'intro'; s.t = 0;
 }
 
-// ---------- ציור ----------
-let stat = null, statKey = '';
+// ---------- ציור, בסגנון PMODE 3 אמיתי (גונן, 27.10) ----------
+// הכל מצויר על משטח של 128 פיקסלים רחבים, ואז נמתח פי 2 לרוחב. בכל מסך רק ארבעה צבעים של ערכה 0, ואחד מהם הוא הרקע. אין שחור.
+// הפיזיקה נשארת ב-256 פיקסלים: מיקום על המסך x נהיה x/2 בציור.
+const LW = 128;
+let off = null, lg = null, stat = null, statKey = '';
+function L() { if (!lg) { off = document.createElement('canvas'); lg = createGfx(off); } return lg; }
+function flush(g) { g.ctx.imageSmoothingEnabled = false; g.ctx.drawImage(off, 0, 0, LW, H, 0, 0, W, H); }
+const lx = x => Math.round(x / 2);
+// דמות: מרכז על המסך (cx) ורגליים (fy); או פינה שמאלית עליונה על המסך (sx, sy)
+function sprC(l, rows, cx, fy, cols, flip) { l.sprite(rows, Math.round(cx / 2 - rows[0].length / 2), Math.round(fy - rows.length), cols, flip, 1); }
+function sprAt(l, rows, sx, sy, cols, flip) { l.sprite(rows, lx(sx), Math.round(sy), cols, flip, 1); }
+
 function drawStatic(s) {
   const key = s.L.sc.id;
   if (stat && statKey === key) return stat;
-  const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const cv = document.createElement('canvas'); cv.width = LW; cv.height = H;
   const ctx = cv.getContext('2d');
   const px = (x, y, c) => { ctx.fillStyle = c; ctx.fillRect(x, y, 1, 1); };
-  const put = (rows, x, y, cols, flip) => { for (let r = 0; r < rows.length; r++) for (let c = 0; c < rows[r].length; c++) { const ch = rows[r][c]; if (ch === '.' || ch === ' ') continue; const cc = cols[ch]; if (!cc) continue; ctx.fillStyle = cc; ctx.fillRect(x + (flip ? rows[r].length - 1 - c : c), y + r, 1, 1); } };
-  ctx.fillStyle = BLACK; ctx.fillRect(0, 0, W, H);
-  const C = colors(s.L.world), [c0, c1, c2, c3] = C.c, TC = { 0: c0, 1: c1, 2: c2, 3: c3, k: BLACK };
-  const g = s.L.grid, at = (c, r) => (r < 0 || r >= ROWS || c < 0 || c >= COLS) ? '#' : g[r][c];
-  if (s.L.world === 1) {
-    // עורקי עץ עמומים ברקע: מרגישים שנמצאים בתוך הגזע
-    for (let x = 6; x < W - 6; x += 9 + (x % 4)) { let xx = x; for (let y = OY; y < OY + ROWS * T; y++) { if ((y + x) % 3 === 0) px(xx, y, c2); if (y % 11 === x % 11) xx += x % 2 ? 1 : -1; } }
-    for (const [x, y] of [[40, 50], [200, 84], [96, 150], [170, 20], [30, 118], [120, 70]]) put(A.GLOW, x, y, { c: c1 });
-  } else {
-    for (let i = 0; i < 50; i++) px((i * 97 + 13) % W, OY + (i * 53 + 7) % 120, c2);
-    // חופת עלים למעלה
-    for (let x = 0; x < W; x++) for (let y = OY; y < OY + 14; y++) { const d = (y - OY) - 6 - 4 * Math.sin(x / 13); if (d < 0 && ((x * 3 + y * 7) & 3)) px(x, y, (d > -2 && x % 3 === 0) ? c1 : c0); }
+  const put = (rows, x, y, cols, flip) => { for (let r = 0; r < rows.length; r++) for (let c = 0; c < rows[r].length; c++) { const ch = rows[r][c]; if (ch === '.') continue; const cc = cols[ch]; if (!cc) continue; ctx.fillStyle = cc; ctx.fillRect(x + (flip ? rows[r].length - 1 - c : c), y + r, 1, 1); } };
+  const w = s.L.world, C = colors(w), TC = C.tile, g = s.L.grid;
+  const at = (c, r) => (r < 0 || r >= ROWS || c < 0 || c >= COLS) ? '#' : g[r][c];
+  ctx.fillStyle = C.bg; ctx.fillRect(0, 0, LW, H);
+  if (w === 2) {   // חופת עלים למעלה
+    for (let x = 0; x < LW; x++) for (let y = OY; y < OY + 12; y++) { const d = (y - OY) - 5 - 3 * Math.sin(x / 7); if (d < 0) px(x, y, (d > -1.5 && x % 2) ? C.leafEdge : C.leaf); }
   }
   for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
-    const ch = g[r][c], x = c * T, y = OY + r * T;
+    const ch = g[r][c], x = c * 4, y = OY + r * T;
     if (ch === '#') {
-      const above = at(c, r - 1);
-      if (s.L.world === 1) {
-        if (!isSolid(above) && above !== 'c') put(A.TILES.rootTop[(c * 7 + r) % 3], x, y, TC);
-        else { const thick = isSolid(at(c - 1, r)) && isSolid(at(c + 1, r)); put(A.TILES.bark[(c + r) % 2].map((rw, yy) => thick && (c > 1 && c < 30) ? rw.replace(/3/g, (m, i) => ((i * 2 + yy + c) % 5 ? '.' : '3')) : rw), x, y, TC, (c + r) % 3 === 0); }
-      } else put(!isSolid(above) ? A.TILES.mudTop : A.TILES.mud, x, y, TC);
+      const above = at(c, r - 1), top = !isSolid(above) && above !== 'c';
+      if (w === 1) { const deep = isSolid(at(c - 1, r)) && isSolid(at(c + 1, r)) && isSolid(at(c - 2, r)) && isSolid(at(c + 2, r)); put(top && c > 1 && c < 30 ? A.TILES.floor[c % 2] : (deep ? A.TILES.barkDeep : A.TILES.bark)[(c + r) % 2], x, y, TC, (c + r) % 3 === 0); }
+      else put(top ? A.TILES.bankTop : A.TILES.bank, x, y, TC, c % 2 === 0);
     } else if (ch === '=') {
       const l = at(c - 1, r) === '=' || isSolid(at(c - 1, r)), rr = at(c + 1, r) === '=' || isSolid(at(c + 1, r));
-      if (s.L.world === 1) {
-        if (!l) put(A.TILES.rootEnd, x, y, TC); else if (!rr) put(A.TILES.rootEnd, x, y, TC, true); else put(A.TILES.rootTop[(c * 7 + r) % 3], x, y, TC);
-        if (l && rr && (c % 5 === 2 || c % 5 === 3)) put(A.TILES.rootBody, x, y + 7, TC);
-        if (c % 3 === 1) { let xx = x + 3; const len = 4 + ((c * 5 + r) % 6); for (let k = 0; k < len; k++) { px(xx, y + 8 + k, k < 2 ? c3 : c2); if (k % 3 === 2) xx += c % 2 ? 1 : -1; } }
+      if (w === 1) {
+        if (!l) put(A.TILES.rootEnd, x, y, TC); else if (!rr) put(A.TILES.rootEnd, x, y, TC, true); else put(A.TILES.root[(c * 5 + r * 3) % 4], x, y, TC);
+        if ((c * 7 + r) % 5 === 1) for (let k = 7; k < 10 + (c % 4); k++) px(x + 1 + ((k >> 1) % 2), y + k, TC.r);   // שורשון
       } else {
-        if (!l) put(A.TILES.branchEnd, x, y, TC); else if (!rr) put(A.TILES.branchEnd, x, y, TC, true); else put(A.TILES.branchTop[c % 2], x, y, TC);
+        if (!l) put(A.TILES.branchEnd, x, y, TC); else if (!rr) put(A.TILES.branchEnd, x, y, TC, true); else put(A.TILES.branch[c % 2], x, y, TC);
       }
     } else if (ch === '|') {
-      for (let yy = y; yy < y + T; yy++) {
-        if (s.L.world === 1) { const ph = (yy - OY) % 4; px(x + 3, yy, ph === 0 || ph === 3 ? c0 : c3); px(x + 4, yy, ph < 2 ? c0 : c3); px(x + 5, yy, ph === 1 || ph === 2 ? c0 : c3); }
-        else { const xx = x + 4 + Math.round(Math.sin(yy / 9)); px(xx, yy, c0); if ((yy - OY) % 8 === 3) { px(xx - 1, yy, c0); px(xx - 2, yy - 1, c0); } if ((yy - OY) % 8 === 7) { px(xx + 1, yy, c0); px(xx + 2, yy - 1, c0); } }
-      }
+      for (let k = 0; k < T; k++) { px(x + 1, y + k, C.rope[0]); if ((y + k) % 4 === 0) px(x + 2, y + k, C.rope[1]); }
     } else if (ch === 'c') {
-      put(s.L.world === 1 ? A.TILES.bark[0] : A.TILES.mud, x, y, TC);
-      for (let k = 1; k < 8; k++) px(x + 3 + (k % 2), y + k, BLACK);   // הסדק: רמז קטן
+      put(w === 1 ? A.TILES.bark[0] : A.TILES.bank, x, y, TC);
+      for (let k = 1; k < 8; k++) px(x + 1 + (k % 2), y + k, C.bg);   // הסדק: רמז קטן
     } else if (ch === '~') {
-      ctx.fillStyle = c2; ctx.fillRect(x, y + (at(c, r - 1) === '~' ? 0 : 3), T, T);
+      ctx.fillStyle = C.water; ctx.fillRect(x, y + (at(c, r - 1) === '~' ? 0 : 3), 4, T);
     }
   }
-  // קני סוף על הגדות בביצות
-  if (s.L.world === 2) for (let c = 0; c < COLS; c++) for (let r = 1; r < ROWS; r++) if (g[r][c] === '#' && !isSolid(g[r - 1][c]) && c % 3 === 1) { for (let k = 1; k < 10 + (c % 4); k++) px(c * T + 3 + (k > 8 ? 1 : 0), OY + r * T - k, c1); px(c * T + 3, OY + r * T - 11 - (c % 4), c3); }
+  if (w === 2) for (let c = 0; c < COLS; c++) for (let r = 1; r < ROWS; r++) if (g[r][c] === '#' && !isSolid(g[r - 1][c]) && c % 3 === 1) { for (let k = 1; k < 8 + (c % 3); k++) px(c * 4 + 1, OY + r * T - k, C.tile.y); px(c * 4 + 1, OY + r * T - 9 - (c % 3), C.tile.r); }   // קני סוף
   stat = cv; statKey = key;
   return cv;
 }
 
-function spr(g, rows, x, y, cols, flip) { g.sprite(rows, Math.round(x), Math.round(y), cols, flip, 1); }
 function drawPlay(g, s) {
-  const L = s.L, p = s.p, C = colors(L.world), [c0, c1, c2, c3] = C.c;
-  g.ctx.drawImage(drawStatic(s), 0, 0);
-  // מים חיים
-  if (L.world === 2) for (let x = 0; x < W; x += 2) { const r = row(WATER + 1); if (tile(s, col(x), r) !== '~') continue; const yy = WATER + 3 + Math.round(Math.sin((x + L.t) / 6)); g.rect(x, yy, 2, 1, c1); if ((x + L.t >> 2) % 9 === 0) g.rect(x, yy + 3, 1, 1, c0); }
-  // יציאה: חץ מהבהב, והשער נעול עד שהשומר מנוצח
-  for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) if (L.grid[r][c] === 'E' && (L.grid[r - 1] || [])[c] !== 'E' && (L.grid[r][c - 1] !== 'E')) {
-    const x = c * T + 8, y = OY + r * T;
-    if (s.gateOpen) { const b = (L.t >> 3) % 2 ? c1 : c0; g.rect(x - 1, y - 2, 2, 10, b); for (let k = 0; k < 4; k++) { g.rect(x - 1 - k, y - 2 + k, 1, 1, b); g.rect(x + k, y - 2 + k, 1, 1, b); } }
-    else { for (let k = 0; k < 16; k += 3) g.rect(x - 8 + k, y, 1, 16, c3); g.rect(x - 8, y + 7, 16, 1, c3); }
+  const l = L(), Lv = s.L, p = s.p, C = colors(Lv.world);
+  l.ctx.drawImage(drawStatic(s), 0, 0);
+  // מים חיים: קו גלים צהוב
+  if (Lv.world === 2) for (let x = 0; x < LW; x++) { if (tile(s, col(x * 2), row(WATER + 1)) !== '~') continue; l.rect(x, WATER + 3 + Math.round(Math.sin((x * 2 + Lv.t) / 6)), 1, 1, C.wave); }
+  // יציאה: חץ מהבהב, ושער סגור עד שהשומר מנוצח
+  for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) if (Lv.grid[r][c] === 'E' && (Lv.grid[r - 1] || [])[c] !== 'E' && Lv.grid[r][c - 1] !== 'E') {
+    const x = c * 4 + 4, y = OY + r * T;
+    if (s.gateOpen) { const b = (Lv.t >> 3) % 2 ? C.txt[0] : C.txt[1]; l.rect(x, y - 1, 1, 11, b); for (let k = 1; k < 4; k++) { l.rect(x - k, y - 1 + k, 1, 1, b); l.rect(x + k, y - 1 + k, 1, 1, b); } }
+    else { for (let k = 0; k < 8; k += 2) l.rect(x - 4 + k, y, 1, 16, C.txt[1]); l.rect(x - 4, y + 7, 8, 1, C.txt[1]); }
   }
   // ליאנות מתנדנדות
-  for (const v of L.vines) {
+  for (const v of Lv.vines) {
     const a = vineAngle(v), ex = v.px + Math.sin(a) * v.len, ey = v.py + Math.cos(a) * v.len;
-    for (let t = 0; t <= 1; t += 1 / v.len) { const x = v.px + (ex - v.px) * t, y = v.py + (ey - v.py) * t; g.rect(x, y, 1, 1, c0); }
-    for (let t = 0.15; t < 0.95; t += 0.11) { const x = v.px + (ex - v.px) * t, y = v.py + (ey - v.py) * t, sd = (t * 9 | 0) % 2 ? 1 : -1; g.rect(x + sd, y, 1, 1, c0); g.rect(x + 2 * sd, y - 1, 2, 1, c0); }
-    g.rect(v.px - 2, v.py - 1, 5, 2, c1);
+    for (let t = 0; t <= 1; t += 1 / v.len) l.rect(lx(v.px + (ex - v.px) * t), Math.round(v.py + (ey - v.py) * t), 1, 1, C.vine);
+    for (let t = 0.15; t < 0.95; t += 0.12) { const x = lx(v.px + (ex - v.px) * t), y = Math.round(v.py + (ey - v.py) * t), sd = (t * 9 | 0) % 2 ? 1 : -1; l.rect(x + sd, y, 1, 1, C.vineLeaf); }
+    l.rect(lx(v.px) - 1, v.py - 1, 3, 2, C.txt[0]);
   }
-  for (const m of L.mush) spr(g, m.sq ? A.MUSH_SQ : A.MUSH, m.x - 8, m.y - 10, C.mush);
-  for (const tp of L.tapes) if (!tp.got) spr(g, A.TAPE, tp.x - 5, tp.y - 2 + ((L.t >> 4) % 2), C.tape);
-  for (const l of L.logs) if (!l.down || (l.down > 100 && l.down % 4 < 2)) spr(g, A.LOG, l.x - 11, l.y - 3 + (l.sink && l.t > 40 ? 1 : 0), C.log);
-  for (const pd of L.lilies) if (!pd.sunk) spr(g, A.LILY, pd.x - 6 + (pd.t > 25 && L.t % 4 < 2 ? 1 : 0), pd.y - 2, C.lily);
-  for (const c of L.crocs) spr(g, A.CROC[smallCrocOpen(c) ? 1 : 0], c.x, c.y - (smallCrocOpen(c) ? 6 : 5), C.croc);
-  const gd = L.guard;
+  for (const m of Lv.mush) sprC(l, m.sq ? A.MUSH_SQ : A.MUSH, m.x, m.y, C.mush);
+  for (const tp of Lv.tapes) if (!tp.got) sprC(l, A.TAPE, tp.x, tp.y + 2 + ((Lv.t >> 4) % 2), C.tape);
+  for (const lg2 of Lv.logs) if (!lg2.down || (lg2.down > 100 && lg2.down % 4 < 2)) sprC(l, A.LOG, lg2.x, lg2.y + (lg2.sink && lg2.t > 40 ? 1 : 0), C.log);
+  for (const pd of Lv.lilies) if (!pd.sunk) sprC(l, A.LILY, pd.x + (pd.t > 25 && Lv.t % 4 < 2 ? 2 : 0), pd.y, C.lily);
+  for (const c of Lv.crocs) sprAt(l, A.CROC[smallCrocOpen(c) ? 1 : 0], c.x, c.y - (smallCrocOpen(c) ? 5 : 4), C.croc);
+  const gd = Lv.guard;
   if (gd && gd.kind === 'croc') {
-    const open = crocOpen(gd);
-    // הגוף: שורת קשקשים על הגב, עור מנוקד, בטן צהובה, ורגליים קצרות שחותרות
-    for (let x = gd.x; x < gd.x + 112; x++) {
-      const yy = gd.y - 6, k = x - gd.x;
-      g.rect(x, yy, 1, 1, c0);
-      for (let r = 1; r < 5; r++) if ((x + r) % 2 === 0 || r === 1) g.rect(x, yy + r, 1, 1, c0);
-      g.rect(x, yy + 5, 1, 1, c1);
-      if (k % 8 < 3) g.rect(x, yy - 1 - (k % 8 === 1 ? 1 : 0), 1, 1 + (k % 8 === 1 ? 1 : 0), c0);
-      if (k % 16 === 5) g.rect(x, yy + 2, 2, 1, BLACK);
-    }
-    for (let i = 0; i < 4; i++) { const lx = gd.x + 14 + i * 28, ph = Math.sin(L.t / 8 + i) > 0 ? 1 : 0; g.rect(lx + ph, gd.y, 3, 2, c0); g.rect(lx - 1 + ph * 2, gd.y + 2, 2, 1, c0); }
-    spr(g, A.BIG_CROC_HEAD[open ? 1 : 0], gd.x + 112, gd.y - (open ? 7 : 6), C.croc);
-    for (let k = 0; k < 10; k++) g.rect(gd.x - k * 2, gd.y - 3 + (k % 2), 2, 2, c0);   // זנב
+    const open = crocOpen(gd), x0 = lx(gd.x), x1 = lx(gd.x + 112);
+    for (let x = x0; x < x1; x++) { const k = x - x0; for (let r = 0; r < 5; r++) l.rect(x, gd.y - 6 + r, 1, 1, r === 4 ? C.croc.t : C.croc.k); if (k % 4 < 2) l.rect(x, gd.y - 7, 1, 1, C.croc.k); if (k % 8 === 3) l.rect(x, gd.y - 4, 1, 1, C.croc.t); }
+    sprAt(l, A.BIG_CROC_HEAD[open ? 1 : 0], gd.x + 112, gd.y - (open ? 7 : 6), C.croc);
+    for (let k = 0; k < 6; k++) l.rect(x0 - 1 - k, gd.y - 3 + (k % 2), 1, 2, C.croc.k);   // זנב
+    for (let i = 0; i < 4; i++) { const fx2 = x0 + 7 + i * 14 + (Math.sin(Lv.t / 8 + i) > 0 ? 1 : 0); l.rect(fx2, gd.y - 1, 2, 2, C.croc.k); }
   }
-  for (const f of L.frogs) spr(g, A.FROG[f.hop ? 1 : 0], f.x - 3, f.y - 4 - f.hop - (f.hop ? 1 : 0), C.frog, f.to < f.from);
-  for (const k of L.throwers) spr(g, A.MONKEY[k.anim ? 1 : 0], k.x - 6, k.y - 13, C.monkey, k.dir > 0);
-  for (const n of L.snakes) spr(g, A.SNAKE[(n.f >> 4) % 2], n.x - 8, n.y - 7, C.snake, n.dir < 0);
-  for (const n of L.ropeSnakes) { if (n.rest) spr(g, A.SNAKE[(n.f >> 4) % 2], n.x + 4, n.top - 7, C.snake); else spr(g, A.SNAKE_UP, n.x - 3, n.y - 6, C.snake, n.dir > 0); }
-  for (const q of L.swarms) for (let i = 0; i < 5; i++) { const a = L.t / 9 + i * 1.3; spr(g, A.MOSQ[(L.t >> 2) % 2], q.x + Math.cos(a) * 7 - 1, q.y + Math.sin(a * 1.3) * 5, C.mosq); }
-  if (gd && gd.kind === 'beetle') { spr(g, A.BIG_BARREL, gd.bx - 8, gd.y - 14, C.barrel, !gd.turn && (gd.f >> 3) % 2 === 0); spr(g, A.BEETLE, gd.x - 9, gd.y - 7 - gd.hop, C.beetle, gd.turn ? gd.to < gd.from : gd.dir < 0); }
-  for (const b of L.barrels) spr(g, A.BARREL[Math.floor(b.rot) % 4], b.x - 5, b.y - 10 + (b.mode === 'float' ? 2 : 0), C.barrel, b.vx < 0);
+  for (const f of Lv.frogs) sprC(l, A.FROG[f.hop ? 1 : 0], f.x, f.y - f.hop, C.frog, f.to < f.from);
+  for (const k of Lv.throwers) sprC(l, A.MONKEY[k.anim ? 1 : 0], k.x, k.y, C.monkey, k.dir > 0);
+  for (const n of Lv.snakes) sprC(l, A.SNAKE[(n.f >> 4) % 2], n.x, n.y, C.snake, n.dir < 0);
+  for (const n of Lv.ropeSnakes) { if (n.rest) sprC(l, A.SNAKE[(n.f >> 4) % 2], n.x + 12, n.top, C.snake); else sprC(l, A.SNAKE_UP, n.x, n.y + 6, C.snake, n.dir > 0); }
+  for (const q of Lv.swarms) for (let i = 0; i < 5; i++) { const a = Lv.t / 9 + i * 1.3; sprAt(l, A.MOSQ[(Lv.t >> 2) % 2], q.x + Math.cos(a) * 7 - 2, q.y + Math.sin(a * 1.3) * 5, C.mosq); }
+  if (gd && gd.kind === 'beetle') { sprC(l, A.BIG_BARREL, gd.bx, gd.y, C.barrel, !gd.turn && (gd.f >> 3) % 2 === 0); sprC(l, A.BEETLE, gd.x, gd.y - gd.hop, C.beetle, gd.turn ? gd.to < gd.from : gd.dir < 0); }
+  for (const b of Lv.barrels) sprC(l, A.BARREL[Math.floor(b.rot) % 2], b.x, b.y + (b.mode === 'float' ? 2 : 0), C.barrel, b.vx < 0);
   // PIP
   if (s.mode !== 'dying' || s.t % 6 < 4) {
-    let rows = A.PIP.stand, oy = 18, flip = p.face < 0;
+    let rows = A.PIP.stand, flip = p.face < 0, fy = p.y;
     if (s.mode === 'dying') rows = A.PIP.hurt;
-    else if (p.mode === 'climb') { rows = A.PIP.climb[(p.anim >> 3) % 2]; oy = 16; flip = false; }
-    else if (p.mode === 'swing') { rows = A.PIP.swing; oy = 17; }
+    else if (p.mode === 'climb') { rows = A.PIP.climb[(p.anim >> 3) % 2]; flip = false; fy = p.y + 1; }
+    else if (p.mode === 'swing') { rows = A.PIP.swing; fy = p.y + 1; }
     else if (p.mode === 'air') rows = A.PIP.jump;
     else if (p.vx) rows = A.PIP.walk[(p.anim >> 2) % 4];
-    if (!(p.inv && L.t % 4 < 2)) spr(g, rows, p.x - 6, p.y - oy, C.pip, flip);
+    if (!(p.inv && Lv.t % 4 < 2)) sprC(l, rows, p.x, fy, C.pip, flip);
   }
-  for (const f of L.fx) {
-    if (f.k === 'text') g.text(f.text, f.x, f.y - (40 - f.t) / 3, c1, 'center');
-    else spr(g, A.SPLASH, f.x - 3, f.y - (20 - f.t) / 4, C.splash);
+  for (const f of Lv.fx) {
+    if (f.k === 'text') l.text(f.text, lx(f.x), Math.round(f.y - (40 - f.t) / 3), C.txt[0], 'center');
+    else sprC(l, A.SPLASH, f.x, f.y - (20 - f.t) / 4, C.splash);
   }
-  drawHud(g, s, C);
-  if (s.msgT > 0) { const w = s.msg.length * 6 + 8; g.rect(128 - w / 2, 86, w, 13, BLACK); g.text(s.msg, 128, 89, (s.msgT >> 3) % 2 ? c1 : c3, 'center'); }
-  if (s.paused) drawPause(g, s, C);
+  drawHud(l, s, C);
+  if (s.msgT > 0) { const w = s.msg.length * 6 + 4; l.rect(64 - w / 2, 86, w, 11, C.bg); l.text(s.msg, 64, 88, (s.msgT >> 3) % 2 ? C.txt[0] : C.txt[1], 'center'); }
+  if (s.paused) drawPause(l, s, C);
+  flush(g);
 }
-function drawHud(g, s, C) {
-  const [cCode, cName, cScore, cTime] = C.hud;
-  g.rect(0, 0, W, OY, BLACK); g.rect(0, 180, W, H - 180, BLACK);
-  g.text(s.L.sc.id, 3, 2, cCode); g.text(s.L.sc.name, 27, 2, cName); g.text(String(s.score).padStart(6, '0'), W - 3, 2, cScore, 'right');
-  for (let i = 0; i < Math.min(6, s.lives); i++) spr(g, A.PIP.life, 3 + i * 8, 184, C.life);
-  for (let i = 0; i < 3; i++) { g.rect(104 + i * 8, 185, 6, 4, i < s.got ? cScore : cTime); g.rect(105 + i * 8, 186, 4, 2, i < s.got ? BLACK : BLACK); g.rect(106 + i * 8, 186, 2, 1, i < s.got ? cScore : cTime); }
+function drawHud(l, s, C) {
+  l.rect(0, 0, LW, OY, C.bg); l.rect(0, 180, LW, H - 180, C.bg);
+  l.text(s.L.sc.id, 1, 2, C.txt[1]); l.text(String(s.score).padStart(6, '0'), LW - 1, 2, C.txt[0], 'right');
+  for (let i = 0; i < Math.min(5, s.lives); i++) l.sprite(A.PIP.life, 1 + i * 5, 184, C.pip, false, 1);
+  for (let i = 0; i < 3; i++) l.sprite(A.TAPE, 50 + i * 7, 185, i < s.got ? C.tape : C.tapeOff, false, 1);
   const sec = Math.ceil(s.time / 50);
-  g.text(s.hurry ? 'HURRY!' : 'TIME ' + sec, W - 3, 185, s.hurry || sec <= 10 ? cCode : cTime, 'right');
+  l.text(s.hurry ? 'HURRY' : 'T ' + sec, LW - 1, 184, s.hurry || sec <= 10 ? C.txt[1] : C.txt[0], 'right');
 }
-function drawPause(g, s, C) {
-  const [c0, c1, c2, c3] = C.c;
-  g.rect(24, 30, 208, 130, BLACK); g.rect(24, 30, 208, 1, c1); g.rect(24, 159, 208, 1, c1);
-  if ((s.page || 0) === 0) { g.text('PAUSED', 128, 38, c3, 'center', 2); drawTree(g, s, C, 60, 54, true); }
+function drawPause(l, s, C) {
+  l.rect(6, 28, 116, 134, C.bg); l.rect(6, 28, 116, 1, C.txt[0]); l.rect(6, 161, 116, 1, C.txt[0]);
+  if ((s.page || 0) === 0) { l.text('PAUSED', 64, 32, C.txt[1], 'center', 2); drawTree(l, s, C, 50, 104); }
   else {
-    g.text('HOW TO PLAY', 128, 38, c3, 'center', 2);
-    [['LEFT RIGHT', 'WALK'], ['UP DOWN', 'CLIMB A ROPE'], ['FIRE', 'JUMP'], ['FIRE ON A VINE', 'LET GO'], ['P', 'THIS MENU']].forEach(([k, t], i) => { g.text(k, 36, 62 + i * 12, c1); g.text(t, 132, 62 + i * 12, c0); });
-    g.text('GET TO THE ARROW AT THE TOP.', 128, 128, c2, 'center'); g.text('3 TAPE PIECES IN EVERY SCREEN.', 128, 138, c2, 'center');
+    l.text('HOW TO PLAY', 64, 34, C.txt[1], 'center');
+    ['ARROWS: WALK, CLIMB', 'FIRE: JUMP', 'ON A VINE, FIRE', 'LETS GO', '', 'REACH THE ARROW', 'AT THE TOP.', '3 TAPE PIECES', 'IN EVERY SCREEN.'].forEach((t, i) => l.text(t, 64, 50 + i * 10, i < 4 ? C.txt[0] : C.txt[2], 'center'));
   }
-  g.text('LEFT RIGHT: PAGE   P: PLAY', 128, 150, c2, 'center');
+  l.text('LR: PAGE  P: PLAY', 64, 152, C.txt[2], 'center');
 }
-// מפת העץ: שבעה עולמות, מסומן איפה PIP
+// מפת העץ: שבעה עולמות מלמטה למעלה, ו-PIP בעולם הנוכחי
 const WNAMES = ['ROOTS', 'SWAMPS', 'RIVERS', 'HIVES', 'CAVES', 'BRANCHES', 'TREETOP'];
-const WCOUNT = [6, 6, 6, 6, 6, 5, 5];
-function drawTree(g, s, C, x0, y0, small) {
-  const [c0, c1, c2, c3] = C.c, cx = 128, top = y0, bot = y0 + (small ? 88 : 128);
-  for (let y = top; y <= bot; y++) for (let x = cx - 8; x <= cx + 8; x++) if ((x + y) % 2 === 0) g.rect(x, y, 1, 1, c1);
-  g.rect(cx - 9, top, 1, bot - top, c1); g.rect(cx + 9, top, 1, bot - top, c1);
+function drawTree(l, s, C, top, bot) {
+  const cx = 64, T0 = colors(1).tile;
+  for (let y = top; y <= bot; y++) for (let x = cx - 4; x <= cx + 3; x++) l.rect(x, y, 1, 1, (x + (y >> 2)) % 4 === 0 ? T0.y : T0.r);
   for (let i = 0; i < 7; i++) {
-    const w = 7 - i, y = top + 4 + i * ((bot - top - 8) / 6), left = i % 2 === 0, done = w < s.world, here = w === s.world;
-    const ex = left ? cx - 40 : cx + 40;
-    for (let k = 0; k <= 30; k++) g.rect(left ? cx - 9 - k : cx + 9 + k, Math.round(y + 3 - k / 10), 1, 1, c0);
-    g.text(w + ' ' + WNAMES[w - 1], left ? ex - 4 : ex + 4, y - 3, done ? c1 : here ? c3 : c2, left ? 'right' : 'left');
-    if (here) spr(g, A.PIP.life, cx - 2, y - 2, colors(s.world).life);
+    const w = 7 - i, y = Math.round(top + 3 + i * ((bot - top - 6) / 6)), left = i % 2 === 0, done = w < s.world, here = w === s.world;
+    for (let k = 0; k < 10; k++) l.rect(left ? cx - 5 - k : cx + 4 + k, y + 3 - (k >> 2), 1, 1, C.txt[2]);
+    l.text(WNAMES[w - 1], left ? cx - 14 : cx + 14, y - 1, done ? C.txt[0] : here ? C.txt[1] : C.txt[2], left ? 'right' : 'left');
+    if (here) l.sprite(A.PIP.life, cx - 2, y - 1, colors(1).pip, false, 1);
   }
 }
-
+const TITLE_C = () => colors(1);
 function drawTitle(g, s) {
-  const C = colors(2), [c0, c1, c2, c3] = C.c;
-  g.clear(BLACK);
-  for (let i = 0; i < 60; i++) g.rect((i * 97 + 13) % W, (i * 53 + 7) % H, 1, 1, c2);
+  const l = L(), C = TITLE_C(), [Y, R, G2] = C.txt;
+  l.clear(C.bg);
   const pg = s.titleP || 0;
   if (pg === 0) {
-    // העץ, BIG BONGO בצמרת עם קלטת הזהב, ו-PIP מטפס
-    for (let y = 96; y < 192; y++) for (let x = 202; x < 230; x++) if ((x + y) % 2 === 0) g.rect(x, y, 1, 1, c1);
-    g.rect(201, 96, 1, 96, c1); g.rect(230, 96, 1, 96, c1);
-    for (let y = -22; y <= 22; y++) for (let x = -46; x <= 46; x++) { const dd = x * x / 2116 + y * y / 484; if (dd < 1 && ((x * 3 + y * 7) & 3)) g.rect(216 + x, 84 + y, 1, 1, dd > 0.6 && (x + y) % 3 === 0 ? c1 : c0); }
-    g.sprite(A.BONGO, 196, 26, { y: c1, g: c0, b: c2, r: c3, k: BLACK }, false, 2);
-    spr(g, A.TAPE, 234, 48, C.tape);
-    g.text('JUNGLE', 88, 16, c1, 'center', 4); g.text('KING', 88, 50, c3, 'center', 4);
-    g.text('BIG BONGO HAS STOLEN', 88, 92, c0, 'center'); g.text('THE GOLDEN TAPE.', 88, 102, c0, 'center');
-    for (let y = 0; y < 150; y++) { const xx = 176 + Math.round(Math.sin(y / 9)); g.rect(xx, y, 1, 1, c0); if (y % 8 === 3) g.rect(xx - 2, y - 1, 2, 1, c0); if (y % 8 === 7) g.rect(xx + 1, y - 1, 2, 1, c0); }
-    spr(g, A.PIP.climb[(s.t >> 4) % 2], 170, 104 - ((s.t >> 2) % 40), C.pip);
+    // העץ, BIG BONGO בצמרת עם קלטת הזהב, ו-PIP מטפס על ליאנה
+    for (let y = 92; y < 112; y++) for (let x = 102; x < 116; x++) l.rect(x, y, 1, 1, (x + (y >> 2)) % 4 === 0 ? Y : R);
+    for (let k = 0; k < 6; k++) { l.rect(100 - k, 111 - k % 2, 3, 1, R); l.rect(115 + k, 111 - k % 2, 3, 1, R); }   // שורשים
+    for (let y = -16; y <= 16; y++) for (let x = -24; x <= 24; x++) { const d = x * x / 576 + y * y / 256; if (d < 1) l.rect(108 + x, 80 + y, 1, 1, d > 0.7 && (x + y) % 3 === 0 ? Y : G2); }
+    l.sprite(A.BONGO, 95, 33, C.bongo, false, 2);
+    l.sprite(A.TAPE, 122, 50, C.tape, false, 1);
+    l.text('JUNGLE', 46, 12, Y, 'center', 2); l.text('KING', 46, 32, R, 'center', 3);
+    ['BIG BONGO HAS', 'STOLEN THE', 'GOLDEN TAPE.'].forEach((t, i) => l.text(t, 46, 62 + i * 9, G2, 'center'));
+    for (let y = 0; y < 112; y++) { const xx = 88 + Math.round(Math.sin(y / 9)); l.rect(xx, y, 1, 1, G2); if (y % 8 === 3) l.rect(xx - 1, y, 1, 1, Y); }
+    l.sprite(A.PIP.climb[(s.t >> 4) % 2], 84, 92 - ((s.t >> 2) % 40), C.pip, false, 1);
   } else if (pg === 1) {
-    g.text('THE STORY', 128, 12, c3, 'center', 2);
-    ['BIG BONGO, THE KING OF THE', 'MONKEYS, STOLE THE GOLDEN TAPE', 'AND TOOK IT TO THE TOP OF', 'THE GREAT TREE.', '', 'PIP IS A SMALL EXPLORER', 'WITH A BIG HAT.', '', '40 SCREENS. 7 WORLDS.', 'CLIMB AND BRING IT BACK!'].forEach((t, i) => g.text(t, 128, 32 + i * 9, i < 4 ? c0 : i < 7 ? c1 : c3, 'center'));
+    l.text('THE STORY', 64, 10, R, 'center', 2);
+    ['BIG BONGO, KING OF', 'THE MONKEYS, TOOK', 'THE GOLDEN TAPE TO', 'THE TOP OF THE', 'GREAT TREE.', '', 'PIP IS A SMALL', 'EXPLORER WITH A', 'BIG HAT. 7 WORLDS.', 'CLIMB AND BRING', 'IT BACK!'].forEach((t, i) => l.text(t, 64, 30 + i * 8, i < 5 ? Y : i < 9 ? G2 : R, 'center'));
   } else if (pg === 2) {
-    g.text('HOW TO PLAY', 128, 12, c3, 'center', 2);
-    [['LEFT RIGHT', 'WALK'], ['UP DOWN', 'CLIMB'], ['FIRE', 'JUMP'], ['FIRE ON A VINE', 'LET GO'], ['P', 'MAP AND HELP']].forEach(([k, t], i) => { g.text(k, 22, 34 + i * 12, c1); g.text(t, 120, 34 + i * 12, c0); });
-    g.text('JUMP OVER THE BARRELS!', 128, 100, c3, 'center');
+    l.text('HOW TO PLAY', 64, 10, R, 'center', 2);
+    ['ARROWS: WALK, CLIMB', 'FIRE: JUMP', 'ON A VINE, FIRE', 'LETS GO', 'P: MAP AND HELP', '', 'JUMP OVER', 'THE BARRELS!'].forEach((t, i) => l.text(t, 64, 32 + i * 10, i < 5 ? Y : R, 'center'));
   } else {
-    g.text('MEET THE JUNGLE', 128, 12, c3, 'center', 2);
-    const W1 = colors(1);
-    spr(g, A.PIP.stand, 20, 36, C.pip); g.text('PIP', 26, 58, c1, 'center');
-    g.sprite(A.BONGO, 46, 30, { y: c1, g: c0, b: c2, r: c3, k: BLACK }, false, 1); g.text('BONGO', 54, 58, c1, 'center');
-    spr(g, A.MONKEY[0], 80, 38, C.monkey); g.text('MONKEY', 88, 58, c1, 'center');
-    spr(g, A.SNAKE[0], 112, 44, W1.snake); g.text('SNAKE', 120, 58, c1, 'center');
-    spr(g, A.CROC[0], 142, 44, C.croc); g.text('CROC', 154, 58, c1, 'center');
-    spr(g, A.FROG[0], 184, 46, C.frog); g.text('FROG', 187, 58, c1, 'center');
-    spr(g, A.BARREL[0], 216, 40, C.barrel); g.text('BARREL', 221, 58, c1, 'center');
-    g.text('AND A GUARD AT THE END', 128, 80, c0, 'center'); g.text('OF EVERY WORLD...', 128, 90, c0, 'center');
+    l.text('MEET THE JUNGLE', 64, 8, R, 'center');
+    const W1 = colors(1), W2 = colors(2);
+    const who = [[A.PIP.stand, W1.pip, 'PIP'], [A.BONGO, W1.bongo, 'BONGO'], [A.MONKEY[0], W1.monkey, 'MONKEY'], [A.BARREL[0], W1.barrel, 'BARREL'],
+      [A.SNAKE[0], W1.snake, 'SNAKE'], [A.CROC[0], { ...W2.croc, k: G2 }, 'CROC'], [A.FROG[0], { ...W2.frog, k: G2 }, 'FROG'], [A.MUSH, W1.mush, 'BOING!']];
+    who.forEach(([rows, cols, name], i) => { const cx = [22, 64, 106][i % 3], fy = 34 + Math.floor(i / 3) * 23; l.sprite(rows, Math.round(cx - rows[0].length / 2), fy - rows.length, cols, false, 1); l.text(name, cx, fy + 2, Y, 'center'); });
+    l.text('+ A GUARD IN EVERY', 64, 92, G2, 'center'); l.text('WORLD...', 64, 101, G2, 'center');
   }
   if (s.save) {
-    if (s.save.world > ROUND_WORLDS) { g.text(s.soon ? 'STILL GROWING...' : 'WORLD ' + s.save.world + ' SOON', 128, 122, c3, 'center', 2); g.text('YOUR GAME IS SAVED FOR IT', 128, 140, c1, 'center'); }
-    else { if ((s.t >> 4) % 2) g.text('FIRE: GO ON', 128, 122, c3, 'center', 2); g.text('WORLD ' + s.save.world + ', ' + DIFF[okDiff(s.save.diff)].name, 128, 140, c1, 'center'); }
+    if (s.save.world > ROUND_WORLDS) { l.text(s.soon ? 'STILL GROWING...' : 'WORLD ' + s.save.world + ' SOON', 64, 122, R, 'center'); l.text('YOUR GAME IS SAVED', 64, 136, Y, 'center'); }
+    else { if ((s.t >> 4) % 2) l.text('FIRE: GO ON', 64, 120, R, 'center', 2); l.text('WORLD ' + s.save.world + ', ' + DIFF[okDiff(s.save.diff)].name, 64, 138, Y, 'center'); }
   } else {
-    if ((s.t >> 4) % 2) g.text('PRESS FIRE', 128, 122, c3, 'center', 2);
-    g.text('LEFT RIGHT: ' + DIFF[okDiff(s.diff)].name, 128, 140, s.diff === 2 ? c3 : c1, 'center');
+    if ((s.t >> 4) % 2) l.text('PRESS FIRE', 64, 120, R, 'center', 2);
+    l.text('LR: ' + DIFF[okDiff(s.diff)].name, 64, 138, s.diff === 2 ? R : Y, 'center');
   }
-  g.text('HIGH ' + s.high + '   DOWN: MORE', 128, 152, c2, 'center');
-  if (s.save) g.text('P: NEW GAME', 128, 166, c0, 'center');
-  g.text('(C) 2026 GONEN YAROM', 128, 182, c3, 'center');
+  l.text('HIGH ' + s.high + '  DOWN: MORE', 64, 150, G2, 'center');
+  if (s.save) l.text('P: NEW GAME', 64, 163, Y, 'center');
+  l.text('(C) 2026 GONEN YAROM', 64, 182, R, 'center');
+  flush(g);
 }
 function drawAsk(g, s) {
-  const C = colors(2), [c0, c1, c2, c3] = C.c;
-  g.clear(BLACK);
-  g.text('NEW GAME?', 128, 30, c3, 'center', 3);
-  g.text('YOUR SAVE ON WORLD ' + s.save.world + ' WILL BE LOST', 128, 72, c0, 'center');
-  g.text('LEFT RIGHT: ' + DIFF[okDiff(s.diff)].name, 128, 96, s.diff === 2 ? c3 : c1, 'center');
-  if (s.askT > 30 && (s.askT >> 4) % 2) g.text('FIRE: YES, NEW GAME', 128, 124, c3, 'center');
-  g.text('UP: NO, KEEP MY SAVE', 128, 142, c1, 'center');
+  const l = L(), C = TITLE_C(), [Y, R, G2] = C.txt;
+  l.clear(C.bg);
+  l.text('NEW GAME?', 64, 26, R, 'center', 2);
+  l.text('YOUR SAVE ON', 64, 60, Y, 'center'); l.text('WORLD ' + s.save.world + ' WILL BE LOST', 64, 70, Y, 'center');
+  l.text('LR: ' + DIFF[okDiff(s.diff)].name, 64, 92, s.diff === 2 ? R : G2, 'center');
+  if (s.askT > 30 && (s.askT >> 4) % 2) l.text('FIRE: YES, NEW GAME', 64, 120, R, 'center');
+  l.text('UP: NO, KEEP SAVE', 64, 138, Y, 'center');
+  flush(g);
 }
 function drawMap(g, s) {
-  const C = colors(s.world), [c0, c1, c2, c3] = C.c;
-  g.clear(BLACK);
-  for (let i = 0; i < 40; i++) g.rect((i * 97 + 13) % W, (i * 53 + 7) % H, 1, 1, c2);
-  g.text('THE GREAT TREE', 128, 6, c1, 'center', 2);
-  drawTree(g, s, C, 0, 30, false);
-  g.text('WORLD ' + s.world + ': ' + WNAMES[s.world - 1], 128, 166, c3, 'center');
-  if (s.t > 30 && (s.t >> 4) % 2) g.text('FIRE: GO', 128, 178, c1, 'center');
+  const l = L(), C = TITLE_C();
+  l.clear(C.bg);
+  l.text('THE GREAT TREE', 64, 6, C.txt[0], 'center');
+  for (let y = -8; y <= 8; y++) for (let x = -22; x <= 22; x++) { const d = x * x / 484 + y * y / 64; if (d < 1) l.rect(64 + x, 26 + y, 1, 1, d > 0.7 && (x + y) % 3 === 0 ? C.txt[0] : C.txt[2]); }
+  l.sprite(A.BONGO, 58, 12, C.bongo, false, 1);
+  drawTree(l, s, C, 34, 156);
+  l.text('WORLD ' + s.world + ': ' + WNAMES[s.world - 1], 64, 166, C.txt[1], 'center');
+  if (s.t > 30 && (s.t >> 4) % 2) l.text('FIRE: GO', 64, 178, C.txt[0], 'center');
+  flush(g);
 }
 function drawCard(g, s) {
-  const C = colors(s.L.world), [c0, c1, c2, c3] = C.c, sc = s.L.sc;
-  g.clear(BLACK);
-  g.text('WORLD ' + s.L.world + ': ' + WNAMES[s.L.world - 1], 128, 50, c2, 'center');
-  g.text(sc.id, 128, 66, c3, 'center', 3);
-  g.text(sc.name, 128, 98, c1, 'center', sc.name.length > 15 ? 1 : 2);
-  g.text('TIME ' + Math.ceil(s.time / 50) + '   LIVES ' + s.lives, 128, 126, c0, 'center');
-  spr(g, A.PIP.stand, 122, 140, C.pip);
+  const l = L(), C = colors(s.L.world), sc = s.L.sc;
+  l.clear(C.bg);
+  l.text('WORLD ' + s.L.world + ': ' + WNAMES[s.L.world - 1], 64, 46, C.txt[2], 'center');
+  l.text(sc.id, 64, 62, C.txt[1], 'center', 3);
+  l.text(sc.name, 64, 94, C.txt[0], 'center');
+  l.text('TIME ' + Math.ceil(s.time / 50) + '  LIVES ' + s.lives, 64, 114, C.txt[2], 'center');
+  l.sprite(A.PIP.stand, 60, 134, C.pip, false, 1);
+  flush(g);
 }
 function drawEnd(g, s) {
-  const C = colors(s.world || 2), [c0, c1, c2, c3] = C.c;
-  g.clear(BLACK);
+  const l = L(), C = colors(Math.min(2, s.world || 2)), [Y, R, G2] = C.txt;
+  l.clear(C.bg);
   if (s.mode === 'clear') {
-    g.text(s.secretGot ? 'SECRET PASSAGE!' : 'SCREEN CLEAR!', 128, 40, c1, 'center', 2);
-    if (s.secretGot) g.text('+1 LIFE   +1000', 128, 60, c3, 'center');
-    g.text('TAPE PIECES ' + s.got + '/3', 128, 76, c0, 'center');
-    g.text('TIME BONUS ' + s.bonusShown, 128, 92, c0, 'center');
-    g.text('SCORE ' + s.score, 128, 120, c3, 'center', 2);
-    return;
-  }
-  if (s.mode === 'over') {
-    g.text('GAME OVER', 128, 50, c3, 'center', 3);
-    g.text('SCORE ' + s.score, 128, 96, c1, 'center', 2);
-    if (D(s).mult !== 1) g.text(D(s).name + ' X' + D(s).mult + ' = ' + finalScore(s), 128, 118, c3, 'center');
-    g.text('YOUR WORLD STAYS SAVED', 128, 140, c2, 'center');
+    l.text(s.secretGot ? 'SECRET!' : 'WELL DONE!', 64, 36, Y, 'center', 2);
+    if (s.secretGot) l.text('+1 LIFE  +1000', 64, 58, R, 'center');
+    l.text('TAPE PIECES ' + s.got + '/3', 64, 76, G2, 'center');
+    l.text('TIME BONUS ' + s.bonusShown, 64, 90, G2, 'center');
+    l.text('SCORE ' + s.score, 64, 116, R, 'center');
+  } else if (s.mode === 'over') {
+    l.text('GAME OVER', 64, 44, R, 'center', 2);
+    l.text('SCORE ' + s.score, 64, 84, Y, 'center');
+    if (D(s).mult !== 1) l.text(D(s).name + ' X' + D(s).mult + ' = ' + finalScore(s), 64, 100, R, 'center');
+    l.text('YOUR WORLD IS SAVED', 64, 124, G2, 'center');
   } else {
-    g.text('WELL DONE, PIP!', 128, 30, c1, 'center', 2);
-    g.text('YOU CLIMBED THROUGH', 128, 60, c0, 'center'); g.text('THE ROOTS AND THE SWAMPS.', 128, 70, c0, 'center');
-    g.text('THE RIVERS ARE STILL GROWING...', 128, 90, c2, 'center'); g.text('MORE OF THE GREAT TREE SOON!', 128, 100, c2, 'center');
-    g.text('SCORE ' + s.score, 128, 122, c3, 'center', 2);
-    if (D(s).mult !== 1) g.text(D(s).name + ' X' + D(s).mult + ' = ' + finalScore(s), 128, 142, c3, 'center');
-    g.text('YOUR GAME IS SAVED FOR WORLD 3', 128, 154, c2, 'center');
+    l.text('WELL DONE, PIP!', 64, 26, Y, 'center');
+    ['YOU CLIMBED THE ROOTS', 'AND THE SWAMPS.', '', 'THE RIVERS ARE', 'STILL GROWING...'].forEach((t, i) => l.text(t, 64, 48 + i * 10, i < 2 ? Y : G2, 'center'));
+    l.text('SCORE ' + s.score, 64, 112, R, 'center');
+    if (D(s).mult !== 1) l.text(D(s).name + ' X' + D(s).mult + ' = ' + finalScore(s), 64, 124, R, 'center');
+    l.text('SAVED FOR WORLD 3', 64, 140, G2, 'center');
   }
-  if (s.t > 50 && (s.t >> 4) % 2) g.text('FIRE: TITLE', 128, 166, c1, 'center');
+  if (s.mode !== 'clear' && s.t > 50 && (s.t >> 4) % 2) l.text('FIRE: TITLE', 64, 164, Y, 'center');
+  flush(g);
 }
 
 // ---------- המחסנית ----------
@@ -654,7 +638,7 @@ export default {
     let diff = 1;
     try { diff = okDiff(parseInt(localStorage.getItem(DIFF_KEY), 10)); } catch (e) {}
     api.state = { mode: 'title', t: 0, titleP: 0, titleT: 0, high: api.loadHigh('king'), save: loadSave(), diff, world: 1, score: 0, lives: 3 };
-    stat = null;
+    stat = null; statKey = '';
   },
 
   update(api) {
