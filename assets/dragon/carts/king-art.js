@@ -132,3 +132,21 @@ export const BEAR = [
   ['....kk....kk..', '...kkkkkkkkkk.', '..kkkkkkkkkkkk', '.kkkkkkkkkkkkk', 'kkkkkkkkkkkttk', 'kkkkkkkkkkkkk.', '.kk.kk..kk.kk.'],
   ['..........kk.k', '.........kkkkk', '..kkkkkkkkekkt', '.kkkkkkkkkkktt', 'kkkkkkkkkkkkk.', 'kkkkkkkkkkkk..', 'kkkkkkkkkkkk..', '.kk..kk..kk...', '.kk..kk..kk...']
 ];
+
+// ---------- עולם 6, ענפי הקופים ----------
+export const COCONUT = ['.kk.', 'kktk', 'kkkk', '.kk.'];
+// קוף גדול (השומרים של BONGO): f פרווה, c פנים, n פה, e עין
+export const APE = [
+  ['...ffff...', '..fccccf..', '..fcecef..', '..fcnncf..', 'ff.ffff.ff', 'f.ffccff.f', 'c.ffccff.c', '..ffffff..', '..ff..ff..', '..ff..ff..', '.ccc..ccc.'],
+  ['...ffff...', '..fccccf..', '..fcecef..', 'f.fcnncf.f', 'ff.ffff.ff', '..ffccff..', '..ffccff..', '..ffffff..', '..ff..ff..', '.ff....ff.', 'ccc....ccc']
+];
+// ---------- עולם 7, הצמרת ----------
+// תוכי: k גוף, w כנף, e עין, b מקור
+export const PARROT = [['....kk..', '...kekb.', 'wwwkkkbb', '.wwkkk..', '...kk...', '...k.k..'], ['..ww.kk.', '.wwwkekb', '..wkkkbb', '...kkk..', '...kk...', '...k.k..']];
+export const NEST = ['.k.kk.k.k.', 'kkkkkkkkkk', '.kkkkkkkk.'];
+// BIG BONGO לקרב בצמרת: מנדריל עם כתר. f פרווה, c פנים וכתר, n אף, e עיניים
+export const BIG_BONGO = [
+  '....c.c.c.c.....', '....ccccccc.....', '....cfcfcfc.....', '...fffffffff....', '..fffcccccfff...', '..ffcccccccff...', '..fcecccccecf...', '..fccccnccccf...',
+  '..fcccnnncccf...', '..ffccnnnccff...', '...fcccccccf....', '..fffcccccfff...', '.fffffffffffff..', 'ffffcfffffcffff.', 'fffccffffffccfff', 'ff.ccffffffcc.ff',
+  'ff..cffffffc..ff', 'cc..ffffffff..cc', 'cc..ffffffff..cc', '....fff..fff....', '....fff..fff....', '...cccc..cccc...'
+];

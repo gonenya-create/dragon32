@@ -329,6 +329,100 @@ block(m, 3, 4, 8, 9, 'E'); put(m, 19, 28, 'P')
 put(m, 19, 2, 'T'); put(m, 14, 29, 'T'); put(m, 4, 4, 'T')
 add('5-6', 'THE SLEEPING BEAR', m, time=90, dark=1, torch=30, guard='bear')
 
+# ---------------- WORLD 6: BRANCHES (round 3) ----------------
+# 6-1: monkey town. Monkeys on the branch ends throw coconuts in an arc at the place where PIP stands. Keep moving
+m = new(); walls(m)
+plat(m, 16, 0, 27); plat(m, 12, 4, 31); plat(m, 8, 0, 27); plat(m, 4, 4, 31)
+rope(m, 26, 17, 19); rope(m, 5, 13, 15); rope(m, 26, 9, 11); rope(m, 5, 5, 7)
+for (r, c) in ((15, 1), (11, 30), (7, 1), (3, 30), (19, 30)): put(m, r, c, 'k')
+block(m, 2, 3, 16, 17, 'E'); put(m, 19, 2, 'P')
+put(m, 15, 14, 'T'); put(m, 11, 10, 'T'); put(m, 7, 22, 'T')
+add('6-1', 'MONKEY TOWN', m, time=60, coco=170)
+
+# 6-2: the branches sway in the wind; ride them over the gaps, and jump off at the right moment
+m = new(); walls(m)
+plat(m, 16, 0, 7); plat(m, 16, 24, 31); plat(m, 12, 0, 5); plat(m, 12, 26, 31); plat(m, 8, 0, 6); plat(m, 8, 25, 31); plat(m, 4, 0, 9)
+put(m, 16, 15, 'B'); put(m, 12, 15, 'B'); put(m, 8, 15, 'B'); put(m, 4, 20, 'B')
+rope(m, 28, 13, 15); rope(m, 3, 9, 11); rope(m, 28, 5, 7)
+put(m, 3, 16, 'k')
+block(m, 2, 3, 2, 3, 'E'); put(m, 19, 2, 'P'); rope(m, 4, 17, 19)
+put(m, 15, 28, 'T'); put(m, 11, 2, 'T'); put(m, 7, 29, 'T')
+add('6-2', 'SWAYING BRANCHES', m, time=60, sways=[[4, 56, 260], [4, 60, 230], [4, 56, 200], [4, 40, 180]])
+
+# 6-3: coconut rain from the treetop. Hide under the leaf roofs, and run between them
+m = new(); walls(m)
+plat(m, 16, 3, 31); plat(m, 12, 0, 27); plat(m, 8, 4, 31); plat(m, 4, 0, 25)
+rope(m, 5, 17, 19); rope(m, 25, 13, 15); rope(m, 6, 9, 11); rope(m, 23, 5, 7)
+for (r, c0) in ((18, 10), (18, 20), (14, 8), (14, 18), (10, 12), (10, 22), (6, 9), (6, 17)): plat(m, r, c0, c0 + 2, 'f')   # leaf roofs: stop coconuts, not PIP
+block(m, 2, 3, 2, 3, 'E'); put(m, 19, 28, 'P')
+put(m, 15, 30, 'T'); put(m, 11, 1, 'T'); put(m, 7, 30, 'T')
+add('6-3', 'COCONUT RAIN', m, time=60, rain=26)
+
+# 6-4: the rope bridge over a deep gap. Each plank falls a moment after PIP steps on it: do not stop.
+# Then up and back on the high branches, past a coconut monkey
+m = new()
+block(m, 15, 20, 0, 5); block(m, 15, 20, 26, 31)
+plat(m, 15, 6, 25, 'b')
+plat(m, 8, 20, 31); rope(m, 28, 9, 14); plat(m, 8, 10, 16); plat(m, 8, 0, 7); put(m, 7, 14, 'k')
+block(m, 6, 7, 2, 3, 'E'); put(m, 14, 2, 'P')
+put(m, 12, 16, 'T'); put(m, 14, 30, 'T'); put(m, 7, 11, 'T')
+add('6-4', 'THE ROPE BRIDGE', m, time=60, coco=200)
+
+# 6-5: BONGO's guards: two big monkeys swap places on the floor again and again, and rest a moment at each side.
+# Cross the floor between them, then climb
+m = new(); walls(m)
+plat(m, 15, 22, 31); rope(m, 29, 16, 19); plat(m, 10, 3, 26); rope(m, 24, 11, 14); plat(m, 5, 0, 20); rope(m, 4, 6, 9)
+put(m, 19, 15, 'G')
+block(m, 3, 4, 16, 17, 'E'); put(m, 19, 1, 'P')
+put(m, 19, 9, 'T'); put(m, 14, 26, 'T'); put(m, 4, 2, 'T')
+add('6-5', "BONGO'S GUARDS", m, time=75, guard='apes')
+
+# ---------------- WORLD 7: TREETOP (round 3) ----------------
+# 7-1: above the leaves. Every few seconds a gust of wind pushes PIP to one side; it changes side each time
+m = new(); walls(m)
+plat(m, 16, 0, 12); plat(m, 16, 16, 31); plat(m, 12, 2, 13); plat(m, 12, 17, 29); plat(m, 8, 0, 11); plat(m, 8, 15, 31); plat(m, 4, 3, 28)
+rope(m, 24, 17, 19); rope(m, 4, 13, 15); rope(m, 27, 9, 11); rope(m, 6, 5, 7)
+block(m, 2, 3, 25, 26, 'E'); put(m, 19, 2, 'P')
+put(m, 15, 14, 'T'); put(m, 11, 15, 'T'); put(m, 7, 13, 'T')
+add('7-1', 'ABOVE THE LEAVES', m, time=60, wind=[240, 110, 0.55])
+
+# 7-2: the bird's nest. Parrots fly from side to side and dive a little over PIP; a mother bird lunges from her nest
+m = new(); walls(m)
+plat(m, 16, 3, 31); plat(m, 12, 0, 27); plat(m, 8, 4, 31); plat(m, 4, 0, 25)
+rope(m, 5, 17, 19); rope(m, 25, 13, 15); rope(m, 6, 9, 11); rope(m, 23, 5, 7)
+put(m, 14, 0, 'q'); put(m, 6, 0, 'q'); put(m, 11, 14, 'n'); put(m, 3, 12, 'n')
+block(m, 2, 3, 2, 3, 'E'); put(m, 19, 28, 'P')
+put(m, 15, 30, 'T'); put(m, 11, 1, 'T'); put(m, 7, 30, 'T')
+add('7-2', "BIRD'S NEST", m, time=60, parrot=240)
+
+# 7-3: cloud steps. No floor below: clouds drift sideways and up and down. Fall, and PIP is gone
+m = new()
+plat(m, 18, 0, 6); plat(m, 4, 24, 31)
+put(m, 18, 12, 'B'); put(m, 15, 20, 'B'); put(m, 12, 12, 'B'); put(m, 9, 20, 'B'); put(m, 8, 23, 'U')
+put(m, 6, 0, 'q')
+block(m, 2, 3, 28, 29, 'E'); put(m, 17, 2, 'P')
+put(m, 13, 6, 'T'); put(m, 7, 14, 'T'); put(m, 3, 26, 'T')
+add('7-3', 'CLOUD STEPS', m, time=75, sways=[[4, 30, 240], [4, 30, 210], [4, 34, 260], [4, 30, 230]], lifts=[[4, 9, 0.45]], parrot=300)
+
+# 7-4: the last vine: a long chain of vines over the open sky, and the wind adds to the swing
+m = new()
+plat(m, 16, 0, 4); plat(m, 16, 27, 31)
+for c in (8, 14, 20, 25): put(m, 2, c, 'V')
+plat(m, 7, 21, 31); rope(m, 29, 8, 15); plat(m, 7, 9, 15); plat(m, 7, 0, 5)
+block(m, 5, 6, 2, 3, 'E'); put(m, 15, 1, 'P')
+put(m, 12, 11, 'T'); put(m, 15, 30, 'T'); put(m, 6, 12, 'T')
+add('7-4', 'THE LAST VINE', m, time=75, vines=[84, 84, 84, 84], wind=[300, 90, 0.4])
+
+# 7-5: the king's crown. BIG BONGO throws barrels down the branches; a barrel that reaches the seesaw rests on one end.
+# Land on the other end and the barrel flies back at him. Three hits: he runs away and leaves the Golden Tape
+m = new(); walls(m)
+plat(m, 1, 12, 19); put(m, 0, 16, 'G')
+plat(m, 6, 6, 25); plat(m, 11, 2, 29); plat(m, 16, 4, 27)
+rope(m, 5, 17, 19); rope(m, 26, 12, 15)
+put(m, 19, 16, '^'); put(m, 19, 3, 'P')
+put(m, 15, 16, 'T'); put(m, 10, 4, 'T'); put(m, 10, 27, 'T')
+add('7-5', "THE KING'S CROWN", m, time=120, guard='bongo')
+
 out = '// JUNGLE KING: מפות המסכים. נוצר ב-tools/king/screens.py (לא לערוך ביד: משנים שם ומריצים מחדש).\n'
 out += '// כל מסך: 32×21 אריחים. # קיר/קרקע, = שורש או ענף (עומדים עליו מלמעלה), | חבל או ליאנה, ~ מים, E יציאה, c סדק סודי.\n'
 out += '// דמויות וחפצים: P התחלה, T חלק קלטת, K קוף שזורק חביות, S נחש, R נחש על חבל, M פטרייה, G שומר, V ליאנה מתנדנדת,\n'

@@ -15,17 +15,35 @@ const DIFF = [
   { name: 'NORMAL', spd: 1, rate: 1, time: 1, mult: 2 },
   { name: 'HARD', spd: 1.25, rate: 0.7, time: 0.8, mult: 3 }
 ];
-const WORLDS = [null, { pal: 1, name: 'ROOTS', first: 0 }, { pal: 0, name: 'SWAMPS', first: 6 }, { pal: 1, name: 'RIVERS', first: 12 }, { pal: 0, name: 'HIVES', first: 18 }, { pal: 0, name: 'CAVES', first: 24 }];
-const ROUND_WORLDS = 5;   // סבב 2: חמישה עולמות, 30 מסכים
+const WORLDS = [null, { pal: 1, name: 'ROOTS', first: 0 }, { pal: 0, name: 'SWAMPS', first: 6 }, { pal: 1, name: 'RIVERS', first: 12 }, { pal: 0, name: 'HIVES', first: 18 }, { pal: 0, name: 'CAVES', first: 24 }, { pal: 1, name: 'BRANCHES', first: 30 }, { pal: 0, name: 'TREETOP', first: 35 }];
+const ROUND_WORLDS = 7;   // כל העץ: שבעה עולמות, 40 מסכים (סבב 3, 27.10)
 const SAVE = 'd32-king-save', DIFF_KEY = 'd32-king-diff';
 const okDiff = d => (d === 0 || d === 1 || d === 2) ? d : 1;
-const D = s => DIFF[okDiff(s.diff)];
+// THE KING RETURNS: בכל סיבוב נוסף הכל מהיר יותר, הזמן קצר יותר, והניקוד מוכפל יותר
+const D = s => { const b = DIFF[okDiff(s.diff)], k = s.loop | 0; return k ? { ...b, spd: b.spd * (1 + 0.15 * k), rate: b.rate / (1 + 0.2 * k), time: b.time * Math.pow(0.9, k), mult: b.mult + k } : b; };
 
 // ---------- צבעים לפי עולם: ערכה 0 של PMODE 3 (ירוק, צהוב, כחול, אדום), ואחד מהם הוא הרקע ----------
 // עולם 1 (שורשים): רקע כחול. עולם 2 (ביצות): רקע ירוק. מסך הפתיחה והמפה: כמו עולם 1
 function colors(w) {
   const [G, Y, B, R] = PALETTES[0];
   const tape = { y: Y, r: R }, barrel = { y: Y, r: R }, mush = { r: R, y: Y }, log = { y: Y, r: R };
+  if (w === 6) {   // ענפי הקופים: ערכה 1, שמיים בתכלת, ענפים כתומים, קופים בסגול
+    const [Bf, Cy, Mg, Or] = PALETTES[1];
+    return {
+      bg: Cy, txt: [Bf, Mg, Or], pip: { h: Or, b: Mg, s: Mg, p: Bf, e: Cy }, monkey: { f: Mg, c: Or, n: Bf, e: Cy }, barrel: { y: Or, r: Mg }, mush: { r: Mg, y: Or },
+      tape: { y: Or, r: Mg }, tapeOff: { y: Bf, r: Bf }, log: { y: Or, r: Mg }, snake: { s: Mg, e: Or, t: Bf }, croc: { k: Mg, t: Or, e: Bf }, frog: { k: Mg, t: Or, e: Bf },
+      mosq: { m: Mg, n: Or }, lily: { k: Or, f: Mg }, splash: { c: Bf }, beetle: { k: Mg, h: Or, r: Bf }, bongo: { f: Mg, c: Or, n: Bf, e: Cy },
+      tile: { r: Or, y: Bf, g: Mg }, rope: [Or, Mg], water: Mg, wave: Bf, vine: Mg, vineLeaf: Or, nut: { k: Mg, t: Or }, ape: { f: Mg, c: Or, n: Bf, e: Cy }, plank: [Or, Mg]
+    };
+  }
+  if (w === 7) {   // הצמרת: שמיים כחולים, עלים ירוקים, עננים צהובים, ציפורים אדומות
+    return {
+      bg: B, txt: [Y, R, G], pip: { h: Y, b: R, s: R, p: G, e: B }, monkey: { f: G, c: Y, n: R, e: B }, barrel, mush, tape, tapeOff: { y: G, r: G }, log,
+      snake: { s: G, e: Y, t: R }, croc: { k: Y, t: R, e: B }, frog: { k: G, t: Y, e: R }, mosq: { m: R, n: Y }, lily: { k: G, f: R }, splash: { c: Y },
+      beetle: { k: G, h: Y, r: R }, bongo: { f: G, c: Y, n: R, e: B }, tile: { r: G, y: Y, g: R }, rope: [Y, G], water: G, wave: Y, vine: G, vineLeaf: Y,
+      cloud: Y, bird: { k: R, w: G, e: Y, b: Y }, nest: { k: Y }, nut: { k: R, t: Y }
+    };
+  }
   if (w === 5) {   // המערות: רקע כחול כהה, והחושך הוא צבע הרקע. סלע באדום וצהוב, האור מהלפיד
     return {
       bg: B, txt: [Y, R, G], pip: { h: Y, b: R, s: R, p: G, e: B }, monkey: { f: G, c: Y, n: R, e: B }, barrel, mush, tape, tapeOff: { y: G, r: G }, log,
@@ -64,7 +82,7 @@ function colors(w) {
 }
 
 // ---------- המפה ----------
-const ENT = 'PTKSRMGVCFOLlQJANZDUHYXIWv';
+const ENT = 'PTKSRMGVCFOLlQJANZDUHYXIWvkBqn^';
 function loadScreen(s, idx) {
   const sc = SCREENS[idx];
   // דמות שעומדת במים (תנין, בול עץ, עלה, השומר בביצות): מתחתיה מים
@@ -73,7 +91,9 @@ function loadScreen(s, idx) {
   grid[0].forEach((ch, c) => { if (sc.map[0][c] === 'K') grid[0][c] = grid[0][c - 1] === '#' || grid[0][c + 1] === '#' ? '#' : '='; });
   const L = { idx, sc, grid, world: +sc.id[0], tapes: [], throwers: [], snakes: [], ropeSnakes: [], mush: [], vines: [], crocs: [], frogs: [],
     lilies: [], logs: [], swarms: [], barrels: [], guard: null, fx: [], t: 0, fish: [], beavers: [], raft: null, falls: sc.falls || [],
-    bees: [], drips: [], sticky: [], lifts: [], jars: [], pots: [], sleep: 0, bats: [], stones: [], torches: [], worms: [], dark: !!sc.dark };
+    bees: [], drips: [], sticky: [], lifts: [], jars: [], pots: [], sleep: 0, bats: [], stones: [], torches: [], worms: [], dark: !!sc.dark,
+    nutters: [], nuts: [], sways: [], planks: [], parrots: [], seesaw: null, gold: null };
+  let bi = 0;
   let vi = 0, li = 0, fi = 0, ji = 0, zi = 0, ui = 0;
   sc.map.forEach((row, r) => row.split('').forEach((ch, c) => {
     const cx = c * T + 4, fy = OY + (r + 1) * T;
@@ -102,15 +122,23 @@ function loadScreen(s, idx) {
     else if (ch === 'I') L.torches.push({ x: cx, y: fy, got: false });
     else if (ch === 'W') L.worms.push({ x: cx, y: fy });
     else if (ch === 'v') L.stones.push({ x: cx, hy: OY + r * T, y: OY + r * T, vy: 0, mode: 'hang', k: 0 });
+    // עולמות 6 ו-7: קוף שזורק קוקוסים, ענף שמתנדנד (בצמרת: ענן), תוכי, קן עם ציפור אם, ונדנדה (בקרב)
+    else if (ch === 'k') L.nutters.push({ x: cx, y: fy, cd: 40 + L.nutters.length * 37, anim: 0 });
+    else if (ch === 'B') { const b = (sc.sways || [])[bi++] || [3, 24, 200]; L.sways.push({ x0: cx, x: cx, y: OY + r * T, w: b[0] * T, amp: b[1], per: b[2], vx: 0 }); }
+    else if (ch === 'q') L.parrots.push({ y0: OY + r * T, x: -20, y: OY + r * T, dir: 1, t: L.parrots.length * 140, per: sc.parrot || 260 });
+    else if (ch === 'n') { L.bats.push({ hx: cx, hy: fy - 8, x: cx, y: fy - 8, mode: 'hang', k: 0, cd: 0, bird: true, range: 52 }); L.nests = (L.nests || []).concat([{ x: cx, y: fy }]); }
+    else if (ch === '^') L.seesaw = { x: cx, y: fy, tilt: 0 };
     else if (ch === 'N') { const rc = [c, c - 1, c + 1].find(k => grid[r - 1] && grid[r - 1][k] === '|' || grid[r][k] === '|'); const r0 = grid[r][rc] === '|' ? r : r - 1; const [a, b] = ropeSpan(grid, rc, r0); L.beavers.push({ x: cx, y: fy, c: rc, a, b, chew: 0, cut: 0, f: 0 }); }
     else if (ch === 'Q') L.swarms.push({ bx: cx, by: OY + r * T, x: cx, y: OY + r * T });
     else if (ch === 'G') L.guard = sc.guard === 'beetle' ? { kind: 'beetle', x: cx - 10, bx: cx + 20, y: fy, dir: 1, side: 0, f: 0, turn: 0, hop: 0 }
+      : sc.guard === 'apes' ? { kind: 'apes', apes: [{ x: cx - 48, from: cx - 48, to: cx + 48 }, { x: cx + 48, from: cx + 48, to: cx - 48 }], y: fy, k: 0, wait: 60, f: 0 }
+      : sc.guard === 'bongo' ? { kind: 'bongo', x: cx, hx: cx, y: OY + (r + 1) * T, t: 0, cd: 90, hits: 0, flash: 0, mode: 'fight', dir: 1 }
       : sc.guard === 'bear' ? { kind: 'bear', x: cx, hx: cx, y: fy, mode: 'sleep', noise: 0, k: 0, dir: 1 }
       : sc.guard === 'queen' ? { kind: 'queen', x: cx, y: OY + r * T, hx: cx, hy: OY + r * T, t: 0, mode: 'hover', tx: cx }
       : sc.guard === 'whirl' ? { kind: 'whirl', x: cx, y: WATER, t: 0, R: sc.whirlR || 56, logs: [{ a: 0 }, { a: Math.PI }] } : { kind: 'croc', x: c * T, y: WATER, t: 0, bx: c * T };
   }));
   s.L = L;
-  s.gateOpen = !sc.guard || sc.guard === 'croc' || sc.guard === 'whirl' || sc.guard === 'bear';
+  s.gateOpen = !sc.guard || ['croc', 'whirl', 'bear', 'apes', 'bongo'].includes(sc.guard);
   s.torchMax = (sc.torch || 0) * 50; s.torch = s.torchMax;
   s.passes = 0;
   s.time = Math.round(sc.time * 50 * D(s).time);
@@ -134,7 +162,7 @@ function ropeSpan(grid, c, r) { let a = r, b = r; while (a > 0 && grid[a - 1][c]
 const col = x => Math.floor(x / T), row = y => Math.floor((y - OY) / T);
 function tile(s, c, r) { if (c < 0 || c >= COLS || r >= ROWS) return '#'; if (r < 0) return '.'; return s.L.grid[r][c]; }
 const isSolid = ch => ch === '#';
-const isTop = ch => ch === '#' || ch === '=' || ch === 'h';
+const isTop = ch => ch === '#' || ch === '=' || ch === 'h' || ch === 'b';
 const isRope = ch => ch === '|';
 
 // ---------- משטחים זזים (בולי עץ, עלי לוטוס, גב התנין, פטריות, חביות צפות) ----------
@@ -147,6 +175,7 @@ function platforms(s) {
   const g = L.guard;
   if (g && g.kind === 'croc') out.push({ x0: g.x + 6, x1: g.x + (crocOpen(g) ? 112 : 132), y: g.y - 6, o: g, kind: 'bigcroc', vx: g.vx || 0 });
   for (const b of L.barrels) if (b.mode === 'float') out.push({ x0: b.x - 5, x1: b.x + 5, y: b.y - 8, o: b, kind: 'barrel', vx: b.vx });
+  for (const w of L.sways) out.push({ x0: w.x - w.w / 2, x1: w.x + w.w / 2, y: w.y, o: w, kind: 'sway', vx: w.vx });
   for (const u of L.lifts) out.push({ x0: u.x - 11, x1: u.x + 11, y: u.y, o: u, kind: 'lift', vy: u.vy });
   const r = L.raft; if (r && !r.wait) out.push({ x0: r.x - 13, x1: r.x + 13, y: r.y - 5, o: r, kind: 'raft', vx: r.vx });
   if (g && g.kind === 'whirl') for (const w of g.logs) out.push({ x0: w.x - 11, x1: w.x + 11, y: g.y - 3, o: w, kind: 'log', vx: w.vx || 0 });
@@ -262,6 +291,11 @@ function step(s, inp, snd) {
     } else if (p.mode === 'walk') p.x -= p.vx * 0.45;
     else if (p.mode === 'air' && p.vy > 0) p.vy += 0.06;
   }
+  // משב רוח (בצמרת): כל כמה שניות הרוח נושבת לצד אחד ודוחפת את PIP
+  const wf = windNow(L);
+  if (wf) { if (p.mode === 'walk') p.x = Math.max(4, Math.min(W - 4, p.x + wf)); else if (p.mode === 'air') p.vx += wf * 0.06; else if (p.mode === 'swing' && p.vine) p.vine.amp = Math.min(0.95, p.vine.amp + 0.0015); }
+  // קרש בגשר החבלים: מי שעומד עליו, אחרי רגע הוא נופל
+  if (p.mode === 'walk') { const r = row(p.y + 0.5), c = col(p.x); if (tile(s, c, r) === 'b' && Math.abs(p.y - (OY + r * T)) < 0.6) { let pk = L.planks.find(k => k.r === r && k.c === c); if (!pk) L.planks.push(pk = { r, c, t: 0, gone: 0 }); if (++pk.t > 22) { L.grid[r][c] = '.'; pk.gone = 300; pk.t = 0; stat = null; snd.tone(140, 60, 60); } } }
   // המערבולת (השומר של עולם 3) מושכת אליה את מי שבאוויר מעל המים
   if (L.guard && L.guard.kind === 'whirl' && p.mode === 'air' && Math.abs(p.x - L.guard.x) < L.guard.R + 24) p.vx += Math.sign(L.guard.x - p.x) * 0.035;
   // מים, ונפילה מחוץ למסך
@@ -282,6 +316,7 @@ function step(s, inp, snd) {
   if (L.sleep) L.sleep--;
   if (s.torch > 0) s.torch--;   // הלפיד נשרף, והאור קטן
   for (const t of L.torches) if (!t.got && Math.abs(t.x - p.x) < 8 && Math.abs(t.y - p.y) < 12) { t.got = true; s.torch = s.torchMax; s.score += 50; snd.tone(600, 80, 900); fx(s, t.x, t.y - 12, 'TORCH'); }
+  if (L.gold && Math.abs(L.gold.x - p.x) < 10 && Math.abs(L.gold.y - p.y) < 14) { L.gold = null; s.score += 5000; return 'win'; }
   for (const tp of L.tapes) if (!tp.got && Math.abs(tp.x - p.x) < 8 && tp.y > p.y - 20 && tp.y < p.y + 4) { tp.got = true; s.got++; s.score += 250; snd.tone(1200, 60, 1600); fx(s, tp.x, tp.y, '250'); }
 
   if (!s.noEnemies && enemies(s, snd, d)) return 'die';
@@ -294,6 +329,8 @@ function freeRope(s, c, r) { if (!isRope(tile(s, c, r))) r = row(s.p.y - 8); let
 function honeyAt(s, x, y) { if (tile(s, col(x), row(y + 0.5)) === 'h' && Math.abs(y - (OY + row(y + 0.5) * T)) < 0.6) return true; return s.L.sticky.some(k => Math.abs(k.y - y) < 0.6 && Math.abs(k.x - x) < 9); }
 // האור במערות (בפיקסלים של המסך): הלפיד מאיר פחות ופחות כשהוא נשרף. בלי לפיד רואים רק קרוב מאוד
 const lightR = s => !s.L.dark ? 999 : s.torchMax ? 18 + 46 * (s.torch / s.torchMax) : 16;
+// הרוח: [מחזור, משך, כוח] בפריימים. כיוון הרוח מתחלף בכל משב
+const windNow = L => { const w = L.sc.wind; if (!w) return 0; const k = L.t % w[0]; return k < w[1] ? w[2] * (Math.floor(L.t / w[0]) % 2 ? -1 : 1) : 0; };
 const inFalls = (L, x, y) => L.falls.some(f => x >= f[0] * T && x < (f[1] + 1) * T && y >= OY + f[2] * T && y < OY + (f[3] + 1) * T);
 function support(s, p, plats) {
   // מעלית שעווה קודמת לרצפה: כשהיא מתחילה לעלות מגובה המדף, PIP עולה איתה
@@ -329,6 +366,8 @@ function movers(s, snd, d) {
   for (const c of L.crocs) c.t++;
   for (const f of L.fx) f.t--;
   L.fx = L.fx.filter(f => f.t > 0);
+  for (const w of L.sways) { const nx = w.x0 + w.amp * Math.sin(L.t * 2 * Math.PI / w.per); w.vx = nx - w.x; w.x = nx; }   // ענף ברוח, או ענן שזז
+  for (const pk of L.planks) if (pk.gone && !--pk.gone) { L.grid[pk.r][pk.c] = 'b'; stat = null; }   // קרש בגשר חוזר
   for (const u of L.lifts) {   // מעלית שעווה: עולה ויורדת, ועוצרת רגע בכל קצה
     if (u.wait) { if (!--u.wait) u.vy = u.y <= u.top ? u.sp : -u.sp; continue; }
     u.y += u.vy; if (u.y <= u.top) { u.y = u.top; u.wait = 50; u.vy = 0; } else if (u.y >= u.bot) { u.y = u.bot; u.wait = 50; u.vy = 0; }
@@ -368,6 +407,7 @@ function enemies(s, snd, d) {
     }
   }
   for (const b of L.barrels) {
+    if (b.mode === 'rest' || b.mode === 'fly') continue;
     b.rot += Math.abs(b.vx) > 0 ? 0.25 : 0.15;
     if (b.mode === 'roll') {
       b.x += b.vx;
@@ -427,11 +467,64 @@ function enemies(s, snd, d) {
     if (!L.sleep) { b.a += b.sp * d.spd; b.x = b.bx + b.rx * Math.cos(b.a); b.y = b.by + b.ry * Math.sin(b.a * (b.ry > b.rx ? 1 : 2)); }
     if (!L.sleep && Math.abs(b.x - p.x) < 7 && Math.abs(b.y - (p.y - 8)) < 9) hurt = true;
   }
+  // קופים שזורקים קוקוסים בקשת אל המקום של PIP, וגשם קוקוסים מלמעלה (מסתתרים מתחת לענפים)
+  for (const k of L.nutters) { if (k.anim) k.anim--; if (--k.cd <= 0) { k.cd = Math.round((L.sc.coco || 150) * d.rate); k.anim = 16; const dx = p.x - k.x; L.nuts.push({ x: k.x, y: k.y - 10, vx: Math.max(-2, Math.min(2, dx / 45)), vy: -3 }); snd.tone(260, 40); } }
+  if (L.sc.rain && L.t % Math.round(L.sc.rain * d.rate) === 0) L.nuts.push({ x: 12 + ((L.t * 97) % 232), y: OY - 6, vx: 0, vy: 0 });
+  for (const n of L.nuts) {
+    n.vy = Math.min(MAXF, n.vy + GRAV * 0.8); const ny = n.y + n.vy; n.x += n.vx; let land = false;
+    if (n.vy > 0) for (let r = row(n.y); r <= row(ny); r++) { const ty = OY + r * T; if (ty > n.y && ty <= ny && (isTop(tile(s, col(n.x), r)) || tile(s, col(n.x), r) === 'f')) { land = true; break; } }
+    if (land || ny > OY + ROWS * T || n.x < -8 || n.x > W + 8) { n.gone = true; L.fx.push({ k: 'splash', x: n.x, y: ny - 4, t: 10 }); } else n.y = ny;
+    if (!n.gone && hit(p, n.x - 3, n.y - 4, n.x + 3, n.y)) hurt = true;
+  }
+  L.nuts = L.nuts.filter(n => !n.gone);
+  // תוכי: עף מצד לצד בגובה קבוע, וצולל קצת כשהוא מעל PIP
+  for (const q of L.parrots) {
+    q.t++; const k = q.t % q.per;
+    if (k === 0) { q.dir = Math.floor(q.t / q.per) % 2 ? -1 : 1; q.x = q.dir > 0 ? -12 : W + 12; }
+    q.x += q.dir * 2 * d.spd; q.y = q.y0 + Math.max(0, 22 - Math.abs(q.x - p.x) / 3) * (Math.abs(q.x - p.x) < 70 ? 1 : 0);
+    if (Math.abs(q.x - p.x) < 8 && Math.abs(q.y - (p.y - 8)) < 9) hurt = true;
+  }
+  // השומרים של BONGO: שני קופים גדולים שמחליפים מקומות על הרצפה, ונחים רגע בכל צד
+  const ap = L.guard;
+  if (ap && ap.kind === 'apes') {
+    ap.f++;
+    if (ap.wait) { if (!--ap.wait) ap.k = 0; }
+    else { ap.k += 0.012 * d.spd; const k = Math.min(1, ap.k); for (const a of ap.apes) a.x = a.from + (a.to - a.from) * (0.5 - 0.5 * Math.cos(k * Math.PI)); if (k >= 1) { ap.wait = 50; for (const a of ap.apes) { const t = a.to; a.to = a.from; a.from = t; } } }
+    for (const a of ap.apes) if (hit(p, a.x - 9, ap.y - 11, a.x + 9, ap.y)) hurt = true;
+  }
+  // הקרב בצמרת: BIG BONGO זורק חביות. חבית שמגיעה לנדנדה נחה על הקצה; PIP שנוחת על הקצה השני מעיף אותה בחזרה אל BONGO.
+  // שלוש פגיעות, ו-BONGO בורח ומשאיר את קלטת הזהב
+  const bg = L.guard;
+  if (bg && bg.kind === 'bongo') {
+    bg.t++; if (bg.flash) bg.flash--;
+    if (bg.mode === 'fight') {
+      bg.x = bg.hx + 30 * Math.sin(bg.t / 70);
+      if (--bg.cd <= 0) { bg.cd = Math.round(170 * d.rate); bg.dir = -bg.dir; L.barrels.push({ x: bg.x + bg.dir * 14, y: bg.y, vx: bg.dir * 1.0 * d.spd, vy: 0, mode: 'roll', rot: 0, keep: true }); snd.tone(130, 90); }
+    } else if (bg.mode === 'flee') { bg.x += 2; bg.y -= 0.6; if (bg.x > W + 30) { bg.mode = 'gone'; } }
+    if (L.gold && L.gold.y < L.gold.ty) L.gold.y = Math.min(L.gold.ty, L.gold.y + 1.5);   // קלטת הזהב נופלת אל הנדנדה
+    const ss = L.seesaw;
+    if (ss) {
+      for (const b of L.barrels) if (b.mode === 'roll' && Math.abs(b.y - ss.y) < 1 && Math.abs(b.x - (ss.x - 20)) < 4) { b.mode = 'rest'; b.side = -1; b.x = ss.x - 20; ss.tilt = -1; }
+        else if (b.mode === 'roll' && Math.abs(b.y - ss.y) < 1 && Math.abs(b.x - (ss.x + 20)) < 4) { b.mode = 'rest'; b.side = 1; b.x = ss.x + 20; ss.tilt = 1; }
+      if (p.mode === 'walk' && p.landed === 2 && Math.abs(p.y - ss.y) < 1) {
+        const side = Math.abs(p.x - (ss.x - 20)) < 9 ? -1 : Math.abs(p.x - (ss.x + 20)) < 9 ? 1 : 0;
+        const b = side && L.barrels.find(k => k.mode === 'rest' && k.side === -side);
+        if (side) ss.tilt = side;
+        if (b) { b.mode = 'fly'; b.vy = -8.7; b.vx = (bg.x - b.x) / 40; snd.tone(300, 200, 1200); }
+      }
+      for (const b of L.barrels) if (b.mode === 'fly') {
+        b.vy += GRAV; b.x += b.vx; b.y += b.vy; b.rot += 0.4;
+        if (bg.mode === 'fight' && Math.abs(b.x - bg.x) < 16 && Math.abs(b.y - (bg.y - 10)) < 14) { b.gone = true; bg.hits++; bg.flash = 50; s.score += 1000; fx(s, bg.x, bg.y - 26, '1000'); snd.tone(900, 300, 200);
+          if (bg.hits >= 3) { bg.mode = 'flee'; L.gold = { x: ss.x, y: bg.y, ty: ss.y - 2 }; msg(s, 'BONGO RUNS!'); [523, 659, 784, 1046, 784, 1046].forEach((f, i) => snd.note && snd.note(f, i * 0.12, 0.12)); } }
+        if (b.y > OY + ROWS * T + 10) b.gone = true;
+      }
+    }
+  }
   // עטלפים: תלויים בשקט עד שהאור של הלפיד מגיע אליהם, ואז מזנקים אל PIP וחוזרים
   const lr = lightR(s);
   for (const b of L.bats) {
     if (b.cd) b.cd--;
-    if (b.mode === 'hang') { if (!b.cd && Math.hypot(b.x - p.x, (b.y - (p.y - 8)) * 2) < lr * 2) { b.mode = 'dive'; b.k = 0; b.tx = p.x; b.ty = p.y - 8; snd.tone(1500, 40, 2000); } }
+    if (b.mode === 'hang') { if (!b.cd && Math.hypot(b.x - p.x, (b.y - (p.y - 8)) * 2) < (b.range || lr * 2)) { b.mode = 'dive'; b.k = 0; b.tx = p.x; b.ty = p.y - 8; snd.tone(1500, 40, 2000); } }
     else if (b.mode === 'dive') { b.k += 0.022 * d.spd; const k = Math.min(1, b.k); b.x = b.hx + (b.tx - b.hx) * k; b.y = b.hy + (b.ty - b.hy) * Math.sin(k * Math.PI / 2) + Math.sin(k * 12) * 3; if (k >= 1) { b.mode = 'back'; b.k = 0; } }
     else { b.k += 0.015; const k = Math.min(1, b.k); b.x = b.tx + (b.hx - b.tx) * k; b.y = b.ty + (b.hy - b.ty) * k; if (k >= 1) { b.mode = 'hang'; b.cd = 120; b.x = b.hx; b.y = b.hy; } }
     if (b.mode !== 'hang' && Math.abs(b.x - p.x) < 8 && Math.abs(b.y - (p.y - 8)) < 8) hurt = true;
@@ -519,14 +612,25 @@ function enemies(s, snd, d) {
 
 // ---------- שמירה ----------
 const loadSave = () => { try { return JSON.parse(localStorage.getItem(SAVE)); } catch (e) { return null; } };
-const writeSave = s => { try { localStorage.setItem(SAVE, JSON.stringify({ v: 1, diff: okDiff(s.diff), world: s.world, lives: s.lives, score: s.score, tapes: s.tapes, sub: s.sub || 0 })); } catch (e) {} };
+const writeSave = s => { try { localStorage.setItem(SAVE, JSON.stringify({ v: 1, diff: okDiff(s.diff), world: s.world, lives: s.lives, score: s.score, tapes: s.tapes, sub: s.sub || 0, loop: s.loop | 0 })); } catch (e) {} };
 const clearSave = () => { try { localStorage.removeItem(SAVE); } catch (e) {} };
 const finalScore = s => s.score * D(s).mult;
 
 function newGame(s) {
-  Object.assign(s, { world: 1, lives: 3, score: 0, tapes: 0, sub: 0, nextLife: 10000 });
+  Object.assign(s, { world: 1, lives: 3, score: 0, tapes: 0, sub: 0, nextLife: 10000, loop: 0 });
   startWorld(s);
 }
+// מוזיקה: לכל עולם מנגינה קצרה משלו, במפת העץ. ובסוף, מנגינת הניצחון
+const TUNES = [null,
+  [[262, 1], [330, 1], [392, 1], [330, 1], [294, 1], [349, 1], [440, 2]],
+  [[196, 2], [233, 1], [262, 1], [233, 1], [196, 1], [175, 2], [196, 2]],
+  [[392, 1], [440, 1], [494, 1], [587, 1], [494, 1], [440, 1], [392, 2], [587, 2]],
+  [[523, 1], [494, 1], [523, 1], [587, 1], [523, 1], [494, 1], [440, 2], [523, 2]],
+  [[147, 2], [175, 2], [165, 2], [131, 2], [147, 4]],
+  [[392, 1], [392, 1], [523, 1], [392, 1], [659, 1], [587, 1], [523, 2], [392, 2]],
+  [[523, 1], [659, 1], [784, 1], [1047, 2], [784, 1], [880, 1], [1047, 3]]];
+const VICTORY = [[523, 1], [523, 1], [523, 1], [659, 2], [587, 1], [659, 1], [784, 3], [659, 1], [784, 1], [1047, 4]];
+function play(snd, tune, beat = 0.14) { if (!snd || !snd.note) return; let t = 0; for (const [f, n] of tune) { snd.note(f, t, beat * n * 0.9); t += beat * n; } }
 function startWorld(s) {
   s.idx = WORLDS[s.world].first;
   writeSave(s);
@@ -604,6 +708,13 @@ function drawStatic(s) {
       // קרקע של שורה אחת (רצפת השורשים): שורש דק כמו כל קומה. אחרת: גוש
       if (r === ROWS - 1 && !top(at(c, r - 1))) thin(c, r); else mass(c, r);
     } else if (ch === '=') thin(c, r);
+    else if (ch === 'f') {   // גג של עלים: עוצר קוקוסים, PIP עובר מתחתיו ודרכו
+      for (let i = 0; i < 4; i++) { const xx = x + i; px(xx, y + 1 + (xx % 3 === 0 ? 0 : 1), TC.g); if (xx % 2) px(xx, y + 3, TC.g); if (xx % 4 === 1) px(xx, y + 4, TC.y); }
+    }
+    else if (ch === 'b') {   // קרש בגשר החבלים, וחבלים דקים מעליו
+      for (let i = 0; i < 4; i++) { px(x + i, y, C.plank ? C.plank[0] : TC.r); px(x + i, y + 1, i === 3 ? C.bg : (C.plank ? C.plank[1] : TC.y)); px(x + i, y - 5 + (i % 2), C.rope[0]); }
+      px(x + 1, y + 2, C.rope[0]); px(x + 1, y - 2, C.rope[0]); px(x + 1, y - 3, C.rope[0]);
+    }
     else if (ch === 'h') {   // שלולית דבש: משטח שאפשר לעמוד עליו, דביק
       for (let i = 0; i < 4; i++) { const xx = x + i; px(xx, y + ((xx >> 1) % 2), TC.r); px(xx, y + 1, TC.r); px(xx, y + 2, TC.r); if (xx % 3) px(xx, y + 3, TC.r); if (xx % 7 === 3) for (let j = 4; j < 7; j++) px(xx, y + j, TC.r); }
     }
@@ -656,6 +767,7 @@ function drawPlay(g, s) {
   for (const k of Lv.sticky) for (let i = -3; i <= 3; i++) if (k.t > 60 || Lv.t % 4 < 2) { l.rect(lx(k.x) + i, k.y - 1, 1, 1, C.honey); if (i % 3 === 0) l.rect(lx(k.x) + i, k.y + 2, 1, 2, C.honey); }
   for (const dr of Lv.drips) { l.rect(lx(dr.x), dr.y0 - 4, 1, 2 + (dr.t < 30 ? 1 : 0), C.honey); if (dr.y) sprC(l, A.DROP, dr.x, dr.y, { y: C.honey }); }
   for (const u of Lv.lifts) {
+    if (Lv.world === 7) { for (let i = -6; i <= 6; i++) { const e = 6 - Math.abs(i); l.rect(lx(u.x) + i, u.y, 1, 1, C.cloud); if (e > 0) l.rect(lx(u.x) + i, u.y + 1, 1, 1, C.cloud); if (e > 1 && i % 3) l.rect(lx(u.x) + i, u.y + 2, 1, 1, C.cloud); if (e > 2 && i % 4 === 1) l.rect(lx(u.x) + i, u.y - 1, 1, 1, C.cloud); } continue; }   // ענן שעולה ויורד
     for (let y = u.top - 12; y < u.y; y += 2) l.rect(lx(u.x), y, 1, 1, C.tile.y);   // חוט השעווה
     for (let i = -5; i <= 5; i++) { l.rect(lx(u.x) + i, u.y, 1, 1, C.tile.r); l.rect(lx(u.x) + i, u.y + 1, 1, 1, i % 2 ? C.tile.y : C.tile.r); if (Math.abs(i) < 4) l.rect(lx(u.x) + i, u.y + 2, 1, 1, C.tile.r); }
   }
@@ -663,11 +775,27 @@ function drawPlay(g, s) {
   for (const k of Lv.pots) if (!k.got) sprC(l, A.SMOKE_POT, k.x, k.y, C.pot);
   for (const b of Lv.bees) { sprC(l, A.BEE[Lv.sleep ? 0 : (Lv.t >> 1) % 2], b.x, b.y + 3, C.bee, Math.sin(b.a) > 0); if (Lv.sleep && (Lv.t >> 4) % 2) l.rect(lx(b.x) + 3, b.y - 5, 2, 1, C.txt[0]); }
   if (gw && gw.kind === 'queen') { sprC(l, A.QUEEN[(Lv.t >> 2) % 2], gw.x, gw.y + 6, C.bee, gw.x < (gw.tx || gw.x)); if (gw.mode === 'aim' && Lv.t % 6 < 3) { l.rect(lx(gw.tx) - 3, gw.ty + 9, 7, 1, C.txt[1]); } }
+  // עולמות 6 ו-7: ענפים מתנדנדים או עננים, קנים, קופים עם קוקוסים, תוכים, השומרים, BONGO והנדנדה
+  for (const w of Lv.sways) {
+    const x0 = lx(w.x - w.w / 2), x1 = lx(w.x + w.w / 2);
+    if (Lv.world === 7) for (let x = x0; x < x1; x++) { const e = Math.min(x - x0, x1 - 1 - x); l.rect(x, w.y, 1, 1, C.cloud); if (e > 0) l.rect(x, w.y + 1, 1, 1, C.cloud); if (e > 1 && (x % 3)) l.rect(x, w.y + 2, 1, 1, C.cloud); if (e > 2 && x % 5 === 1) l.rect(x, w.y - 1, 1, 1, C.cloud); }
+    else for (let x = x0; x < x1; x++) { l.rect(x, w.y, 1, 1, C.tile.y); l.rect(x, w.y + 1, 1, 1, C.tile.r); if ((x + 1) % 3) l.rect(x, w.y + 2, 1, 1, C.tile.r); if (x % 5 === 2) { l.rect(x, w.y + 3, 1, 1, C.tile.g); l.rect(x, w.y + 4, 1, 1, C.tile.g); } }
+  }
+  for (const nst of Lv.nests || []) sprC(l, A.NEST, nst.x, nst.y, C.nest);
+  for (const k of Lv.nutters) sprC(l, A.MONKEY[k.anim ? 1 : 0], k.x, k.y, C.monkey, k.x < s.p.x);
+  for (const n of Lv.nuts) sprC(l, A.COCONUT, n.x, n.y, C.nut);
+  for (const q of Lv.parrots) if (q.x > -10 && q.x < W + 10) sprC(l, A.PARROT[(Lv.t >> 3) % 2], q.x, q.y + 3, C.bird, q.dir < 0);
+  if (gw && gw.kind === 'apes') for (const a of gw.apes) sprC(l, A.APE[gw.wait ? 0 : (gw.f >> 3) % 2], a.x, gw.y, C.ape, a.to < a.from);
+  if (Lv.seesaw) { const ss = Lv.seesaw, cx = lx(ss.x); for (let i = -12; i <= 12; i++) l.rect(cx + i, ss.y - 4 - Math.round(ss.tilt * i / 6), 1, 2, C.tile.y); l.rect(cx - 1, ss.y - 3, 3, 3, C.tile.r); }
+  if (gw && gw.kind === 'bongo' && gw.mode !== 'gone' && !(gw.flash && Lv.t % 4 < 2)) sprC(l, A.BIG_BONGO, gw.x, gw.y, C.bongo, gw.dir > 0);
+  if (Lv.gold) { l.sprite(A.TAPE, lx(Lv.gold.x) - 5, Lv.gold.y - 8 + ((Lv.t >> 3) % 2), C.tape, false, 2); }
+  for (const b of Lv.barrels) if (b.mode === 'rest' || b.mode === 'fly') sprC(l, A.BARREL[Math.floor(b.rot || 0) % 2], b.x, b.y, C.barrel);
+  if (windNow(Lv)) for (let i = 0; i < 14; i++) { const y = 20 + ((i * 53) % 150), x = ((i * 37 + Lv.t * 3 * Math.sign(windNow(Lv))) % 140 + 140) % 140 - 6; for (let k = 0; k < 5; k++) l.rect(x + k, y, 1, 1, C.txt[0]); }
   // עולם 5: תולעים, לפידים, נטיפים, עטלפים והדוב
   for (const w of Lv.worms) sprC(l, A.WORM, w.x, w.y, C.worm);
   for (const t of Lv.torches) if (!t.got) sprC(l, A.TORCH[(Lv.t >> 3) % 2], t.x, t.y, C.torch);
   for (const st of Lv.stones) if (st.mode !== 'gone') sprC(l, A.STALAC, st.x + (st.mode === 'shake' ? (Lv.t % 4 < 2 ? 1 : -1) : 0), st.y + 5, C.stone);
-  for (const b of Lv.bats) { if (b.mode === 'hang') sprC(l, A.BAT_HANG, b.x, b.y + 5, C.bat); else sprC(l, A.BAT_FLY[(Lv.t >> 2) % 2], b.x, b.y + 2, C.bat); }
+  for (const b of Lv.bats) { if (b.bird) sprC(l, A.PARROT[b.mode === 'hang' ? 0 : (Lv.t >> 3) % 2], b.x, b.y + 6, C.bird, b.x > s.p.x); else if (b.mode === 'hang') sprC(l, A.BAT_HANG, b.x, b.y + 5, C.bat); else sprC(l, A.BAT_FLY[(Lv.t >> 2) % 2], b.x, b.y + 2, C.bat); }
   if (gw && gw.kind === 'bear') { sprC(l, A.BEAR[gw.mode === 'sleep' ? 0 : 1], gw.x, gw.y, C.bear, gw.dir < 0); if (gw.mode === 'sleep') { const z = (Lv.t >> 3) % 12; l.text('Z', lx(gw.x) + 6 + (z >> 2), gw.y - 14 - z, C.txt[2]); if (gw.noise > 35 && Lv.t % 10 < 5) l.text('!', lx(gw.x) - 2, gw.y - 18, C.txt[1]); } }
   for (const f of Lv.fish) if (f.y < WATER + 4) sprC(l, A.FISH[(Lv.t >> 3) % 2], f.x, f.y, C.fish, f.dx < 0);
   for (const b of Lv.beavers) sprC(l, A.BEAVER[b.chew > 0 && (Lv.t >> 2) % 2 ? 1 : 0], b.x, b.y, C.beaver, b.x > b.c * T + 4);
@@ -690,7 +818,7 @@ function drawPlay(g, s) {
   for (const n of Lv.ropeSnakes) { if (n.rest) sprC(l, A.SNAKE[(n.f >> 4) % 2], n.x + 12, n.top, C.snake); else sprC(l, A.SNAKE_UP, n.x, n.y + 6, C.snake, n.dir > 0); }
   for (const q of Lv.swarms) for (let i = 0; i < 5; i++) { const a = Lv.t / 9 + i * 1.3; sprAt(l, A.MOSQ[(Lv.t >> 2) % 2], q.x + Math.cos(a) * 7 - 2, q.y + Math.sin(a * 1.3) * 5, C.mosq); }
   if (gd && gd.kind === 'beetle') { sprC(l, A.BIG_BARREL, gd.bx, gd.y, C.barrel, !gd.turn && (gd.f >> 3) % 2 === 0); sprC(l, A.BEETLE, gd.x, gd.y - gd.hop, C.beetle, gd.turn ? gd.to < gd.from : gd.dir < 0); }
-  for (const b of Lv.barrels) sprC(l, A.BARREL[Math.floor(b.rot) % 2], b.x, b.y + (b.mode === 'float' ? 2 : 0), C.barrel, b.vx < 0);
+  for (const b of Lv.barrels) if (b.mode !== 'rest' && b.mode !== 'fly') sprC(l, A.BARREL[Math.floor(b.rot) % 2], b.x, b.y + (b.mode === 'float' ? 2 : 0), C.barrel, b.vx < 0);
   // PIP
   if (s.mode !== 'dying' || s.t % 6 < 4) {
     let rows = A.PIP.stand, flip = p.face < 0, fy = p.y;
@@ -829,6 +957,7 @@ function drawCard(g, s) {
   const l = L(), C = colors(s.L.world), sc = s.L.sc;
   l.clear(C.bg);
   l.text('WORLD ' + s.L.world + ': ' + WNAMES[s.L.world - 1], 64, 46, C.txt[2], 'center');
+  if (s.loop) l.text('ROUND ' + (s.loop + 1), 64, 30, C.txt[1], 'center');
   l.text(sc.id, 64, 62, C.txt[1], 'center', 3);
   l.text(sc.name, 64, 94, C.txt[0], 'center');
   l.text('TIME ' + Math.ceil(s.time / 50) + '  LIVES ' + s.lives, 64, 114, C.txt[2], 'center');
@@ -844,6 +973,16 @@ function drawEnd(g, s) {
     l.text('TAPE PIECES ' + s.got + '/3', 64, 76, G2, 'center');
     l.text('TIME BONUS ' + s.bonusShown, 64, 90, G2, 'center');
     l.text('SCORE ' + s.score, 64, 116, R, 'center');
+  } else if (s.mode === 'win') {
+    l.text('YOU DID IT!', 64, 14, Y, 'center', 2);
+    l.sprite(A.TAPE, 54, 36, C.tape, false, 4);
+    ['BIG BONGO RAN AWAY.', 'THE GOLDEN TAPE', 'IS BACK!'].forEach((t, i) => l.text(t, 64, 56 + i * 10, i ? G2 : Y, 'center'));
+    l.text('TAPE PIECES ' + s.tapes + '/120', 64, 92, s.tapes >= 120 ? R : G2, 'center');
+    if (s.tapes >= 120) l.text('ALL OF THEM! A TRUE EXPLORER', 64, 102, R, 'center');
+    l.text('SCORE ' + s.score, 64, 116, R, 'center');
+    if (D(s).mult !== 1) l.text(D(s).name + ' X' + D(s).mult + ' = ' + finalScore(s), 64, 126, R, 'center');
+    l.text('THE KING RETURNS...', 64, 144, Y, 'center');
+    if (s.t > 120 && (s.t >> 4) % 2) l.text('FIRE: ROUND ' + ((s.loop | 0) + 2), 64, 164, Y, 'center');
   } else if (s.mode === 'over') {
     l.text('GAME OVER', 64, 44, R, 'center', 2);
     l.text('SCORE ' + s.score, 64, 84, Y, 'center');
@@ -856,7 +995,7 @@ function drawEnd(g, s) {
     if (D(s).mult !== 1) l.text(D(s).name + ' X' + D(s).mult + ' = ' + finalScore(s), 64, 124, R, 'center');
     l.text('SAVED FOR WORLD ' + (ROUND_WORLDS + 1), 64, 140, G2, 'center');
   }
-  if (s.mode !== 'clear' && s.t > 50 && (s.t >> 4) % 2) l.text('FIRE: TITLE', 64, 164, Y, 'center');
+  if (s.mode !== 'clear' && s.mode !== 'win' && s.t > 50 && (s.t >> 4) % 2) l.text('FIRE: TITLE', 64, 164, Y, 'center');
   flush(g);
 }
 
@@ -880,7 +1019,9 @@ export default {
       'הנהרות: הזרם סוחף את בולי העץ, ובסוף הנהר בול שוקע. במפל: מי שעוצר על החבל, המים מורידים אותו. בונה מכרסם את החבל שמטפסים עליו: לא לעצור.',
       'הכוורות: דבש דביק מאט ומנמיך את הקפיצה. מעליות שעווה עולות ויורדות. עציץ עשן מרדים את הדבורים לכמה שניות. אצל המלכה: אוספים 3 צנצנות דבש.',
       'המערות: רואים רק את מה שהלפיד מאיר, והוא נשרף. לפיד חדש מאיר שוב. עטלפים מזנקים כשהאור מגיע אליהם. נטיפים נופלים כשעוברים מתחתם. ליד הדוב הישן: הולכים, עוצרים, הולכים.',
-      'עכשיו יש חמישה עולמות, 30 מסכים. הענפים והצמרת בדרך.',
+      'הענפים: קופים זורקים קוקוסים, ענפים מתנדנדים ברוח, וקרשים בגשר החבלים נופלים אחרי רגע. בצמרת: משבי רוח, תוכים, עננים שזזים.',
+      'הקרב: BIG BONGO זורק חביות. חבית שמגיעה לנדנדה נחה על הקצה. קופצים ונוחתים על הקצה השני, והחבית עפה אל BONGO. שלוש פגיעות, והקלטת חוזרת.',
+      'אחרי הניצחון: THE KING RETURNS, סיבוב נוסף ומהיר יותר. מי שאוסף את כל 120 החלקים מקבל סוף מיוחד.',
       'P עוצר ופותח מפה והוראות. Esc או "הוצאת המחסנית" יוצאים.'],
     en: ['BIG BONGO, the king of the monkeys, stole the Golden Tape and took it to the top of the Great Tree. PIP, a small explorer, climbs to bring it back.',
       'Walk: ◀ ▶. Climb a rope: ▲ ▼. Jump: FIRE (also off a rope, with ◀ or ▶).',
@@ -896,7 +1037,9 @@ export default {
       'Rivers: the current carries the logs, and at the end of the river a log sinks. In the waterfall, stop on a rope and the water pushes you down. A beaver gnaws the rope you climb: do not stop.',
       'Hives: honey is sticky, slower and a lower jump. Wax lifts go up and down. A smoke pot puts the bees to sleep for a few seconds. In the queen\'s room, take the 3 honey jars.',
       'Caves: you only see what the torch lights, and it burns down. A new torch lights it up again. Bats dive when the light reaches them. Stalactites fall when you pass under. By the sleeping bear: walk, stop, walk.',
-      'Five worlds, 30 screens, for now. The branches and the treetop are coming.',
+      'Branches: monkeys throw coconuts, branches sway in the wind, and the planks of the rope bridge fall after a moment. Treetop: gusts of wind, parrots, moving clouds.',
+      'The fight: BIG BONGO throws barrels. A barrel that reaches the seesaw rests on its end. Jump and land on the other end, and the barrel flies back at BONGO. Three hits and the tape is back.',
+      'After you win: THE KING RETURNS, another, faster round. Collect all 120 pieces for a special ending.',
       'P pauses and shows the map and help. Esc or "Eject cartridge" leaves.']
   },
 
@@ -925,13 +1068,13 @@ export default {
       if (s.soon) s.soon--;
       if (s.t > 40 && s.save && (api.hit('fire') || api.hit('up'))) {   // ממשיכים מהעולם השמור
         const v = s.save;
-        Object.assign(s, { diff: okDiff(v.diff), world: Math.min(ROUND_WORLDS, Math.max(1, v.world | 0)), lives: Math.max(3, v.lives | 0), score: v.score | 0, tapes: v.tapes | 0, sub: v.sub | 0, nextLife: (Math.floor((v.score | 0) / 10000) + 1) * 10000 });
+        Object.assign(s, { diff: okDiff(v.diff), world: Math.min(ROUND_WORLDS, Math.max(1, v.world | 0)), lives: Math.max(3, v.lives | 0), score: v.score | 0, tapes: v.tapes | 0, sub: v.sub | 0, loop: v.loop | 0, nextLife: (Math.floor((v.score | 0) / 10000) + 1) * 10000 });
         s.idx = WORLDS[s.world].first; s.mode = 'map'; s.t = 0; return;
       }
       if (s.t > 40 && !s.save && api.hit('fire')) { newGame(s); return; }
       return;
     }
-    if (s.mode === 'map') { if (s.t > 30 && api.hit('fire')) startScreen(s); return; }
+    if (s.mode === 'map') { if (s.t === 2) play(snd, TUNES[s.world] || TUNES[1]); if (s.t > 30 && api.hit('fire')) startScreen(s); return; }
     if (s.mode === 'intro') { if (s.t > 75 || (s.t > 15 && api.hit('fire'))) { s.mode = 'play'; s.t = 0; snd.tone(523, 60); } return; }
     if (s.mode === 'play') {
       if (api.hit('pause')) { s.paused = !s.paused; s.page = 0; snd.tone(600, 40); return; }
@@ -941,6 +1084,7 @@ export default {
       const ev = step(s, inp, snd);
       if (s.score >= s.nextLife) { s.lives++; s.nextLife += 10000; msg(s, 'EXTRA LIFE!'); snd.tone(700, 200, 1400); }
       if (ev === 'die') { s.mode = 'dying'; s.t = 0; }
+      else if (ev === 'win') { s.tapes += s.got; s.mode = 'win'; s.t = 0; play(snd, VICTORY, 0.16); endScore(api, s); }
       else if (ev === 'exit' || ev === 'secret') {
         s.secretGot = ev === 'secret';
         if (ev === 'secret') { s.lives++; s.score += 1000; }
@@ -967,6 +1111,10 @@ export default {
       }
       return;
     }
+    if (s.mode === 'win') {   // THE KING RETURNS: סיבוב נוסף, מהיר יותר, עם הניקוד והחיים
+      if (s.t > 120 && api.hit('fire')) { s.loop = (s.loop | 0) + 1; s.world = 1; s.lives++; startWorld(s); }
+      return;
+    }
     if (s.mode === 'over' || s.mode === 'end') {
       if (s.t > 50 && api.hit('fire')) { s.mode = 'title'; s.t = 0; s.titleP = 0; s.save = loadSave(); s.high = api.loadHigh('king'); }
     }
@@ -985,7 +1133,7 @@ export default {
 function endScore(api, s) {
   const fs = finalScore(s), v = loadSave();
   if (fs > ((v && v.sub) || s.sub || 0)) { api.submitScore('king', fs); s.sub = fs; if (v) try { localStorage.setItem(SAVE, JSON.stringify({ ...v, sub: fs })); } catch (e) {} }
-  if (s.mode === 'end') { s.world = ROUND_WORLDS + 1; writeSave(s); }   // העולם הבא עוד בבנייה: השמירה מחכה לו
+  if (s.mode === 'end') { s.world = ROUND_WORLDS + 1; writeSave(s); }
 }
 
 // לבדיקות: הפיזיקה בלי ציור

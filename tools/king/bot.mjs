@@ -15,7 +15,7 @@ function clone(s) {
   s.L.grid = g; s.L.sc = sc; c.L.grid = g; c.L.sc = sc;
   return c;
 }
-const movers = s => s.L.lifts.length + s.L.drips.length + s.L.vines.length + s.L.logs.length + s.L.lilies.length + s.L.crocs.length + (s.L.raft ? 1 : 0) + (s.L.guard && (s.L.guard.kind === 'croc' || s.L.guard.kind === 'whirl') ? 1 : 0);
+const movers = s => s.L.sways.length + (s.L.sc.wind ? 1 : 0) + s.L.lifts.length + s.L.drips.length + s.L.vines.length + s.L.logs.length + s.L.lilies.length + s.L.crocs.length + (s.L.raft ? 1 : 0) + (s.L.guard && (s.L.guard.kind === 'croc' || s.L.guard.kind === 'whirl') ? 1 : 0);
 function key(s) {
   const p = s.p;
   let k = p.mode + ':' + Math.round(p.x / 2) + ',' + Math.round(p.y / 2) + ':' + Math.round(p.vy);
@@ -82,6 +82,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   for (let i = 0; i < _test.SCREENS.length; i++) {
     const sc = _test.SCREENS[i];
     if (only && sc.id !== only) continue;
+    if (sc.guard === 'bongo') { console.log(`${sc.id} ${sc.name.padEnd(18)} the fight (no exit): checked by its own test`); continue; }
     const t0 = Date.now(), r = solve(i);
     const thrower = sc.map[0].includes('K'), top = thrower ? reachTop(i) : null, rows = thrower ? barrelRows(i) : null;
     console.log(`${sc.id} ${sc.name.padEnd(18)} ${r.ok ? 'OK  ' + (r.frames / 50).toFixed(1) + 's of ' + sc.time + 's' : 'NO PATH'}  nodes ${r.nodes}${r.secret ? '  secret reachable' : ''}${thrower ? '  thrower ' + (top.top ? 'REACHABLE' : 'out of reach') + (top.done ? '' : ' (search cut)') + '  barrels on rows ' + rows.join(',') : ''}  (${((Date.now() - t0) / 1000).toFixed(1)}s)`);

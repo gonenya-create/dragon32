@@ -1428,8 +1428,8 @@ if (part('cartridge JUNGLE KING')) {
   // הרובוט: כל מסך אפשר לסיים, בפחות מחצי מהזמן של המסך
   const { solve } = await import('./king/bot.mjs');
   const { _test: KT } = await import('../assets/dragon/carts/king.js');
-  const route = KT.SCREENS.map((sc, i) => { const r = solve(i); return { id: sc.id, ok: r.ok, sec: r.ok ? r.frames / 50 : null, time: sc.time }; });
-  check(`the robot finishes every one of the ${KT.SCREENS.length} screens (5 worlds), each in less than half its time`, KT.SCREENS.length === 30 && route.every(r => r.ok && r.sec < r.time / 2), JSON.stringify(route.filter(r => !r.ok || r.sec >= r.time / 2)));
+  const route = KT.SCREENS.map((sc, i) => [sc, i]).filter(([sc]) => sc.guard !== 'bongo').map(([sc, i]) => { const r = solve(i); return { id: sc.id, ok: r.ok, sec: r.ok ? r.frames / 50 : null, time: sc.time }; });
+  check(`the robot finishes every one of the ${route.length} screens with an exit (7 worlds, 40 screens with the fight), each in less than half its time`, KT.SCREENS.length === 40 && route.length === 39 && route.every(r => r.ok && r.sec < r.time / 2), JSON.stringify(route.filter(r => !r.ok || r.sec >= r.time / 2)));
   // זורק החביות בפינה (גונן, 27.10: "בדונקי לא היה אפשר להגיע לקוף"): PIP לא מגיע אליו, והחביות מתגלגלות על הקומה של היציאה
   const { reachTop, barrelRows } = await import('./king/bot.mjs');
   const thr = KT.SCREENS.map((sc, i) => [sc, i]).filter(([sc]) => sc.map[0].includes('K'));
@@ -1475,6 +1475,29 @@ if (part('cartridge JUNGLE KING')) {
     for (let i = 0; i < 70; i++) KT.step(a, { left: i % 2 ? 0 : 0 } && { left: 1 }, ksnd);
     for (let i = 0; i < 160; i++) KT.step(b, { left: (i % 40) < 18 ? 1 : 0 }, ksnd);
     check('5-6: walking on and on near the sleeping bear wakes it; walk, stop, walk does not', a.L.guard.mode !== 'sleep' && b.L.guard.mode === 'sleep', JSON.stringify([a.L.guard.mode, b.L.guard.mode, b.L.guard.noise])); }
+  // סבב 3 (27.10): הענפים, הצמרת והקרב
+  { const s = at('6-1'); s.p.inv = 0; const k = s.L.nutters[0]; k.cd = 1; s.p.x = k.x + 40; s.p.y = k.y; s.p.mode = 'walk'; let ev = null; for (let i = 0; i < 90 && ev !== 'die'; i++) ev = KT.step(s, {}, ksnd) || ev;
+    check('6-1: a monkey throws a coconut in an arc at PIP, and it hits him', ev === 'die'); }
+  { const s = at('6-2'); s.noEnemies = true; const w = s.L.sways[0]; run(s, 1); s.p.x = w.x; s.p.y = w.y; s.p.mode = 'walk'; const x0 = s.p.x; run(s, 40);
+    check('6-2: a swaying branch carries PIP with it', Math.abs(s.p.x - x0) > 8 && s.p.mode === 'walk', s.p.x - x0); }
+  { const s = at('6-3'); s.p.inv = 1e9; s.p.x = 4; let rained = false; for (let i = 0; i < 120; i++) { run(s, 1); if (s.L.nuts.length) rained = true; }
+    const [rr, rc] = s.L.grid.flatMap((r, ri) => r.map((ch, c) => ch === 'f' ? [ri, c] : null)).filter(Boolean)[0];
+    s.L.nuts = [{ x: rc * 8 + 4, y: KT.OY + (rr - 3) * 8, vx: 0, vy: 0 }]; const nut = s.L.nuts[0]; let lowest = 0; for (let i = 0; i < 40; i++) { run(s, 1); if (s.L.nuts.includes(nut)) lowest = nut.y; }
+    check('6-3: coconuts rain from the treetop, and a leaf roof stops them', rained && !s.L.nuts.includes(nut) && lowest <= KT.OY + rr * 8, JSON.stringify({ rained, lowest, roof: KT.OY + rr * 8 })); }
+  { const s = at('6-4'); s.noEnemies = true; s.p.x = 10 * 8 + 4; s.p.y = KT.OY + 15 * 8; s.p.mode = 'walk'; run(s, 30); const fell = s.L.grid[15][10] === '.'; run(s, 320);
+    check('6-4: a plank of the rope bridge falls a moment after PIP stands on it, and comes back later', fell && s.L.grid[15][10] === 'b'); }
+  { const s = at('6-5'); s.p.inv = 0; const a = s.L.guard.apes[0]; s.p.x = a.x; s.p.y = s.L.guard.y; s.p.mode = 'walk';
+    check("6-5: BONGO's big monkeys hurt PIP when they touch him", run(s, 2) === 'die'); }
+  { const s = at('7-1'); s.noEnemies = true; s.L.t = 0; s.p.x = 60; s.p.y = KT.OY + 20 * 8; s.p.mode = 'walk'; const x0 = s.p.x; run(s, 60);
+    check('7-1: a gust of wind pushes PIP to one side', Math.abs(s.p.x - x0) > 15, s.p.x - x0); }
+  { const s = at('7-2'); s.p.inv = 1e9; const b = s.L.bats.find(k => k.bird); s.p.x = b.x + 30; s.p.y = b.y + 8; s.p.mode = 'walk'; run(s, 2);
+    check("7-2: the mother bird lunges when PIP comes near her nest", b.mode === 'dive'); }
+  { const s = at('7-5'); s.p.inv = 1e9; const g = s.L.guard, ss = s.L.seesaw; let n = 0, ev = null;
+    while (n < 20000 && g.hits < 3) { const b = s.L.barrels.find(k => k.mode === 'rest'); if (b) { s.p.x = ss.x - 20 * b.side; s.p.y = ss.y; s.p.mode = 'walk'; s.p.vx = 0; run(s, 1, { fire: 1 }); run(s, 100); n += 101; } else { s.p.x = 20; s.p.y = ss.y; s.p.mode = 'walk'; run(s, 1); n++; } }
+    run(s, 200); const gold = s.L.gold; if (gold) { s.p.x = gold.x - 30; s.p.y = ss.y; s.p.mode = 'walk'; for (let i = 0; i < 60 && ev !== 'win'; i++) ev = KT.step(s, { right: 1 }, ksnd); }
+    check("7-5: barrels on the seesaw fly back at BIG BONGO; after 3 hits he runs, and the Golden Tape wins the game", g.hits === 3 && ev === 'win', JSON.stringify({ hits: g.hits, ev, n })); }
+  { const a = at('1-1'), b = at('1-1'); b.loop = 1; const ta = a.time, tb = KT.newState(1); tb.loop = 1; KT.loadScreen(tb, 0);
+    check('THE KING RETURNS: the next round is faster, with less time', tb.time < ta); }
 }
 
 if (part('adverts gallery')) {
