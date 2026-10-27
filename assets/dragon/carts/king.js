@@ -47,7 +47,7 @@ function loadScreen(s, idx) {
     else if (ch === 'T') L.tapes.push({ x: cx, y: OY + r * T + 6, got: false });
     else if (ch === 'K') L.throwers.push({ x: cx, y: fy, dir: sc.dir ?? -1, cd: 60, anim: 0 });
     else if (ch === 'S') { const [a, b] = span(grid, c, r + 1); L.snakes.push({ x: cx, y: fy, dir: 1, a: a * T + 8, b: b * T, f: 0 }); }
-    else if (ch === 'R') { const [a, b] = ropeSpan(grid, c, r); L.ropeSnakes.push({ x: cx, y: OY + r * T, dir: 1, a: OY + a * T + 6, b: OY + (b + 1) * T - 2 }); }
+    else if (ch === 'R') { const [a, b] = ropeSpan(grid, c, r); L.ropeSnakes.push({ x: cx, y: OY + r * T, dir: 1, a: OY + a * T + 6, b: OY + (b + 1) * T - 2, top: OY + a * T, rest: 0, f: 0 }); }
     else if (ch === 'M') L.mush.push({ x: cx, y: fy, sq: 0 });
     else if (ch === 'V') L.vines.push({ px: cx, py: OY + r * T, len: (sc.vines || [])[vi++] || 72, amp: 0.5, ph: vi * 1.7 });
     else if (ch === 'C') L.crocs.push({ x: c * T, y: WATER, t: 0 });
@@ -55,7 +55,7 @@ function loadScreen(s, idx) {
     else if (ch === 'O') L.lilies.push({ x: cx, y: WATER, t: 0, sunk: 0 });
     else if (ch === 'L' || ch === 'l') { const b = (sc.logs || [])[li++] || [c - 3, c + 3]; L.logs.push({ x: cx, y: WATER, a: b[0] * T + 12, b: b[1] * T - 4, vx: 0.4, sink: ch === 'l', t: 0, down: 0 }); }
     else if (ch === 'Q') L.swarms.push({ bx: cx, by: OY + r * T, x: cx, y: OY + r * T });
-    else if (ch === 'G') L.guard = sc.guard === 'beetle' ? { kind: 'beetle', x: cx, y: fy, dir: 1, side: 0, f: 0 } : { kind: 'croc', x: c * T, y: WATER, t: 0, bx: c * T };
+    else if (ch === 'G') L.guard = sc.guard === 'beetle' ? { kind: 'beetle', x: cx - 10, bx: cx + 20, y: fy, dir: 1, side: 0, f: 0, turn: 0, hop: 0 } : { kind: 'croc', x: c * T, y: WATER, t: 0, bx: c * T };
   }));
   s.L = L;
   s.gateOpen = !sc.guard || sc.guard === 'croc';
@@ -90,7 +90,7 @@ function platforms(s) {
   for (const p of L.lilies) if (!p.sunk) out.push({ x0: p.x - 6, x1: p.x + 6, y: p.y - 2, o: p, kind: 'lily' });
   for (const c of L.crocs) out.push({ x0: c.x + 2, x1: c.x + 15, y: c.y - 3, o: c, kind: 'croc' });
   const g = L.guard;
-  if (g && g.kind === 'croc') out.push({ x0: g.x + 6, x1: g.x + (crocOpen(g) ? 112 : 132), y: g.y - 6, o: g, kind: 'bigcroc' });
+  if (g && g.kind === 'croc') out.push({ x0: g.x + 6, x1: g.x + (crocOpen(g) ? 112 : 132), y: g.y - 6, o: g, kind: 'bigcroc', vx: g.vx || 0 });
   for (const b of L.barrels) if (b.mode === 'float') out.push({ x0: b.x - 5, x1: b.x + 5, y: b.y - 8, o: b, kind: 'barrel', vx: b.vx });
   return out;
 }
@@ -142,7 +142,7 @@ function step(s, inp, snd) {
       if (ground && ground.vx) p.x += ground.vx;
       if (ground && ground.kind === 'lily') ground.o.t++;
       if (ground && ground.kind === 'log' && ground.o.sink) ground.o.t++;
-      if (inp.fire) { p.mode = 'air'; p.vy = JUMP; p.fallY = p.y; p.ropeJump = false; snd.tone(300, 80, 600); }
+      if (inp.fire) { p.mode = 'air'; p.vy = JUMP; p.fallY = p.y; p.ropeJump = false; p.realJump = true; snd.tone(300, 80, 600); }
       else if (inp.down && isRope(tile(s, col(p.x), row(p.y) + 1)) && Math.abs(p.x - (col(p.x) * T + 4)) <= 4) { p.mode = 'climb'; p.x = col(p.x) * T + 4; p.y = OY + (row(p.y) + 1) * T + 2; }
     } else {
       // באוויר: שליטה חלקית, ותנופה מהליאנה נשמרת
@@ -173,9 +173,9 @@ function step(s, inp, snd) {
           for (const pl of plats) if (pl.y >= p.y - 0.5 && pl.y <= ny + 0.001 && p.x + 3 >= pl.x0 && p.x - 3 <= pl.x1 && (!land || pl.y < land.y)) land = pl;
           if (land) {
             ny = land.y;
-            if (land.kind === 'mush') { p.vy = BOUNCE; p.fallY = ny; land.o.sq = 8; snd.tone(200, 120, 900); ny -= 0.01; }
+            if (land.kind === 'mush') { p.vy = BOUNCE; p.fallY = ny; land.o.sq = 8; p.realJump = false; snd.tone(200, 120, 900); ny -= 0.01; }
             else {
-              p.mode = 'walk'; p.vy = 0;
+              p.mode = 'walk'; p.vy = 0; p.realJump = false;
               if (ny - p.fallY > FALL_HURT) { p.y = ny; return die(s, snd, 'OUCH!'); }
             }
           }
@@ -238,7 +238,7 @@ function movers(s, snd, d) {
   for (const c of L.crocs) c.t++;
   for (const f of L.fx) f.t--;
   L.fx = L.fx.filter(f => f.t > 0);
-  if (s.L.guard && s.L.guard.kind === 'croc') { const g = s.L.guard; g.t++; g.x = g.bx + Math.round(10 * Math.sin(g.t / 80)); }
+  if (s.L.guard && s.L.guard.kind === 'croc') { const g = s.L.guard, ox = g.x; g.t++; g.x = g.bx + Math.round(10 * Math.sin(g.t / 80)); g.vx = g.x - ox; }
 }
 const onPlat = (s, o) => s.p.mode === 'walk' && Math.abs(s.p.y - (o.y - 2)) < 1.5 && Math.abs(s.p.x - o.x) < 9;
 
@@ -282,7 +282,7 @@ function enemies(s, snd, d) {
     }
     if (b.mode !== 'float' && !b.gone) {
       if (hit(p, b.x - 4, b.y - 9, b.x + 4, b.y)) hurt = true;
-      else if (!b.jumped && p.mode === 'air' && Math.abs(b.x - p.x) < 9 && b.y - p.y > 1 && b.y - p.y < 26) { b.jumped = true; s.score += 100; fx(s, b.x, b.y - 14, '100'); snd.tone(900, 40); }
+      else if (!b.jumped && p.mode === 'air' && p.realJump && !s.hurry && Math.abs(b.x - p.x) < 9 && b.y - p.y > 1 && b.y - p.y < 26) { b.jumped = true; s.score += 100; fx(s, b.x, b.y - 14, '100'); snd.tone(900, 40); }
     }
   }
   L.barrels = L.barrels.filter(b => !b.gone);
@@ -292,8 +292,13 @@ function enemies(s, snd, d) {
     if (n.x < n.a || n.x > n.b) { n.dir = -n.dir; n.x += n.dir * 2; }
     if (hit(p, n.x - 7, n.y - 6, n.x + 7, n.y)) hurt = true;
   }
+  // נחש על חבל: יורד ועולה, ובראש החבל נח קצת על השורש, ליד החבל. אז אפשר לטפס
   for (const n of L.ropeSnakes) {
-    n.y += n.dir * 0.5 * d.spd; if (n.y < n.a || n.y > n.b) { n.dir = -n.dir; n.y += n.dir * 2; }
+    n.f++;
+    if (n.rest) { n.rest--; if (hit(p, n.x + 5, n.top - 6, n.x + 19, n.top)) hurt = true; continue; }
+    n.y += n.dir * 0.5 * d.spd;
+    if (n.y > n.b) { n.dir = -1; n.y = n.b; }
+    if (n.y < n.a) { n.dir = 1; n.y = n.a; n.rest = Math.round(130 / d.spd); }
     if (hit(p, n.x - 3, n.y - 6, n.x + 3, n.y + 6)) hurt = true;
   }
   // תנינים קטנים: הראש נושך כשהפה פתוח
@@ -314,14 +319,20 @@ function enemies(s, snd, d) {
   // השומרים
   const g = L.guard;
   if (g && g.kind === 'beetle') {
-    g.x += g.dir * 0.9 * d.spd; g.f++;
-    const bx = g.x + g.dir * 20;
-    if (bx < 26 || bx > W - 26) { g.dir = -g.dir; snd.tone(90, 80); }
+    g.f++;
+    if (g.turn) {   // בקיר: החבית עוצרת, והחיפושית קופצת מעליה לצד השני
+      g.turn--; const k = 1 - g.turn / 30; g.x = g.from + (g.to - g.from) * k; g.hop = Math.sin(k * Math.PI) * 22;
+      if (!g.turn) g.hop = 0;
+    } else {
+      g.bx += g.dir * 0.9 * d.spd; g.x = g.bx - g.dir * 30;
+      if (g.bx < 26 || g.bx > W - 26) { g.dir = -g.dir; g.turn = 30; g.from = g.x; g.to = g.bx - g.dir * 30; snd.tone(90, 80); }
+    }
+    const bx = g.bx;
     const side = Math.sign(bx - p.x);
-    if (g.side && side && side !== g.side && !s.gateOpen && p.y > OY + 17 * T) {   // נספר רק כש-PIP למטה, בדרך של החבית
+    if (g.side && side && side !== g.side && !s.gateOpen && p.y > OY + 16 * T && p.mode !== 'climb') {   // נספר רק כש-PIP למטה, בדרך של החבית (גם בקפיצה מעליה)
        s.passes++; snd.tone(600 + s.passes * 100, 80); fx(s, p.x, p.y - 24, s.passes + '/3'); if (s.passes >= (s.L.sc.passes || 3)) { s.gateOpen = true; msg(s, 'THE GATE IS OPEN!'); snd.tone(500, 300, 1000); } }
     if (side) g.side = side;
-    if (hit(p, bx - 8, g.y - 14, bx + 8, g.y) || hit(p, g.x - 9, g.y - 7, g.x + 9, g.y)) hurt = true;
+    if (hit(p, bx - 6, g.y - 11, bx + 6, g.y) || hit(p, g.x - 9, g.y - 7 - g.hop, g.x + 9, g.y - g.hop)) hurt = true;
   }
   if (g && g.kind === 'croc' && crocOpen(g) && hit(p, g.x + 112, g.y - 12, g.x + 136, g.y)) hurt = true;
   if (hurt && !p.inv) { die(s, snd, 'OUCH!'); return true; }
@@ -447,9 +458,9 @@ function drawPlay(g, s) {
   for (const f of L.frogs) spr(g, A.FROG[f.hop ? 1 : 0], f.x - 3, f.y - 4 - f.hop - (f.hop ? 1 : 0), C.frog, f.to < f.from);
   for (const k of L.throwers) spr(g, A.MONKEY[k.anim ? 1 : 0], k.x - 6, k.y - 13, C.monkey, k.dir > 0);
   for (const n of L.snakes) spr(g, A.SNAKE[(n.f >> 4) % 2], n.x - 8, n.y - 7, C.snake, n.dir < 0);
-  for (const n of L.ropeSnakes) spr(g, A.SNAKE_UP, n.x - 3, n.y - 6, C.snake, n.dir > 0);
+  for (const n of L.ropeSnakes) { if (n.rest) spr(g, A.SNAKE[(n.f >> 4) % 2], n.x + 4, n.top - 7, C.snake); else spr(g, A.SNAKE_UP, n.x - 3, n.y - 6, C.snake, n.dir > 0); }
   for (const q of L.swarms) for (let i = 0; i < 5; i++) { const a = L.t / 9 + i * 1.3; spr(g, A.MOSQ[(L.t >> 2) % 2], q.x + Math.cos(a) * 7 - 1, q.y + Math.sin(a * 1.3) * 5, C.mosq); }
-  if (gd && gd.kind === 'beetle') { const bx = gd.x + gd.dir * 20; spr(g, A.BIG_BARREL, bx - 8, gd.y - 14, C.barrel, (gd.f >> 3) % 2 === 0); spr(g, A.BEETLE, gd.x - 9, gd.y - 7, C.beetle, gd.dir < 0); }
+  if (gd && gd.kind === 'beetle') { spr(g, A.BIG_BARREL, gd.bx - 8, gd.y - 14, C.barrel, !gd.turn && (gd.f >> 3) % 2 === 0); spr(g, A.BEETLE, gd.x - 9, gd.y - 7 - gd.hop, C.beetle, gd.turn ? gd.to < gd.from : gd.dir < 0); }
   for (const b of L.barrels) spr(g, A.BARREL[Math.floor(b.rot) % 4], b.x - 5, b.y - 10 + (b.mode === 'float' ? 2 : 0), C.barrel, b.vx < 0);
   // PIP
   if (s.mode !== 'dying' || s.t % 6 < 4) {
@@ -541,8 +552,8 @@ function drawTitle(g, s) {
     g.text('AND A GUARD AT THE END', 128, 80, c0, 'center'); g.text('OF EVERY WORLD...', 128, 90, c0, 'center');
   }
   if (s.save) {
-    if ((s.t >> 4) % 2) g.text('FIRE: GO ON', 128, 122, c3, 'center', 2);
-    g.text('WORLD ' + s.save.world + ', ' + DIFF[okDiff(s.save.diff)].name, 128, 140, c1, 'center');
+    if (s.save.world > ROUND_WORLDS) { g.text(s.soon ? 'STILL GROWING...' : 'WORLD ' + s.save.world + ' SOON', 128, 122, c3, 'center', 2); g.text('YOUR GAME IS SAVED FOR IT', 128, 140, c1, 'center'); }
+    else { if ((s.t >> 4) % 2) g.text('FIRE: GO ON', 128, 122, c3, 'center', 2); g.text('WORLD ' + s.save.world + ', ' + DIFF[okDiff(s.save.diff)].name, 128, 140, c1, 'center'); }
   } else {
     if ((s.t >> 4) % 2) g.text('PRESS FIRE', 128, 122, c3, 'center', 2);
     g.text('LEFT RIGHT: ' + DIFF[okDiff(s.diff)].name, 128, 140, s.diff === 2 ? c3 : c1, 'center');
@@ -582,7 +593,8 @@ function drawEnd(g, s) {
   const C = colors(s.world || 2), [c0, c1, c2, c3] = C.c;
   g.clear(BLACK);
   if (s.mode === 'clear') {
-    g.text('SCREEN CLEAR!', 128, 40, c1, 'center', 2);
+    g.text(s.secretGot ? 'SECRET PASSAGE!' : 'SCREEN CLEAR!', 128, 40, c1, 'center', 2);
+    if (s.secretGot) g.text('+1 LIFE   +1000', 128, 60, c3, 'center');
     g.text('TAPE PIECES ' + s.got + '/3', 128, 76, c0, 'center');
     g.text('TIME BONUS ' + s.bonusShown, 128, 92, c0, 'center');
     g.text('SCORE ' + s.score, 128, 120, c3, 'center', 2);
@@ -599,6 +611,7 @@ function drawEnd(g, s) {
     g.text('THE RIVERS ARE STILL GROWING...', 128, 90, c2, 'center'); g.text('MORE OF THE GREAT TREE SOON!', 128, 100, c2, 'center');
     g.text('SCORE ' + s.score, 128, 122, c3, 'center', 2);
     if (D(s).mult !== 1) g.text(D(s).name + ' X' + D(s).mult + ' = ' + finalScore(s), 128, 142, c3, 'center');
+    g.text('YOUR GAME IS SAVED FOR WORLD 3', 128, 154, c2, 'center');
   }
   if (s.t > 50 && (s.t >> 4) % 2) g.text('FIRE: TITLE', 128, 166, c1, 'center');
 }
@@ -615,7 +628,8 @@ export default {
       'בכל מסך: מגיעים לחץ המהבהב למעלה. בדרך יש 3 חלקים של קלטת הזהב (לא חובה, אבל שווים נקודות).',
       'חביות: הקופים מגלגלים אותן. קפיצה מעל חבית נותנת 100. פטרייה מקפיצה גבוה. נפילה גבוהה מדי כואבת.',
       'חבל קרוע: קופצים מהחבל (FIRE), ותופסים שוב מעל הקרע עם ▲.',
-      'בסוף כל עולם יש שומר. בשורשים: מתחמקים מהחבית הענקית שלוש פעמים, והשער נפתח.',
+      'נחש על חבל: הוא נח קצת למעלה, ליד החבל. זה הזמן לטפס. אפשר גם לקפוץ מהשורש ולתפוס את החבל מעליו.',
+      'בסוף כל עולם יש שומר. בשורשים: רצים לעבר החבית הענקית וקופצים מעליה, שלוש פעמים, והשער נפתח.',
       'הזמן: כשהוא נגמר לא מתים, אבל החביות מגיעות מהר יותר. מי שמסיים מהר מקבל בונוס.',
       'שמירה: בתחילת כל עולם. במסך הפתיחה FIRE ממשיך. משחק חדש: P, ואז FIRE לאישור.',
       'קושי: במסך הפתיחה ◀ ▶ בוחרים EASY, NORMAL או HARD. הניקוד מוכפל לפי הקושי.',
@@ -627,7 +641,8 @@ export default {
       'In every screen: reach the blinking arrow at the top. On the way are 3 pieces of the Golden Tape (not required, but worth points).',
       'Barrels: the monkeys roll them. Jumping over one gives 100. A mushroom bounces you high. Falling too far hurts.',
       'Torn rope: jump off the rope (FIRE) and grab it again above the gap with ▲.',
-      'Each world ends with a guard. In the roots: dodge the giant barrel three times and the gate opens.',
+      'Snake on a rope: it rests for a while at the top, beside the rope. That is the time to climb. You can also jump from the root and grab the rope above it.',
+      'Each world ends with a guard. In the roots: run at the giant barrel and jump over it, three times, and the gate opens.',
       'Time: when it runs out you do not die, but the barrels come faster. A fast finish gives a bonus.',
       'Saving: at the start of each world. On the title, FIRE goes on. New game: P, then FIRE to confirm.',
       'Difficulty: on the title ◀ ▶ choose EASY, NORMAL or HARD. The score is multiplied by it.',
@@ -656,6 +671,8 @@ export default {
       if (api.hit('down')) { s.titleP = (s.titleP + 1) % 4; s.titleT = 0; snd.tone(330, 30); } else if (++s.titleT > 300) { s.titleP = (s.titleP + 1) % 4; s.titleT = 0; }
       if (s.save && api.hit('pause') && s.t > 40) { s.askNew = true; s.askT = 0; try { s.diff = okDiff(parseInt(localStorage.getItem(DIFF_KEY), 10)); } catch (e) {} snd.tone(250, 60); return; }
       if (!s.save && (api.hit('left') || api.hit('right'))) { s.diff = (s.diff + (api.hit('right') ? 1 : 2)) % 3; snd.tone(440 + s.diff * 110, 40); try { localStorage.setItem(DIFF_KEY, String(s.diff)); } catch (e) {} }
+      if (s.t > 40 && s.save && s.save.world > ROUND_WORLDS && (api.hit('fire') || api.hit('up'))) { s.soon = 120; snd.tone(200, 120); return; }
+      if (s.soon) s.soon--;
       if (s.t > 40 && s.save && (api.hit('fire') || api.hit('up'))) {   // ממשיכים מהעולם השמור
         const v = s.save;
         Object.assign(s, { diff: okDiff(v.diff), world: Math.min(ROUND_WORLDS, Math.max(1, v.world | 0)), lives: Math.max(3, v.lives | 0), score: v.score | 0, tapes: v.tapes | 0, sub: v.sub | 0, nextLife: (Math.floor((v.score | 0) / 10000) + 1) * 10000 });
@@ -675,7 +692,8 @@ export default {
       if (s.score >= s.nextLife) { s.lives++; s.nextLife += 10000; msg(s, 'EXTRA LIFE!'); snd.tone(700, 200, 1400); }
       if (ev === 'die') { s.mode = 'dying'; s.t = 0; }
       else if (ev === 'exit' || ev === 'secret') {
-        if (ev === 'secret') { s.lives++; s.score += 1000; msg(s, 'SECRET PASSAGE!'); }
+        s.secretGot = ev === 'secret';
+        if (ev === 'secret') { s.lives++; s.score += 1000; }
         s.tapes += s.got; s.bonus = Math.ceil(s.time / 50) * 10; s.bonusShown = 0; s.mode = 'clear'; s.t = 0;
         [523, 659, 784, 1046].forEach((f, i) => snd.note && snd.note(f, i * 0.09, 0.09));
       }
@@ -717,7 +735,7 @@ export default {
 function endScore(api, s) {
   const fs = finalScore(s), v = loadSave();
   if (fs > ((v && v.sub) || s.sub || 0)) { api.submitScore('king', fs); s.sub = fs; if (v) try { localStorage.setItem(SAVE, JSON.stringify({ ...v, sub: fs })); } catch (e) {} }
-  if (s.mode === 'end') clearSave();
+  if (s.mode === 'end') { s.world = ROUND_WORLDS + 1; writeSave(s); }   // העולם הבא עוד בבנייה: השמירה מחכה לו
 }
 
 // לבדיקות: הפיזיקה בלי ציור

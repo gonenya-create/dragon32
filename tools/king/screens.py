@@ -31,7 +31,7 @@ plat(m, 12, 2, 7); plat(m, 12, 10, 15); plat(m, 5, 16, 28); plat(m, 13, 26, 29)
 rope(m, 12, 13, 19)
 put(m, 19, 8, 'M'); put(m, 11, 14, 'M'); put(m, 19, 23, 'M')
 block(m, 3, 4, 27, 28, 'E'); put(m, 4, 22, 'K'); put(m, 19, 3, 'P')
-put(m, 11, 3, 'T'); put(m, 12, 28, 'T'); put(m, 4, 22, 'T')
+put(m, 11, 3, 'T'); put(m, 12, 28, 'T'); put(m, 4, 19, 'T')
 add('1-2', 'MUSHROOM HOP', m, time=60, rate=230, dir=-1)
 
 m = new(); walls(m)
