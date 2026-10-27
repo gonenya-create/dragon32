@@ -26,12 +26,12 @@ function colors(w) {
   const tape = { y: Y, r: R }, barrel = { y: Y, r: R }, mush = { r: R, y: Y }, log = { y: Y, r: R };
   if (w === 2) return {
     bg: G, txt: [Y, R, B], pip: { h: Y, b: R, s: R, p: B, e: G }, monkey: { f: R, c: Y, n: B, e: G }, barrel, mush, tape, tapeOff: { y: B, r: B }, log,
-    snake: { s: B, e: Y, t: R }, croc: { k: G, t: Y, e: R }, frog: { k: G, t: Y, e: R }, mosq: { m: R, n: Y }, lily: { k: Y }, splash: { c: Y },
+    snake: { s: B, e: Y, t: R }, croc: { k: Y, t: R, e: B }, frog: { k: G, t: Y, e: R }, mosq: { m: R, n: Y }, lily: { k: Y }, splash: { c: Y },
     beetle: { k: B, h: Y, r: R }, bongo: { f: B, c: Y, n: R, e: G }, tile: { r: R, y: Y, g: B }, rope: [Y, R], water: B, wave: Y, leaf: B, leafEdge: Y, vine: B, vineLeaf: Y
   };
   return {
     bg: B, txt: [Y, R, G], pip: { h: Y, b: R, s: R, p: G, e: B }, monkey: { f: G, c: Y, n: R, e: B }, barrel, mush, tape, tapeOff: { y: G, r: G }, log,
-    snake: { s: G, e: Y, t: R }, croc: { k: G, t: Y, e: R }, frog: { k: G, t: Y, e: R }, mosq: { m: R, n: Y }, lily: { k: G }, splash: { c: Y },
+    snake: { s: G, e: Y, t: R }, croc: { k: Y, t: R, e: B }, frog: { k: G, t: Y, e: R }, mosq: { m: R, n: Y }, lily: { k: G }, splash: { c: Y },
     beetle: { k: G, h: Y, r: R }, bongo: { f: G, c: Y, n: R, e: B }, tile: { r: R, y: Y, g: G }, rope: [Y, G], water: B, wave: Y, leaf: G, leafEdge: Y, vine: G, vineLeaf: Y
   };
 }
