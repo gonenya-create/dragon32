@@ -24,7 +24,7 @@ function key(s) {
   return k;
 }
 
-export function solve(idx, { limit = 400000, diff = 1 } = {}) {
+export function solve(idx, { limit = 3000000, diff = 1 } = {}) {
   const s0 = _test.newState(diff); _test.loadScreen(s0, idx); s0.noEnemies = true; s0.gateOpen = true;
   const seen = new Set([key(s0)]);
   let frontier = [{ s: s0, path: [] }], nodes = 0, secret = null;

@@ -7,6 +7,8 @@ import * as A from './king-art.js';
 import { SCREENS } from './king-screens.js';
 
 const OY = 10, T = 8, COLS = 32, ROWS = 21;
+// ליאנה מתנדנדת בקביעות עד 43 מעלות לכל צד: בקצה התנופה היא מעל הגדה השנייה, ושם משחררים
+const VAMP = 0.75;
 const GRAV = 0.22, JUMP = -3.4, WALK = 1.1, CLIMB = 1.0, MAXF = 4, BOUNCE = -5.6, FALL_HURT = 50, WATER = OY + 18 * T;
 const DIFF = [
   { name: 'EASY', spd: 0.75, rate: 1.4, time: 1.3, mult: 1 },
@@ -53,7 +55,7 @@ function loadScreen(s, idx) {
     else if (ch === 'S') { const [a, b] = span(grid, c, r + 1); L.snakes.push({ x: cx, y: fy, dir: 1, a: a * T + 8, b: b * T, f: 0 }); }
     else if (ch === 'R') { const [a, b] = ropeSpan(grid, c, r); L.ropeSnakes.push({ x: cx, y: OY + r * T, dir: 1, a: OY + a * T + 6, b: OY + (b + 1) * T - 2, top: OY + a * T, rest: 0, f: 0 }); }
     else if (ch === 'M') L.mush.push({ x: cx, y: fy, sq: 0 });
-    else if (ch === 'V') L.vines.push({ px: cx, py: OY + r * T, len: (sc.vines || [])[vi++] || 72, amp: 0.5, ph: vi * 1.7 });
+    else if (ch === 'V') L.vines.push({ px: cx, py: OY + r * T, len: (sc.vines || [])[vi++] || 72, amp: VAMP, ph: vi * 1.7 });
     else if (ch === 'C') L.crocs.push({ x: c * T, y: WATER, t: 0 });
     else if (ch === 'F') { const hop = (sc.frogHop || [])[fi++]; L.frogs.push({ x: cx, y: fy, a: hop ? hop[0] * T + 4 : cx - 16, b: hop ? hop[1] * T + 4 : cx, t: 0, dir: 1 }); }
     else if (ch === 'O') L.lilies.push({ x: cx, y: WATER, t: 0, sunk: 0 });
@@ -115,10 +117,10 @@ function step(s, inp, snd) {
   let ev = null;
 
   if (p.mode === 'swing') {
-    const v = p.vine, ox = p.x, oy = p.y;
-    if (dir) v.amp = Math.max(0.3, Math.min(0.95, v.amp + 0.003 * dir * Math.sign(Math.cos(v.ph))));   // נדנוד: ◀ ▶ בכיוון התנופה מגדילים אותה
+    const v = p.vine, ox = p.sx, oy = p.sy;
+    if (dir) v.amp = Math.max(0.5, Math.min(0.95, v.amp + 0.003 * dir * Math.sign(Math.cos(v.ph))));   // נדנוד: ◀ ▶ בכיוון התנופה מגדילים אותה
     const a = vineAngle(v);
-    p.x = v.px + Math.sin(a) * p.vd; p.y = v.py + Math.cos(a) * p.vd + 14;
+    p.x = v.px + Math.sin(a) * p.vd; p.y = v.py + Math.cos(a) * p.vd + 14; p.sx = p.x; p.sy = p.y;
     p.face = Math.cos(v.ph) >= 0 ? 1 : -1;
     if (inp.fire) { p.mode = 'air'; p.vx = (p.x - ox) * 1.05; p.vy = (p.y - oy) * 1.05 - 0.6; p.fallY = p.y; p.grabCd = 18; p.vine = null; snd.tone(500, 60, 700); }
   } else if (p.mode === 'climb') {
@@ -152,7 +154,7 @@ function step(s, inp, snd) {
       // באוויר: שליטה חלקית, ותנופה מהליאנה נשמרת
       if (Math.abs(p.vx) > WALK) p.vx *= 0.99; else p.vx = Math.max(-WALK, Math.min(WALK, p.vx + dir * 0.12));
     }
-    if (inp.up && !p.grabCd && !(p.ropeJump && p.vy < 0) && (isRope(tile(s, col(p.x), row(p.y - 8))) || isRope(tile(s, col(p.x), row(p.y - 14))))) { p.ropeJump = false; p.mode = 'climb'; p.x = col(p.x) * T + 4; p.vx = p.vy = 0; }
+    if (inp.up && !p.grabCd && !(p.ropeJump && p.vy < 0) && (isRope(tile(s, col(p.x), row(p.y - 8))) || isRope(tile(s, col(p.x), row(p.y - 14)))) && (p.mode === 'walk' || p.ropeJump || freeRope(s, col(p.x), row(p.y - 14)))) { p.ropeJump = false; p.mode = 'climb'; p.x = col(p.x) * T + 4; p.vx = p.vy = 0; }
     if (p.mode !== 'climb') {
       // תזוזה לצדדים, וקירות עוצרים
       let nx = p.x + p.vx;
@@ -189,7 +191,7 @@ function step(s, inp, snd) {
         if (!p.grabCd && p.mode === 'air') for (const v of L.vines) {
           const a = vineAngle(v), hx = p.x, hy = p.y - 14;
           for (let dd = v.len * 0.35; dd <= v.len; dd += 2) {
-            if (Math.abs(v.px + Math.sin(a) * dd - hx) < 5 && Math.abs(v.py + Math.cos(a) * dd - hy) < 5) { p.mode = 'swing'; p.vine = v; p.vd = dd; v.amp = Math.max(v.amp, 0.62); snd.tone(250, 40); break; }
+            if (Math.abs(v.px + Math.sin(a) * dd - hx) < 5 && Math.abs(v.py + Math.cos(a) * dd - hy) < 5) { p.mode = 'swing'; p.vine = v; p.vd = dd; p.x = v.px + Math.sin(a) * dd; p.y = v.py + Math.cos(a) * dd + 14; p.sx = p.x; p.sy = p.y; snd.tone(250, 40); break; }
           }
           if (p.mode === 'swing') break;
         }
@@ -212,6 +214,8 @@ function step(s, inp, snd) {
   movers(s, snd, d);
   return ev;
 }
+// חבל שתלוי חופשי (בלי שורש מתחתיו) אפשר לתפוס בקפיצה. חבל שעומד על שורש עולים רק כשעומדים מתחתיו, כדי שלא ידלגו על קומה
+function freeRope(s, c, r) { if (!isRope(tile(s, c, r))) r = row(s.p.y - 8); let b = r; while (b < ROWS - 1 && isRope(tile(s, c, b + 1))) b++; return !isTop(tile(s, c, b + 1)); }
 function support(s, p, plats) {
   const r = row(p.y + 0.5);
   if (Math.abs(p.y - (OY + r * T)) < 0.6 && (isTop(tile(s, col(p.x - 3), r)) || isTop(tile(s, col(p.x + 3), r)))) { p.y = OY + r * T; return { kind: 'tile' }; }
@@ -227,7 +231,7 @@ const hit = (p, x0, y0, x1, y1) => p.x + 3 > x0 && p.x - 3 < x1 && p.y - 1 > y0 
 // עצמים שזזים לבד (גם כשהאויבים כבויים בבדיקה): ליאנות, בולי עץ, עלים, פטריות
 function movers(s, snd, d) {
   const L = s.L;
-  for (const v of L.vines) { v.ph += Math.sqrt(GRAV / v.len) * 0.9; if (s.p.vine !== v) v.amp += (0.5 - v.amp) * 0.01; }
+  for (const v of L.vines) { v.ph += Math.sqrt(GRAV / v.len) * 0.9; if (s.p.vine !== v) v.amp += (VAMP - v.amp) * 0.01; }
   for (const l of L.logs) {
     if (l.down) { l.down--; if (!l.down) l.t = 0; continue; }
     l.x += l.vx; if (l.x < l.a || l.x > l.b) { l.vx = -l.vx; l.x += l.vx * 2; }

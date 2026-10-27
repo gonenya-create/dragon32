@@ -1371,11 +1371,12 @@ if (part('cartridge JUNGLE KING')) {
   await K('s.p.vy = 0;'); await p.keyboard.press('Space'); await p.waitForTimeout(100);
   const air = await K('return s.p.mode;'); await p.waitForTimeout(900);
   check('FIRE jumps, and PIP lands again', air === 'air' && (await K('return s.p.mode;')) === 'walk');
-  // טיפוס: החבל בעמודה 26, מהרצפה לשורש בשורה 15
-  await K('s.p.x = 26 * 8 + 4; s.p.y = 170; s.p.mode = "walk";');
+  // טיפוס: החבל שעומד על הרצפה (נמצא לפי המפה), עד השורש שהוא תלוי ממנו
+  const rp = await K('const g = s.L.grid; for (let c = 0; c < 32; c++) if (g[19][c] === "|") { let r = 19; while (g[r - 1][c] === "|") r--; return { c, top: 10 + (r - 1) * 8 }; }');
+  await K(`s.p.x = ${rp.c} * 8 + 4; s.p.y = 170; s.p.mode = "walk";`);
   await p.keyboard.down('ArrowUp'); await p.waitForTimeout(1200); await p.keyboard.up('ArrowUp'); await p.waitForTimeout(80);
-  check('UP climbs the rope and PIP stands on the root above', await K('return s.p.mode === "walk" && s.p.y === 130;'), await K('return JSON.stringify(s.p);'));
-  await K('s.p.x = 26 * 8 + 4; s.p.y = 130;'); await press('ArrowDown', 300);
+  check('UP climbs the rope and PIP stands on the root above', await K(`return s.p.mode === "walk" && s.p.y === ${rp.top};`), await K('return JSON.stringify(s.p);'));
+  await K(`s.p.x = ${rp.c} * 8 + 4; s.p.y = ${rp.top};`); await press('ArrowDown', 300);
   check('DOWN on a root over a rope climbs down', await K('return s.p.mode === "climb";'));
   // חלק קלטת
   const tp = await K('const t = s.L.tapes[0]; s.p.mode = "walk"; s.p.x = t.x; s.p.y = t.y + 8; return s.score;');
@@ -1387,7 +1388,7 @@ if (part('cartridge JUNGLE KING')) {
   const hurt = await K('return s.mode;'); await p.waitForTimeout(1700);
   check('a barrel hits PIP: one life less and the screen starts again', hurt === 'dying' && await K('return s.lives === 2 && (s.mode === "intro" || s.mode === "play");'));
   // יציאה
-  await K('s.mode = "play"; s.noEnemies = true; s.p.x = 6 * 8 + 8; s.p.y = 50; s.p.mode = "walk";'); await p.waitForTimeout(150);
+  await K('s.mode = "play"; s.noEnemies = true; const g = s.L.grid; let er = 0, ec = 0; for (let r = 20; r >= 0; r--) for (let c = 0; c < 32; c++) if (g[r][c] === "E") { er = r; ec = c; } let r2 = er; while (g[r2][ec] === "E") r2++; s.p.x = ec * 8 + 4; s.p.y = 10 + r2 * 8; s.p.mode = "walk";'); await p.waitForTimeout(150);
   check('reaching the arrow at the top clears the screen (time bonus)', await K('return s.mode === "clear";'));
   await K('s.t = 200; s.bonusShown = s.bonus;'); await press('Space'); await p.waitForTimeout(100);
   check('after the tally, the next screen (1-2)', await K('return s.L.sc.id === "1-2";'));
