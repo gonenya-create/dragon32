@@ -18,7 +18,7 @@ window.D32_GAMES = {
       "key": "period",
       "he": "המשחקים של Ken Kalish",
       "en": "Ken Kalish's games",
-      "years": "1983–85",
+      "years": "1982–85",
       "note": [
         "Ken Kalish כתב משחקים ל-Dragon ול-Color Computer, ו-Microdeal מקורנוול הוציאה אותם בזמנו, על קלטות. כאן באישורו.",
         "Ken Kalish wrote games for the Dragon and the Color Computer, and Microdeal of Cornwall published them at the time, on tape. Here with his permission."
@@ -64,6 +64,38 @@ window.D32_GAMES = {
     }
   ],
   "games": {
+    "escape": {
+      "slug": "escape",
+      "drawer": "period",
+      "year": "1982",
+      "tag": [
+        "מבוך חידות",
+        "puzzle maze"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כחצי דקה",
+        "about half a minute"
+      ],
+      "about": {
+        "he": [
+          "המשחק הראשון של Ken Kalish: הוא כתב אותו בסוף 1981, ו-Color Software Services מטקסס הוציאה אותו ב-1982. בבריטניה הוציאה אותו Microdeal, גם ל-Dragon.",
+          "המנוע התלת-ממדי שלו הוא אותו מנוע ש-Kalish השתמש בו אחר כך ב-Phantom Slayer. אבל כאן אין רוחות ואין ירי: זה משחק חידות."
+        ],
+        "en": [
+          "Ken Kalish's first game: he wrote it at the end of 1981, and Color Software Services of Texas published it in 1982. In Britain Microdeal published it, for the Dragon too.",
+          "Its 3D engine is the one Kalish later used for Phantom Slayer. But here there are no phantoms and no shooting: it is a puzzle game."
+        ]
+      },
+      "icon": [
+        24,
+        8,
+        96
+      ]
+    },
     "phantom": {
       "slug": "phantom-slayer",
       "drawer": "period",

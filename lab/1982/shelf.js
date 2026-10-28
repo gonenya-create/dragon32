@@ -20,6 +20,9 @@
     ['dragontet', 'DragonTet', 'DragonTet', 'm',
       ['Salva Kantero, 2025', '/lab/1982/tapes/dragontet-readme.txt', 'https://github.com/salvakantero/Dragontet', '/lab/1982/tapes/dragontet-license.txt']],
     // משחקי Ken Kalish: הוא רצה שהמשחקים שלו יהיו זמינים לכולם (L. Curtis Boyle, מייל 24.10.2026). קרדיט מלא, יורד לפי בקשה
+    // המשחק הראשון של Ken Kalish: נכתב ב-1981 ויצא ב-1982 (Color Software Services, ובבריטניה Microdeal). אותו מנוע תלת-ממדי כמו Phantom Slayer
+    ['escape', 'Escape', 'Escape', 'm',
+      ['Ken Kalish · Color Software Services / Microdeal, 1982', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
     ['phantom', 'Phantom Slayer', 'Phantom Slayer', 'm',
       ['Ken Kalish · Med Systems / Microdeal, 1983', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
     ['ranger', 'Danger Ranger', 'Danger Ranger', 'a',
@@ -102,6 +105,22 @@
         '[←] [→] move, [↑] turns, [↓] drops faster. [W] [A] [S] [D] work too.',
         'Player two: [I] [J] [K] [L].',
         '[H] pauses, any key resumes. [X] goes back to the menu.']
+    },
+    // נבדק במכונה (28.10): הטעינה (CLOADM ואז EXEC), מסך הפתיחה וההקדמה, ההליכה, דלת של דמות (POET) ומסך הרמז, [↓] חזרה למסדרון,
+    // צלילי הספרות, והמעלית (מקש לא נכון: נפילה וסוף). מהקוד ($20E5): חיצים, BREAK, X, והספרות 1–9 שמנגנות צליל. לא מגלים כאן את הפתרון
+    escape: {
+      he: ['אחרי הטעינה מקלידים EXEC ו-[ENTER]. מופיעים מסך הפתיחה וההקדמה, ואז המסדרון.',
+        '[↑] צעד קדימה, [↓] צעד אחורה, [←] [→] מסתובבים. מקיר רגיל לא עוברים.',
+        'על הקירות יש דלתות אדומות, ועל חלק מהן שלט עם שם. נכנסים אליהן ב-[↑], ושם מחכה דמות עם רמז. [↓] חוזר למסדרון.',
+        'כשמופיע סמן מהבהב, עונים במקלדת ולוחצים [ENTER].',
+        'המטרה: לפענח מהרמזים "מפתח" של 5 צלילים, ולהקיש אותו במעלית. כל ספרה, [1] עד [9], מנגנת צליל. מפתח לא נכון במעלית מפיל אתכם לתחתית הפיר, וזה סוף המשחק.',
+        'כדאי לצייר מפה על דף, כמו שעשו ב-1982.'],
+      en: ['After loading type EXEC and [ENTER]. The title screen and the introduction appear, then the corridor.',
+        '[↑] step forward, [↓] step back, [←] [→] turn. You cannot walk through a plain wall.',
+        'The walls have red doors, and some have a sign with a name. Go in with [↑], and a character with a clue is waiting. [↓] takes you back to the corridor.',
+        'When a cursor flashes, answer on the keyboard and press [ENTER].',
+        'The goal: work out from the clues a "key" of 5 notes, and play it in the elevator. Each digit, [1] to [9], plays a note. The wrong key in the elevator drops you to the bottom of the shaft, and the game is over.',
+        'Draw a map on paper, as people did in 1982.']
     },
     // נבדק במכונה (28.10): הטעינה דרך $B75B והנקודתיים ב-$84AF, מסך הרישיון (512 קריאות ל-$BBC5, כמו במקור), הפתיחה, הליכה, קפיצה, סולם, בול עץ (2000 ל-1900) והשעון.
     // מהקוד של המשחק: X של הג'ויסטיק הימני ($015A) עד $0A שמאלה, מ-$36 ימינה; Y ($015B) מעל $36 למטה, עד $19 למעלה. הכפתור הימני קופץ
@@ -253,6 +272,7 @@
     eggs: ['המשחק מופיע. מתחילים ב[רווח].', 'The game appears. Press [Space] to start.'],
     blockdown: ['כשהטעינה נגמרת המשחק מתחיל לבד. מתחילים ב[רווח].', 'When loading ends the game starts by itself. Press [Space] to start.'],
     dragontet: ['מופיע תפריט: בוחרים ב[↑] [↓] ומאשרים ב[ENTER].', 'A menu appears: choose with [↑] [↓] and confirm with [ENTER].'],
+    escape: ['מופיעים מסך הפתיחה וההקדמה, ואז המסדרון: [↑] קדימה, [←] [→] מסתובבים.', 'The title screen and the introduction appear, then the corridor: [↑] forward, [←] [→] turn.'],
     phantom: ['המשחק שואל על ההוראות: [N] מדלג, [Y] מציג אותן.', 'The game asks about the instructions: [N] skips them, [Y] shows them.'],
     ranger: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וב-SELECT LEVEL בוחרים שלב.', 'When loading ends pick a colour: [1], [2] or [3]. On the title screen press [Space], and at SELECT LEVEL pick a level.'],
     cuthbert: ['אחרי הטעינה מופיע LICENSED BY MICRODEAL ונשאר כחמש עד שבע דקות. זה לא תקוע: כך המשחק בנוי. כשמופיע הג\'ונגל, לוחצים [רווח].', 'After loading, LICENSED BY MICRODEAL appears and stays for about five to seven minutes. It is not stuck: the game is built that way. When the jungle appears, press [Space].'],
@@ -265,6 +285,7 @@
     eggs: ['תופסים בסל את הביצים שהדרקון מטיל. לשחקן אחד.', 'Catch the dragon\'s eggs in a basket. 1 player.'],
     blockdown: ['קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים.', 'Falling blocks: complete the lines. 1 or 2 players.'],
     dragontet: ['קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים.', 'Falling blocks: complete the lines. 1 or 2 players.'],
+    escape: ['מבוך תלת-ממדי של חידות: מוצאים דמויות עם רמזים, ומפענחים את הקוד של המעלית כדי לצאת מהבניין. לשחקן אחד.', 'A 3D puzzle maze: find characters with clues, and work out the elevator code to get out of the building. 1 player.'],
     phantom: ['מבוך תלת-ממדי: צדים רוחות רפאים לפני שהן תופסות אתכם. לשחקן אחד.', '3D maze: hunt the phantoms before they catch you. 1 player.'],
     cuthbert: ['רצים בג\'ונגל, קופצים מעל בורות ובולי עץ ויורדים בסולמות למנהרה, נגד השעון. בג\'ויסטיק.', 'Run through the jungle, jump pits and logs and climb down ladders to the tunnel, against the clock. Joystick.'],
     athletyx: ['תחרות אתלטיקה: ריצה ועוד מקצועות, נגד השעון. בג\'ויסטיק. נכתב רק ל-Dragon.', 'An athletics contest: a sprint and more events, against the clock. Joystick. Written only for the Dragon.'],

@@ -13,6 +13,7 @@
     blockdown: { dir: { up: 'S', down: 'X', left: 'Z', right: 'C' }, fire: 'space', label: ['רווח', 'SPACE'] },
     dragontet: { dir: ARROWS, fire: 'enter', label: ['ENTER', 'ENTER'] },
     phantom: { dir: ARROWS, fire: 'space', label: ['רווח', 'SPACE'] },
+    escape: { dir: ARROWS, fire: 'enter', label: ['ENTER', 'ENTER'] },
     ranger: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
     dungeon: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
     athletyx: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },

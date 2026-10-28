@@ -1631,7 +1631,7 @@ if (part('real machine lab')) {
     const r = await p.goto(base.replace(/\/$/, '') + path);
     await p.waitForTimeout(3500);
     check(`${path} loads with the drawn keyboard`, r.status() === 200 && (await p.locator('.kbd .k').count()) > 50 && errs.length === 0, errs.join(' | '));
-    check(`${path} has the tape shelf (19 tapes: 7 BASIC, Dragon Eggs, Blockdown, DragonTet, Phantom Slayer, Danger Ranger, Cuthbert in the Jungle, Dungeon Raid, Athletyx, Adventureland, Pirate Adventure, Secret Mission, Voodoo Castle)`, (await p.locator('#tapes .tape.row').count()) === 19);
+    check(`${path} has the tape shelf (20 tapes: 7 BASIC, Dragon Eggs, Blockdown, DragonTet, Escape, Phantom Slayer, Danger Ranger, Cuthbert in the Jungle, Dungeon Raid, Athletyx, Adventureland, Pirate Adventure, Secret Mission, Voodoo Castle)`, (await p.locator('#tapes .tape.row').count()) === 20);
     check(`${path} everything starts closed: the cabinet drawers, "first try", "what works" and "how to edit a line", with no memory of what was opened last time`, await p.evaluate(() =>
       [...document.querySelectorAll('#tapes details.drawer, .info details, details.how')].every(d => !d.open) && document.querySelectorAll('.info details').length === 3
       && /PRINT 2\+3/.test(document.querySelector('.info details.try')?.textContent || '') && ![...document.querySelectorAll('.info > p.note')].some(e => /PRINT 2\+3/.test(e.textContent))
@@ -1653,8 +1653,8 @@ if (part('real machine lab')) {
       kalish: document.querySelector('.cabinet [data-drawer="period"] .drawer-name')?.textContent,
       icons: [...document.querySelectorAll('.tape.row .ic')].every(i => /shots\//.test(i.style.backgroundImage)) }));
     check(`${path} the cabinet: drawers in time order (Scott Adams 1979, Ken Kalish's games, type it in, the community, ours, my tapes), the years left to right, rows by year, an icon from each game's screen`,
-      cab.drawers.join() === 'adams,period,type,community,ours,mine' && cab.years.map(y => y[0]).join() === '1979,1983–85,1983,2021–2025,2026' && /Ken Kalish/.test(cab.kalish) && cab.years.every(y => y[1] === 'ltr')
-      && cab.rows.adams.join() === 'adventureland,pirate,mission,voodoo' && cab.rows.period.join() === 'phantom,ranger,cuthbert,dungeon,athletyx' && cab.rows.community.join() === 'blockdown,dragontet' && cab.rows.ours.length === 8 && cab.rows.ours[0] === 'eggs' && cab.icons, JSON.stringify(cab));
+      cab.drawers.join() === 'adams,period,type,community,ours,mine' && cab.years.map(y => y[0]).join() === '1979,1982–85,1983,2021–2025,2026' && /Ken Kalish/.test(cab.kalish) && cab.years.every(y => y[1] === 'ltr')
+      && cab.rows.adams.join() === 'adventureland,pirate,mission,voodoo' && cab.rows.period.join() === 'escape,phantom,ranger,cuthbert,dungeon,athletyx' && cab.rows.community.join() === 'blockdown,dragontet' && cab.rows.ours.length === 8 && cab.rows.ours[0] === 'eggs' && cab.icons, JSON.stringify(cab));
     // דף משחק ליד המכונה, עם כתובת משלו; "חזרה לארון" חוזר
     const gv = await p.evaluate(async () => {
       const out = [];
@@ -1668,7 +1668,7 @@ if (part('real machine lab')) {
     });
     const pre = path;
     check(`${path} every game opens its own page beside the machine, at its own address, with the 3 tabs (how to load, how to play, about), the red button and the credit; "back to the cabinet" returns`,
-      gv.out.length === 19 && gv.out.every(g => g.open && g.url.startsWith(pre) && g.url.length > pre.length + 3 && g.tabs === 3 && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go) && gv.after === pre && gv.closed, JSON.stringify(gv.out.filter(g => !(g.open && g.tabs === 3 && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go)).slice(0, 3)));
+      gv.out.length === 20 && gv.out.every(g => g.open && g.url.startsWith(pre) && g.url.length > pre.length + 3 && g.tabs === 3 && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go) && gv.after === pre && gv.closed, JSON.stringify(gv.out.filter(g => !(g.open && g.tabs === 3 && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go)).slice(0, 3)));
     const direct = await browser.newPage({ viewport: { width: 1280, height: 900 } });
     const dres = await direct.goto(base.replace(/\/$/, '') + path + 'dungeon-raid/'); await direct.waitForTimeout(1500);
     const dd = await direct.evaluate(() => ({ open: document.body.classList.contains('game-open'), name: document.querySelector('.gv-title')?.textContent, title: document.title, og: document.querySelector('meta[property="og:title"]')?.content, shot: document.querySelector('.gv-shot').complete && document.querySelector('.gv-shot').naturalWidth === 256 }));
