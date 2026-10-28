@@ -370,6 +370,17 @@
       if (dr.link) { const a = document.createElement('a'); a.href = dr.link; a.rel = 'noopener'; a.textContent = dr.link.replace(/^https?:\/\/(www\.)?|\/$/g, ''); p.append(' ', a); }
       body.appendChild(p);
     }
+    // ברכה של המחבר, במילים שלו ובאנגלית שלו, עם חתימה; בדף העברי גם תרגום קטן (Scott Adams, 28.10; גונן: "מאשר הכל")
+    if (dr.quote) {
+      const q = document.createElement('blockquote');
+      q.className = 'drawer-quote';
+      q.lang = 'en'; q.dir = 'ltr';
+      const t = document.createElement('p'); t.textContent = '\u201C' + dr.quote.text + '\u201D';
+      const c = document.createElement('footer'); c.textContent = '\u2014 ' + dr.quote.sign;
+      q.append(t, c);
+      body.appendChild(q);
+      if (!EN && dr.quote.he) { const h = document.createElement('p'); h.className = 'drawer-note drawer-quote-he'; h.textContent = 'בעברית: ' + dr.quote.he; body.appendChild(h); }
+    }
     for (const [g, he, en] of dr.groups || [[null]]) {
       if (g) { const h = document.createElement('p'); h.className = 'drawer-group'; h.textContent = EN ? en : he; body.appendChild(h); }
       const list = document.createElement('div');
@@ -604,6 +615,10 @@
 .yr { direction: ltr; unicode-bidi: isolate; font: 700 12px/1.6 'Courier New', monospace; color: var(--accent, #f2d23a); border: 1px solid #6a5434; border-radius: 999px; padding: 0 8px; white-space: nowrap; }
 .drawer-note { margin: 2px 4px 8px; font-size: 14px; color: #b9a98f; line-height: 1.5; }
 .drawer-note a { color: var(--accent, #f2d23a); }
+.drawer-quote { margin: 4px 4px 10px; padding: 8px 12px; border-inline-start: 3px solid var(--accent, #f2d23a); background: #221b14; border-radius: 6px; font-size: 14px; line-height: 1.55; color: #e6d8bc; text-align: left; }
+.drawer-quote p { margin: 0 0 6px; font-style: italic; }
+.drawer-quote footer { font-size: 13px; color: #b9a98f; }
+.drawer-quote-he { font-size: 13px; }
 .drawer-group { margin: 10px 4px 4px; font-size: 13px; font-weight: 700; color: #d8c8a8; }
 .rows { display: grid; gap: 2px; }
 .tape.row { display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 10px; width: 100%; text-align: start; padding: 6px 8px; min-height: 44px; border-radius: 8px; border: 1px solid transparent; background: transparent; box-shadow: none; }

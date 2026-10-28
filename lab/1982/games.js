@@ -12,7 +12,12 @@ window.D32_GAMES = {
         "Scott Adams הביא את הרפתקאות המילים למחשבים הביתיים. הקלטות האלה הן גרסת ה-Color Computer, ש-Roger Schrag העביר לצבע, והיא רצה גם על ה-Dragon. כאן באישורו.",
         "Scott Adams brought text adventures to home computers. These tapes are the Color Computer versions, converted to colour by Roger Schrag, which also ran on the Dragon. Here with his permission."
       ],
-      "link": "https://www.msadams.com/"
+      "link": "https://www.msadams.com/",
+      "quote": {
+        "text": "Greetings to all those Dragon Players out there, whether you are trying the games for the very first time or just rediscovering them I hope you have a tremendous amount of fun playing them. I know I did in writing them! G-D bless!",
+        "sign": "Scott Adams, 10/28/2026, Platteville Wisconsin USA",
+        "he": "ברכות לכל שחקני ה-Dragon שם בחוץ, בין אם אתם מנסים את המשחקים בפעם הראשונה ובין אם אתם מגלים אותם מחדש. אני מקווה שתיהנו מהם מאוד. אני יודע שאני נהניתי לכתוב אותם! ה׳ יברך!"
+      }
     },
     {
       "key": "period",
@@ -370,11 +375,11 @@ window.D32_GAMES = {
       ],
       "about": {
         "he": [
-          "ההרפתקה הרביעית בסדרה, מ-1979. Alexis Adams כתבה אותה, וכך כתוב במשחק. המרה לצבע של Roger Schrag.",
+          "ההרפתקה הרביעית בסדרה, מ-1979. Alexis Adams כתבה אותה, וכך כתוב במשחק. Scott Adams מספר שהרעיון היה שלה, ושהיא הביאה הרבה מהסיפור וכמה מהחידות. המרה לצבע של Roger Schrag.",
           "מסירים קללת וודו מהרוזן כריסטו, בטירה מלאת סודות."
         ],
         "en": [
-          "The fourth adventure in the series, from 1979. Alexis Adams wrote it, as the game says. Colour conversion by Roger Schrag.",
+          "The fourth adventure in the series, from 1979. Alexis Adams wrote it, as the game says. Scott Adams says it was her idea, and that she brought much of the story and a number of the puzzles. Colour conversion by Roger Schrag.",
           "Lift a voodoo curse from Count Cristo, in a castle full of secrets."
         ]
       },

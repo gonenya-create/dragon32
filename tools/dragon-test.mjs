@@ -1655,6 +1655,11 @@ if (part('real machine lab')) {
     check(`${path} the cabinet: drawers in time order (Scott Adams 1979, Ken Kalish's games, type it in, the community, ours, my tapes), the years left to right, rows by year, an icon from each game's screen`,
       cab.drawers.join() === 'adams,period,type,community,ours,mine' && cab.years.map(y => y[0]).join() === '1979,1982–85,1983,2021–2025,2026' && /Ken Kalish/.test(cab.kalish) && cab.years.every(y => y[1] === 'ltr')
       && cab.rows.adams.join() === 'adventureland,pirate,mission,voodoo' && cab.rows.period.join() === 'escape,phantom,ranger,cuthbert,dungeon,athletyx' && cab.rows.community.join() === 'blockdown,dragontet' && cab.rows.ours.length === 8 && cab.rows.ours[0] === 'eggs' && cab.icons, JSON.stringify(cab));
+    // הברכה של Scott Adams במגירה שלו: המילים שלו באנגלית משמאל לימין, עם חתימה; בעברית גם תרגום (28.10)
+    const sq = await p.evaluate(() => { const q = document.querySelector('.cabinet [data-drawer="adams"] blockquote.drawer-quote');
+      return q && { dir: getComputedStyle(q).direction, t: q.textContent, he: !!document.querySelector('.cabinet [data-drawer="adams"] .drawer-quote-he'), n: document.querySelectorAll('blockquote.drawer-quote').length }; });
+    check(`${path} Scott Adams' greeting in his drawer, in his words, signed`,
+      sq && sq.n === 1 && sq.dir === 'ltr' && /^\u201CGreetings to all those Dragon Players out there/.test(sq.t) && /G-D bless!\u201D/.test(sq.t) && /\u2014 Scott Adams, 10\/28\/2026, Platteville Wisconsin USA$/.test(sq.t) && sq.he === !path.startsWith('/en/'), JSON.stringify(sq));
     // דף משחק ליד המכונה, עם כתובת משלו; "חזרה לארון" חוזר
     const gv = await p.evaluate(async () => {
       const out = [];
