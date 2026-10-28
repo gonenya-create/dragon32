@@ -128,6 +128,38 @@ window.D32_GAMES = {
         48
       ]
     },
+    "cuthbert": {
+      "slug": "cuthbert-in-the-jungle",
+      "drawer": "period",
+      "year": "1983",
+      "tag": [
+        "ג'ויסטיק",
+        "joystick"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כשבע דקות",
+        "about seven minutes"
+      ],
+      "about": {
+        "he": [
+          "Ken Kalish כתב אותו בשם Trapfall, ו-Tom Mix Software הוציאה אותו ב-1983 ל-Color Computer. בבריטניה הוציאה אותו Microdeal מקורנוול בשם Cuthbert in the Jungle, והוא רץ גם על ה-Dragon.",
+          "הטוען של Microdeal מריץ את עצמו בעזרת תו נקודתיים שיושב בכתובת קבועה בשבב של ה-Dragon. סידרנו את השבב שלנו כמו במקור, כדי שהתו יישב שם גם אצלנו. ההמתנה הארוכה במסך הרישיון היא של המשחק עצמו."
+        ],
+        "en": [
+          "Ken Kalish wrote it as Trapfall, and Tom Mix Software published it in 1983 for the Color Computer. In Britain Microdeal of Cornwall published it as Cuthbert in the Jungle, and it ran on the Dragon too.",
+          "Microdeal's loader starts itself with a colon character that sits at a fixed address in the Dragon's chip. We laid out our chip like the original, so the colon sits there in ours too. The long wait on the licence screen is the game's own."
+        ]
+      },
+      "icon": [
+        28,
+        84,
+        48
+      ]
+    },
     "dungeon": {
       "slug": "dungeon-raid",
       "drawer": "period",

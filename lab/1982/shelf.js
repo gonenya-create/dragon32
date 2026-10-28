@@ -24,6 +24,9 @@
       ['Ken Kalish · Med Systems / Microdeal, 1983', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
     ['ranger', 'Danger Ranger', 'Danger Ranger', 'a',
       ['Ken Kalish · Med Systems / Microdeal, 1983', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
+    // Trapfall של Ken Kalish (Tom Mix Software, 1983), שבבריטניה יצא אצל Microdeal בשם Cuthbert in the Jungle (Kalish בראיון אצל Curtis Boyle)
+    ['cuthbert', 'Cuthbert in the Jungle', 'Cuthbert in the Jungle', 'a',
+      ['Ken Kalish · Microdeal, 1983', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
     // נכתב רק ל-Dragon (Curtis Boyle: "Dungeon Raid & Athletyx were exclusively Dragon titles"). על המסך: (C)1983, ו-COPYRIGHT 1984 של Microdeal
     ['dungeon', 'Dungeon Raid', 'Dungeon Raid', 'a',
       ['Ken Kalish · Microdeal, 1983–84', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
@@ -44,7 +47,7 @@
       ['Alexis Adams & Scott Adams · Adventure International, 1979 · color: Roger Schrag', 'https://www.msadams.com/', null, null, 'adams']]
   ];
   // משחקים שצריכים ג'ויסטיק: כשהקלטת נטענת, החיצים במקלדת הופכים לג'ויסטיק הימני ו-Alt (Option במק) לכפתור שלו
-  const JOY = new Set(['ranger', 'dungeon', 'athletyx']);
+  const JOY = new Set(['ranger', 'dungeon', 'athletyx', 'cuthbert']);
   function setJoy(on) {
     try { Module.ccall('wasm_set_joystick_by_name', null, ['number', 'string'], [0, on ? 'kjoy0' : '']); } catch (e) {}
     window.d32Joy = !!on;
@@ -99,6 +102,20 @@
         '[←] [→] move, [↑] turns, [↓] drops faster. [W] [A] [S] [D] work too.',
         'Player two: [I] [J] [K] [L].',
         '[H] pauses, any key resumes. [X] goes back to the menu.']
+    },
+    // נבדק במכונה (28.10): הטעינה דרך $B75B והנקודתיים ב-$84AF, מסך הרישיון (512 קריאות ל-$BBC5, כמו במקור), הפתיחה, הליכה, קפיצה, סולם, בול עץ (2000 ל-1900) והשעון.
+    // מהקוד של המשחק: X של הג'ויסטיק הימני ($015A) עד $0A שמאלה, מ-$36 ימינה; Y ($015B) מעל $36 למטה, עד $19 למעלה. הכפתור הימני קופץ
+    cuthbert: {
+      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
+        'אחרי הכפתור האדום מקלידים CLOADM ו-[ENTER]. קודם מופיע הציור של Microdeal, והמשחק ממשיך להיטען מאחוריו.',
+        'אחר כך מופיע LICENSED BY MICRODEAL ונשאר כחמש עד שבע דקות. זה לא תקוע: המשחק עצמו מחכה כך, ובאותה לולאת המתנה של השבב המקורי.',
+        'במסך הג\'ונגל לוחצים [רווח] כדי להתחיל. [←] [→] הולכים, [רווח] קופץ מעל בורות ובולי עץ, ו-[↑] [↓] מטפסים בסולם אל המנהרה שמתחת.',
+        'מתחילים עם 2000 נקודות, וכל בול עץ שפוגע בכם מוריד נקודות. למעלה משמאל רץ השעון: 20 דקות למסע.'],
+      en: ['In this game the arrow keys are a joystick and [Space] is its button (or [Alt], [Option] on a Mac). On a phone there is a stick and a fire button under the screen.',
+        'After the red button type CLOADM and [ENTER]. The Microdeal picture comes first, and the game goes on loading behind it.',
+        'Then LICENSED BY MICRODEAL appears and stays for about five to seven minutes. It is not stuck: the game itself waits like this, using the same delay loop as the original chip.',
+        'On the jungle screen press [Space] to start. [←] [→] walk, [Space] jumps over pits and logs, and [↑] [↓] climb the ladder to the tunnel below.',
+        'You start with 2000 points, and every log that hits you takes some away. The clock at the top left runs: 20 minutes for the trip.']
     },
     // נבדק במכונה (28.10): הטעינה בשלבים דרך $B75B, המסכים, בחירת שחקנים, ריצת 100 מטר (FOUL על זינוק מוקדם, זמן ותוצאה), והמקצוע הבא.
     // מהקוד של המשחק: X של הג'ויסטיק הימני ($015A) מעל $25 או מתחת ל-$1C, וכל החלפת כיוון היא צעד. הכפתור הימני: לחיצה, או החזקה שנספרת
@@ -234,6 +251,7 @@
     blockdown: ['קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים.', 'Falling blocks: complete the lines. 1 or 2 players.'],
     dragontet: ['קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים.', 'Falling blocks: complete the lines. 1 or 2 players.'],
     phantom: ['מבוך תלת-ממדי: צדים רוחות רפאים לפני שהן תופסות אתכם. לשחקן אחד.', '3D maze: hunt the phantoms before they catch you. 1 player.'],
+    cuthbert: ['רצים בג\'ונגל, קופצים מעל בורות ובולי עץ ויורדים בסולמות למנהרה, נגד השעון. בג\'ויסטיק.', 'Run through the jungle, jump pits and logs and climb down ladders to the tunnel, against the clock. Joystick.'],
     athletyx: ['תחרות אתלטיקה: ריצה ועוד מקצועות, נגד השעון. בג\'ויסטיק. נכתב רק ל-Dragon.', 'An athletics contest: a sprint and more events, against the clock. Joystick. Written only for the Dragon.'],
     dungeon: ['רצים במסדרונות של מבוך ויורים ביצורים ובדלתות, נגד השעון. בג\'ויסטיק. נכתב רק ל-Dragon.', 'Race down dungeon corridors, shooting creatures and doors against the clock. Joystick. Written only for the Dragon.'],
     ranger: ['רצים, קופצים ויורים: אוספים מפתחות ואוצרות בין עטלפים ועיניים. בג\'ויסטיק.', 'Run, jump and shoot: collect keys and treasure past bats and eyes. Joystick.'],

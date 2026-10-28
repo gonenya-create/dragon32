@@ -283,6 +283,7 @@ The four file-error raisers above share one 3-byte-spaced chain ending in a jump
 | $B7AA | Parse a filename from text into $01D1 (length) / $01D2 | — | likely |
 | $B903 | Skip the current file | — | likely |
 | **$B75B** | CLOADM's load loop, from X | **X = load address.** Motor on and sync (through $BDE7), then blocks to X one after another until the end block (its data is stored too). A header block or a read error gives ?IO. Motor off, returns. The Dragon twin of CoCo $A529 (Color BASIC Unravelled). Microdeal's Athletyx loader calls it directly, once per stage (28.10). | likely |
+| **$84A6 / $84AF** | Start of the statement loop, after the BREAK check | **$84A6:** X = text pointer, saved as the statement start; a zero byte goes to the next line, ':' runs the next statement, anything else is ?SN. **$84AF holds ':'** (the operand of CMPA #':). Microdeal's Cuthbert in the Jungle loader points the text pointer at $84AF and relies on that colon, so our layout matches the original from $84A6 (28.10). | likely |
 
 Block layout used by these routines:
 

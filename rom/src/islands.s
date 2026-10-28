@@ -94,10 +94,19 @@ isl_bb26_9	rts
 		bra	runstk
 
 ; @island $849F
-; לולאת הפקודות (קורא 8.16). ‏$84A6: אחרי בדיקת ה-BREAK
+; לולאת הפקודות (קורא 8.16). ‏$84A6: אחרי בדיקת ה-BREAK. מ-$84A6 הקוד עצמו, באותו סדר כמו במקור, כך שב-$84AF
+; יושב ה-':' של CMPA #': (28.10). הטוען של Cuthbert in the Jungle מכוון לשם את מצביע הטקסט: BASIC קורא ':',
+; וקורא ל"תו הבא" ($9F), שהטוען דרס בעצמו
 		jmp	newstt
 		fill	$ff,$84a6-*
-		jmp	newst2
+		ldx	<TXTPTR
+		stx	<TXTBEG		; תחילת הפקודה: לשם חוזרים אחרי קלט שגוי ב-INPUT (קורא: TXTBEG)
+		lda	,x
+		beq	isl_nst3
+		cmpa	#':
+		lbne	err_sn
+		jmp	gone
+isl_nst3	jmp	newst3		; סוף שורה: הקישור שאחריו אומר מה הלאה
 
 ; @island $84ED
 ; משגר פקודות מטבלה (קורא 8.2)

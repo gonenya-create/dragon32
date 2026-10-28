@@ -153,6 +153,11 @@ try {
     s = await run([...poke(0x7000, '8E7100 BDB75B 39'), 'POKE &H7104,7:EXEC &H7000', 'PRINT PEEK(&H7100);PEEK(&H7101);PEEK(&H7102);PEEK(&H7103);PEEK(&H7104)'], { tapeLoad: cas, timeout: 20 });
   } finally { await rm(cas, { force: true }); }
   ok('הבלוקים נטענים ברצף לכתובת שב-X, עד בלוק הסוף (כולל הנתונים שבו), והבלוק שאחריו לא', /^ 11 {2}22 {2}33 {2}44 {2}7 ?$/m.test(s), show(tail(s)));
+
+  console.log('נקודתיים ב-‏$84AF');
+  // הטוען של Microdeal (Cuthbert in the Jungle) מפנה את מצביע הטקסט ל-$84AF, ושם יש במקור ':' (האופרנד של CMPA #':)
+  s = await run(['PRINT PEEK(&H84AF)']);
+  ok('$84AF מכיל את התו נקודתיים (58), כמו במקור', /^ 58 ?$/m.test(s), show(tail(s)));
 } catch (e) {
   fail++; console.log('  ✗ ' + e.message);
 }

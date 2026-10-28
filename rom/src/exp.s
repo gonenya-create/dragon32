@@ -549,7 +549,14 @@ error		jsr	HK_ERR1		; נקודות החיבור 17 ו-18, עם B = הקוד
 		fill	$ff,$849f-*	;@isl
 		jmp	newstt	;@isl
 		fill	$ff,$84a6-*	;@isl
-		jmp	newst2	;@isl
+		ldx	<TXTPTR	;@isl
+		stx	<TXTBEG		; תחילת הפקודה: לשם חוזרים אחרי קלט שגוי ב-INPUT (קורא: TXTBEG)	;@isl
+		lda	,x	;@isl
+		beq	isl_nst3	;@isl
+		cmpa	#':	;@isl
+		lbne	err_sn	;@isl
+		jmp	gone	;@isl
+isl_nst3	jmp	newst3		; סוף שורה: הקישור שאחריו אומר מה הלאה	;@isl
 isl_849f_e	;@isl
 		lda	,x
 		lbsr	chrout
@@ -576,6 +583,14 @@ linget		clra
 		std	1,s		; *2
 		lslb
 		rola
+		bra	isl_84ed_e	;@isl
+		fill	$ff,$84ed-*	;@isl
+		tfr	a,b	;@isl
+		lslb	;@isl
+		abx	;@isl
+		jsr	<chrget	;@isl
+		jmp	[,x]	;@isl
+isl_84ed_e	;@isl
 		lslb
 		rola			; *8
 		addd	1,s		; *10
@@ -587,14 +602,6 @@ linget		clra
 
 ; ---------- שמירת שורה (mit: MAIN1/NODEL/STOLOP, m6502.asm:1567-1641) ----------
 storeline	bsr	linget		; D = מספר השורה
-		bra	isl_84ed_e	;@isl
-		fill	$ff,$84ed-*	;@isl
-		tfr	a,b	;@isl
-		lslb	;@isl
-		abx	;@isl
-		jsr	<chrget	;@isl
-		jmp	[,x]	;@isl
-isl_84ed_e	;@isl
 		std	LINNUM
 storel2					; EDIT נכנס כאן: LINNUM מוכן, X = הטקסט
 		lbsr	skipsp		; רווחים אחרי המספר לא נשמרים (mit: CHRGET מדלג עליהם)
@@ -604,28 +611,30 @@ storel2					; EDIT נכנס כאן: LINNUM מוכן, X = הטקסט
 		pshs	d		; האורך
 		ldd	LINNUM
 		bsr	fndlin		; Y = השורה (C=1 אם קיימת)
+		bra	isl_851b_e	;@isl
+		fill	$ff,$851b-*	;@isl
+		jmp	brkchk	;@isl
+isl_851b_e	;@isl
 		bcc	1F
 		ldx	,y		; קיימת: קודם מוחקים (mit: m6502.asm:1571-1608). X = השורה הבאה
 		tfr	y,u
 5		cmpx	VARTAB
 		bhs	6F
-		lda	,x+
-		sta	,u+
-		bra	5B
-		fill	$ff,$851b-*	;@isl
-		jmp	brkchk	;@isl
-6		stu	VARTAB
-1		tst	CRB
-		beq	9F		; רק מספר: רק מחיקה
-		; מזיזים את [Y..VARTAB) למעלה באורך השורה (mit: BLTU)
-		ldd	VARTAB
-		addd	,s
 		bra	isl_852b_e	;@isl
 		fill	$ff,$852b-*	;@isl
 isl_852b	jsr	$bbe5	;@isl
 		beq	isl_852b	;@isl
 		lbra	brktst	;@isl
 isl_852b_e	;@isl
+		lda	,x+
+		sta	,u+
+		bra	5B
+6		stu	VARTAB
+1		tst	CRB
+		beq	9F		; רק מספר: רק מחיקה
+		; מזיזים את [Y..VARTAB) למעלה באורך השורה (mit: BLTU)
+		ldd	VARTAB
+		addd	,s
 		pshs	d,y		; יש מקום? אחרת ?OM לפני שמזיזים משהו (mit: REASON). Y = הגבול התחתון
 		lbsr	reason
 		ldx	VARTAB
@@ -680,6 +689,10 @@ lnkprg		ldx	TXTTAB
 
 ; scrtch (NEW): שני אפסים בתחילת התוכנית, והמשתנים אחריהם (mit: SCRTCH, m6502.asm:1919)
 scrtch		ldx	TXTTAB
+		bra	isl_85a5_e	;@isl
+		fill	$ff,$85a5-*	;@isl
+		jmp	run	;@isl
+isl_85a5_e	;@isl
 		clr	,x+
 		clr	,x+
 		stx	VARTAB
@@ -689,10 +702,6 @@ runc		jsr	HK_STR		; 20 (ניקוי המשתנים)
 		std	FRETOP
 		ldd	VARTAB
 		std	ARYTAB
-		bra	isl_85a5_e	;@isl
-		fill	$ff,$85a5-*	;@isl
-		jmp	run	;@isl
-isl_85a5_e	;@isl
 		std	STREND
 		ldd	TXTTAB		; RESTORE
 		subd	#1

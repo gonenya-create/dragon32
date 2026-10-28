@@ -89,20 +89,20 @@ ary_new		stx	ARYREC
 		cmpy	STREND
 		blo	6B
 		tst	1,u
+		bra	isl_9772_e	;@isl
+		fill	$ff,$9772-*	;@isl
+		jmp	fn_rnd	;@isl
+isl_9772_e	;@isl
 		beq	getdef		; לא DIM: עכשיו ניגשים לאיבר
 		bra	ary_x		; DIM: מוציאים את האינדקסים ואת הבלוק, וזהו
 ; getdef: X = הרשומה. ההיסט לפי האינדקסים שבמחסנית: האחרון ראשון (mit: GETDEF/INLPNM)
 getdef		clr	CURTOL
 		clr	CURTOL+1
 		leay	5,x		; הגדלים, באותו סדר
-		bra	isl_9772_e	;@isl
-		fill	$ff,$9772-*	;@isl
-		jmp	fn_rnd	;@isl
-isl_9772_e	;@isl
 		leax	,s		; X = האינדקסים
 1		ldd	,x++		; האינדקס
 		cmpd	,y
-		bhs	ary_bs		; גדול מדי: ?BS
+		lbhs	ary_bs		; גדול מדי: ?BS
 		ldd	,y++
 		bsr	mulcur		; CURTOL = CURTOL*גודל + אינדקס
 		addd	-2,x

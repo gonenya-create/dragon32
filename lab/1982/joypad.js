@@ -16,6 +16,7 @@
     ranger: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
     dungeon: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
     athletyx: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
+    cuthbert: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
     sketch: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] }   // הקלד בעצמך (typein.js): Sketching מצייר בג'ויסטיק
   };
   const css = document.createElement('style');
