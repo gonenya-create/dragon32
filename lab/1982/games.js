@@ -16,12 +16,12 @@ window.D32_GAMES = {
     },
     {
       "key": "period",
-      "he": "משחקים מהתקופה",
-      "en": "Games from the time",
-      "years": "1983–84",
+      "he": "המשחקים של Ken Kalish",
+      "en": "Ken Kalish's games",
+      "years": "1983–85",
       "note": [
-        "משחקים מקצועיים שנמכרו ל-Dragon בזמנו, על קלטות. כאן באישור המחברים.",
-        "Professional games sold for the Dragon at the time, on tape. Here with the authors' permission."
+        "Ken Kalish כתב משחקים ל-Dragon ול-Color Computer, ו-Microdeal מקורנוול הוציאה אותם בזמנו, על קלטות. כאן באישורו.",
+        "Ken Kalish wrote games for the Dragon and the Color Computer, and Microdeal of Cornwall published them at the time, on tape. Here with his permission."
       ]
     },
     {
@@ -157,6 +157,38 @@ window.D32_GAMES = {
       "icon": [
         118,
         56,
+        48
+      ]
+    },
+    "athletyx": {
+      "slug": "athletyx",
+      "drawer": "period",
+      "year": "1984–85",
+      "tag": [
+        "ג'ויסטיק",
+        "joystick"
+      ],
+      "players": [
+        "1–2 שחקנים",
+        "1–2 players"
+      ],
+      "load": [
+        "כשתי דקות",
+        "about two minutes"
+      ],
+      "about": {
+        "he": [
+          "Ken Kalish כתב אותו רק ל-Dragon, ו-Microdeal מקורנוול הוציאה אותו. על מסך הפתיחה כתוב 1984, ועל המסך של Microdeal כתוב 1985.",
+          "תחרות אתלטיקה בכמה מקצועות, שמתחילה בריצת 100 מטר. הטוען של Microdeal טוען אותו בשלבים, דרך כתובת קבועה בשבב של ה-Dragon, ולכן הוספנו אותה גם לשבב שלנו."
+        ],
+        "en": [
+          "Ken Kalish wrote it for the Dragon only, and Microdeal of Cornwall published it. The title screen says 1984, and Microdeal's screen says 1985.",
+          "An athletics contest in several events, starting with the 100 metres. Microdeal's loader loads it in stages through a fixed address in the Dragon's chip, so we added that address to our chip too."
+        ]
+      },
+      "icon": [
+        160,
+        100,
         48
       ]
     },

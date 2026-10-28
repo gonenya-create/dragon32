@@ -1,7 +1,9 @@
 // בדיקות הכתובות הקבועות של המקור (src/islands.s), מול docs/DRAGON-SPEC-ENTRIES.md ו-docs/DRAGON-RESEARCH-ERA.md.
 // כל בדיקה מכניסה לזיכרון תוכנית מכונה קטנה שלנו (לא מהמקור), שקוראת לכתובת, ובודקת מה BASIC מראה.
 // הרצה: node rom/tools/entry-test.mjs
-import { readFile } from 'node:fs/promises';
+import { readFile, writeFile, rm } from 'node:fs/promises';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
 import { runRom } from './xr2.mjs';
 
 let pass = 0, fail = 0;
@@ -139,6 +141,18 @@ try {
     'POKE &H7060,0:EXEC &H7030:T=TIMER:FOR I=1 TO 400:NEXT:D=TIMER-T:C=PEEK(&H7060)',
     'PRINT D>10;ABS(D-C)<=1']);
   ok('הפסיקה של המשתמש רצה בכל שדה, ו-TIMER ממשיך לספור', /^-1 -1 ?$/m.test(s), show(tail(s)));
+
+  console.log('טעינה מכתובת: ‏$B75B');
+  // כמו הטוען של Athletyx: LDX #$7100 / JSR $B75B / RTS. על הקלטת: שני בלוקי נתונים בלי כותרת, ואז בלוק סוף
+  // שיש בו נתונים (ההמשך שלהם נטען גם הוא), ואחריו עוד בלוק שלא אמור להיטען
+  const blk = (type, data) => { const b = Buffer.from([0x55, 0x3C, type, data.length, ...data]); return Buffer.concat([b, Buffer.from([(type + data.length + data.reduce((a, c) => a + c, 0)) & 255])]); };
+  const lead = n => Buffer.alloc(n, 0x55);
+  const cas = join(tmpdir(), `b75b-${process.pid}.cas`);
+  await writeFile(cas, Buffer.concat([lead(128), blk(1, [11, 22]), lead(15), blk(1, [33]), lead(15), blk(255, [44]), lead(128), blk(1, [99]), lead(16)]));
+  try {
+    s = await run([...poke(0x7000, '8E7100 BDB75B 39'), 'POKE &H7104,7:EXEC &H7000', 'PRINT PEEK(&H7100);PEEK(&H7101);PEEK(&H7102);PEEK(&H7103);PEEK(&H7104)'], { tapeLoad: cas, timeout: 20 });
+  } finally { await rm(cas, { force: true }); }
+  ok('הבלוקים נטענים ברצף לכתובת שב-X, עד בלוק הסוף (כולל הנתונים שבו), והבלוק שאחריו לא', /^ 11 {2}22 {2}33 {2}44 {2}7 ?$/m.test(s), show(tail(s)));
 } catch (e) {
   fail++; console.log('  ✗ ' + e.message);
 }

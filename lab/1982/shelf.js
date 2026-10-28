@@ -27,6 +27,10 @@
     // נכתב רק ל-Dragon (Curtis Boyle: "Dungeon Raid & Athletyx were exclusively Dragon titles"). על המסך: (C)1983, ו-COPYRIGHT 1984 של Microdeal
     ['dungeon', 'Dungeon Raid', 'Dungeon Raid', 'a',
       ['Ken Kalish · Microdeal, 1983–84', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
+    // נכתב רק ל-Dragon (Curtis Boyle, כמו Dungeon Raid). על מסך הפתיחה: (C) 1984, ועל המסך של Microdeal: 1985.
+    // הקלטת: הבלוקים בדיוק כמו בקובץ ה-CAS שבארכיון, עם אורכי המבוא של ההקלטה המקורית (ה-WAV): הטוען צריך מבוא ארוך בין השלבים
+    ['athletyx', 'Athletyx', 'Athletyx', 'a',
+      ['Ken Kalish · Microdeal, 1984–85', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
     // ההרפתקאות של Scott Adams: אישור בכתב (מייל 25.10.2026). קרדיט מלא וקישור ל-msadams.com, בלי שינויים, יורד לפי בקשה
     ['adventureland', 'Adventureland', 'Adventureland', 'a',
       ['Scott Adams · Adventure International, 1979 · color: Roger Schrag', 'https://www.msadams.com/', null, null, 'adams']],
@@ -40,7 +44,7 @@
       ['Alexis Adams & Scott Adams · Adventure International, 1979 · color: Roger Schrag', 'https://www.msadams.com/', null, null, 'adams']]
   ];
   // משחקים שצריכים ג'ויסטיק: כשהקלטת נטענת, החיצים במקלדת הופכים לג'ויסטיק הימני ו-Alt (Option במק) לכפתור שלו
-  const JOY = new Set(['ranger', 'dungeon']);
+  const JOY = new Set(['ranger', 'dungeon', 'athletyx']);
   function setJoy(on) {
     try { Module.ccall('wasm_set_joystick_by_name', null, ['number', 'string'], [0, on ? 'kjoy0' : '']); } catch (e) {}
     window.d32Joy = !!on;
@@ -95,6 +99,20 @@
         '[←] [→] move, [↑] turns, [↓] drops faster. [W] [A] [S] [D] work too.',
         'Player two: [I] [J] [K] [L].',
         '[H] pauses, any key resumes. [X] goes back to the menu.']
+    },
+    // נבדק במכונה (28.10): הטעינה בשלבים דרך $B75B, המסכים, בחירת שחקנים, ריצת 100 מטר (FOUL על זינוק מוקדם, זמן ותוצאה), והמקצוע הבא.
+    // מהקוד של המשחק: X של הג'ויסטיק הימני ($015A) מעל $25 או מתחת ל-$1C, וכל החלפת כיוון היא צעד. הכפתור הימני: לחיצה, או החזקה שנספרת
+    athletyx: {
+      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
+        'אחרי הכפתור האדום מקלידים CLOADM ו-[ENTER]. הטעינה לוקחת כשתי דקות: קודם מופיע הציור של Microdeal, והמשחק ממשיך להיטען מאחוריו.',
+        'במסך LICENSED BY MICRODEAL לוחצים [רווח], ובמסך הפתיחה שוב [רווח]. ב-SELECT PLAYERS בוחרים [1] לשחקן אחד או [2] לשניים, ואחר כך [ENTER].',
+        'ריצת 100 מטר: מחכים ל-GO!!!!, ואז מנענעים את הג\'ויסטיק ימינה ושמאלה בקצב: [←] [→] [←] [→]. כל החלפת כיוון היא צעד, והפסים למטה משמאל מראים את המהירות. מי שזז לפני GO מקבל FOUL.',
+        'ליד NEED כתוב הזמן שצריך להשיג. במקצועות האחרים משתמשים גם בכפתור: לוחצים עליו, או מחזיקים אותו כדי לצבור כוח.'],
+      en: ['In this game the arrow keys are a joystick and [Space] is its button (or [Alt], [Option] on a Mac). On a phone there is a stick and a fire button under the screen.',
+        'After the red button type CLOADM and [ENTER]. Loading takes about two minutes: the Microdeal picture comes first, and the game goes on loading behind it.',
+        'On the LICENSED BY MICRODEAL screen press [Space], and on the title screen [Space] again. At SELECT PLAYERS press [1] for one player or [2] for two, then [ENTER].',
+        '100 metres: wait for GO!!!!, then rock the joystick left and right in rhythm: [←] [→] [←] [→]. Every change of direction is a step, and the bars at the bottom left show your speed. Move before GO and you get a FOUL.',
+        'NEED shows the time you have to beat. In the other events you also use the button: press it, or hold it down to build up power.']
     },
     // נבדק במכונה (27.10): צבע, רמה, המנגינה ואחריה FIRE, תנועה, ירי ונקודות, פגיעה ביצור וגל ההדף, החיים. סוף החיים (בקוד, $2BBB): מחכה למקש דרך POLCAT; C ממשיך ($2FED), כל מקש אחר מתחיל מחדש ($2FDD)
     dungeon: {
@@ -216,6 +234,7 @@
     blockdown: ['קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים.', 'Falling blocks: complete the lines. 1 or 2 players.'],
     dragontet: ['קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים.', 'Falling blocks: complete the lines. 1 or 2 players.'],
     phantom: ['מבוך תלת-ממדי: צדים רוחות רפאים לפני שהן תופסות אתכם. לשחקן אחד.', '3D maze: hunt the phantoms before they catch you. 1 player.'],
+    athletyx: ['תחרות אתלטיקה: ריצה ועוד מקצועות, נגד השעון. בג\'ויסטיק. נכתב רק ל-Dragon.', 'An athletics contest: a sprint and more events, against the clock. Joystick. Written only for the Dragon.'],
     dungeon: ['רצים במסדרונות של מבוך ויורים ביצורים ובדלתות, נגד השעון. בג\'ויסטיק. נכתב רק ל-Dragon.', 'Race down dungeon corridors, shooting creatures and doors against the clock. Joystick. Written only for the Dragon.'],
     ranger: ['רצים, קופצים ויורים: אוספים מפתחות ואוצרות בין עטלפים ועיניים. בג\'ויסטיק.', 'Run, jump and shoot: collect keys and treasure past bats and eyes. Joystick.'],
     voodoo: ['הרפתקת מילים: מסירים קללת וודו מהרוזן כריסטו, בטירה מלאת סודות. ההרפתקה הרביעית בסדרה.', 'A text adventure: lift a voodoo curse from Count Cristo in a castle full of secrets. The fourth adventure in the series.'],
@@ -544,8 +563,11 @@
 body.game-open .shelf > :not(.game-view) { display: none; }
 @media (min-width: 1100px) {
   body.game-open .info, body.game-open main > p.note:first-child { display: none; }
-  body.game-open main { grid-template-columns: minmax(520px, 1fr) min(720px, calc((100vh - 370px) * 4 / 3 + 28px), calc(100vw - 640px)) 0; }
+  /* חצי חצי (גונן, 28.10): חצי דף המשחק, חצי המכונה, שבאמצע החצי שלה ובגודל הכי גדול שנכנס בגובה */
+  body.game-open main { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 0; }
   body.game-open .shelf { grid-column: 1; }
+  body.game-open .machine { justify-self: center; width: min(100%, calc((100vh - 370px) * 4 / 3 + 28px)); }
+  body.game-open .gv-shot { flex: 0 1 46%; width: 46%; max-width: 512px; }
 }
 `;
   document.head.appendChild(css);

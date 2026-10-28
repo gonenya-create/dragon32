@@ -65,6 +65,78 @@ cpy		ldb	,x+
 		bne	cpy
 9		rts
 
+; CLOAD ו-CLOADM עברו לכאן מ-mitfile.s (28.10): כך הכתובת המקורית $B75B (CLOADM מכתובת) נופלת בקוד רגיל,
+; לפני הלולאות המתוזמנות, והן נגמרות לפני $B93E
+; ---------- CLOAD (3.3) ----------
+cload_st	clr	FSTATE		; סוגרים בכוח (מה שחיכה לכתיבה הולך לאיבוד)
+		cmpa	#'M
+		beq	cloadm
+		leas	2,s		; CLOAD לא חוזר לתוכנית
+		bsr	getfne
+		lbsr	search
+		tst	HGAP
+		lbne	cl_asc
+		tst	HTYPE		; רציף: רק תוכנית
+		bne	cfm
+		lbsr	scrtch
+		jsr	tsync
+		ldx	TXTTAB
+1		stx	BLKADR
+		tfr	s,d		; מקום לבלוק: הכתובת + 256 + 58 מתחת למחסנית
+		subd	#314
+		cmpd	BLKADR
+		lbls	err_om
+		jsr	tblkrd
+		bne	7F
+		lda	BLKTYP
+		beq	7F		; כותרת באמצע
+		bpl	1B		; $01-$7F: נתונים. $80-$FF: הסוף
+		stx	VARTAB
+		bsr	motoff
+		lbsr	prcr
+		leax	m_ok,pcr	; OK ושורה חדשה, גם בתוכנית
+		lbsr	puts
+		lbsr	lnkprg		; קישורים חדשים (תוכנית שנשמרה בכתובת אחרת)
+		lbsr	runstk
+		lbra	main		; לא מריצים, ובלי OK נוסף
+7		lbsr	scrtch		; מה שנטען נמחק
+		lbra	err_io
+cfm		lbra	err_fm		; עותק קרוב של efm: שתי קפיצות קצרות במקום ארוכות
+
+; ---------- CLOADM (3.4) ----------
+cloadm		jsr	<chrget		; ה-M
+		lbsr	getfn
+		lbsr	search
+		tst	HGAP
+		lbne	clm_gap
+		lbsr	getofs		; ההיסט (אחרי החיפוש)
+		pshs	d
+		bra	isl_b75b_e	;@isl
+		fill	$ff,$b75b-*	;@isl
+		jmp	clmx	;@isl
+isl_b75b_e	;@isl
+		lda	HTYPE
+		cmpa	#2
+		bne	cfm
+		ldd	HEXEC
+		addd	,s
+		std	EXECJP
+		ldd	HLOAD
+		addd	,s
+		std	,s
+		fcb	$8c		; cmpx #: מדלג על ה-pshs (הכתובת כבר במחסנית)
+; clmx ($B75B, כמו $A529 ב-CoCo לפי Color BASIC Unravelled): הטעינה עצמה, מהכתובת שב-X. מנוע וסנכרון,
+; בלוקים לשם עד בלוק הסוף (גם הנתונים שבו), ?IO על כותרת או שגיאת קריאה. בסוף המנוע כבוי, וחוזרים.
+; הטוען של Microdeal (Athletyx) טוען דרכה את המשחק בחלקים, כל אחד לכתובת שהקוד הקודם קבע
+clmx		pshs	x		; הסנכרון מאפס את X (המנוע)
+		jsr	$bde7		; מנוע וסנכרון דרך הכתובת המקורית, כמו במקור (XRoar מזהה אותה ומשלים מבוא קצר בקובצי CAS)
+		puls	x
+2		stx	BLKADR
+		jsr	tblkrd
+		lbsr	chkblk
+		bpl	2B
+		lbra	motoff		; ממשיכים לפקודה הבאה
+
 ; ---------- כתיבת בית (קורא 1.3) ----------
 ; twbyte: A = הבית, מהביט הנמוך. כל ביט = גל סינוס מדורג: קודם הערך השמור מהביט הקודם, ואז מהטבלה:
 ; לביט 0 האינדקסים 0-34 (35 נשמר לבא), לביט 1 הזוגיים 0-32 (34 נשמר). המרווחים בין כתיבות:

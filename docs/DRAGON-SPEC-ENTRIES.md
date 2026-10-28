@@ -282,6 +282,7 @@ The four file-error raisers above share one 3-byte-spaced chain ending in a jump
 | $B8B3 | Search the tape for the file named at $01D2 | 8 characters, blank-padded. Shows "S" and the file names on screen if in direct mode. Z clear on error. | likely |
 | $B7AA | Parse a filename from text into $01D1 (length) / $01D2 | — | likely |
 | $B903 | Skip the current file | — | likely |
+| **$B75B** | CLOADM's load loop, from X | **X = load address.** Motor on and sync (through $BDE7), then blocks to X one after another until the end block (its data is stored too). A header block or a read error gives ?IO. Motor off, returns. The Dragon twin of CoCo $A529 (Color BASIC Unravelled). Microdeal's Athletyx loader calls it directly, once per stage (28.10). | likely |
 
 Block layout used by these routines:
 
