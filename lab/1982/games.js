@@ -389,6 +389,38 @@ window.D32_GAMES = {
         256
       ]
     },
+    "count": {
+      "slug": "the-count",
+      "drawer": "adams",
+      "year": "1979",
+      "tag": [
+        "הרפתקת מילים",
+        "text adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "קצת פחות משתי דקות",
+        "a little under two minutes"
+      ],
+      "about": {
+        "he": [
+          "ההרפתקה החמישית של Scott Adams, מ-1979. על המסך: COPYRIGHT ADAMS 1979, והמרה לצבע של Roger Schrag.",
+          "מתעוררים במיטה זרה, אחר הצהריים, בארץ של רוזן מסתורי."
+        ],
+        "en": [
+          "Scott Adams' fifth adventure, from 1979. The screen says COPYRIGHT ADAMS 1979, with the colour conversion by Roger Schrag.",
+          "Wake up in a strange bed, in the afternoon, in the land of a mysterious Count."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        256
+      ]
+    },
     "blockdown": {
       "slug": "blockdown",
       "drawer": "community",

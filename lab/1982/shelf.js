@@ -47,7 +47,9 @@
       ['Scott Adams · Adventure International, 1979 · color: Roger Schrag', 'https://www.msadams.com/', null, null, 'adams']],
     // על המסך: "BY ALEXIS ADAMS". היא כתבה אותו עם Scott, והוא בסדרה שלו
     ['voodoo', 'Voodoo Castle', 'Voodoo Castle', 'a',
-      ['Alexis Adams & Scott Adams · Adventure International, 1979 · color: Roger Schrag', 'https://www.msadams.com/', null, null, 'adams']]
+      ['Alexis Adams & Scott Adams · Adventure International, 1979 · color: Roger Schrag', 'https://www.msadams.com/', null, null, 'adams']],
+    ['count', 'The Count', 'The Count', 'a',
+      ['Scott Adams · Adventure International, 1979 · color: Roger Schrag', 'https://www.msadams.com/', null, null, 'adams']]
   ];
   // משחקים שצריכים ג'ויסטיק: כשהקלטת נטענת, החיצים במקלדת הופכים לג'ויסטיק הימני ו-Alt (Option במק) לכפתור שלו
   const JOY = new Set(['ranger', 'dungeon', 'athletyx', 'cuthbert']);
@@ -262,6 +264,21 @@
         'Type a verb and a noun, then [ENTER]. For example OPEN COFFIN, GO EAST, GET KNIFE. The first three letters are enough.',
         'The description of the place always stays at the top of the screen. There are six ways to go: N S E W UP DOWN, and INVENTORY shows what you carry.',
         'There is no score here and HELP doesn\'t help: examine everything and try things out.']
+    },
+    // נבדק במכונה (28.10, גם ב-WebKit): טעינה, שתי שאלות פתיחה (אין כאן שאלה על אותיות קטנות), HELP, מלאי, LOOK, SCORE (אין ניקוד) ושמירה לקלטת
+    count: {
+      he: ['הטעינה לוקחת קצת פחות משתי דקות, והמשחק מתחיל לבד.',
+        'בהתחלה שתי שאלות: על {PRESS ENTER} לוחצים [ENTER], ועל {RESTORE A PREVIOUSLY SAVED GAME?} עונים [N] ו[ENTER].',
+        'מתעוררים במיטת נחושת גדולה: מישהו השכיב אתכם לישון, כבר אחר הצהריים ואיחרתם לקום. איפה אתם, ומי הרוזן?',
+        'כותבים פועל ושם עצם באנגלית ולוחצים [ENTER]. למשל {LOOK} (להסתכל), {GO NORTH} (ללכת צפונה), {INVENTORY} (מה בידיים). שלוש האותיות הראשונות מספיקות.',
+        'תיאור המקום תמיד מופיע למעלה במסך. הולכים בשש דרכים: {N S E W UP DOWN}. כשנתקעים, {HELP} נותן רמז.',
+        'כאן אין ניקוד. {SAVE GAME} שומר את המשחק לקלטת, ואפשר להמשיך אחר כך.'],
+      en: ['Loading takes a little under two minutes, and the game starts by itself.',
+        'Two questions first: at PRESS ENTER press [ENTER], and at RESTORE A PREVIOUSLY SAVED GAME? answer [N] and [ENTER].',
+        'You wake up in a large brass bed: someone put you to bed, it is already afternoon and you overslept. Where are you, and who is the Count?',
+        'Type a verb and a noun, then [ENTER]. For example LOOK, GO NORTH, INVENTORY. The first three letters are enough.',
+        'The description of the place always stays at the top of the screen. There are six ways to go: N S E W UP DOWN. When stuck, HELP gives a hint.',
+        'There is no score here. SAVE GAME saves the game to tape, so you can carry on later.']
     }
   };
   // מה קורה אחרי הטעינה ומה לוחצים: השורה האחרונה של "איך טוענים", וגם ההודעה מתחת לכפתור האדום
@@ -278,7 +295,8 @@
     cuthbert: ['אחרי הטעינה מופיע LICENSED BY MICRODEAL ונשאר כחמש עד שבע דקות. זה לא תקוע: כך המשחק בנוי. כשמופיע הג\'ונגל, לוחצים [רווח].', 'After loading, LICENSED BY MICRODEAL appears and stays for about five to seven minutes. It is not stuck: the game is built that way. When the jungle appears, press [Space].'],
     dungeon: ['בסוף הטעינה בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וב-SELECT LEVEL בוחרים רמה, [1] עד [3].', 'At the end of loading pick a colour: [1], [2] or [3]. On the title screen press [Space], and at SELECT LEVEL pick a level, [1] to [3].'],
     athletyx: ['במסך LICENSED BY MICRODEAL ובמסך הפתיחה לוחצים [רווח]. כשמופיע SELECT PLAYERS לוחצים [1] (או [2] לשני שחקנים), והריצה מתחילה.', 'On the LICENSED BY MICRODEAL screen and the title screen press [Space]. When SELECT PLAYERS appears press [1] (or [2] for two players), and the race begins.'],
-    adventureland: ADVQ, pirate: ADVQ, mission: ADVQ, voodoo: ADVQ
+    adventureland: ADVQ, pirate: ADVQ, mission: ADVQ, voodoo: ADVQ,
+    count: ['כשהטעינה נגמרת המשחק שואל שתי שאלות: לוחצים [ENTER], ואחר כך [N] ו-[ENTER].', 'When loading ends the game asks two questions: press [ENTER], then [N] and [ENTER].']
   };
   // מה המשחק, בשורה אחת מתחת לשם (גונן, 25.10: "לא מבינים מה זה המשחק"). השם עצמו נשאר כמו שהמחבר כתב
   const DESC = {
@@ -291,6 +309,7 @@
     athletyx: ['תחרות אתלטיקה: ריצה ועוד מקצועות, נגד השעון. בג\'ויסטיק. נכתב רק ל-Dragon.', 'An athletics contest: a sprint and more events, against the clock. Joystick. Written only for the Dragon.'],
     dungeon: ['רצים במסדרונות של מבוך ויורים ביצורים ובדלתות, נגד השעון. בג\'ויסטיק. נכתב רק ל-Dragon.', 'Race down dungeon corridors, shooting creatures and doors against the clock. Joystick. Written only for the Dragon.'],
     ranger: ['רצים, קופצים ויורים: אוספים מפתחות ואוצרות בין עטלפים ועיניים. בג\'ויסטיק.', 'Run, jump and shoot: collect keys and treasure past bats and eyes. Joystick.'],
+    count: ['הרפתקת מילים: מתעוררים במיטה זרה, בארץ של רוזן מסתורי. ההרפתקה החמישית של Scott Adams.', 'A text adventure: wake up in a strange bed, in the land of a mysterious Count. Scott Adams\' fifth adventure.'],
     voodoo: ['הרפתקת מילים: מסירים קללת וודו מהרוזן כריסטו, בטירה מלאת סודות. ההרפתקה הרביעית בסדרה.', 'A text adventure: lift a voodoo curse from Count Cristo in a castle full of secrets. The fourth adventure in the series.'],
     mission: ['הרפתקת מילים: סוכן חשאי צריך לעצור פצצת זמן בכור גרעיני. ההרפתקה השלישית של Scott Adams.', 'A text adventure: a secret agent must stop a time bomb in a nuclear reactor. Scott Adams\' third adventure.'],
     pirate: ['הרפתקת מילים: מדירה בלונדון לאי של פיראטים, בחיפוש אחרי אוצר. ההרפתקה השנייה של Scott Adams.', 'A text adventure: from a London flat to a pirates\' island, hunting for treasure. Scott Adams\' second adventure.'],
