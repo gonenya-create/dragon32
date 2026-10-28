@@ -122,12 +122,12 @@
     athletyx: {
       he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
         'אחרי הכפתור האדום מקלידים CLOADM ו-[ENTER]. הטעינה לוקחת כשתי דקות: קודם מופיע הציור של Microdeal, והמשחק ממשיך להיטען מאחוריו.',
-        'במסך LICENSED BY MICRODEAL לוחצים [רווח], ובמסך הפתיחה שוב [רווח]. ב-SELECT PLAYERS בוחרים [1] לשחקן אחד או [2] לשניים, ואחר כך [ENTER].',
+        'במסך LICENSED BY MICRODEAL לוחצים [רווח], ובמסך הפתיחה שוב [רווח]. ב-SELECT PLAYERS לוחצים [1] לשחקן אחד או [2] לשניים, והריצה מתחילה מיד.',
         'ריצת 100 מטר: מחכים ל-GO!!!!, ואז מנענעים את הג\'ויסטיק ימינה ושמאלה בקצב: [←] [→] [←] [→]. כל החלפת כיוון היא צעד, והפסים למטה משמאל מראים את המהירות. מי שזז לפני GO מקבל FOUL.',
         'ליד NEED כתוב הזמן שצריך להשיג. במקצועות האחרים משתמשים גם בכפתור: לוחצים עליו, או מחזיקים אותו כדי לצבור כוח.'],
       en: ['In this game the arrow keys are a joystick and [Space] is its button (or [Alt], [Option] on a Mac). On a phone there is a stick and a fire button under the screen.',
         'After the red button type CLOADM and [ENTER]. Loading takes about two minutes: the Microdeal picture comes first, and the game goes on loading behind it.',
-        'On the LICENSED BY MICRODEAL screen press [Space], and on the title screen [Space] again. At SELECT PLAYERS press [1] for one player or [2] for two, then [ENTER].',
+        'On the LICENSED BY MICRODEAL screen press [Space], and on the title screen [Space] again. At SELECT PLAYERS press [1] for one player or [2] for two, and the race starts at once.',
         '100 metres: wait for GO!!!!, then rock the joystick left and right in rhythm: [←] [→] [←] [→]. Every change of direction is a step, and the bars at the bottom left show your speed. Move before GO and you get a FOUL.',
         'NEED shows the time you have to beat. In the other events you also use the button: press it, or hold it down to build up power.']
     },
@@ -244,6 +244,21 @@
         'The description of the place always stays at the top of the screen. There are six ways to go: N S E W UP DOWN, and INVENTORY shows what you carry.',
         'There is no score here and HELP doesn\'t help: examine everything and try things out.']
     }
+  };
+  // מה קורה אחרי הטעינה ומה לוחצים: השורה האחרונה של "איך טוענים", וגם ההודעה מתחת לכפתור האדום
+  // (גונן, 28.10: נתקע במסכים שמחכים למקש, כי "איך טוענים" אמר רק שהמשחק מתחיל לבד)
+  const ADVQ = ['כשהטעינה נגמרת המשחק שואל שלוש שאלות: עונים [N] ו-[ENTER], אחר כך [ENTER], ושוב [N] ו-[ENTER].',
+    'When loading ends the game asks three questions: answer [N] and [ENTER], then [ENTER], then [N] and [ENTER] again.'];
+  const AFTER = {
+    eggs: ['המשחק מופיע. מתחילים ב[רווח].', 'The game appears. Press [Space] to start.'],
+    blockdown: ['כשהטעינה נגמרת המשחק מתחיל לבד. מתחילים ב[רווח].', 'When loading ends the game starts by itself. Press [Space] to start.'],
+    dragontet: ['מופיע תפריט: בוחרים ב[↑] [↓] ומאשרים ב[ENTER].', 'A menu appears: choose with [↑] [↓] and confirm with [ENTER].'],
+    phantom: ['המשחק שואל על ההוראות: [N] מדלג, [Y] מציג אותן.', 'The game asks about the instructions: [N] skips them, [Y] shows them.'],
+    ranger: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וב-SELECT LEVEL בוחרים שלב.', 'When loading ends pick a colour: [1], [2] or [3]. On the title screen press [Space], and at SELECT LEVEL pick a level.'],
+    cuthbert: ['אחרי הטעינה מופיע LICENSED BY MICRODEAL ונשאר כחמש עד שבע דקות. זה לא תקוע: כך המשחק בנוי. כשמופיע הג\'ונגל, לוחצים [רווח].', 'After loading, LICENSED BY MICRODEAL appears and stays for about five to seven minutes. It is not stuck: the game is built that way. When the jungle appears, press [Space].'],
+    dungeon: ['בסוף הטעינה בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וב-SELECT LEVEL בוחרים רמה, [1] עד [3].', 'At the end of loading pick a colour: [1], [2] or [3]. On the title screen press [Space], and at SELECT LEVEL pick a level, [1] to [3].'],
+    athletyx: ['במסך LICENSED BY MICRODEAL ובמסך הפתיחה לוחצים [רווח]. כשמופיע SELECT PLAYERS לוחצים [1] (או [2] לשני שחקנים), והריצה מתחילה.', 'On the LICENSED BY MICRODEAL screen and the title screen press [Space]. When SELECT PLAYERS appears press [1] (or [2] for two players), and the race begins.'],
+    adventureland: ADVQ, pirate: ADVQ, mission: ADVQ, voodoo: ADVQ
   };
   // מה המשחק, בשורה אחת מתחת לשם (גונן, 25.10: "לא מבינים מה זה המשחק"). השם עצמו נשאר כמו שהמחבר כתב
   const DESC = {
@@ -435,13 +450,29 @@
   const statusHome = status && status.parentNode, statusNext = status && status.nextSibling;
   const baseTitle = document.title;
   const T2 = (he, en) => EN ? en : he;
+  let viewId = null, inTape = null;   // המשחק שהדף שלו פתוח, והקלטת שברשמקול (null: "הקלטות שלי" או כלום)
+  // הקלידו CLOAD/CLOADM בדף של משחק, בלי שהקלטת שלו ברשמקול: המכונה עושה מה שהייתה עושה (קוראת את מה שיש ברשמקול),
+  // ומתחת לכפתור האדום מופיעה תזכורת (גונן, 28.10: ?FM ERROR כשהקליד CLOADM לפני הכפתור)
+  window.addEventListener('keydown', e => {
+    if (e.key !== 'Enter' || !viewId || inTape === viewId || view.hidden || !status || findRam() < 0) return;
+    const last = (screenRows().filter(r => r.trim()).pop() || '').trim();
+    if (!/^CLOAD/.test(last)) return;
+    status.textContent = T2('הקלטת של המשחק עוד לא ברשמקול. קודם לוחצים על הכפתור האדום, ואחר כך מקלידים שוב ' + (last.startsWith('CLOADM') ? 'CLOADM' : 'CLOAD') + '.',
+      'The game\'s tape is not in the recorder yet. First press the red button, then type ' + (last.startsWith('CLOADM') ? 'CLOADM' : 'CLOAD') + ' again.');
+    const go = view.querySelector('.gv-go');
+    if (go) { go.classList.remove('nudge'); void go.offsetWidth; go.classList.add('nudge'); }
+    // בטלפון הכפתור מתחת למקלדת: מגללים אליו, כדי שיראו את התזכורת
+    if (go) { const r = go.getBoundingClientRect(); if (r.top < 0 || r.bottom > innerHeight) go.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+  }, true);
   function loadSteps(id, kind) {
     const m = meta(id), steps = [];
     steps.push(T2('לוחצים על הכפתור האדום, והקלטת נכנסת לרשמקול.', 'Press the red button, and the tape goes into the recorder.'));
     if (!kind) steps.push(T2('מקלידים {CLOAD} ו-[ENTER]. אחרי כמה שניות מופיע OK.', 'Type {CLOAD} and [ENTER]. After a few seconds OK appears.'), T2('מקלידים {RUN} ו-[ENTER].', 'Type {RUN} and [ENTER].'));
     else if (kind === 'm') steps.push(T2('מקלידים {CLOADM} ו-[ENTER]. כשמופיע OK, מקלידים {EXEC} ו-[ENTER].', 'Type {CLOADM} and [ENTER]. When OK appears, type {EXEC} and [ENTER].'));
-    else steps.push(T2('מקלידים {CLOADM} ו-[ENTER]. קודם מופיע S, ואחר כך F ושם הקלטת. כשהטעינה נגמרת, המשחק מתחיל לבד.', 'Type {CLOADM} and [ENTER]. First S appears, then F and the tape\'s name. When loading ends, the game starts by itself.'));
+    else steps.push(T2('מקלידים {CLOADM} ו-[ENTER]. קודם מופיע S, ואחר כך F ושם הקלטת.', 'Type {CLOADM} and [ENTER]. First S appears, then F and the tape\'s name.'));
     if (m.load && L2(m.load)) steps.push(T2('הטעינה לוקחת ' + m.load[0] + ', כמו קלטת אמיתית.', 'Loading takes ' + m.load[1] + ', like a real tape.'));
+    if (AFTER[id]) steps.push(T2(...AFTER[id]));
+    else if (kind === 'a') steps.push(T2('כשהטעינה נגמרת, המשחק מתחיל לבד.', 'When loading ends, the game starts by itself.'));
     return steps;
   }
   function playLines(id, kind) {
@@ -454,6 +485,7 @@
   function openGame(id, push) {
     const t = TAPES.find(x => x[0] === id), m = meta(id);
     if (!t) return;
+    viewId = id;
     const [, he, en, kind, credit] = t, name = EN ? en : he, b = buttons[TAPES.indexOf(t)];
     view.textContent = '';
     const back = document.createElement('button');
@@ -531,6 +563,7 @@
   }
   function closeGame(push) {
     view.hidden = true;
+    viewId = null;
     document.body.classList.remove('game-open');
     if (status && statusHome) statusHome.insertBefore(status, statusNext);
     document.title = baseTitle;
@@ -569,6 +602,8 @@
 .gv-tags > span:not(.yr) { font-size: 12px; color: #b9a98f; border: 1px solid #4a3a2a; border-radius: 999px; padding: 0 8px; }
 .gv-go { display: block; width: 100%; border: 0; border-radius: 12px; background: #e0503c; color: #fff; font: inherit; font-weight: 800; font-size: 18px; padding: 12px; box-shadow: 0 4px 0 #6d160b; cursor: pointer; }
 .gv-go:active { transform: translateY(2px); box-shadow: 0 2px 0 #6d160b; }
+.gv-go.nudge { animation: gv-nudge 0.5s ease-in-out 3; }
+@keyframes gv-nudge { 50% { box-shadow: 0 4px 0 #6d160b, 0 0 0 5px #f2d23a; } }
 .gv-info #tape-status { margin: 8px 0 0; }
 .gv-shot { flex: 0 1 300px; width: 300px; max-width: 100%; height: auto; image-rendering: pixelated; border-radius: 6px; border: 1px solid #4a3a2a; background: #000; }
 .gv-tabs { display: flex; gap: 6px; margin-top: 14px; border-bottom: 1px solid #4a3a2a; flex-wrap: wrap; }
@@ -670,17 +705,21 @@ body.game-open .shelf > :not(.game-view) { display: none; }
     if (typeof Module === 'undefined' || !window.d32Ready) { status.textContent = EN ? 'The computer is still starting. Try again in a moment.' : 'המחשב עוד נדלק. נסו שוב בעוד רגע.'; return; }
     busy = true;
     findRam();
+    const id = (/^\/tape-(.+)\.cas$/.exec(path) || [])[1] || null;
+    inTape = id;
     try {
       FS.writeFile(path, bytes);
       Module.ccall('wasm_load_file', null, ['string', 'number', 'number'], [path, 2, 0]);
       document.querySelectorAll('.tape').forEach(t => t.classList.toggle('in', t === button));
       const [LOADW, RUNW] = mc ? ['CLOADM', 'EXEC'] : ['CLOAD', 'RUN'];
       if (!auto) {
-        status.textContent = mc === 'a'
-          ? (EN ? 'The tape "' + title + '" is in the recorder. Type CLOADM. Loading can take a few minutes: first S, then F and the tape\'s name, and the game starts by itself.'
-            : 'הקלטת "' + title + '" ברשמקול. הקלידו CLOADM. הטעינה יכולה לקחת כמה דקות: קודם S, אחר כך F ושם הקלטת, ואז המשחק מתחיל לבד.')
+        inTape = id;
+        const next = AFTER[id] ? ' ' + T2(...AFTER[id]).replace(/[\[\]{}]/g, '') : '';
+        status.textContent = (mc === 'a'
+          ? (EN ? 'The tape "' + title + '" is in the recorder. Type CLOADM. Loading can take a few minutes: first S, then F and the tape\'s name' + (next ? '.' : ', and the game starts by itself.')
+            : 'הקלטת "' + title + '" ברשמקול. הקלידו CLOADM. הטעינה יכולה לקחת כמה דקות: קודם S, אחר כך F ושם הקלטת' + (next ? '.' : ', ואז המשחק מתחיל לבד.'))
           : EN ? 'The tape "' + title + '" is in the recorder. Type ' + LOADW + ', and after OK type ' + RUNW + '.'
-          : 'הקלטת "' + title + '" ברשמקול. הקלידו ' + LOADW + ', ואחרי ה-OK הקלידו ' + RUNW + '.';
+          : 'הקלטת "' + title + '" ברשמקול. הקלידו ' + LOADW + ', ואחרי ה-OK הקלידו ' + RUNW + '.') + next;
         document.getElementById('canvas')?.focus({ preventScroll: true });
         return;
       }
@@ -765,6 +804,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
     if (!list.length) return;
     try {
       FS.writeFile('/mytapes.cas', tapeBytes(list));
+      inTape = null;
       Module.ccall('wasm_load_file', null, ['string', 'number', 'number'], ['/mytapes.cas', 2, 0]);
     } catch (e) {}
   }

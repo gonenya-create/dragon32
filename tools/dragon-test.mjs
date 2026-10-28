@@ -1679,6 +1679,15 @@ if (part('real machine lab')) {
     check(`${path} open to Google: no "noindex", its own main address and the address in the other language (the machine and every game page)`, !seo.robots && !seoMain.robots
       && seo.canon === 'https://dragon1982.com' + path + 'dungeon-raid/' && seo.he === 'https://dragon1982.com/lab/1982/dungeon-raid/' && seo.en === 'https://dragon1982.com/en/lab/1982/dungeon-raid/' && /Kalish/.test(seo.desc)
       && seoMain.canon === 'https://dragon1982.com' + path && seoMain.n >= 2, JSON.stringify([seo, seoMain]));
+    // אחרי הטעינה: מה לוחצים (גונן, 28.10: נתקע במסך שמחכה למקש), ו-CLOADM לפני הכפתור האדום מביא תזכורת מתחתיו
+    await direct.waitForFunction(() => window.d32Ready, null, { timeout: 20000 }); await direct.waitForTimeout(2500);
+    const steps = await direct.$$eval('.gv-pane ol li', l => l.map(x => x.textContent));
+    await direct.click('#canvas');
+    for (const k of [...'CLOADM', 'Enter']) { await direct.keyboard.down(k); await direct.waitForTimeout(80); await direct.keyboard.up(k); await direct.waitForTimeout(80); }
+    await direct.waitForTimeout(600);
+    const hint = await direct.evaluate(() => [document.getElementById('tape-status')?.textContent || '', document.querySelector('.gv-go')?.classList.contains('nudge')]);
+    check(`${path}dungeon-raid/ "how to load" ends with what to press after loading, and CLOADM before the red button brings a reminder under it`,
+      /SELECT LEVEL/.test(steps.at(-1) || '') && /(אדום|red button)/.test(hint[0]) && hint[1], JSON.stringify([steps.at(-1), hint]));
     await direct.close();
     const b = await p.request.get(base.replace(/\/$/, '') + path + 'building/');
     check(`${path} links to "what we are building now", which loads`, b.status() === 200 && (await p.locator('main > p.note a[href="./building/"]').count()) === 1);

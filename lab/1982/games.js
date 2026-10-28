@@ -141,8 +141,8 @@ window.D32_GAMES = {
         "1 player"
       ],
       "load": [
-        "כשבע דקות",
-        "about seven minutes"
+        "כשתי דקות",
+        "about two minutes"
       ],
       "about": {
         "he": [
