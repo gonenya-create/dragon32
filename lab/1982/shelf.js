@@ -49,10 +49,16 @@
     ['voodoo', 'Voodoo Castle', 'Voodoo Castle', 'a',
       ['Alexis Adams & Scott Adams · Adventure International, 1979 · color: Roger Schrag', 'https://www.msadams.com/', null, null, 'adams']],
     ['count', 'The Count', 'The Count', 'a',
-      ['Scott Adams · Adventure International, 1979 · color: Roger Schrag', 'https://www.msadams.com/', null, null, 'adams']]
+      ['Scott Adams · Adventure International, 1979 · color: Roger Schrag', 'https://www.msadams.com/', null, null, 'adams']],
+    // משחקי Mike Hughey: במכתב מ-19.6.1997 נתן רשות להפיץ אותם "as desired, in whatever format" (ארכיון CLEAR). קרדיט מלא, יורד לפי בקשה.
+    // הקלטות: הגרסאות ל-Dragon ש-Microdeal מכרה בבריטניה (Tom Mix Software הוציאה אותם בארה"ב)
+    ['grabber', 'Grabber', 'Grabber', 'a',
+      ['Mike Hughey · Tom Mix Software / Microdeal, 1983', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']],
+    ['draconian', 'Draconian', 'Draconian', 'a',
+      ['Mike Hughey · Tom Mix Software / Microdeal, 1984', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']]
   ];
   // משחקים שצריכים ג'ויסטיק: כשהקלטת נטענת, החיצים במקלדת הופכים לג'ויסטיק הימני ו-Alt (Option במק) לכפתור שלו
-  const JOY = new Set(['ranger', 'dungeon', 'athletyx', 'cuthbert']);
+  const JOY = new Set(['ranger', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian']);
   function setJoy(on) {
     try { Module.ccall('wasm_set_joystick_by_name', null, ['number', 'string'], [0, on ? 'kjoy0' : '']); } catch (e) {}
     window.d32Joy = !!on;
@@ -184,6 +190,34 @@
         'Hold [SPACE] to aim, release to fire. The pistol takes about 2 seconds to recharge.',
         '[1]–[6] set the phantom detector range; it beeps when one is near. If a phantom touches you, the game is over.']
     },
+    // נבדק במכונה (28.10): טעינה (כשלוש וחצי דקות, מסך הטעינה של Microdeal), בחירת צבע, מסך הפתיחה, NUMBER OF PLAYERS?, הליכה במבוך,
+    // והכפתור שמעביר בין שני המבוכים. המטרה לפי Curtis Boyle (lcurtisboyle.com/nitros9/grabber.html)
+    grabber: {
+      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
+        'הטעינה ארוכה, כשלוש וחצי דקות. כשהיא נגמרת בוחרים צבע רקע: [1] שחור, [2] בהיר, [3] ירוק.',
+        'מופיע מסך הפתיחה, ואחריו NUMBER OF PLAYERS?. לוחצים [1] לשחקן אחד, או [2] לשניים בתורות.',
+        'על המסך שני מבוכים. החיצים מזיזים אתכם, ו-[רווח] מעביר אתכם למבוך השני.',
+        'המטרה: לאסוף את המטילים מהפינות ולהחזיר אותם לתאים שבמרכז. שתי מפלצות אפשר לנצח רק כשאתם בצבע שלהן, והשלישית גונבת מטילים מהמרכז.'],
+      en: ['In this game the arrow keys are a joystick and [Space] is its button (or [Alt], [Option] on a Mac). On a phone there is a stick and a fire button under the screen.',
+        'Loading is long, about three and a half minutes. When it ends pick a background colour: [1] black, [2] buff, [3] green.',
+        'The title screen appears, then NUMBER OF PLAYERS?. Press [1] for one player, or [2] for two taking turns.',
+        'There are two mazes on the screen. The arrows move you, and [Space] moves you to the other maze.',
+        'The goal: collect the bars from the corners and bring them back to the holds in the middle. Two monsters can be beaten only when you are their colour, and the third steals bars from the middle.']
+    },
+    // נבדק במכונה (28.10): טעינה, בחירת צבע, מסך הפתיחה, NUMBER OF PLAYERS? (המקש נקלט רק כשהשאלה כבר על המסך), טיסה לכל כיוון וירי.
+    // המטרה לפי Curtis Boyle (lcurtisboyle.com/nitros9/draconian.html)
+    draconian: {
+      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
+        'הטעינה ארוכה, כשלוש וחצי דקות. כשהיא נגמרת בוחרים צבע רקע: [1] שחור, [2] בהיר, [3] ירוק.',
+        'מופיע מסך הפתיחה. לוחצים [רווח], או מחכים, ומופיע NUMBER OF PLAYERS?. כשהשאלה על המסך לוחצים [1] לשחקן אחד, או [2] לשניים.',
+        'החיצים מכוונים את החללית, והיא טסה לכיוון הזה. [רווח] יורה. המפה מימין מראה את הבסיסים.',
+        'המטרה: להשמיד את כל הבסיסים בשלב ולהציל את האסטרונאוטים שכלואים בהם. נזהרים ממוקשים, מאסטרואידים ומהירי של הבסיסים. מי שמתעכב, דרקון ענק רודף אחריו.'],
+      en: ['In this game the arrow keys are a joystick and [Space] is its button (or [Alt], [Option] on a Mac). On a phone there is a stick and a fire button under the screen.',
+        'Loading is long, about three and a half minutes. When it ends pick a background colour: [1] black, [2] buff, [3] green.',
+        'The title screen appears. Press [Space], or wait, and NUMBER OF PLAYERS? appears. When the question is on the screen press [1] for one player, or [2] for two.',
+        'The arrows point your ship, and it flies that way. [Space] fires. The map on the right shows the bases.',
+        'The goal: destroy all the bases in the sector and rescue the astronauts held in them. Watch out for mines, asteroids and fire from the bases. Take too long and a giant dragon comes after you.']
+    },
     // נבדק במכונה (25.10): צבע, רמה, ריצה, קפיצה, ירי, ניקוד, סוף משחק ושיא
     ranger: {
       he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
@@ -291,6 +325,8 @@
     dragontet: ['מופיע תפריט: בוחרים ב[↑] [↓] ומאשרים ב[ENTER].', 'A menu appears: choose with [↑] [↓] and confirm with [ENTER].'],
     escape: ['מופיעים מסך הפתיחה וההקדמה, ואז המסדרון: [↑] קדימה, [←] [→] מסתובבים.', 'The title screen and the introduction appear, then the corridor: [↑] forward, [←] [→] turn.'],
     phantom: ['המשחק שואל על ההוראות: [N] מדלג, [Y] מציג אותן.', 'The game asks about the instructions: [N] skips them, [Y] shows them.'],
+    grabber: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. אחרי מסך הפתיחה, ב-NUMBER OF PLAYERS? לוחצים [1].', 'When loading ends pick a colour: [1], [2] or [3]. After the title screen, at NUMBER OF PLAYERS? press [1].'],
+    draconian: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וכשמופיע NUMBER OF PLAYERS? לוחצים [1].', 'When loading ends pick a colour: [1], [2] or [3]. On the title screen press [Space], and when NUMBER OF PLAYERS? appears press [1].'],
     ranger: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וב-SELECT LEVEL בוחרים שלב.', 'When loading ends pick a colour: [1], [2] or [3]. On the title screen press [Space], and at SELECT LEVEL pick a level.'],
     cuthbert: ['אחרי הטעינה מופיע LICENSED BY MICRODEAL ונשאר כחמש עד שבע דקות. זה לא תקוע: כך המשחק בנוי. כשמופיע הג\'ונגל, לוחצים [רווח].', 'After loading, LICENSED BY MICRODEAL appears and stays for about five to seven minutes. It is not stuck: the game is built that way. When the jungle appears, press [Space].'],
     dungeon: ['בסוף הטעינה בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וב-SELECT LEVEL בוחרים רמה, [1] עד [3].', 'At the end of loading pick a colour: [1], [2] or [3]. On the title screen press [Space], and at SELECT LEVEL pick a level, [1] to [3].'],
@@ -308,6 +344,8 @@
     cuthbert: ['רצים בג\'ונגל, קופצים מעל בורות ובולי עץ ויורדים בסולמות למנהרה, נגד השעון. בג\'ויסטיק.', 'Run through the jungle, jump pits and logs and climb down ladders to the tunnel, against the clock. Joystick.'],
     athletyx: ['תחרות אתלטיקה: ריצה ועוד מקצועות, נגד השעון. בג\'ויסטיק. נכתב רק ל-Dragon.', 'An athletics contest: a sprint and more events, against the clock. Joystick. Written only for the Dragon.'],
     dungeon: ['רצים במסדרונות של מבוך ויורים ביצורים ובדלתות, נגד השעון. בג\'ויסטיק. נכתב רק ל-Dragon.', 'Race down dungeon corridors, shooting creatures and doors against the clock. Joystick. Written only for the Dragon.'],
+    grabber: ['שני מבוכים בבת אחת: אוספים מטילים ומחזירים אותם למרכז, ובורחים ממפלצות. בג\'ויסטיק.', 'Two mazes at once: collect the bars, bring them back to the middle and escape the monsters. Joystick.'],
+    draconian: ['טסים בחלל לכל כיוון, משמידים בסיסים ומצילים אסטרונאוטים, לפני שהדרקון מגיע. בג\'ויסטיק.', 'Fly through space in any direction, destroy bases and rescue astronauts before the dragon arrives. Joystick.'],
     ranger: ['רצים, קופצים ויורים: אוספים מפתחות ואוצרות בין עטלפים ועיניים. בג\'ויסטיק.', 'Run, jump and shoot: collect keys and treasure past bats and eyes. Joystick.'],
     count: ['הרפתקת מילים: מתעוררים במיטה זרה, בארץ של רוזן מסתורי. ההרפתקה החמישית של Scott Adams.', 'A text adventure: wake up in a strange bed, in the land of a mysterious Count. Scott Adams\' fifth adventure.'],
     voodoo: ['הרפתקת מילים: מסירים קללת וודו מהרוזן כריסטו, בטירה מלאת סודות. ההרפתקה הרביעית בסדרה.', 'A text adventure: lift a voodoo curse from Count Cristo in a castle full of secrets. The fourth adventure in the series.'],
@@ -459,6 +497,11 @@
       docs.textContent = 'msadams.com';
       docs.rel = 'noopener';
       by.append(EN ? 'By ' : 'מאת ', who, ' · ', EN ? 'with his permission · ' : 'באישורו · ', docs, EN ? ' · removed on request' : ' · יוסר לפי בקשה');
+    } else if (credit[4] === 'hughey') {
+      // הרשות במכתב שלו מ-1997 (ארכיון CLEAR): "distribute them as desired, in whatever format"
+      docs.textContent = EN ? 'his permission' : 'הרשות שלו';
+      docs.rel = 'noopener';
+      by.append(EN ? 'By ' : 'מאת ', who, ' · ', docs, EN ? ' · removed on request' : ' · יוסר לפי בקשה');
     } else by.append(EN ? 'By ' : 'מאת ', who, ' · ', docs);
     if (credit[2]) by.append(' · ', site);
     if (credit[3]) { const lic = document.createElement('a'); lic.href = credit[3]; lic.textContent = 'GPL v3'; by.append(' · ', lic); }

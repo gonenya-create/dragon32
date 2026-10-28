@@ -30,6 +30,16 @@ window.D32_GAMES = {
       ]
     },
     {
+      "key": "hughey",
+      "he": "המשחקים של Mike Hughey",
+      "en": "Mike Hughey's games",
+      "years": "1983–84",
+      "note": [
+        "Mike Hughey כתב משחקים בשפת מכונה ל-Color Computer, ו-Tom Mix Software ממישיגן הוציאה אותם. ל-Dragon הוציאה אותם Microdeal בבריטניה. ב-1997 הוא כתב שהוא ישמח שיפיצו אותם בחופשיות, בכל צורה. כאן ברשותו.",
+        "Mike Hughey wrote machine-code games for the Color Computer, and Tom Mix Software of Michigan published them. Microdeal brought them out for the Dragon in Britain. In 1997 he wrote that he would be thrilled for them to be distributed freely, in whatever format. Here with his permission."
+      ]
+    },
+    {
       "key": "type",
       "he": "הקלד בעצמך",
       "en": "Type it in",
@@ -259,6 +269,70 @@ window.D32_GAMES = {
         160,
         100,
         48
+      ]
+    },
+    "grabber": {
+      "slug": "grabber",
+      "drawer": "hughey",
+      "year": "1983",
+      "tag": [
+        "מבוך",
+        "maze"
+      ],
+      "players": [
+        "שחקן אחד או שניים",
+        "1 or 2 players"
+      ],
+      "load": [
+        "כשלוש וחצי דקות",
+        "about three and a half minutes"
+      ],
+      "about": {
+        "he": [
+          "Mike Hughey כתב אותו ל-Color Computer, ו-Tom Mix Software הוציאה אותו ביולי 1983. Microdeal הוציאה אותו ל-Dragon.",
+          "שני מבוכים על המסך בבת אחת, והכפתור מעביר ביניהם. היה בו דבר נדיר אז: מוזיקה שמתנגנת לאורך כל המשחק. Hughey כתב עליו: \"משחק קטן ונהדר\"."
+        ],
+        "en": [
+          "Mike Hughey wrote it for the Color Computer, and Tom Mix Software published it in July 1983. Microdeal brought it out for the Dragon.",
+          "Two mazes on the screen at once, and the button moves you between them. It had something rare then: music that plays all through the game. Hughey called it \"a great little game\"."
+        ]
+      },
+      "icon": [
+        80,
+        8,
+        128
+      ]
+    },
+    "draconian": {
+      "slug": "draconian",
+      "drawer": "hughey",
+      "year": "1984",
+      "tag": [
+        "יריות בחלל",
+        "space shooter"
+      ],
+      "players": [
+        "שחקן אחד או שניים",
+        "1 or 2 players"
+      ],
+      "load": [
+        "כשלוש וחצי דקות",
+        "about three and a half minutes"
+      ],
+      "about": {
+        "he": [
+          "Mike Hughey כתב אותו ל-Color Computer, ו-Tom Mix Software הוציאה אותו ב-1984. Microdeal הוציאה אותו ל-Dragon.",
+          "טסים בחלל לכל כיוון ומשמידים בסיסים, ומצילים אסטרונאוטים שכלואים בהם. מי שמתעכב, דרקון ענק רודף אחריו. יש מוזיקה בכמה קולות בפתיחה ובין השלבים."
+        ],
+        "en": [
+          "Mike Hughey wrote it for the Color Computer, and Tom Mix Software published it in 1984. Microdeal brought it out for the Dragon.",
+          "Fly through space in any direction, destroy the bases and rescue the astronauts held in them. Take too long and a giant dragon comes after you. There is music in several voices at the start and between levels."
+        ]
+      },
+      "icon": [
+        72,
+        48,
+        104
       ]
     },
     "adventureland": {
