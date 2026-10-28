@@ -272,13 +272,8 @@
   const BASE = EN ? '/en/lab/1982/' : '/lab/1982/';
   const meta = id => G.games[id] || {};
   const L2 = (pair) => pair ? pair[EN ? 1 : 0] : '';
-  const DKEY = 'd32-lab-drawers';
-  let drawerState = {};
-  try { drawerState = JSON.parse(localStorage.getItem(DKEY)) || {}; } catch (e) {}
-  const remember = d => d.addEventListener('toggle', () => {
-    drawerState[d.dataset.drawer] = d.open;
-    try { localStorage.setItem(DKEY, JSON.stringify(drawerState)); } catch (e) {}
-  });
+  // כל המגירות סגורות בכל כניסה, בלי זיכרון (גונן, 28.10); מנקים את מה שנשמר פעם
+  try { localStorage.removeItem('d32-lab-drawers'); } catch (e) {}
   // שנה או טווח שנים: תגית משמאל לימין, כדי שבעברית "1983–84" לא יתהפך (גונן, 27.10)
   const yearChip = y => { const s = document.createElement('span'); s.className = 'yr'; s.dir = 'ltr'; s.textContent = y; return s; };
   const yearKey = id => parseInt(meta(id).year, 10) || 9999;
@@ -289,7 +284,7 @@
     const d = document.createElement('details');
     d.className = 'drawer';
     d.dataset.drawer = dr.key;
-    d.open = !!drawerState[dr.key];   // סגורות בכניסה הראשונה (גונן, 25.10), ונזכרות אחר כך
+    d.open = false;
     d.innerHTML = '<summary><span class="drawer-name"></span> <span class="drawer-count"></span></summary><div class="drawer-body"></div>';
     d.querySelector('.drawer-name').textContent = EN ? dr.en : dr.he;
     d.querySelector('.drawer-count').textContent = ids.length;
@@ -309,7 +304,6 @@
       body.appendChild(list);
       grids[dr.key + (g ? ':' + g : '')] = list;
     }
-    remember(d);
     box.appendChild(d);
   }
   // עוד משחק טוב שלא על המדף: ב-Dunjunz יש חלקים מהמשחק המקורי של Bug-Byte בלי רשות, אז רק קישור לאתר של המחבר
@@ -324,7 +318,6 @@
     grids.community.after(more);
   }
   const mineDrawer = document.getElementById('drawer-mine');
-  if (mineDrawer) { if ('mine' in drawerState) mineDrawer.open = drawerState.mine; remember(mineDrawer); }
   const openDrawerOf = b => { const d = b && b.closest('details.drawer'); if (d) d.open = true; };
   // צלמית: חלק קטן מצילום המסך של המשחק (מהמכונה שלנו), מוגדל בפיקסלים חדים
   function icon(id) {

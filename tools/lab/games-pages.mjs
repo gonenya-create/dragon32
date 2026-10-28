@@ -23,8 +23,10 @@ for (const en of [false, true]) {
     const nm = names[id];
     if (!nm) throw new Error('No shelf name for ' + id);
     const title = `${en ? nm[1] : nm[0]} — Dragon 1982`, desc = (en ? m.about.en : m.about.he).join(' ');
+    const U = 'https://dragon1982.com', he = `${U}/lab/1982/${m.slug}/`, enU = `${U}/en/lab/1982/${m.slug}/`;
     let html = tpl
-      .replace(/<title>[^<]*<\/title>/, `<title>${esc(title)}</title>\n<meta name="description" content="${esc(desc)}">\n<meta property="og:title" content="${esc(title)}">\n<meta property="og:description" content="${esc(desc)}">\n<meta property="og:image" content="https://dragon1982.com/lab/1982/shots/${id}.png">\n<link rel="alternate" hreflang="${en ? 'he' : 'en'}" href="${other}${m.slug}/">`)
+      .replace(/<meta name="description"[^>]*>\n|<link rel="(?:canonical|alternate)"[^>]*>\n/g, '')
+      .replace(/<title>[^<]*<\/title>/, `<title>${esc(title)}</title>\n<meta name="description" content="${esc(desc)}">\n<meta property="og:title" content="${esc(title)}">\n<meta property="og:description" content="${esc(desc)}">\n<meta property="og:image" content="${U}/lab/1982/shots/${id}.png">\n<link rel="canonical" href="${en ? enU : he}">\n<link rel="alternate" hreflang="he" href="${he}">\n<link rel="alternate" hreflang="en" href="${enU}">`)
       .replace('<body>', `<body data-game="${id}">`)
       .replace(`href="${other}"`, `href="${other}${m.slug}/"`)
       .replaceAll('href="./building/"', `href="${base}building/"`)

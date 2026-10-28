@@ -24,22 +24,16 @@
   const cabinet = document.querySelector('.cabinet'), mine = document.getElementById('drawer-mine');
   if (!cabinet) return;
 
-  // המגירה, כמו המגירות של shelf.js: סגורה בכניסה הראשונה, ונזכרת אחר כך (אותו מפתח בדפדפן)
-  const DKEY = 'd32-lab-drawers';
-  let state = {};
-  try { state = JSON.parse(localStorage.getItem(DKEY)) || {}; } catch (e) {}
+  // המגירה, כמו המגירות של shelf.js: סגורה בכל כניסה (גונן, 28.10)
   const d = document.createElement('details');
   d.className = 'drawer';
   d.dataset.drawer = 'type';
-  d.open = !!state.type;
+  d.open = false;
   d.innerHTML = '<summary><span class="drawer-name"></span> <span class="drawer-count"></span></summary><div class="drawer-body"><p class="note typein-note"></p><div class="tapes"></div></div>';
   d.querySelector('.drawer-name').textContent = T('הקלד בעצמך', 'Type it in');
   d.querySelector('.drawer-count').textContent = PAGES.length;
   d.querySelector('.typein-note').textContent = T('ב-1983 מגזינים הדפיסו תוכניות שקוראים שלחו, וכולם הקלידו אותן בעצמם. פותחים את העמוד המקורי, מקלידים ומריצים.',
     'In 1983 magazines printed programs sent in by readers, and everyone typed them in. Open the original page, type it in and run it.');
-  d.addEventListener('toggle', () => {
-    try { state = JSON.parse(localStorage.getItem(DKEY)) || {}; state.type = d.open; localStorage.setItem(DKEY, JSON.stringify(state)); } catch (e) {}
-  });
   // הסדר הכרונולוגי של הארון (גונן, 27.10): אחרי ההרפתקאות של 1983–84, לפני המשחקים החדשים מהקהילה
   const after = document.querySelector('#tapes [data-drawer="community"]');
   if (after) after.before(d); else cabinet.insertBefore(d, mine);

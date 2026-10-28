@@ -1632,7 +1632,10 @@ if (part('real machine lab')) {
     await p.waitForTimeout(3500);
     check(`${path} loads with the drawn keyboard`, r.status() === 200 && (await p.locator('.kbd .k').count()) > 50 && errs.length === 0, errs.join(' | '));
     check(`${path} has the tape shelf (17 tapes: 7 BASIC, Dragon Eggs, Blockdown, DragonTet, Phantom Slayer, Danger Ranger, Dungeon Raid, Adventureland, Pirate Adventure, Secret Mission, Voodoo Castle)`, (await p.locator('#tapes .tape.row').count()) === 17);
-    check(`${path} the cabinet drawers start closed`, await p.evaluate(() => [...document.querySelectorAll('#tapes details.drawer')].every(d => !d.open)));
+    check(`${path} everything starts closed: the cabinet drawers, "first try", "what works" and "how to edit a line", with no memory of what was opened last time`, await p.evaluate(() =>
+      [...document.querySelectorAll('#tapes details.drawer, .info details, details.how')].every(d => !d.open) && document.querySelectorAll('.info details').length === 3
+      && /PRINT 2\+3/.test(document.querySelector('.info details.try')?.textContent || '') && ![...document.querySelectorAll('.info > p.note')].some(e => /PRINT 2\+3/.test(e.textContent))
+      && localStorage.getItem('d32-lab-drawers') === null));
     check(`${path} "type it in" drawer: 2 magazine pages; a page opens beside the machine (scan from archive.org, credit) and closes`, await p.evaluate(async () => {
       const cards = document.querySelectorAll('[data-drawer="type"] .tape');
       if (cards.length !== 2) return false;
@@ -1669,6 +1672,12 @@ if (part('real machine lab')) {
     const dres = await direct.goto(base.replace(/\/$/, '') + path + 'dungeon-raid/'); await direct.waitForTimeout(1500);
     const dd = await direct.evaluate(() => ({ open: document.body.classList.contains('game-open'), name: document.querySelector('.gv-title')?.textContent, title: document.title, og: document.querySelector('meta[property="og:title"]')?.content, shot: document.querySelector('.gv-shot').complete && document.querySelector('.gv-shot').naturalWidth === 256 }));
     check(`${path}dungeon-raid/ opens the machine with the Dungeon Raid page already open (its own title for sharing, and a screenshot from our machine)`, dres.status() === 200 && dd.open && dd.name === 'Dungeon Raid' && /^Dungeon Raid — Dragon 1982/.test(dd.title) && /Dungeon Raid/.test(dd.og) && dd.shot, JSON.stringify(dd));
+    const seo = await direct.evaluate(() => ({ robots: !!document.querySelector('meta[name=robots][content*=noindex]'), canon: document.querySelector('link[rel=canonical]')?.href,
+      he: document.querySelector('link[hreflang=he]')?.href, en: document.querySelector('link[hreflang=en]')?.href, desc: document.querySelector('meta[name=description]')?.content || '' }));
+    const seoMain = await p.evaluate(() => ({ robots: !!document.querySelector('meta[name=robots][content*=noindex]'), canon: document.querySelector('link[rel=canonical]')?.href, n: document.querySelectorAll('link[rel=alternate][hreflang]').length }));
+    check(`${path} open to Google: no "noindex", its own main address and the address in the other language (the machine and every game page)`, !seo.robots && !seoMain.robots
+      && seo.canon === 'https://dragon1982.com' + path + 'dungeon-raid/' && seo.he === 'https://dragon1982.com/lab/1982/dungeon-raid/' && seo.en === 'https://dragon1982.com/en/lab/1982/dungeon-raid/' && /Kalish/.test(seo.desc)
+      && seoMain.canon === 'https://dragon1982.com' + path && seoMain.n >= 2, JSON.stringify([seo, seoMain]));
     await direct.close();
     const b = await p.request.get(base.replace(/\/$/, '') + path + 'building/');
     check(`${path} links to "what we are building now", which loads`, b.status() === 200 && (await p.locator('main > p.note a[href="./building/"]').count()) === 1);
@@ -1744,6 +1753,7 @@ if (part('real machine lab')) {
       await m.evaluate(() => d32Type('LIST\n'));
       await m.waitForTimeout(1500);
       check('after a reload, CLOAD "MYPROG" loads it back', (await m.evaluate(() => d32Screen())).includes('10 PRINT "SAVED"') && merrs.length === 0, (await m.evaluate(() => d32Screen())).filter(Boolean).join(' | ') + merrs.join(' | '));
+      await m.evaluate(() => { document.getElementById('drawer-mine').open = true; });   // המגירות נסגרות בכל כניסה (גונן, 28.10)
       const del = m.locator('#mytapes .mytape .mini').nth(1);
       await del.click();
       await del.click();

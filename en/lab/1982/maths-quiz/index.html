@@ -9,8 +9,9 @@
 <meta property="og:title" content="Maths quiz — Dragon 1982">
 <meta property="og:description" content="Ten addition and subtraction questions, and your score at the end. 14 lines of BASIC.">
 <meta property="og:image" content="https://dragon1982.com/lab/1982/shots/quiz.png">
-<link rel="alternate" hreflang="he" href="/lab/1982/maths-quiz/">
-<meta name="robots" content="noindex">
+<link rel="canonical" href="https://dragon1982.com/en/lab/1982/maths-quiz/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/lab/1982/maths-quiz/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/lab/1982/maths-quiz/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;700&amp;display=swap">
 <style>
@@ -170,8 +171,10 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
     </div>
   </section>
   <div class="info">
-  <p class="note">Try: <code>PRINT 2+3</code>, or a program: <code>10 FOR I=1 TO 10:PRINT I*I:NEXT</code> then <code>RUN</code>. To stop: <code>BREAK</code> (Esc).</p>
-  <details class="note" open><summary><strong>What works, and what's still missing</strong></summary>
+  <details class="note try"><summary><strong>First try: type it yourself</strong></summary>
+    <p>With no tape, the machine is waiting for you. Type <code>PRINT 2+3</code> and <code>ENTER</code>, and it answers 5. Or a small program: <code>10 FOR I=1 TO 10:PRINT I*I:NEXT</code>, then <code>RUN</code>. To stop: <code>BREAK</code> (Esc).</p>
+  </details>
+  <details class="note"><summary><strong>What works, and what's still missing</strong></summary>
     <p><strong>Works:</strong> the whole BASIC in one 16K chip, like the original: numbers and strings, variables and arrays, IF/THEN/ELSE, AND/OR/NOT, FOR, GOTO, GOSUB, ON, DATA/READ, INPUT, DEF FN, the functions (INT, RND, SIN, LEFT$, MID$...), graphics (PMODE, LINE, CIRCLE, PAINT, DRAW, GET/PUT), sound (SOUND, AUDIO, PLAY), cassette in the original format (CSAVE/CLOAD, CSAVEM/CLOADM, OPEN/PRINT #/INPUT #), PRINT USING, TAB, EDIT, RENUM, DEL, STOP/CONT, TRON. RESET keeps your program, like a real Dragon.</p>
     <p><strong>Still missing:</strong> DLOAD. Nothing has been checked against a real Dragon yet. The app's cartridges and helper don't work here.</p>
     <p><strong>Found a difference from the Dragon you remember?</strong> That is exactly what we're looking for. <a href="https://github.com/gonenya-create/dragon32/issues/new?labels=real-machine&amp;title=Difference%20from%20the%20original%3A%20&amp;body=What%20I%20typed%3A%0A%0A%0AWhat%20I%20got%3A%0A%0A%0AWhat%20the%20original%20Dragon%20would%20do%3A%0A%0A%0AComputer%20/%20phone%20and%20browser%3A%0A">Open a report on GitHub</a> (a ready form with three questions; a GitHub account is needed), or write via the <a href="https://www.gonenyarom.co.il/about/#contact">contact page</a> (in Hebrew; English is fine): what you typed, what you got, and what the original would have done.</p>
