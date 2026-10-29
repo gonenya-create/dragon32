@@ -100,7 +100,7 @@ warm	equ	33740
 brktst	equ	39224
 movdsc	equ	38065
 ptab16	equ	46656
-blink	equ	49058
+blink	equ	49055
 err_no	equ	35066
 isl_a93a_e	equ	43325
 RELSAV	equ	986
@@ -113,7 +113,7 @@ VARNAM	equ	55
 dlet	equ	45517
 err_nf	equ	34997
 LDRCNT	equ	144
-irq	equ	49085
+irq	equ	49082
 x_mux	equ	40763
 varend	equ	39550
 keyindex	equ	48903
@@ -204,7 +204,7 @@ LPTWID	equ	155
 gpset	equ	43743
 pletr	equ	46479
 ghl	equ	44294
-gk_got	equ	49050
+gk_got	equ	49047
 snerr	equ	36464
 pnote	equ	46539
 mpoly	equ	41315
@@ -213,10 +213,10 @@ nx_one	equ	37157
 mltply	equ	35538
 us_cyc	equ	42769
 pfmult	equ	40994
-gk_loop	equ	49043
+gk_loop	equ	49040
 inloop	equ	39441
 ENDMEM	equ	116
-getkey	equ	49041
+getkey	equ	49038
 rst2	equ	33542
 ed_del	equ	42474
 fexpr	equ	37395
@@ -297,7 +297,7 @@ LPTPOS	equ	156
 clmx	equ	46964
 fn_rnd	equ	39694
 chkcom	equ	36402
-ki_out	equ	49038
+ki_out	equ	49035
 rs_st	equ	41726
 DEVNUM	equ	111
 isl_ba7e	equ	47742
@@ -329,7 +329,7 @@ gfc	equ	45690
 us_ch	equ	42992
 cr_name	equ	34409
 fn_eof	equ	48455
-gk_r	equ	49048
+gk_r	equ	49045
 DSCPNT	equ	77
 fn_sqr	equ	41089
 mltpl1	equ	35554
@@ -481,7 +481,7 @@ isl_bde7_e	equ	48618
 conint	equ	37882
 fmultt	equ	35625
 mem_fc	equ	40866
-irqtk	equ	49093
+irqtk	equ	49090
 FACOV	equ	99
 dim	equ	38877
 ed_keys	equ	42382
@@ -678,7 +678,7 @@ negfac	equ	35434
 dfc	equ	45181
 BLKADR	equ	126
 prline	equ	34618
-ki_none	equ	49037
+ki_none	equ	49034
 wrhdr	equ	47425
 gmax	equ	43680
 getdev	equ	47864
@@ -899,7 +899,7 @@ fin_lp	equ	35852
 umul	equ	44780
 cpy	equ	46818
 LPEOL	equ	330
-ki_next	equ	48991
+ki_next	equ	48988
 LPTCFW	equ	153
 restore	equ	39061
 EDPTR	equ	217
@@ -990,7 +990,7 @@ FACMOH	equ	81
 trawd	equ	48629
 frestr	equ	38176
 dmcmd	equ	45528
-ki_col	equ	48930
+ki_col	equ	48929
 ghlx	equ	44290
 condcr	equ	33872
 trawb	equ	48638
