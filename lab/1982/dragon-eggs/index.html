@@ -8,7 +8,10 @@
 <meta name="description" content="המשחק הראשון שכתבנו בשפת מכונה למכונה הזאת, ב-2026. הקוד פתוח, ב-GitHub. הדרקון מטיל ביצים, ואתם תופסים אותן בסל.">
 <meta property="og:title" content="ביצי הדרקון — Dragon 1982">
 <meta property="og:description" content="המשחק הראשון שכתבנו בשפת מכונה למכונה הזאת, ב-2026. הקוד פתוח, ב-GitHub. הדרקון מטיל ביצים, ואתם תופסים אותן בסל.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dragon1982.com/lab/1982/dragon-eggs/">
 <meta property="og:image" content="https://dragon1982.com/lab/1982/shots/eggs.png">
+<meta name="twitter:card" content="summary">
 <link rel="canonical" href="https://dragon1982.com/lab/1982/dragon-eggs/">
 <link rel="alternate" hreflang="he" href="https://dragon1982.com/lab/1982/dragon-eggs/">
 <link rel="alternate" hreflang="en" href="https://dragon1982.com/en/lab/1982/dragon-eggs/">
@@ -142,6 +145,7 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
 <header>
   <b dir="ltr">Dragon 1982</b><span class="tag">מכונת ה-Dragon · בבנייה</span>
   <button type="button" id="full-open">📺 מסך מלא</button>
+  <a href="https://github.com/gonenya-create/dragon32" class="gh">קוד פתוח ב-<span dir="ltr">GitHub</span></a>
   <a href="/en/lab/1982/dragon-eggs/" lang="en" hreflang="en" data-lang="en">English</a>
   <a href="/">← חזרה לאפליקציה</a>
 </header>
@@ -194,7 +198,7 @@ for (const f of ['ui_done_initialising', 'ui_menu_add', 'ui_menu_add_str', 'ui_m
 var Module = {
   canvas: document.getElementById('canvas'),
   // ה-ROM שלנו במקום ה-BASIC המקורי; kbd-translate: מה שמקלידים במחשב הוא מה שמופיע
-  arguments: ['-machine', 'dragon32', '-extbas', '/d32.rom', '-kbd-translate', '-kbd-lang', 'us', '-no-vo-colour-killer', '-tape-write', '/out.cas'],
+  arguments: ['-machine', 'dragon32', '-no-machine-cart', '-extbas', '/d32.rom', '-kbd-translate', '-kbd-lang', 'us', '-no-vo-colour-killer', '-tape-write', '/out.cas'],
   print: () => {}, printErr: () => {},
   onRuntimeInitialized: () => { window.d32Ready = true; },
   preRun: [function () {

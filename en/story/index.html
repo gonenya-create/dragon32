@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The journey — Dragon 1982</title>
 <meta name="description" content="How I rebuilt the 1982 Dragon 32 in the browser, with AI, day by day.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_GB">
+<meta property="og:title" content="The journey — Dragon 1982">
+<meta property="og:description" content="How I rebuilt the 1982 Dragon 32 in the browser, with AI, day by day.">
+<meta property="og:url" content="https://dragon1982.com/en/story/">
+<meta property="og:image" content="https://dragon1982.com/assets/share/dragon1982.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;700&amp;display=swap">
 <style>
@@ -37,6 +46,7 @@ a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
   <b dir="ltr">Dragon 1982</b><span class="tag">The journey</span>
   <a href="/story/" lang="he" hreflang="he" data-lang="he">עברית</a>
   <a href="/en/">← Back to the computer</a>
+  <a href="https://github.com/gonenya-create/dragon32">Open source on GitHub</a>
 </header>
 <main>
 <h1>The journey</h1>
@@ -96,11 +106,11 @@ a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 <ul>
   <li><strong>Two rooms:</strong> the original ROM is under copyright. So one AI agent reads the original and reports only facts, in its own words. A second agent writes the code without ever seeing the original.</li>
   <li><strong>Tests:</strong> every change passes hundreds of automatic tests. But tests only check what we knew to write, which is why people with a real machine matter.</li>
-  <li><strong>My rules:</strong> nothing goes live until I write "merge". No building before research. And nothing original of others goes in: no code, no games, no logos.</li>
+  <li><strong>My rules:</strong> nothing goes live until I write "merge". No building before research. And nothing of others goes in without permission: no code, no games, no logos. The original ROM never goes in at all.</li>
 </ul>
 
 <h2>What's next</h2>
-<p>Machine-code games jump to fixed addresses inside the ROM. Our routines now sit at those same addresses, and machine-code games already run on the machine: our own Dragon Eggs, and two new games by other authors, with their permission. Original games from the period have not been tested yet. That's the next stage. <a href="/en/lab/1982/building/">What we are building now</a> · <a href="/en/dragon-history/">The history of the Dragon</a></p>
+<p>Machine-code games jump to fixed addresses inside the ROM. Our routines now sit at those same addresses, and 13 original games from the period already run on the machine without any change to their code: by Ken Kalish, Scott Adams and Mike Hughey, with their permission. Next: comparing the machine with a real Dragon, which I bought for exactly that. <a href="/en/lab/1982/building/">What we are building now</a> · <a href="/en/dragon-history/">The history of the Dragon</a></p>
 </main>
 <script src="/assets/dragon/langpick.js" defer></script>
 </body>

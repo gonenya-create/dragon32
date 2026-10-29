@@ -25,8 +25,8 @@ for (const en of [false, true]) {
     const title = `${en ? nm[1] : nm[0]} — Dragon 1982`, desc = (en ? m.about.en : m.about.he).join(' ');
     const U = 'https://dragon1982.com', he = `${U}/lab/1982/${m.slug}/`, enU = `${U}/en/lab/1982/${m.slug}/`;
     let html = tpl
-      .replace(/<meta name="description"[^>]*>\n|<link rel="(?:canonical|alternate)"[^>]*>\n/g, '')
-      .replace(/<title>[^<]*<\/title>/, `<title>${esc(title)}</title>\n<meta name="description" content="${esc(desc)}">\n<meta property="og:title" content="${esc(title)}">\n<meta property="og:description" content="${esc(desc)}">\n<meta property="og:image" content="${U}/lab/1982/shots/${id}.png">\n<link rel="canonical" href="${en ? enU : he}">\n<link rel="alternate" hreflang="he" href="${he}">\n<link rel="alternate" hreflang="en" href="${enU}">`)
+      .replace(/<meta name="description"[^>]*>\n|<link rel="(?:canonical|alternate)"[^>]*>\n|<meta (?:property="og:|name="twitter:)[^>]*>\n/g, '')
+      .replace(/<title>[^<]*<\/title>/, `<title>${esc(title)}</title>\n<meta name="description" content="${esc(desc)}">\n<meta property="og:title" content="${esc(title)}">\n<meta property="og:description" content="${esc(desc)}">\n<meta property="og:type" content="website">\n<meta property="og:url" content="${en ? enU : he}">\n<meta property="og:image" content="${U}/lab/1982/shots/${id}.png">\n<meta name="twitter:card" content="summary">\n<link rel="canonical" href="${en ? enU : he}">\n<link rel="alternate" hreflang="he" href="${he}">\n<link rel="alternate" hreflang="en" href="${enU}">`)
       .replace('<body>', `<body data-game="${id}">`)
       .replace(`href="${other}"`, `href="${other}${m.slug}/"`)
       .replaceAll('href="./building/"', `href="${base}building/"`)
