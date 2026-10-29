@@ -73,6 +73,10 @@
     // Lionheart של Harry Whitehouse (Peaksoft, 1983): הרשות שלו במייל, 29.10.2026 ("Yes that's fine by me"). BASIC, הקלטת כמו שהיא
     ['lionht', 'Lionheart', 'Lionheart', null,
       ['Harry Whitehouse · Peaksoft, 1983', 'http://www.peaksoft.uk/peaksoftstory', null, null, 'love']],
+    // SAS של Harry Whitehouse (Peaksoft, 1983): אותה רשות. BASIC עם קוד מכונה קטן. קורא את החיצים ישר מטבלת המקלדת (PEEK(341)=223),
+    // וזה חשף שהטבלה שלנו נשמרה הפוך מהמקור (תוקן ב-ROM, 29.10). הקלטת כמו שהיא
+    ['sas', 'SAS', 'SAS', null,
+      ['Harry Whitehouse · Peaksoft, 1983', 'http://www.peaksoft.uk/peaksoftstory', null, null, 'love']],
     ['tangle', 'Tanglewood', 'Tanglewood', 'm',
       ['Ian Murray-Watson · Microdeal, 1986', '/lab/1982/tapes/tanglewood-license.txt', 'https://gitlab.com/amigasourcecodepreservation/tanglewood', null, 'mit']]
   ];
@@ -289,6 +293,17 @@
         'To go on to the Holy Land, leave by the bottom right corner with at least 450 men. The number is shown at the top left.',
         'Prince John\'s army burns the forest as it comes for you. You can use that to open a way to men trapped among the trees. If it reaches the square next to yours, it wins.']
     },
+    // נבדק במכונה (29.10): CLOAD, ‏RUN, הפתיחה המוקלדת, ‏BRIEFING?, ‏WHO DARES, WINS, השדה, והחייל זז בחיצים. לפי העטיפה ולפי התוכנית
+    sas: {
+      he: ['אימון של יחידת ה-SAS: חוצים שדות מוקשים, נזהרים מסיורים ומהמסוקים, ומשמידים את בסיס האויב. תשעה שדות מוקשים, והם נעשים קשים יותר.',
+        'אחרי RUN המחשב מקליד את הפתיחה, אות אחרי אות. ל-DO YOU REQUIRE BRIEFING? לוחצים [Y] כדי לקרוא את התדריך המלא (מקש לכל עמוד), או [N] כדי להתחיל.',
+        'החיצים מזיזים את החייל. [G] זורק רימון. [F] יורה טיל מונחה, במקום הנכון בשדה.',
+        'התדריך בתוך המשחק מסביר את הכול: מה עושים בכל שדה, ואיך מגיעים לבסיס.'],
+      en: ['An SAS training simulation: cross minefields, keep away from patrols and helicopter gunships, and destroy the enemy base. Nine minefields, getting harder.',
+        'After RUN the computer types out its opening, letter by letter. At DO YOU REQUIRE BRIEFING? press [Y] to read the full briefing (a key for each page), or [N] to start.',
+        'The arrows move your soldier. [G] throws a grenade. [F] fires a wire-guided missile, from the right place on the field.',
+        'The briefing inside the game explains everything: what to do on each field, and how to reach the base.']
+    },
     // נבדק במכונה (29.10): CLOADM, ‏EXEC, מסך הפתיחה, התפריט, Extra time? ובחירת דמות. ההוראות לפי המדריך המקורי ל-Dragon (המאגר של Tanglewood)
     tangle: {
       he: ['הרפתקה ביער: Schark, יזם עם כוחות קסם, רוצה לכרות את Tanglewood ולבנות משרדים. יש לכם עשרה ימים לעצור אותו.',
@@ -411,6 +426,7 @@
     draconian: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וכשמופיע NUMBER OF PLAYERS? לוחצים [1].', 'When loading ends pick a colour: [1], [2] or [3]. On the title screen press [Space], and when NUMBER OF PLAYERS? appears press [1].'],
     alcatraz: ['כשמופיע OK מקלידים {RUN}. ל-DRAGON OR TANDY COLOR? לוחצים [D], ול-JOYSTICKS? לוחצים [Y].', 'When OK appears type {RUN}. At DRAGON OR TANDY COLOR? press [D], and at JOYSTICKS? press [Y].'],
     lionht: ['כשמופיע OK מקלידים {RUN}. אחרי מסך הפתיחה, ב-SKILL LEVEL (1-5)? מקלידים מספר ו-[ENTER].', 'When OK appears type {RUN}. After the title screen, at SKILL LEVEL (1-5)? type a number and [ENTER].'],
+    sas: ['כשמופיע OK מקלידים {RUN}. הפתיחה מוקלדת לאט, כמו במכונת כתיבה. ל-BRIEFING? לוחצים [Y] או [N].', 'When OK appears type {RUN}. The opening types out slowly, like a typewriter. At BRIEFING? press [Y] or [N].'],
     champs: ['כשמופיע OK מקלידים {RUN}. המשחק שואל WHICH TEAM WOULD YOU LIKE TO BE?: כותבים שם ולוחצים [ENTER].', 'When OK appears type {RUN}. The game asks WHICH TEAM WOULD YOU LIKE TO BE?: type a name and press [ENTER].'],
     cricket: ['מופיע מסך הפתיחה של Cricket, והמשחק ממשיך לטעון ולהתכונן עוד כמה דקות. אחר כך עונים על השאלות במקלדת.', 'The Cricket title screen appears, and the game goes on loading and preparing for a few minutes. Then answer the questions on the keyboard.'],
     tangle: ['כשמופיע OK מקלידים {EXEC}. אחרי מסך הפתיחה לוחצים [1] למשחק חדש.', 'When OK appears type {EXEC}. After the title screen press [1] for a new game.'],
@@ -435,6 +451,7 @@
     draconian: ['טסים בחלל לכל כיוון, משמידים בסיסים ומצילים אסטרונאוטים, לפני שהדרקון מגיע. בג\'ויסטיק.', 'Fly through space in any direction, destroy bases and rescue astronauts before the dragon arrives. Joystick.'],
     alcatraz: ['בורחים מכלא Alcatraz II ונזהרים מהשומרים. בג\'ויסטיק.', 'Escape from the prison of Alcatraz II and keep away from the guards. Joystick.'],
     lionht: ['ריצ\'רד לב הארי אוסף את הצלבנים שלו ביער, ובורח מהצבא של הנסיך ג\'ון. בחיצים.', 'Richard the Lionheart gathers his crusaders in the forest and escapes Prince John\'s army. Arrow keys.'],
+    sas: ['אימון SAS: חוצים שדות מוקשים, נזהרים מסיורים וממסוקים, ומשמידים את בסיס האויב. בחיצים.', 'SAS training: cross minefields, dodge patrols and gunships, and destroy the enemy base. Arrow keys.'],
     champs: ['מנהלים קבוצת כדורגל מהליגה הרביעית עד גביע אירופה: קונים, מוכרים ומשחקים. לשחקן אחד.', 'Manage a football club from the 4th Division to the European Cup: buy, sell and play. 1 player.'],
     cricket: ['משחק קריקט של 40 אוברים: מגישים, חובטים ורצים. נגד המחשב או בשניים. בג\'ויסטיק.', 'A 40-over cricket match: bowl, bat and run. Against the computer or for two. Joystick.'],
     tangle: ['הרפתקה ביער עם חמש דמויות: עוצרים את Schark לפני שהוא כורת את היער. בחיצים ובפקודות.', 'A woodland adventure with five characters: stop Schark before he cuts down the woods. Arrows and typed commands.'],

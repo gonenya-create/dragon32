@@ -992,6 +992,38 @@ window.D32_GAMES = {
         64,
         64
       ]
+    },
+    "sas": {
+      "slug": "sas",
+      "drawer": "more",
+      "year": "1983",
+      "tag": [
+        "פעולה",
+        "action"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כדקה וחצי",
+        "about a minute and a half"
+      ],
+      "about": {
+        "he": [
+          "Harry Whitehouse כתב אותו, ו-Peaksoft הוציאה אותו. ל-Dragon נמכרו ממנו יותר מ-4,000 עותקים.",
+          "\"הדמיית אימון מסווגת\" של ה-SAS: פתיחה שמוקלדת אות אחרי אות, תדריך משימה מלא בתוך התוכנית, ושדה עם מסוקים, סיורים ומוקשים. על העטיפה: \"צליל מדהים\"."
+        ],
+        "en": [
+          "Harry Whitehouse wrote it, and Peaksoft published it. More than 4,000 copies sold for the Dragon.",
+          "A \"classified training simulation\" of the SAS: an opening typed out letter by letter, a full mission briefing inside the program, and a field with helicopters, patrols and mines. The inlay promises \"astounding sound\"."
+        ]
+      },
+      "icon": [
+        24,
+        0,
+        64
+      ]
     }
   }
 };
