@@ -22,8 +22,8 @@ const FROM_KEY = { Escape: 'BREAK', Enter: 'ENTER', ArrowUp: 'UP', ArrowDown: 'D
 
 // הכניסה למכונת ה-Dragon: ההבדל בין שני המחשבים כבר בקישור (דוח "אינסטינקט", 23.10)
 const labText = () => '<span aria-hidden="true">🧪</span> <strong>' + tr('מכונת ה-<bdi dir="ltr">Dragon</bdi>', 'The <bdi dir="ltr">Dragon</bdi> machine') + '</strong>: '
-  + tr('הכי קרוב למחשב המקורי. בבנייה: משחק ראשון בשפת מכונה, ביצי הדרקון שלנו, כבר רץ עליה. משחקים מקוריים מהתקופה עוד לא נבדקו, ועוד לא השווינו מול <bdi dir="ltr">Dragon</bdi> אמיתי. כאן באפליקציה לומדים וכותבים <bdi dir="ltr">BASIC</bdi> בנוחות.',
-    'as close to the original computer as we can get. Being built: our first machine-code game, Dragon Eggs, runs on it. Original games from the period are not tested yet, and it has not been compared with a real <bdi dir="ltr">Dragon</bdi>. Here in the app you learn and write <bdi dir="ltr">BASIC</bdi> the easy way.');
+  + tr('הכי קרוב למחשב המקורי. בבנייה: 13 משחקים מקוריים מהתקופה, של <bdi dir="ltr">Ken Kalish</bdi>, <bdi dir="ltr">Scott Adams</bdi> ו-<bdi dir="ltr">Mike Hughey</bdi>, כבר רצים עליה בלי שינוי בקוד שלהם, באישור המחברים. עוד לא השווינו אותה מול <bdi dir="ltr">Dragon</bdi> אמיתי. כאן באפליקציה לומדים וכותבים <bdi dir="ltr">BASIC</bdi> בנוחות.',
+    'as close to the original computer as we can get. Being built: 13 original games from the period, by Ken Kalish, Scott Adams and Mike Hughey, already run on it without any change to their code, with their authors’ permission. It has not yet been compared with a real <bdi dir="ltr">Dragon</bdi>. Here in the app you learn and write <bdi dir="ltr">BASIC</bdi> the easy way.');
 export function createTheater({ root, input, machine, sound, powerOn }) {
   const tv = root.querySelector('.d32-tv');
 
