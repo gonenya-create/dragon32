@@ -1599,6 +1599,10 @@ if (part('lessons and magazine')) {
     const r = await p.goto(new URL(path, PAGE).href);
     check(`${path} loads`, r.ok() && /archive\.org|Dragon User/.test(await p.content()));
   }
+  {
+    const r = await p.request.get(new URL('/assets/poster/dragon1982-poster-a3.pdf', PAGE).href);
+    check('/magazine/: the "1982 comes back to life" poster PDF is linked and downloads', r.ok() && (await r.body()).subarray(0, 4).toString() === '%PDF' && /dragon1982-poster-a3\.pdf/.test(await (await p.request.get(new URL('/magazine/', PAGE).href)).text()));
+  }
   await p.close();
 }
 
