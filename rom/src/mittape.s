@@ -92,7 +92,7 @@ cload_st	clr	FSTATE		; סוגרים בכוח (מה שחיכה לכתיבה הו�
 		beq	7F		; כותרת באמצע
 		bpl	1B		; $01-$7F: נתונים. $80-$FF: הסוף
 		stx	VARTAB
-		bsr	motoff
+		lbsr	motoff
 		lbsr	prcr
 		leax	m_ok,pcr	; OK ושורה חדשה, גם בתוכנית
 		lbsr	puts

@@ -17,8 +17,7 @@ ary		andb	#2		; רק DIM (2) נחשב "DIM"; 0 ו-1: קריאה רגילה יו�
 		ldx	VARNAM
 		pshs	a,b,x		; [0]=VALTYP [1]=DIM? [2-3]=VARNAM
 		clr	,-s		; מספר הממדים, למעלה
-1		jsr	<chrget		; אחרי ( או ,
-		lbsr	frmevl		; האינדקס (אינדקס בתוך אינדקס: רקורסיה)
+1		lbsr	getfrm		; אחרי ( או ,: האינדקס (אינדקס בתוך אינדקס: רקורסיה)
 		lbsr	chknum
 		lbsr	ayint
 		ldx	FACMO
@@ -89,10 +88,6 @@ ary_new		stx	ARYREC
 		cmpy	STREND
 		blo	6B
 		tst	1,u
-		bra	isl_9772_e	;@isl
-		fill	$ff,$9772-*	;@isl
-		jmp	fn_rnd	;@isl
-isl_9772_e	;@isl
 		beq	getdef		; לא DIM: עכשיו ניגשים לאיבר
 		bra	ary_x		; DIM: מוציאים את האינדקסים ואת הבלוק, וזהו
 ; getdef: X = הרשומה. ההיסט לפי האינדקסים שבמחסנית: האחרון ראשון (mit: GETDEF/INLPNM)
@@ -102,9 +97,13 @@ getdef		clr	CURTOL
 		leax	,s		; X = האינדקסים
 1		ldd	,x++		; האינדקס
 		cmpd	,y
-		lbhs	ary_bs		; גדול מדי: ?BS
+		bhs	ary_bs		; גדול מדי: ?BS
 		ldd	,y++
 		bsr	mulcur		; CURTOL = CURTOL*גודל + אינדקס
+		bra	isl_9772_e	;@isl
+		fill	$ff,$9772-*	;@isl
+		jmp	fn_rnd	;@isl
+isl_9772_e	;@isl
 		addd	-2,x
 		std	CURTOL
 		cmpx	IDXTMP

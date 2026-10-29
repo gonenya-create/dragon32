@@ -10,8 +10,7 @@ sgxy		lbsr	evbyte
 		cmpb	#63
 		lbhi	mem_fc
 		pshs	b		; x
-		lbsr	chkcom
-		lbsr	evbyte
+		lbsr	comevb
 		cmpb	#31
 sg_fc		lbhi	mem_fc		; (גם SET קופץ לכאן, עם אותם דגלים)
 		lda	#8		; B = y
@@ -44,8 +43,7 @@ sgrp		pshs	x
 ; תא טקסט: נהיה גרפי עם הנקודה הזאת בלבד; c=0 שם = ירוק. ')' נבדק לפני הכתיבה
 set_st		bsr	sgxyp
 		pshs	x
-		lbsr	chkcom
-		lbsr	evbyte
+		lbsr	comevb
 		cmpb	#8
 		bhi	sg_fc
 		puls	x

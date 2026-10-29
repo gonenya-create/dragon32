@@ -83,8 +83,7 @@ gcpos		ldb	#6
 		rts
 ; gcnum: פסיק, מספר כפול 2^B (מוסיפים למעריך), ואז 0-65535 ב-D (אחרת ?FC)
 gcnum		pshs	b
-		lbsr	chkcom
-		lbsr	frmevl
+		lbsr	comfrm
 		lbsr	chknum
 		puls	b
 		tst	FACEXP

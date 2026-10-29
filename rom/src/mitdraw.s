@@ -20,8 +20,7 @@ GPRMSK		equ	$cd		; המסכה של תחילת השורה
 ; הקורא ([אורך][כתובת]), ועוברים לחדשה. Y משתנה
 dxstr		pshs	b
 		bsr	dvar
-		tst	VALTYP
-		lbeq	err_tm
+		lbsr	chkstr
 		puls	b
 		lbsr	getstk
 		ldx	VARPNT
@@ -334,8 +333,7 @@ put_st		ldb	#1
 		stb	GPFLG
 		lbsr	g2pt
 		lbsr	chkcom
-		clrb
-		lbsr	ptrget		; כמו במקור: יכול ליצור משתנה פשוט באותו שם
+		lbsr	ptrget0		; כמו במקור: יכול ליצור משתנה פשוט באותו שם
 		tst	VALTYP
 		bne	gfc		; מערך מחרוזות: ?FC
 		ldx	ARYTAB
@@ -455,26 +453,26 @@ gpbit		lsrb
 		tst	GPFLG
 		bne	3F
 		bita	,x		; GET: ביט דלוק במסך → דלוק במערך
-		lbeq	5F
+		beq	5F
 		orb	,u
 		stb	,u
-		lbra	5F
+		bra	5F
 3		ldb	GPACT		; PUT: הפעולה לפי הביט במערך
 		lda	1,s
 		anda	,u
 		beq	4F
 		lsrb
 		lsrb
+		bra	isl_b3b4_e	;@isl
+		fill	$ff,$b3b4-*	;@isl
+		jmp	reset	;@isl
+isl_b3b4_e	;@isl
 4		lda	,x
 		bitb	#2		; מחיקה
 		beq	41F
 		ora	,s
 		eora	,s
 41		bitb	#1		; היפוך
-		bra	isl_b3b4_e	;@isl
-		fill	$ff,$b3b4-*	;@isl
-		jmp	reset	;@isl
-isl_b3b4_e	;@isl
 		beq	42F
 		eora	,s
 42		sta	,x
@@ -484,18 +482,11 @@ isl_b3b4_e	;@isl
 		rora
 		leax	1,x
 6		leay	-1,y
-		lbne	gpbit
+		bne	gpbit
 		ldx	GPRADR		; השורה הבאה, מאותה מסכה
 		lda	GROWB
 		leax	a,x
 		lda	GPRMSK
 		dec	GY2+1
-		lbne	gpbrow
+		bne	gpbrow
 		rts
-; הפעולות של PUT: מחיקה = 2, הדלקה = 3, היפוך = 1, בלי שינוי = 0 (לביט 1 בביטים 2-3)
-gpatab		fcb	$ac,$0e		; PSET: מחיקה / הדלקה
-		fcb	$ad,$0b		; PRESET: הדלקה / מחיקה
-		fcb	$c8,$02		; AND: מחיקה / בלי שינוי
-		fcb	$c9,$0c		; OR: בלי שינוי / הדלקה
-		fcb	$c0,$05		; NOT: היפוך / היפוך
-		fcb	0

@@ -494,7 +494,7 @@ isl_841f_e	;@isl
 		lbsr	isdig
 		bcc	1F
 		lbsr	storeline	; שורה עם מספר: נשמרת, בלי OK (כמו במקור)
-		lds	STKTOP		; עריכה מנקה את המחסנית (mit: CLEARC/STKINI)
+stkmain		lds	STKTOP		; עריכה מנקה את המחסנית (mit: CLEARC/STKINI)
 		clr	,-s
 		bra	main
 1		lbsr	crunch		; פקודה ישירה: מכווצים ומבצעים (mit: MAIN, CRDONE)
@@ -1125,6 +1125,19 @@ err_ds		ldb	#50
 		include	"mitfunc.s"
 		include	"entries.s"		; מתאמים לכתובות הקבועות של המקור
 		include	"mitmem.s"		; (עבר לכאן ב-22.10, כדי לפנות מקום למעלה לכתובות הקבועות)
+
+; ---------- טבלאות קטנות (29.10: עברו לכאן, לפני $A000, כדי להזיז את הלולאות של SOUND אחורה) ----------
+; (מ-mitdraw.s)
+; הפעולות של PUT: מחיקה = 2, הדלקה = 3, היפוך = 1, בלי שינוי = 0 (לביט 1 בביטים 2-3)
+gpatab		fcb	$ac,$0e		; PSET: מחיקה / הדלקה
+		fcb	$ad,$0b		; PRESET: הדלקה / מחיקה
+		fcb	$c8,$02		; AND: מחיקה / בלי שינוי
+		fcb	$c9,$0c		; OR: בלי שינוי / הדלקה
+		fcb	$c0,$05		; NOT: היפוך / היפוך
+		fcb	0
+; (מ-mitedit.s)
+m_ul		fcc	"UL "
+		fcb	0
 
 ; ---------- שבעת המצביעים ב-$A000 (docs/DRAGON-SPEC-INTERFACES.md 3ב, DRAGON-SPEC-TAPE.md 1.10) ----------
 ; הקוד שלפני הטבלה חייב להיגמר לפני $A000 (אחרת האסמבלר נותן שגיאה). המקום שנשאר פנוי מתמלא ב-$FF

@@ -35,10 +35,8 @@ line_st		cmpa	#$89		; INPUT
 		clr	IKEYIM
 		lbsr	devgetln	; מקלדת או קלטת (קורא: קלטת 3.11)
 		lbcs	inbrk		; BREAK (C=1): עצירה, ו-CONT חוזר לפקודה (קורא)
-		clrb
-		lbsr	ptrget
-		tst	VALTYP
-		lbeq	err_tm
+		lbsr	ptrget0
+		lbsr	chkstr
 		ldd	VARPNT
 		std	FORPNT
 		clr	CHARAC		; רק 0 מסיים
@@ -206,8 +204,6 @@ rn_mapu		bsr	rn_map
 		lbsr	ed_cr
 		puls	d
 9		rts
-m_ul		fcc	"UL "
-		fcb	0
 ; rn_shift: מזיזים את [X..VARTAB) ב-D בתים (עם סימן; הדגלים לפי D). למעלה: ?OM אם אין מקום
 rn_shift	pshs	d,x
 		beq	9F
@@ -503,9 +499,7 @@ ed_e		bsr	ed_cr		; E: שמירה בלי להדפיס את היתר
 		ldd	EDNUM
 		std	LINNUM
 		lbsr	storel2
-		lds	STKTOP
-		clr	,-s
-		lbra	main		; בלי OK (קורא)
+		lbra	stkmain		; מחסנית חדשה, בלי OK (קורא)
 ed_q		lbra	edok		; Q: יציאה בלי שמירה
 ed_cr		lda	#13
 		lbra	putc

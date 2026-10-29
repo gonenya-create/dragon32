@@ -81,8 +81,8 @@ gmax		ldx	#GMAXX
 		std	2,x
 		bra	gscl
 
-; gaddr: הנקודה (GX,GY) אחרי ההקטנה → X = הבית, A = המסכה. רק הבתים התחתונים נחשבים.
-; ביט לנקודה (0, 2, 4): x/8, המסכה $80 זזה ימינה. שני ביטים (1, 3): x/4, המסכה $C0 זזה פעמיים
+; gaddr: הנקודה (GX,GY) אחרי ההקטנה → X = הבית, A = המסכה. רק הבתים התחתונים נחשבים. U ו-Y לא משתנים.
+; ביט לנקודה (0, 2, 4): x/8, והמסכה מטבלה לפי x AND 7. שני ביטים (1, 3): x/4, והמסכה לפי x AND 3 (כמו במקור: טבלה)
 gaddr		ldb	GY+1
 		lda	GROWB
 		mul
@@ -98,23 +98,18 @@ gaddr		ldb	GY+1
 		abx
 		ldb	GX+1
 		andb	#7
-		lda	#$80
-1		decb
-		bmi	9F
-		lsra
-		bra	1B
+		bra	3F
 2		lsrb
 		lsrb
 		abx
 		ldb	GX+1
 		andb	#3
-		lda	#$c0
-3		decb
-		bmi	9F
-		lsra
-		lsra
-		bra	3B
-9		rts
+		addb	#8
+3		pshs	x
+		leax	gmasks,pcr
+		lda	b,x
+		puls	x,pc
+gmasks		fcb	$80,$40,$20,$10,$08,$04,$02,$01,$c0,$30,$0c,$03
 
 ; gpset: נקודה בצבע הפעולה ב-(GX,GY). gplot: X = הבית, A = המסכה. U ו-Y לא משתנים
 gpset		bsr	gaddr
@@ -393,7 +388,7 @@ gline_st	bsr	g2pt
 		lbsr	gscl2
 		lbsr	gdefc
 		jsr	<chrgot
-		beq	gline
+		lbeq	gline
 		lbsr	chkcom
 		lda	#'B
 		lbsr	synchk
@@ -431,19 +426,39 @@ ghl		ldu	#GX+1
 gvly		lda	GY+1
 		ldb	GY2+1
 gvl		ldu	#GY+1
+; כמו במקור: המקום והמסכה מחושבים פעם אחת, ואז רק צועדים. אנכי: עוד שורה (GROWB בתים). אופקי: המסכה זזה
+; ימינה (שני ביטים במצב צבעים), וכשהיא נגמרת עוברים לבית הבא, למסכה השמאלית
 gseg		pshs	a
 		cmpb	,s+
 		bhs	1F
-		exg	a,b
+		exg	a,b		; A = הקטן, B = הגדול
 1		pshs	b
 		ldb	,u
-		pshs	b
+		pshs	b		; [0] הערך של הציר, [1] הסוף
 		sta	,u
-2		lbsr	gpset
-		lda	,u
-		cmpa	1,s
+		lbsr	gaddr
+2		lbsr	gplot
+		ldb	,u
+		cmpb	1,s
 		bhs	3F
 		inc	,u
+		cmpu	#GY+1
+		beq	5F
+		ldb	GMODE
+		lsrb			; C = מצב צבעים
+		bcc	4F
+		lsra
+4		lsra
+		bne	2B
+		leax	1,x
+		rora			; הביט שיצא חוזר משמאל: $80
+		ldb	GMODE
+		lsrb
+		bcc	2B
+		asra			; מצב צבעים: $C0
+		bra	2B
+5		ldb	GROWB
+		abx
 		bra	2B
 3		puls	a,b
 		sta	,u

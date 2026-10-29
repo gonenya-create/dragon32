@@ -30,6 +30,8 @@ chrtpl		fcb	$0c,$a7		; inc <$A7
 
 ; synchk: התו הנוכחי חייב להיות A. אחרת ?SN. אחר כך מתקדמים
 ; chkrp / chkcom / chklp: ')' / ',' / '(' חייבים להיות כאן (כמו SYNRPR/SYNCOM במקור)
+chkeq		lda	#$cb		; '=' (ארבעה מקומות)
+		fcb	$8c
 chkrp		lda	#')
 		fcb	$8c		; cmpx #: מדלג על ה-lda הבא (בית אחד במקום bra)
 chkcom		lda	#',
@@ -169,19 +171,17 @@ lineget		ldx	TXTPTR
 		puls	d,pc
 
 new_st		lbsr	scrtch
-		lds	STKTOP
+newstk		lds	STKTOP
 		clr	,-s
 		lbra	endcon
 
 ; ---------- LET (mit: LET 2540) ----------
-let		clrb			; יוצרים משתנה אם אין
-		lbsr	ptrget
+let		lbsr	ptrget0			; יוצרים משתנה אם אין
 		ldd	VARPNT
 		std	FORPNT
 		lda	VALTYP
 		pshs	a
-		lda	#$cb		; =
-		lbsr	synchk
+		lbsr	chkeq		; =
 		lbsr	frmevl
 		puls	a
 		cmpa	VALTYP
@@ -242,8 +242,7 @@ prlist		beq	pr_cr
 		lbeq	usstart
 		cmpa	#'@		; PRINT @n (קורא): 0-511, אחרת ?FC; אחריו פסיק אם יש המשך, וסוף = שורה חדשה
 		bne	pr_lp
-		jsr	<chrget
-		lbsr	frmevl
+		lbsr	getfrm
 		lbsr	getadr
 		cmpd	#511
 		lbhi	err_fc
@@ -286,13 +285,13 @@ pr_lp		cmpa	#';
 ; מסך 16/16/32, מדפסת 16/116/132. לקלטת: כלום
 pr_comma	lbsr	istape
 		beq	pr_semi
+		lbsr	devpar
+		ldd	DEVLCF		; A = השדה האחרון, B = המקום
+		pshs	a
 		bra	isl_903d_e	;@isl
 		fill	$ff,$903d-*	;@isl
 		jmp	print	;@isl
 isl_903d_e	;@isl
-		lbsr	devpar
-		ldd	DEVLCF		; A = השדה האחרון, B = המקום
-		pshs	a
 		cmpb	,s+
 		bhs	2F
 		tfr	b,a
@@ -307,8 +306,7 @@ pr_semi		jsr	<chrget		; גם הפסיק ממשיך כאן
 		rts			; ; בסוף: בלי שורה חדשה
 ; TAB(n) (קורא: מדפסת 4.2): n בין 0 ל-255, ואחריו ')'. רווחים עד העמודה n; אם כבר שם או אחריה: כלום
 ; (בלי שורה חדשה). לקלטת: כלום. אחרי TAB אין שורה חדשה בסוף, כמו ';'
-pr_tab		jsr	<chrget
-		lbsr	evbyte
+pr_tab		lbsr	getevb
 		lbsr	chkrp
 		lbsr	devpar
 		tst	SPCIO
@@ -349,8 +347,7 @@ for		lbsr	let		; המשתנה מקבל את ערך ההתחלה; let שם ב-FOR
 		jsr	<chrgot
 		cmpa	#$c1		; STEP
 		bne	3F
-		jsr	<chrget
-		lbsr	frmevl
+		lbsr	getfrm
 3		bsr	stmend		; X = סוף פקודת ה-FOR: מכאן ממשיכים אחרי כל NEXT
 		ldd	CURLIN
 		pshs	x,d		; [16-17] הטקסט, [14-15] השורה
@@ -369,13 +366,8 @@ for		lbsr	let		; המשתנה מקבל את ערך ההתחלה; let שם ב-FOR
 		ldd	FORPNT		; [1-2] המשתנה
 		std	1,s
 		lda	#$80		; [0] FOR
-		bra	isl_90e5_e	;@isl
-		fill	$ff,$90e5-*	;@isl
-		jmp	x_strout	;@isl
-		jmp	strprt	;@isl
-isl_90e5_e	;@isl
 		sta	,s
-		bra	nxnew
+		lbra	nxnew
 TEMPLIM		equ	$03e0		; זמני: העד, בתוך FBUFFR שלא בשימוש כאן
 RELSAV		equ	$03da		; זמני: המקום לפני סימן יחס
 
@@ -383,6 +375,11 @@ RELSAV		equ	$03da		; זמני: המקום לפני סימן יחס
 stmend		ldx	TXTPTR
 1		lda	,x
 		beq	9F
+		bra	isl_90e5_e	;@isl
+		fill	$ff,$90e5-*	;@isl
+		jmp	x_strout	;@isl
+		jmp	strprt	;@isl
+isl_90e5_e	;@isl
 		cmpa	#':
 		beq	9F
 		cmpa	#'"
@@ -449,6 +446,7 @@ nxnew
 
 ; ---------- משתנים (mit: PTRGET 3626, NOTFNS 3709) ----------
 ; משתנה פשוט: [שם 2][ערך 5] בין VARTAB ל-ARYTAB. B=1: לא יוצרים (קריאה בביטוי מחזירה 0)
+ptrget0		clrb			; B=0: יוצרים משתנה אם אין (שבעה מקומות)
 ptrget		pshs	b
 		clr	VALTYP
 		jsr	<chrgot
@@ -528,6 +526,9 @@ zero5		fcb	0,0,0,0,0
 
 ; ---------- ביטויים (mit: FRMEVL 3195, EVAL 3323, OPTAB 1084) ----------
 ; frmevl: ביטוי מ-TXTPTR (התו הנוכחי) → FAC. מטפס לפי קדימויות, כמו טבלת OPTAB של mit
+comfrm		lbsr	chkcom		; comfrm: ',' ואז ביטוי; getfrm: התו הבא ואז ביטוי
+		fcb	$8c		; cmpx #: מדלג על ה-jsr הבא
+getfrm		jsr	<chrget
 frmevl		clrb
 fexpr		pshs	b		; הקדימות המינימלית
 		lbsr	eval
@@ -653,8 +654,7 @@ eval		jsr	HK_OPND		; 16
 		lbeq	fndoer
 		cmpa	#'(
 		bne	4F
-		jsr	<chrget
-		lbsr	frmevl
+		lbsr	getfrm
 		lbra	chkrp
 4		cmpa	#$ff		; פונקציה: טבלה לפי הטוקן (mit: ISFUN)
 		bne	5F
@@ -714,8 +714,7 @@ fn_mid		lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את האר�
 		lbsr	frmevl
 		bsr	frestr0
 		pshs	x		; המתאר
-		lbsr	chkcom
-		bsr	evbyte
+		bsr	comevb
 		tstb
 		beq	fcerr		; אין מקום 0
 		decb
@@ -724,8 +723,7 @@ fn_mid		lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את האר�
 		jsr	<chrgot
 		cmpa	#',
 		bne	1F
-		jsr	<chrget
-		bsr	evbyte
+		bsr	getevb
 1		lbsr	chkrp		; לא נוגע ב-B
 		tfr	b,a		; כמה
 		puls	b,x		; התחלה, המתאר
@@ -745,8 +743,7 @@ fn_mid		lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את האר�
 strarg		lbsr	frmevl
 		bsr	frestr0
 		pshs	x
-		lbsr	chkcom
-		bsr	evbyte
+		bsr	comevb
 		lbsr	chkrp		; לא נוגע ב-B
 		puls	x
 		cmpb	,x		; לא יותר מהאורך
@@ -754,12 +751,15 @@ strarg		lbsr	frmevl
 		ldb	,x
 1		tfr	b,a
 		rts
-frestr0		tst	VALTYP		; מחרוזת? X = המתאר (בלי לשחרר עדיין)
+frestr0		ldx	FACMO		; מחרוזת? X = המתאר (בלי לשחרר עדיין)
+chkstr		tst	VALTYP		; מחרוזת? אחרת ?TM
 		beq	tmerr
-		ldx	FACMO
 		rts
 ; conint: FAC → B בין 0 ל-255, אחרת ?FC (mit: CONINT)
 ; evbyte: ביטוי → B (0-255)
+comevb		lbsr	chkcom		; comevb: ',' ואז בית; getevb: התו הבא ואז בית
+		fcb	$8c		; cmpx #: מדלג על ה-jsr הבא
+getevb		jsr	<chrget
 evbyte		lbsr	frmevl
 conint		bsr	chknum
 		lbsr	ayint

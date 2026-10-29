@@ -81,12 +81,12 @@ sseg		sta	PIA1
 ; ---------- AUDIO ON / OFF (קורא 3) ----------
 ; @endnofill
 audio_st	pshs	a		; המילה שאחרי AUDIO נקראת קודם
+		jsr	<chrget
 		bra	isl_b44f_e	;@isl
 		fill	$ff,$b44f-*	;@isl
 		nop	;@isl
 		jmp	warm	;@isl
 isl_b44f_e	;@isl
-		jsr	<chrget
 		puls	a
 		cmpa	#$c2		; OFF: רק מכבים. הבוררים לא משתנים
 		beq	sndoff
@@ -263,7 +263,7 @@ parg		pshs	b
 2		cmpa	#'>
 		bne	3F
 		cmpb	#128
-		lbhs	pfc2
+		bhs	pfc2
 		lslb
 		rts
 3		cmpa	#'<

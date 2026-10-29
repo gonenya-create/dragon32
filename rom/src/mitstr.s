@@ -192,15 +192,13 @@ strspa		sta	DSCTMP
 		lda	DSCTMP
 		rts
 2		tst	GARBFL		; כבר אספנו: אין מקום
-		bra	isl_957a_e	;@isl
-		fill	$ff,$957a-*	;@isl
-		jmp	prnum	;@isl
-isl_957a_e	;@isl
 		lbne	err_os
 		inc	GARBFL
 		lbsr	garba2
 		bra	1B
 GARBFL		equ	$07
+		fill	$ff,$957a-*	;@isl
+		jmp	prnum	;@isl
 
 ; ---------- פונקציות מחרוזת בסיסיות (mit: LEN 4730, ASC 4741, CHR 4627, LEFT 4642, RIGHT 4672, MID 4677) ----------
 fn_asc		lbsr	frestr
@@ -237,10 +235,8 @@ str_fc		lbra	err_fc
 midst		jsr	<chrget		; אחרי $FF
 		jsr	<chrget		; אחרי $98
 		lbsr	chklp
-		clrb			; יוצרים משתנה אם אין
-		lbsr	ptrget
-		tst	VALTYP
-		lbeq	err_tm
+		lbsr	ptrget0			; יוצרים משתנה אם אין
+		lbsr	chkstr
 		ldx	VARPNT
 		pshs	x		; המתאר
 		ldd	2,x
@@ -255,8 +251,7 @@ midst		jsr	<chrget		; אחרי $FF
 		ldx	,s
 		ldd	DSCTMP+2
 		std	2,x
-2		lbsr	chkcom
-		lbsr	evbyte
+2		lbsr	comevb
 		tstb
 		beq	str_fc		; אין מקום 0
 		pshs	b		; ההתחלה
@@ -264,12 +259,10 @@ midst		jsr	<chrget		; אחרי $FF
 		jsr	<chrgot
 		cmpa	#',
 		bne	3F
-		jsr	<chrget
-		lbsr	evbyte
+		lbsr	getevb
 3		pshs	b		; כמה
 		lbsr	chkrp
-		lda	#$cb		; =
-		lbsr	synchk
+		lbsr	chkeq		; =
 		lbsr	frmevl
 		lbsr	frestr		; A = האורך, X = הכתובת
 		pshs	a,x		; 0=אורך B$, 1=כתובת, 3=כמה, 4=התחלה, 5=המתאר

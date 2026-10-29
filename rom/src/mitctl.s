@@ -133,8 +133,7 @@ def		cmpa	#$ff		; DEF USRn=
 		bsr	ptrsub
 		bsr	cchk
 		lbsr	chkrp
-		lda	#$cb		; =
-		lbsr	synchk
+		lbsr	chkeq		; =
 		ldx	DEFPNT
 		ldd	TXTPTR
 		std	,x
@@ -152,8 +151,7 @@ getfnm		lda	#$be
 cchk		lbra	chknum		; (גם קריאות קצרות מ-DEF ומ-fndoer)
 ; ptrsub: משתנה במצב האינדקסים A (SUBFLG), ואחר כך חזרה למצב רגיל
 ptrsub		sta	SUBFLG
-		clrb
-		lbsr	ptrget
+		lbsr	ptrget0
 		clr	SUBFLG
 		rts
 ; fndoer: FNx(ביטוי) בתוך ביטוי. ערך הפרמטר נשמר במחסנית ומוחזר בסוף (רקורסיה מותרת)
@@ -303,8 +301,7 @@ input		bsr	errdir		; לא במצב ישיר: ?ID; ואחר כך ההנחיה
 2		ldx	#BUFMIN
 		clr	INPFLG
 inloop0		stx	INPPTR
-inloop		clrb			; המשתנה (נוצר אם אין)
-		lbsr	ptrget
+inloop		lbsr	ptrget0			; המשתנה (נוצר אם אין)
 		ldd	VARPNT
 		std	FORPNT
 		ldd	TXTPTR
@@ -412,8 +409,7 @@ fn_peek		bsr	getadr
 		lbra	givb
 poke		bsr	frmadr
 		pshs	d
-		lbsr	chkcom
-		lbsr	evbyte
+		lbsr	comevb
 		stb	[,s++]
 		rts
 exec		beq	1F		; בלי כתובת: האחרונה

@@ -202,12 +202,10 @@ fn_instr	lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את האר
 		tstb
 		lbeq	err_fc
 		stb	,s
-		lbsr	chkcom
-		lbsr	frmevl
+		lbsr	comfrm
 1		lbsr	frestr0		; s$
 		pshs	x
-		lbsr	chkcom
-		lbsr	frmevl
+		lbsr	comfrm
 		lbsr	frestr0		; t$
 		pshs	x
 		lbsr	chkrp
@@ -254,8 +252,7 @@ fn_instr	lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את האר
 fn_strng	lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את הארגומנטים בעצמה)
 		lbsr	evbyte
 		pshs	b		; n
-		lbsr	chkcom
-		lbsr	frmevl
+		lbsr	comfrm
 		tst	VALTYP
 		bne	1F
 		lbsr	conint
@@ -290,18 +287,13 @@ fn_pos		lbsr	chknum
 		sta	DEVNUM
 		ldb	DEVPOS
 		lbra	givb
-		fill	$ff,$9d3d-*	;@isl
-		jmp	irq	;@isl
-		fill	$ff,$9d46-*	;@isl
-		jmp	irqtk	;@isl
 fn_mem		tfr	s,d		; S בכניסה פחות STREND, בלי סימן (קורא)
 		subd	STREND
 		lbra	givu
 fn_varptr	lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את הארגומנטים בעצמה)
 		ldd	STREND		; משתנה שלא היה: נוצר, ואז ?FC (קורא)
 		pshs	d
-		clrb
-		lbsr	ptrget
+		lbsr	ptrget0
 		puls	d
 		cmpd	STREND
 		lbne	err_fc
@@ -310,6 +302,12 @@ fn_varptr	lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את הא�
 		ldd	VARPNT		; מספר: בית המעריך; מחרוזת: המתאר; מערך: האיבר
 		lbra	givu
 fn_timer	ldd	TICKS
+		bra	isl_9d3d_e	;@isl
+		fill	$ff,$9d3d-*	;@isl
+		jmp	irq	;@isl
+		fill	$ff,$9d46-*	;@isl
+		jmp	irqtk	;@isl
+isl_9d3d_e	;@isl
 		lbra	givu
 ; TIMER=n (פקודה): 0-65535, בלי השבר
 timset		jsr	<chrget		; אחרי $FF
@@ -318,8 +316,7 @@ timset		jsr	<chrget		; אחרי $FF
 		std	TICKS
 		rts
 ; eqadr: '=' ואחריו כתובת 0-65535 ב-D
-eqadr		lda	#$cb		; =
-		lbsr	synchk
+eqadr		lbsr	chkeq		; =
 ; evadr: ביטוי → כתובת 0-65535 ב-D
 evadr		lbsr	frmevl
 		lbra	getadr
