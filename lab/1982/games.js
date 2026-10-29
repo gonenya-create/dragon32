@@ -33,10 +33,20 @@ window.D32_GAMES = {
       "key": "hughey",
       "he": "המשחקים של Mike Hughey",
       "en": "Mike Hughey's games",
-      "years": "1983–84",
+      "years": "1982–84",
       "note": [
         "Mike Hughey כתב משחקים בשפת מכונה ל-Color Computer, ו-Tom Mix Software ממישיגן הוציאה אותם. ל-Dragon הוציאה אותם Microdeal בבריטניה. ב-1997 הוא כתב שהוא ישמח שיפיצו אותם בחופשיות, בכל צורה. כאן ברשותו.",
         "Mike Hughey wrote machine-code games for the Color Computer, and Tom Mix Software of Michigan published them. Microdeal brought them out for the Dragon in Britain. In 1997 he wrote that he would be thrilled for them to be distributed freely, in whatever format. Here with his permission."
+      ]
+    },
+    {
+      "key": "more",
+      "he": "עוד משחקים מאותה תקופה",
+      "en": "More games from the time",
+      "years": "1984–86",
+      "note": [
+        "משחקים של מחברים שיש לנו מהם משחק אחד. כאן באישורם, או ברישיון פתוח שהם עצמם נתנו.",
+        "Games by authors we have one game from. Here with their permission, or under an open licence they gave themselves."
       ]
     },
     {
@@ -821,6 +831,102 @@ window.D32_GAMES = {
         0,
         0,
         256
+      ]
+    },
+    "alcatraz": {
+      "slug": "alcatraz-ii",
+      "drawer": "hughey",
+      "year": "1982",
+      "tag": [
+        "בריחה מהכלא",
+        "prison escape"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כדקה",
+        "about a minute"
+      ],
+      "about": {
+        "he": [
+          "Mike Hughey כתב אותו ל-Color Computer, ו-Spectral Associates הוציאה אותו. Microdeal הוציאה אותו ל-Dragon.",
+          "הוא כתוב ב-BASIC, ובצד השני של הקלטת יש תוכנית הוראות משלו, שמוצגת כמכתב מאסיר אחר: \"אף אחד עוד לא הגיע לחופש מהכלא הזה\"."
+        ],
+        "en": [
+          "Mike Hughey wrote it for the Color Computer, and Spectral Associates published it. Microdeal brought it out for the Dragon.",
+          "It is written in BASIC, and the other side of the tape has its own instructions program, told as a letter from a fellow inmate: \"no one has ever actually reached freedom from this prison\"."
+        ]
+      },
+      "icon": [
+        128,
+        0,
+        64
+      ]
+    },
+    "cricket": {
+      "slug": "tim-loves-cricket",
+      "drawer": "more",
+      "year": "1984",
+      "tag": [
+        "ספורט",
+        "sport"
+      ],
+      "players": [
+        "שחקן אחד או שניים",
+        "1 or 2 players"
+      ],
+      "load": [
+        "כשלוש דקות, ועוד כמה דקות הכנה",
+        "about three minutes, then a few minutes of preparing"
+      ],
+      "about": {
+        "he": [
+          "Tim Love כתב אותו, ו-Peaksoft הוציאה אותו ב-1984. הוא היה מהנמכרים של ה-Dragon: במרץ 1985 הוא היה במקום 3 במצעד של חנות Microbyte.",
+          "משחק של 40 אוברים בין שתי קבוצות, מקבוצת כפר ועד משחק מבחן, עם הגשה, חבטה ושדה בג'ויסטיק, ובאנימציה. אפשר גם לבחור קבוצות משלכם."
+        ],
+        "en": [
+          "Tim Love wrote it, and Peaksoft published it in 1984. It sold well on the Dragon: in March 1985 it was number 3 in the Microbyte shop chart.",
+          "A 40-over match between two teams, from village green to test match, with bowling, batting and fielding by joystick, in animation. You can also pick your own teams."
+        ]
+      },
+      "icon": [
+        0,
+        96,
+        96
+      ]
+    },
+    "tangle": {
+      "slug": "tanglewood",
+      "drawer": "more",
+      "year": "1986",
+      "tag": [
+        "הרפתקה",
+        "adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כשתי דקות וחצי",
+        "about two and a half minutes"
+      ],
+      "about": {
+        "he": [
+          "Ian Murray-Watson כתב אותו, עם גרפיקה של Pete Lyon, ו-Microdeal הוציאה אותו ל-Dragon ול-Tandy. אחר כך יצא גם ל-Amiga ול-Atari ST.",
+          "ב-2018 Murray-Watson, ‏Lyon ומייסד Microdeal, ‏John Symes, שחררו אותו כקוד פתוח ברישיון MIT, ולכן הוא כאן."
+        ],
+        "en": [
+          "Ian Murray-Watson wrote it, with graphics by Pete Lyon, and Microdeal published it for the Dragon and the Tandy. It later came out for the Amiga and the Atari ST too.",
+          "In 2018 Murray-Watson, Lyon and Microdeal's founder John Symes released it as open source under the MIT licence, which is why it is here."
+        ]
+      },
+      "icon": [
+        0,
+        36,
+        32
       ]
     }
   }

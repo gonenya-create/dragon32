@@ -20,6 +20,9 @@
     cuthbert: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
     grabber: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
     draconian: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
+    alcatraz: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
+    cricket: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
+    tangle: { dir: ARROWS, fire: 'enter', label: ['ENTER', 'ENTER'] },
     sketch: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] }   // הקלד בעצמך (typein.js): Sketching מצייר בג'ויסטיק
   };
   const css = document.createElement('style');

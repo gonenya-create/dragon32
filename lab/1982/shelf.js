@@ -55,12 +55,27 @@
     ['grabber', 'Grabber', 'Grabber', 'a',
       ['Mike Hughey · Tom Mix Software / Microdeal, 1983', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']],
     ['draconian', 'Draconian', 'Draconian', 'a',
-      ['Mike Hughey · Tom Mix Software / Microdeal, 1984', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']]
+      ['Mike Hughey · Tom Mix Software / Microdeal, 1984', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']],
+    // Alcatraz II של Mike Hughey (Spectral Associates, ול-Dragon מ-Microdeal): תוכנית BASIC, באותו מכתב מ-1997. בקלטת מהארכיון היו
+    // 15 בתי מבוא לפני כל בלוק, והמכונה צריכה מבוא ארוך כמו בקלטת אמיתית: המבוא הוארך, הנתונים כמו שהם (29.10)
+    ['alcatraz', 'Alcatraz II', 'Alcatraz II', null,
+      ['Mike Hughey · Spectral Associates / Microdeal, 1982', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']],
+    // Tim Love's Cricket (Peaksoft, 1984): רשות מ-Tim Love במייל, 29.10.2026 ("Fine by me!"). שלושה חלקים בקלטת: טוען, BASIC וקוד מכונה.
+    // שורה 10 שלו, CLOADM"":GOTO280, חשפה באג ב-ROM שלנו (תוקן 29.10). המבוא הוארך כמו ב-Alcatraz
+    ['cricket', 'Tim Love\'s Cricket', 'Tim Love\'s Cricket', 'a',
+      ['Tim Love · Peaksoft, 1984', 'https://timlovescricket.blogspot.com/', null, null, 'love']],
+    // Tanglewood (Microdeal, 1986): קוד פתוח ברישיון MIT מ-2018 (Ian Murray-Watson, Pete Lyon, ובהסכמת John Symes).
+    // הקלטת מהמאגר הרשמי נגמרת בביט האחרון, אז נוספו אחריה 16 בתי מבוא (כמו בקלטת אמיתית); הנתונים כמו שהם
+    ['tangle', 'Tanglewood', 'Tanglewood', 'm',
+      ['Ian Murray-Watson · Microdeal, 1986', '/lab/1982/tapes/tanglewood-license.txt', 'https://gitlab.com/amigasourcecodepreservation/tanglewood', null, 'mit']]
   ];
   // משחקים שצריכים ג'ויסטיק: כשהקלטת נטענת, החיצים במקלדת הופכים לג'ויסטיק הימני ו-Alt (Option במק) לכפתור שלו
-  const JOY = new Set(['ranger', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian']);
-  function setJoy(on) {
+  const JOY = new Set(['ranger', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian', 'alcatraz', 'cricket']);
+  // ב-Cricket החובט משתמש בג'ויסטיק השמאלי והמגיש בימני (המדריך של Peaksoft): החיצים מזיזים את שניהם יחד
+  const BOTH = new Set(['cricket']);
+  function setJoy(on, both) {
     try { Module.ccall('wasm_set_joystick_by_name', null, ['number', 'string'], [0, on ? 'kjoy0' : '']); } catch (e) {}
+    try { Module.ccall('wasm_set_joystick_by_name', null, ['number', 'string'], [1, on && both ? 'kjoy0' : '']); } catch (e) {}
     window.d32Joy = !!on;
   }
   // גם רווח יורה במשחקי ג'ויסטיק (גונן, 27.10): במק, לחיצה כפולה על Option פותחת לפעמים תוכנה אחרת (למשל החלון המהיר של Claude).
@@ -78,7 +93,7 @@
   }
   // כל קלטת שנכנסת לרשמקול: ג'ויסטיק מהמקלדת רק למשחקי ג'ויסטיק, ולוח המשחק לטלפון (joypad.js) רק למשחקים שיש להם מקשים שם
   function gameKeys(id) {
-    setJoy(JOY.has(id));
+    setJoy(JOY.has(id), BOTH.has(id));
     if (window.d32Pad) window.d32Pad(id);
   }
   // איך משחקים (גונן, 25.10: "לא בטוח שהמשתמשים יבינו איך משחקים"): תיבה נפתחת מתחת לכל משחק בשפת מכונה.
@@ -218,6 +233,42 @@
         'The arrows point your ship, and it flies that way. [Space] fires. The map on the right shows the bases.',
         'The goal: destroy all the bases in the sector and rescue the astronauts held in them. Watch out for mines, asteroids and fire from the bases. Take too long and a giant dragon comes after you.']
     },
+    // נבדק במכונה (29.10): CLOAD, ‏RUN, ‏DRAGON OR TANDY, ‏JOYSTICKS?, השומרים זזים במבוך. ההוראות מהתוכנית INSTRUCT שבצד השני של הקלטת
+    alcatraz: {
+      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
+        'אחרי RUN המשחק שואל DRAGON OR TANDY COLOR?: לוחצים [D]. ל-JOYSTICKS? (Y OR N) לוחצים [Y].',
+        'אתם אסיר בכלא Alcatraz II, ומזיזים את עצמכם בחיצים. אי אפשר לעבור דרך קירות ודרך שערים סגורים.',
+        'השומרים מסתובבים בכלא. אם הם תופסים אתכם, חוזרים לתא. הם פותחים שערים כשהם עוברים בהם, וכך משאירים לכם דרך החוצה.'],
+      en: ['In this game the arrow keys are a joystick and [Space] is its button (or [Alt], [Option] on a Mac). On a phone there is a stick and a fire button under the screen.',
+        'After RUN the game asks DRAGON OR TANDY COLOR?: press [D]. At JOYSTICKS? (Y OR N) press [Y].',
+        'You are a prisoner in Alcatraz II, and the arrows move you. You cannot pass through walls or closed gates.',
+        'Guards walk the prison. If they catch you, you go back to your cell. They open gates as they pass through, leaving you a way out.']
+    },
+    // נבדק במכונה (29.10): שלושת החלקים נטענים, מסך הפתיחה, התפריטים (רמה, עזרה בחבטה, בחירת קבוצות) וטבלת הקבוצה.
+    // ההוראות לפי המדריך של Peaksoft (ארכיון World of Dragon)
+    cricket: {
+      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). החובט משתמש בג\'ויסטיק השמאלי והמגיש בימני, ולכן כאן החיצים מזיזים את שניהם.',
+        'הטעינה בשלושה חלקים, ואחרי מסך הפתיחה המשחק מכין את הדמויות עוד כמה דקות. זה לא תקוע.',
+        'המשחק שואל כמה שאלות, ועונים במקלדת: [Y] או [N], ורמה: [1] מבחן, [2] מחוז, [3] כפר.',
+        'הגשה: לפני הזריקה מזיזים את החץ שמסמן מאיפה המגיש זורק. בצליל השני מזיזים את הג\'ויסטיק כדי לקבוע איזה כדור זה.',
+        'חבטה: קודם הג\'ויסטיק קובע את גובה המחבט, אחרי [רווח] את הזווית והמקום. ריצה: ג\'ויסטיק שמאלה רצים, ימינה נשארים.'],
+      en: ['In this game the arrow keys are a joystick and [Space] is its button (or [Alt], [Option] on a Mac). The batter uses the left joystick and the bowler the right one, so here the arrows move both.',
+        'It loads in three parts, and after the title screen it prepares its figures for a few more minutes. It is not stuck.',
+        'The game asks a few questions, answered on the keyboard: [Y] or [N], and a level: [1] test match, [2] county, [3] village green.',
+        'Bowling: before the delivery move the arrow that marks where the bowler releases. At the second tone move the joystick to choose the ball.',
+        'Batting: first the joystick sets the height of the bat, after [Space] its angle and position. Running: joystick left to run, right to stay.']
+    },
+    // נבדק במכונה (29.10): CLOADM, ‏EXEC, מסך הפתיחה, התפריט, Extra time? ובחירת דמות. ההוראות לפי המדריך המקורי ל-Dragon (המאגר של Tanglewood)
+    tangle: {
+      he: ['הרפתקה ביער: Schark, יזם עם כוחות קסם, רוצה לכרות את Tanglewood ולבנות משרדים. יש לכם עשרה ימים לעצור אותו.',
+        'אחרי מסך הפתיחה לוחצים [1] למשחק חדש. אחר כך בוחרים דמות במספר: [1] עד [5]. אפשר להחליף ביניהן ביער.',
+        'החיצים מזיזים את הדמות. פקודות כותבים באנגלית, פועל ושם עצם, ולוחצים [ENTER]: למשל GET, ‏DROP, ‏LOOK או ?.',
+        'פקודות מיוחדות: TIME מחליף בין יום ללילה, SLEEP מחזיר כוח בלילה, TRANSFER מעביר חפץ לדמות שלידכם.'],
+      en: ['An adventure in the woods: Schark, a property developer with magic powers, wants to cut down Tanglewood and build offices. You have ten days to stop him.',
+        'After the title screen press [1] for a new game. Then pick a character by number: [1] to [5]. You can switch between them in the woods.',
+        'The arrows move your character. Type commands in English, verb and noun, and press [ENTER]: for example GET, DROP, LOOK or ?.',
+        'Special commands: TIME switches between day and night, SLEEP restores energy at night, TRANSFER gives an object to a character next to you.']
+    },
     // נבדק במכונה (25.10): צבע, רמה, ריצה, קפיצה, ירי, ניקוד, סוף משחק ושיא
     ranger: {
       he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
@@ -327,6 +378,9 @@
     phantom: ['המשחק שואל על ההוראות: [N] מדלג, [Y] מציג אותן.', 'The game asks about the instructions: [N] skips them, [Y] shows them.'],
     grabber: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. אחרי מסך הפתיחה, ב-NUMBER OF PLAYERS? לוחצים [1].', 'When loading ends pick a colour: [1], [2] or [3]. After the title screen, at NUMBER OF PLAYERS? press [1].'],
     draconian: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וכשמופיע NUMBER OF PLAYERS? לוחצים [1].', 'When loading ends pick a colour: [1], [2] or [3]. On the title screen press [Space], and when NUMBER OF PLAYERS? appears press [1].'],
+    alcatraz: ['כשמופיע OK מקלידים {RUN}. ל-DRAGON OR TANDY COLOR? לוחצים [D], ול-JOYSTICKS? לוחצים [Y].', 'When OK appears type {RUN}. At DRAGON OR TANDY COLOR? press [D], and at JOYSTICKS? press [Y].'],
+    cricket: ['מופיע מסך הפתיחה של Cricket, והמשחק ממשיך לטעון ולהתכונן עוד כמה דקות. אחר כך עונים על השאלות במקלדת.', 'The Cricket title screen appears, and the game goes on loading and preparing for a few minutes. Then answer the questions on the keyboard.'],
+    tangle: ['כשמופיע OK מקלידים {EXEC}. אחרי מסך הפתיחה לוחצים [1] למשחק חדש.', 'When OK appears type {EXEC}. After the title screen press [1] for a new game.'],
     ranger: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וב-SELECT LEVEL בוחרים שלב.', 'When loading ends pick a colour: [1], [2] or [3]. On the title screen press [Space], and at SELECT LEVEL pick a level.'],
     cuthbert: ['אחרי הטעינה מופיע LICENSED BY MICRODEAL ונשאר כחמש עד שבע דקות. זה לא תקוע: כך המשחק בנוי. כשמופיע הג\'ונגל, לוחצים [רווח].', 'After loading, LICENSED BY MICRODEAL appears and stays for about five to seven minutes. It is not stuck: the game is built that way. When the jungle appears, press [Space].'],
     dungeon: ['בסוף הטעינה בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וב-SELECT LEVEL בוחרים רמה, [1] עד [3].', 'At the end of loading pick a colour: [1], [2] or [3]. On the title screen press [Space], and at SELECT LEVEL pick a level, [1] to [3].'],
@@ -346,6 +400,9 @@
     dungeon: ['רצים במסדרונות של מבוך ויורים ביצורים ובדלתות, נגד השעון. בג\'ויסטיק. נכתב רק ל-Dragon.', 'Race down dungeon corridors, shooting creatures and doors against the clock. Joystick. Written only for the Dragon.'],
     grabber: ['שני מבוכים בבת אחת: אוספים מטילים ומחזירים אותם למרכז, ובורחים ממפלצות. בג\'ויסטיק.', 'Two mazes at once: collect the bars, bring them back to the middle and escape the monsters. Joystick.'],
     draconian: ['טסים בחלל לכל כיוון, משמידים בסיסים ומצילים אסטרונאוטים, לפני שהדרקון מגיע. בג\'ויסטיק.', 'Fly through space in any direction, destroy bases and rescue astronauts before the dragon arrives. Joystick.'],
+    alcatraz: ['בורחים מכלא Alcatraz II ונזהרים מהשומרים. בג\'ויסטיק.', 'Escape from the prison of Alcatraz II and keep away from the guards. Joystick.'],
+    cricket: ['משחק קריקט של 40 אוברים: מגישים, חובטים ורצים. נגד המחשב או בשניים. בג\'ויסטיק.', 'A 40-over cricket match: bowl, bat and run. Against the computer or for two. Joystick.'],
+    tangle: ['הרפתקה ביער עם חמש דמויות: עוצרים את Schark לפני שהוא כורת את היער. בחיצים ובפקודות.', 'A woodland adventure with five characters: stop Schark before he cuts down the woods. Arrows and typed commands.'],
     ranger: ['רצים, קופצים ויורים: אוספים מפתחות ואוצרות בין עטלפים ועיניים. בג\'ויסטיק.', 'Run, jump and shoot: collect keys and treasure past bats and eyes. Joystick.'],
     count: ['הרפתקת מילים: מתעוררים במיטה זרה, בארץ של רוזן מסתורי. ההרפתקה החמישית של Scott Adams.', 'A text adventure: wake up in a strange bed, in the land of a mysterious Count. Scott Adams\' fifth adventure.'],
     voodoo: ['הרפתקת מילים: מסירים קללת וודו מהרוזן כריסטו, בטירה מלאת סודות. ההרפתקה הרביעית בסדרה.', 'A text adventure: lift a voodoo curse from Count Cristo in a castle full of secrets. The fourth adventure in the series.'],
@@ -502,6 +559,17 @@
       docs.textContent = EN ? 'his permission' : 'הרשות שלו';
       docs.rel = 'noopener';
       by.append(EN ? 'By ' : 'מאת ', who, ' · ', docs, EN ? ' · removed on request' : ' · יוסר לפי בקשה');
+    } else if (credit[4] === 'love') {
+      // הרשות במייל מ-Tim Love (29.10.2026). הקישור: הבלוג שלו על המשחק
+      docs.textContent = EN ? 'with his permission' : 'באישורו';
+      docs.rel = 'noopener';
+      by.append(EN ? 'By ' : 'מאת ', who, ' · ', docs, EN ? ' · removed on request' : ' · יוסר לפי בקשה');
+    } else if (credit[4] === 'mit') {
+      // קוד פתוח: הרישיון (MIT) והמאגר הרשמי
+      docs.textContent = EN ? 'MIT licence' : 'רישיון MIT';
+      site.textContent = EN ? 'source code' : 'קוד המקור';
+      by.append(EN ? 'By ' : 'מאת ', who, ' · ', docs, ' · ', site);
+      return by;
     } else by.append(EN ? 'By ' : 'מאת ', who, ' · ', docs);
     if (credit[2]) by.append(' · ', site);
     if (credit[3]) { const lic = document.createElement('a'); lic.href = credit[3]; lic.textContent = 'GPL v3'; by.append(' · ', lic); }
