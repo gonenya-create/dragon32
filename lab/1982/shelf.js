@@ -70,6 +70,9 @@
     // תוכנית BASIC; הקלטת מהארכיון רצה כמו שהיא
     ['champs', 'Champions!', 'Champions!', null,
       ['Harry Whitehouse · Peaksoft, 1983', 'http://www.peaksoft.uk/peaksoftstory', null, null, 'love']],
+    // Lionheart של Harry Whitehouse (Peaksoft, 1983): הרשות שלו במייל, 29.10.2026 ("Yes that's fine by me"). BASIC, הקלטת כמו שהיא
+    ['lionht', 'Lionheart', 'Lionheart', null,
+      ['Harry Whitehouse · Peaksoft, 1983', 'http://www.peaksoft.uk/peaksoftstory', null, null, 'love']],
     ['tangle', 'Tanglewood', 'Tanglewood', 'm',
       ['Ian Murray-Watson · Microdeal, 1986', '/lab/1982/tapes/tanglewood-license.txt', 'https://gitlab.com/amigasourcecodepreservation/tanglewood', null, 'mit']]
   ];
@@ -273,6 +276,19 @@
         'Each week choose: [C] check other teams, the transfer market and the reserves, and buy players. [S] sell a player. [U] use the substitute. [P] play the week\'s games.',
         'A player costs £10,000 for each point of skill, and selling brings back £5,000. After each round come the results, the table, gate money, wages and news: injuries, suspensions and sponsorship.']
     },
+    // נבדק במכונה (29.10): CLOAD, ‏RUN, מסך הפתיחה, SKILL LEVEL, מפת היער עם האותיות. ההוראות לפי העטיפה המקורית של Peaksoft
+    lionht: {
+      he: ['אתם ריצ\'רד לב הארי, ובונים צבא למסע הצלב השלישי. האנשים שלכם מפוזרים ביער של אנגליה, והצבא של הנסיך ג\'ון רודף אחריכם.',
+        'אחרי מסך הפתיחה בוחרים רמה, [1] עד [5], ולוחצים [ENTER]. [1] הכי קשה.',
+        'המשבצות עם האותיות הן הצלבנים. זזים בחיצים אל המשבצת שלהם כדי לאסוף אותם. אות מאוחרת יותר באלף-בית היא קבוצה גדולה יותר.',
+        'כדי להמשיך לארץ הקודש יוצאים מהפינה הימנית התחתונה עם לפחות 450 איש. המספר מופיע למעלה משמאל.',
+        'הצבא של הנסיך שורף את היער בדרכו אליכם. אפשר להשתמש בזה כדי לפתוח דרך לאנשים שתקועים בין העצים. אם הוא מגיע למשבצת שליד שלכם, הוא מנצח.'],
+      en: ['You are Richard the Lionheart, building his forces for the Third Crusade. Your men are scattered through the forest of England, and Prince John\'s army is tracking you down.',
+        'After the title screen choose a skill level, [1] to [5], and press [ENTER]. [1] is the hardest.',
+        'The lettered squares are your crusaders. Move onto a square with the arrows to collect them. A later letter means a bigger group.',
+        'To go on to the Holy Land, leave by the bottom right corner with at least 450 men. The number is shown at the top left.',
+        'Prince John\'s army burns the forest as it comes for you. You can use that to open a way to men trapped among the trees. If it reaches the square next to yours, it wins.']
+    },
     // נבדק במכונה (29.10): CLOADM, ‏EXEC, מסך הפתיחה, התפריט, Extra time? ובחירת דמות. ההוראות לפי המדריך המקורי ל-Dragon (המאגר של Tanglewood)
     tangle: {
       he: ['הרפתקה ביער: Schark, יזם עם כוחות קסם, רוצה לכרות את Tanglewood ולבנות משרדים. יש לכם עשרה ימים לעצור אותו.',
@@ -394,6 +410,7 @@
     grabber: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. אחרי מסך הפתיחה, ב-NUMBER OF PLAYERS? לוחצים [1].', 'When loading ends pick a colour: [1], [2] or [3]. After the title screen, at NUMBER OF PLAYERS? press [1].'],
     draconian: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וכשמופיע NUMBER OF PLAYERS? לוחצים [1].', 'When loading ends pick a colour: [1], [2] or [3]. On the title screen press [Space], and when NUMBER OF PLAYERS? appears press [1].'],
     alcatraz: ['כשמופיע OK מקלידים {RUN}. ל-DRAGON OR TANDY COLOR? לוחצים [D], ול-JOYSTICKS? לוחצים [Y].', 'When OK appears type {RUN}. At DRAGON OR TANDY COLOR? press [D], and at JOYSTICKS? press [Y].'],
+    lionht: ['כשמופיע OK מקלידים {RUN}. אחרי מסך הפתיחה, ב-SKILL LEVEL (1-5)? מקלידים מספר ו-[ENTER].', 'When OK appears type {RUN}. After the title screen, at SKILL LEVEL (1-5)? type a number and [ENTER].'],
     champs: ['כשמופיע OK מקלידים {RUN}. המשחק שואל WHICH TEAM WOULD YOU LIKE TO BE?: כותבים שם ולוחצים [ENTER].', 'When OK appears type {RUN}. The game asks WHICH TEAM WOULD YOU LIKE TO BE?: type a name and press [ENTER].'],
     cricket: ['מופיע מסך הפתיחה של Cricket, והמשחק ממשיך לטעון ולהתכונן עוד כמה דקות. אחר כך עונים על השאלות במקלדת.', 'The Cricket title screen appears, and the game goes on loading and preparing for a few minutes. Then answer the questions on the keyboard.'],
     tangle: ['כשמופיע OK מקלידים {EXEC}. אחרי מסך הפתיחה לוחצים [1] למשחק חדש.', 'When OK appears type {EXEC}. After the title screen press [1] for a new game.'],
@@ -417,6 +434,7 @@
     grabber: ['שני מבוכים בבת אחת: אוספים מטילים ומחזירים אותם למרכז, ובורחים ממפלצות. בג\'ויסטיק.', 'Two mazes at once: collect the bars, bring them back to the middle and escape the monsters. Joystick.'],
     draconian: ['טסים בחלל לכל כיוון, משמידים בסיסים ומצילים אסטרונאוטים, לפני שהדרקון מגיע. בג\'ויסטיק.', 'Fly through space in any direction, destroy bases and rescue astronauts before the dragon arrives. Joystick.'],
     alcatraz: ['בורחים מכלא Alcatraz II ונזהרים מהשומרים. בג\'ויסטיק.', 'Escape from the prison of Alcatraz II and keep away from the guards. Joystick.'],
+    lionht: ['ריצ\'רד לב הארי אוסף את הצלבנים שלו ביער, ובורח מהצבא של הנסיך ג\'ון. בחיצים.', 'Richard the Lionheart gathers his crusaders in the forest and escapes Prince John\'s army. Arrow keys.'],
     champs: ['מנהלים קבוצת כדורגל מהליגה הרביעית עד גביע אירופה: קונים, מוכרים ומשחקים. לשחקן אחד.', 'Manage a football club from the 4th Division to the European Cup: buy, sell and play. 1 player.'],
     cricket: ['משחק קריקט של 40 אוברים: מגישים, חובטים ורצים. נגד המחשב או בשניים. בג\'ויסטיק.', 'A 40-over cricket match: bowl, bat and run. Against the computer or for two. Joystick.'],
     tangle: ['הרפתקה ביער עם חמש דמויות: עוצרים את Schark לפני שהוא כורת את היער. בחיצים ובפקודות.', 'A woodland adventure with five characters: stop Schark before he cuts down the woods. Arrows and typed commands.'],

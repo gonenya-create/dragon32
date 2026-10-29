@@ -960,6 +960,38 @@ window.D32_GAMES = {
         0,
         72
       ]
+    },
+    "lionht": {
+      "slug": "lionheart",
+      "drawer": "more",
+      "year": "1983",
+      "tag": [
+        "הרפתקה",
+        "adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כדקה",
+        "about a minute"
+      ],
+      "about": {
+        "he": [
+          "Harry Whitehouse כתב אותו, ו-Peaksoft הוציאה אותו ב-1983. הוא היה המשחק השני הכי נמכר של Peaksoft ל-Dragon: יותר מ-5,500 עותקים.",
+          "\"הרפתקה של אומץ ומיומנות מעברה האצילי של אנגליה\", כתוב במסך הפתיחה. ועל העטיפה ציטוט ממועדון Dragon: \"ממכר, כיף גדול ומשעבד לגמרי\"."
+        ],
+        "en": [
+          "Harry Whitehouse wrote it, and Peaksoft published it in 1983. It was Peaksoft's second best-selling Dragon game: more than 5,500 copies.",
+          "\"An adventure of courage and skill from England's noble past\", says the title screen. And the inlay quotes Dragon Club News: \"Compulsive, great fun and totally addictive\"."
+        ]
+      },
+      "icon": [
+        56,
+        64,
+        64
+      ]
     }
   }
 };
