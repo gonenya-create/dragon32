@@ -201,8 +201,9 @@ isl_ba7e	stb	,x+	;@isl
 		blo	isl_ba7e	;@isl
 		rts	;@isl
 isl_ba77_e	;@isl
-		jsr	<chrgot		; סוף: A = 0
+		jsr	<chrgot		; סוף הפקודה: 0 או ':'
 		bne	cadr
+		clra			; גם אחרי ':' (למשל CLOADM"":GOTO 280 ב-Tim Love's Cricket): ההיסט 0, לא $3A00
 		rts
 cadr		lbsr	chkcom
 		lbsr	frmevl
@@ -212,11 +213,11 @@ cadr		lbsr	chkcom
 csavem		jsr	<chrget		; ה-M
 		lbsr	getfn
 		bsr	cadr
-		std	HLOAD
 		bra	isl_baa0_e	;@isl
 		fill	$ff,$baa0-*	;@isl
 		jmp	sound2	;@isl
 isl_baa0_e	;@isl
+		std	HLOAD
 		pshs	d
 		bsr	cadr
 		cmpd	,s		; סוף לפני התחלה: ?FC, לפני כתובת הביצוע
@@ -228,13 +229,13 @@ isl_baa0_e	;@isl
 		lda	#2
 		clrb
 		lbsr	wrhdr
-		jsr	tleader
 		bra	isl_bac3_e	;@isl
 		fill	$ff,$bac3-*	;@isl
 		bra	isl_bac8	;@isl
 		jmp	sndon	;@isl
 isl_bac8	jmp	sndoff	;@isl
 isl_bac3_e	;@isl
+		jsr	tleader
 		puls	d,x		; D = הסוף, X = ההתחלה
 		addd	#1		; כולל הסוף
 		lbra	wdata
@@ -249,11 +250,11 @@ motor_st	tfr	a,b		; chrget לא נוגע ב-B
 		jsr	<chrget
 		cmpb	#$c2		; OFF
 		lbeq	motoff
-		cmpb	#$88		; ON: המנוע והשהיה; הפסיקות לא נחסמות
 		bra	isl_baec_e	;@isl
 		fill	$ff,$baec-*	;@isl
 		jmp	x_audon	;@isl
 isl_baec_e	;@isl
+		cmpb	#$88		; ON: המנוע והשהיה; הפסיקות לא נחסמות
 		lbne	err_sn
 		jmp	tmoton
 
@@ -284,10 +285,6 @@ devfac		lbsr	ayint
 		sta	SPCIO
 9		rts
 8		lbra	err_dn
-; istape: Z=1 כשההתקן הוא הקלטת. A משתנה
-istape		lda	DEVNUM
-		inca
-		rts
 		fill	$ff,$bb26-*	;@isl
 		cmpa	#':	;@isl
 		bhs	isl_bb26_9	;@isl
@@ -297,6 +294,10 @@ istape		lda	DEVNUM
 isl_bb26_1	suba	#'0	;@isl
 		suba	#-'0	;@isl
 isl_bb26_9	rts	;@isl
+; istape: Z=1 כשההתקן הוא הקלטת. A משתנה
+istape		lda	DEVNUM
+		inca
+		rts
 ; chkout / chkin (4.2): הקלטת חייבת להיות פתוחה לכתיבה / לקריאה. סגורה: ?NO, בכיוון השני: ?FM.
 ; קריאה מהמדפסת: ?FM
 chkout		jsr	HK_CKOUT	; 7

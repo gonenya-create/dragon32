@@ -197,7 +197,7 @@ GREM	equ	209
 TANSGN	equ	10
 sqrhlf	equ	41416
 gsetac	equ	43815
-skipf_st	equ	47827
+skipf_st	equ	47830
 radix	equ	39896
 nz0999	equ	35092
 LPTWID	equ	155
@@ -266,7 +266,7 @@ isl_bbe5_e	equ	48104
 clear	equ	40572
 x_adrbyt	equ	40713
 next	equ	37155
-chrout	equ	47961
+chrout	equ	47965
 if_no	equ	38919
 us_orf	equ	43039
 nround	equ	35532
@@ -310,7 +310,7 @@ SNDFRQ	equ	140
 audio_st	equ	46155
 dvcmp	equ	35747
 us_cr	equ	42755
-devfac	equ	47871
+devfac	equ	47873
 rn_down	equ	42162
 gcogx	equ	43613
 sseg	equ	46146
@@ -324,7 +324,7 @@ twopi	equ	41446
 pseg16	equ	46637
 HGAP	equ	484
 gl_brk	equ	34875
-cadr	equ	47755
+cadr	equ	47756
 gfc	equ	45690
 us_ch	equ	42992
 cr_name	equ	34409
@@ -489,7 +489,7 @@ pfc2	equ	46397
 tdefs	equ	47389
 gscl2	equ	43653
 FRESPC	equ	37
-motor_st	equ	47836
+motor_st	equ	47839
 USEND	equ	219
 cr_ret	equ	34278
 firq	equ	33776
@@ -528,9 +528,9 @@ GROWB	equ	185
 RESHO	equ	19
 err_fm	equ	35063
 HK_STR	equ	407
-devpar	equ	48010
+devpar	equ	48014
 KALL	equ	337
-csavem	equ	47764
+csavem	equ	47765
 islet	equ	34401
 HK_INPQ	equ	380
 ary_new	equ	38699
@@ -658,7 +658,7 @@ joyrd	equ	40382
 givu	equ	35458
 isl_8b2d_1	equ	35661
 gext	equ	44905
-chkout	equ	47925
+chkout	equ	47929
 float	equ	35449
 fn_strng	equ	40170
 ed_bk	equ	42512
@@ -681,7 +681,7 @@ prline	equ	34618
 ki_none	equ	49037
 wrhdr	equ	47425
 gmax	equ	43680
-getdev	equ	47862
+getdev	equ	47864
 str_fc	equ	38335
 HK_LINE	equ	386
 fout	equ	36169
@@ -710,7 +710,7 @@ timset	equ	40308
 us_ok	equ	42837
 pcopy_st	equ	44453
 stmtbl	equ	33108
-chkin	equ	47932
+chkin	equ	47936
 GPRMSK	equ	205
 err_cn	equ	35045
 HK_EOF	equ	392
@@ -1010,7 +1010,7 @@ run	equ	36567
 fndoer	equ	39141
 sign	equ	36118
 RSTFLG	equ	113
-istape	equ	47906
+istape	equ	47925
 rn_shift	equ	42129
 ary_bs	equ	38696
 rnd1	equ	35333

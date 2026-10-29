@@ -1610,6 +1610,19 @@ if (part('lessons and magazine')) {
 if (part('real machine lab')) {
   console.log('real machine lab');
   {
+    // CLOADM"" ואחריו ':' באותה שורה (שורה 10 של Tim Love's Cricket): ההיסט 0, הטעינה לכתובת שבכותרת (באג עד 29.10: ההיסט היה $3A00)
+    const p = await browser.newPage({ viewport: { width: 1000, height: 900 } });
+    await p.goto(base.replace(/\/$/, '') + '/lab/1982/');
+    await p.waitForFunction(() => window.d32Ready, null, { timeout: 60000 }); await p.waitForTimeout(3000);
+    await p.evaluate(() => { localStorage.removeItem('d32-lab-tapes'); d32Type('POKE&H3000,42:CSAVEM"MC",&H3000,&H3000,&H3000\n'); });
+    await p.waitForFunction(() => (JSON.parse(localStorage.getItem('d32-lab-tapes') || '[]')).some(t => t.n === 'MC'), null, { timeout: 60000 }).catch(() => {});
+    await p.locator('#mytapes .tape').first().click().catch(() => {});
+    await p.evaluate(() => d32Type('\nPOKE&H3000,0\n10 CLEAR200,&H2FFF:CLOADM"":GOTO20\n20 PRINT"GOT";PEEK(&H3000)\nRUN\n'));
+    const ok = await p.waitForFunction(() => /GOT 42/.test((window.d32Screen() || []).join('\n')), null, { timeout: 60000 }).then(() => true, () => false);
+    check('CLOADM"" followed by ":" on the same line loads to the address in the header (offset 0), as on the original', ok, (await p.evaluate(() => (window.d32Screen() || []).filter(Boolean).join(' | '))));
+    await p.close();
+  }
+  {
     // קלטת קול ל-Dragon אמיתי (29.10): CSAVE ← 🔊 wav ← הצליל נכנס לרשמקול כמו קלטת אמיתית ← NEW, CLOAD ← אותה תוכנית
     const p = await browser.newPage({ viewport: { width: 1000, height: 900 } });
     await p.goto(base.replace(/\/$/, '') + '/lab/1982/');
