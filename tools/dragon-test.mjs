@@ -1601,7 +1601,8 @@ if (part('lessons and magazine')) {
   }
   {
     const r = await p.request.get(new URL('/assets/poster/dragon1982-poster-a3.pdf', PAGE).href);
-    check('/magazine/: the "1982 comes back to life" poster PDF is linked and downloads', r.ok() && (await r.body()).subarray(0, 4).toString() === '%PDF' && /dragon1982-poster-a3\.pdf/.test(await (await p.request.get(new URL('/magazine/', PAGE).href)).text()));
+    const pages = await Promise.all(['/posters/', '/en/posters/', '/', '/en/'].map(u => p.request.get(new URL(u, PAGE).href).then(x => x.text())));
+    check('/posters/ (he+en): the "1982 comes back to life" poster PDF downloads, both pages link it, and both home pages link to the posters', r.ok() && (await r.body()).subarray(0, 4).toString() === '%PDF' && pages.slice(0, 2).every(t => /dragon1982-poster-a3\.pdf/.test(t)) && /href="\/posters\/"/.test(pages[2]) && /href="\/en\/posters\/"/.test(pages[3]));
   }
   await p.close();
 }

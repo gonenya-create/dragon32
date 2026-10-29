@@ -166,6 +166,7 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
       + '<a href="' + (EN ? '/en/story/' : '/story/') + '"><span aria-hidden="true">📜</span> ' + tr('יומן המסע', 'The journey') + '</a>'
       + '<a href="' + (EN ? '/en/magazine/' : '/magazine/') + '"><span aria-hidden="true">📰</span> ' + tr('מה קראו בעלי <bdi dir="ltr">Dragon</bdi>', 'What Dragon Owners Were Reading') + '</a>'
       + '<a href="' + (EN ? '/en/adverts/' : '/adverts/') + '"><span aria-hidden="true">📺</span> ' + tr('הפרסומות', 'The adverts') + '</a>'
+      + '<a href="' + (EN ? '/en/posters/' : '/posters/') + '"><span aria-hidden="true">🖼️</span> ' + tr('פוסטרים', 'Posters') + '</a>'
       + '<a href="' + (EN ? '/en/dragon-history/' : '/dragon-history/') + '"><span aria-hidden="true">🐉</span> ' + tr('ההיסטוריה של ה-<bdi dir="ltr">Dragon</bdi>', 'The history of the <bdi dir="ltr">Dragon</bdi>') + '</a>';
     return row;
   };
