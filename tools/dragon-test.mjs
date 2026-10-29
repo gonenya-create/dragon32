@@ -1610,6 +1610,28 @@ if (part('lessons and magazine')) {
 if (part('real machine lab')) {
   console.log('real machine lab');
   {
+    // קלטת קול ל-Dragon אמיתי (29.10): CSAVE ← 🔊 wav ← הצליל נכנס לרשמקול כמו קלטת אמיתית ← NEW, CLOAD ← אותה תוכנית
+    const p = await browser.newPage({ viewport: { width: 1000, height: 900 } });
+    await p.goto(base.replace(/\/$/, '') + '/lab/1982/');
+    await p.waitForFunction(() => window.d32Ready, null, { timeout: 60000 }); await p.waitForTimeout(3000);
+    await p.evaluate(() => { localStorage.removeItem('d32-lab-tapes'); d32Type('10 PRINT "HELLO GONEN ";\n20 GOTO 10\nCSAVE "HELLO"\n'); });
+    await p.waitForFunction(() => (JSON.parse(localStorage.getItem('d32-lab-tapes') || '[]')).some(t => t.n === 'HELLO'), null, { timeout: 60000 }).catch(() => {});
+    const info = await p.evaluate(() => {
+      const f = (JSON.parse(localStorage.getItem('d32-lab-tapes') || '[]')).find(t => t.n === 'HELLO');
+      if (!f) return null;
+      const w = d32TapeWav(f), v = new DataView(w.buffer);
+      FS.writeFile('/t.wav', w); Module.ccall('wasm_load_file', null, ['string', 'number', 'number'], ['/t.wav', 2, 0]);
+      const btn = [...document.querySelectorAll('#mytapes .mini')].some(b => b.textContent === '🔊');
+      return { riff: String.fromCharCode(...w.slice(0, 4)), rate: v.getUint32(24, true), bits: v.getUint16(34, true), secs: (w.length - 44) / 44100, btn };
+    });
+    await p.evaluate(() => d32Type('NEW\nCLOAD\n'));
+    const loaded = await p.waitForFunction(() => /F HELLO[\s\S]*\nOK\s*$/.test((window.d32Screen() || []).join('\n')), null, { timeout: 60000 }).then(() => true, () => false);
+    await p.evaluate(() => d32Type('CLS\nLIST\n')); await p.waitForTimeout(1500);
+    const list = (await p.evaluate(() => (window.d32Screen() || []).join('\n')));
+    check('/lab/1982/ 🔊 a saved tape becomes a sound file (wav, 44100 Hz, 8 bit) in the Dragon\'s own format, and the machine CLOADs it back from the sound unchanged', !!info && info.riff === 'RIFF' && info.rate === 44100 && info.bits === 8 && info.btn && info.secs > 2.7 && info.secs < 3.1 && loaded && /10 PRINT "HELLO GONEN ";\n20 GOTO 10/.test(list), JSON.stringify(info) + ' ' + loaded);
+    await p.close();
+  }
+  {
     // גם רווח יורה במשחקי ג'ויסטיק (גונן, 27.10: Option במק פותח את החלון המהיר של Claude): הקלטת של Danger Ranger מדליקה את הג'ויסטיק מהמקלדת
     const p = await browser.newPage({ viewport: { width: 1000, height: 900 } });
     await p.goto(base.replace(/\/$/, '') + '/lab/1982/'); await p.waitForTimeout(3500);
@@ -1775,7 +1797,7 @@ if (part('real machine lab')) {
       await m.waitForTimeout(1500);
       check('after a reload, CLOAD "MYPROG" loads it back', (await m.evaluate(() => d32Screen())).includes('10 PRINT "SAVED"') && merrs.length === 0, (await m.evaluate(() => d32Screen())).filter(Boolean).join(' | ') + merrs.join(' | '));
       await m.evaluate(() => { document.getElementById('drawer-mine').open = true; });   // המגירות נסגרות בכל כניסה (גונן, 28.10)
-      const del = m.locator('#mytapes .mytape .mini').nth(1);
+      const del = m.locator('#mytapes .mytape .mini[aria-label^="מחיקת"], #mytapes .mytape .mini[aria-label^="Delete"]').first();   // ⬇ 🔊 ✕: המחיקה לפי השם, לא לפי המקום
       await del.click();
       await del.click();
       check('a saved tape can be deleted (two taps)', await m.locator('#mytapes .tape').count() === 0);

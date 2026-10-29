@@ -884,6 +884,47 @@ body.game-open .shelf > :not(.game-view) { display: none; }
     }
     return new Uint8Array(out);
   }
+  // קלטת קול ל-Dragon אמיתי (29.10): אותם בתים שה-ROM הקליט, בצליל שה-Dragon טוען מהרשמקול.
+  // כמו ההקלטה של המכונה עצמה: 44100 דגימות בשנייה, 8 ביט, חצי שנייה שקט בהתחלה, ועוד חצי שנייה אחרי הכותרת
+  // (הרשמקול עוצר ומתניע). כל ביט הוא גל סינוס אחד שמתחיל בעלייה, הביט הנמוך קודם. האורך לפי מחזורי המעבד
+  // (0.894886 מגה-הרץ): ביט 0 = 813 מחזורים, ביט 1 = 435 (Ciaran Anscomb, 20.10).
+  function tapeWav(f) {
+    const RATE = 44100, CPU = 894886, AMP = 86;
+    const leader = new Array(128).fill(0x55), gap = f.b[0][11];
+    const parts = [['quiet', 0.5], ['bytes', leader.concat(block(0, f.b[0].slice(1)))]];
+    if (!gap) parts.push(['quiet', 0.5], ['bytes', leader.concat(...f.b.slice(1).map(b => block(b[0], b.slice(1))))]);
+    else for (const b of f.b.slice(1)) parts.push(['quiet', 0.5], ['bytes', leader.concat(block(b[0], b.slice(1)))]);
+    parts.push(['quiet', 0.1]);
+    const out = [];
+    let t = 0;
+    const quiet = sec => { const end = Math.round((t + sec) * RATE); while (out.length < end) out.push(128); t += sec; };
+    const bit = one => {
+      const len = (one ? 435 : 813) / CPU, from = Math.round(t * RATE), to = Math.round((t + len) * RATE);
+      for (let s = from; s < to; s++) out.push(Math.round(128 + AMP * Math.sin(2 * Math.PI * ((s / RATE - t) / len))));
+      t += len;
+    };
+    for (const [kind, v] of parts) {
+      if (kind === 'quiet') quiet(v);
+      else for (const byte of v) for (let i = 0; i < 8; i++) bit((byte >> i) & 1);
+    }
+    const head = new DataView(new ArrayBuffer(44)), txt = (o, str) => { for (let i = 0; i < 4; i++) head.setUint8(o + i, str.charCodeAt(i)); };
+    txt(0, 'RIFF'); head.setUint32(4, 36 + out.length, true); txt(8, 'WAVE'); txt(12, 'fmt ');
+    head.setUint32(16, 16, true); head.setUint16(20, 1, true); head.setUint16(22, 1, true);
+    head.setUint32(24, RATE, true); head.setUint32(28, RATE, true); head.setUint16(32, 1, true); head.setUint16(34, 8, true);
+    txt(36, 'data'); head.setUint32(40, out.length, true);
+    const wav = new Uint8Array(44 + out.length);
+    wav.set(new Uint8Array(head.buffer), 0); wav.set(out, 44);
+    return wav;
+  }
+  window.d32TapeWav = tapeWav;
+  function saveFile(bytes, name, type) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([bytes], { type }));
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  }
   function addTapes(files) {
     const list = myTapes();
     for (const f of files) {
@@ -933,14 +974,14 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       down.className = 'mini';
       down.textContent = '⬇';
       down.setAttribute('aria-label', (EN ? 'Download tape ' : 'הורדת הקלטת ') + f.n);
-      down.addEventListener('click', () => {
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(new Blob([tapeBytes([f])], { type: 'application/octet-stream' }));
-        a.download = (f.n || 'TAPE') + '.cas';
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
-      });
+      down.addEventListener('click', () => saveFile(tapeBytes([f]), (f.n || 'TAPE') + '.cas', 'application/octet-stream'));
+      const sound = document.createElement('button');
+      sound.type = 'button';
+      sound.className = 'mini';
+      sound.textContent = '🔊';
+      sound.setAttribute('aria-label', (EN ? 'Download as sound for a real Dragon: ' : 'הורדה כצליל ל-Dragon אמיתי: ') + f.n);
+      sound.title = EN ? 'Download as sound (.wav) for a real Dragon' : 'הורדה כצליל (wav) ל-Dragon אמיתי';
+      sound.addEventListener('click', () => saveFile(tapeWav(f), (f.n || 'TAPE') + '.wav', 'audio/wav'));
       const del = document.createElement('button');
       del.type = 'button';
       del.className = 'mini';
@@ -959,7 +1000,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
         renderMine();
         insertLibrary();
       });
-      row.append(b, down, del);
+      row.append(b, down, sound, del);
       mineBox.appendChild(row);
     }
   }
