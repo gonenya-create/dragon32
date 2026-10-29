@@ -43,7 +43,7 @@ window.D32_GAMES = {
       "key": "more",
       "he": "עוד משחקים מאותה תקופה",
       "en": "More games from the time",
-      "years": "1984–86",
+      "years": "1983–86",
       "note": [
         "משחקים של מחברים שיש לנו מהם משחק אחד. כאן באישורם, או ברישיון פתוח שהם עצמם נתנו.",
         "Games by authors we have one game from. Here with their permission, or under an open licence they gave themselves."
@@ -927,6 +927,38 @@ window.D32_GAMES = {
         0,
         36,
         32
+      ]
+    },
+    "champs": {
+      "slug": "champions",
+      "drawer": "more",
+      "year": "1983",
+      "tag": [
+        "ניהול כדורגל",
+        "football management"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כשתי דקות",
+        "about two minutes"
+      ],
+      "about": {
+        "he": [
+          "Harry Whitehouse כתב אותו, והוא היה הלהיט הגדול של Peaksoft, החברה שהקים: ל-Dragon נמכרו ממנו יותר מ-8,000 עותקים, ובכל הגרסאות כמעט 30,000.",
+          "מנהלים בו את כל המועדון: קונים ומוכרים שחקנים, מתמודדים עם פציעות, הרחקות ובעיות קהל, ומשלמים משכורות. העטיפה מבטיחה \"את כל הכיף, הדרמה והתסכול של ניהול קבוצה בליגה\"."
+        ],
+        "en": [
+          "Harry Whitehouse wrote it, and it was the big hit of Peaksoft, the company he founded: more than 8,000 copies sold for the Dragon, and almost 30,000 across all versions.",
+          "You run the whole club: buy and sell players, deal with injuries, suspensions and crowd trouble, and pay the wages. The inlay promises \"all the fun, drama and frustration of managing a league club\"."
+        ]
+      },
+      "icon": [
+        72,
+        0,
+        72
       ]
     }
   }

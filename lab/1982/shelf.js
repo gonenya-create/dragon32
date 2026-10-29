@@ -66,6 +66,10 @@
       ['Tim Love · Peaksoft, 1984', 'https://timlovescricket.blogspot.com/', null, null, 'love']],
     // Tanglewood (Microdeal, 1986): קוד פתוח ברישיון MIT מ-2018 (Ian Murray-Watson, Pete Lyon, ובהסכמת John Symes).
     // הקלטת מהמאגר הרשמי נגמרת בביט האחרון, אז נוספו אחריה 16 בתי מבוא (כמו בקלטת אמיתית); הנתונים כמו שהם
+    // Champions! של Harry Whitehouse (Peaksoft, 1983), משחק ניהול כדורגל: הרשות שלו במייל, 29.10.2026 ("yes, of course").
+    // תוכנית BASIC; הקלטת מהארכיון רצה כמו שהיא
+    ['champs', 'Champions!', 'Champions!', null,
+      ['Harry Whitehouse · Peaksoft, 1983', 'http://www.peaksoft.uk/peaksoftstory', null, null, 'love']],
     ['tangle', 'Tanglewood', 'Tanglewood', 'm',
       ['Ian Murray-Watson · Microdeal, 1986', '/lab/1982/tapes/tanglewood-license.txt', 'https://gitlab.com/amigasourcecodepreservation/tanglewood', null, 'mit']]
   ];
@@ -258,6 +262,17 @@
         'Bowling: before the delivery move the arrow that marks where the bowler releases. At the second tone move the joystick to choose the ball.',
         'Batting: first the joystick sets the height of the bat, after [Space] its angle and position. Running: joystick left to run, right to stay.']
     },
+    // נבדק במכונה (29.10): CLOAD, ‏RUN, שם הקבוצה, ההקדמה, מסך הקבוצה והתפריט. ההוראות לפי העטיפה המקורית של Peaksoft
+    champs: {
+      he: ['אתם המנהלים של קבוצה בליגה הרביעית. המטרה: להביא אותה לאליפות הליגה הראשונה, ומשם לגביע אירופה.',
+        'קודם כותבים את שם הקבוצה, עד 10 אותיות, ולוחצים [ENTER]. אחר כך מופיעים השחקנים: ליד כל אחד רמת הכישרון שלו, ובצד הדירוג של הקבוצה והכסף בבנק.',
+        'בכל שבוע בוחרים: [C] בודקים קבוצות אחרות, את שוק ההעברות ואת המילואים, וקונים שחקנים. [S] מוכרים שחקן. [U] מחליפים עם המחליף. [P] משחקים את משחקי השבוע.',
+        'שחקן עולה 10,000 ליש"ט לכל נקודת כישרון, ומכירה מחזירה 5,000. אחרי כל מחזור מופיעים התוצאות, הטבלה, הכנסות מהקהל, משכורות וחדשות: פציעות, הרחקות וחסויות.'],
+      en: ['You manage a club in the 4th Division. The goal: take it to the championship of the 1st Division, and on into the European Cup.',
+        'First type your team\'s name, up to 10 letters, and press [ENTER]. Then your players appear: beside each one his skill rating, and at the side the team\'s rating and the money in the bank.',
+        'Each week choose: [C] check other teams, the transfer market and the reserves, and buy players. [S] sell a player. [U] use the substitute. [P] play the week\'s games.',
+        'A player costs £10,000 for each point of skill, and selling brings back £5,000. After each round come the results, the table, gate money, wages and news: injuries, suspensions and sponsorship.']
+    },
     // נבדק במכונה (29.10): CLOADM, ‏EXEC, מסך הפתיחה, התפריט, Extra time? ובחירת דמות. ההוראות לפי המדריך המקורי ל-Dragon (המאגר של Tanglewood)
     tangle: {
       he: ['הרפתקה ביער: Schark, יזם עם כוחות קסם, רוצה לכרות את Tanglewood ולבנות משרדים. יש לכם עשרה ימים לעצור אותו.',
@@ -379,6 +394,7 @@
     grabber: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. אחרי מסך הפתיחה, ב-NUMBER OF PLAYERS? לוחצים [1].', 'When loading ends pick a colour: [1], [2] or [3]. After the title screen, at NUMBER OF PLAYERS? press [1].'],
     draconian: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וכשמופיע NUMBER OF PLAYERS? לוחצים [1].', 'When loading ends pick a colour: [1], [2] or [3]. On the title screen press [Space], and when NUMBER OF PLAYERS? appears press [1].'],
     alcatraz: ['כשמופיע OK מקלידים {RUN}. ל-DRAGON OR TANDY COLOR? לוחצים [D], ול-JOYSTICKS? לוחצים [Y].', 'When OK appears type {RUN}. At DRAGON OR TANDY COLOR? press [D], and at JOYSTICKS? press [Y].'],
+    champs: ['כשמופיע OK מקלידים {RUN}. המשחק שואל WHICH TEAM WOULD YOU LIKE TO BE?: כותבים שם ולוחצים [ENTER].', 'When OK appears type {RUN}. The game asks WHICH TEAM WOULD YOU LIKE TO BE?: type a name and press [ENTER].'],
     cricket: ['מופיע מסך הפתיחה של Cricket, והמשחק ממשיך לטעון ולהתכונן עוד כמה דקות. אחר כך עונים על השאלות במקלדת.', 'The Cricket title screen appears, and the game goes on loading and preparing for a few minutes. Then answer the questions on the keyboard.'],
     tangle: ['כשמופיע OK מקלידים {EXEC}. אחרי מסך הפתיחה לוחצים [1] למשחק חדש.', 'When OK appears type {EXEC}. After the title screen press [1] for a new game.'],
     ranger: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וב-SELECT LEVEL בוחרים שלב.', 'When loading ends pick a colour: [1], [2] or [3]. On the title screen press [Space], and at SELECT LEVEL pick a level.'],
@@ -401,6 +417,7 @@
     grabber: ['שני מבוכים בבת אחת: אוספים מטילים ומחזירים אותם למרכז, ובורחים ממפלצות. בג\'ויסטיק.', 'Two mazes at once: collect the bars, bring them back to the middle and escape the monsters. Joystick.'],
     draconian: ['טסים בחלל לכל כיוון, משמידים בסיסים ומצילים אסטרונאוטים, לפני שהדרקון מגיע. בג\'ויסטיק.', 'Fly through space in any direction, destroy bases and rescue astronauts before the dragon arrives. Joystick.'],
     alcatraz: ['בורחים מכלא Alcatraz II ונזהרים מהשומרים. בג\'ויסטיק.', 'Escape from the prison of Alcatraz II and keep away from the guards. Joystick.'],
+    champs: ['מנהלים קבוצת כדורגל מהליגה הרביעית עד גביע אירופה: קונים, מוכרים ומשחקים. לשחקן אחד.', 'Manage a football club from the 4th Division to the European Cup: buy, sell and play. 1 player.'],
     cricket: ['משחק קריקט של 40 אוברים: מגישים, חובטים ורצים. נגד המחשב או בשניים. בג\'ויסטיק.', 'A 40-over cricket match: bowl, bat and run. Against the computer or for two. Joystick.'],
     tangle: ['הרפתקה ביער עם חמש דמויות: עוצרים את Schark לפני שהוא כורת את היער. בחיצים ובפקודות.', 'A woodland adventure with five characters: stop Schark before he cuts down the woods. Arrows and typed commands.'],
     ranger: ['רצים, קופצים ויורים: אוספים מפתחות ואוצרות בין עטלפים ועיניים. בג\'ויסטיק.', 'Run, jump and shoot: collect keys and treasure past bats and eyes. Joystick.'],
@@ -560,7 +577,7 @@
       docs.rel = 'noopener';
       by.append(EN ? 'By ' : 'מאת ', who, ' · ', docs, EN ? ' · removed on request' : ' · יוסר לפי בקשה');
     } else if (credit[4] === 'love') {
-      // הרשות במייל מ-Tim Love (29.10.2026). הקישור: הבלוג שלו על המשחק
+      // הרשות במייל מהמחבר (Tim Love, ‏Harry Whitehouse, 29.10.2026). הקישור: הדף שלו על המשחק
       docs.textContent = EN ? 'with his permission' : 'באישורו';
       docs.rel = 'noopener';
       by.append(EN ? 'By ' : 'מאת ', who, ' · ', docs, EN ? ' · removed on request' : ' · יוסר לפי בקשה');
