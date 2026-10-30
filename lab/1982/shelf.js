@@ -1244,9 +1244,11 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       else status.textContent = EN ? 'No program found in this file.' : 'לא נמצאה תוכנית בקובץ הזה.';
     });
   }
-  // קלטת אמיתית דרך המיקרופון (גונן, 30.10: "כולם"): מקליטים את הצליל של רשמקול שמנגן ליד המחשב או הטלפון, מנקים אותו
-  // (מסננים זמזום נמוך והופכים לגלים מרובעים, כמו המעגל של הקלטת במחשב), ומכניסים לרשמקול של המכונה כקובץ WAV.
-  // המכונה קוראת אותו כמו כל קלטת: CLOAD או CLOADM. בלי ניקוי, רעש וזמזום של מיקרופון מונעים מ-CLOAD למצוא את הקלטת
+  // קלטת אמיתית דרך המיקרופון (גונן, 30.10: "כולם"): מקליטים את הצליל של רשמקול או טלפון שמנגן ליד המחשב.
+  // הקורא (tapedecode.js, גונן 30.10: "רכיב ... שיהיה עמיד") לומד מההקלטה איך הרמקול והמיקרופון משנים את הצליל,
+  // קורא את הבלוקים עם בדיקת הסכום שלהם, ומכניס לרשמקול של המכונה קלטת נקייה עם אותם בתים בדיוק. המכונה טוענת
+  // אותה כמו כל קלטת: CLOAD או CLOADM. אם חלק לא נקלט, מנגנים שוב: החלקים הטובים נשמרים וההקלטה החדשה משלימה.
+  // אם הקורא לא מצא קלטת רגילה בכלל (למשל טוען מיוחד של משחק), ההקלטה נכנסת לרשמקול כמו שהיא, אחרי ניקוי
   const micBtn = document.getElementById('tape-mic');
   // ההודעות מופיעות מתחת לכפתור (גונן, 30.10: "לא הופיעה הודעה": שורת המצב הכללית למעלה, רחוק מהכפתור), וגם בשורת המצב הכללית
   const micMsg = document.getElementById('mic-status');
@@ -1319,12 +1321,49 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       if (n < sr) { say(EN ? 'The recording is too short.' : 'ההקלטה קצרה מדי.'); return; }
       const x = new Float32Array(n); let o = 0;
       for (const c of chunks) { x.set(c, o); o += c.length; }
+      readMic(x, sr);
+    }
+    // ההקלטה כמו שהיא, אחרי ניקוי, כשהקורא לא מצא בה קלטת רגילה
+    function rawToRecorder(x, sr, why) {
       try {
         FS.writeFile('/mic.wav', wav16(cleanTape(x, sr), sr));
         Module.ccall('wasm_load_file', null, ['string', 'number', 'number'], ['/mic.wav', 2, 0]);
-        say(EN ? '✅ The recording is in the tape recorder (' + Math.round(n / sr) + ' s). Now click the machine\'s screen and type CLOAD and ENTER (CLOADM for machine code). When OK appears, type RUN.'
-          : '✅ ההקלטה ברשמקול (' + Math.round(n / sr) + ' שניות). עכשיו לוחצים על מסך המכונה ומקלידים CLOAD ו-ENTER (לשפת מכונה CLOADM). כשמופיע OK, מקלידים RUN.');
+        say(why + (EN ? ' The recording went into the tape recorder as it is: you can still try CLOAD. If it doesn\'t load: louder on the phone, closer to the microphone, a quiet room, and start recording before you press play.'
+          : ' ההקלטה נכנסה לרשמקול כמו שהיא: אפשר בכל זאת לנסות CLOAD. אם לא נטען: עוצמה גבוהה יותר בטלפון, קרוב יותר למיקרופון, שקט בחדר, ולהתחיל להקליט לפני שמנגנים.'));
       } catch (e) { say(EN ? 'The machine is not ready yet.' : 'המכונה עוד לא מוכנה.'); }
+    }
+    let micPrev = null, reader = null;
+    function readMic(x, sr) {
+      if (typeof Worker === 'undefined') { rawToRecorder(x, sr, ''); return; }
+      reader = reader || new Worker('/lab/1982/tapedecode.js');
+      micBtn.disabled = true;
+      say(EN ? '⏳ Reading the tape…' : '⏳ קורא את הקלטת…');
+      reader.onerror = () => { micBtn.disabled = false; rawToRecorder(x, sr, ''); };
+      reader.onmessage = e => {
+        const m = e.data;
+        if (m.progress !== undefined) { say((EN ? '⏳ Reading the tape… ' : '⏳ קורא את הקלטת… ') + Math.round(m.progress * 100) + '%'); return; }
+        micBtn.disabled = false;
+        const files = (m.result && m.result.files) || [], good = files.filter(f => f.ok);
+        if (good.length) {
+          micPrev = null;
+          try {
+            FS.writeFile('/mic.cas', tapeBytes(good.map(f => ({ n: f.n, b: f.b }))));
+            Module.ccall('wasm_load_file', null, ['string', 'number', 'number'], ['/mic.cas', 2, 0]);
+          } catch (err) { say(EN ? 'The machine is not ready yet.' : 'המכונה עוד לא מוכנה.'); return; }
+          const mc = good[0].b[0][9] === 2, names = good.map(f => '"' + f.n + '"').join(', ');
+          const [LOADW, RUNW] = mc ? ['CLOADM', 'EXEC'] : ['CLOAD', 'RUN'];
+          say(EN ? '✅ Read ' + names + ' with no errors. It is in the tape recorder: click the machine\'s screen and type ' + LOADW + ' and ENTER. When OK appears, type ' + RUNW + '.'
+            : '✅ נקראה הקלטת ' + names + ', בלי שגיאות. היא ברשמקול: לוחצים על מסך המכונה ומקלידים ' + LOADW + ' ו-ENTER. כשמופיע OK, מקלידים ' + RUNW + '.');
+          document.getElementById('canvas')?.focus({ preventScroll: true });
+        } else if (files.length) {
+          // חלק מהבלוקים נקראו: שומרים אותם, והקלטה נוספת של אותה קלטת תשלים
+          micPrev = files;
+          const f = files[0], have = f.b.length, all = f.parts.length + (f.end ? 0 : 1);
+          say(EN ? '⚠️ Read ' + have + ' of ' + (f.end ? all : 'at least ' + all) + ' parts of "' + f.n + '"; something is missing. Play the tape again from the start and press record again: the parts already read are kept, and the new recording fills in the rest.'
+            : '⚠️ נקראו ' + have + ' מתוך ' + (f.end ? all : 'לפחות ' + all) + ' חלקים של "' + f.n + '", וחסר חלק. מנגנים את הקלטת שוב מההתחלה ולוחצים שוב להקליט: מה שכבר נקרא נשמר, וההקלטה החדשה משלימה.');
+        } else rawToRecorder(x, sr, EN ? 'No ordinary Dragon tape found in the recording.' : 'לא מצאתי בהקלטה קלטת Dragon רגילה.');
+      };
+      reader.postMessage({ x, sr, prev: micPrev });
     }
     micBtn.addEventListener('click', () => { if (rec) micStop(); else micStart(); });
   }

@@ -31,7 +31,7 @@ let server = null;
 if (!base) { server = await serve(); base = 'http://localhost:' + server.address().port; }
 const PAGE = base.replace(/\/$/, '') + '/';   // האפליקציה היא דף אחד: המחשב המלא
 
-const browser = await chromium.launch({ channel: 'chrome', args: ['--lang=he-IL'] });
+const browser = await chromium.launch({ channel: 'chrome', args: ['--lang=he-IL', '--autoplay-policy=no-user-gesture-required', '--use-fake-ui-for-media-stream'] });
 // אם בדיקה קורסת באמצע: סוגרים את הדפדפן לפני היציאה, כדי שלא יישאר Chrome נסתר ברקע
 const bail = async e => { console.error(e); await browser.close().catch(() => {}); if (server) server.close(); process.exit(1); };
 process.on('uncaughtException', bail);
@@ -1654,6 +1654,29 @@ if (part('real machine lab')) {
     await p.evaluate(() => d32Type('CLS\nLIST\n')); await p.waitForTimeout(1500);
     const list = (await p.evaluate(() => (window.d32Screen() || []).join('\n')));
     check('/lab/1982/ 🔊 a saved tape becomes a sound file (wav, 44100 Hz, 8 bit) in the Dragon\'s own format, and the machine CLOADs it back from the sound unchanged', !!info && info.riff === 'RIFF' && info.rate === 44100 && info.bits === 8 && info.btn && info.secs > 2.7 && info.secs < 3.1 && loaded && /10 PRINT "HELLO GONEN ";\n20 GOTO 10/.test(list), JSON.stringify(info) + ' ' + loaded);
+    await p.close();
+  }
+  {
+    // קלטת אמיתית מהבית (גונן, 30.10: "רכיב ... שיהיה עמיד"): מיקרופון מדומה מנגן את קלטת הבדיקה דרך "טלפון"
+    // (הצליל הגבוה מוחלש ב-15 dB, בלי בסים, חלש), לוחצים להקליט ולעצור, הקורא מכניס לרשמקול קלטת נקייה, CLOAD ו-RUN
+    const p = await browser.newPage({ viewport: { width: 1300, height: 900 } }); const errs = []; p.on('pageerror', e => errs.push(String(e)));
+    await p.goto(base.replace(/\/$/, '') + '/lab/1982/'); await p.waitForFunction(() => window.d32Ready, null, { timeout: 60000 }); await p.waitForTimeout(2500);
+    await p.evaluate(async () => {
+      const ac = new AudioContext(), buf = await ac.decodeAudioData(await (await fetch('/lab/1982/tapes/guess-tape.m4a')).arrayBuffer());
+      navigator.mediaDevices.getUserMedia = async () => {
+        const src = ac.createBufferSource(), shelf = ac.createBiquadFilter(), hp = ac.createBiquadFilter(), g = ac.createGain(), dest = ac.createMediaStreamDestination();
+        src.buffer = buf; shelf.type = 'highshelf'; shelf.frequency.value = 1500; shelf.gain.value = -15; hp.type = 'highpass'; hp.frequency.value = 600; g.gain.value = 0.3;
+        src.connect(shelf).connect(hp).connect(g).connect(dest); setTimeout(() => src.start(), 700); window.__dur = buf.duration; return dest.stream;
+      };
+    });
+    await p.click('#tape-mic'); await p.waitForTimeout((await p.evaluate(() => window.__dur) + 1.8) * 1000); await p.click('#tape-mic');
+    const msg = await p.waitForFunction(() => /✅|⚠️|לא מצאתי/.test(document.getElementById('mic-status').textContent), null, { timeout: 120000 })
+      .then(() => p.evaluate(() => document.getElementById('mic-status').textContent), () => 'timeout');
+    await p.evaluate(() => window.d32Type('CLOAD\n'));
+    const ok = await p.waitForFunction(() => { const r = window.d32Screen?.() || []; const i = r.findIndex(x => x === 'F GUESS'); return i >= 0 && r.slice(i + 1).includes('OK'); }, null, { timeout: 60000 }).then(() => true, () => false);
+    if (ok) await p.evaluate(() => window.d32Type('RUN\n'));
+    const ran = ok && await p.waitForFunction(() => (window.d32Screen?.() || []).some(r => r.includes('GUESS MY NUMBER')), null, { timeout: 30000 }).then(() => true, () => false);
+    check('/lab/1982/ 🎙️ a tape played through a "phone" into the microphone is read with no errors, and CLOAD then RUN runs it', /^✅ נקראה הקלטת "GUESS"/.test(msg) && ran && !errs.length, msg + ' ' + errs.join(' | '));
     await p.close();
   }
   {
