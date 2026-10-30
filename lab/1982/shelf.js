@@ -42,7 +42,7 @@
     // חלק אחד שמתחיל לבד אחרי CLOADM; הקלטת מהארכיון כמו שהיא. משחק עם ידית
     ['devil', 'Devil Assault', 'Devil Assault', 'a',
       ['Ken Kalish · Tom Mix / Microdeal, 1983', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
-    // נכתב רק ל-Dragon (Curtis Boyle: "Dungeon Raid & Athletyx were exclusively Dragon titles"). על המסך: (C)1983, ו-COPYRIGHT 1984 של Microdeal
+    // נכתב רק ל-Dragon (לפי Curtis Boyle). על המסך: (C)1983, ו-COPYRIGHT 1984 של Microdeal
     ['dungeon', 'Dungeon Raid', 'Dungeon Raid', 'a',
       ['Ken Kalish · Microdeal, 1983–84', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
     // נכתב רק ל-Dragon (Curtis Boyle, כמו Dungeon Raid). על מסך הפתיחה: (C) 1984, ועל המסך של Microdeal: 1985.
@@ -72,17 +72,17 @@
     // 15 בתי מבוא לפני כל בלוק, והמכונה צריכה מבוא ארוך כמו בקלטת אמיתית: המבוא הוארך, הנתונים כמו שהם (29.10)
     ['alcatraz', 'Alcatraz II', 'Alcatraz II', null,
       ['Mike Hughey · Spectral Associates / Microdeal, 1982', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']],
-    // Tim Love's Cricket (Peaksoft, 1984): רשות מ-Tim Love במייל, 29.10.2026 ("Fine by me!"). שלושה חלקים בקלטת: טוען, BASIC וקוד מכונה.
+    // Tim Love's Cricket (Peaksoft, 1984): רשות מ-Tim Love במייל, 29.10.2026. שלושה חלקים בקלטת: טוען, BASIC וקוד מכונה.
     // שורה 10 שלו, CLOADM"":GOTO280, חשפה באג ב-ROM שלנו (תוקן 29.10). המבוא הוארך כמו ב-Alcatraz
     ['cricket', 'Tim Love\'s Cricket', 'Tim Love\'s Cricket', 'a',
       ['Tim Love · Peaksoft, 1984', 'https://timlovescricket.blogspot.com/', null, null, 'love']],
     // Tanglewood (Microdeal, 1986): קוד פתוח ברישיון MIT מ-2018 (Ian Murray-Watson, Pete Lyon, ובהסכמת John Symes).
     // הקלטת מהמאגר הרשמי נגמרת בביט האחרון, אז נוספו אחריה 16 בתי מבוא (כמו בקלטת אמיתית); הנתונים כמו שהם
-    // Champions! של Harry Whitehouse (Peaksoft, 1983), משחק ניהול כדורגל: הרשות שלו במייל, 29.10.2026 ("yes, of course").
+    // Champions! של Harry Whitehouse (Peaksoft, 1983), משחק ניהול כדורגל: הרשות שלו במייל, 29.10.2026.
     // תוכנית BASIC; הקלטת מהארכיון רצה כמו שהיא
     ['champs', 'Champions!', 'Champions!', null,
       ['Harry Whitehouse · Peaksoft, 1983', 'http://www.peaksoft.uk/peaksoftstory', null, null, 'love']],
-    // Lionheart של Harry Whitehouse (Peaksoft, 1983): הרשות שלו במייל, 29.10.2026 ("Yes that's fine by me"). BASIC, הקלטת כמו שהיא
+    // Lionheart של Harry Whitehouse (Peaksoft, 1983): הרשות שלו במייל, 29.10.2026. BASIC, הקלטת כמו שהיא
     ['lionht', 'Lionheart', 'Lionheart', null,
       ['Harry Whitehouse · Peaksoft, 1983', 'http://www.peaksoft.uk/peaksoftstory', null, null, 'love']],
     // SAS של Harry Whitehouse (Peaksoft, 1983): אותה רשות. BASIC עם קוד מכונה קטן. קורא את החיצים ישר מטבלת המקלדת (PEEK(341)=223),
