@@ -1753,11 +1753,13 @@ if (part('real machine lab')) {
     // העטיפה המקורית (30.10): רק במשחק שיש עליו רשות (El Diablero, מארכיון Dragon Data), בלשונית "על המשחק", עם קרדיט וקישור. התמונה נטענת
     const cv = await browser.newPage({ viewport: { width: 1280, height: 900 } });
     await cv.goto(base.replace(/\/$/, '') + path + 'el-diablero/'); await cv.waitForTimeout(1500);
-    const cov = await cv.evaluate(async () => { const tb = [...document.querySelectorAll('.gv-tabs button')]; tb[2].click(); const i = document.querySelector('.gv-pane:not([hidden]) .gv-cover img');
+    const cov = await cv.evaluate(async () => { const tb = [...document.querySelectorAll('.gv-tabs button')]; const i = document.querySelector('.gv-media .gv-cover img'), seen = !!(i && i.getBoundingClientRect().height > 100);
       if (i) await new Promise(r => i.complete ? r() : (i.onload = i.onerror = r));
       tb[0].click(); const onlyOne = [...document.querySelectorAll('.gv-pane')].filter(p => getComputedStyle(p).display !== 'none').length === 1;
-      return { w: i && i.naturalWidth, link: document.querySelector('.gv-cover figcaption a')?.href, onlyOne }; });
-    check(`${path}el-diablero/ shows the original cover in the About tab, with credit and a link to the Dragon Data Archive, and only one tab shows at a time`, cov.w > 300 && /dragondata\.co\.uk/.test(cov.link || '') && cov.onlyOne, JSON.stringify(cov));
+      const v = document.querySelector('.game-view').getBoundingClientRect(), kb = document.querySelector('.machine').getBoundingClientRect();
+      const fit = []; for (const t of tb) { t.click(); await new Promise(r => setTimeout(r, 50)); fit.push(Math.round(document.querySelector('.game-view').getBoundingClientRect().bottom - kb.bottom)); }
+      return { w: i && i.naturalWidth, seen, link: document.querySelector('.gv-media figcaption a')?.href, onlyOne, fit }; });
+    check(`${path}el-diablero/ shows the original cover as soon as the game page opens (beside the screenshot), with credit and a link to the Dragon Data Archive; one tab at a time, and the page ends at the keyboard's bottom in every tab`, cov.w > 300 && cov.seen && /dragondata\.co\.uk/.test(cov.link || '') && cov.onlyOne && cov.fit.every(d => Math.abs(d) <= 2), JSON.stringify(cov));
     await cv.close();
     const direct = await browser.newPage({ viewport: { width: 1280, height: 900 } });
     const dres = await direct.goto(base.replace(/\/$/, '') + path + 'dungeon-raid/'); await direct.waitForTimeout(1500);

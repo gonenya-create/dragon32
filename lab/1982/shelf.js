@@ -787,10 +787,13 @@
     back.className = 'gv-back';
     back.textContent = T2('→ חזרה לארון', '← Back to the cabinet');
     back.addEventListener('click', () => closeGame(true));
-    const top = document.createElement('div');
-    top.className = 'gv-top';
+    // דף המשחק בפריסה אחת קבועה (גונן, 30.10: "לא סימטרית ... חלק ארוך חלק קצר"): הטקסט בטור אחד, ובטור שליד המכונה
+    // צילום המסך ומתחתיו העטיפה המקורית, שרואים מיד (גונן: "צריך להראות מייד כשפותחים את דף המשחק"). במחשב הדף
+    // בגובה המכונה, והלשוניות נגללות בתוכן. בטלפון הכול בטור אחד, הצילום והעטיפה זה לצד זה
+    const head = document.createElement('div');
+    head.className = 'gv-head';
     const info = document.createElement('div');
-    info.className = 'gv-info';
+    info.className = 'gv-info gv-act';
     const h = document.createElement('h3');
     h.className = 'gv-title';
     h.innerHTML = '<bdi></bdi>';
@@ -803,19 +806,48 @@
     for (const x of [L2(m.tag), L2(m.players)]) if (x) { const s = document.createElement('span'); s.textContent = x; tags.appendChild(s); }
     if (m.year) tags.appendChild(yearChip(m.year));
     if (m.load && L2(m.load)) { const s = document.createElement('span'); s.textContent = T2('טעינה: ', 'Loading: ') + L2(m.load); tags.appendChild(s); }
+    head.append(h, desc, tags);
     const go = document.createElement('button');
     go.type = 'button';
     go.className = 'gv-go';
     go.textContent = T2('▶ הכנס את הקלטת לרשמקול', '▶ Put the tape in the recorder');
     go.addEventListener('click', () => load(id, name, b, false, kind));
-    info.append(h, desc, tags, go);
+    info.append(go);
     if (status) info.appendChild(status);
+    const media = document.createElement('figure');
+    media.className = 'gv-media';
     const pic = document.createElement('img');
     pic.className = 'gv-shot';
     pic.src = '/lab/1982/shots/' + id + '.png';
     pic.alt = T2('צילום מסך מהמשחק, מהמכונה שלנו', 'A screenshot of the game, from our machine');
     pic.width = 256; pic.height = 192;
-    top.append(info, pic);
+    media.appendChild(pic);
+    if (m.cover) {
+      // העטיפה המקורית, רק כשיש עליה רשות. לחיצה פותחת אותה בגדול. קרדיט וקישור למקור מתחת
+      const a = document.createElement('a');
+      a.className = 'gv-cover';
+      a.href = m.cover.src; a.target = '_blank'; a.rel = 'noopener';
+      const im = document.createElement('img');
+      im.src = m.cover.src; im.alt = T2('העטיפה המקורית של ', 'The original cover of ') + name;
+      a.appendChild(im);
+      const cap = document.createElement('figcaption');
+      cap.append(L2(m.cover.credit) + ' ');
+      const src = document.createElement('a');
+      src.href = m.cover.link; src.target = '_blank'; src.rel = 'noopener';
+      const bd = document.createElement('bdi'); bd.textContent = L2(m.cover.from); src.appendChild(bd);
+      cap.appendChild(src);
+      media.append(a, cap);
+    } else {
+      // בלי עטיפה (התוכניות שלנו): מדבקת קלטת שלנו, כדי שהצורה תהיה אותה צורה בכל משחק
+      const lab = document.createElement('div');
+      lab.className = 'gv-cover gv-label';
+      lab.setAttribute('aria-hidden', 'true');
+      const n = document.createElement('bdi'); n.className = 'gv-label-name'; n.textContent = name;
+      const holes = document.createElement('span'); holes.className = 'gv-label-holes';
+      const by = document.createElement('span'); by.className = 'gv-label-by'; by.textContent = 'DRAGON 1982';
+      lab.append(n, holes, by);
+      media.appendChild(lab);
+    }
     // שלוש לשוניות: איך טוענים, איך משחקים, על המשחק
     const tabs = document.createElement('div');
     tabs.className = 'gv-tabs';
@@ -846,37 +878,35 @@
       pane.appendChild(ul);
     });
     mk(T2('על המשחק', 'About'), pane => {
-      // העטיפה המקורית (גונן, 30.10), רק כשיש עליה רשות: תמונה קטנה עם קרדיט וקישור למקור, ולחיצה פותחת אותה בגדול
-      if (m.cover) {
-        const fig = document.createElement('figure');
-        fig.className = 'gv-cover';
-        const a = document.createElement('a');
-        a.href = m.cover.src; a.target = '_blank'; a.rel = 'noopener';
-        const im = document.createElement('img');
-        im.src = m.cover.src; im.loading = 'lazy'; im.alt = T2('העטיפה המקורית של ', 'The original cover of ') + name;
-        a.appendChild(im);
-        const cap = document.createElement('figcaption');
-        cap.append(L2(m.cover.credit) + ' ');
-        const src = document.createElement('a');
-        src.href = m.cover.link; src.target = '_blank'; src.rel = 'noopener';
-        const bd = document.createElement('bdi'); bd.textContent = L2(m.cover.from); src.appendChild(bd);
-        cap.appendChild(src);
-        fig.append(a, cap);
-        pane.appendChild(fig);
-      }
       for (const s of (m.about ? m.about[EN ? 'en' : 'he'] : [])) { const p = document.createElement('p'); p.textContent = s; pane.appendChild(p); }
     });
-    view.append(back, top, tabs, ...panes, creditLine(id, credit));
+    const paneBox = document.createElement('div');
+    paneBox.className = 'gv-panes';
+    paneBox.append(...panes);
+    const body = document.createElement('div');
+    body.className = 'gv-body';
+    body.append(head, media, info, tabs, paneBox);
+    view.append(back, body, creditLine(id, credit));
     tabs.firstChild.click();
     view.hidden = false;
     document.body.classList.add('game-open');
+    requestAnimationFrame(fitView);
     buttons.forEach(x => x && x.classList.toggle('sel', x === b));
     document.title = name + ' — Dragon 1982';
     if (push && m.slug) history.pushState({ game: id }, '', BASE + m.slug + '/');
     if (innerWidth < 1100 && push) view.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
+  // במחשב (רוחב 1100 ומעלה): דף המשחק נגמר בדיוק בתחתית המקלדת, בכל משחק ובכל לשונית
+  function fitView() {
+    if (view.hidden || innerWidth < 1100) { view.style.height = ''; return; }
+    const kb = document.querySelector('.machine'), bottom = kb ? kb.getBoundingClientRect().bottom : innerHeight - 8;
+    view.style.height = Math.max(420, Math.round(bottom - view.getBoundingClientRect().top)) + 'px';
+  }
+  addEventListener('resize', fitView);
+  if (window.ResizeObserver && document.querySelector('.machine')) new ResizeObserver(fitView).observe(document.querySelector('.machine'));
   function closeGame(push) {
     view.hidden = true;
+    view.style.height = '';
     viewId = null;
     document.body.classList.remove('game-open');
     if (status && statusHome) statusHome.insertBefore(status, statusNext);
@@ -912,8 +942,11 @@
 .ic { flex: 0 0 32px; width: 32px; height: 24px; border-radius: 4px; background: #2b2a26 no-repeat; image-rendering: pixelated; box-shadow: 0 0 0 1px #00000080; }
 .game-view { margin-top: 8px; border: 2px solid #5a4430; border-radius: 14px; background: linear-gradient(#2b2018, #1f1712); padding: 12px 14px; }
 .gv-back { background: none; border: 0; color: var(--accent, #f2d23a); font: inherit; font-size: 15px; padding: 4px 0; cursor: pointer; min-height: 36px; }
-.gv-top { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap-reverse; }
-.gv-info { flex: 1 1 240px; min-width: 0; }
+.gv-body { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "media" "act" "tabs" "panes"; }
+.gv-head { grid-area: head; min-width: 0; }
+.gv-act { grid-area: act; min-width: 0; }
+.gv-tabs { grid-area: tabs; }
+.gv-panes { grid-area: panes; min-width: 0; }
 .gv-title { margin: 0; font-size: 26px; line-height: 1.2; }
 .gv-desc { margin: 4px 0 8px; color: #d8c8a8; }
 .gv-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; }
@@ -923,19 +956,25 @@
 .gv-go.nudge { animation: gv-nudge 0.5s ease-in-out 3; }
 @keyframes gv-nudge { 50% { box-shadow: 0 4px 0 #6d160b, 0 0 0 5px #f2d23a; } }
 .gv-info #tape-status { margin: 8px 0 0; }
-.gv-shot { flex: 0 1 300px; width: 300px; max-width: 100%; height: auto; image-rendering: pixelated; border-radius: 6px; border: 1px solid #4a3a2a; background: #000; }
+/* הצילום והעטיפה: בטלפון זה לצד זה באותו גובה */
+.gv-media { grid-area: media; margin: 4px 0 12px; display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 10px; }
+.gv-shot { display: block; height: calc((100vw - 90px) * 0.36); max-height: 220px; width: auto; aspect-ratio: 4 / 3; image-rendering: pixelated; border-radius: 6px; border: 1px solid #4a3a2a; background: #000; }
+.gv-cover { display: block; height: calc((100vw - 90px) * 0.36); max-height: 220px; }
+.gv-cover img { display: block; height: 100%; width: auto; border-radius: 6px; box-shadow: 0 3px 12px rgba(0,0,0,.45); }
+.gv-media figcaption { flex-basis: 100%; text-align: center; font-size: 12px; line-height: 1.45; color: var(--muted, #b9a98f); }
+.gv-media figcaption a { color: var(--accent, #f2d23a); }
+/* מדבקת קלטת שלנו, למשחק בלי עטיפה */
+.gv-label { aspect-ratio: 0.68; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 12% 8% 8%; border-radius: 6px;
+  border-top: 12px solid #c8402c; background: #efe3c6; color: #2b2018; box-shadow: 0 3px 12px rgba(0,0,0,.45); text-align: center; }
+.gv-label-name { font: 700 clamp(14px, 1.6vw, 22px)/1.15 'Courier New', monospace; text-transform: uppercase; overflow-wrap: anywhere; }
+.gv-label-holes { width: 70%; height: 16%; border-radius: 999px; background: radial-gradient(circle at 22% 50%, #2b2018 0 18%, transparent 19%), radial-gradient(circle at 78% 50%, #2b2018 0 18%, transparent 19%), #d6c7a4; }
+.gv-label-by { font: 700 11px/1 'Courier New', monospace; letter-spacing: 1px; }
 .gv-tabs { display: flex; gap: 6px; margin-top: 14px; border-bottom: 1px solid #4a3a2a; flex-wrap: wrap; }
 .gv-tabs button { font: inherit; font-size: 14px; font-weight: 700; color: #b9a98f; background: transparent; border: 1px solid #4a3a2a; border-bottom: 0; border-radius: 8px 8px 0 0; padding: 6px 12px; cursor: pointer; min-height: 36px; }
 .gv-tabs button[aria-selected="true"] { background: #2a2119; color: var(--accent, #f2d23a); }
 .gv-pane { padding: 10px 2px 4px; line-height: 1.7; }
-.gv-pane:not([hidden]) { display: flow-root; }   /* העטיפה הצפה נשארת בתוך הלשונית */
 .gv-pane ol, .gv-pane ul { margin: 0; padding-inline-start: 22px; display: grid; gap: 6px; }
 .gv-pane p { margin: 0 0 8px; }
-.gv-cover { float: inline-end; width: 168px; margin-block: 2px 10px; margin-inline-start: 14px; }
-.gv-cover img { display: block; width: 100%; height: auto; border-radius: 6px; box-shadow: 0 3px 12px rgba(0,0,0,.45); }
-.gv-cover figcaption { font-size: 12px; line-height: 1.45; margin-top: 6px; color: var(--muted, #b9a98f); }
-.gv-cover figcaption a { color: var(--accent, #f2d23a); }
-@media (max-width: 520px) { .gv-cover { float: none; width: 60%; margin: 4px auto 12px; } }
 .game-view .tape-credit { margin: 10px 0 0; padding-top: 8px; border-top: 1px solid #4a3a2a; }
 body.game-open .shelf > :not(.game-view) { display: none; }
 @media (min-width: 1100px) {
@@ -944,7 +983,18 @@ body.game-open .shelf > :not(.game-view) { display: none; }
   body.game-open main { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 0; }
   body.game-open .shelf { grid-column: 1; }
   body.game-open .machine { justify-self: center; width: min(100%, calc((100vh - 370px) * 4 / 3 + 28px)); }
-  body.game-open .gv-shot { flex: 0 1 46%; width: 46%; max-width: 512px; }
+  /* דף המשחק בגובה המכונה (הגובה נקבע ב-fitView): טור טקסט, וליד המכונה טור של צילום ועטיפה. רק הלשוניות נגללות */
+  body.game-open .shelf { overflow: hidden; }
+  body.game-open .game-view { display: flex; flex-direction: column; box-sizing: border-box; }
+  .gv-body { flex: 1; min-height: 0; gap: 0 18px; grid-template-columns: minmax(0, 1fr) clamp(190px, 38%, 300px);
+    grid-template-rows: auto auto auto minmax(0, 1fr); grid-template-areas: "head media" "act media" "tabs media" "panes media"; }
+  .gv-panes { overflow-y: auto; overscroll-behavior: contain; padding-inline-end: 4px; }
+  .gv-media { margin: 0; flex-direction: column; flex-wrap: nowrap; justify-content: flex-start; align-items: stretch; min-height: 0; overflow: hidden; }
+  .gv-shot { width: 100%; height: auto; max-height: none; flex: none; }
+  .gv-cover { flex: 0 1 auto; min-height: 0; height: auto; max-height: none; display: flex; justify-content: center; }
+  .gv-cover img { height: auto; width: auto; max-width: 100%; max-height: 100%; object-fit: contain; }
+  .gv-label { width: 78%; height: auto; max-height: none; aspect-ratio: 0.68; flex: 0 1 auto; min-height: 0; align-self: center; }
+  .gv-media figcaption { flex: none; text-align: start; }
 }
 `;
   document.head.appendChild(css);
