@@ -129,7 +129,19 @@ window.D32_GAMES = {
         24,
         8,
         96
-      ]
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/escape.jpg",
+        "credit": [
+          "העטיפה המקורית של Microdeal. סריקה:",
+          "The original Microdeal cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/index.php?title=Escape"
+      }
     },
     "invrev": {
       "slug": "invaders-revenge",
@@ -161,7 +173,19 @@ window.D32_GAMES = {
         152,
         64,
         48
-      ]
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/invrev.jpg",
+        "credit": [
+          "העטיפה המקורית של Microdeal. סריקה:",
+          "The original Microdeal cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/index.php?title=Invaders_Revenge"
+      }
     },
     "diablero": {
       "slug": "el-diablero",
@@ -196,8 +220,14 @@ window.D32_GAMES = {
       ],
       "cover": {
         "src": "/lab/1982/covers/diablero.jpg",
-        "credit": ["העטיפה המקורית מ-1983. סריקה:", "The original 1983 cover. Scan:"],
-        "from": ["ארכיון Dragon Data", "Dragon Data Archive"],
+        "credit": [
+          "העטיפה המקורית מ-1983. סריקה:",
+          "The original 1983 cover. Scan:"
+        ],
+        "from": [
+          "ארכיון Dragon Data",
+          "Dragon Data Archive"
+        ],
         "link": "http://dragondata.co.uk/Software/artwork/index.html"
       }
     },
@@ -231,7 +261,19 @@ window.D32_GAMES = {
         0,
         0,
         256
-      ]
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/phantom.jpg",
+        "credit": [
+          "העטיפה המקורית של Microdeal. סריקה:",
+          "The original Microdeal cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/index.php?title=Phantom_Slayer"
+      }
     },
     "ranger": {
       "slug": "danger-ranger",
@@ -263,7 +305,19 @@ window.D32_GAMES = {
         26,
         26,
         48
-      ]
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/ranger.jpg",
+        "credit": [
+          "העטיפה המקורית של Microdeal. סריקה:",
+          "The original Microdeal cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/index.php?title=Danger_Ranger"
+      }
     },
     "cuthbert": {
       "slug": "cuthbert-in-the-jungle",
@@ -295,7 +349,19 @@ window.D32_GAMES = {
         28,
         84,
         48
-      ]
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/cuthbert.jpg",
+        "credit": [
+          "העטיפה המקורית של Microdeal. סריקה:",
+          "The original Microdeal cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/"
+      }
     },
     "devil": {
       "slug": "devil-assault",
@@ -327,7 +393,19 @@ window.D32_GAMES = {
         96,
         60,
         48
-      ]
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/devil.jpg",
+        "credit": [
+          "העטיפה המקורית של Microdeal. סריקה:",
+          "The original Microdeal cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/index.php?title=Devil_Assault"
+      }
     },
     "dungeon": {
       "slug": "dungeon-raid",
@@ -359,7 +437,19 @@ window.D32_GAMES = {
         118,
         56,
         48
-      ]
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/dungeon.jpg",
+        "credit": [
+          "העטיפה המקורית של Microdeal. סריקה:",
+          "The original Microdeal cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/"
+      }
     },
     "athletyx": {
       "slug": "athletyx",
@@ -391,7 +481,19 @@ window.D32_GAMES = {
         160,
         100,
         48
-      ]
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/athletyx.jpg",
+        "credit": [
+          "העטיפה המקורית של Microdeal. סריקה:",
+          "The original Microdeal cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/index.php?title=Athletyx"
+      }
     },
     "grabber": {
       "slug": "grabber",
@@ -423,7 +525,19 @@ window.D32_GAMES = {
         80,
         8,
         128
-      ]
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/grabber.jpg",
+        "credit": [
+          "העטיפה המקורית של Microdeal. סריקה:",
+          "The original Microdeal cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/index.php?title=Grabber"
+      }
     },
     "draconian": {
       "slug": "draconian",
@@ -455,7 +569,19 @@ window.D32_GAMES = {
         72,
         48,
         104
-      ]
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/draconian.jpg",
+        "credit": [
+          "העטיפה המקורית של Microdeal. סריקה:",
+          "The original Microdeal cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/index.php?title=Draconian"
+      }
     },
     "adventureland": {
       "slug": "adventureland",
@@ -487,7 +613,19 @@ window.D32_GAMES = {
         0,
         0,
         256
-      ]
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/adventureland.jpg",
+        "credit": [
+          "העטיפה המקורית של Adventure International. סריקה:",
+          "The original Adventure International cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/index.php?title=Adventureland"
+      }
     },
     "pirate": {
       "slug": "pirate-adventure",
@@ -519,7 +657,19 @@ window.D32_GAMES = {
         0,
         0,
         256
-      ]
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/pirate.jpg",
+        "credit": [
+          "העטיפה המקורית של Adventure International. סריקה:",
+          "The original Adventure International cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/index.php?title=Pirate_Adventure"
+      }
     },
     "mission": {
       "slug": "secret-mission",
@@ -551,7 +701,19 @@ window.D32_GAMES = {
         0,
         0,
         256
-      ]
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/mission.jpg",
+        "credit": [
+          "העטיפה המקורית של Adventure International. סריקה:",
+          "The original Adventure International cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/index.php?title=Secret_Mission"
+      }
     },
     "voodoo": {
       "slug": "voodoo-castle",
@@ -583,7 +745,19 @@ window.D32_GAMES = {
         0,
         0,
         256
-      ]
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/voodoo.jpg",
+        "credit": [
+          "העטיפה המקורית של Adventure International. סריקה:",
+          "The original Adventure International cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/index.php?title=Voodoo_Castle"
+      }
     },
     "count": {
       "slug": "the-count",
@@ -975,7 +1149,19 @@ window.D32_GAMES = {
         128,
         0,
         64
-      ]
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/alcatraz.jpg",
+        "credit": [
+          "העטיפה המקורית של Microdeal. סריקה:",
+          "The original Microdeal cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/index.php?title=Alcatraz_II"
+      }
     },
     "cricket": {
       "slug": "tim-loves-cricket",
@@ -1007,7 +1193,19 @@ window.D32_GAMES = {
         0,
         96,
         96
-      ]
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/cricket.jpg",
+        "credit": [
+          "העטיפה המקורית של Peaksoft. סריקה:",
+          "The original Peaksoft cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/index.php?title=Tim_Love%27s_Cricket"
+      }
     },
     "spores": {
       "slug": "star-spores",
@@ -1115,7 +1313,19 @@ window.D32_GAMES = {
         72,
         0,
         72
-      ]
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/champs.jpg",
+        "credit": [
+          "העטיפה המקורית של Peaksoft. סריקה:",
+          "The original Peaksoft cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/index.php?title=Champions"
+      }
     },
     "lionht": {
       "slug": "lionheart",
@@ -1147,7 +1357,19 @@ window.D32_GAMES = {
         56,
         64,
         64
-      ]
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/lionht.jpg",
+        "credit": [
+          "העטיפה המקורית של Peaksoft. סריקה:",
+          "The original Peaksoft cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/index.php?title=Lionheart"
+      }
     },
     "sas": {
       "slug": "sas",
@@ -1179,7 +1401,19 @@ window.D32_GAMES = {
         24,
         0,
         64
-      ]
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/sas.jpg",
+        "credit": [
+          "העטיפה המקורית של Peaksoft. סריקה:",
+          "The original Peaksoft cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/index.php?title=SAS"
+      }
     }
   }
 };

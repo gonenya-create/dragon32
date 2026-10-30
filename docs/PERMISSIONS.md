@@ -18,6 +18,8 @@ The BASIC ROM the machine runs is our own clean-room code. No original ROM is us
 | Star Spores | Dave Shadoff · Spectral Associates / Microdeal, 1983–84 | Written permission by email | 25.10.2026 | [World of Dragon](https://archive.worldofdragon.org/index.php?title=Star_Spores) |
 | Tanglewood | Ian Murray-Watson, graphics Pete Lyon · Microdeal, 1986 | Released as open source under the MIT licence in 2018, with the agreement of Microdeal's founder John Symes | 2018 | [`lab/1982/tapes/tanglewood-license.txt`](../lab/1982/tapes/tanglewood-license.txt) · [source](https://gitlab.com/amigasourcecodepreservation/tanglewood) |
 
+**Original covers.** Beside each game whose author gave permission, the game page shows the original cassette cover, scanned by the [World of Dragon archive](https://archive.worldofdragon.org/), with credit to the publisher and a link to the scan. The owner's view (30.10.2026) is that an author who allowed the game allowed its original packaging too. El Diablero's cover is from the Dragon Data Archive (see below). Tanglewood's cover is not shown: its MIT licence covers the program, not the cover art.
+
 ## New games from the community
 
 | Game | Author | Basis | Public source |
