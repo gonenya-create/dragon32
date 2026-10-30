@@ -13,7 +13,8 @@ const G = JSON.parse(gamesSrc.slice(gamesSrc.indexOf('{'), gamesSrc.lastIndexOf(
 // השמות כמו על המדף (shelf.js, TAPES): ['id', 'שם', 'Name'
 const shelf = await readFile(join(root, 'lab/1982/shelf.js'), 'utf8');
 const names = {};
-for (const m of shelf.matchAll(/\['([a-z]+)', '((?:[^'\\]|\\.)*)', '((?:[^'\\]|\\.)*)'/g)) names[m[1]] = [m[2].replace(/\\'/g, "'"), m[3].replace(/\\'/g, "'")];
+// רק ההתאמה הראשונה (TAPES בא ראשון): גם רשימות אחרות בקובץ נראות כך, למשל JOY = new Set(['ranger', 'devil', ...])
+for (const m of shelf.matchAll(/\['([a-z]+)', '((?:[^'\\]|\\.)*)', '((?:[^'\\]|\\.)*)'/g)) if (!names[m[1]]) names[m[1]] = [m[2].replace(/\\'/g, "'"), m[3].replace(/\\'/g, "'")];
 const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 let bad = 0, n = 0;
 for (const en of [false, true]) {

@@ -131,6 +131,38 @@ window.D32_GAMES = {
         96
       ]
     },
+    "invrev": {
+      "slug": "invaders-revenge",
+      "drawer": "period",
+      "year": "1982",
+      "tag": [
+        "יריות",
+        "shooter"
+      ],
+      "players": [
+        "שחקן אחד או שניים",
+        "1 or 2 players"
+      ],
+      "load": [
+        "כדקה",
+        "about a minute"
+      ],
+      "about": {
+        "he": [
+          "Ken Kalish כתב אותו, ו-Med Systems מצפון קרוליינה הוציאה אותו ב-1982, אותה חברה שהוציאה אחר כך את Phantom Slayer. ל-Dragon הוציאה אותו Microdeal בבריטניה, ועל העטיפה כתוב \"by K. KALISH\".",
+          "הרעיון: Space Invaders הפוך. כל הפולשים כבר הושמדו, ואתם האחרון שנשאר. יורדים אל מתחת לקו ונלחמים בספינות של בני האדם, ונזהרים מבסיס הלייזר שהשמיד את כל החברים שלכם."
+        ],
+        "en": [
+          "Ken Kalish wrote it, and Med Systems of North Carolina published it in 1982, the same company that later published Phantom Slayer. Microdeal brought it out for the Dragon in Britain, and the cover says \"by K. KALISH\".",
+          "The idea: Space Invaders turned around. All the invaders have been wiped out, and you are the last one left. You drop below the line and fight the human ships, and keep away from the laser base that destroyed all your companions."
+        ]
+      },
+      "icon": [
+        152,
+        64,
+        48
+      ]
+    },
     "phantom": {
       "slug": "phantom-slayer",
       "drawer": "period",
@@ -224,6 +256,38 @@ window.D32_GAMES = {
       "icon": [
         28,
         84,
+        48
+      ]
+    },
+    "devil": {
+      "slug": "devil-assault",
+      "drawer": "period",
+      "year": "1983",
+      "tag": [
+        "יריות",
+        "shooter"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כשתי דקות וחצי",
+        "about two and a half minutes"
+      ],
+      "about": {
+        "he": [
+          "Ken Kalish כתב אותו, ו-Tom Mix Software ממישיגן הוציאה אותו ב-1983. ל-Dragon הוציאה אותו Microdeal, ועל העטיפה השם שלו בראש: \"KEN KALISH'S Devil Assault\".",
+          "טנק בתחתית המסך נלחם בשלושה מסכים: עטלפי ערפד שמפציצים, רובוטים מטורפים שצועדים למטה ו-Sproings שקופצים. ברמות הגבוהות מגיע השטן עצמו. \"In true Ken Kalish style\", כתוב על העטיפה."
+        ],
+        "en": [
+          "Ken Kalish wrote it, and Tom Mix Software of Michigan published it in 1983. Microdeal brought it out for the Dragon, with his name at the top of the cover: \"KEN KALISH'S Devil Assault\".",
+          "A tank at the bottom of the screen fights through three screens: bombing vampire bats, crazed robots marching down, and bouncing Sproings. On the higher levels the Devil himself turns up. \"In true Ken Kalish style\", says the cover."
+        ]
+      },
+      "icon": [
+        96,
+        60,
         48
       ]
     },

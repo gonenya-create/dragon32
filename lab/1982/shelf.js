@@ -23,6 +23,10 @@
     // המשחק הראשון של Ken Kalish: נכתב ב-1981 ויצא ב-1982 (Color Software Services, ובבריטניה Microdeal). אותו מנוע תלת-ממדי כמו Phantom Slayer
     ['escape', 'Escape', 'Escape', 'm',
       ['Ken Kalish · Color Software Services / Microdeal, 1982', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
+    // Invaders Revenge של Ken Kalish (Med Systems, 1982; ל-Dragon מ-Microdeal): על העטיפה "by K. KALISH", ובמסך הפתיחה "BY KENNETH KALISH".
+    // CLOADM ואז EXEC; הקלטת מהארכיון כמו שהיא. בחיצים ו[רווח] (בשאלה JOYSTICKS עונים N)
+    ['invrev', 'Invaders Revenge', 'Invaders Revenge', 'm',
+      ['Ken Kalish · Med Systems / Microdeal, 1982', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
     ['phantom', 'Phantom Slayer', 'Phantom Slayer', 'm',
       ['Ken Kalish · Med Systems / Microdeal, 1983', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
     ['ranger', 'Danger Ranger', 'Danger Ranger', 'a',
@@ -30,6 +34,10 @@
     // Trapfall של Ken Kalish (Tom Mix Software, 1983), שבבריטניה יצא אצל Microdeal בשם Cuthbert in the Jungle (Kalish בראיון אצל Curtis Boyle)
     ['cuthbert', 'Cuthbert in the Jungle', 'Cuthbert in the Jungle', 'a',
       ['Ken Kalish · Microdeal, 1983', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
+    // Devil Assault של Ken Kalish (Tom Mix, 1983; ל-Dragon מ-Microdeal): על העטיפה השם שלו מעל שם המשחק, ובמסך הפתיחה "by Ken Kalish".
+    // חלק אחד שמתחיל לבד אחרי CLOADM; הקלטת מהארכיון כמו שהיא. משחק עם ידית
+    ['devil', 'Devil Assault', 'Devil Assault', 'a',
+      ['Ken Kalish · Tom Mix / Microdeal, 1983', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
     // נכתב רק ל-Dragon (Curtis Boyle: "Dungeon Raid & Athletyx were exclusively Dragon titles"). על המסך: (C)1983, ו-COPYRIGHT 1984 של Microdeal
     ['dungeon', 'Dungeon Raid', 'Dungeon Raid', 'a',
       ['Ken Kalish · Microdeal, 1983–84', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
@@ -81,7 +89,7 @@
       ['Ian Murray-Watson · Microdeal, 1986', '/lab/1982/tapes/tanglewood-license.txt', 'https://gitlab.com/amigasourcecodepreservation/tanglewood', null, 'mit']]
   ];
   // משחקים שצריכים ג'ויסטיק: כשהקלטת נטענת, החיצים במקלדת הופכים לג'ויסטיק הימני ו-Alt (Option במק) לכפתור שלו
-  const JOY = new Set(['ranger', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian', 'alcatraz', 'cricket']);
+  const JOY = new Set(['ranger', 'devil', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian', 'alcatraz', 'cricket']);
   // ב-Cricket החובט משתמש בג'ויסטיק השמאלי והמגיש בימני (המדריך של Peaksoft): החיצים מזיזים את שניהם יחד
   const BOTH = new Set(['cricket']);
   function setJoy(on, both) {
@@ -184,6 +192,21 @@
         '100 metres: wait for GO!!!!, then rock the joystick left and right in rhythm: [←] [→] [←] [→]. Every change of direction is a step, and the bars at the bottom left show your speed. Move before GO and you get a FOUL.',
         'NEED shows the time you have to beat. In the other events you also use the button: press it, or hold it down to build up power.']
     },
+    // נבדק במכונה (30.10): הטעינה, מסך הצבעים, מסך הפתיחה, SELECT LEVEL, האש שמתחילה, העטלפים והפצצות, הבסיס שמתפוצץ והחיים שיורדים
+    devil: {
+      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
+        'הטעינה לוקחת כשתי דקות וחצי, והמשחק מתחיל לבד. קודם מופיע הציור של Microdeal, והמשחק ממשיך להיטען מאחוריו.',
+        'בוחרים צבע: [1] שחור, [2] בהיר, [3] ירוק. אחרי מסך הפתיחה, ב-SELECT LEVEL בוחרים רמה, [0] עד [5]: ברמות הזוגיות הטיל עף ישר למעלה, ובאי-זוגיות אפשר לכוון אותו בג\'ויסטיק תוך כדי מעוף.',
+        'לוחצים על הכפתור כדי להתחיל. [←] [→] מזיזים את הבסיס בתחתית המסך, והכפתור יורה.',
+        'שלושה מסכים: עטלפי ערפד שמפציצים ומתפצלים כשפוגעים בהם, רובוטים שצועדים למטה ויורים, ו-Sproings שקופצים לרמוס את הבסיס. ברמות הגבוהות השטן עצמו עף למעלה ומפיל קדרה בוערת.',
+        'כל 10,000 נקודות מקבלים בסיס נוסף. [R] מתחיל מחדש.'],
+      en: ['In this game the arrow keys are a joystick and [Space] is its button (or [Alt], [Option] on a Mac). On a phone there is a stick and a fire button under the screen.',
+        'Loading takes about two and a half minutes, and the game starts by itself. The Microdeal picture comes first, and the game goes on loading behind it.',
+        'Pick a colour: [1] black, [2] buff, [3] green. After the title screen, at SELECT LEVEL pick a level, [0] to [5]: on even levels the missile flies straight up, and on odd levels you can steer it with the joystick as it flies.',
+        'Press the button to start. [←] [→] move your base along the bottom of the screen, and the button fires.',
+        'Three screens: vampire bats that bomb you and split in two when hit, robots that march down firing, and Sproings that bounce in to stomp your base. On the higher levels the Devil himself flies across the top and drops a flaming cauldron.',
+        'A bonus base every 10,000 points. [R] starts again.']
+    },
     // נבדק במכונה (27.10): צבע, רמה, המנגינה ואחריה FIRE, תנועה, ירי ונקודות, פגיעה ביצור וגל ההדף, החיים. סוף החיים (בקוד, $2BBB): מחכה למקש דרך POLCAT; C ממשיך ($2FED), כל מקש אחר מתחיל מחדש ($2FDD)
     dungeon: {
       he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
@@ -200,6 +223,19 @@
         '[←] [→] move sideways, [↓] run faster down the corridor, [↑] slower. [Space] fires downwards, at the creatures and at locked doors.',
         'Watch out for the snakes, oafs and snappers, and for the shock wave of a creature that blows up. Don\'t shoot the clones that look like you: that costs a life. The stars at the top are your lives, and the number on the right is the time.',
         'When the last life is gone the game stops and waits for a key: [C] carries on from the same place in the dungeon (the score starts again from zero), and any other key starts again from the beginning. There is no end screen: that is how Ken Kalish made it.']
+    },
+    // נבדק במכונה (30.10): הטעינה, JOYSTICKS, ההוראות במשחק, מסך הפתיחה, שחקנים, יריות ומהירות, הספינות שזזות ובסיס הלייזר
+    invrev: {
+      he: ['אחרי הטעינה מקלידים EXEC ו-[ENTER]. כשהמשחק שואל JOYSTICKS (Y/N)? לוחצים [N], ומשחקים בחיצים.',
+        'ב-NEED INSTRUCTIONS (Y/N)? לוחצים [Y] כדי לקרוא את ההוראות (מקש לכל עמוד), או [N]. אחר כך בוחרים [1] או [2] שחקנים, כמה יריות, [1] עד [5], ומהירות, [1] עד [5].',
+        'הפעם אתם הפולש: החללית האחרונה שנשארה, נגד ספינות בני האדם. החלליות שלכם מחכות למעלה משמאל, מעל הקו.',
+        'החיצים מזיזים את החללית לכל הכיוונים. מורידים אותה אל מתחת לקו כדי להתחיל, ו-[רווח] יורה.',
+        'ספינה רגילה שווה 100 נקודות, ספינת הדגל 1000. בסיס הלייזר למטה יורה עליכם, ואותו אי אפשר להשמיד. ב-10,000 נקודות מקבלים חללית נוספת.'],
+      en: ['After loading type EXEC and [ENTER]. When the game asks JOYSTICKS (Y/N)? press [N], and play with the arrow keys.',
+        'At NEED INSTRUCTIONS (Y/N)? press [Y] to read the instructions (a key for each page), or [N]. Then choose [1] or [2] players, how many shots, [1] to [5], and the speed, [1] to [5].',
+        'This time you are the invader: the last ship left, against the human ships. Your ships wait at the top left, above the line.',
+        'The arrow keys move your ship in every direction. Bring it below the line to start, and [Space] fires.',
+        'A normal ship is worth 100 points, the flagship 1000. The laser base at the bottom fires at you, and it cannot be destroyed. A bonus ship at 10,000 points.']
     },
     // נבדק במכונה (25.10): בחירות, תנועה, כיוון וירי, רוחות שזזות, וסוף משחק עם הניקוד
     phantom: {
@@ -421,6 +457,8 @@
     blockdown: ['כשהטעינה נגמרת המשחק מתחיל לבד. מתחילים ב[רווח].', 'When loading ends the game starts by itself. Press [Space] to start.'],
     dragontet: ['מופיע תפריט: בוחרים ב[↑] [↓] ומאשרים ב[ENTER].', 'A menu appears: choose with [↑] [↓] and confirm with [ENTER].'],
     escape: ['מופיעים מסך הפתיחה וההקדמה, ואז המסדרון: [↑] קדימה, [←] [→] מסתובבים.', 'The title screen and the introduction appear, then the corridor: [↑] forward, [←] [→] turn.'],
+    invrev: ['ב-JOYSTICKS? לוחצים [N], ב-NEED INSTRUCTIONS? לוחצים [N], ואז בוחרים שחקנים, יריות ומהירות במספרים.', 'At JOYSTICKS? press [N], at NEED INSTRUCTIONS? press [N], then choose players, shots and speed with the number keys.'],
+    devil: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. ב-SELECT LEVEL בוחרים רמה, [0] עד [5], ומתחילים בכפתור.', 'When loading ends pick a colour: [1], [2] or [3]. At SELECT LEVEL pick a level, [0] to [5], and start with the button.'],
     phantom: ['המשחק שואל על ההוראות: [N] מדלג, [Y] מציג אותן.', 'The game asks about the instructions: [N] skips them, [Y] shows them.'],
     grabber: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. אחרי מסך הפתיחה, ב-NUMBER OF PLAYERS? לוחצים [1].', 'When loading ends pick a colour: [1], [2] or [3]. After the title screen, at NUMBER OF PLAYERS? press [1].'],
     draconian: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וכשמופיע NUMBER OF PLAYERS? לוחצים [1].', 'When loading ends pick a colour: [1], [2] or [3]. On the title screen press [Space], and when NUMBER OF PLAYERS? appears press [1].'],
@@ -446,6 +484,8 @@
     phantom: ['מבוך תלת-ממדי: צדים רוחות רפאים לפני שהן תופסות אתכם. לשחקן אחד.', '3D maze: hunt the phantoms before they catch you. 1 player.'],
     cuthbert: ['רצים בג\'ונגל, קופצים מעל בורות ובולי עץ ויורדים בסולמות למנהרה, נגד השעון. בג\'ויסטיק.', 'Run through the jungle, jump pits and logs and climb down ladders to the tunnel, against the clock. Joystick.'],
     athletyx: ['תחרות אתלטיקה: ריצה ועוד מקצועות, נגד השעון. בג\'ויסטיק. נכתב רק ל-Dragon.', 'An athletics contest: a sprint and more events, against the clock. Joystick. Written only for the Dragon.'],
+    invrev: ['Space Invaders הפוך: אתם הפולש האחרון, ונלחמים בספינות של בני האדם. בחיצים, לאחד או לשניים.', 'Space Invaders turned around: you are the last invader, fighting the human ships. Arrow keys, 1 or 2 players.'],
+    devil: ['טנק בתחתית המסך נגד עטלפי ערפד, רובוטים ו-Sproings, ובסוף גם השטן עצמו. בג\'ויסטיק.', 'A tank at the bottom of the screen against vampire bats, robots and Sproings, and in the end the Devil himself. Joystick.'],
     dungeon: ['רצים במסדרונות של מבוך ויורים ביצורים ובדלתות, נגד השעון. בג\'ויסטיק. נכתב רק ל-Dragon.', 'Race down dungeon corridors, shooting creatures and doors against the clock. Joystick. Written only for the Dragon.'],
     grabber: ['שני מבוכים בבת אחת: אוספים מטילים ומחזירים אותם למרכז, ובורחים ממפלצות. בג\'ויסטיק.', 'Two mazes at once: collect the bars, bring them back to the middle and escape the monsters. Joystick.'],
     draconian: ['טסים בחלל לכל כיוון, משמידים בסיסים ומצילים אסטרונאוטים, לפני שהדרקון מגיע. בג\'ויסטיק.', 'Fly through space in any direction, destroy bases and rescue astronauts before the dragon arrives. Joystick.'],
