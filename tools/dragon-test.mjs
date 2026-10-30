@@ -1595,7 +1595,7 @@ if (part('lessons and magazine')) {
   const typed = await p.waitForFunction(() => /\nRUN(\n|$)/.test(document.querySelector('#lesson-computer .d32-out').textContent), null, { timeout: 150000 }).then(() => true, () => false);
   await p.waitForTimeout(5000);
   check('/lessons/#30: "type it all and RUN" types DRAGFLY and it runs without an error', typed && await p.evaluate(() => !/ERROR/.test(document.querySelector('#lesson-computer .d32-out').textContent)));
-  for (const path of ['/magazine/', '/magazine/du01/', '/magazine/du02/', '/en/magazine/', '/en/magazine/du01/', '/en/magazine/du02/']) {
+  for (const path of ['/magazine/', '/magazine/du01/', '/magazine/du02/', '/magazine/du03/', '/en/magazine/', '/en/magazine/du01/', '/en/magazine/du02/', '/en/magazine/du03/']) {
     const r = await p.goto(new URL(path, PAGE).href);
     check(`${path} loads`, r.ok() && /archive\.org|Dragon User/.test(await p.content()));
   }
