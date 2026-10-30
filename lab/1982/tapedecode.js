@@ -59,12 +59,18 @@
   function segments(y, sr) {
     const F = Math.max(1, Math.round(sr * 0.02)), nf = Math.floor(y.length / F), lv = new Float32Array(nf);
     for (let f = 0; f < nf; f++) { let s = 0; for (let i = f * F; i < (f + 1) * F; i++) s += y[i] * y[i]; lv[f] = 10 * Math.log10(s / F + 1e-12); }
-    const so = Array.from(lv).sort((p, q) => p - q), floor = so[Math.floor(nf * 0.005)], top = so[Math.floor(nf * 0.95)];
-    if (!(top - floor > 6)) { // all one level: either all tape (recording started late) or no tape at all
-      for (let t = 0; t + sr * 0.4 < y.length; t += Math.round(sr * 0.25)) if (leaderAt(y, sr, t, t + Math.round(sr * 0.4))) return Object.assign([[0, y.length]], { quiet: [] });
-      return Object.assign([], { quiet: [] });
+    // the room's quiet: frames of exact digital silence (Chrome records zeros for a moment when the microphone opens) don't count
+    const so = Array.from(lv).filter(v => v > -100).sort((p, q) => p - q);
+    if (so.length < 5) return Object.assign([], { quiet: [] });
+    const floor = so[Math.floor(so.length * 0.005)], top = so[Math.floor(so.length * 0.95)];
+    let th = floor + (top - floor) / 3;
+    if (!(top - floor > 6)) { // one level apart from exact silence: either all tape (recording started late, or a clean file) or no tape at all
+      let tape = false;
+      for (let t = 0; t + sr * 0.4 < y.length && !tape; t += Math.round(sr * 0.25)) tape = leaderAt(y, sr, t, t + Math.round(sr * 0.4));
+      if (!tape) return Object.assign([], { quiet: [] });
+      th = -100; // everything but exact silence is tape
     }
-    const th = floor + (top - floor) / 3, out = []; let s = -1, quiet = 0, lastOn = -1;
+    const out = []; let s = -1, quiet = 0, lastOn = -1;
     for (let f = 0; f < nf; f++) {
       if (lv[f] > th) { if (s < 0) s = f; quiet = 0; lastOn = f; }
       else if (s >= 0 && ++quiet >= 3) { out.push([s * F, (lastOn + 1) * F]); s = -1; quiet = 0; }
@@ -72,7 +78,7 @@
     if (s >= 0) out.push([s * F, (lastOn + 1) * F]);
     const segs = out.filter(([a, b]) => b - a > sr * 0.05);
     // frames 12 dB or more under the tape's level: an echo or a pause, not a block
-    segs.quiet = []; for (let f = 0; f < nf; f++) if (lv[f] < top - 12) segs.quiet.push([f * F, (f + 1) * F]);
+    segs.quiet = []; for (let f = 0; f < nf; f++) if (lv[f] < top - 12 || lv[f] <= -100) segs.quiet.push([f * F, (f + 1) * F]);
     return segs;
   }
   // does the stretch start with a leader (1,0,1,0...)? Strong self-similarity one pair (1+0) apart.
