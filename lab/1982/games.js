@@ -40,10 +40,20 @@ window.D32_GAMES = {
       ]
     },
     {
+      "key": "harry",
+      "he": "המשחקים של Harry Whitehouse",
+      "en": "Harry Whitehouse's games",
+      "years": "1983",
+      "note": [
+        "Harry Whitehouse הקים את Peaksoft, וכתב לה את המשחקים שהיו הלהיטים הגדולים שלה ל-Dragon. כאן ברשותו.",
+        "Harry Whitehouse founded Peaksoft and wrote the games that were its biggest Dragon hits. Here with his permission."
+      ]
+    },
+    {
       "key": "more",
       "he": "עוד משחקים מאותה תקופה",
       "en": "More games from the time",
-      "years": "1983–86",
+      "years": "1984–86",
       "note": [
         "משחקים של מחברים שיש לנו מהם משחק אחד. כאן באישורם, או ברישיון פתוח שהם עצמם נתנו.",
         "Games by authors we have one game from. Here with their permission, or under an open licence they gave themselves."
@@ -931,7 +941,7 @@ window.D32_GAMES = {
     },
     "champs": {
       "slug": "champions",
-      "drawer": "more",
+      "drawer": "harry",
       "year": "1983",
       "tag": [
         "ניהול כדורגל",
@@ -963,7 +973,7 @@ window.D32_GAMES = {
     },
     "lionht": {
       "slug": "lionheart",
-      "drawer": "more",
+      "drawer": "harry",
       "year": "1983",
       "tag": [
         "הרפתקה",
@@ -995,7 +1005,7 @@ window.D32_GAMES = {
     },
     "sas": {
       "slug": "sas",
-      "drawer": "more",
+      "drawer": "harry",
       "year": "1983",
       "tag": [
         "פעולה",
