@@ -93,6 +93,14 @@ html[dir="rtl"] .drawer:not([open]) > summary::after { transform: rotate(90deg);
 .tape:focus-visible, .k:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 #tape-status { min-height: 1.5em; color: var(--accent); }
 .mic-status { color: var(--accent); font-weight: 700; }
+.realtape { margin-top: 14px; padding: 12px 16px; border: 1.5px solid #5a4430; border-radius: 12px; background: #1b1511; }
+.realtape h3 { margin: 0 0 6px; font-size: 17px; }
+.realtape p, .realtape ol { margin: 6px 0; line-height: 1.6; }
+.realtape ol { padding-inline-start: 22px; }
+.realtape-go { margin: 6px 0 2px; padding: 10px 16px; border: 0; border-radius: 999px; background: #c8402c; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+.realtape-go.on { background: #8c1f12; }
+body.full .realtape { display: none; }
+
 .mic-status:empty { display: none; }
 .mine-title { font-size: 16px; margin: 18px 0 2px; }
 .mytapes { display: grid; gap: 6px; margin-top: 8px; }
@@ -156,6 +164,18 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
   <div class="machine">
   <div class="tv"><canvas id="canvas" tabindex="0" oncontextmenu="event.preventDefault()" aria-label="Computer screen"></canvas></div>
   <div class="kbd" id="kbd" aria-label="Dragon 32 keyboard"></div>
+  <section class="realtape" aria-labelledby="realtape-title">
+    <h3 id="realtape-title">🎙️ A real cassette from home</h3>
+    <p>Got an old Dragon cassette? The machine can "hear" it through your computer's or phone's microphone.</p>
+    <ol>
+      <li>Press the button, and recording starts.</li>
+      <li>Play the cassette on a tape player next to the computer, then press the button again.</li>
+      <li>Click the machine's screen and type <code>CLOAD</code> (<code>CLOADM</code> for machine code). When OK appears, type <code>RUN</code>.</li>
+    </ol>
+    <button type="button" class="realtape-go" id="tape-mic">🎙️ Start recording</button>
+    <p class="mic-status" id="mic-status" role="status" aria-live="polite"></p>
+    <p class="note">No cassette at home? Play the <a href="/lab/1982/tapes/guess-tape.m4a">test tape</a> from your phone (the game "Guess my number", 8 seconds). A quiet room and a medium volume work best, and silence before and after doesn't matter.</p>
+  </section>
   </div>
   <section class="shelf" aria-labelledby="shelf-title">
     <h2 id="shelf-title">Tape shelf</h2>
@@ -171,10 +191,7 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
     <p class="note">Write a program and type <code>CSAVE "NAME"</code> (up to 8 letters). It is recorded to tape and kept here. To load: tap the tape and type <code>CLOAD</code>, or type <code>CLOAD "NAME"</code>.</p>
     <div class="mytapes" id="mytapes"></div>
     <button type="button" class="mini upload" id="tape-upload">📂 Load a tape from a file</button>
-    <button type="button" class="mini upload" id="tape-mic">🎙️ A real cassette, through the microphone</button>
-    <p class="note mic-status" id="mic-status" role="status" aria-live="polite"></p>
     <input type="file" id="tape-file" accept=".cas" hidden>
-    <p class="note"><strong>🎙️ An old cassette at home?</strong> Press the microphone button, play the cassette on a tape player next to the computer or phone, and press the button again at the end. The recording goes into the machine's tape recorder: type <code dir="ltr">CLOAD</code> (or <code dir="ltr">CLOADM</code>). A quiet room and a medium volume work best.</p>
     <p class="note">Tapes are kept only in this browser and are lost if you clear it (in Safari also after a week without a visit). To keep one for good or move it to another device: ⬇ downloads the tape as a file.</p>
     <p class="note"><strong>For a real <bdi>Dragon</bdi>:</strong> 🔊 downloads the tape as sound (wav), like a tape from back then. Plug the Dragon's cassette lead (the EAR plug) into your headphone socket, type <code>CLOAD</code> on the Dragon and play the file at about 75% volume. If you get <code>?IO ERROR</code>, change the volume and try again.</p>
     </div></details>

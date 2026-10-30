@@ -1303,7 +1303,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
         if (s >= 600) micStop();
       }, 500);
       rec = { stream, ctx, proc, src, chunks, tick, get n() { return n; } };
-      micBtn.textContent = EN ? '⏹ Stop recording' : '⏹ עצירת ההקלטה';
+      micBtn.textContent = EN ? '⏹ Stop recording' : '⏹ לעצור את ההקלטה';
       micBtn.classList.add('on');
     }
     function micStop() {
