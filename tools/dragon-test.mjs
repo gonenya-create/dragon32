@@ -1680,6 +1680,25 @@ if (part('real machine lab')) {
     await p.close();
   }
   {
+    // הקריאה נכשלת (רק רעש): מופיעה הודעה, וכפתור ששומר את ההקלטה כקובץ wav כדי לשלוח אותה לבדיקה (גונן, 30.10)
+    const p = await browser.newPage({ viewport: { width: 1300, height: 900 }, acceptDownloads: true }); const errs = []; p.on('pageerror', e => errs.push(String(e)));
+    await p.goto(base.replace(/\/$/, '') + '/lab/1982/'); await p.waitForFunction(() => window.d32Ready, null, { timeout: 60000 }); await p.waitForTimeout(2000);
+    await p.evaluate(() => {
+      navigator.mediaDevices.getUserMedia = async () => {
+        const ac = new AudioContext(), n = ac.sampleRate * 4, buf = ac.createBuffer(1, n, ac.sampleRate), d = buf.getChannelData(0);
+        for (let i = 0; i < n; i++) d[i] = (Math.random() - 0.5) * 0.2;
+        const src = ac.createBufferSource(), dest = ac.createMediaStreamDestination(); src.buffer = buf; src.loop = true; src.connect(dest); src.start(); return dest.stream;
+      };
+    });
+    await p.click('#tape-mic'); await p.waitForTimeout(3000); await p.click('#tape-mic');
+    const shown = await p.waitForFunction(() => { const b = document.querySelector('.mic-save'); return b && !b.hidden && b.offsetParent; }, null, { timeout: 120000 }).then(() => true, () => false);
+    let name = '';
+    if (shown) { const [dl] = await Promise.all([p.waitForEvent('download', { timeout: 10000 }).catch(() => null), p.click('.mic-save')]); name = dl ? dl.suggestedFilename() : ''; }
+    const msg = await p.evaluate(() => document.getElementById('mic-status').textContent);
+    check('/lab/1982/ 🎙️ when nothing can be read (only noise), the box says so and offers "💾 save the recording" as a wav file', shown && /לא מצאתי/.test(msg) && /^dragon-mic-\d{8}-\d{4}\.wav$/.test(name) && !errs.length, msg + ' | ' + name + ' ' + errs.join(' | '));
+    await p.close();
+  }
+  {
     // גם רווח יורה במשחקי ג'ויסטיק (גונן, 27.10: Option במק פותח את החלון המהיר של Claude): הקלטת של Danger Ranger מדליקה את הג'ויסטיק מהמקלדת
     const p = await browser.newPage({ viewport: { width: 1000, height: 900 } });
     await p.goto(base.replace(/\/$/, '') + '/lab/1982/'); await p.waitForTimeout(3500);

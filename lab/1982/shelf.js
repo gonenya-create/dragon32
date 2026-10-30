@@ -1355,6 +1355,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
         if (s >= 600) micStop();
       }, 500);
       rec = { stream, ctx, proc, src, chunks, tick, get n() { return n; } };
+      if (saveBtn) saveBtn.hidden = true;
       micBtn.textContent = EN ? '⏹ Stop recording' : '⏹ לעצור את ההקלטה';
       micBtn.classList.add('on');
     }
@@ -1382,6 +1383,23 @@ body.game-open .shelf > :not(.game-view) { display: none; }
           : ' ההקלטה נכנסה לרשמקול כמו שהיא: אפשר בכל זאת לנסות CLOAD. אם לא נטען: עוצמה גבוהה יותר בטלפון, קרוב יותר למיקרופון, שקט בחדר, ולהתחיל להקליט לפני שמנגנים.'));
       } catch (e) { say(EN ? 'The machine is not ready yet.' : 'המכונה עוד לא מוכנה.'); }
     }
+    // הקריאה לא הצליחה: כפתור ששומר את ההקלטה כמו שהיא, כדי לשלוח אותה ולבדוק מה המיקרופון שמע (גונן, 30.10)
+    let saveBtn = null;
+    function offerSave(x, sr) {
+      if (!saveBtn) {
+        saveBtn = document.createElement('button');
+        saveBtn.type = 'button';
+        saveBtn.className = 'mini mic-save';
+        saveBtn.textContent = EN ? '💾 Save the recording' : '💾 לשמור את ההקלטה';
+        micMsg.after(saveBtn);
+      }
+      saveBtn.hidden = false;
+      saveBtn.onclick = () => {
+        const q = new Int16Array(x.length); for (let i = 0; i < x.length; i++) q[i] = Math.max(-32767, Math.min(32767, Math.round(x[i] * 32767)));
+        const d = new Date(), two = v => String(v).padStart(2, '0');
+        saveFile(wav16(q, sr), 'dragon-mic-' + d.getFullYear() + two(d.getMonth() + 1) + two(d.getDate()) + '-' + two(d.getHours()) + two(d.getMinutes()) + '.wav', 'audio/wav');
+      };
+    }
     let micPrev = null, reader = null;
     function readMic(x, sr) {
       if (typeof Worker === 'undefined') { rawToRecorder(x, sr, ''); return; }
@@ -1391,7 +1409,11 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       reader.onerror = () => { micBtn.disabled = false; rawToRecorder(x, sr, ''); };
       reader.onmessage = e => {
         const m = e.data;
-        if (m.progress !== undefined) { say((EN ? '⏳ Reading the tape… ' : '⏳ קורא את הקלטת… ') + Math.round(m.progress * 100) + '%'); return; }
+        if (m.progress !== undefined) {
+          say(m.phase === 2 ? (EN ? '⏳ Reading the hard parts again… ' + Math.round(m.progress) + ' s (up to a minute and a half)' : '⏳ קורא שוב את החלקים הקשים… ' + Math.round(m.progress) + ' שניות (עד דקה וחצי)')
+            : (EN ? '⏳ Reading the tape… ' : '⏳ קורא את הקלטת… ') + Math.min(99, Math.round(m.progress * 100)) + '%');
+          return;
+        }
         micBtn.disabled = false;
         const files = (m.result && m.result.files) || [], good = files.filter(f => f.ok);
         if (good.length) {
@@ -1412,6 +1434,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
           say(EN ? '⚠️ Read ' + have + ' of ' + (f.end ? all : 'at least ' + all) + ' parts of "' + f.n + '"; something is missing. Play the tape again from the start and press record again: the parts already read are kept, and the new recording fills in the rest.'
             : '⚠️ נקראו ' + have + ' מתוך ' + (f.end ? all : 'לפחות ' + all) + ' חלקים של "' + f.n + '", וחסר חלק. מנגנים את הקלטת שוב מההתחלה ולוחצים שוב להקליט: מה שכבר נקרא נשמר, וההקלטה החדשה משלימה.');
         } else rawToRecorder(x, sr, EN ? 'No ordinary Dragon tape found in the recording.' : 'לא מצאתי בהקלטה קלטת Dragon רגילה.');
+        if (!good.length) offerSave(x, sr);
       };
       reader.postMessage({ x, sr, prev: micPrev });
     }

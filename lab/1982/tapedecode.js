@@ -163,10 +163,13 @@
     return { bits: bits.reverse(), starts: starts.reverse() };
   }
   // long stretches in windows of 2 s (plus 0.3 s to look ahead), each window continuing the last one's path
-  function viterbi(x, n, sr, k, tpl, C, J) {
+  // (onWin(fraction) reports progress; past the deadline it stops and returns what it read so far)
+  function viterbi(x, n, sr, k, tpl, C, J, onWin, deadline = Infinity) {
     const W = Math.round(sr * 2), O = Math.round(sr * 0.3), bits = [], starts = [];
     let off = 0, st = -1;
     while (off < n) {
+      if (onWin) onWin(off / n);
+      if (Date.now() > deadline) break;
       const len = Math.min(n - off, W + O), last = off + len >= n, r = viterbi1(x.subarray(off), len, sr, k, tpl, C, J, st);
       let i = 0;
       for (; i < r.bits.length; i++) { if (!last && r.starts[i] >= W) break; bits.push(r.bits[i]); starts.push(off + r.starts[i]); }
@@ -218,7 +221,7 @@
   // Returns { files: [{ n, b: [[type, ...data], ...], ok }], blocks: [...all slots in time order], seconds }
   const LIMIT = 90000; // ms
   function decode(x, sr, progress) {
-    const t0 = Date.now();
+    const t0 = Date.now(), deadline = t0 + LIMIT; // the deeper readings stop at the limit; the first reading always finishes
     const y = bandpass(x, sr), segs = segments(y, sr), slots = [], calm = [];
     let k = 1, h = null, done = 0; const total = segs.reduce((s, [a, b]) => s + b - a, 0) || 1;
     // calm = stretches that are surely not a block: silence between the stretches, and leader runs found while reading
@@ -239,7 +242,9 @@
       const n = b - a, cands = [];
       // a failed block in a quiet moment (an echo) or in the last 40 ms (noise after the trailer) is not a block
       const real = s => s.best || (s.at < b0 - sr * 0.04 && calmIn(calm, s.at, s.at + Math.round(sr * 0.02)) < sr * 0.01);
-      const read = (x2, tpl, C, from = 0, to = n) => { const r = viterbi(x2.subarray(from), to - from, sr, k, tpl, C, 2); cands.push(...blocksOf(r, a + from)); leaderRuns(r, a + from, calm); return r; };
+      const read = (x2, tpl, C, from = 0, to = n, onWin, until) => { const r = viterbi(x2.subarray(from), to - from, sr, k, tpl, C, 2, onWin, until); cands.push(...blocksOf(r, a + from)); leaderRuns(r, a + from, calm); return r; };
+      // progress: the first reading of every stream moves the percentage; the deeper readings report the seconds spent
+      const tell = f => { if (progress) progress((done + f * (b - a)) / total, 1); };
       const current = () => groupSlots(cands, sr).filter(real);
       // problem spots: failed blocks and gaps that are neither leader nor silence, as ranges inside this stretch
       const trouble = () => {
@@ -253,20 +258,21 @@
         });
       };
       // stage 1: plain sine waves on every stream
-      const first = streams.map(x2 => read(x2, [sine(), sine()], 0));
+      const first = streams.map((x2, si) => read(x2, [sine(), sine()], 0, 0, n, f => tell((si + f) / streams.length)));
       // stage 2 and 3, only where something is still wrong: learn how the waves really sound (2, 3, then 4 waves back)
       // and read again. A short stretch is read again whole, 4 rounds; a long one (a long tape) only around the problem
       // spots, with the sounds learnt from the whole stretch. A time limit keeps the browser from working for ever.
       outer: for (const C of [2, 3, 4]) for (let si = 0; si < streams.length; si++) {
         if (C > 2 && si > 1) continue;
         const spots = trouble(); if (!spots.length) break outer;
-        if (Date.now() - t0 > LIMIT) break outer;
-        const x2 = streams[si]; let r = first[si], tpl = train(x2, r.bits, r.starts, C);
-        if (n < sr * 20) for (let round = 0; round < 4; round++) { r = read(x2, tpl, C); tpl = train(x2, r.bits, r.starts, C); }
-        else for (let round = 0; round < 2; round++) for (const [p, q] of spots) read(x2, tpl, C, p, q);
+        if (Date.now() > deadline) break outer;
+        const x2 = streams[si], deep = () => { if (progress) progress((Date.now() - t0) / 1000, 2); };
+        let r = first[si], tpl = train(x2, r.bits, r.starts, C);
+        if (n < sr * 20) for (let round = 0; round < 4 && Date.now() <= deadline; round++) { r = read(x2, tpl, C, 0, n, deep, deadline); tpl = train(x2, r.bits, r.starts, C); }
+        else for (let round = 0; round < 2; round++) for (const [p, q] of spots) if (Date.now() <= deadline) read(x2, tpl, C, p, q, deep, deadline);
       }
       slots.push(...groupSlots(cands, sr).filter(real));
-      done += b - a; if (progress) progress(done / total);
+      done += b - a; if (progress) progress(done / total, 1);
     }
     return { files: assemble(slots, calm, sr), blocks: slots, seconds: x.length / sr, calm };
   }
@@ -344,7 +350,7 @@
   if (typeof window !== 'undefined') window.D32TapeDecode = api;
   else if (typeof self !== 'undefined' && typeof self.postMessage === 'function' && typeof module === 'undefined') {
     // as a Web Worker: { x, sr, prev } in (prev = the files of an earlier playing), progress and the result out
-    self.onmessage = e => { const { x, sr, prev } = e.data; try { const r = decode(x, sr, f => self.postMessage({ progress: f })); self.postMessage({ result: { files: merge(prev, r.files), slots: r.blocks.map(s => ({ at: s.at / sr, ok: !!s.best, t: s.best ? s.best.t : null })), seconds: r.seconds } }); } catch (err) { self.postMessage({ error: String(err && err.message || err) }); } };
+    self.onmessage = e => { const { x, sr, prev } = e.data; try { const r = decode(x, sr, (f, phase) => self.postMessage({ progress: f, phase })); self.postMessage({ result: { files: merge(prev, r.files), slots: r.blocks.map(s => ({ at: s.at / sr, ok: !!s.best, t: s.best ? s.best.t : null })), seconds: r.seconds } }); } catch (err) { self.postMessage({ error: String(err && err.message || err) }); } };
   }
   if (typeof module !== 'undefined') module.exports = api;
 })();
