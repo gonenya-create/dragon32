@@ -7,7 +7,7 @@ window.D32_GAMES = {
       "key": "adams",
       "he": "ההרפתקאות של Scott Adams",
       "en": "Scott Adams' adventures",
-      "years": "1979",
+      "years": "1979–84",
       "note": [
         "Scott Adams הביא את הרפתקאות המילים למחשבים הביתיים. הקלטות האלה הן גרסת ה-Color Computer, ש-Roger Schrag העביר לצבע, והיא רצה גם על ה-Dragon. כאן באישורו.",
         "Scott Adams brought text adventures to home computers. These tapes are the Color Computer versions, converted to colour by Roger Schrag, which also ran on the Dragon. Here with his permission."
@@ -790,6 +790,346 @@ window.D32_GAMES = {
         0,
         256
       ]
+    },
+    "odyssey": {
+      "slug": "strange-odyssey",
+      "drawer": "adams",
+      "year": "1979",
+      "tag": [
+        "הרפתקת מילים",
+        "text adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "קצת פחות משתי דקות",
+        "a little under two minutes"
+      ],
+      "about": {
+        "he": [
+          "ההרפתקה השישית של Scott Adams, מ-1979. על המסך: ADVENTURE #6, ‏COPYRIGHT ADAMS 1979, והמרה לצבע של Roger Schrag.",
+          "מתחילים בחללית קטנה של אדם אחד, שנחתה על אסטרואיד רחוק. בחוץ מחכים שרידים של ציוויליזציה עתיקה."
+        ],
+        "en": [
+          "Scott Adams' sixth adventure, from 1979. The screen says ADVENTURE #6, COPYRIGHT ADAMS 1979, with the colour conversion by Roger Schrag.",
+          "You start in a one-man scout ship, landed on a distant asteroid. Outside wait the remains of an ancient civilisation."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        256
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/odyssey.jpg",
+        "credit": [
+          "העטיפה המקורית של Adventure International. סריקה:",
+          "The original Adventure International cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/index.php?title=Strange_Odyssey"
+      }
+    },
+    "funhouse": {
+      "slug": "mystery-fun-house",
+      "drawer": "adams",
+      "year": "1979",
+      "tag": [
+        "הרפתקת מילים",
+        "text adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "קצת פחות משתי דקות",
+        "a little under two minutes"
+      ],
+      "about": {
+        "he": [
+          "ההרפתקה השביעית של Scott Adams, מ-1979. על המסך: ADVENTURE #7, ‏COPYRIGHT ADAMS 1979, והמרה לצבע של Roger Schrag.",
+          "עומדים מול בית שעשועים בלונה פארק, עם נעליים, שעון ומסטיק יבש בכיס. בפנים: מראות, מבוכים והפתעות."
+        ],
+        "en": [
+          "Scott Adams' seventh adventure, from 1979. The screen says ADVENTURE #7, COPYRIGHT ADAMS 1979, with the colour conversion by Roger Schrag.",
+          "You stand in front of a fun house at a fairground, with shoes, a watch and some dry chewing gum. Inside: mirrors, mazes and surprises."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        256
+      ]
+    },
+    "pyramid": {
+      "slug": "pyramid-of-doom",
+      "drawer": "adams",
+      "year": "1979",
+      "tag": [
+        "הרפתקת מילים",
+        "text adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "קצת פחות משתי דקות",
+        "a little under two minutes"
+      ],
+      "about": {
+        "he": [
+          "ההרפתקה השמינית בסדרה, מ-1979. על המסך: BY ALVIN FILES & SCOTT ADAMS, ‏COPYRIGHT ADAMS 1979, והמרה לצבע של Roger Schrag.",
+          "מתחילים במדבר, עם מימייה ריקה ופנס כבוי. מוט עץ בולט מהחול, ומתחתיו פירמידה מלאה אוצרות ומלכודות."
+        ],
+        "en": [
+          "The eighth adventure in the series, from 1979. The screen says BY ALVIN FILES & SCOTT ADAMS, COPYRIGHT ADAMS 1979, with the colour conversion by Roger Schrag.",
+          "You start in a desert with an empty canteen and an unlit flashlight. A wooden pole sticks out of the sand, and below lies a pyramid full of treasure and traps."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        256
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/pyramid.jpg",
+        "credit": [
+          "העטיפה המקורית של Adventure International. סריקה:",
+          "The original Adventure International cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/index.php?title=Pyramid_of_Doom"
+      }
+    },
+    "ghost": {
+      "slug": "ghost-town",
+      "drawer": "adams",
+      "year": "1980",
+      "tag": [
+        "הרפתקת מילים",
+        "text adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "קצת פחות משתי דקות",
+        "a little under two minutes"
+      ],
+      "about": {
+        "he": [
+          "ההרפתקה התשיעית של Scott Adams, מ-1980. על המסך: ADVENTURE #9, והמרה לצבע של Roger Schrag.",
+          "מתחילים ברחוב של עיירת רפאים במערב הפרוע: מספרה, בית כלא ובתים נטושים. האוצרות מחכים למי שיעז להיכנס."
+        ],
+        "en": [
+          "Scott Adams' ninth adventure, from 1980. The screen says ADVENTURE #9, with the colour conversion by Roger Schrag.",
+          "You start on the street of a Wild West ghost town: a barber shop, a jail and empty houses. The treasures wait for whoever dares to go in."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        256
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/ghost.jpg",
+        "credit": [
+          "העטיפה המקורית של Adventure International. סריקה:",
+          "The original Adventure International cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/index.php?title=Ghost_Town"
+      }
+    },
+    "savage1": {
+      "slug": "savage-island-1",
+      "drawer": "adams",
+      "year": "1981",
+      "tag": [
+        "הרפתקת מילים",
+        "text adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "קצת פחות משתי דקות",
+        "a little under two minutes"
+      ],
+      "about": {
+        "he": [
+          "ההרפתקה העשירית של Scott Adams, מ-1981, החלק הראשון מתוך שניים. על המסך: ADVENTURE #10, והמרה לצבע של Roger Schrag.",
+          "מתחילים על חוף של אי פראי, ליד ראש אבן ענק וג'ונגל סבוך. סערה מתקרבת. זו הרפתקה קשה, לשחקנים מנוסים."
+        ],
+        "en": [
+          "Scott Adams' tenth adventure, from 1981, part one of two. The screen says ADVENTURE #10, with the colour conversion by Roger Schrag.",
+          "You start on the beach of a savage island, beside a huge stone head and an impenetrable jungle. A storm is coming. This one is hard, for experienced players."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        256
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/savage1.jpg",
+        "credit": [
+          "העטיפה המקורית של Adventure International. סריקה:",
+          "The original Adventure International cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/index.php?title=Savage_Island_Part_1"
+      }
+    },
+    "savage2": {
+      "slug": "savage-island-2",
+      "drawer": "adams",
+      "year": "1981",
+      "tag": [
+        "הרפתקת מילים",
+        "text adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "קצת פחות משתי דקות",
+        "a little under two minutes"
+      ],
+      "about": {
+        "he": [
+          "ההרפתקה ה-11 בסדרה, מ-1981, החלק השני של Savage Island. על המסך: BY SCOTT ADAMS & RUS WETMORE, והמרה לצבע של Roger Schrag.",
+          "ההמשך של חלק 1. בהתחלה קול מתכתי מבקש סיסמה: מקבלים אותה בסוף חלק 1. מי שעונה לא נכון, ההרפתקה נגמרת מיד."
+        ],
+        "en": [
+          "The 11th adventure in the series, from 1981, the second part of Savage Island. The screen says BY SCOTT ADAMS & RUS WETMORE, with the colour conversion by Roger Schrag.",
+          "The sequel to part 1. At the start a metallic voice asks for a password: you get it at the end of part 1. A wrong answer ends the adventure at once."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        256
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/savage2.jpg",
+        "credit": [
+          "העטיפה המקורית של Adventure International. סריקה:",
+          "The original Adventure International cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/index.php?title=Savage_Island_Part_2"
+      }
+    },
+    "golden": {
+      "slug": "golden-voyage",
+      "drawer": "adams",
+      "year": "1981",
+      "tag": [
+        "הרפתקת מילים",
+        "text adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "קצת פחות משתי דקות",
+        "a little under two minutes"
+      ],
+      "about": {
+        "he": [
+          "ההרפתקה ה-12 בסדרה, מ-1981. על המסך: BY WILLIAM DEMAS & SCOTT ADAMS, ‏DEDICATED: BRITISH BAND \"QUEEN\", והמרה לצבע של Roger Schrag.",
+          "מתחילים בעיר פרסית, ליד סוחר. מלך זקן מחכה לסוד הנעורים, וצריך להפליג ולמצוא אותו לפני שיהיה מאוחר."
+        ],
+        "en": [
+          "The 12th adventure in the series, from 1981. The screen says BY WILLIAM DEMAS & SCOTT ADAMS, DEDICATED: BRITISH BAND \"QUEEN\", with the colour conversion by Roger Schrag.",
+          "You start in a Persian city, beside a merchant. An old king awaits the secret of youth, and you must sail out and find it before it is too late."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        256
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/golden.jpg",
+        "credit": [
+          "העטיפה המקורית של Adventure International. סריקה:",
+          "The original Adventure International cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/index.php?title=Golden_Voyage"
+      }
+    },
+    "claymorgue": {
+      "slug": "sorcerer-of-claymorgue-castle",
+      "drawer": "adams",
+      "year": "1984",
+      "tag": [
+        "הרפתקת מילים",
+        "text adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "קצת פחות משתי דקות",
+        "a little under two minutes"
+      ],
+      "about": {
+        "he": [
+          "ההרפתקה ה-13 של Scott Adams, מ-1984. על המסך: ADVENTURE 13 BY SCOTT ADAMS, והמרה לצבע של Roger Schrag. לפי רשימת Lysator, בגרסת ה-Dragon המקורית יש באג שאולי לא מאפשר לסיים את המשחק.",
+          "אתם שוליה של קוסם, עם שישה כישופים בכיס: אש, זרע, אור ועוד. צריך למצוא 13 כוכבים בטירה של מכשף רשע."
+        ],
+        "en": [
+          "Scott Adams' 13th adventure, from 1984. The screen says ADVENTURE 13 BY SCOTT ADAMS, with the colour conversion by Roger Schrag. According to the Lysator list, the original Dragon version has a bug that may stop you finishing the game.",
+          "You are a wizard's apprentice with six spells in your pocket: fire, seed, light and more. Find the 13 stars in the castle of an evil sorcerer."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        256
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/claymorgue.jpg",
+        "credit": [
+          "העטיפה המקורית של Adventure International. סריקה:",
+          "The original Adventure International cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/index.php?title=Sorcerer_of_Claymorgue_Castle"
+      }
     },
     "blockdown": {
       "slug": "blockdown",
