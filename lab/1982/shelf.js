@@ -1244,6 +1244,87 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       else status.textContent = EN ? 'No program found in this file.' : 'לא נמצאה תוכנית בקובץ הזה.';
     });
   }
+  // קלטת אמיתית דרך המיקרופון (גונן, 30.10: "כולם"): מקליטים את הצליל של רשמקול שמנגן ליד המחשב או הטלפון, מנקים אותו
+  // (מסננים זמזום נמוך והופכים לגלים מרובעים, כמו המעגל של הקלטת במחשב), ומכניסים לרשמקול של המכונה כקובץ WAV.
+  // המכונה קוראת אותו כמו כל קלטת: CLOAD או CLOADM. בלי ניקוי, רעש וזמזום של מיקרופון מונעים מ-CLOAD למצוא את הקלטת
+  const micBtn = document.getElementById('tape-mic');
+  if (micBtn) {
+    let rec = null;
+    const micLabel = micBtn.textContent;
+    // מסנן: זמזום נמוך (מתחת ל-400 הרץ) החוצה, ואז השוואה עם היסטרזיס לפי עוצמת הצליל באזור (עשירית מאית שנייה)
+    function cleanTape(x, sr) {
+      const out = new Int16Array(x.length);
+      const a = Math.exp(-2 * Math.PI * 400 / sr), win = Math.max(1, Math.round(sr * 0.01)), sq = new Float32Array(win);
+      let py = 0, px = 0, s2 = 0, st = 1;
+      for (let i = 0; i < x.length; i++) {
+        py = a * (py + x[i] - px); px = x[i];
+        const v = py, k = i % win;
+        s2 += v * v - sq[k]; sq[k] = v * v;
+        const th = 0.3 * Math.sqrt(Math.max(s2, 1e-12) / win);
+        if (st > 0 && v < -th) st = -1; else if (st < 0 && v > th) st = 1;
+        out[i] = st * 26000;
+      }
+      return out;
+    }
+    function wav16(samples, sr) {
+      const b = new ArrayBuffer(44 + samples.length * 2), d = new DataView(b);
+      const w = (o, s) => { for (let i = 0; i < s.length; i++) d.setUint8(o + i, s.charCodeAt(i)); };
+      w(0, 'RIFF'); d.setUint32(4, 36 + samples.length * 2, true); w(8, 'WAVE'); w(12, 'fmt ');
+      d.setUint32(16, 16, true); d.setUint16(20, 1, true); d.setUint16(22, 1, true); d.setUint32(24, sr, true);
+      d.setUint32(28, sr * 2, true); d.setUint16(32, 2, true); d.setUint16(34, 16, true); w(36, 'data'); d.setUint32(40, samples.length * 2, true);
+      new Int16Array(b, 44).set(samples);
+      return new Uint8Array(b);
+    }
+    async function micStart() {
+      let stream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false, channelCount: 1 } });
+      } catch (e) {
+        status.textContent = EN ? 'No microphone: the browser did not allow it.' : 'אין מיקרופון: הדפדפן לא אישר.';
+        return;
+      }
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const src = ctx.createMediaStreamSource(stream), proc = ctx.createScriptProcessor(4096, 1, 1), mute = ctx.createGain();
+      mute.gain.value = 0;
+      const chunks = []; let n = 0, peak = 0;
+      proc.onaudioprocess = ev => {
+        const d = ev.inputBuffer.getChannelData(0); chunks.push(new Float32Array(d)); n += d.length;
+        for (let i = 0; i < d.length; i += 64) peak = Math.max(peak, Math.abs(d[i]));
+      };
+      src.connect(proc); proc.connect(mute); mute.connect(ctx.destination);
+      const t0 = Date.now();
+      const tick = setInterval(() => {
+        const s = Math.round((Date.now() - t0) / 1000), bar = '▮'.repeat(Math.min(10, Math.round(peak * 14))) || '·';
+        peak = 0;
+        status.textContent = (EN ? '🔴 Recording ' : '🔴 מקליט ') + s + (EN ? ' s. Play the cassette now, then press the button again to stop. Level: ' : ' שניות. מנגנים עכשיו את הקלטת, ובסוף לוחצים שוב על הכפתור. עוצמה: ') + bar;
+        if (s >= 600) micStop();
+      }, 500);
+      rec = { stream, ctx, proc, src, chunks, tick, get n() { return n; } };
+      micBtn.textContent = EN ? '⏹ Stop recording' : '⏹ עצירת ההקלטה';
+      micBtn.classList.add('on');
+    }
+    function micStop() {
+      if (!rec) return;
+      const { stream, ctx, proc, src, chunks, tick } = rec, n = rec.n, sr = ctx.sampleRate;
+      rec = null;
+      clearInterval(tick);
+      try { src.disconnect(); proc.disconnect(); } catch (e) {}
+      stream.getTracks().forEach(t => t.stop());
+      ctx.close();
+      micBtn.textContent = micLabel;
+      micBtn.classList.remove('on');
+      if (n < sr) { status.textContent = EN ? 'The recording is too short.' : 'ההקלטה קצרה מדי.'; return; }
+      const x = new Float32Array(n); let o = 0;
+      for (const c of chunks) { x.set(c, o); o += c.length; }
+      try {
+        FS.writeFile('/mic.wav', wav16(cleanTape(x, sr), sr));
+        Module.ccall('wasm_load_file', null, ['string', 'number', 'number'], ['/mic.wav', 2, 0]);
+        status.textContent = EN ? 'The recording is in the tape recorder (' + Math.round(n / sr) + ' s). Type CLOAD, or CLOADM for machine code, and ENTER.'
+          : 'ההקלטה ברשמקול (' + Math.round(n / sr) + ' שניות). מקלידים CLOAD, או CLOADM לשפת מכונה, ו-ENTER.';
+      } catch (e) { status.textContent = EN ? 'The machine is not ready yet.' : 'המכונה עוד לא מוכנה.'; }
+    }
+    micBtn.addEventListener('click', () => { if (rec) micStop(); else micStart(); });
+  }
   // שמירה: כל שנייה בודקים אם CSAVE הקליט תוכנית שלמה חדשה ל-/out.cas
   let outSize = 0, outDone = 0;
   setInterval(() => {

@@ -26,6 +26,7 @@ li { margin: 4px 0; }
 a { color: var(--accent); }
 code { font-family: 'Courier New', monospace; }
 a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.bm{border-collapse:collapse;margin:10px 0 6px;font-size:15px;width:100%}.bm th,.bm td{border-bottom:1px solid rgba(128,128,128,.35);padding:5px 8px;text-align:start}.bm td[dir=ltr]{font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body>
@@ -62,10 +63,16 @@ a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
   <li>25 נקודות הרחבה בזיכרון, באותם מקומות כמו במקור. דרכן מחסניות מוסיפות פקודות.</li>
 </ul>
 
+<h2>המהירות מול 1982</h2>
+<p>ב-1982 המגזין <bdi>Personal Computer World</bdi> הריץ על כל מחשב שמונה תוכניות <bdi>BASIC</bdi> קצרות, ומדד בשעון עצר כמה שניות לקחה כל אחת. הנה התוצאות של ה-<bdi>Dragon 32</bdi> מהגיליון של אוגוסט 1982, ולידן אותן תוכניות על המכונה שלנו (בשניות):</p>
+<table class="bm"><thead><tr><th>מבחן</th><th>מה הוא בודק</th><th><bdi>Dragon 32</bdi>, 1982</th><th>המכונה שלנו</th></tr></thead><tbody><tr><td dir="ltr">BM1</td><td>לולאת <bdi>FOR</bdi> ריקה, 1000 פעמים</td><td>1.6</td><td>1.6</td></tr><tr><td dir="ltr">BM2</td><td>לולאה עם <bdi>IF</bdi> ו-GOTO</td><td>10.2</td><td>10.1</td></tr><tr><td dir="ltr">BM3</td><td>חשבון עם משתנים</td><td>19.7</td><td>19.8</td></tr><tr><td dir="ltr">BM4</td><td>חשבון עם מספרים קבועים</td><td>21.6</td><td>21.7</td></tr><tr><td dir="ltr">BM5</td><td>ועוד GOSUB</td><td>23.3</td><td>23.5</td></tr><tr><td dir="ltr">BM6</td><td>ועוד לולאת <bdi>FOR</bdi> פנימית</td><td>34.3</td><td>35.5</td></tr><tr><td dir="ltr">BM7</td><td>ועוד כתיבה למערך</td><td>50.0</td><td>52.4</td></tr><tr><td dir="ltr">BM8</td><td>חזקה, לוגריתם וסינוס, 100 פעמים</td><td>12.9</td><td>12.4</td></tr></tbody></table>
+<p>חמש התוכניות הראשונות יוצאות כמעט בדיוק כמו במקור, בגבולות הדיוק של שעון עצר. שלושה הבדלים קטנים עוד נשארו: לולאת <code dir="ltr">FOR</code> פנימית וכתיבה למערך איטיות אצלנו בכמה אחוזים, והפונקציות המתמטיות מהירות קצת יותר. נבדוק אותם מול <bdi>Dragon</bdi> אמיתי.</p>
+<p class="muted">המקור: <a href="https://archive.org/details/PersonalComputerWorld1982-08" rel="noopener"><bdi dir="ltr">Personal Computer World</bdi>, אוגוסט 1982, עמ' 116</a>.</p>
+
 <h2>מה עוד רחוק מהמקור</h2>
 <ul>
   <li><strong>תוכנות בשפת מכונה:</strong> הרבה משחקים של פעם קופצים ישר לכתובות בתוך ה-ROM המקורי. בנינו את הכתובות שתוכנות של אז השתמשו בהן, כל אחת במקום המקורי שלה, וגם את טבלאות הפקודות. 23 משחקים מאותה תקופה כבר רצים עליה בלי שינוי בקוד שלהם, של <bdi>Ken Kalish</bdi>, <bdi>Scott Adams</bdi>, <bdi>Mike Hughey</bdi>, <bdi>Tim Love</bdi>, <bdi>Harry Whitehouse</bdi> ו-<bdi>Ian Murray-Watson</bdi>, באישור המחברים. הצעד הבא: השוואה מול <bdi>Dragon</bdi> אמיתי.</li>
-  <li><strong>מהירות:</strong> תוכנית <bdi>BASIC</bdi> רצה אצלנו במהירות קצת שונה מהמקור. עוד לא מדדנו בכמה.</li>
+  <li><strong>מהירות:</strong> קרובה מאוד למקור (ראו למעלה). נשארו כמה אחוזים בלולאות <code dir="ltr">FOR</code> פנימיות, במערכים ובפונקציות המתמטיות.</li>
   <li><strong><code dir="ltr">DLOAD</code>:</strong> טעינה דרך כבל. עוד לא ידוע לנו מה הפקודה עושה ב-<bdi>Dragon 32</bdi>.</li>
   <li><strong>מחשב אמיתי:</strong> עוד לא בדקנו מול <bdi>Dragon</bdi> אמיתי. כל מה שאנחנו יודעים מגיע מהמקור, מהספרים ומ-<bdi>Ciaran</bdi>.</li>
 </ul>

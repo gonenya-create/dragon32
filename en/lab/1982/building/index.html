@@ -26,6 +26,7 @@ li { margin: 4px 0; }
 a { color: var(--accent); }
 code { font-family: 'Courier New', monospace; }
 a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.bm{border-collapse:collapse;margin:10px 0 6px;font-size:15px;width:100%}.bm th,.bm td{border-bottom:1px solid rgba(128,128,128,.35);padding:5px 8px;text-align:start}.bm td[dir=ltr]{font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body>
@@ -62,10 +63,16 @@ a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
   <li>25 extension hooks in memory, in the same places as the original. Cartridges add commands through them.</li>
 </ul>
 
+<h2>Speed against 1982</h2>
+<p>In 1982 the magazine <i>Personal Computer World</i> ran eight short BASIC programs on every computer and timed each one with a stopwatch. Here are the Dragon 32 results from the August 1982 issue, next to the same programs on our machine (in seconds):</p>
+<table class="bm"><thead><tr><th>Test</th><th>What it does</th><th>Dragon 32, 1982</th><th>Our machine</th></tr></thead><tbody><tr><td dir="ltr">BM1</td><td>an empty FOR loop, 1000 times</td><td dir="ltr">1.6</td><td dir="ltr">1.6</td></tr><tr><td dir="ltr">BM2</td><td>a loop with IF and GOTO</td><td dir="ltr">10.2</td><td dir="ltr">10.1</td></tr><tr><td dir="ltr">BM3</td><td>arithmetic with variables</td><td dir="ltr">19.7</td><td dir="ltr">19.8</td></tr><tr><td dir="ltr">BM4</td><td>arithmetic with constants</td><td dir="ltr">21.6</td><td dir="ltr">21.7</td></tr><tr><td dir="ltr">BM5</td><td>plus GOSUB</td><td dir="ltr">23.3</td><td dir="ltr">23.5</td></tr><tr><td dir="ltr">BM6</td><td>plus an inner FOR loop</td><td dir="ltr">34.3</td><td dir="ltr">35.5</td></tr><tr><td dir="ltr">BM7</td><td>plus writing to an array</td><td dir="ltr">50.0</td><td dir="ltr">52.4</td></tr><tr><td dir="ltr">BM8</td><td>power, LOG and SIN, 100 times</td><td dir="ltr">12.9</td><td dir="ltr">12.4</td></tr></tbody></table>
+<p>The first five come out almost exactly as on the original, within stopwatch accuracy. Three small differences remain: an inner <code>FOR</code> loop and writing to an array are a few percent slower here, and the maths functions a little faster. We will check them against a real Dragon.</p>
+<p class="muted">Source: <a href="https://archive.org/details/PersonalComputerWorld1982-08" rel="noopener"><i>Personal Computer World</i>, August 1982, p. 116</a>.</p>
+
 <h2>What is still far from the original</h2>
 <ul>
   <li><strong>Machine-code software:</strong> many old games jump straight to addresses inside the original ROM. We built the addresses that software of the time used, each in its original place, and the command tables too. 23 games from that time already run on it without any change to their code, by Ken Kalish, Scott Adams, Mike Hughey, Tim Love, Harry Whitehouse and Ian Murray-Watson, with their authors' permission. The next step: comparing it with a real Dragon.</li>
-  <li><strong>Speed:</strong> a BASIC program runs at a slightly different speed from the original. We have not measured by how much yet.</li>
+  <li><strong>Speed:</strong> very close to the original (see above). A few percent remain in inner <code>FOR</code> loops, arrays and the maths functions.</li>
   <li><strong><code>DLOAD</code>:</strong> loading over a cable. We do not know yet what it does on a Dragon 32.</li>
   <li><strong>A real machine:</strong> we have not checked against a real Dragon yet. Everything we know comes from the original, the books and Ciaran.</li>
 </ul>
