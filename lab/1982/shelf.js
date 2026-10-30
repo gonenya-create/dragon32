@@ -1300,9 +1300,9 @@ body.game-open .shelf > :not(.game-view) { display: none; }
   // אותה כמו כל קלטת: CLOAD או CLOADM. אם חלק לא נקלט, מנגנים שוב: החלקים הטובים נשמרים וההקלטה החדשה משלימה.
   // אם הקורא לא מצא קלטת רגילה בכלל (למשל טוען מיוחד של משחק), ההקלטה נכנסת לרשמקול כמו שהיא, אחרי ניקוי
   const micBtn = document.getElementById('tape-mic');
-  // ההודעות מופיעות מתחת לכפתור (גונן, 30.10: "לא הופיעה הודעה": שורת המצב הכללית למעלה, רחוק מהכפתור), וגם בשורת המצב הכללית
+  // ההודעות מופיעות רק מתחת לכפתור, בתיבה (גונן, 30.10: ההודעה הופיעה פעמיים, גם מעל הארון). בלי התיבה: בשורת המצב הכללית
   const micMsg = document.getElementById('mic-status');
-  const say = t => { status.textContent = t; if (micMsg) micMsg.textContent = t; };
+  const say = t => { if (micMsg) micMsg.textContent = t; else status.textContent = t; };
   if (micBtn) {
     let rec = null;
     const micLabel = micBtn.textContent;

@@ -95,7 +95,7 @@ html[dir="rtl"] .drawer:not([open]) > summary::after { transform: rotate(90deg);
 .tape:focus-visible, .k:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 #tape-status { min-height: 1.5em; color: var(--accent); }
 .mic-status { color: var(--accent); font-weight: 700; }
-.realtape { margin-top: 16px; padding: 10px 14px; border: 1.5px solid #5a4430; border-radius: 12px; background: #1b1511; }
+.realtape { margin: 16px 0; padding: 10px 14px; border: 1.5px solid #5a4430; border-radius: 12px; background: #1b1511; }
 .realtape h3 { margin: 0 0 4px; font-size: 16px; }
 .realtape p, .realtape ol { margin: 4px 0; font-size: 14px; line-height: 1.5; }
 .realtape ol { padding-inline-start: 18px; }
@@ -123,7 +123,6 @@ body.full .realtape { display: none; }
   .info { grid-column: 1; grid-row: 2; min-height: 0; max-height: 100%; overflow-y: auto; padding-inline-end: 6px; }
   .machine { grid-column: 2; grid-row: 1 / 3; }
   .shelf { grid-column: 3; grid-row: 1 / 3; margin-top: 0; max-height: calc(100vh - 70px); overflow-y: auto; padding-inline-end: 6px; }
-  .realtape { position: sticky; bottom: 0; z-index: 2; box-shadow: 0 -12px 16px #0f0c0a; }   /* תמיד נראית בתחתית העמודה, והמגירות נגללות מעליה */
   .tapes { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }   /* עמודה צרה: קלטת אחת בשורה, כדי ששם ארוך כמו Adventureland לא יברח מהקוביה */
   .info > p.note:first-child { margin-top: 0; }
   .typein-view { grid-column: 1; grid-row: 1 / 3; margin: 0; height: calc(100vh - 70px); display: flex; flex-direction: column; }
@@ -188,20 +187,6 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
     <p class="note"><strong>ל-<bdi>Dragon</bdi> אמיתי:</strong> 🔊 מוריד את הקלטת כצליל (<bdi dir="ltr">wav</bdi>), כמו קלטת של אז. מחברים את כבל הקלטת של ה-<bdi>Dragon</bdi> (התקע <bdi dir="ltr">EAR</bdi>) לשקע האוזניות, מקלידים ב-<bdi>Dragon</bdi> <code dir="ltr">CLOAD</code>, ומנגנים את הקובץ בעוצמה של בערך 75%. אם מופיע <code dir="ltr">?IO ERROR</code>, משנים את העוצמה ומנסים שוב.</p>
     </div></details>
     </div>
-  <section class="realtape" aria-labelledby="realtape-title">
-      <h3 id="realtape-title">🎙️ קלטת אמיתית מהבית</h3>
-      <p>יש לכם קלטת <bdi>Dragon</bdi> ישנה? המכונה יכולה לשמוע אותה דרך המיקרופון.</p>
-      <button type="button" class="realtape-go" id="tape-mic">🎙️ להתחיל להקליט</button>
-      <p class="mic-status" id="mic-status" role="status" aria-live="polite"></p>
-      <details class="rt-how"><summary>איך זה עובד?</summary>
-        <ol>
-          <li>לוחצים על הכפתור, וההקלטה מתחילה.</li>
-          <li>מנגנים את הקלטת ליד המחשב, ובסוף לוחצים שוב.</li>
-          <li>המכונה תגיד מה להקליד (בדרך כלל <code dir="ltr">CLOAD</code> ואז <code dir="ltr">RUN</code>). חלק לא נקלט? מנגנים שוב, ומה שכבר נקרא נשמר.</li>
-        </ol>
-        <p class="note">אין קלטת? נגנו מהטלפון את <a href="/lab/1982/tapes/guess-tape.m4a">קלטת הבדיקה</a> (8 שניות), בעוצמה בינונית ובחדר שקט.</p>
-      </details>
-    </section>
   </section>
   <div class="info">
   <details class="note try"><summary><strong>ניסיון ראשון: מקלידים בעצמנו</strong></summary>
@@ -217,6 +202,20 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
     <p><strong>רווח:</strong> תו קדימה · <strong>←:</strong> תו אחורה · <strong><span dir="ltr">D</span>:</strong> מחיקה · <strong><span dir="ltr">C</span>:</strong> החלפה · <strong><span dir="ltr">I</span>:</strong> הוספה · <strong><span dir="ltr">X</span>:</strong> הוספה בסוף · <strong><span dir="ltr">H</span>:</strong> מחיקת הסוף והוספה · <strong><span dir="ltr">S</span> ותו:</strong> קפיצה אל התו · <strong><span dir="ltr">K</span> ותו:</strong> מחיקה עד התו · <strong><span dir="ltr">L</span>:</strong> הצגת השורה · <strong><span dir="ltr">A</span>:</strong> ביטול השינויים.</p>
     <p>יציאה ממצב הוספה: <strong><span dir="ltr">SHIFT+↑</span></strong> (במקלדת של מחשב: <code dir="ltr">_</code>). <strong><span dir="ltr">ENTER</span></strong> שומר את השורה, <strong><span dir="ltr">BREAK</span></strong> יוצא בלי לשמור.</p>
   </details>
+  <section class="realtape" aria-labelledby="realtape-title">
+      <h3 id="realtape-title">🎙️ קלטת אמיתית מהבית</h3>
+      <p>יש לכם קלטת <bdi>Dragon</bdi> ישנה? המכונה יכולה לשמוע אותה דרך המיקרופון.</p>
+      <button type="button" class="realtape-go" id="tape-mic">🎙️ להתחיל להקליט</button>
+      <p class="mic-status" id="mic-status" role="status" aria-live="polite"></p>
+      <details class="rt-how"><summary>איך זה עובד?</summary>
+        <ol>
+          <li>לוחצים על הכפתור, וההקלטה מתחילה.</li>
+          <li>מנגנים את הקלטת ליד המחשב, ובסוף לוחצים שוב.</li>
+          <li>המכונה תגיד מה להקליד (בדרך כלל <code dir="ltr">CLOAD</code> ואז <code dir="ltr">RUN</code>). חלק לא נקלט? מנגנים שוב, ומה שכבר נקרא נשמר.</li>
+        </ol>
+        <p class="note">אין קלטת? נגנו מהטלפון את <a href="/lab/1982/tapes/guess-tape.m4a">קלטת הבדיקה</a> (8 שניות), בעוצמה בינונית ובחדר שקט.</p>
+      </details>
+    </section>
   <p class="note">האמולטור הוא <a href="https://www.6809.org.uk/xroar/" dir="ltr">XRoar</a> של Ciaran Anscomb, ברישיון <span dir="ltr">GPL v3</span>. <a href="./SOURCE.md">קוד המקור והרישיון</a>. ה-BASIC שלנו: <a href="https://github.com/gonenya-create/dragon32/tree/main/rom" dir="ltr">github.com/gonenya-create/dragon32</a>.</p>
   </div>
 </main>
