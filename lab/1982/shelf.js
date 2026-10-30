@@ -824,7 +824,27 @@
       ul.appendChild(always);
       pane.appendChild(ul);
     });
-    mk(T2('על המשחק', 'About'), pane => { for (const s of (m.about ? m.about[EN ? 'en' : 'he'] : [])) { const p = document.createElement('p'); p.textContent = s; pane.appendChild(p); } });
+    mk(T2('על המשחק', 'About'), pane => {
+      // העטיפה המקורית (גונן, 30.10), רק כשיש עליה רשות: תמונה קטנה עם קרדיט וקישור למקור, ולחיצה פותחת אותה בגדול
+      if (m.cover) {
+        const fig = document.createElement('figure');
+        fig.className = 'gv-cover';
+        const a = document.createElement('a');
+        a.href = m.cover.src; a.target = '_blank'; a.rel = 'noopener';
+        const im = document.createElement('img');
+        im.src = m.cover.src; im.loading = 'lazy'; im.alt = T2('העטיפה המקורית של ', 'The original cover of ') + name;
+        a.appendChild(im);
+        const cap = document.createElement('figcaption');
+        cap.append(L2(m.cover.credit) + ' ');
+        const src = document.createElement('a');
+        src.href = m.cover.link; src.target = '_blank'; src.rel = 'noopener';
+        const bd = document.createElement('bdi'); bd.textContent = L2(m.cover.from); src.appendChild(bd);
+        cap.appendChild(src);
+        fig.append(a, cap);
+        pane.appendChild(fig);
+      }
+      for (const s of (m.about ? m.about[EN ? 'en' : 'he'] : [])) { const p = document.createElement('p'); p.textContent = s; pane.appendChild(p); }
+    });
     view.append(back, top, tabs, ...panes, creditLine(id, credit));
     tabs.firstChild.click();
     view.hidden = false;
@@ -887,8 +907,14 @@
 .gv-tabs button { font: inherit; font-size: 14px; font-weight: 700; color: #b9a98f; background: transparent; border: 1px solid #4a3a2a; border-bottom: 0; border-radius: 8px 8px 0 0; padding: 6px 12px; cursor: pointer; min-height: 36px; }
 .gv-tabs button[aria-selected="true"] { background: #2a2119; color: var(--accent, #f2d23a); }
 .gv-pane { padding: 10px 2px 4px; line-height: 1.7; }
+.gv-pane:not([hidden]) { display: flow-root; }   /* העטיפה הצפה נשארת בתוך הלשונית */
 .gv-pane ol, .gv-pane ul { margin: 0; padding-inline-start: 22px; display: grid; gap: 6px; }
 .gv-pane p { margin: 0 0 8px; }
+.gv-cover { float: inline-end; width: 168px; margin-block: 2px 10px; margin-inline-start: 14px; }
+.gv-cover img { display: block; width: 100%; height: auto; border-radius: 6px; box-shadow: 0 3px 12px rgba(0,0,0,.45); }
+.gv-cover figcaption { font-size: 12px; line-height: 1.45; margin-top: 6px; color: var(--muted, #b9a98f); }
+.gv-cover figcaption a { color: var(--accent, #f2d23a); }
+@media (max-width: 520px) { .gv-cover { float: none; width: 60%; margin: 4px auto 12px; } }
 .game-view .tape-credit { margin: 10px 0 0; padding-top: 8px; border-top: 1px solid #4a3a2a; }
 body.game-open .shelf > :not(.game-view) { display: none; }
 @media (min-width: 1100px) {

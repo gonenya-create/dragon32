@@ -1727,6 +1727,15 @@ if (part('real machine lab')) {
     const pre = path;
     check(`${path} every game opens its own page beside the machine, at its own address, with the 3 tabs (how to load, how to play, about), the red button and the credit; "back to the cabinet" returns`,
       gv.out.length === 32 && gv.out.every(g => g.open && g.url.startsWith(pre) && g.url.length > pre.length + 3 && g.tabs === 3 && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go) && gv.after === pre && gv.closed, JSON.stringify(gv.out.filter(g => !(g.open && g.tabs === 3 && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go)).slice(0, 3)));
+    // העטיפה המקורית (30.10): רק במשחק שיש עליו רשות (El Diablero, מארכיון Dragon Data), בלשונית "על המשחק", עם קרדיט וקישור. התמונה נטענת
+    const cv = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    await cv.goto(base.replace(/\/$/, '') + path + 'el-diablero/'); await cv.waitForTimeout(1500);
+    const cov = await cv.evaluate(async () => { const tb = [...document.querySelectorAll('.gv-tabs button')]; tb[2].click(); const i = document.querySelector('.gv-pane:not([hidden]) .gv-cover img');
+      if (i) await new Promise(r => i.complete ? r() : (i.onload = i.onerror = r));
+      tb[0].click(); const onlyOne = [...document.querySelectorAll('.gv-pane')].filter(p => getComputedStyle(p).display !== 'none').length === 1;
+      return { w: i && i.naturalWidth, link: document.querySelector('.gv-cover figcaption a')?.href, onlyOne }; });
+    check(`${path}el-diablero/ shows the original cover in the About tab, with credit and a link to the Dragon Data Archive, and only one tab shows at a time`, cov.w > 300 && /dragondata\.co\.uk/.test(cov.link || '') && cov.onlyOne, JSON.stringify(cov));
+    await cv.close();
     const direct = await browser.newPage({ viewport: { width: 1280, height: 900 } });
     const dres = await direct.goto(base.replace(/\/$/, '') + path + 'dungeon-raid/'); await direct.waitForTimeout(1500);
     const dd = await direct.evaluate(() => ({ open: document.body.classList.contains('game-open'), name: document.querySelector('.gv-title')?.textContent, title: document.title, og: document.querySelector('meta[property="og:title"]')?.content, shot: document.querySelector('.gv-shot').complete && document.querySelector('.gv-shot').naturalWidth === 256 }));

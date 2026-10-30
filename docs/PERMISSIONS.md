@@ -32,7 +32,7 @@ The magazine listings are not copied here. The page scans load straight from arc
 
 | What | From | Permission | Date |
 |---|---|---|---|
-| Period adverts, leaflets and photos | Richard, Dragon Data Archive ([dragondata.co.uk](http://www.dragondata.co.uk/)) | Written permission by Messenger | 27.10.2026 |
+| Period adverts, leaflets, photos, and the original El Diablero cover | Richard, Dragon Data Archive ([dragondata.co.uk](http://www.dragondata.co.uk/)) | Written permission by Messenger | 27.10.2026, and again 30.10.2026 for any of the archive's files |
 
 ## Our own work
 

@@ -193,7 +193,13 @@ window.D32_GAMES = {
         8,
         8,
         64
-      ]
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/diablero.jpg",
+        "credit": ["העטיפה המקורית מ-1983. סריקה:", "The original 1983 cover. Scan:"],
+        "from": ["ארכיון Dragon Data", "Dragon Data Archive"],
+        "link": "http://dragondata.co.uk/Software/artwork/index.html"
+      }
     },
     "phantom": {
       "slug": "phantom-slayer",
