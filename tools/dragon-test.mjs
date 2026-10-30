@@ -1688,9 +1688,9 @@ if (part('real machine lab')) {
       [...document.querySelectorAll('#tapes details.drawer, .info details, details.how')].every(d => !d.open) && document.querySelectorAll('.info details').length === 3
       && /PRINT 2\+3/.test(document.querySelector('.info details.try')?.textContent || '') && ![...document.querySelectorAll('.info > p.note')].some(e => /PRINT 2\+3/.test(e.textContent))
       && localStorage.getItem('d32-lab-drawers') === null));
-    check(`${path} "type it in" drawer: 2 magazine pages; a page opens beside the machine (scan from archive.org, credit) and closes`, await p.evaluate(async () => {
+    check(`${path} "type it in" drawer: 7 magazine pages (1983–85); a page opens beside the machine (scan from archive.org, credit) and closes`, await p.evaluate(async () => {
       const cards = document.querySelectorAll('[data-drawer="type"] .tape');
-      if (cards.length !== 2) return false;
+      if (cards.length !== 7) return false;
       document.querySelector('.tape[data-page="sketch"]').click();
       const v = document.querySelector('.typein-view');
       const ok = !v.hidden && /^https:\/\/archive\.org\/download\/Dragon_User_1983-09_Sunshine_Books_GB\/page\/n38_/.test(v.querySelector('.tv-scan img').src) && /R Steel/.test(v.textContent);
@@ -1706,7 +1706,7 @@ if (part('real machine lab')) {
       hughey: document.querySelector('.cabinet [data-drawer="hughey"] .drawer-name')?.textContent,
       icons: [...document.querySelectorAll('.tape.row .ic')].every(i => /shots\//.test(i.style.backgroundImage)) }));
     check(`${path} the cabinet: drawers in time order (Scott Adams 1979, Ken Kalish's games, Mike Hughey's games, Harry Whitehouse's games, more from the time, type it in, the community, ours, my tapes), the years left to right, rows by year, an icon from each game's screen`,
-      cab.drawers.join() === 'adams,period,hughey,harry,more,type,community,ours,mine' && cab.years.map(y => y[0]).join() === '1979,1982–85,1982–84,1983,1984–86,1983,2021–2025,2026' && /Ken Kalish/.test(cab.kalish) && /Mike Hughey/.test(cab.hughey) && cab.years.every(y => y[1] === 'ltr')
+      cab.drawers.join() === 'adams,period,hughey,harry,more,type,community,ours,mine' && cab.years.map(y => y[0]).join() === '1979,1982–85,1982–84,1983,1984–86,1983–85,2021–2025,2026' && /Ken Kalish/.test(cab.kalish) && /Mike Hughey/.test(cab.hughey) && cab.years.every(y => y[1] === 'ltr')
       && cab.rows.adams.join() === 'adventureland,pirate,mission,voodoo,count' && cab.rows.period.join() === 'escape,invrev,diablero,phantom,ranger,cuthbert,devil,dungeon,athletyx' && cab.rows.hughey.join() === 'alcatraz,grabber,draconian' && cab.rows.harry.join() === 'champs,lionht,sas' && cab.rows.more.join() === 'cricket,spores,tangle' && cab.rows.community.join() === 'blockdown,dragontet' && cab.rows.ours.length === 8 && cab.rows.ours[0] === 'eggs' && cab.icons, JSON.stringify(cab));
     // הברכה של Scott Adams במגירה שלו: המילים שלו באנגלית משמאל לימין, עם חתימה; בעברית גם תרגום (28.10)
     const sq = await p.evaluate(() => { const q = document.querySelector('.cabinet [data-drawer="adams"] blockquote.drawer-quote');
