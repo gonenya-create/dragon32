@@ -793,12 +793,19 @@
     grids.community.after(more);
   }
   const mineDrawer = document.getElementById('drawer-mine');
-  const openDrawerOf = b => { const d = b && b.closest('details.drawer'); if (d) d.open = true; };
+  const openDrawerOf = b => { const d = b && b.closest('details.drawer'); if (d) d.open = true; if (b && b.classList.contains('folded') && b.parentNode.unfold) b.parentNode.unfold(); };
   // צלמית: חלק קטן מצילום המסך של המשחק (מהמכונה שלנו), מוגדל בפיקסלים חדים
   function icon(id) {
     const m = meta(id), s = document.createElement('span');
     s.className = 'ic';
     if (m.icon) { const [x, y, w] = m.icon, k = 32 / w; s.style.backgroundImage = 'url(/lab/1982/shots/' + id + '.png)'; s.style.backgroundSize = (256 * k) + 'px ' + (192 * k) + 'px'; s.style.backgroundPosition = (-x * k) + 'px ' + (-y * k) + 'px'; }
+    return s;
+  }
+  // בסדרה של Scott Adams הצלמית היא העטיפה המקורית: מסכי הטקסט נראים כולם אותו דבר
+  function coverIcon(src) {
+    const s = document.createElement('span');
+    s.className = 'ic cv';
+    s.style.backgroundImage = 'url(' + src + ')';
     return s;
   }
   // הקרדיט: מי כתב, והרשות (או התיעוד והרישיון)
@@ -867,7 +874,8 @@
     nm.textContent = EN ? en : he;
     const tg = document.createElement('span');
     tg.className = 'tg';
-    tg.textContent = L2(m.tag);
+    // בסדרה של Scott Adams: מספר ההרפתקה ונושא קצר, כדי שאפשר יהיה להבדיל בין 13 השורות (גונן, 31.10: "המדף של סקוט מלא")
+    tg.textContent = m.num ? '\u2066#' + m.num + '\u2069 · ' + L2(m.theme) : L2(m.tag);   // המספר מבודד, כדי שיופיע ראשון גם מימין לשמאל
     const txt = document.createElement('span');
     txt.className = 'txt';
     const line = document.createElement('span');
@@ -875,10 +883,24 @@
     line.append(tg);
     if (m.year) line.appendChild(yearChip(m.year));
     txt.append(nm, line);
-    b.append(icon(id), txt);
+    b.append(m.num && m.cover ? coverIcon(m.cover.src) : icon(id), txt);
     b.addEventListener('click', () => openGame(id, true));
     buttons[i] = b;
     if (list) list.appendChild(b);
+  }
+  // מגירה ארוכה: מראים את הראשונים, והשאר מאחורי "עוד" (גונן, 31.10)
+  for (const dr of G.drawers) {
+    const list = grids[dr.key];
+    if (!dr.fold || !list || list.children.length <= dr.fold) continue;
+    const rest = [...list.children].slice(dr.fold);
+    rest.forEach(r => r.classList.add('folded'));
+    const more = document.createElement('button');
+    more.type = 'button';
+    more.className = 'rows-more';
+    more.textContent = EN ? '+ ' + rest.length + ' more adventures (' + (dr.fold + 1) + '–' + (dr.fold + rest.length) + ')' : '+ עוד ' + rest.length + ' הרפתקאות (' + (dr.fold + 1) + '–' + (dr.fold + rest.length) + ')';
+    more.addEventListener('click', () => { list.classList.add('unfolded'); more.remove(); });
+    list.after(more);
+    list.unfold = () => { list.classList.add('unfolded'); more.remove(); };
   }
   // ---------- דף המשחק: נפתח במקום הארון, והמכונה נשארת ----------
   const shelfSec = box.closest('.shelf');
@@ -1084,6 +1106,11 @@
 .tape.row .nm { font-weight: 700; line-height: 1.25; }
 .tape.row .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .tape.row .tg { font-size: 12px; color: #b9a98f; }
+.rows .folded { display: none; }
+.rows.unfolded .folded { display: flex; }
+.rows-more { display: block; width: 100%; margin: 4px 0 2px; min-height: 40px; border-radius: 8px; border: 1px dashed #5a4430; background: transparent; color: var(--accent, #f2d23a); font: inherit; font-size: 14px; cursor: pointer; }
+.rows-more:hover { background: #2a2119; }
+.ic.cv { flex-basis: 24px; width: 24px; height: 32px; margin-inline: 4px; background-size: cover; background-position: center top; image-rendering: auto; }
 .ic { flex: 0 0 32px; width: 32px; height: 24px; border-radius: 4px; background: #2b2a26 no-repeat; image-rendering: pixelated; box-shadow: 0 0 0 1px #00000080; }
 .game-view { margin-top: 8px; border: 2px solid #5a4430; border-radius: 14px; background: linear-gradient(#2b2018, #1f1712); padding: 12px 14px; }
 .gv-back { background: none; border: 0; color: var(--accent, #f2d23a); font: inherit; font-size: 15px; padding: 4px 0; cursor: pointer; min-height: 36px; }

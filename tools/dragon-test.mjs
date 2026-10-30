@@ -1746,7 +1746,7 @@ if (part('real machine lab')) {
       rows: Object.fromEntries([...document.querySelectorAll('.cabinet details.drawer')].map(d => [d.dataset.drawer, [...d.querySelectorAll('.tape.row')].map(r => r.dataset.id)])),
       kalish: document.querySelector('.cabinet [data-drawer="period"] .drawer-name')?.textContent,
       hughey: document.querySelector('.cabinet [data-drawer="hughey"] .drawer-name')?.textContent,
-      icons: [...document.querySelectorAll('.tape.row .ic')].every(i => /shots\//.test(i.style.backgroundImage)) }));
+      icons: [...document.querySelectorAll('.tape.row .ic')].every(i => /shots\/|covers\//.test(i.style.backgroundImage)) }));
     check(`${path} the cabinet: drawers in time order (Scott Adams 1979–84, Ken Kalish's games, Mike Hughey's games, Harry Whitehouse's games, more from the time, type it in, the community, ours, my tapes), the years left to right, rows by year, an icon from each game's screen`,
       cab.drawers.join() === 'adams,period,hughey,harry,more,type,community,ours,mine' && cab.years.map(y => y[0]).join() === '1979–84,1982–85,1982–84,1983,1984–86,1983–85,2021–2025,2026' && /Ken Kalish/.test(cab.kalish) && /Mike Hughey/.test(cab.hughey) && cab.years.every(y => y[1] === 'ltr')
       && cab.rows.adams.join() === 'adventureland,pirate,mission,voodoo,count,odyssey,funhouse,pyramid,ghost,savage1,savage2,golden,claymorgue' && cab.rows.period.join() === 'escape,invrev,diablero,phantom,ranger,cuthbert,devil,dungeon,athletyx' && cab.rows.hughey.join() === 'alcatraz,grabber,draconian' && cab.rows.harry.join() === 'champs,lionht,sas' && cab.rows.more.join() === 'cricket,spores,tangle' && cab.rows.community.join() === 'blockdown,dragontet' && cab.rows.ours.length === 8 && cab.rows.ours[0] === 'eggs' && cab.icons, JSON.stringify(cab));
@@ -1755,6 +1755,12 @@ if (part('real machine lab')) {
       return q && { dir: getComputedStyle(q).direction, t: q.textContent, he: !!document.querySelector('.cabinet [data-drawer="adams"] .drawer-quote-he'), n: document.querySelectorAll('blockquote.drawer-quote').length }; });
     check(`${path} Scott Adams' greeting in his drawer, in his words, signed`,
       sq && sq.n === 1 && sq.dir === 'ltr' && /^\u201CGreetings to all those Dragon Players out there/.test(sq.t) && /G-D bless!\u201D/.test(sq.t) && /\u2014 Scott Adams, 10\/28\/2026, Platteville Wisconsin USA$/.test(sq.t) && sq.he === !path.startsWith('/en/'), JSON.stringify(sq));
+    // המגירה של Scott Adams: 13 הרפתקאות, 5 גלויות ו"עוד 8"; בכל שורה מספר ונושא, והעטיפה כצלמית (גונן, 31.10)
+    const fold = await p.evaluate(() => { const rows = [...document.querySelectorAll('.cabinet [data-drawer="adams"] .tape.row')], more = document.querySelector('.cabinet [data-drawer="adams"] .rows-more');
+      const r = { n: rows.length, hidden: rows.filter(b => b.classList.contains('folded')).length, more: !!more, tg: rows[5]?.querySelector('.tg').textContent, cv: rows.filter(b => b.querySelector('.ic.cv')).length };
+      more?.click(); r.after = rows.filter(b => getComputedStyle(b).display !== 'none').length; r.gone = !document.querySelector('.cabinet [data-drawer="adams"] .rows-more'); return r; });
+    check(`${path} Scott Adams' drawer: 5 adventures shown and "+ 8 more", each row with its number and theme, the original cover as its icon`,
+      fold.n === 13 && fold.hidden === 8 && fold.more && /#6\u2069 · /.test(fold.tg) && fold.cv === 11 && fold.after === 13 && fold.gone, JSON.stringify(fold));
     // דף משחק ליד המכונה, עם כתובת משלו; "חזרה לארון" חוזר
     const gv = await p.evaluate(async () => {
       const out = [];

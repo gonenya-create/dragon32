@@ -17,7 +17,8 @@ window.D32_GAMES = {
         "text": "Greetings to all those Dragon Players out there, whether you are trying the games for the very first time or just rediscovering them I hope you have a tremendous amount of fun playing them. I know I did in writing them! G-D bless!",
         "sign": "Scott Adams, 10/28/2026, Platteville Wisconsin USA",
         "he": "ברכות לכל שחקני ה-Dragon שם בחוץ, בין אם אתם מנסים את המשחקים בפעם הראשונה ובין אם אתם מגלים אותם מחדש. אני מקווה שתיהנו מהם מאוד. אני יודע שאני נהניתי לכתוב אותם! ה׳ יברך!"
-      }
+      },
+      "fold": 5
     },
     {
       "key": "period",
@@ -587,6 +588,11 @@ window.D32_GAMES = {
       "slug": "adventureland",
       "drawer": "adams",
       "year": "1979",
+      "num": 1,
+      "theme": [
+        "יער קסום",
+        "enchanted forest"
+      ],
       "tag": [
         "הרפתקת מילים",
         "text adventure"
@@ -631,6 +637,11 @@ window.D32_GAMES = {
       "slug": "pirate-adventure",
       "drawer": "adams",
       "year": "1979",
+      "num": 2,
+      "theme": [
+        "פיראטים",
+        "pirates"
+      ],
       "tag": [
         "הרפתקת מילים",
         "text adventure"
@@ -675,6 +686,11 @@ window.D32_GAMES = {
       "slug": "secret-mission",
       "drawer": "adams",
       "year": "1979",
+      "num": 3,
+      "theme": [
+        "ריגול",
+        "spy"
+      ],
       "tag": [
         "הרפתקת מילים",
         "text adventure"
@@ -719,6 +735,11 @@ window.D32_GAMES = {
       "slug": "voodoo-castle",
       "drawer": "adams",
       "year": "1979",
+      "num": 4,
+      "theme": [
+        "קללת וודו",
+        "voodoo curse"
+      ],
       "tag": [
         "הרפתקת מילים",
         "text adventure"
@@ -763,6 +784,11 @@ window.D32_GAMES = {
       "slug": "the-count",
       "drawer": "adams",
       "year": "1979",
+      "num": 5,
+      "theme": [
+        "ערפד",
+        "vampire"
+      ],
       "tag": [
         "הרפתקת מילים",
         "text adventure"
@@ -795,6 +821,11 @@ window.D32_GAMES = {
       "slug": "strange-odyssey",
       "drawer": "adams",
       "year": "1979",
+      "num": 6,
+      "theme": [
+        "חלל",
+        "space"
+      ],
       "tag": [
         "הרפתקת מילים",
         "text adventure"
@@ -839,6 +870,11 @@ window.D32_GAMES = {
       "slug": "mystery-fun-house",
       "drawer": "adams",
       "year": "1979",
+      "num": 7,
+      "theme": [
+        "לונה פארק",
+        "funfair"
+      ],
       "tag": [
         "הרפתקת מילים",
         "text adventure"
@@ -871,6 +907,11 @@ window.D32_GAMES = {
       "slug": "pyramid-of-doom",
       "drawer": "adams",
       "year": "1979",
+      "num": 8,
+      "theme": [
+        "מצרים",
+        "Egypt"
+      ],
       "tag": [
         "הרפתקת מילים",
         "text adventure"
@@ -915,6 +956,11 @@ window.D32_GAMES = {
       "slug": "ghost-town",
       "drawer": "adams",
       "year": "1980",
+      "num": 9,
+      "theme": [
+        "מערב פרוע",
+        "Wild West"
+      ],
       "tag": [
         "הרפתקת מילים",
         "text adventure"
@@ -959,6 +1005,11 @@ window.D32_GAMES = {
       "slug": "savage-island-1",
       "drawer": "adams",
       "year": "1981",
+      "num": 10,
+      "theme": [
+        "אי פראי",
+        "savage island"
+      ],
       "tag": [
         "הרפתקת מילים",
         "text adventure"
@@ -1003,6 +1054,11 @@ window.D32_GAMES = {
       "slug": "savage-island-2",
       "drawer": "adams",
       "year": "1981",
+      "num": 11,
+      "theme": [
+        "אי פראי, חלק 2",
+        "savage island, part 2"
+      ],
       "tag": [
         "הרפתקת מילים",
         "text adventure"
@@ -1047,6 +1103,11 @@ window.D32_GAMES = {
       "slug": "golden-voyage",
       "drawer": "adams",
       "year": "1981",
+      "num": 12,
+      "theme": [
+        "אלף לילה ולילה",
+        "Arabian Nights"
+      ],
       "tag": [
         "הרפתקת מילים",
         "text adventure"
@@ -1091,6 +1152,11 @@ window.D32_GAMES = {
       "slug": "sorcerer-of-claymorgue-castle",
       "drawer": "adams",
       "year": "1984",
+      "num": 13,
+      "theme": [
+        "כישופים",
+        "spells"
+      ],
       "tag": [
         "הרפתקת מילים",
         "text adventure"
