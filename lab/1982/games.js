@@ -1009,6 +1009,50 @@ window.D32_GAMES = {
         96
       ]
     },
+    "spores": {
+      "slug": "star-spores",
+      "drawer": "more",
+      "year": "1984",
+      "tag": [
+        "יריות",
+        "shooter"
+      ],
+      "players": [
+        "שחקן אחד או שניים",
+        "1 or 2 players"
+      ],
+      "load": [
+        "כשלוש דקות",
+        "about three minutes"
+      ],
+      "about": {
+        "he": [
+          "Dave Shadoff כתב אותו ל-Color Computer, ו-Spectral Associates הוציאה אותו ב-1983. ל-Dragon הוציאה אותו Microdeal ב-1984. כאן ברשותו.",
+          "על העטיפה: יצורים ממערכת הכוכבים Nastira הגיעו לכדור הארץ, והמשחק \"מאמן\" אתכם להילחם בהם. לכל משפחה של יצורים יש כינוי משלה: Evil Eyes, ‏Qubes, ‏Stompers, ‏Psychlops ועוד."
+        ],
+        "en": [
+          "Dave Shadoff wrote it for the Color Computer, and Spectral Associates published it in 1983. Microdeal brought it out for the Dragon in 1984. Here with his permission.",
+          "From the cover: creatures from the star system Nastira have reached Earth, and the game \"trains\" you to fight them. Each family of creatures has its own nickname: Evil Eyes, Qubes, Stompers, Psychlops and more."
+        ]
+      },
+      "icon": [
+        120,
+        24,
+        64
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/spores.jpg",
+        "credit": [
+          "העטיפה המקורית של Microdeal. סריקה:",
+          "The original Microdeal cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/index.php?title=Star_Spores"
+      }
+    },
     "tangle": {
       "slug": "tanglewood",
       "drawer": "more",

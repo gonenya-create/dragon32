@@ -340,7 +340,7 @@ DSCPNT	equ	77
 fn_sqr	equ	41089
 mltpl1	equ	35620
 gline_st	equ	44196
-pfc	equ	46194
+pfc	equ	46193
 HK_DECR	equ	422
 return	equ	39068
 gpar	equ	43589
@@ -493,7 +493,7 @@ irqtk	equ	49058
 FACOV	equ	99
 dim	equ	38919
 ed_keys	equ	42375
-pfc2	equ	46388
+pfc2	equ	46389
 tdefs	equ	47370
 gscl2	equ	43637
 FRESPC	equ	37
@@ -761,7 +761,7 @@ SNDTMR	equ	141
 def	equ	39110
 INTEGR	equ	1
 lnkprg	equ	34188
-ploop	equ	46217
+ploop	equ	46216
 FACSGN	equ	84
 mul10	equ	36072
 efmo	equ	48354
@@ -1053,7 +1053,7 @@ pmtab	equ	44024
 clr_go	equ	40653
 x_css	equ	44060
 dget	equ	45203
-play_st	equ	46197
+play_st	equ	46196
 isl_852b	equ	34091
 HK_CKIN	equ	365
 initab	equ	35002

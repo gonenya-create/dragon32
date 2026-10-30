@@ -168,6 +168,14 @@ try {
   // JSR $B538 / STA $7080 / RTS: מחכה למקש ומחזיר אותו ב-A
   s = await run([...poke(0x7000, 'BDB538 B77080 39'), 'EXEC &H7000', 'Q', 'PRINT PEEK(&H7080)']);
   ok('$B538 מחכה למקש ומחזיר אותו ב-A (קורא 30.10)', /^ 81 ?$/m.test(s), show(tail(s)));
+
+  console.log('סימן ה-Dragon ב-‏$B4B3');
+  // Star Spores (Microdeal) קורא את המילה ב-$B4B3: $2843 אומר Dragon (ואז מפת המקלדת של ה-Dragon). אחרת הוא חושב שזה CoCo
+  s = await run(['PRINT PEEK(&HB4B3);PEEK(&HB4B4)']);
+  ok('$B4B3 מכיל $28,$43 (40 67), כמו שתוכנות של אז מצפות ב-Dragon', /^ 40 {2}67 ?$/m.test(s), show(tail(s)));
+  // PLAY עדיין עובד אחרי השינוי שם (O, V, L, T, P, X והתו עצמו)
+  s = await run(['PLAY "T200O2V20L8CDEP8;O3V31L16.C;O+C;O-V-V+T-T+L4C"', 'PRINT "PLAYOK"']);
+  ok('PLAY רץ ונגמר אחרי השינוי באזור $B4B3', /^PLAYOK ?$/m.test(s) && !/ERROR/.test(s), show(tail(s)));
 } catch (e) {
   fail++; console.log('  ✗ ' + e.message);
 }

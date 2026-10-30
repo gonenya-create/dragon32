@@ -89,6 +89,10 @@
     // וזה חשף שהטבלה שלנו נשמרה הפוך מהמקור (תוקן ב-ROM, 29.10). הקלטת כמו שהיא
     ['sas', 'SAS', 'SAS', null,
       ['Harry Whitehouse · Peaksoft, 1983', 'http://www.peaksoft.uk/peaksoftstory', null, null, 'love']],
+    // Star Spores של Dave Shadoff (Spectral Associates, 1983; ל-Dragon מ-Microdeal): הרשות שלו במייל, 25.10.2026. הקלטת מהארכיון כמו שהיא.
+    // הטוען של Microdeal בשלבים (כמו Athletyx). המשחק בודק את המילה ב-$B4B3 כדי לדעת שהוא על Dragon (נוסף ל-ROM, 30.10)
+    ['spores', 'Star Spores', 'Star Spores', 'a',
+      ['Dave Shadoff · Spectral Associates / Microdeal, 1984', 'https://archive.worldofdragon.org/index.php?title=Star_Spores', null, null, 'love']],
     ['tangle', 'Tanglewood', 'Tanglewood', 'm',
       ['Ian Murray-Watson · Microdeal, 1986', '/lab/1982/tapes/tanglewood-license.txt', 'https://gitlab.com/amigasourcecodepreservation/tanglewood', null, 'mit']]
   ];
@@ -240,6 +244,21 @@
         'This time you are the invader: the last ship left, against the human ships. Your ships wait at the top left, above the line.',
         'The arrow keys move your ship in every direction. Bring it below the line to start, and [Space] fires.',
         'A normal ship is worth 100 points, the flagship 1000. The laser base at the bottom fires at you, and it cannot be destroyed. A bonus ship at 10,000 points.']
+    },
+    // נבדק במכונה (30.10): הטעינה בשלבים, הצבע, מסך הפתיחה, טבלת השיאים, K ו-1, תנועה בחיצים לשני הצדדים, ומצב ג'ויסטיק
+    spores: {
+      he: ['הטעינה לוקחת כשלוש דקות, והמשחק מתחיל לבד. קודם מופיע הציור של Microdeal, והמשחק ממשיך להיטען מאחוריו.',
+        'בוחרים צבע: [1] שחור, [2] בהיר, [3] ירוק. במסך הפתיחה לוחצים מקש כלשהו.',
+        'בטבלת השיאים המשחק שואל JOYSTICK OR KEYBOARD? לוחצים [K] למקלדת, ואז ב-1 OR 2 PLAYERS? לוחצים [1] או [2]. אם מחכים, הוא מראה הדגמה.',
+        '[←] [→] מזיזים את החללית, ו-[רווח] יורה. [P] עוצר, ו-[ENTER] ממשיך.',
+        'הנבגים מגיעים בקבוצות של שמונה, ישנים. צריך לפגוע בכל אחד פעמיים: פעם כדי להעיר אותו, ופעם כדי להשמיד אותו לפני שהוא מתאושש. נבג שמתבגר כבר אי אפשר להרוג.',
+        'הפס למעלה הוא הדלק: כשהוא נגמר, כל הנבגים מתעוררים ותוקפים. שש משפחות של יצורים, ואחריהן סבב בונוס.'],
+      en: ['Loading takes about three minutes, and the game starts by itself. The Microdeal picture comes first, and the game goes on loading behind it.',
+        'Pick a colour: [1] black, [2] buff, [3] green. On the title screen press any key.',
+        'On the high-score table the game asks JOYSTICK OR KEYBOARD? Press [K] for the keyboard, then at 1 OR 2 PLAYERS? press [1] or [2]. If you wait, it shows a demo.',
+        '[←] [→] move your ship, and [Space] fires. [P] pauses, and [ENTER] carries on.',
+        'The spores arrive in groups of eight, asleep. Each needs two hits: one to wake it, and one to destroy it while it is still dazed. Once a spore matures it cannot be killed.',
+        'The bar at the top is your fuel: when it runs out, every spore wakes up and attacks. Six families of creatures, then a bonus round.']
     },
     // נבדק במכונה (30.10): הטעינה, מסך הפתיחה, תיאור המקום, LOOK, INVENTORY, GO NORTH (CAN'T GO)
     diablero: {
@@ -474,6 +493,7 @@
     blockdown: ['כשהטעינה נגמרת המשחק מתחיל לבד. מתחילים ב[רווח].', 'When loading ends the game starts by itself. Press [Space] to start.'],
     dragontet: ['מופיע תפריט: בוחרים ב[↑] [↓] ומאשרים ב[ENTER].', 'A menu appears: choose with [↑] [↓] and confirm with [ENTER].'],
     escape: ['מופיעים מסך הפתיחה וההקדמה, ואז המסדרון: [↑] קדימה, [←] [→] מסתובבים.', 'The title screen and the introduction appear, then the corridor: [↑] forward, [←] [→] turn.'],
+    spores: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים מקש, ב-JOYSTICK OR KEYBOARD? לוחצים [K], וב-1 OR 2 PLAYERS? לוחצים [1].', 'When loading ends pick a colour: [1], [2] or [3]. On the title screen press a key, at JOYSTICK OR KEYBOARD? press [K], and at 1 OR 2 PLAYERS? press [1].'],
     diablero: ['מופיע מסך הפתיחה: לוחצים מקש, ומקלידים פקודות באנגלית, למשל LOOK ו-[ENTER].', 'The title screen appears: press a key, then type commands in English, for example LOOK and [ENTER].'],
     invrev: ['ב-JOYSTICKS? לוחצים [N], ב-NEED INSTRUCTIONS? לוחצים [N], ואז בוחרים שחקנים, יריות ומהירות במספרים.', 'At JOYSTICKS? press [N], at NEED INSTRUCTIONS? press [N], then choose players, shots and speed with the number keys.'],
     devil: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. ב-SELECT LEVEL בוחרים רמה, [0] עד [5], ומתחילים בכפתור.', 'When loading ends pick a colour: [1], [2] or [3]. At SELECT LEVEL pick a level, [0] to [5], and start with the button.'],
@@ -502,6 +522,7 @@
     phantom: ['מבוך תלת-ממדי: צדים רוחות רפאים לפני שהן תופסות אתכם. לשחקן אחד.', '3D maze: hunt the phantoms before they catch you. 1 player.'],
     cuthbert: ['רצים בג\'ונגל, קופצים מעל בורות ובולי עץ ויורדים בסולמות למנהרה, נגד השעון. בג\'ויסטיק.', 'Run through the jungle, jump pits and logs and climb down ladders to the tunnel, against the clock. Joystick.'],
     athletyx: ['תחרות אתלטיקה: ריצה ועוד מקצועות, נגד השעון. בג\'ויסטיק. נכתב רק ל-Dragon.', 'An athletics contest: a sprint and more events, against the clock. Joystick. Written only for the Dragon.'],
+    spores: ['נבגים מהחלל ישנים בקבוצות של שמונה: פוגעים בכל אחד פעמיים, לפני שהדלק נגמר והם מתעוררים. בחיצים.', 'Space spores sleep in groups of eight: hit each one twice, before your fuel runs out and they wake. Arrow keys.'],
     diablero: ['הרפתקת טקסט במדבר: מקלידים פקודות באנגלית ומגלים לאן הדרך מובילה. לשחקן אחד.', 'A text adventure in the desert: type commands in English and find out where the trail leads. 1 player.'],
     invrev: ['Space Invaders הפוך: אתם הפולש האחרון, ונלחמים בספינות של בני האדם. בחיצים, לאחד או לשניים.', 'Space Invaders turned around: you are the last invader, fighting the human ships. Arrow keys, 1 or 2 players.'],
     devil: ['טנק בתחתית המסך נגד עטלפי ערפד, רובוטים ו-Sproings, ובסוף גם השטן עצמו. בג\'ויסטיק.', 'A tank at the bottom of the screen against vampire bats, robots and Sproings, and in the end the Devil himself. Joystick.'],

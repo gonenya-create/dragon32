@@ -24,6 +24,7 @@
     draconian: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
     alcatraz: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
     cricket: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
+    spores: { dir: ARROWS, fire: 'space', label: ['רווח', 'SPACE'] },
     tangle: { dir: ARROWS, fire: 'enter', label: ['ENTER', 'ENTER'] },
     sketch: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] }   // הקלד בעצמך (typein.js): Sketching מצייר בג'ויסטיק
   };

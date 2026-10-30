@@ -97,7 +97,7 @@ audio_st	pshs	a		; המילה שאחרי AUDIO נקראת קודם
 isl_b469_e	;@isl
 ; snds: sndsel ואז sndon
 snds		lbsr	sndsel
-		lbra	sndon
+		bra	sndon		; קצרה (בית אחד פחות, בשביל $B4B3: 30.10)
 
 ; ---------- PLAY מחרוזת (קורא 2, 9) ----------
 ; (plyini עבר ל-exp.s, לפני $A000, כדי לפנות מקום לכניסה $B538: 30.10)
@@ -134,6 +134,10 @@ ploop		lbsr	dget
 		bhs	pfc
 		stb	OCTAVE
 		bra	ploop
+; ‏$B4B3: שני בתים שתוכנות של אז בודקות כדי לדעת שהן על Dragon ולא על CoCo. Star Spores (Microdeal) קורא שם את
+; המילה $2843, ואם היא שם הוא עובר למפת המקלדת של ה-Dragon (החיצים בשורה אחרת). העובדה מהקוד של המשחק עצמו (30.10).
+; הם באים אחרי קפיצה, אז אף אחד לא מריץ אותם. entry-test בודק שהם במקום
+		fcb	$28,$43
 2		cmpa	#'V
 		bne	3F
 		ldb	VOLHI		; העוצמה הנוכחית: הגבוה חלקי 4, פחות 31

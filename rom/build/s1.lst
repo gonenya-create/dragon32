@@ -245,7 +245,7 @@ FFC0                  SAM             equ     $ffc0
 81BE B137                             fdb     draw_st         ; $B5 DRAW
 81C0 ADBE                             fdb     pcopy_st                ; $B6 PCOPY
 81C2 ABA1                             fdb     pmode_st                ; $B7 PMODE
-81C4 B475                             fdb     play_st         ; $B8 PLAY
+81C4 B474                             fdb     play_st         ; $B8 PLAY
 81C6 88F9                             fdb     err_sn          ; $B9 DLOAD
 81C8 A39E                             fdb     renum           ; $BA RENUM
 81CA 5347CE           fntab           fcs     "SGN"
@@ -7064,7 +7064,7 @@ B409 39                               rts
                       ; evnzb: ביטוי → B בין 1 ל-255. שלילי, 0 או מעל 255: ?FC. השבר נחתך (קורא 1.1)
 B40A 17E02A           evnzb           lbsr    evbyte
 B40D 5D                               tstb
-B40E 10270060                         lbeq    pfc
+B40E 1027005F                         lbeq    pfc
 B412 39                               rts
                       
                       ; ---------- SOUND טון,משך (קורא 1) ----------
@@ -7124,108 +7124,112 @@ B469 7E83F0                           jmp     firq    ;@isl
 B46C                  isl_b469_e      ;@isl
                       ; snds: sndsel ואז sndon
 B46C 17FF77           snds            lbsr    sndsel
-B46F 16FF88                           lbra    sndon
+B46F 2089                             bra     sndon           ; קצרה (בית אחד פחות, בשביל $B4B3: 30.10)
                       
                       ; ---------- PLAY מחרוזת (קורא 2, 9) ----------
                       ; (plyini עבר ל-exp.s, לפני $A000, כדי לפנות מקום לכניסה $B538: 30.10)
                       
-B472 16D48D           pfc             lbra    err_fc
+B471 16D48E           pfc             lbra    err_fc
                       ; המחרוזות המקוננות (X) במחסנית: [אורך][כתובת]. הסמן בתחתית: אורך 1, כתובת 0
-B475 8E0000           play_st         ldx     #0
-B478 8601                             lda     #1
-B47A 3412                             pshs    a,x
-B47C 17DDD7                           lbsr    frmevl
-B47F 4F                               clra                    ; DAC והצליל דולק, עוד לפני בדיקת הסוג
-B480 8DEA                             bsr     snds
-B482 17E0DB                           lbsr    frestr          ; לא מחרוזת: ?TM
-B485 97D8                             sta     DLEN
-B487 9FD9                             stx     DPTR
-B489 17FC07           ploop           lbsr    dget
-B48C 240B                             bcc     1F
-B48E 3512                             puls    a,x             ; המחרוזת נגמרה: חוזרים לחיצונית
-B490 97D8                             sta     DLEN
-B492 9FD9                             stx     DPTR
-B494 26F3                             bne     ploop
-B496 16FF68                           lbra    sndoff          ; הסמן: סוף PLAY
-B499 813B             1               cmpa    #';
-B49B 27EC                             beq     ploop
-B49D 8127                             cmpa    #''
-B49F 27E8                             beq     ploop
-B4A1 814F                             cmpa    #'O
-B4A3 260F                             bne     2F
-B4A5 D6DE                             ldb     OCTAVE
-B4A7 5C                               incb
-B4A8 1700E5                           lbsr    parg
-B4AB 5A                               decb
-B4AC C105                             cmpb    #5
-B4AE 24C2                             bhs     pfc
-B4B0 D7DE                             stb     OCTAVE
-B4B2 20D5                             bra     ploop
-B4B4 8156             2               cmpa    #'V
-B4B6 261A                             bne     3F
-B4B8 D6DF                             ldb     VOLHI           ; העוצמה הנוכחית: הגבוה חלקי 4, פחות 31
-B4BA 54                               lsrb
+B474 8E0000           play_st         ldx     #0
+B477 8601                             lda     #1
+B479 3412                             pshs    a,x
+B47B 17DDD8                           lbsr    frmevl
+B47E 4F                               clra                    ; DAC והצליל דולק, עוד לפני בדיקת הסוג
+B47F 8DEB                             bsr     snds
+B481 17E0DC                           lbsr    frestr          ; לא מחרוזת: ?TM
+B484 97D8                             sta     DLEN
+B486 9FD9                             stx     DPTR
+B488 17FC08           ploop           lbsr    dget
+B48B 240B                             bcc     1F
+B48D 3512                             puls    a,x             ; המחרוזת נגמרה: חוזרים לחיצונית
+B48F 97D8                             sta     DLEN
+B491 9FD9                             stx     DPTR
+B493 26F3                             bne     ploop
+B495 16FF69                           lbra    sndoff          ; הסמן: סוף PLAY
+B498 813B             1               cmpa    #';
+B49A 27EC                             beq     ploop
+B49C 8127                             cmpa    #''
+B49E 27E8                             beq     ploop
+B4A0 814F                             cmpa    #'O
+B4A2 2611                             bne     2F
+B4A4 D6DE                             ldb     OCTAVE
+B4A6 5C                               incb
+B4A7 1700E6                           lbsr    parg
+B4AA 5A                               decb
+B4AB C105                             cmpb    #5
+B4AD 24C2                             bhs     pfc
+B4AF D7DE                             stb     OCTAVE
+B4B1 20D5                             bra     ploop
+                      ; ‏$B4B3: שני בתים שתוכנות של אז בודקות כדי לדעת שהן על Dragon ולא על CoCo. Star Spores (Microdeal) קורא שם את
+                      ; המילה $2843, ואם היא שם הוא עובר למפת המקלדת של ה-Dragon (החיצים בשורה אחרת). העובדה מהקוד של המשחק עצמו (30.10).
+                      ; הם באים אחרי קפיצה, אז אף אחד לא מריץ אותם. entry-test בודק שהם במקום
+B4B3 2843                             fcb     $28,$43
+B4B5 8156             2               cmpa    #'V
+B4B7 261A                             bne     3F
+B4B9 D6DF                             ldb     VOLHI           ; העוצמה הנוכחית: הגבוה חלקי 4, פחות 31
 B4BB 54                               lsrb
-B4BC C01F                             subb    #31
-B4BE 1700CF                           lbsr    parg
-B4C1 C11F                             cmpb    #31
-B4C3 22AD                             bhi     pfc
-B4C5 58                               lslb
+B4BC 54                               lsrb
+B4BD C01F                             subb    #31
+B4BF 1700CE                           lbsr    parg
+B4C2 C11F                             cmpb    #31
+B4C4 22AB                             bhi     pfc
 B4C6 58                               lslb
-B4C7 1F98                             tfr     b,a             ; גבוה = 126+4V, נמוך = 124-4V
-B4C9 8B7E                             adda    #126
-B4CB 50                               negb
-B4CC CB7C                             addb    #124
-B4CE DDDF                             std     VOLHI
-B4D0 20B7                             bra     ploop
-B4D2 814C             3               cmpa    #'L
-B4D4 261E                             bne     4F
-B4D6 D6E1                             ldb     NOTELN
-B4D8 1700B5                           lbsr    parg
-B4DB 5D                               tstb
-B4DC 2794                             beq     pfc
-B4DE D7E1                             stb     NOTELN
-B4E0 0FE5                             clr     DOTVAL
-B4E2 17FBAE           31              lbsr    dget            ; הנקודות: רק מיד אחרי L
-B4E5 25A2                             bcs     ploop
-B4E7 812E                             cmpa    #'.
-B4E9 2604                             bne     32F
-B4EB 0CE5                             inc     DOTVAL
-B4ED 20F3                             bra     31B
-B4EF 17FBBB           32              lbsr    dback
-B4F2 2095                             bra     ploop
-B4F4 8154             4               cmpa    #'T
-B4F6 260C                             bne     5F
-B4F8 D6E2                             ldb     TEMPO
-B4FA 170093                           lbsr    parg
-B4FD 5D                               tstb
-B4FE 2734                             beq     pfc2
-B500 D7E2                             stb     TEMPO
-B502 2085                             bra     ploop
-B504 8150             5               cmpa    #'P
-B506 2620                             bne     6F
-B508 17FBDC                           lbsr    dval            ; רק "=שם;" או ספרות
-B50B 5D                               tstb
-B50C 2726                             beq     pfc2
-B50E 9EDF                             ldx     VOLHI           ; השתיקה: תו C בעוצמה $7C/$7C, בלי נקודות, ואחר כך חזרה
-B510 96E5                             lda     DOTVAL
-B512 3412                             pshs    a,x
-B514 8E7C7C                           ldx     #$7c7c
-B517 9FDF                             stx     VOLHI
-B519 0FE5                             clr     DOTVAL
-B51B 4F                               clra
-B51C 1700AD                           lbsr    pnote
-B51F 3512                             puls    a,x
-B521 9FDF                             stx     VOLHI
-B523 97E5                             sta     DOTVAL
-B525 16FF61                           lbra    ploop
-B528 8158             6               cmpa    #'X
-B52A 260F                             bne     7F
-B52C C602                             ldb     #2              ; X שם; : מחרוזת אחרת. getstk של 4 בתים (שתי מילים)
-B52E 17FB3D                           lbsr    dxstr
-B531 16FF55                           lbra    ploop
-B534 16D3CB           pfc2            lbra    err_fc
-B537 FF                               fill    $ff,$b538-*     ;@isl
+B4C7 58                               lslb
+B4C8 1F98                             tfr     b,a             ; גבוה = 126+4V, נמוך = 124-4V
+B4CA 8B7E                             adda    #126
+B4CC 50                               negb
+B4CD CB7C                             addb    #124
+B4CF DDDF                             std     VOLHI
+B4D1 20B5                             bra     ploop
+B4D3 814C             3               cmpa    #'L
+B4D5 261E                             bne     4F
+B4D7 D6E1                             ldb     NOTELN
+B4D9 1700B4                           lbsr    parg
+B4DC 5D                               tstb
+B4DD 2792                             beq     pfc
+B4DF D7E1                             stb     NOTELN
+B4E1 0FE5                             clr     DOTVAL
+B4E3 17FBAD           31              lbsr    dget            ; הנקודות: רק מיד אחרי L
+B4E6 25A0                             bcs     ploop
+B4E8 812E                             cmpa    #'.
+B4EA 2604                             bne     32F
+B4EC 0CE5                             inc     DOTVAL
+B4EE 20F3                             bra     31B
+B4F0 17FBBA           32              lbsr    dback
+B4F3 2093                             bra     ploop
+B4F5 8154             4               cmpa    #'T
+B4F7 260C                             bne     5F
+B4F9 D6E2                             ldb     TEMPO
+B4FB 170092                           lbsr    parg
+B4FE 5D                               tstb
+B4FF 2734                             beq     pfc2
+B501 D7E2                             stb     TEMPO
+B503 2083                             bra     ploop
+B505 8150             5               cmpa    #'P
+B507 2620                             bne     6F
+B509 17FBDB                           lbsr    dval            ; רק "=שם;" או ספרות
+B50C 5D                               tstb
+B50D 2726                             beq     pfc2
+B50F 9EDF                             ldx     VOLHI           ; השתיקה: תו C בעוצמה $7C/$7C, בלי נקודות, ואחר כך חזרה
+B511 96E5                             lda     DOTVAL
+B513 3412                             pshs    a,x
+B515 8E7C7C                           ldx     #$7c7c
+B518 9FDF                             stx     VOLHI
+B51A 0FE5                             clr     DOTVAL
+B51C 4F                               clra
+B51D 1700AC                           lbsr    pnote
+B520 3512                             puls    a,x
+B522 9FDF                             stx     VOLHI
+B524 97E5                             sta     DOTVAL
+B526 16FF5F                           lbra    ploop
+B529 8158             6               cmpa    #'X
+B52B 260E                             bne     7F
+B52D C602                             ldb     #2              ; X שם; : מחרוזת אחרת. getstk של 4 בתים (שתי מילים)
+B52F 17FB3C                           lbsr    dxstr
+B532 16FF53                           lbra    ploop
+B535 16D3CA           pfc2            lbra    err_fc
+B538                                  fill    $ff,$b538-*     ;@isl
 B538 7EBF6E                           jmp     getkey  ;@isl
 B53B 814E             7               cmpa    #'N             ; N לפני תו: מדלגים
 B53D 2603                             bne     8F
@@ -7261,10 +7265,10 @@ B578 17FB6C                           lbsr    dval
 B57B 1F98                             tfr     b,a
 B57D 4A               91              deca
 B57E 810B                             cmpa    #11
-B580 22B2                             bhi     pfc2
+B580 22B3                             bhi     pfc2
 B582 D6E1                             ldb     NOTELN
 B584 8D46                             bsr     pnote
-B586 16FF00                           lbra    ploop
+B586 16FEFF                           lbra    ploop
 B589 0A0C0103050608   pletr           fcb     10,12,1,3,5,6,8
                       
                       ; parg: הארגומנט של O V L T → B. B = הערך הנוכחי. + - > < משנים אותו, אחרת "=שם;" או ספרות
@@ -7274,24 +7278,24 @@ B595 3504                             puls    b
 B597 812B                             cmpa    #'+
 B599 2604                             bne     1F
 B59B 5C                               incb
-B59C 2796                             beq     pfc2
+B59C 2797                             beq     pfc2
 B59E 39                               rts
 B59F 812D             1               cmpa    #'-
 B5A1 2607                             bne     2F
 B5A3 5D                               tstb
-B5A4 1027FF8C                         lbeq    pfc2
+B5A4 1027FF8D                         lbeq    pfc2
 B5A8 5A                               decb
 B5A9 39                               rts
 B5AA 813E             2               cmpa    #'>
 B5AC 2608                             bne     3F
 B5AE C180                             cmpb    #128
-B5B0 1024FF80                         lbhs    pfc2
+B5B0 1024FF81                         lbhs    pfc2
 B5B4 58                               lslb
 B5B5 39                               rts
 B5B6 813C             3               cmpa    #'<
 B5B8 2607                             bne     4F
 B5BA 5D                               tstb
-B5BB 1027FF75                         lbeq    pfc2
+B5BB 1027FF76                         lbeq    pfc2
 B5BF 54                               lsrb
 B5C0 39                               rts
 B5C1 17FAE9           4               lbsr    dback

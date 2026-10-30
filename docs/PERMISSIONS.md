@@ -15,6 +15,7 @@ The BASIC ROM the machine runs is our own clean-room code. No original ROM is us
 | Grabber, Draconian, Alcatraz II | Mike Hughey · Tom Mix Software / Spectral Associates / Microdeal, 1982–84 | Public letter of 19.6.1997: his games may be distributed freely, "as desired, in whatever format" | 1997 | [CLEAR rights page (Web Archive)](https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html) |
 | Champions!, Lionheart, SAS | Harry Whitehouse · Peaksoft, 1983 | Written permission by email | 29.10.2026 | [The Peaksoft story](http://www.peaksoft.uk/peaksoftstory) |
 | Tim Love's Cricket | Tim Love · Peaksoft, 1984 | Written permission by email from the author, and from Harry Whitehouse for Peaksoft | 29.10.2026 | [timlovescricket.blogspot.com](https://timlovescricket.blogspot.com/) |
+| Star Spores | Dave Shadoff · Spectral Associates / Microdeal, 1983–84 | Written permission by email | 25.10.2026 | [World of Dragon](https://archive.worldofdragon.org/index.php?title=Star_Spores) |
 | Tanglewood | Ian Murray-Watson, graphics Pete Lyon · Microdeal, 1986 | Released as open source under the MIT licence in 2018, with the agreement of Microdeal's founder John Symes | 2018 | [`lab/1982/tapes/tanglewood-license.txt`](../lab/1982/tapes/tanglewood-license.txt) · [source](https://gitlab.com/amigasourcecodepreservation/tanglewood) |
 
 ## New games from the community
