@@ -348,11 +348,13 @@
     sas: {
       he: ['אימון של יחידת ה-SAS: חוצים שדות מוקשים, נזהרים מסיורים ומהמסוקים, ומשמידים את בסיס האויב. תשעה שדות מוקשים, והם נעשים קשים יותר.',
         'אחרי RUN המחשב מקליד את הפתיחה, אות אחרי אות. ל-DO YOU REQUIRE BRIEFING? לוחצים [Y] כדי לקרוא את התדריך המלא (מקש לכל עמוד), או [N] כדי להתחיל.',
-        'החיצים מזיזים את החייל. [G] זורק רימון. [F] יורה טיל מונחה, במקום הנכון בשדה.',
+        'מחזיקים את החיצים לחוצים כדי לזוז, לא מקישים: המשחק בודק את המקלדת פעם בסיבוב, ולחיצה קצרה לא נקלטת.',
+        '[G] זורק רימון: מפוצץ מוקשים ומשמיד בסיס אויב סמוך. [F] יורה טיל מונחה על המסוק הקרוב, רק אחרי שהשמדת בסיס ונכנסת אליו.',
         'התדריך בתוך המשחק מסביר את הכול: מה עושים בכל שדה, ואיך מגיעים לבסיס.'],
       en: ['An SAS training simulation: cross minefields, keep away from patrols and helicopter gunships, and destroy the enemy base. Nine minefields, getting harder.',
         'After RUN the computer types out its opening, letter by letter. At DO YOU REQUIRE BRIEFING? press [Y] to read the full briefing (a key for each page), or [N] to start.',
-        'The arrows move your soldier. [G] throws a grenade. [F] fires a wire-guided missile, from the right place on the field.',
+        'Hold the arrow keys down to move, don\'t tap them: the game checks the keyboard once a round, and a quick tap is missed.',
+        '[G] throws a grenade: it blows up mines and knocks out an enemy base next to you. [F] fires a wire-guided missile at the nearest helicopter, only after you have knocked out a base and moved into it.',
         'The briefing inside the game explains everything: what to do on each field, and how to reach the base.']
     },
     // נבדק במכונה (29.10): CLOADM, ‏EXEC, מסך הפתיחה, התפריט, Extra time? ובחירת דמות. ההוראות לפי המדריך המקורי ל-Dragon (המאגר של Tanglewood)
