@@ -1707,8 +1707,8 @@ if (part('real machine lab')) {
     await p.waitForTimeout(3500);
     check(`${path} loads with the drawn keyboard`, r.status() === 200 && (await p.locator('.kbd .k').count()) > 50 && errs.length === 0, errs.join(' | '));
     check(`${path} has the tape shelf (33 tapes: 7 BASIC, Dragon Eggs, Blockdown, DragonTet, Escape, Invaders Revenge, El Diablero, Phantom Slayer, Danger Ranger, Cuthbert in the Jungle, Devil Assault, Dungeon Raid, Athletyx, Alcatraz II, Grabber, Draconian, Champions!, Lionheart, SAS, Tim Love's Cricket, Star Spores, Tanglewood, Adventureland, Pirate Adventure, Secret Mission, Voodoo Castle, The Count)`, (await p.locator('#tapes .tape.row').count()) === 33);
-    check(`${path} everything starts closed: the cabinet drawers, "first try", "what works" and "how to edit a line", with no memory of what was opened last time`, await p.evaluate(() =>
-      [...document.querySelectorAll('#tapes details.drawer, .info details, details.how')].every(d => !d.open) && document.querySelectorAll('.info details').length === 3
+    check(`${path} everything starts closed: the cabinet drawers, "first try", "what works", "how to edit a line" and the mic box\'s "how does it work?", with no memory of what was opened last time`, await p.evaluate(() =>
+      [...document.querySelectorAll('#tapes details.drawer, .info details, details.how')].every(d => !d.open) && document.querySelectorAll('.info > details').length === 3 && document.querySelectorAll('.info .realtape details.rt-how').length === 1
       && /PRINT 2\+3/.test(document.querySelector('.info details.try')?.textContent || '') && ![...document.querySelectorAll('.info > p.note')].some(e => /PRINT 2\+3/.test(e.textContent))
       && localStorage.getItem('d32-lab-drawers') === null));
     check(`${path} "type it in" drawer: 7 magazine pages (1983–85); a page opens beside the machine (scan from archive.org, credit) and closes`, await p.evaluate(async () => {
