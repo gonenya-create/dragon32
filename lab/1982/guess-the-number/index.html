@@ -164,18 +164,6 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
   <div class="machine">
   <div class="tv"><canvas id="canvas" tabindex="0" oncontextmenu="event.preventDefault()" aria-label="מסך המחשב"></canvas></div>
   <div class="kbd" id="kbd" aria-label="מקלדת Dragon 32"></div>
-  <section class="realtape" aria-labelledby="realtape-title">
-    <h3 id="realtape-title">🎙️ קלטת אמיתית מהבית</h3>
-    <p>יש לכם קלטת ישנה של <bdi>Dragon</bdi>? המכונה יכולה "לשמוע" אותה דרך המיקרופון של המחשב או הטלפון.</p>
-    <ol>
-      <li>לוחצים על הכפתור, וההקלטה מתחילה.</li>
-      <li>מנגנים את הקלטת ברשמקול ליד המחשב, ובסוף לוחצים שוב על הכפתור.</li>
-      <li>לוחצים על מסך המכונה ומקלידים <code dir="ltr">CLOAD</code> (לשפת מכונה <code dir="ltr">CLOADM</code>). כשמופיע OK, מקלידים <code dir="ltr">RUN</code>.</li>
-    </ol>
-    <button type="button" class="realtape-go" id="tape-mic">🎙️ להתחיל להקליט</button>
-    <p class="mic-status" id="mic-status" role="status" aria-live="polite"></p>
-    <p class="note">אין קלטת בבית? מנגנים מהטלפון את <a href="/lab/1982/tapes/guess-tape.m4a">קלטת הבדיקה</a> (המשחק "נחש את המספר", 8 שניות). שקט בחדר ועוצמה בינונית עובדים הכי טוב, ושקט לפני ואחרי לא מפריע.</p>
-  </section>
   </div>
   <section class="shelf" aria-labelledby="shelf-title">
     <h2 id="shelf-title">מדף הקלטות</h2>
@@ -196,6 +184,18 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
     <p class="note"><strong>ל-<bdi>Dragon</bdi> אמיתי:</strong> 🔊 מוריד את הקלטת כצליל (<bdi dir="ltr">wav</bdi>), כמו קלטת של אז. מחברים את כבל הקלטת של ה-<bdi>Dragon</bdi> (התקע <bdi dir="ltr">EAR</bdi>) לשקע האוזניות, מקלידים ב-<bdi>Dragon</bdi> <code dir="ltr">CLOAD</code>, ומנגנים את הקובץ בעוצמה של בערך 75%. אם מופיע <code dir="ltr">?IO ERROR</code>, משנים את העוצמה ומנסים שוב.</p>
     </div></details>
     </div>
+  <section class="realtape" aria-labelledby="realtape-title">
+      <h3 id="realtape-title">🎙️ קלטת אמיתית מהבית</h3>
+      <p>יש לכם קלטת ישנה של <bdi>Dragon</bdi>? המכונה יכולה "לשמוע" אותה דרך המיקרופון של המחשב או הטלפון.</p>
+      <ol>
+        <li>לוחצים על הכפתור, וההקלטה מתחילה.</li>
+        <li>מנגנים את הקלטת ברשמקול ליד המחשב, ובסוף לוחצים שוב על הכפתור.</li>
+        <li>לוחצים על מסך המכונה ומקלידים <code dir="ltr">CLOAD</code> (לשפת מכונה <code dir="ltr">CLOADM</code>). כשמופיע OK, מקלידים <code dir="ltr">RUN</code>.</li>
+      </ol>
+      <button type="button" class="realtape-go" id="tape-mic">🎙️ להתחיל להקליט</button>
+      <p class="mic-status" id="mic-status" role="status" aria-live="polite"></p>
+      <p class="note">אין קלטת בבית? מנגנים מהטלפון את <a href="/lab/1982/tapes/guess-tape.m4a">קלטת הבדיקה</a> (המשחק "נחש את המספר", 8 שניות). שקט בחדר ועוצמה בינונית עובדים הכי טוב, ושקט לפני ואחרי לא מפריע.</p>
+    </section>
   </section>
   <div class="info">
   <details class="note try"><summary><strong>ניסיון ראשון: מקלידים בעצמנו</strong></summary>

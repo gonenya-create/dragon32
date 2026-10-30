@@ -164,18 +164,6 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
   <div class="machine">
   <div class="tv"><canvas id="canvas" tabindex="0" oncontextmenu="event.preventDefault()" aria-label="Computer screen"></canvas></div>
   <div class="kbd" id="kbd" aria-label="Dragon 32 keyboard"></div>
-  <section class="realtape" aria-labelledby="realtape-title">
-    <h3 id="realtape-title">🎙️ A real cassette from home</h3>
-    <p>Got an old Dragon cassette? The machine can "hear" it through your computer's or phone's microphone.</p>
-    <ol>
-      <li>Press the button, and recording starts.</li>
-      <li>Play the cassette on a tape player next to the computer, then press the button again.</li>
-      <li>Click the machine's screen and type <code>CLOAD</code> (<code>CLOADM</code> for machine code). When OK appears, type <code>RUN</code>.</li>
-    </ol>
-    <button type="button" class="realtape-go" id="tape-mic">🎙️ Start recording</button>
-    <p class="mic-status" id="mic-status" role="status" aria-live="polite"></p>
-    <p class="note">No cassette at home? Play the <a href="/lab/1982/tapes/guess-tape.m4a">test tape</a> from your phone (the game "Guess my number", 8 seconds). A quiet room and a medium volume work best, and silence before and after doesn't matter.</p>
-  </section>
   </div>
   <section class="shelf" aria-labelledby="shelf-title">
     <h2 id="shelf-title">Tape shelf</h2>
@@ -196,6 +184,18 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
     <p class="note"><strong>For a real <bdi>Dragon</bdi>:</strong> 🔊 downloads the tape as sound (wav), like a tape from back then. Plug the Dragon's cassette lead (the EAR plug) into your headphone socket, type <code>CLOAD</code> on the Dragon and play the file at about 75% volume. If you get <code>?IO ERROR</code>, change the volume and try again.</p>
     </div></details>
     </div>
+  <section class="realtape" aria-labelledby="realtape-title">
+      <h3 id="realtape-title">🎙️ A real cassette from home</h3>
+      <p>Got an old Dragon cassette? The machine can "hear" it through your computer's or phone's microphone.</p>
+      <ol>
+        <li>Press the button, and recording starts.</li>
+        <li>Play the cassette on a tape player next to the computer, then press the button again.</li>
+        <li>Click the machine's screen and type <code>CLOAD</code> (<code>CLOADM</code> for machine code). When OK appears, type <code>RUN</code>.</li>
+      </ol>
+      <button type="button" class="realtape-go" id="tape-mic">🎙️ Start recording</button>
+      <p class="mic-status" id="mic-status" role="status" aria-live="polite"></p>
+      <p class="note">No cassette at home? Play the <a href="/lab/1982/tapes/guess-tape.m4a">test tape</a> from your phone (the game "Guess my number", 8 seconds). A quiet room and a medium volume work best, and silence before and after doesn't matter.</p>
+    </section>
   </section>
   <div class="info">
   <details class="note try"><summary><strong>First try: type it yourself</strong></summary>
