@@ -92,6 +92,8 @@ html[dir="rtl"] .drawer:not([open]) > summary::after { transform: rotate(90deg);
 .tape.in { border-color: var(--accent); background: #3a2a10; }
 .tape:focus-visible, .k:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 #tape-status { min-height: 1.5em; color: var(--accent); }
+.mic-status { color: var(--accent); font-weight: 700; }
+.mic-status:empty { display: none; }
 .mine-title { font-size: 16px; margin: 18px 0 2px; }
 .mytapes { display: grid; gap: 6px; margin-top: 8px; }
 .mytape { display: flex; gap: 6px; align-items: stretch; }
@@ -170,6 +172,7 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
     <div class="mytapes" id="mytapes"></div>
     <button type="button" class="mini upload" id="tape-upload">📂 Load a tape from a file</button>
     <button type="button" class="mini upload" id="tape-mic">🎙️ A real cassette, through the microphone</button>
+    <p class="note mic-status" id="mic-status" role="status" aria-live="polite"></p>
     <input type="file" id="tape-file" accept=".cas" hidden>
     <p class="note"><strong>🎙️ An old cassette at home?</strong> Press the microphone button, play the cassette on a tape player next to the computer or phone, and press the button again at the end. The recording goes into the machine's tape recorder: type <code dir="ltr">CLOAD</code> (or <code dir="ltr">CLOADM</code>). A quiet room and a medium volume work best.</p>
     <p class="note">Tapes are kept only in this browser and are lost if you clear it (in Safari also after a week without a visit). To keep one for good or move it to another device: ⬇ downloads the tape as a file.</p>

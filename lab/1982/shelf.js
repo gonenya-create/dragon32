@@ -1248,6 +1248,9 @@ body.game-open .shelf > :not(.game-view) { display: none; }
   // (מסננים זמזום נמוך והופכים לגלים מרובעים, כמו המעגל של הקלטת במחשב), ומכניסים לרשמקול של המכונה כקובץ WAV.
   // המכונה קוראת אותו כמו כל קלטת: CLOAD או CLOADM. בלי ניקוי, רעש וזמזום של מיקרופון מונעים מ-CLOAD למצוא את הקלטת
   const micBtn = document.getElementById('tape-mic');
+  // ההודעות מופיעות מתחת לכפתור (גונן, 30.10: "לא הופיעה הודעה": שורת המצב הכללית למעלה, רחוק מהכפתור), וגם בשורת המצב הכללית
+  const micMsg = document.getElementById('mic-status');
+  const say = t => { status.textContent = t; if (micMsg) micMsg.textContent = t; };
   if (micBtn) {
     let rec = null;
     const micLabel = micBtn.textContent;
@@ -1280,7 +1283,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       try {
         stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false, channelCount: 1 } });
       } catch (e) {
-        status.textContent = EN ? 'No microphone: the browser did not allow it.' : 'אין מיקרופון: הדפדפן לא אישר.';
+        say(EN ? 'No microphone: the browser did not allow it.' : 'אין מיקרופון: הדפדפן לא אישר.');
         return;
       }
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1296,7 +1299,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       const tick = setInterval(() => {
         const s = Math.round((Date.now() - t0) / 1000), bar = '▮'.repeat(Math.min(10, Math.round(peak * 14))) || '·';
         peak = 0;
-        status.textContent = (EN ? '🔴 Recording ' : '🔴 מקליט ') + s + (EN ? ' s. Play the cassette now, then press the button again to stop. Level: ' : ' שניות. מנגנים עכשיו את הקלטת, ובסוף לוחצים שוב על הכפתור. עוצמה: ') + bar;
+        say((EN ? '🔴 Recording ' : '🔴 מקליט ') + s + (EN ? ' s. Play the cassette now, then press the button again to stop. Level: ' : ' שניות. מנגנים עכשיו את הקלטת, ובסוף לוחצים שוב על הכפתור. עוצמה: ') + bar);
         if (s >= 600) micStop();
       }, 500);
       rec = { stream, ctx, proc, src, chunks, tick, get n() { return n; } };
@@ -1313,15 +1316,15 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       ctx.close();
       micBtn.textContent = micLabel;
       micBtn.classList.remove('on');
-      if (n < sr) { status.textContent = EN ? 'The recording is too short.' : 'ההקלטה קצרה מדי.'; return; }
+      if (n < sr) { say(EN ? 'The recording is too short.' : 'ההקלטה קצרה מדי.'); return; }
       const x = new Float32Array(n); let o = 0;
       for (const c of chunks) { x.set(c, o); o += c.length; }
       try {
         FS.writeFile('/mic.wav', wav16(cleanTape(x, sr), sr));
         Module.ccall('wasm_load_file', null, ['string', 'number', 'number'], ['/mic.wav', 2, 0]);
-        status.textContent = EN ? 'The recording is in the tape recorder (' + Math.round(n / sr) + ' s). Type CLOAD, or CLOADM for machine code, and ENTER.'
-          : 'ההקלטה ברשמקול (' + Math.round(n / sr) + ' שניות). מקלידים CLOAD, או CLOADM לשפת מכונה, ו-ENTER.';
-      } catch (e) { status.textContent = EN ? 'The machine is not ready yet.' : 'המכונה עוד לא מוכנה.'; }
+        say(EN ? '✅ The recording is in the tape recorder (' + Math.round(n / sr) + ' s). Now click the machine\'s screen and type CLOAD and ENTER (CLOADM for machine code). When OK appears, type RUN.'
+          : '✅ ההקלטה ברשמקול (' + Math.round(n / sr) + ' שניות). עכשיו לוחצים על מסך המכונה ומקלידים CLOAD ו-ENTER (לשפת מכונה CLOADM). כשמופיע OK, מקלידים RUN.');
+      } catch (e) { say(EN ? 'The machine is not ready yet.' : 'המכונה עוד לא מוכנה.'); }
     }
     micBtn.addEventListener('click', () => { if (rec) micStop(); else micStart(); });
   }
