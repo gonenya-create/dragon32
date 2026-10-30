@@ -27,6 +27,10 @@
     // CLOADM ואז EXEC; הקלטת מהארכיון כמו שהיא. בחיצים ו[רווח] (בשאלה JOYSTICKS עונים N)
     ['invrev', 'Invaders Revenge', 'Invaders Revenge', 'm',
       ['Ken Kalish · Med Systems / Microdeal, 1982', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
+    // El Diablero של Ken Kalish (Computerware, 1982; ל-Dragon מ-Dragon Data): במסך הפתיחה "BY KENNETH KALISH". הרפתקת טקסט.
+    // CLOADM ואז EXEC; הקלטת מהארכיון כמו שהיא. קורא פקודות דרך הכניסה המקורית $B5C9, שנוספה ל-ROM בשבילו (30.10)
+    ['diablero', 'El Diablero', 'El Diablero', 'm',
+      ['Ken Kalish · Computerware / Dragon Data, 1982', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
     ['phantom', 'Phantom Slayer', 'Phantom Slayer', 'm',
       ['Ken Kalish · Med Systems / Microdeal, 1983', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
     ['ranger', 'Danger Ranger', 'Danger Ranger', 'a',
@@ -236,6 +240,17 @@
         'This time you are the invader: the last ship left, against the human ships. Your ships wait at the top left, above the line.',
         'The arrow keys move your ship in every direction. Bring it below the line to start, and [Space] fires.',
         'A normal ship is worth 100 points, the flagship 1000. The laser base at the bottom fires at you, and it cannot be destroyed. A bonus ship at 10,000 points.']
+    },
+    // נבדק במכונה (30.10): הטעינה, מסך הפתיחה, תיאור המקום, LOOK, INVENTORY, GO NORTH (CAN'T GO)
+    diablero: {
+      he: ['אחרי הטעינה מקלידים EXEC ו-[ENTER]. במסך הפתיחה לוחצים על מקש כלשהו.',
+        'זו הרפתקת טקסט, כמו של Scott Adams: המחשב מתאר איפה אתם, מה אתם רואים ולאן אפשר ללכת, ושואל WHAT DO I DO NOW?',
+        'עונים בשתי מילים באנגלית ולוחצים [ENTER]: למשל GO WEST, ‏GET ROCK, ‏LOOK. ‏INVENTORY מראה מה יש לכם.',
+        'מתחילים במדבר, ליד בריכה קטנה של מים צהובים, על שפת קניון עמוק. כדאי לצייר מפה על דף.'],
+      en: ['After loading type EXEC and [ENTER]. On the title screen press any key.',
+        'It is a text adventure, like Scott Adams\'s: the computer describes where you are, what you see and where you can go, and asks WHAT DO I DO NOW?',
+        'Answer in two English words and press [ENTER]: for example GO WEST, GET ROCK, LOOK. INVENTORY shows what you carry.',
+        'You start in the desert, next to a small pool of yellow water, at the edge of a deep canyon. Draw a map on paper.']
     },
     // נבדק במכונה (25.10): בחירות, תנועה, כיוון וירי, רוחות שזזות, וסוף משחק עם הניקוד
     phantom: {
@@ -457,6 +472,7 @@
     blockdown: ['כשהטעינה נגמרת המשחק מתחיל לבד. מתחילים ב[רווח].', 'When loading ends the game starts by itself. Press [Space] to start.'],
     dragontet: ['מופיע תפריט: בוחרים ב[↑] [↓] ומאשרים ב[ENTER].', 'A menu appears: choose with [↑] [↓] and confirm with [ENTER].'],
     escape: ['מופיעים מסך הפתיחה וההקדמה, ואז המסדרון: [↑] קדימה, [←] [→] מסתובבים.', 'The title screen and the introduction appear, then the corridor: [↑] forward, [←] [→] turn.'],
+    diablero: ['מופיע מסך הפתיחה: לוחצים מקש, ומקלידים פקודות באנגלית, למשל LOOK ו-[ENTER].', 'The title screen appears: press a key, then type commands in English, for example LOOK and [ENTER].'],
     invrev: ['ב-JOYSTICKS? לוחצים [N], ב-NEED INSTRUCTIONS? לוחצים [N], ואז בוחרים שחקנים, יריות ומהירות במספרים.', 'At JOYSTICKS? press [N], at NEED INSTRUCTIONS? press [N], then choose players, shots and speed with the number keys.'],
     devil: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. ב-SELECT LEVEL בוחרים רמה, [0] עד [5], ומתחילים בכפתור.', 'When loading ends pick a colour: [1], [2] or [3]. At SELECT LEVEL pick a level, [0] to [5], and start with the button.'],
     phantom: ['המשחק שואל על ההוראות: [N] מדלג, [Y] מציג אותן.', 'The game asks about the instructions: [N] skips them, [Y] shows them.'],
@@ -484,6 +500,7 @@
     phantom: ['מבוך תלת-ממדי: צדים רוחות רפאים לפני שהן תופסות אתכם. לשחקן אחד.', '3D maze: hunt the phantoms before they catch you. 1 player.'],
     cuthbert: ['רצים בג\'ונגל, קופצים מעל בורות ובולי עץ ויורדים בסולמות למנהרה, נגד השעון. בג\'ויסטיק.', 'Run through the jungle, jump pits and logs and climb down ladders to the tunnel, against the clock. Joystick.'],
     athletyx: ['תחרות אתלטיקה: ריצה ועוד מקצועות, נגד השעון. בג\'ויסטיק. נכתב רק ל-Dragon.', 'An athletics contest: a sprint and more events, against the clock. Joystick. Written only for the Dragon.'],
+    diablero: ['הרפתקת טקסט במדבר: מקלידים פקודות באנגלית ומגלים לאן הדרך מובילה. לשחקן אחד.', 'A text adventure in the desert: type commands in English and find out where the trail leads. 1 player.'],
     invrev: ['Space Invaders הפוך: אתם הפולש האחרון, ונלחמים בספינות של בני האדם. בחיצים, לאחד או לשניים.', 'Space Invaders turned around: you are the last invader, fighting the human ships. Arrow keys, 1 or 2 players.'],
     devil: ['טנק בתחתית המסך נגד עטלפי ערפד, רובוטים ו-Sproings, ובסוף גם השטן עצמו. בג\'ויסטיק.', 'A tank at the bottom of the screen against vampire bats, robots and Sproings, and in the end the Devil himself. Joystick.'],
     dungeon: ['רצים במסדרונות של מבוך ויורים ביצורים ובדלתות, נגד השעון. בג\'ויסטיק. נכתב רק ל-Dragon.', 'Race down dungeon corridors, shooting creatures and doors against the clock. Joystick. Written only for the Dragon.'],

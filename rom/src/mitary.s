@@ -66,6 +66,10 @@ ary_new		stx	ARYREC
 		leax	,s		; X = האינדקסים, עד הבלוק (U)
 4		ldd	,x++		; DIM: האינדקס ועוד 1
 		addd	#1
+		bra	isl_9772_e	;@isl
+		fill	$ff,$9772-*	;@isl
+		jmp	fn_rnd	;@isl
+isl_9772_e	;@isl
 		tst	1,u
 		bne	5F
 		ldd	#11		; ברירת מחדל
@@ -78,7 +82,7 @@ ary_new		stx	ARYREC
 		addd	CURTOL
 		bcs	ary_om
 		pshs	d
-		lbsr	reason
+		bsr	reason
 		puls	d
 		std	STREND
 		subd	ARYREC		; האורך הכולל
@@ -100,10 +104,6 @@ getdef		clr	CURTOL
 		bhs	ary_bs		; גדול מדי: ?BS
 		ldd	,y++
 		bsr	mulcur		; CURTOL = CURTOL*גודל + אינדקס
-		bra	isl_9772_e	;@isl
-		fill	$ff,$9772-*	;@isl
-		jmp	fn_rnd	;@isl
-isl_9772_e	;@isl
 		addd	-2,x
 		std	CURTOL
 		cmpx	IDXTMP

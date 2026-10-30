@@ -18,16 +18,7 @@ HALFMAX		equ	$94		; חצי גל מקסימלי (רק בסנכרון)
 MOTDLY		equ	$95		; 2 בתים: השהיית המנוע (8 מחזורים לספירה)
 
 ; ---------- מנוע (קורא 1.1) ----------
-; tmoton: המנוע דולק, ואז השהיה של MOTDLY ספירות (תמיד, גם אם כבר דלק). A ו-X משתנים (X=0)
-tmoton		lda	PIA1+1
-		ora	#8
-		sta	PIA1+1
-		ldx	MOTDLY
-1		leax	-1,x
-		bne	1B
-		rts
-		fill	$ff,$b6a5-*	;@isl
-		jmp	csavp	;@isl
+; (tmoton עבר ל-exp.s, לפני $A000, כדי לפנות מקום לכניסה $B5C9: 30.10)
 ; motoff: המנוע כבוי, והפסיקות פתוחות. A משתנה
 motoff		lda	PIA1+1
 		anda	#$f7
@@ -36,12 +27,14 @@ motoff		lda	PIA1+1
 		rts
 
 ; ---------- שם הקובץ (עבר לכאן מ-mitfile.s ב-22.10: ממלא את המקום שלפני הלולאות המתוזמנות) ----------
-getfne		bsr	getfn
-nochr		jsr	<chrgot
-		lbne	err_sn
-		rts
+; (getfne ו-nochr עברו ל-exp.s, לפני $A000, כדי לפנות מקום לכניסה $B6A6: 30.10)
 ; getfn (3.1): השם מתמלא ברווחים. אם יש ביטוי: מחרוזת, וכל התווים שלה מועתקים מ-FNAME (שם ארוך גולש לחוצץ)
 getfn		ldx	#FNAME
+		bra	isl_b6a5_e	;@isl
+		fill	$ff,$b6a5-*	;@isl
+		clra	;@isl
+		jmp	csavab	;@isl
+isl_b6a5_e	;@isl
 		ldd	#$2008		; 8 רווחים
 1		sta	,x+
 		decb
@@ -50,10 +43,6 @@ getfn		ldx	#FNAME
 		jsr	<chrgot
 		beq	9F
 		lbsr	frmevl
-		bra	isl_b6d4_e	;@isl
-		fill	$ff,$b6d4-*	;@isl
-		jmp	cload_st	;@isl
-isl_b6d4_e	;@isl
 		lbsr	frestr		; לא מחרוזת: ?TM
 		sta	FNLEN
 		beq	9F
@@ -70,9 +59,13 @@ cpy		ldb	,x+
 ; ---------- CLOAD (3.3) ----------
 cload_st	clr	FSTATE		; סוגרים בכוח (מה שחיכה לכתיבה הולך לאיבוד)
 		cmpa	#'M
+		bra	isl_b6d4_e	;@isl
+		fill	$ff,$b6d4-*	;@isl
+		jmp	cload_st	;@isl
+isl_b6d4_e	;@isl
 		beq	cloadm
 		leas	2,s		; CLOAD לא חוזר לתוכנית
-		bsr	getfne
+		lbsr	getfne
 		lbsr	search
 		tst	HGAP
 		lbne	cl_asc
@@ -92,7 +85,7 @@ cload_st	clr	FSTATE		; סוגרים בכוח (מה שחיכה לכתיבה הו�
 		beq	7F		; כותרת באמצע
 		bpl	1B		; $01-$7F: נתונים. $80-$FF: הסוף
 		stx	VARTAB
-		lbsr	motoff
+		bsr	motoff
 		lbsr	prcr
 		leax	m_ok,pcr	; OK ושורה חדשה, גם בתוכנית
 		lbsr	puts
@@ -106,15 +99,11 @@ cfm		lbra	err_fm		; עותק קרוב של efm: שתי קפיצות קצרות �
 ; ---------- CLOADM (3.4) ----------
 cloadm		jsr	<chrget		; ה-M
 		lbsr	getfn
-		lbsr	search
+clmfn		lbsr	search		; ‏$A095: מכאן, כשהשם כבר במקום
 		tst	HGAP
 		lbne	clm_gap
 		lbsr	getofs		; ההיסט (אחרי החיפוש)
 		pshs	d
-		bra	isl_b75b_e	;@isl
-		fill	$ff,$b75b-*	;@isl
-		jmp	clmx	;@isl
-isl_b75b_e	;@isl
 		lda	HTYPE
 		cmpa	#2
 		bne	cfm
@@ -123,6 +112,10 @@ isl_b75b_e	;@isl
 		std	EXECJP
 		ldd	HLOAD
 		addd	,s
+		bra	isl_b75b_e	;@isl
+		fill	$ff,$b75b-*	;@isl
+		jmp	clmx	;@isl
+isl_b75b_e	;@isl
 		std	,s
 		fcb	$8c		; cmpx #: מדלג על ה-pshs (הכתובת כבר במחסנית)
 ; clmx ($B75B, כמו $A529 ב-CoCo לפי Color BASIC Unravelled): הטעינה עצמה, מהכתובת שב-X. מנוע וסנכרון,

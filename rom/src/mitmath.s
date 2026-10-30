@@ -74,6 +74,10 @@ fn_sqr		lbsr	chknum
 fpwrt		tst	FACEXP
 		beq	exp		; מעריך 0: 1, גם 0^0 (קורא)
 		tst	ARGEXP
+		bra	isl_a095_e	;@isl
+		fill	$ff,$a095-*	;@isl
+		jmp	clmfn	;@isl
+isl_a095_e	;@isl
 		bne	1F
 		tst	FACSGN		; בסיס 0: מעריך שלילי ?/0 (קורא), אחרת 0
 		lbmi	err_dv0
@@ -106,9 +110,6 @@ fpwrt		tst	FACEXP
 fn_exp		lbsr	chknum
 exp		ldx	#logeb2	; x*log2(e)
 		lbsr	fmult		; ב-Dragon: מעוגל כרגיל, ואז מפרידים (קורא; ב-mit מוסיפים 80 לבית הנוסף)
-		lbsr	movaf		; ARG = y
-		clr	FACOV
-		lda	FACEXP
 		bra	isl_a0e3_e	;@isl
 		fill	$ff,$a0e3-*	;@isl
 		bsr	isl_a0e5	;@isl
@@ -117,6 +118,9 @@ isl_a0e5	bsr	isl_a0ea	;@isl
 		rts	;@isl
 isl_a0ea	jmp	x_getdev	;@isl
 isl_a0e3_e	;@isl
+		lbsr	movaf		; ARG = y
+		clr	FACOV
+		lda	FACEXP
 		cmpa	#$88		; |y| >= 128: גדול מדי
 		blo	2F
 6		tst	FACSGN		; חיובי: ?OV. שלילי: 0

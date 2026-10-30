@@ -37,7 +37,7 @@ sndoff		ldb	PIA1+3
 ; evnzb: ביטוי → B בין 1 ל-255. שלילי, 0 או מעל 255: ?FC. השבר נחתך (קורא 1.1)
 evnzb		lbsr	evbyte
 		tstb
-		beq	pfc
+		lbeq	pfc
 		rts
 
 ; ---------- SOUND טון,משך (קורא 1) ----------
@@ -77,37 +77,30 @@ sseg		sta	PIA1
 1		incb
 		bne	1B
 		rts
+		fill	$ff,$b44f-*	;@isl
+		nop	;@isl
+		jmp	warm	;@isl
 
 ; ---------- AUDIO ON / OFF (קורא 3) ----------
 ; @endnofill
 audio_st	pshs	a		; המילה שאחרי AUDIO נקראת קודם
 		jsr	<chrget
-		bra	isl_b44f_e	;@isl
-		fill	$ff,$b44f-*	;@isl
-		nop	;@isl
-		jmp	warm	;@isl
-isl_b44f_e	;@isl
 		puls	a
 		cmpa	#$c2		; OFF: רק מכבים. הבוררים לא משתנים
-		beq	sndoff
+		lbeq	sndoff
 		cmpa	#$88		; ON
 		lbne	err_sn
 		lda	#1		; כניסת הקלטת
-; snds: sndsel ואז sndon
-snds		lbsr	sndsel
-		bra	sndon
+		bra	isl_b469_e	;@isl
 		fill	$ff,$b469-*	;@isl
 		jmp	firq	;@isl
+isl_b469_e	;@isl
+; snds: sndsel ואז sndon
+snds		lbsr	sndsel
+		lbra	sndon
 
 ; ---------- PLAY מחרוזת (קורא 2, 9) ----------
-; plyini: ברירות המחדל, בהדלקה ובכל RUN (קורא 0.2): O3 (נשמר 2), עוצמה $B8/$44, L4, T2, בלי נקודות
-plyini		ldd	#$4404
-		std	VOLLO
-		ldd	#$02b8
-		std	OCTAVE
-		sta	TEMPO		; A = 2
-		clr	DOTVAL
-		rts
+; (plyini עבר ל-exp.s, לפני $A000, כדי לפנות מקום לכניסה $B538: 30.10)
 
 pfc		lbra	err_fc
 ; המחרוזות המקוננות (X) במחסנית: [אורך][כתובת]. הסמן בתחתית: אורך 1, כתובת 0
@@ -205,16 +198,18 @@ ploop		lbsr	dget
 		lbsr	dxstr
 		lbra	ploop
 pfc2		lbra	err_fc
+		fill	$ff,$b538-*	;@isl
+		jmp	getkey	;@isl
 7		cmpa	#'N		; N לפני תו: מדלגים
 		bne	8F
 		lbsr	dgetf
+8		cmpa	#'A
+		blo	9F
+		cmpa	#'G
 		bra	isl_b54a_e	;@isl
 		fill	$ff,$b54a-*	;@isl
 		jmp	chrout	;@isl
 isl_b54a_e	;@isl
-8		cmpa	#'A
-		blo	9F
-		cmpa	#'G
 		bhi	9F
 		leax	pletr-'A,pcr	; C=1 D=3 E=5 F=6 G=8 A=10 B=12
 		ldb	a,x
@@ -257,13 +252,13 @@ parg		pshs	b
 1		cmpa	#'-
 		bne	2F
 		tstb
-		beq	pfc2
+		lbeq	pfc2
 		decb
 		rts
 2		cmpa	#'>
 		bne	3F
 		cmpb	#128
-		bhs	pfc2
+		lbhs	pfc2
 		lslb
 		rts
 3		cmpa	#'<
@@ -274,6 +269,8 @@ parg		pshs	b
 		rts
 4		lbsr	dback
 		lbra	dval
+		fill	$ff,$b5c9-*	;@isl
+		jmp	x_inlin	;@isl
 
 ; pnote: A = התו (0-11), B = האורך. U = המקום של כתובת החזרה: פסיקת השדה חוזרת לשם כשהתו נגמר (קורא 9)
 ; @nofill: לולאות מתוזמנות, לפי מחזורים. tools/islands.py לא מכניס כאן גושים

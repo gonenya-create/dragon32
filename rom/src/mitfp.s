@@ -71,6 +71,18 @@ unpk		ldd	1,x
 		std	1,u
 		ldd	3,x
 		std	3,u
+		bra	isl_89a4_e	;@isl
+		fill	$ff,$89a4-*	;@isl
+		ldb	#')	;@isl
+		fcb	$8c	;@isl
+		ldb	#'(	;@isl
+		fcb	$8c	;@isl
+		ldb	#',	;@isl
+		tfr	b,a	;@isl
+		jmp	synchk	;@isl
+		fill	$ff,$89b4-*	;@isl
+		jmp	err_sn	;@isl
+isl_89a4_e	;@isl
 		lda	,x
 		sta	,u
 		rts
@@ -110,20 +122,8 @@ faddh		leax	fhalf,pcr
 fadd		bsr	conupk
 		bra	faddt
 fsub		bsr	conupk
-		bra	isl_89a4_e	;@isl
-		fill	$ff,$89a4-*	;@isl
-		ldb	#')	;@isl
-		fcb	$8c	;@isl
-		ldb	#'(	;@isl
-		fcb	$8c	;@isl
-		ldb	#',	;@isl
-		tfr	b,a	;@isl
-		jmp	synchk	;@isl
-		fill	$ff,$89b4-*	;@isl
-		jmp	err_sn	;@isl
-isl_89a4_e	;@isl
 fsubt		com	FACSGN
-finl2		lbsr	arisg
+finl2		bsr	arisg
 ; faddt: FAC = ARG + FAC
 faddt		tst	FACEXP
 		beq	movfa		; FAC=0: התוצאה ARG
@@ -183,7 +183,7 @@ fsubit		neg	FACOV		; סימנים שונים: הגדול פחות הקטן (0 פ
 		sbca	1,x
 		std	FACHO
 		rora			; C = יצא שלילי → ביט 7 של A
-		bra	fltst
+		lbra	fltst
 
 ; shiftr: מזיז את המנטיסה ב-1..4,X ימינה ב-B סיביות, דרך FACOV. ממלא מלמעלה בביט 7 של BITS
 ; (mit: SHIFTR/ROLSHF 5100)
@@ -300,42 +300,6 @@ mltpl1		lsra
 		ora	#$80		; סמן: הלולאה נגמרת כשהוא יוצא
 1		bcc	2F
 		pshs	a
-		ldd	RESMO
-		addd	ARGMO
-		std	RESMO
-		ldd	RESHO
-		adcb	ARGMOH
-		adca	ARGHO
-		std	RESHO
-		puls	a
-2		ror	RESHO
-		ror	RESMOH
-		ror	RESMO
-		ror	RESLO
-		ror	FACOV
-		lsra
-		bne	1B
-		rts
-; muldiv: המעריך של מכפלה. קטן מדי: אפס (ויציאה גם מהשגרה שקראה). גדול מדי: ?OV
-; muldv2: D = המעריך השני (בחילוק: 256 פחות המעריך של FAC)
-muldiv		ldb	FACEXP
-		clra
-muldv2		tst	ARGEXP
-		beq	8F
-		addb	ARGEXP
-		rola
-		subd	#128
-		ble	8F
-		tsta
-		lbne	ovf
-		stb	FACEXP
-		lda	ARISGN
-		sta	FACSGN
-fprts		rts
-8		leas	2,s
-		bra	zerofc
-fmult		lbsr	conupk
-fmultt		tst	FACEXP
 		bra	isl_8b2d_e	;@isl
 		fill	$ff,$8b2d-*	;@isl
 		lbsr	chknum	;@isl
@@ -362,6 +326,47 @@ isl_8b2d_2	std	FACMO	;@isl
 		tstb	;@isl
 		rts	;@isl
 isl_8b2d_e	;@isl
+		ldd	RESMO
+		addd	ARGMO
+		std	RESMO
+		ldd	RESHO
+		adcb	ARGMOH
+		adca	ARGHO
+		std	RESHO
+		puls	a
+2		ror	RESHO
+		ror	RESMOH
+		ror	RESMO
+		ror	RESLO
+		ror	FACOV
+		lsra
+		bne	1B
+		rts
+; muldiv: המעריך של מכפלה. קטן מדי: אפס (ויציאה גם מהשגרה שקראה). גדול מדי: ?OV
+; muldv2: D = המעריך השני (בחילוק: 256 פחות המעריך של FAC)
+muldiv		ldb	FACEXP
+		clra
+muldv2		tst	ARGEXP
+		beq	8F
+		addb	ARGEXP
+		rola
+		bra	isl_8b8a_e	;@isl
+		fill	$ff,$8b8a-*	;@isl
+		jmp	err_bs	;@isl
+		jmp	err_fc	;@isl
+isl_8b8a_e	;@isl
+		subd	#128
+		ble	8F
+		tsta
+		lbne	ovf
+		stb	FACEXP
+		lda	ARISGN
+		sta	FACSGN
+fprts		rts
+8		leas	2,s
+		lbra	zerofc
+fmult		lbsr	conupk
+fmultt		tst	FACEXP
 		beq	fprts
 		bsr	muldiv
 		clra
@@ -382,16 +387,11 @@ movfr		ldd	RESHO
 
 ; ---------- חילוק (mit: FDIVT 5393, DIVIDE 5410) ----------
 fdiv		lbsr	conupk
-		bra	isl_8b8a_e	;@isl
-		fill	$ff,$8b8a-*	;@isl
-		jmp	err_bs	;@isl
-		jmp	err_fc	;@isl
-isl_8b8a_e	;@isl
 fdivt		ldb	FACEXP
 		lbeq	err_dv0		; ב-Dragon בלי עיגול בכניסה; המנה מתעגלת בסוף (קורא)
 		negb
 		clra
-		lbsr	muldv2		; ARG - FAC + 128
+		bsr	muldv2		; ARG - FAC + 128
 		lbsr	incexp		; ועוד 1
 		ldu	#RESHO
 		lda	#1
@@ -433,9 +433,15 @@ divsub		pshs	a
 		bra	shfarg
 divnrm		ldb	#64		; שתי הסיביות לראש הבית הנוסף
 		mul
+		bra	isl_8c36_e	;@isl
+		fill	$ff,$8c36-*	;@isl
+		clra	;@isl
+		clr	VALTYP	;@isl
+		lbra	givd	;@isl
+isl_8c36_e	;@isl
 		stb	FACOV
 		puls	cc
-		lbra	movfr
+		bra	movfr
 
 ; ---------- קריאת מספר מהטקסט (mit: FIN 5704) ----------
 ; בכניסה: TXTPTR על התו הראשון. ביציאה: FAC, ו-TXTPTR אחרי המספר
@@ -448,7 +454,7 @@ fin		clra
 		std	TENEXP		; וגם EXPSGN
 		jsr	<chrgot
 		ldx	#SGNFLG		; סימן בהתחלה: רק בקלט וב-DATA (בביטוי הוא טוקן) (mit: FIN)
-		lbsr	fsgn
+		bsr	fsgn
 fin_lp		bcs	fin_dig		; ספרה
 		cmpa	#'.
 		bne	fin_e
@@ -460,20 +466,14 @@ fin_dig		tst	DPTFLG
 		beq	1F
 		inc	DECCNT
 1		pshs	a
-		lbsr	mul10
+		bsr	mul10
 		puls	a
 		suba	#'0
-		lbsr	finlog
+		bsr	finlog
 fin_nx		jsr	<chrget
 		bra	fin_lp
 fin_e		cmpa	#'E
 		bne	fin_end
-		bra	isl_8c36_e	;@isl
-		fill	$ff,$8c36-*	;@isl
-		clra	;@isl
-		clr	VALTYP	;@isl
-		lbra	givd	;@isl
-isl_8c36_e	;@isl
 		jsr	<chrget
 		ldx	#EXPSGN
 		bsr	fsgn
@@ -715,6 +715,13 @@ fdig		lda	#'0
 		subd	2,x
 		pshs	d
 		ldd	FACHO
+		bra	isl_8e4f_e	;@isl
+		fill	$ff,$8e4f-*	;@isl
+		jsr	<chrget	;@isl
+		jsr	frmevl	;@isl
+		jsr	conint	;@isl
+		jmp	<chrgot	;@isl
+isl_8e4f_e	;@isl
 		sbcb	1,x
 		sbca	,x
 		bcs	2F
@@ -725,5 +732,16 @@ fdig		lda	#'0
 		bra	1B
 2		leas	2,s
 		leax	4,x
+		bra	isl_8e7a_e	;@isl
+		fill	$ff,$8e7a-*	;@isl
+		jmp	x_adrbyt	;@isl
+		fill	$ff,$8e7e-*	;@isl
+		jsr	chkcom	;@isl
+		bra	$8e51	;@isl
+		jsr	frmevl	;@isl
+		jsr	getadr	;@isl
+		tfr	d,x	;@isl
+		rts	;@isl
+isl_8e7a_e	;@isl
 		puls	b,pc
 

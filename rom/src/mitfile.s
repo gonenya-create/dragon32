@@ -31,8 +31,6 @@ rblk		ldx	#TBUF
 		lbsr	motoff
 		ldb	BLKRES
 		rts
-		fill	$ff,$b93e-*	;@isl
-		jmp	tblkrd	;@isl
 ; wrhdr: הכותרת. A = סוג הקובץ, B = הדגלים (ASCII ופערים שווים בכל סוגי השמירה). קובץ פתוח: ?AO.
 ; רק השם, הסוג והדגלים נכתבים; בתי הביצוע והטעינה נשארים כמו שהם (CSAVEM כותב אותם לפני)
 wrhdr		tst	FSTATE
@@ -41,6 +39,10 @@ wrhdr		tst	FSTATE
 		stb	HASCII
 		stb	HGAP
 		ldx	#FNAME
+		bra	isl_b93e_e	;@isl
+		fill	$ff,$b93e-*	;@isl
+		jmp	tblkrd	;@isl
+isl_b93e_e	;@isl
 		ldu	#TBUF
 		lda	#8
 		lbsr	cpy
@@ -161,7 +163,7 @@ csave_st	cmpa	#'M
 		jsr	<chrgot
 		bne	1F
 csavp		clra			; תוכנית, בינארי, רציף ($B6A5: אחרי השם)
-		clrb
+csavab		clrb			; ‏$B6A6: הסוג כבר ב-A
 		lbsr	wrhdr
 		jsr	tleader
 		ldx	TXTTAB		; מתחילת התוכנית עד VARTAB (כולל שני האפסים של הסוף)
@@ -193,14 +195,6 @@ getofs		clrb
 		bne	cadr
 		clra			; גם אחרי ':' (למשל CLOADM"":GOTO 280 ב-Tim Love's Cricket): ההיסט 0, לא $3A00
 		rts
-		fill	$ff,$ba77-*	;@isl
-		ldb	#$60	;@isl
-		ldx	#$0400	;@isl
-		stx	CURSOR	;@isl
-isl_ba7e	stb	,x+	;@isl
-		cmpx	#$0600	;@isl
-		blo	isl_ba7e	;@isl
-		rts	;@isl
 cadr		lbsr	comfrm
 		lbra	getadr
 
@@ -210,12 +204,18 @@ csavem		jsr	<chrget		; ה-M
 		bsr	cadr
 		std	HLOAD
 		pshs	d
+		bra	isl_ba77_e	;@isl
+		fill	$ff,$ba77-*	;@isl
+		ldb	#$60	;@isl
+		ldx	#$0400	;@isl
+		stx	CURSOR	;@isl
+isl_ba7e	stb	,x+	;@isl
+		cmpx	#$0600	;@isl
+		blo	isl_ba7e	;@isl
+		rts	;@isl
+isl_ba77_e	;@isl
 		bsr	cadr
 		cmpd	,s		; סוף לפני התחלה: ?FC, לפני כתובת הביצוע
-		bra	isl_baa0_e	;@isl
-		fill	$ff,$baa0-*	;@isl
-		jmp	sound2	;@isl
-isl_baa0_e	;@isl
 		lblo	err_fc
 		pshs	d
 		bsr	cadr
@@ -223,15 +223,15 @@ isl_baa0_e	;@isl
 		lbsr	nochr
 		lda	#2
 		clrb
+		bra	isl_baa0_e	;@isl
+		fill	$ff,$baa0-*	;@isl
+		jmp	sound2	;@isl
+isl_baa0_e	;@isl
 		lbsr	wrhdr
 		jsr	tleader
 		puls	d,x		; D = הסוף, X = ההתחלה
 		addd	#1		; כולל הסוף
 		lbra	wdata
-		fill	$ff,$bac3-*	;@isl
-		bra	isl_bac8	;@isl
-		jmp	sndon	;@isl
-isl_bac8	jmp	sndoff	;@isl
 
 ; ---------- SKIPF (3.7) ----------
 skipf_st	lbsr	getfne
@@ -242,6 +242,12 @@ skipf_st	lbsr	getfne
 motor_st	tfr	a,b		; chrget לא נוגע ב-B
 		jsr	<chrget
 		cmpb	#$c2		; OFF
+		bra	isl_bac3_e	;@isl
+		fill	$ff,$bac3-*	;@isl
+		bra	isl_bac8	;@isl
+		jmp	sndon	;@isl
+isl_bac8	jmp	sndoff	;@isl
+isl_bac3_e	;@isl
 		lbeq	motoff
 		cmpb	#$88		; ON: המנוע והשהיה; הפסיקות לא נחסמות
 		lbne	err_sn
@@ -253,10 +259,6 @@ motor_st	tfr	a,b		; chrget לא נוגע ב-B
 ; getdev: [#]ביטוי → DEVNUM. בין -32768 ל-32767 (אחרת ?FC), אחר כך בין -128 ל-127 (אחרת ?DN); נשמר,
 ; ורק 0, -1, -2 מותרים (אחרת ?DN; השגיאה מאפסת את DEVNUM)
 getdev		cmpa	#'#
-		bra	isl_baec_e	;@isl
-		fill	$ff,$baec-*	;@isl
-		jmp	x_audon	;@isl
-isl_baec_e	;@isl
 		bne	1F
 		jsr	<chrget
 1		lbsr	frmevl
@@ -264,6 +266,10 @@ devfac		lbsr	ayint
 		ldb	FACLO
 		sex
 		cmpa	FACMO
+		bra	isl_baec_e	;@isl
+		fill	$ff,$baec-*	;@isl
+		jmp	x_audon	;@isl
+isl_baec_e	;@isl
 		bne	8F
 		stb	DEVNUM
 		tstb			; 2: B עם הדגלים שלו; Z=1 בחזרה = מקובל (גם התקן של הרחבה)
@@ -287,6 +293,14 @@ istape		lda	DEVNUM
 chkout		jsr	HK_CKOUT	; 7
 		ldb	#2
 		bra	1F
+chkin		jsr	HK_CKIN		; 6
+		lda	DEVNUM
+		cmpa	#$fe
+		beq	8F
+		ldb	#1
+1		bsr	istape
+		bne	9F
+		bra	isl_bb26_e	;@isl
 		fill	$ff,$bb26-*	;@isl
 		cmpa	#':	;@isl
 		bhs	isl_bb26_9	;@isl
@@ -296,13 +310,7 @@ chkout		jsr	HK_CKOUT	; 7
 isl_bb26_1	suba	#'0	;@isl
 		suba	#-'0	;@isl
 isl_bb26_9	rts	;@isl
-chkin		jsr	HK_CKIN		; 6
-		lda	DEVNUM
-		cmpa	#$fe
-		beq	8F
-		ldb	#1
-1		bsr	istape
-		bne	9F
+isl_bb26_e	;@isl
 		lda	FSTATE
 		lbeq	err_no
 		cmpb	FSTATE
@@ -363,10 +371,6 @@ devpar		jsr	HK_DEVP		; 3
 		clra
 		std	DEVPOS
 		coma
-		bra	isl_bbb5_e	;@isl
-		fill	$ff,$bbb5-*	;@isl
-		jmp	blink	;@isl
-isl_bbb5_e	;@isl
 		sta	SPCIO
 9		tst	DEVWID
 		puls	a,b,pc
@@ -377,32 +381,38 @@ isl_bbb5_e	;@isl
 ; לבד), ועם 0 נשלח סוף שורה. A, B ו-X נשמרים
 prtout		pshs	a,b,x
 		cmpa	#13
+		beq	2F
+		cmpa	#$20
+		bra	isl_bbb5_e	;@isl
+		fill	$ff,$bbb5-*	;@isl
+		jmp	blink	;@isl
+isl_bbb5_e	;@isl
+		blo	1F
+		inc	LPTPOS
+1		bsr	lpsend
+		lda	LPTPOS
+		cmpa	LPTWID
 		bra	isl_bbc5_e	;@isl
 		fill	$ff,$bbc5-*	;@isl
 isl_bbc5	leax	-1,x	;@isl
 		bne	isl_bbc5	;@isl
 		rts	;@isl
 isl_bbc5_e	;@isl
-		beq	2F
-		cmpa	#$20
-		blo	1F
-		inc	LPTPOS
-1		bsr	lpsend
-		lda	LPTPOS
-		cmpa	LPTWID
 		blo	9F
 		tst	LPAUTO
 		beq	2F
 		clr	LPTPOS
 9		puls	a,b,x,pc
-		fill	$ff,$bbe5-*	;@isl
-		jmp	keyindex	;@isl
 2		tst	LPTPOS		; סוף שורה
 		bne	3F
 		lda	#$20
 		bsr	lpsend
 3		ldx	#LPEOL
 		ldb	,x+		; כמה בתים (עד 6)
+		bra	isl_bbe5_e	;@isl
+		fill	$ff,$bbe5-*	;@isl
+		jmp	keyindex	;@isl
+isl_bbe5_e	;@isl
 		beq	5F
 4		lda	,x+
 		bsr	lpsend
@@ -536,8 +546,6 @@ wopen		ldb	#$ff
 		clr	CBFCNT
 9		rts
 efmo		lbra	err_fm		; ?FM קרוב (OPEN, CLOAD של ASCII)
-		fill	$ff,$bcf5-*	;@isl
-		jmp	lpsend	;@isl
 
 ; ---------- CLOSE [#התקן[,#התקן...]] (3.13) ----------
 close_st	beq	tclose		; בלי כלום: הכול
@@ -547,6 +555,8 @@ close_st	beq	tclose		; בלי כלום: הכול
 		beq	9F		; ה-rts של tclose
 		lbsr	chkcom
 		bra	1B
+		fill	$ff,$bcf5-*	;@isl
+		jmp	lpsend	;@isl
 ; tclose: סגירת הכול (END, RUN, CLOSE; קורא: מדפסת 3.6 נקודות 8-9): הקלטת, דרך סגירת התקן אחד
 tclose		jsr	HK_CLALL	; 8
 		lda	#$ff
@@ -557,10 +567,6 @@ clsone		jsr	HK_CLONE	; 9
 		lda	DEVNUM
 		clr	DEVNUM
 		inca
-		bra	isl_bd1a_e	;@isl
-		fill	$ff,$bd1a-*	;@isl
-		jmp	prtout	;@isl
-isl_bd1a_e	;@isl
 		bne	9F
 		lda	FSTATE
 		cmpa	#2
@@ -569,6 +575,10 @@ isl_bd1a_e	;@isl
 		beq	2F
 		lbsr	wbuf
 2		lda	#$ff
+		bra	isl_bd1a_e	;@isl
+		fill	$ff,$bd1a-*	;@isl
+		jmp	prtout	;@isl
+isl_bd1a_e	;@isl
 		sta	BLKTYP
 		clr	BLKLEN
 		lbsr	wblk
@@ -580,23 +590,19 @@ tcl1		clr	FSTATE		; C=0 (END)
 ; מקלדת: 0. מדפסת: ?FM. קלטת: פתוחה לקריאה, ו-1- כשהחוצץ ריק. ההתקן הקודם חוזר אחר כך
 fn_eof		jsr	HK_EOF		; 15
 		lda	DEVNUM
-		bra	isl_bd41_e	;@isl
-		fill	$ff,$bd41-*	;@isl
-		jmp	x_mux	;@isl
-isl_bd41_e	;@isl
 		pshs	a
 		lbsr	devfac		; B = DEVNUM
 		tstb
 		beq	1F
 		lbsr	chkin
 		clrb
-		bra	isl_bd52_e	;@isl
-		fill	$ff,$bd52-*	;@isl
-		jmp	joyrd	;@isl
-isl_bd52_e	;@isl
 		tst	CBFCNT
 		bne	1F
 		decb
+		bra	isl_bd41_e	;@isl
+		fill	$ff,$bd41-*	;@isl
+		jmp	x_mux	;@isl
+isl_bd41_e	;@isl
 1		puls	a
 		sta	DEVNUM
 		sex
@@ -606,6 +612,10 @@ isl_bd52_e	;@isl
 ; דגל ASCII חובה (?FM). NEW, הקלטת פתוחה לקריאה, ושורה אחרי שורה כאילו הוקלדה (בלי הד). שורה בלי מספר: ?DS.
 ; בסוף הקובץ: סגור, ו-OK. שורה שנקטעה בסוף הקובץ הולכת לאיבוד
 cl_asc		tst	HASCII
+		bra	isl_bd52_e	;@isl
+		fill	$ff,$bd52-*	;@isl
+		jmp	joyrd	;@isl
+isl_bd52_e	;@isl
 		beq	efmo
 		lbsr	scrtch
 		lda	#$ff
@@ -659,20 +669,16 @@ clm_gap		ldd	HTYPE		; הכותרת תידרס בחוצץ: הסוג וה-ASCII נ
 3		stx	EXECJP
 		leas	2,s
 		lbra	tcl1
-		fill	$ff,$bddc-*	;@isl
-		jmp	motoff	;@isl
 ; trawd: שני בתים מהקלטת → D (הגבוה קודם)
 trawd		bsr	trawb
 		tfr	a,b
 		bsr	trawb
-		bra	isl_bde7_e	;@isl
-		fill	$ff,$bde7-*	;@isl
-		jmp	tsync	;@isl
-isl_bde7_e	;@isl
 		exg	a,b
 		rts
 ; trawb: בית מהקלטת. סוף הקובץ באמצע: ?IO
 trawb		lbsr	tchin
 		bne	eio2
 		rts
+		fill	$ff,$bddc-*	;@isl
+		jmp	motoff	;@isl
 eio2		lbra	err_io

@@ -272,6 +272,12 @@ fn_strng	lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את האר
 3		stb	,x+
 		deca
 		bne	3B
+		bra	isl_9d3d_e	;@isl
+		fill	$ff,$9d3d-*	;@isl
+		jmp	irq	;@isl
+		fill	$ff,$9d46-*	;@isl
+		jmp	irqtk	;@isl
+isl_9d3d_e	;@isl
 4		lbra	putnew
 
 ; ---------- POS, MEM, VARPTR, TIMER (קורא) ----------
@@ -302,12 +308,6 @@ fn_varptr	lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את הא�
 		ldd	VARPNT		; מספר: בית המעריך; מחרוזת: המתאר; מערך: האיבר
 		lbra	givu
 fn_timer	ldd	TICKS
-		bra	isl_9d3d_e	;@isl
-		fill	$ff,$9d3d-*	;@isl
-		jmp	irq	;@isl
-		fill	$ff,$9d46-*	;@isl
-		jmp	irqtk	;@isl
-isl_9d3d_e	;@isl
 		lbra	givu
 ; TIMER=n (פקודה): 0-65535, בלי השבר
 timset		jsr	<chrget		; אחרי $FF

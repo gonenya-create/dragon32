@@ -156,6 +156,10 @@ fretmp		bsr	fretms		; Z=1 אם זה היה הזמני האחרון
 		cmpd	FRETOP
 		bne	9F
 		addb	,x		; D = FRETOP
+		bra	isl_957a_e	;@isl
+		fill	$ff,$957a-*	;@isl
+		jmp	prnum	;@isl
+isl_957a_e	;@isl
 		adca	#0
 		std	FRETOP
 9		lda	,x
@@ -197,30 +201,28 @@ strspa		sta	DSCTMP
 		lbsr	garba2
 		bra	1B
 GARBFL		equ	$07
-		fill	$ff,$957a-*	;@isl
-		jmp	prnum	;@isl
 
 ; ---------- פונקציות מחרוזת בסיסיות (mit: LEN 4730, ASC 4741, CHR 4627, LEFT 4642, RIGHT 4672, MID 4677) ----------
-fn_asc		lbsr	frestr
+fn_asc		bsr	frestr
 		clr	VALTYP
 		tsta
 		beq	str_fc
 		ldb	,x
 		bra	1F
-fn_len		lbsr	frestr
+fn_len		bsr	frestr
 		clr	VALTYP
 		tfr	a,b
 1		lbra	givb
 fn_chr		lbsr	conint		; B = 0-255
 		pshs	b
 		lda	#1
-		lbsr	strspa
+		bsr	strspa
 		puls	b
 		stb	,x		; X = הכתובת (strspa)
 		lbra	putnew
 ; left$/right$/mid$: X = מתאר המחרוזת, B = התחלה (0..), A = כמה תווים. מעתיקים לזמני חדש
 substr		pshs	a,b,x
-		lbsr	strspa		; מקום ל-A תווים (עלול לאסוף: מחשבים את המקור אחר כך)
+		bsr	strspa		; מקום ל-A תווים (עלול לאסוף: מחשבים את המקור אחר כך)
 		ldx	2,s
 		lbsr	fretmp		; X = כתובת המקור
 		puls	d,u		; A = כמה, B = התחלה (U סתם)

@@ -460,13 +460,13 @@ gpbit		lsrb
 3		ldb	GPACT		; PUT: הפעולה לפי הביט במערך
 		lda	1,s
 		anda	,u
-		beq	4F
-		lsrb
-		lsrb
 		bra	isl_b3b4_e	;@isl
 		fill	$ff,$b3b4-*	;@isl
 		jmp	reset	;@isl
 isl_b3b4_e	;@isl
+		beq	4F
+		lsrb
+		lsrb
 4		lda	,x
 		bitb	#2		; מחיקה
 		beq	41F

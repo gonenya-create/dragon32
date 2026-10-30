@@ -158,6 +158,16 @@ try {
   // הטוען של Microdeal (Cuthbert in the Jungle) מפנה את מצביע הטקסט ל-$84AF, ושם יש במקור ':' (האופרנד של CMPA #':)
   s = await run(['PRINT PEEK(&H84AF)']);
   ok('$84AF מכיל את התו נקודתיים (58), כמו במקור', /^ 58 ?$/m.test(s), show(tail(s)));
+
+  console.log('שורה מהמקלדת: ‏$B5C9, ומקש: ‏$B538');
+  // כמו El Diablero (Ken Kalish): JSR $B5C9, ואז שומרים את CC, B, X והתווים $02DD ו-$02E2 (לפני שהשורה הבאה דורסת את המאגר).
+  // השורה HELLO מוקלדת לתוכנית
+  s = await run([...poke(0x7000, 'BDB5C9 1FA8 B77083 F77080 BF7081 B602DD B77084 B602E2 B77085 39'), 'EXEC &H7000', 'HELLO',
+    'PRINT PEEK(&H7084);PEEK(&H7085);PEEK(&H7080);PEEK(&H7081)*256+PEEK(&H7082);PEEK(&H7083) AND 5']);
+  ok('$B5C9 קורא שורה ל-$02DD עם אפס בסוף, ומחזיר B = התווים + 1, X = $02DC, Z=1 ו-C=0 (קורא 30.10)', /^ 72 {2}0 {2}6 {2}732 {2}4 ?$/m.test(s), show(tail(s)));
+  // JSR $B538 / STA $7080 / RTS: מחכה למקש ומחזיר אותו ב-A
+  s = await run([...poke(0x7000, 'BDB538 B77080 39'), 'EXEC &H7000', 'Q', 'PRINT PEEK(&H7080)']);
+  ok('$B538 מחכה למקש ומחזיר אותו ב-A (קורא 30.10)', /^ 81 ?$/m.test(s), show(tail(s)));
 } catch (e) {
   fail++; console.log('  ✗ ' + e.message);
 }

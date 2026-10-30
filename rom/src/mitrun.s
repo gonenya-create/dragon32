@@ -49,11 +49,6 @@ newstt		jsr	HK_NEWS		; 21
 		andcc	#$af		; הפסיקות פתוחות בתחילת כל פקודה (קורא: קלטת 5, צליל 1.2)
 		lbsr	brkchk		; BREAK? (mit: ISCNTC)
 		jmp	$84a6		; newst2, באותו סדר כמו במקור (islands.s)
-		fill	$ff,$8e4f-*	;@isl
-		jsr	<chrget	;@isl
-		jsr	frmevl	;@isl
-		jsr	conint	;@isl
-		jmp	<chrgot	;@isl
 newst3		ldd	1,x		; הקישור (X = מצביע הטקסט, מ-$84A6)
 		lbeq	endcon		; סוף התוכנית (או סוף השורה הישירה)
 		ldd	3,x
@@ -67,17 +62,6 @@ gone		jsr	<chrget
 snerr		lbra	err_sn		; יציאה משותפת ל-?SN בסביבה
 gone3		beq	9F		; פקודה ריקה
 		jsr	HK_STMT		; 10, עם A = הבית
-		bra	isl_8e7a_e	;@isl
-		fill	$ff,$8e7a-*	;@isl
-		jmp	x_adrbyt	;@isl
-		fill	$ff,$8e7e-*	;@isl
-		jsr	chkcom	;@isl
-		bra	$8e51	;@isl
-		jsr	frmevl	;@isl
-		jsr	getadr	;@isl
-		tfr	d,x	;@isl
-		rts	;@isl
-isl_8e7a_e	;@isl
 		tsta
 		lbpl	let		; לא מילה שמורה: השמה
 		cmpa	#$ff		; פונקציה בתחילת פקודה: TIMER= (קורא)
@@ -253,9 +237,13 @@ prlist		beq	pr_cr
 		cmpa	#$cd		; PRINT @n,USING
 		lbeq	usstart
 pr_lp		cmpa	#';
-		lbeq	pr_semi
+		bra	isl_903d_e	;@isl
+		fill	$ff,$903d-*	;@isl
+		jmp	print	;@isl
+isl_903d_e	;@isl
+		beq	pr_semi
 		cmpa	#$bb		; TAB(
-		lbeq	pr_tab
+		beq	pr_tab
 		cmpa	#',
 		beq	pr_comma
 		lbsr	frmevl
@@ -288,10 +276,6 @@ pr_comma	lbsr	istape
 		lbsr	devpar
 		ldd	DEVLCF		; A = השדה האחרון, B = המקום
 		pshs	a
-		bra	isl_903d_e	;@isl
-		fill	$ff,$903d-*	;@isl
-		jmp	print	;@isl
-isl_903d_e	;@isl
 		cmpb	,s+
 		bhs	2F
 		tfr	b,a
@@ -302,7 +286,7 @@ isl_903d_e	;@isl
 		bra	pr_semi
 2		lbsr	pr_cr
 pr_semi		jsr	<chrget		; גם הפסיק ממשיך כאן
-		lbne	pr_lp
+		bne	pr_lp
 		rts			; ; בסוף: בלי שורה חדשה
 ; TAB(n) (קורא: מדפסת 4.2): n בין 0 ל-255, ואחריו ')'. רווחים עד העמודה n; אם כבר שם או אחריה: כלום
 ; (בלי שורה חדשה). לקלטת: כלום. אחרי TAB אין שורה חדשה בסוף, כמו ';'
@@ -332,7 +316,7 @@ prspcs		pshs	b
 for		lbsr	let		; המשתנה מקבל את ערך ההתחלה; let שם ב-FORPNT את המשתנה של הלולאה
 				; (לא VARPNT: הביטוי של ההתחלה כבר דרס אותו — FOR I=J TO 3)
 		leas	2,s		; בלי החזרה ל-gone: הרשומה נכנסת מתחתיה (mit: NOTOL)
-		lbsr	fndfor		; אותו משתנה כבר בלולאה? מוחקים אותה ומה שמעליה
+		bsr	fndfor		; אותו משתנה כבר בלולאה? מוחקים אותה ומה שמעליה
 		bne	2F
 		leas	18,x		; X = הרשומה
 2		ldb	#18
@@ -340,6 +324,11 @@ for		lbsr	let		; המשתנה מקבל את ערך ההתחלה; let שם ב-FOR
 		lda	#$bc		; TO
 		lbsr	synchk
 		lbsr	frmevl		; העד
+		bra	isl_90e5_e	;@isl
+		fill	$ff,$90e5-*	;@isl
+		jmp	x_strout	;@isl
+		jmp	strprt	;@isl
+isl_90e5_e	;@isl
 		ldx	#TEMPLIM
 		lbsr	movmf
 		leax	fone,pcr	; צעד ברירת מחדל 1
@@ -367,7 +356,7 @@ for		lbsr	let		; המשתנה מקבל את ערך ההתחלה; let שם ב-FOR
 		std	1,s
 		lda	#$80		; [0] FOR
 		sta	,s
-		lbra	nxnew
+		bra	nxnew
 TEMPLIM		equ	$03e0		; זמני: העד, בתוך FBUFFR שלא בשימוש כאן
 RELSAV		equ	$03da		; זמני: המקום לפני סימן יחס
 
@@ -375,11 +364,6 @@ RELSAV		equ	$03da		; זמני: המקום לפני סימן יחס
 stmend		ldx	TXTPTR
 1		lda	,x
 		beq	9F
-		bra	isl_90e5_e	;@isl
-		fill	$ff,$90e5-*	;@isl
-		jmp	x_strout	;@isl
-		jmp	strprt	;@isl
-isl_90e5_e	;@isl
 		cmpa	#':
 		beq	9F
 		cmpa	#'"

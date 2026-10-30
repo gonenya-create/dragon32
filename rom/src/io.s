@@ -4,6 +4,10 @@
 hw_init
 		; PIA0: A = שורות המקלדת (קלט), B = עמודות (פלט)
 		ldx	#PIA0
+		bra	isl_bde7_e	;@isl
+		fill	$ff,$bde7-*	;@isl
+		jmp	tsync	;@isl
+isl_bde7_e	;@isl
 		ldb	#$34		; CR: גישה לנתונים; CA2/CB2 פלט נמוך — בוררי הצליל, הצליל והמנוע כבויים (קורא: צליל 0.3)
 		clra
 		bsr	piaddr		; DDRA: הכול קלט

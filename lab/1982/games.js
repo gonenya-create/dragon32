@@ -163,6 +163,38 @@ window.D32_GAMES = {
         48
       ]
     },
+    "diablero": {
+      "slug": "el-diablero",
+      "drawer": "period",
+      "year": "1982",
+      "tag": [
+        "הרפתקת טקסט",
+        "text adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כשתי דקות",
+        "about two minutes"
+      ],
+      "about": {
+        "he": [
+          "Ken Kalish כתב אותו, ו-Computerware הוציאה אותו ב-1982. ל-Dragon הוציאה אותו Dragon Data עצמה, החברה שבנתה את המחשב.",
+          "בראיון אצל L. Curtis Boyle סיפר Kalish שכתב אותו אחרי שקרא את הספרים של קרלוס קסטנדה. אין בו גרפיקה: רק מילים, כמו ההרפתקאות של Scott Adams."
+        ],
+        "en": [
+          "Ken Kalish wrote it, and Computerware published it in 1982. For the Dragon it came out from Dragon Data itself, the company that built the computer.",
+          "In his interview with L. Curtis Boyle, Kalish said he wrote it after reading Carlos Castaneda's books. There are no graphics: just words, like Scott Adams's adventures."
+        ]
+      },
+      "icon": [
+        8,
+        8,
+        64
+      ]
+    },
     "phantom": {
       "slug": "phantom-slayer",
       "drawer": "period",

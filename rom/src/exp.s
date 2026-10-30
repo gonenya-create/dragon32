@@ -999,7 +999,7 @@ pow10		fdb	10000,1000,100,10,1,0
 
 ; getline: שורה ל-LINBUF (מסתיים ב-0). ← מוחק, ENTER מסיים, BREAK: C=1. (שלנו, עם מצביע ולא B,X)
 getline		jsr	HK_LINE		; 13
-		pshs	b,x
+gl_ent		pshs	b,x
 gl_new		ldx	#LINBUF
 gl_key		lbsr	getkey		; הסמן מהבהב בתוך getkey (קורא)
 		cmpa	#13
@@ -1032,6 +1032,42 @@ gl_done		clr	,x
 		pshs	cc
 		lbsr	prcr
 		puls	cc,b,x,pc
+; plyini (עבר מ-mitsnd.s, 30.10): ברירות המחדל, בהדלקה ובכל RUN (קורא 0.2): O3 (נשמר 2), עוצמה $B8/$44, L4, T2, בלי נקודות
+plyini		ldd	#$4404
+		std	VOLLO
+		ldd	#$02b8
+		std	OCTAVE
+		sta	TEMPO		; A = 2
+		clr	DOTVAL
+		rts
+; tmoton (עבר מ-mittape.s, 30.10): המנוע דולק, ואז השהיה של MOTDLY ספירות (תמיד, גם אם כבר דלק). A ו-X משתנים (X=0)
+tmoton		lda	PIA1+1
+		ora	#8
+		sta	PIA1+1
+		ldx	MOTDLY
+1		leax	-1,x
+		bne	1B
+		rts
+; getfne: שם הקובץ ואז סוף הפקודה. nochr: אחרי הפקודה לא בא כלום, אחרת ?SN (עברו מ-mittape.s, 30.10)
+getfne		lbsr	getfn
+nochr		jsr	<chrgot
+		lbne	err_sn
+		rts
+; x_inlin ($B5C9, קורא 30.10): כמו getline בלי ה-hook, ו-INKEY$ מתנקה. בחזרה כמו במקור: X = $02DC, A = 13,
+; B = מספר התווים + 1, Z=1, ו-C=1 אם נלחץ BREAK
+x_inlin		clr	IKEYIM
+		bsr	gl_ent
+		pshs	cc
+		ldx	#LINBUF
+		clrb
+1		incb
+		tst	,x+
+		bne	1B
+		ldx	#LINBUF-1
+		lda	#13
+		puls	cc
+		orcc	#4
+		rts
 banner		fcc	"DRAGON 1982 BASIC 1.0"	; כמו במחשב הראשי של האתר
 		fcb	13
 		fcc	"(C) 2026 GONEN YAROM"

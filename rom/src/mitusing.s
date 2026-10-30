@@ -338,14 +338,14 @@ us_dg		lbsr	faddh
 		lbsr	qint
 		ldy	USBASE
 		ldx	#foutbl
-1		lbsr	fdig
-		stb	,y+
 		bra	isl_a93a_e	;@isl
 		fill	$ff,$a93a-*	;@isl
 		jmp	txtmode	;@isl
 isl_a93a_e	;@isl
+1		lbsr	fdig
+		stb	,y+
 		cmpx	#foutbl+36	; תשע החזקות
-		lblo	1B
+		blo	1B
 ; us_out: מהספרות לפלט: החלק השלם (פסיקים), מילוי, סימן ו-$, התאמה לרוחב (%), נקודה, שבר, מעריך, סימן נגרר
 us_out		ldy	USBASE
 		leay	16,y
@@ -450,12 +450,12 @@ us_fit		ldb	USD
 		lda	#'+
 		ldb	USX
 		bpl	4F
-		negb
-		lda	#'-
 		bra	isl_aa10_e	;@isl
 		fill	$ff,$aa10-*	;@isl
 		jmp	x_css	;@isl
 isl_aa10_e	;@isl
+		negb
+		lda	#'-
 4		sta	,y+
 		lda	#'0-1
 41		inca
