@@ -1453,8 +1453,8 @@ body.game-open .shelf > :not(.game-view) { display: none; }
         status.textContent = (mc === 'a'
           ? (EN ? 'The tape "' + title + '" is in the recorder. Type CLOADM. Loading can take a few minutes: first S, then F and the tape\'s name' + (next ? '.' : ', and the game starts by itself.')
             : 'הקלטת "' + title + '" ברשמקול. הקלידו CLOADM. הטעינה יכולה לקחת כמה דקות: קודם S, אחר כך F ושם הקלטת' + (next ? '.' : ', ואז המשחק מתחיל לבד.'))
-          : EN ? 'The tape "' + title + '" is in the recorder. Type ' + LOADW + ', and after OK type ' + RUNW + '.'
-          : 'הקלטת "' + title + '" ברשמקול. הקלידו ' + LOADW + ', ואחרי ה-OK הקלידו ' + RUNW + '.') + next;
+          : EN ? 'The tape "' + title + '" is in the recorder. Type ' + LOADW + ', and after OK type ' + RUNW + '.' + (mc === 'mine' ? ' Some games start by themselves.' : '')
+          : 'הקלטת "' + title + '" ברשמקול. הקלידו ' + LOADW + ', ואחרי ה-OK הקלידו ' + RUNW + '.' + (mc === 'mine' ? ' יש משחקים שמתחילים לבד.' : '')) + next;
         document.getElementById('canvas')?.focus({ preventScroll: true });
         return;
       }
@@ -1596,7 +1596,21 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       p.textContent = EN ? 'No tapes yet.' : 'עוד אין קלטות.';
       mineBox.appendChild(p);
     }
-    for (const f of list.slice().reverse()) {
+    // שתי קבוצות (גונן, 31.10: "להפריד את הקלטות שהם משחקים לבין קלטות שהם תכניות בייסיק"): שפת מכונה, ואחריה BASIC ונתונים
+    const recent = list.slice().reverse();
+    const groups = [[recent.filter(f => f.b[0][9] === 2), EN ? '🎮 Games and machine code' : '🎮 משחקים ושפת מכונה'],
+      [recent.filter(f => f.b[0][9] !== 2), EN ? '📝 BASIC programs' : '📝 תוכניות BASIC']];
+    for (const [items, label] of groups) {
+      if (!items.length) continue;
+      const h = document.createElement('h3');
+      h.className = 'mine-group';
+      h.textContent = label;
+      mineBox.appendChild(h);
+      for (const f of items) addRow(f);
+    }
+  }
+  function addRow(f) {
+    {
       const row = document.createElement('div');
       row.className = 'mytape';
       const b = document.createElement('button');
@@ -1612,7 +1626,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       b.querySelector('.how').textContent = how;
       b.setAttribute('aria-label', f.n + (kind === 2 ? (EN ? ', machine code: CLOADM' : ', שפת מכונה: CLOADM')
         : kind === 0 ? (EN ? ', BASIC program: CLOAD' : ', תוכנית BASIC: CLOAD') : (EN ? ', data file' : ', קובץ נתונים')));
-      b.addEventListener('click', () => { gameKeys(null); play(tapeBytes([f]), '/mine.cas', f.n, b, false, false); });
+      b.addEventListener('click', () => { gameKeys(null); play(tapeBytes([f]), '/mine.cas', f.n, b, false, false, kind === 2 ? 'mine' : false); });
       const down = document.createElement('button');
       down.type = 'button';
       down.className = 'mini';
