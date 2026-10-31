@@ -27,6 +27,8 @@
     spores: { dir: ARROWS, fire: 'space', label: ['רווח', 'SPACE'] },
     tangle: { dir: ARROWS, fire: 'enter', label: ['ENTER', 'ENTER'] },
     digit: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
+    brickout: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },   // ידית: shelf.js מזיז את המחבט בהדרגה לפי החיצים
+    snaker: { dir: ARROWS, fire: 'enter', label: ['ENTER', 'ENTER'] },
     sketch: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] }   // הקלד בעצמך (typein.js): Sketching מצייר בג'ויסטיק
   };
   const css = document.createElement('style');

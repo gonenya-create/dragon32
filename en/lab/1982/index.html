@@ -164,7 +164,7 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
   <a href="/en/">← Back to the app</a>
 </header>
 <main>
-  <p class="note"><strong>Two computers:</strong> here, on the machine, as close to the original as we can get. To learn and write BASIC the easy way, with games and a helper: <a href="/en/">the app</a>.<br>This is <strong>the Dragon machine</strong>: the Dragon 32's chips (the 6809 CPU, memory and video), running <strong>a BASIC we wrote ourselves</strong>, without the original ROM. <strong>It is still being built:</strong> the BASIC behaves like the original in everything we have checked, and the routines that 1982 machine-code software called now sit at the original addresses. Original games from that time, by Ken Kalish, Scott Adams, Mike Hughey, Tim Love, Harry Whitehouse, Ian Murray-Watson, Rolf Michelsen and Douglas J. Morgan, already run on it without any change to their code. We have not yet compared it with a real Dragon. <a href="./building/">What we are building now</a>. Click the screen and type, or use the keyboard below.</p>
+  <p class="note"><strong>Two computers:</strong> here, on the machine, as close to the original as we can get. To learn and write BASIC the easy way, with games and a helper: <a href="/en/">the app</a>.<br>This is <strong>the Dragon machine</strong>: the Dragon 32's chips (the 6809 CPU, memory and video), running <strong>a BASIC we wrote ourselves</strong>, without the original ROM. <strong>It is still being built:</strong> the BASIC behaves like the original in everything we have checked, and the routines that 1982 machine-code software called now sit at the original addresses. Original games from that time, by Ken Kalish, Scott Adams, Mike Hughey, Tim Love, Harry Whitehouse, Ian Murray-Watson, Rolf Michelsen, Douglas J. Morgan, Gary Ritchie and Owen Stenseth, already run on it without any change to their code. We have not yet compared it with a real Dragon. <a href="./building/">What we are building now</a>. Click the screen and type, or use the keyboard below.</p>
   <div class="machine">
   <div class="tv"><canvas id="canvas" tabindex="0" oncontextmenu="event.preventDefault()" aria-label="Computer screen"></canvas></div>
   <div class="kbd" id="kbd" aria-label="Dragon 32 keyboard"></div>
@@ -227,7 +227,7 @@ for (const f of ['ui_done_initialising', 'ui_menu_add', 'ui_menu_add_str', 'ui_m
 var Module = {
   canvas: document.getElementById('canvas'),
   // ה-ROM שלנו במקום ה-BASIC המקורי; kbd-translate: מה שמקלידים במחשב הוא מה שמופיע
-  arguments: ['-machine', 'dragon32', '-no-machine-cart', '-extbas', '/d32.rom', '-kbd-translate', '-kbd-lang', 'us', '-no-vo-colour-killer', '-tape-write', '/out.cas'],
+  arguments: ['-machine', 'dragon32', '-no-machine-cart', '-extbas', '/d32.rom', '-kbd-translate', '-kbd-lang', 'us', '-no-vo-colour-killer', '-tape-write', '/out.cas', '-joy-wasm-virtual'],
   print: () => {}, printErr: () => {},
   onRuntimeInitialized: () => { window.d32Ready = true; },
   preRun: [function () {

@@ -119,13 +119,23 @@
     // הקובץ המקורי נכנס לחריץ, המחשב נדלק מחדש והמשחק מתחיל לבד; "הוצא" מחזיר ל-BASIC.
     // Dungeons of Daggorath (DynaMicro / Tandy, 1982): רשות פומבית של Douglas J. Morgan לכל אחד, בתנאי שהמשחק נשאר כמו המקור
     ['daggorath', 'Dungeons of Daggorath', 'Dungeons of Daggorath', 'c',
-      ['DynaMicro (Douglas J. Morgan, Phillip C. Landmeier, Keith Kiyohara) · Tandy, 1982', '/lab/1982/carts/daggorath-license.txt', null, null, 'grant']]
+      ['DynaMicro (Douglas J. Morgan, Phillip C. Landmeier, Keith Kiyohara) · Tandy, 1982', '/lab/1982/carts/daggorath-license.txt', null, null, 'grant']],
+    // Snaker של Gary Ritchie (נכתב במרץ 1983, פורסם ב-The Rainbow בינואר 1984): תוכנית BASIC ל-CoCo, והמחבר פרסם אותה ברישיון MIT.
+    // הרישום המקורי שלו (src/snaker.bas) כמו שהוא, בקלטת טקסט כמו ש-CSAVE "SNAKER",A כותב, ו-CLOAD רגיל קורא אותה
+    ['snaker', 'Snaker', 'Snaker', null,
+      ['Gary Ritchie · The Rainbow, January 1984', '/lab/1982/tapes/snaker-license.txt', 'https://github.com/gtritchie/snaker', null, 'mit']],
+    // Brickout של Owen Stenseth (1987; על המסך SUPER BRICKOUT): הופץ בחינם בלוחות המודעות, וב-2021 שוחרר ברישיון MIT.
+    // הקובץ המקורי שלו (BRICKOUT.BIN, קטע אחד ב-$6000, הפעלה ב-$6B25) עטוף בקלטת CLOADM, בלי שום שינוי. ידית: PADDLE
+    ['brickout', 'Brickout', 'Brickout', 'm',
+      ['Owen Stenseth · freeware, 1987', '/lab/1982/tapes/brickout-license.txt', 'https://github.com/digitalbytes/super-brickout', null, 'mit']]
   ];
   // משחקים שצריכים ג'ויסטיק: כשהקלטת נטענת, החיצים במקלדת הופכים לג'ויסטיק הימני ו-Alt (Option במק) לכפתור שלו
-  const JOY = new Set(['ranger', 'devil', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian', 'alcatraz', 'cricket', 'digit']);
-  // ב-Cricket החובט משתמש בג'ויסטיק השמאלי והמגיש בימני (המדריך של Peaksoft): החיצים מזיזים את שניהם יחד
-  const BOTH = new Set(['cricket']);
+  const JOY = new Set(['ranger', 'devil', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian', 'alcatraz', 'cricket', 'digit', 'snaker']);
+  // ב-Cricket החובט משתמש בג'ויסטיק השמאלי והמגיש בימני (המדריך של Peaksoft): החיצים מזיזים את שניהם יחד.
+  // ב-Snaker הימני מכוון (JOYSTK(0)) והשמאלי קובע מהירות (JOYSTK(3)): למעלה מהר, למטה לאט
+  const BOTH = new Set(['cricket', 'snaker']);
   function setJoy(on, both) {
+    paddle = false; padDir = 0;
     try { Module.ccall('wasm_set_joystick_by_name', null, ['number', 'string'], [0, on ? 'kjoy0' : '']); } catch (e) {}
     try { Module.ccall('wasm_set_joystick_by_name', null, ['number', 'string'], [1, on && both ? 'kjoy0' : '']); } catch (e) {}
     window.d32Joy = !!on;
@@ -143,9 +153,62 @@
     const canvas = document.getElementById('canvas');
     if (canvas) canvas.dispatchEvent(new KeyboardEvent(type, { key: 'Alt', code: 'AltLeft', bubbles: true, cancelable: true }));
   }
+  // משחקי ידית (Brickout): המחבט הולך בדיוק למקום של הג'ויסטיק, כמו ידית אמיתית, ולכן חיצים של ג'ויסטיק מהמקלדת היו מקפיצים אותו
+  // רק לקצוות. כאן הג'ויסטיק הימני הוא הג'ויסטיק הווירטואלי של XRoar (-joy-wasm-virtual): העכבר או האצבע על המסך מזיזים את המחבט
+  // בדיוק למקום שלהם, החיצים (גם מלוח המשחק בטלפון) מזיזים אותו בהדרגה, ו-Alt, רווח או לחיצה בעכבר על המסך הם הכפתור
+  const PADDLE = new Set(['brickout']);
+  let paddle = false, padX = 32768, padDir = 0, padT = 0;
+  function padAxis(v) {
+    padX = Math.max(0, Math.min(65535, Math.round(v)));
+    try { Module.ccall('wasm_js_set_axis', null, ['number', 'number'], [0, padX]); } catch (e) {}
+  }
+  function padButton(on) { try { Module.ccall('wasm_js_set_button', null, ['number', 'number'], [0, on ? 1 : 0]); } catch (e) {} }
+  function setPaddle(on) {
+    paddle = on; padDir = 0; padButton(false);
+    const canvas = document.getElementById('canvas');
+    if (canvas) canvas.style.touchAction = on ? 'none' : '';
+    if (!on) return;
+    try { Module.ccall('wasm_set_joystick_by_name', null, ['number', 'string'], [0, 'wasm']); } catch (e) {}
+    padAxis(32768);
+  }
+  // חץ לחוץ: המחבט נע בקצב קבוע, מקצה לקצה בכשנייה
+  function padRun(t) {
+    if (!paddle || !padDir) return;
+    if (padT) padAxis(padX + padDir * 65535 * Math.min(t - padT, 50) / 1000);
+    padT = t;
+    requestAnimationFrame(padRun);
+  }
+  const PAD_KEYS = { ArrowLeft: -1, ArrowRight: 1 };
+  function padKey(e, down) {
+    if (!paddle) return;
+    const t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    if (e.key in PAD_KEYS) {
+      const d = PAD_KEYS[e.key];
+      if (down && padDir !== d) { padDir = d; padT = 0; requestAnimationFrame(padRun); }
+      if (!down && padDir === d) padDir = 0;
+    } else if (e.key === 'Alt' || e.code === 'Space') {
+      if (!(down && e.repeat)) padButton(down);
+    } else return;
+    e.preventDefault(); e.stopImmediatePropagation();
+  }
+  window.addEventListener('keydown', e => padKey(e, true), true);
+  window.addEventListener('keyup', e => padKey(e, false), true);
+  // העכבר או האצבע: המקום על המסך הוא המקום של המחבט. שטח המשחק הוא בערך 80% מרוחב המסך, בלי המסגרת
+  (function () {
+    const canvas = document.getElementById('canvas');
+    if (!canvas) return;
+    const at = e => { const r = canvas.getBoundingClientRect(); padAxis(((e.clientX - r.left) / r.width - 0.1) / 0.8 * 65535); };
+    canvas.addEventListener('pointermove', e => { if (paddle && (e.pointerType === 'mouse' || e.buttons)) at(e); });
+    canvas.addEventListener('pointerdown', e => { if (!paddle) return; at(e); if (e.pointerType === 'mouse') padButton(true); });
+    const up = e => { if (paddle && e.pointerType === 'mouse') padButton(false); };
+    canvas.addEventListener('pointerup', up);
+    canvas.addEventListener('pointercancel', up);
+  })();
   // כל קלטת שנכנסת לרשמקול: ג'ויסטיק מהמקלדת רק למשחקי ג'ויסטיק, ולוח המשחק לטלפון (joypad.js) רק למשחקים שיש להם מקשים שם
   function gameKeys(id) {
     setJoy(JOY.has(id), BOTH.has(id));
+    setPaddle(PADDLE.has(id));
     if (window.d32Pad) window.d32Pad(id);
   }
   // איך משחקים (גונן, 25.10: "לא בטוח שהמשתמשים יבינו איך משחקים"): תיבה נפתחת מתחת לכל משחק בשפת מכונה.
@@ -416,6 +479,33 @@
         'When a creature comes near, fight with {ATTACK LEFT} (the hand with the sword). {GET RIGHT} picks something up from the floor into your right hand, {STOW RIGHT} puts what it holds in the backpack, {DROP RIGHT} drops it, and {CLIMB UP} or {CLIMB DOWN} use a ladder.',
         'Watch the heart: it beats faster when you work hard or get hurt. If it gets too fast you faint, so rest a moment before going on. The goal: go down to the fifth level and defeat the wizard.']
     },
+    // נבדק במכונה (31.10): CLOADM, ‏EXEC, מסך הפתיחה (INPUT LEVEL 0-9), המחבט הולך למקום של העכבר, והכפתור משחרר את הכדור.
+    // ההוראות לפי ה-README המקורי של המחבר מ-1987 וקוד המקור (25 שלבים; המחבט קורא את הג'ויסטיק הימני, כמו ידית)
+    brickout: {
+      he: ['שוברים את כל הלבנים בכדור. המחבט הולך למקום של העכבר על המסך, כמו ידית של פעם. אפשר גם בחיצים [←] [→], ובטלפון בידית או בגרירת אצבע על המסך.',
+        'במסך הפתיחה, ב-INPUT LEVEL 0-9, לוחצים על מספר כדי לבחור באיזה שלב מתחילים, או על הכפתור כדי להתחיל מיד. יש 25 שלבים.',
+        'יש לבנים שאפשר לשבור רק מלמעלה, רק מהצד או רק מלמטה. ליד SCORE רואים כמה מחבטים נשארו.',
+        'מלבנים נופלות אותיות. תופסים אותן במחבט: E מאריך את המחבט, P נותן מחבט נוסף, B מקפיץ לשלב הבא, S מאט את הכדור, ו-C מדביק את הכדור למחבט עד שלוחצים על הכפתור.',
+        'הכפתור: לחיצה בעכבר על המסך, [רווח] או [Alt] (במק [Option]). בטלפון: כפתור האש.'],
+      en: ['Break all the bricks with the ball. The paddle goes where the mouse is on the screen, like a paddle controller of the time. The arrows [←] [→] work too, and on a phone the stick or dragging a finger on the screen.',
+        'On the title screen, at INPUT LEVEL 0-9, press a number to choose the starting level, or the button to start at once. There are 25 levels.',
+        'Some bricks can only be broken from the top, the side or the bottom. Next to SCORE you see how many paddles are left.',
+        'Letters fall from the bricks. Catch them with the paddle: E expands the paddle, P gives an extra paddle, B breaks through to the next level, S slows the ball, and C makes the ball stick to the paddle until you press the button.',
+        'The button: a mouse click on the screen, [Space] or [Alt] ([Option] on a Mac). On a phone: the fire button.']
+    },
+    // נבדק במכונה (31.10): CLOAD, ‏RUN, מסך הפתיחה עם המנגינה, והנחש זז בחיצים. ההוראות לפי קוד המקור ו-GAMEPLAY.md של המחבר
+    snaker: {
+      he: ['נחש יורד בכביש, ומכוניות צבעוניות עולות מולו מלמטה. מגיעים עד למטה בלי להתנגש, שלוש פעמים. הזמן הוא הניקוד: כמה שפחות, יותר טוב.',
+        'במשחק הזה החיצים הם ג\'ויסטיק: [←] [→] מכוונים את הנחש. [↑] מאיץ ו-[↓] מאט. בטלפון: הידית שמתחת למסך.',
+        'במסך הפתיחה, כש-press ANY key TO START מופיע, לוחצים [ENTER].',
+        'התנגשות במכונית מחזירה את הנחש שורה אחת למעלה, וממשיכים משם.',
+        'שיא חדש? המשחק שואל WHAT IS YOUR NAME: כותבים שם ולוחצים [ENTER]. ב-ANOTHER GAME (Y/N) עונים [Y] או [N].'],
+      en: ['A snake goes down a highway while coloured cars rise towards it from the bottom. Reach the bottom without crashing, three times. Your time is the score: the lower, the better.',
+        'In this game the arrows are the joystick: [←] [→] steer the snake. [↑] speeds up and [↓] slows down. On a phone: the stick under the screen.',
+        'On the title screen, when press ANY key TO START appears, press [ENTER].',
+        'Hitting a car sends the snake back up one row, and you go on from there.',
+        'A new best time? The game asks WHAT IS YOUR NAME: type a name and press [ENTER]. At ANOTHER GAME (Y/N) answer [Y] or [N].']
+    },
     digit: {
       he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
         'במסך הפתיחה, עם טבלת השיאים, לוחצים על הכפתור. מופיע CAN YOU ESCAPE CAVE NO 01??, ואחריו המערה הראשונה. יש 25 מערות.',
@@ -672,6 +762,8 @@
     cricket: ['מופיע מסך הפתיחה של Cricket, והמשחק ממשיך לטעון ולהתכונן עוד כמה דקות. אחר כך עונים על השאלות במקלדת.', 'The Cricket title screen appears, and the game goes on loading and preparing for a few minutes. Then answer the questions on the keyboard.'],
     tangle: ['כשמופיע OK מקלידים {EXEC}. אחרי מסך הפתיחה לוחצים [1] למשחק חדש.', 'When OK appears type {EXEC}. After the title screen press [1] for a new game.'],
     digit: ['הטעינה לוקחת כשתי דקות. כשמופיע OK מקלידים {EXEC}. במסך הפתיחה לוחצים על כפתור הג\'ויסטיק, [רווח].', 'Loading takes about two minutes. When OK appears type {EXEC}. On the title screen press the joystick button, [Space].'],
+    brickout: ['כשמופיע OK מקלידים {EXEC}. במסך הפתיחה לוחצים על מספר, 0 עד 9, או על הכפתור.', 'When OK appears type {EXEC}. On the title screen press a number, 0 to 9, or the button.'],
+    snaker: ['כשמופיע OK מקלידים {RUN}. כשהמנגינה נגמרת לוחצים [ENTER].', 'When OK appears type {RUN}. When the tune ends press [ENTER].'],
     daggorath: ['אחרי מסך הפתיחה, עם הקוסם, מופיע מסך המשחק. מתחילים להקליד פקודות, למשל {EXAMINE}.', 'After the opening screen with the wizard, the game screen appears. Start typing commands, for example {EXAMINE}.'],
     ranger: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וב-SELECT LEVEL בוחרים שלב.', 'When loading ends pick a colour: [1], [2] or [3]. On the title screen press [Space], and at SELECT LEVEL pick a level.'],
     cuthbert: ['אחרי הטעינה מופיע LICENSED BY MICRODEAL ונשאר כחמש עד שבע דקות. זה לא תקוע: כך המשחק בנוי. כשמופיע הג\'ונגל, לוחצים [רווח].', 'After loading, LICENSED BY MICRODEAL appears and stays for about five to seven minutes. It is not stuck: the game is built that way. When the jungle appears, press [Space].'],
@@ -711,6 +803,8 @@
     cricket: ['משחק קריקט של 40 אוברים: מגישים, חובטים ורצים. נגד המחשב או בשניים. בג\'ויסטיק.', 'A 40-over cricket match: bowl, bat and run. Against the computer or for two. Joystick.'],
     tangle: ['הרפתקה ביער עם חמש דמויות: עוצרים את Schark לפני שהוא כורת את היער. בחיצים ובפקודות.', 'A woodland adventure with five characters: stop Schark before he cuts down the woods. Arrows and typed commands.'],
     digit: ['חופרים במערות, אוספים יהלומים ובורחים מאבנים נופלות וממפלצות: 25 מערות. בג\'ויסטיק.', 'Dig through caves, collect diamonds and escape falling stones and monsters: 25 caves. Joystick.'],
+    brickout: ['שוברים לבנים בכדור ובמחבט, ותופסים אותיות שנופלות: 25 שלבים. בעכבר, כמו ידית.', 'Break bricks with a ball and paddle, and catch the falling letters: 25 levels. Mouse, like a paddle.'],
+    snaker: ['נחש יורד בכביש בין מכוניות שעולות מולו: שלוש ירידות, נגד השעון. בג\'ויסטיק.', 'A snake goes down a highway between cars rising towards it: three runs, against the clock. Joystick.'],
     daggorath: ['מבוך בתלת-ממד, בזמן אמת: יורדים חמש קומות במבוך, נלחמים ביצורים ומנצחים את הקוסם. בפקודות באנגלית.', 'A real-time 3D maze: go down five levels, fight the creatures and defeat the wizard. Typed English commands.'],
     ranger: ['רצים, קופצים ויורים: אוספים מפתחות ואוצרות בין עטלפים ועיניים. בג\'ויסטיק.', 'Run, jump and shoot: collect keys and treasure past bats and eyes. Joystick.'],
     count: ['הרפתקת מילים: מתעוררים במיטה זרה, בארץ של רוזן מסתורי. ההרפתקה החמישית של Scott Adams.', 'A text adventure: wake up in a strange bed, in the land of a mysterious Count. Scott Adams\' fifth adventure.'],
