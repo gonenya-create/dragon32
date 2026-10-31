@@ -114,7 +114,12 @@
     // Dig-It של Rolf Michelsen (1986), ש-Microdeal מכרה בשם Stone Raider II: קוד פתוח ברישיון BSD (המאגר שלו ב-GitHub).
     // הקלטת נבנתה מקוד המקור בלי שום שינוי (lwasm), ועטופה בקלטת CLOADM רגילה. משתמש ב-$BD41 וב-$BBE5 של ה-ROM. ג'ויסטיק בלבד
     ['digit', 'Dig-It', 'Dig-It', 'm',
-      ['Rolf Michelsen · Microdeal (as Stone Raider II), 1986', '/lab/1982/tapes/digit-license.txt', 'https://github.com/rolfmichelsen/StoneRaiderII', null, 'bsd']]
+      ['Rolf Michelsen · Microdeal (as Stone Raider II), 1986', '/lab/1982/tapes/digit-license.txt', 'https://github.com/rolfmichelsen/StoneRaiderII', null, 'bsd']],
+    // מחסניות של ה-CoCo שרצו על ה-Dragon (גונן, 31.10: "זה חלק מהדראגון כי זה היה ככה באמת"; מגירה קטנה). 'c' = מחסנית:
+    // הקובץ המקורי נכנס לחריץ, המחשב נדלק מחדש והמשחק מתחיל לבד; "הוצא" מחזיר ל-BASIC.
+    // Dungeons of Daggorath (DynaMicro / Tandy, 1982): רשות פומבית של Douglas J. Morgan לכל אחד, בתנאי שהמשחק נשאר כמו המקור
+    ['daggorath', 'Dungeons of Daggorath', 'Dungeons of Daggorath', 'c',
+      ['DynaMicro (Douglas J. Morgan, Phillip C. Landmeier, Keith Kiyohara) · Tandy, 1982', '/lab/1982/carts/daggorath-license.txt', null, null, 'grant']]
   ];
   // משחקים שצריכים ג'ויסטיק: כשהקלטת נטענת, החיצים במקלדת הופכים לג'ויסטיק הימני ו-Alt (Option במק) לכפתור שלו
   const JOY = new Set(['ranger', 'devil', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian', 'alcatraz', 'cricket', 'digit']);
@@ -398,6 +403,19 @@
     },
     // נבדק במכונה (31.10): CLOADM, ‏EXEC, מסך הפתיחה וטבלת השיאים, CAN YOU ESCAPE CAVE NO 01??, המערה, והאיש חופר בחיצים.
     // ההוראות לפי ה-README של המחבר וקוד המקור (כפתור לחוץ + כיוון = חופרים בלי לזוז; BREAK = מוותרים על חיים; Q = חזרה לפתיחה)
+    // נבדק במכונה (31.10): המחסנית המקורית, מסך הפתיחה, EXAMINE (בתרמיל: WOODEN SWORD ו-PINE TORCH), PULL, ‏USE, ‏LOOK, ‏MOVE, ‏TURN, והמסדרון בתלת-ממד
+    daggorath: {
+      he: ['משחק פקודות: כותבים פקודה באנגלית ולוחצים [ENTER]. למטה רואים מה ביד שמאל ומה ביד ימין (EMPTY: ריקה), ובאמצע את הלב.',
+        'בהתחלה חושך. בתרמיל יש חרב עץ ולפיד: {PULL RIGHT TORCH} ואחר כך {USE RIGHT} מדליקים את הלפיד, ו-{PULL LEFT SWORD} שם את החרב ביד שמאל.',
+        'הולכים ב-{MOVE} (או {MOVE BACK}), ומסתובבים ב-{TURN LEFT}, ‏{TURN RIGHT} או {TURN AROUND}. ‏{LOOK} מראה שוב את המסדרון, ו-{EXAMINE} מה יש בחדר ובתרמיל.',
+        'כשיצור מתקרב, תוקפים ב-{ATTACK LEFT} (ביד עם החרב). ‏{GET RIGHT} מרים חפץ מהרצפה ליד ימין, ‏{STOW RIGHT} מכניס את מה שביד לתרמיל, ‏{DROP RIGHT} זורק אותו, ו-{CLIMB UP} או {CLIMB DOWN} בסולם.',
+        'שמים לב ללב: הוא דופק מהר יותר כשמתאמצים או נפגעים. כשהוא מהיר מדי, מתעלפים, אז נחים רגע לפני שממשיכים. המטרה: לרדת עד הקומה החמישית ולנצח את הקוסם.'],
+      en: ['A command game: type a command in English and press [ENTER]. At the bottom you see what is in your left and right hands (EMPTY when nothing), and the heart in the middle.',
+        'At first it is dark. Your backpack holds a wooden sword and a torch: {PULL RIGHT TORCH} and then {USE RIGHT} light the torch, and {PULL LEFT SWORD} puts the sword in your left hand.',
+        'Walk with {MOVE} (or {MOVE BACK}), and turn with {TURN LEFT}, {TURN RIGHT} or {TURN AROUND}. {LOOK} shows the corridor again, and {EXAMINE} what is in the room and in your backpack.',
+        'When a creature comes near, fight with {ATTACK LEFT} (the hand with the sword). {GET RIGHT} picks something up from the floor into your right hand, {STOW RIGHT} puts what it holds in the backpack, {DROP RIGHT} drops it, and {CLIMB UP} or {CLIMB DOWN} use a ladder.',
+        'Watch the heart: it beats faster when you work hard or get hurt. If it gets too fast you faint, so rest a moment before going on. The goal: go down to the fifth level and defeat the wizard.']
+    },
     digit: {
       he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
         'במסך הפתיחה, עם טבלת השיאים, לוחצים על הכפתור. מופיע CAN YOU ESCAPE CAVE NO 01??, ואחריו המערה הראשונה. יש 25 מערות.',
@@ -654,6 +672,7 @@
     cricket: ['מופיע מסך הפתיחה של Cricket, והמשחק ממשיך לטעון ולהתכונן עוד כמה דקות. אחר כך עונים על השאלות במקלדת.', 'The Cricket title screen appears, and the game goes on loading and preparing for a few minutes. Then answer the questions on the keyboard.'],
     tangle: ['כשמופיע OK מקלידים {EXEC}. אחרי מסך הפתיחה לוחצים [1] למשחק חדש.', 'When OK appears type {EXEC}. After the title screen press [1] for a new game.'],
     digit: ['הטעינה לוקחת כשתי דקות. כשמופיע OK מקלידים {EXEC}. במסך הפתיחה לוחצים על כפתור הג\'ויסטיק, [רווח].', 'Loading takes about two minutes. When OK appears type {EXEC}. On the title screen press the joystick button, [Space].'],
+    daggorath: ['אחרי מסך הפתיחה, עם הקוסם, מופיע מסך המשחק. מתחילים להקליד פקודות, למשל {EXAMINE}.', 'After the opening screen with the wizard, the game screen appears. Start typing commands, for example {EXAMINE}.'],
     ranger: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וב-SELECT LEVEL בוחרים שלב.', 'When loading ends pick a colour: [1], [2] or [3]. On the title screen press [Space], and at SELECT LEVEL pick a level.'],
     cuthbert: ['אחרי הטעינה מופיע LICENSED BY MICRODEAL ונשאר כחמש עד שבע דקות. זה לא תקוע: כך המשחק בנוי. כשמופיע הג\'ונגל, לוחצים [רווח].', 'After loading, LICENSED BY MICRODEAL appears and stays for about five to seven minutes. It is not stuck: the game is built that way. When the jungle appears, press [Space].'],
     dungeon: ['בסוף הטעינה בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וב-SELECT LEVEL בוחרים רמה, [1] עד [3].', 'At the end of loading pick a colour: [1], [2] or [3]. On the title screen press [Space], and at SELECT LEVEL pick a level, [1] to [3].'],
@@ -692,6 +711,7 @@
     cricket: ['משחק קריקט של 40 אוברים: מגישים, חובטים ורצים. נגד המחשב או בשניים. בג\'ויסטיק.', 'A 40-over cricket match: bowl, bat and run. Against the computer or for two. Joystick.'],
     tangle: ['הרפתקה ביער עם חמש דמויות: עוצרים את Schark לפני שהוא כורת את היער. בחיצים ובפקודות.', 'A woodland adventure with five characters: stop Schark before he cuts down the woods. Arrows and typed commands.'],
     digit: ['חופרים במערות, אוספים יהלומים ובורחים מאבנים נופלות וממפלצות: 25 מערות. בג\'ויסטיק.', 'Dig through caves, collect diamonds and escape falling stones and monsters: 25 caves. Joystick.'],
+    daggorath: ['מבוך בתלת-ממד, בזמן אמת: יורדים חמש קומות במבוך, נלחמים ביצורים ומנצחים את הקוסם. בפקודות באנגלית.', 'A real-time 3D maze: go down five levels, fight the creatures and defeat the wizard. Typed English commands.'],
     ranger: ['רצים, קופצים ויורים: אוספים מפתחות ואוצרות בין עטלפים ועיניים. בג\'ויסטיק.', 'Run, jump and shoot: collect keys and treasure past bats and eyes. Joystick.'],
     count: ['הרפתקת מילים: מתעוררים במיטה זרה, בארץ של רוזן מסתורי. ההרפתקה החמישית של Scott Adams.', 'A text adventure: wake up in a strange bed, in the land of a mysterious Count. Scott Adams\' fifth adventure.'],
     odyssey: ['הרפתקת מילים בחלל: חללית קטנה, אסטרואיד רחוק ואוצרות של ציוויליזציה עתיקה. ההרפתקה השישית של Scott Adams.', 'A text adventure in space: a small scout ship, a distant asteroid and the treasures of an ancient civilisation. Scott Adams\' sixth adventure.'],
@@ -868,6 +888,10 @@
       docs.textContent = EN ? 'with his permission' : 'באישורו';
       docs.rel = 'noopener';
       by.append(EN ? 'By ' : 'מאת ', who, ' · ', docs, EN ? ' · removed on request' : ' · יוסר לפי בקשה');
+    } else if (credit[4] === 'grant') {
+      // רשות פומבית של המחבר לכל אחד (Daggorath: Douglas J. Morgan): הקישור לנוסח שלה
+      docs.textContent = EN ? 'public licence' : 'רשות פומבית';
+      by.append(EN ? 'By ' : 'מאת ', who, ' · ', docs, EN ? ' · removed on request' : ' · יוסר לפי בקשה');
     } else if (credit[4] === 'mit' || credit[4] === 'bsd') {
       // קוד פתוח: הרישיון (MIT או BSD) והמאגר הרשמי
       docs.textContent = credit[4] === 'mit' ? (EN ? 'MIT licence' : 'רישיון MIT') : (EN ? 'BSD licence' : 'רישיון BSD');
@@ -947,6 +971,12 @@
   }, true);
   function loadSteps(id, kind) {
     const m = meta(id), steps = [];
+    if (kind === 'c') {
+      steps.push(T2('לוחצים על הכפתור האדום, והמחסנית נכנסת לחריץ. המחשב נדלק מחדש, והמשחק מתחיל לבד: בלי CLOAD, כמו מחסנית אמיתית.', 'Press the red button, and the cartridge goes into the slot. The computer restarts and the game starts by itself: no CLOAD, like a real cartridge.'),
+        T2('כדי לחזור ל-BASIC לוחצים ⏏ הוצא את המחסנית. גם קלטת אחרת מוציאה אותה לפני שהיא נכנסת לרשמקול.', 'To go back to BASIC press ⏏ Take the cartridge out. Another tape also takes it out before going into the recorder.'));
+      if (AFTER[id]) steps.push(T2(...AFTER[id]));
+      return steps;
+    }
     steps.push(T2('לוחצים על הכפתור האדום, והקלטת נכנסת לרשמקול.', 'Press the red button, and the tape goes into the recorder.'));
     if (!kind) steps.push(T2('מקלידים {CLOAD} ו-[ENTER]. אחרי כמה שניות מופיע OK.', 'Type {CLOAD} and [ENTER]. After a few seconds OK appears.'), T2('מקלידים {RUN} ו-[ENTER].', 'Type {RUN} and [ENTER].'));
     else if (kind === 'm') steps.push(T2('מקלידים {CLOADM} ו-[ENTER]. כשמופיע OK, מקלידים {EXEC} ו-[ENTER].', 'Type {CLOADM} and [ENTER]. When OK appears, type {EXEC} and [ENTER].'));
@@ -997,9 +1027,17 @@
     const go = document.createElement('button');
     go.type = 'button';
     go.className = 'gv-go';
-    go.textContent = T2('▶ הכנס את הקלטת לרשמקול', '▶ Put the tape in the recorder');
+    go.textContent = kind === 'c' ? T2('▶ הכנס את המחסנית לחריץ', '▶ Put the cartridge in the slot') : T2('▶ הכנס את הקלטת לרשמקול', '▶ Put the tape in the recorder');
     go.addEventListener('click', () => load(id, name, b, false, kind));
     info.append(go);
+    if (kind === 'c') {
+      const out = document.createElement('button');
+      out.type = 'button';
+      out.className = 'gv-eject';
+      out.textContent = T2('⏏ הוצא את המחסנית', '⏏ Take the cartridge out');
+      out.addEventListener('click', () => window.d32EjectCart());
+      info.append(out);
+    }
     if (status) info.appendChild(status);
     const media = document.createElement('figure');
     media.className = 'gv-media';
@@ -1145,6 +1183,8 @@
 .gv-tags > span:not(.yr) { font-size: 12px; color: #b9a98f; border: 1px solid #4a3a2a; border-radius: 999px; padding: 0 8px; }
 .gv-go { display: block; width: 100%; border: 0; border-radius: 12px; background: #e0503c; color: #fff; font: inherit; font-weight: 800; font-size: 18px; padding: 12px; box-shadow: 0 4px 0 #6d160b; cursor: pointer; }
 .gv-go:active { transform: translateY(2px); box-shadow: 0 2px 0 #6d160b; }
+.gv-eject { display: none; width: 100%; margin-top: 8px; border: 1.5px solid #5a4430; border-radius: 12px; background: #1b1511; color: #f4efe4; font: inherit; font-weight: 700; font-size: 16px; padding: 10px; cursor: pointer; }
+body.cart-in .gv-eject { display: block; }
 .gv-go.nudge { animation: gv-nudge 0.5s ease-in-out 3; }
 @keyframes gv-nudge { 50% { box-shadow: 0 4px 0 #6d160b, 0 0 0 5px #f2d23a; } }
 .gv-info #tape-status { margin: 8px 0 0; }
@@ -1256,8 +1296,38 @@ body.game-open .shelf > :not(.game-view) { display: none; }
   // auto: מהאפליקציה (?tape=), שם הנוחות: המחשב מקליד CLOAD ו-RUN. לחיצה במכונה: רק מכניסים את הקלטת לרשמקול,
   // ומקלידים בעצמנו, כמו ב-1982 (גונן, 22.10: "מכונת דראגון תהיה המקור... בלי הטבות")
   // mc: קלטת של שפת מכונה: 'm' = CLOADM ואחרי ה-OK גם EXEC; 'a' = CLOADM, והמשחק מתחיל לבד
+  // ---- מחסניות: כמו במחשב האמיתי, מכניסים מחסנית לחריץ, המחשב נדלק מחדש והמשחק מתחיל לבד. מוציאים, וחוזרים ל-BASIC ----
+  let cartIn = null;
+  async function insertCart(id, title, button) {
+    if (typeof Module === 'undefined' || !window.d32Ready) { status.textContent = EN ? 'The computer is still starting. Try again in a moment.' : 'המחשב עוד נדלק. נסו שוב בעוד רגע.'; return; }
+    busy = true;
+    try {
+      const bytes = new Uint8Array(await (await fetch('/lab/1982/carts/' + id + '.ccc')).arrayBuffer());
+      gameKeys(id);
+      FS.writeFile('/cart-' + id + '.ccc', bytes);
+      Module.ccall('wasm_load_file', null, ['string', 'number', 'number'], ['/cart-' + id + '.ccc', 0, 0]);
+      cartIn = id; inTape = id; ram = -1;
+      document.querySelectorAll('.tape').forEach(t => t.classList.toggle('in', t === button));
+      document.body.classList.add('cart-in');
+      status.textContent = EN ? 'The cartridge "' + title + '" is in the slot. The computer restarts, and the game starts by itself.'
+        : 'המחסנית "' + title + '" בחריץ. המחשב נדלק מחדש, והמשחק מתחיל לבד.';
+      document.getElementById('canvas')?.focus({ preventScroll: true });
+      if (innerWidth < 1000) document.querySelector('.tv').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (e) { status.textContent = failed(); }
+    finally { busy = false; }
+  }
+  async function ejectCart() {
+    try { Module.ccall('wasm_set_machine_cart', null, ['string', 'string', 'string', 'string'], ['dragon32', '', '', '']); } catch (e) {}
+    cartIn = null; inTape = null; ram = -1;
+    setJoy(false);
+    document.body.classList.remove('cart-in');
+    document.querySelectorAll('.tape').forEach(t => t.classList.remove('in'));
+    await wait(1500);   // המחשב נדלק מחדש בלי המחסנית, עם ה-BASIC שלנו
+  }
+  window.d32EjectCart = async () => { if (!cartIn) return; await ejectCart(); status.textContent = EN ? 'The cartridge is out. The computer is back in BASIC.' : 'המחסנית בחוץ. המחשב חזר ל-BASIC.'; };
   async function load(id, title, button, auto, mc) {
     if (busy) return;
+    if (mc === 'c') return insertCart(id, title, button);
     try {
       // הקלטת כמו קלטת אמיתית: מה שהמכונה עצמה כתבה עם CSAVE, בפורמט המכווץ (rom/tools/mktapes.mjs)
       const bytes = new Uint8Array(await (await fetch('/lab/1982/tapes/' + id + '.cas')).arrayBuffer());
@@ -1269,6 +1339,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
   async function play(bytes, path, title, button, run, auto, mc) {
     if (busy) return;
     if (typeof Module === 'undefined' || !window.d32Ready) { status.textContent = EN ? 'The computer is still starting. Try again in a moment.' : 'המחשב עוד נדלק. נסו שוב בעוד רגע.'; return; }
+    if (cartIn) await ejectCart();
     busy = true;
     findRam();
     const id = (/^\/tape-(.+)\.cas$/.exec(path) || [])[1] || null;

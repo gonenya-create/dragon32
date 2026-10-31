@@ -61,6 +61,16 @@ window.D32_GAMES = {
       ]
     },
     {
+      "key": "coco",
+      "he": "מחסניות של ה-CoCo שרצו על ה-Dragon",
+      "en": "CoCo cartridges that ran on the Dragon",
+      "years": "1982",
+      "note": [
+        "ה-Dragon וה-Tandy CoCo האמריקאי נבנו כמעט מאותם שבבים, עם אותו חריץ מחסניות. הרבה מחסניות של ה-CoCo עבדו גם על ה-Dragon, ובעלי Dragon השתמשו בהן. המשחקים כאן לא נכתבו ל-Dragon, אבל רצים עליו בלי שינוי.",
+        "The Dragon and the American Tandy CoCo were built from almost the same chips, with the same cartridge slot. Many CoCo cartridges also worked on the Dragon, and Dragon owners used them. The games here were not written for the Dragon, but run on it unchanged."
+      ]
+    },
+    {
       "key": "type",
       "he": "הקלד בעצמך",
       "en": "Type it in",
@@ -1719,6 +1729,38 @@ window.D32_GAMES = {
         104,
         80,
         40
+      ]
+    },
+    "daggorath": {
+      "slug": "dungeons-of-daggorath",
+      "drawer": "coco",
+      "year": "1982",
+      "tag": [
+        "מבוך בתלת-ממד",
+        "3D dungeon"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "מיד: מחסנית",
+        "instant: a cartridge"
+      ],
+      "about": {
+        "he": [
+          "DynaMicro כתבה אותו: Douglas J. Morgan, ‏Phillip C. Landmeier ו-Keith Kiyohara, עם ציורים של April Landmeier. ‏Tandy מכרה אותו ב-1982 כמחסנית למחשב ה-CoCo, לא ל-Dragon. הוא היה מהמשחקים הראשונים של מבוך בתלת-ממד בזמן אמת, ולהיט גדול.",
+          "הוא כאן כי הוא רץ על ה-Dragon בלי שום שינוי, ו-Douglas J. Morgan התיר בפומבי לכל אחד להפיץ אותו, בתנאי שהמשחק נשאר כמו המקור. זו המחסנית המקורית, כמו שהיא."
+        ],
+        "en": [
+          "DynaMicro wrote it: Douglas J. Morgan, Phillip C. Landmeier and Keith Kiyohara, with artwork by April Landmeier. Tandy sold it in 1982 as a cartridge for the CoCo, not for the Dragon. It was one of the first real-time 3D dungeon games, and a big hit.",
+          "It is here because it runs on the Dragon without any change, and Douglas J. Morgan publicly allowed anyone to distribute it, on condition that the game stays as the original. This is the original cartridge, as it was."
+        ]
+      },
+      "icon": [
+        96,
+        24,
+        72
       ]
     },
     "champs": {

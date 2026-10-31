@@ -1725,7 +1725,7 @@ if (part('real machine lab')) {
     const r = await p.goto(base.replace(/\/$/, '') + path);
     await p.waitForTimeout(3500);
     check(`${path} loads with the drawn keyboard`, r.status() === 200 && (await p.locator('.kbd .k').count()) > 50 && errs.length === 0, errs.join(' | '));
-    check(`${path} has the tape shelf (42 tapes: 7 BASIC, Dragon Eggs, Blockdown, DragonTet, Escape, Invaders Revenge, El Diablero, Phantom Slayer, Danger Ranger, Cuthbert in the Jungle, Devil Assault, Dungeon Raid, Athletyx, Alcatraz II, Grabber, Draconian, Champions!, Lionheart, SAS, Tim Love's Cricket, Star Spores, Tanglewood, Dig-It, Adventureland, Pirate Adventure, Secret Mission, Voodoo Castle, The Count, and Scott Adams' adventures 6–13)`, (await p.locator('#tapes .tape.row').count()) === 42);
+    check(`${path} has the tape shelf (43 tapes: 7 BASIC, Dragon Eggs, Blockdown, DragonTet, Escape, Invaders Revenge, El Diablero, Phantom Slayer, Danger Ranger, Cuthbert in the Jungle, Devil Assault, Dungeon Raid, Athletyx, Alcatraz II, Grabber, Draconian, Champions!, Lionheart, SAS, Tim Love's Cricket, Star Spores, Tanglewood, Dig-It, Dungeons of Daggorath, Adventureland, Pirate Adventure, Secret Mission, Voodoo Castle, The Count, and Scott Adams' adventures 6–13)`, (await p.locator('#tapes .tape.row').count()) === 43);
     check(`${path} everything starts closed: the cabinet drawers, "first try", "what works", "how to edit a line" and the mic box\'s "how does it work?", with no memory of what was opened last time`, await p.evaluate(() =>
       [...document.querySelectorAll('#tapes details.drawer, .info details, details.how')].every(d => !d.open) && document.querySelectorAll('.info > details').length === 3 && document.querySelectorAll('.info .realtape details.rt-how').length === 1
       && /PRINT 2\+3/.test(document.querySelector('.info details.try')?.textContent || '') && ![...document.querySelectorAll('.info > p.note')].some(e => /PRINT 2\+3/.test(e.textContent))
@@ -1748,8 +1748,8 @@ if (part('real machine lab')) {
       hughey: document.querySelector('.cabinet [data-drawer="hughey"] .drawer-name')?.textContent,
       icons: [...document.querySelectorAll('.tape.row .ic')].every(i => /shots\/|covers\//.test(i.style.backgroundImage)) }));
     check(`${path} the cabinet: drawers in time order (Scott Adams 1979–84, Ken Kalish's games, Mike Hughey's games, Harry Whitehouse's games, more from the time, type it in, the community, ours, my tapes), the years left to right, rows by year, an icon from each game's screen`,
-      cab.drawers.join() === 'adams,period,hughey,harry,more,type,community,ours,mine' && cab.years.map(y => y[0]).join() === '1979–84,1982–85,1982–84,1983,1984–86,1983–85,2021–2025,2026' && /Ken Kalish/.test(cab.kalish) && /Mike Hughey/.test(cab.hughey) && cab.years.every(y => y[1] === 'ltr')
-      && cab.rows.adams.join() === 'adventureland,pirate,mission,voodoo,count,odyssey,funhouse,pyramid,ghost,savage1,savage2,golden,claymorgue' && cab.rows.period.join() === 'escape,invrev,diablero,phantom,ranger,cuthbert,devil,dungeon,athletyx' && cab.rows.hughey.join() === 'alcatraz,grabber,draconian' && cab.rows.harry.join() === 'champs,lionht,sas' && cab.rows.more.join() === 'cricket,spores,tangle,digit' && cab.rows.community.join() === 'blockdown,dragontet' && cab.rows.ours.length === 8 && cab.rows.ours[0] === 'eggs' && cab.icons, JSON.stringify(cab));
+      cab.drawers.join() === 'adams,period,hughey,harry,more,coco,type,community,ours,mine' && cab.years.map(y => y[0]).join() === '1979–84,1982–85,1982–84,1983,1984–86,1982,1983–85,2021–2025,2026' && /Ken Kalish/.test(cab.kalish) && /Mike Hughey/.test(cab.hughey) && cab.years.every(y => y[1] === 'ltr')
+      && cab.rows.adams.join() === 'adventureland,pirate,mission,voodoo,count,odyssey,funhouse,pyramid,ghost,savage1,savage2,golden,claymorgue' && cab.rows.period.join() === 'escape,invrev,diablero,phantom,ranger,cuthbert,devil,dungeon,athletyx' && cab.rows.hughey.join() === 'alcatraz,grabber,draconian' && cab.rows.harry.join() === 'champs,lionht,sas' && cab.rows.more.join() === 'cricket,spores,tangle,digit' && cab.rows.coco.join() === 'daggorath' && cab.rows.community.join() === 'blockdown,dragontet' && cab.rows.ours.length === 8 && cab.rows.ours[0] === 'eggs' && cab.icons, JSON.stringify(cab));
     // הברכה של Scott Adams במגירה שלו: המילים שלו באנגלית משמאל לימין, עם חתימה; בעברית גם תרגום (28.10)
     const sq = await p.evaluate(() => { const q = document.querySelector('.cabinet [data-drawer="adams"] blockquote.drawer-quote');
       return q && { dir: getComputedStyle(q).direction, t: q.textContent, he: !!document.querySelector('.cabinet [data-drawer="adams"] .drawer-quote-he'), n: document.querySelectorAll('blockquote.drawer-quote').length }; });
@@ -1774,7 +1774,7 @@ if (part('real machine lab')) {
     });
     const pre = path;
     check(`${path} every game opens its own page beside the machine, at its own address, with the 3 tabs (how to load, how to play, about), the red button and the credit; "back to the cabinet" returns`,
-      gv.out.length === 42 && gv.out.every(g => g.open && g.url.startsWith(pre) && g.url.length > pre.length + 3 && g.tabs === 3 && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go) && gv.after === pre && gv.closed, JSON.stringify(gv.out.filter(g => !(g.open && g.tabs === 3 && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go)).slice(0, 3)));
+      gv.out.length === 43 && gv.out.every(g => g.open && g.url.startsWith(pre) && g.url.length > pre.length + 3 && g.tabs === 3 && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go) && gv.after === pre && gv.closed, JSON.stringify(gv.out.filter(g => !(g.open && g.tabs === 3 && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go)).slice(0, 3)));
     // העטיפה המקורית (30.10): רק במשחק שיש עליו רשות (El Diablero, מארכיון Dragon Data), בלשונית "על המשחק", עם קרדיט וקישור. התמונה נטענת
     const cv = await browser.newPage({ viewport: { width: 1280, height: 900 } });
     await cv.goto(base.replace(/\/$/, '') + path + 'el-diablero/'); await cv.waitForTimeout(1500);
@@ -1786,6 +1786,22 @@ if (part('real machine lab')) {
       return { w: i && i.naturalWidth, seen, link: document.querySelector('.gv-media figcaption a')?.href, onlyOne, fit }; });
     check(`${path}el-diablero/ shows the original cover as soon as the game page opens (beside the screenshot), with credit and a link to the Dragon Data Archive; one tab at a time, and the page ends at the keyboard's bottom in every tab`, cov.w > 300 && cov.seen && /dragondata\.co\.uk/.test(cov.link || '') && cov.onlyOne && cov.fit.every(d => Math.abs(d) <= 2), JSON.stringify(cov));
     await cv.close();
+    // מחסנית (31.10): Dungeons of Daggorath נכנס לחריץ, המחשב נדלק מחדש עם המשחק, ו"הוצא" מחזיר ל-BASIC שלנו
+    {
+      const cp = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+      await cp.goto(base.replace(/\/$/, '') + path + 'dungeons-of-daggorath/');
+      await cp.waitForFunction(() => window.d32Ready, null, { timeout: 20000 }); await cp.waitForTimeout(2000);
+      const before = await cp.evaluate(() => ({ go: document.querySelector('.gv-go')?.textContent, eject: getComputedStyle(document.querySelector('.gv-eject')).display, credit: document.querySelector('.game-view .tape-credit')?.textContent,
+        lic: document.querySelector('.game-view .tape-credit a')?.getAttribute('href'), steps: document.querySelector('.game-view')?.textContent || '' }));
+      await cp.click('.gv-go'); await cp.waitForTimeout(6000);
+      const inCart = await cp.evaluate(() => ({ cart: document.body.classList.contains('cart-in'), eject: getComputedStyle(document.querySelector('.gv-eject')).display, basic: (window.d32Screen?.() || []).some(r => /DRAGON 1982 BASIC/.test(r)) }));
+      await cp.click('.gv-eject'); await cp.waitForTimeout(3000);
+      const out = await cp.evaluate(() => ({ cart: document.body.classList.contains('cart-in'), basic: (window.d32Screen?.() || []).some(r => /DRAGON 1982 BASIC/.test(r)) }));
+      check(`${path}dungeons-of-daggorath/ a cartridge: the red button puts it in the slot and the game starts by itself (no BASIC on screen); "take the cartridge out" brings back our BASIC; credit with the public licence`,
+        /(מחסנית|cartridge)/i.test(before.go) && before.eject === 'none' && /Douglas J\. Morgan/.test(before.credit) && before.lic === '/lab/1982/carts/daggorath-license.txt'
+        && inCart.cart && inCart.eject === 'block' && !inCart.basic && !out.cart && out.basic, JSON.stringify([before.go, before.eject, before.lic, inCart, out]));
+      await cp.close();
+    }
     const direct = await browser.newPage({ viewport: { width: 1280, height: 900 } });
     const dres = await direct.goto(base.replace(/\/$/, '') + path + 'dungeon-raid/'); await direct.waitForTimeout(1500);
     const dd = await direct.evaluate(() => ({ open: document.body.classList.contains('game-open'), name: document.querySelector('.gv-title')?.textContent, title: document.title, og: document.querySelector('meta[property="og:title"]')?.content, shot: document.querySelector('.gv-shot').complete && document.querySelector('.gv-shot').naturalWidth === 256 }));
