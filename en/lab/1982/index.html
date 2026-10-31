@@ -115,6 +115,14 @@ body.full .realtape { display: none; }
 .mini.armed { border-color: #ff8a7a; color: #ff8a7a; }
 .mini:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .upload { margin-top: 8px; padding: 8px 12px; }
+.mine-tools { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.mine-tools .upload { margin-top: 0; }
+.drawer .mytape .tape { min-height: 0; flex-direction: row; align-items: center; gap: 10px; padding: 6px 10px; }
+.mytape .tape .kind { font-size: 18px; line-height: 1; }
+.mytape .tape .tname { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 700 17px 'Courier New', monospace; color: #9cc4ff; }
+.mytape .tape .how { font: 700 12px 'Courier New', monospace; color: var(--accent); }
+.mytape .mini { min-width: 40px; padding: 0 8px; }
+.mine-how { margin-top: 10px; }
 @media (min-width: 1100px) {
   html, body { height: 100%; }
   main { max-width: none; display: grid; gap: 0 24px; align-items: start; padding-bottom: 8px;
@@ -180,12 +188,15 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
     <div class="cabinet">
     <div id="tapes"></div>
     <details class="drawer" id="drawer-mine" data-drawer="mine"><summary><span class="drawer-name">My tapes</span> <span class="drawer-count" id="mine-count">0</span></summary><div class="drawer-body">
-    <p class="note">Write a program and type <code>CSAVE "NAME"</code> (up to 8 letters). It is recorded to tape and kept here. To load: tap the tape and type <code>CLOAD</code>, or type <code>CLOAD "NAME"</code>.</p>
-    <div class="mytapes" id="mytapes"></div>
-    <button type="button" class="mini upload" id="tape-upload">📂 Load a tape from a file</button>
+    <div class="mine-tools"><button type="button" class="mini upload" id="tape-upload">📂 Load a tape from a file</button></div>
     <input type="file" id="tape-file" accept=".cas" hidden>
+    <div class="mytapes" id="mytapes"></div>
+    <details class="note mine-how"><summary>ℹ️ How it works</summary>
+    <p class="note">🎮 Machine code, usually a game: type <code>CLOADM</code>, then <code>EXEC</code>. 📝 A BASIC program: type <code>CLOAD</code>, then <code>RUN</code>. 🕹 Arrows as joystick: in a game that moves with a joystick, the arrows move and Alt or Space is the button.</p>
+    <p class="note">Write a program and type <code>CSAVE "NAME"</code> (up to 8 letters). It is recorded to tape and kept here. To load: tap the tape and type <code>CLOAD</code>, or type <code>CLOAD "NAME"</code>.</p>
     <p class="note">Tapes are kept only in this browser and are lost if you clear it (in Safari also after a week without a visit). To keep one for good or move it to another device: ⬇ downloads the tape as a file.</p>
     <p class="note"><strong>For a real <bdi>Dragon</bdi>:</strong> 🔊 downloads the tape as sound (wav), like a tape from back then. Plug the Dragon's cassette lead (the EAR plug) into your headphone socket, type <code>CLOAD</code> on the Dragon and play the file at about 75% volume. If you get <code>?IO ERROR</code>, change the volume and try again.</p>
+    </details>
     </div></details>
     </div>
   </section>

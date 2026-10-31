@@ -113,6 +113,14 @@ body.full .realtape { display: none; }
 .mini.armed { border-color: #ff8a7a; color: #ff8a7a; }
 .mini:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .upload { margin-top: 8px; padding: 8px 12px; }
+.mine-tools { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.mine-tools .upload { margin-top: 0; }
+.drawer .mytape .tape { min-height: 0; flex-direction: row; align-items: center; gap: 10px; padding: 6px 10px; }
+.mytape .tape .kind { font-size: 18px; line-height: 1; }
+.mytape .tape .tname { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 700 17px 'Courier New', monospace; color: #9cc4ff; }
+.mytape .tape .how { font: 700 12px 'Courier New', monospace; color: var(--accent); }
+.mytape .mini { min-width: 40px; padding: 0 8px; }
+.mine-how { margin-top: 10px; }
 @media (min-width: 1100px) {
   html, body { height: 100%; }
   main { max-width: none; display: grid; gap: 0 24px; align-items: start; padding-bottom: 8px;
@@ -178,12 +186,15 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
     <div class="cabinet">
     <div id="tapes"></div>
     <details class="drawer" id="drawer-mine" data-drawer="mine"><summary><span class="drawer-name">הקלטות שלי</span> <span class="drawer-count" id="mine-count">0</span></summary><div class="drawer-body">
-    <p class="note">כותבים תוכנית ומקלידים <code dir="ltr">CSAVE "NAME"</code> (שם באנגלית, עד 8 אותיות). היא מוקלטת לקלטת ונשמרת כאן. כדי לטעון: לוחצים על הקלטת ומקלידים <code dir="ltr">CLOAD</code>, או מקלידים <code dir="ltr">CLOAD "NAME"</code>.</p>
-    <div class="mytapes" id="mytapes"></div>
-    <button type="button" class="mini upload" id="tape-upload">📂 טעינת קלטת מקובץ</button>
+    <div class="mine-tools"><button type="button" class="mini upload" id="tape-upload">📂 טעינת קלטת מקובץ</button></div>
     <input type="file" id="tape-file" accept=".cas" hidden>
+    <div class="mytapes" id="mytapes"></div>
+    <details class="note mine-how"><summary>ℹ️ איך זה עובד</summary>
+    <p class="note">🎮 שפת מכונה, בדרך כלל משחק: מקלידים <code dir="ltr">CLOADM</code> ואחר כך <code dir="ltr">EXEC</code>. 📝 תוכנית BASIC: מקלידים <code dir="ltr">CLOAD</code> ואחר כך <code dir="ltr">RUN</code>. 🕹 הג'ויסטיק מהמקלדת: במשחק שזז בג'ויסטיק, החיצים מזיזים ו-Alt או רווח הם הכפתור.</p>
+    <p class="note">כותבים תוכנית ומקלידים <code dir="ltr">CSAVE "NAME"</code> (שם באנגלית, עד 8 אותיות). היא מוקלטת לקלטת ונשמרת כאן. כדי לטעון: לוחצים על הקלטת ומקלידים <code dir="ltr">CLOAD</code>, או מקלידים <code dir="ltr">CLOAD "NAME"</code>.</p>
     <p class="note">הקלטות נשמרות רק בדפדפן הזה, ונמחקות אם מנקים אותו (בספארי גם אחרי שבוע בלי ביקור). כדי לשמור לתמיד או להעביר למכשיר אחר: ⬇ מוריד את הקלטת כקובץ.</p>
     <p class="note"><strong>ל-<bdi>Dragon</bdi> אמיתי:</strong> 🔊 מוריד את הקלטת כצליל (<bdi dir="ltr">wav</bdi>), כמו קלטת של אז. מחברים את כבל הקלטת של ה-<bdi>Dragon</bdi> (התקע <bdi dir="ltr">EAR</bdi>) לשקע האוזניות, מקלידים ב-<bdi>Dragon</bdi> <code dir="ltr">CLOAD</code>, ומנגנים את הקובץ בעוצמה של בערך 75%. אם מופיע <code dir="ltr">?IO ERROR</code>, משנים את העוצמה ומנסים שוב.</p>
+    </details>
     </div></details>
     </div>
   </section>

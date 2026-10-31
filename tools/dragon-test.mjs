@@ -1864,7 +1864,7 @@ if (part('real machine lab')) {
       const fromApp = await a.waitForFunction(() => (window.d32Screen?.() || []).includes('FROM THE APP 3'), null, { timeout: 60000 }).then(() => true, () => false);
       check('?mine=APPPROG: a program saved in the app loads as a text tape and runs', fromApp && aerrs.length === 0,
         JSON.stringify(await a.evaluate(() => [document.getElementById('tape-status').textContent, window.d32Screen?.()])) + aerrs.join(' | '));
-      check('the app program also lands on the machine\'s "my tapes"', await a.locator('#mytapes .tape small:text-is("APPPROG")').count() === 1);
+      check('the app program also lands on the machine\'s "my tapes"', await a.locator('#mytapes .tape .tname:text-is("APPPROG")').count() === 1);
       await a.evaluate(() => { localStorage.removeItem('d32-mytapes'); localStorage.removeItem('d32-lab-tapes'); });
       await a.close();
       // מהאפליקציה: #p=... — "פתח במכונה" או קישור שיתוף. התוכנית בתוך הקישור, נטענת מקלטת טקסט ורצה
@@ -1886,8 +1886,8 @@ if (part('real machine lab')) {
       await m.waitForFunction(() => window.d32Ready, null, { timeout: 20000 });
       await m.waitForTimeout(2000);
       await m.evaluate(() => d32Type('10 PRINT "SAVED"\nCSAVE "MYPROG"\n'));
-      await m.waitForFunction(() => [...document.querySelectorAll('#mytapes .tape small')].some(e => e.textContent === 'MYPROG'), null, { timeout: 20000 }).catch(() => {});
-      check('CSAVE on the real machine puts the program on "my tapes"', await m.locator('#mytapes .tape small:text-is("MYPROG")').count() === 1);
+      await m.waitForFunction(() => [...document.querySelectorAll('#mytapes .tape .tname')].some(e => e.textContent === 'MYPROG'), null, { timeout: 20000 }).catch(() => {});
+      check('CSAVE on the real machine puts the program on "my tapes"', await m.locator('#mytapes .tape .tname:text-is("MYPROG")').count() === 1);
       await m.reload();
       await m.waitForFunction(() => window.d32Ready, null, { timeout: 20000 });
       await m.waitForTimeout(4000);

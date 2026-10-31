@@ -206,8 +206,12 @@
     canvas.addEventListener('pointercancel', up);
   })();
   // כל קלטת שנכנסת לרשמקול: ג'ויסטיק מהמקלדת רק למשחקי ג'ויסטיק, ולוח המשחק לטלפון (joypad.js) רק למשחקים שיש להם מקשים שם
+  // קלטת שלי (id = null): ג'ויסטיק מהמקלדת לפי המתג במגירה "הקלטות שלי" (גונן, 31.10: "אני לא יכול לשחק")
+  let mineIn = false, myJoy = false;
+  try { myJoy = localStorage.getItem('d32-myjoy') === '1'; } catch (e) {}
   function gameKeys(id) {
-    setJoy(JOY.has(id), BOTH.has(id));
+    mineIn = id === null;
+    setJoy(JOY.has(id) || (mineIn && myJoy), BOTH.has(id));
     setPaddle(PADDLE.has(id));
     if (window.d32Pad) window.d32Pad(id);
   }
@@ -1598,9 +1602,16 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       const b = document.createElement('button');
       b.type = 'button';
       b.className = 'tape';
-      b.innerHTML = '<span></span><small dir="ltr"></small>';
-      b.querySelector('span').textContent = EN ? 'My tape' : 'הקלטת שלי';
-      b.querySelector('small').textContent = f.n;
+      // השם גדול, ולידו מה יש בקלטת לפי הכותרת שלה (גונן, 31.10: "איך נבחין בין משחק שהורדתי לתכנית כתובה"):
+      // 🎮 שפת מכונה (סוג 2) נטענת ב-CLOADM, 📝 תוכנית BASIC (סוג 0) ב-CLOAD, 📄 קובץ נתונים (סוג 1) נקרא מתוך תוכנית
+      const kind = f.b[0][9];
+      const [icon, how] = kind === 2 ? ['🎮', 'CLOADM'] : kind === 0 ? ['📝', 'CLOAD'] : ['📄', ''];
+      b.innerHTML = '<span class="kind" aria-hidden="true"></span><span class="tname" dir="ltr"></span><span class="how" dir="ltr"></span>';
+      b.querySelector('.kind').textContent = icon;
+      b.querySelector('.tname').textContent = f.n;
+      b.querySelector('.how').textContent = how;
+      b.setAttribute('aria-label', f.n + (kind === 2 ? (EN ? ', machine code: CLOADM' : ', שפת מכונה: CLOADM')
+        : kind === 0 ? (EN ? ', BASIC program: CLOAD' : ', תוכנית BASIC: CLOAD') : (EN ? ', data file' : ', קובץ נתונים')));
       b.addEventListener('click', () => { gameKeys(null); play(tapeBytes([f]), '/mine.cas', f.n, b, false, false); });
       const down = document.createElement('button');
       down.type = 'button';
@@ -1640,6 +1651,28 @@ body.game-open .shelf > :not(.game-view) { display: none; }
   renderMine();
   // קלטת מקובץ (למשל אחת שהורדתם במכשיר אחר)
   const upload = document.getElementById('tape-upload'), file = document.getElementById('tape-file');
+  // המתג: משחק מקלטת שלי שקורא ג'ויסטיק לא זז בלי ג'ויסטיק. כשהוא דלוק, החיצים הם הג'ויסטיק הימני, ו-Alt או רווח הכפתור,
+  // כמו במשחקי הג'ויסטיק שעל המדף. נזכר בדפדפן הזה
+  if (upload) {
+    const joyBtn = document.createElement('button');
+    joyBtn.type = 'button';
+    joyBtn.className = 'mini upload';
+    joyBtn.id = 'mine-joy';
+    const showJoy = () => {
+      joyBtn.setAttribute('aria-pressed', myJoy ? 'true' : 'false');
+      joyBtn.textContent = '🕹 ' + (EN ? 'Arrows as joystick: ' + (myJoy ? 'on' : 'off') : 'ג\'ויסטיק מהמקלדת: ' + (myJoy ? 'דלוק' : 'כבוי'));
+    };
+    joyBtn.title = EN ? 'For my tapes: the arrows move the right joystick, Alt or Space is its button'
+      : 'לקלטות שלי: החיצים מזיזים את הג\'ויסטיק הימני, ו-Alt או רווח הם הכפתור שלו';
+    showJoy();
+    joyBtn.addEventListener('click', () => {
+      myJoy = !myJoy;
+      try { localStorage.setItem('d32-myjoy', myJoy ? '1' : '0'); } catch (e) {}
+      showJoy();
+      if (mineIn) setJoy(myJoy, false);
+    });
+    upload.after(joyBtn);
+  }
   if (upload && file) {
     upload.addEventListener('click', () => file.click());
     file.addEventListener('change', async () => {
