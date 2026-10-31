@@ -110,10 +110,14 @@
     ['spores', 'Star Spores', 'Star Spores', 'a',
       ['Dave Shadoff · Spectral Associates / Microdeal, 1984', 'https://archive.worldofdragon.org/index.php?title=Star_Spores', null, null, 'love']],
     ['tangle', 'Tanglewood', 'Tanglewood', 'm',
-      ['Ian Murray-Watson · Microdeal, 1986', '/lab/1982/tapes/tanglewood-license.txt', 'https://gitlab.com/amigasourcecodepreservation/tanglewood', null, 'mit']]
+      ['Ian Murray-Watson · Microdeal, 1986', '/lab/1982/tapes/tanglewood-license.txt', 'https://gitlab.com/amigasourcecodepreservation/tanglewood', null, 'mit']],
+    // Dig-It של Rolf Michelsen (1986), ש-Microdeal מכרה בשם Stone Raider II: קוד פתוח ברישיון BSD (המאגר שלו ב-GitHub).
+    // הקלטת נבנתה מקוד המקור בלי שום שינוי (lwasm), ועטופה בקלטת CLOADM רגילה. משתמש ב-$BD41 וב-$BBE5 של ה-ROM. ג'ויסטיק בלבד
+    ['digit', 'Dig-It', 'Dig-It', 'm',
+      ['Rolf Michelsen · Microdeal (as Stone Raider II), 1986', '/lab/1982/tapes/digit-license.txt', 'https://github.com/rolfmichelsen/StoneRaiderII', null, 'bsd']]
   ];
   // משחקים שצריכים ג'ויסטיק: כשהקלטת נטענת, החיצים במקלדת הופכים לג'ויסטיק הימני ו-Alt (Option במק) לכפתור שלו
-  const JOY = new Set(['ranger', 'devil', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian', 'alcatraz', 'cricket']);
+  const JOY = new Set(['ranger', 'devil', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian', 'alcatraz', 'cricket', 'digit']);
   // ב-Cricket החובט משתמש בג'ויסטיק השמאלי והמגיש בימני (המדריך של Peaksoft): החיצים מזיזים את שניהם יחד
   const BOTH = new Set(['cricket']);
   function setJoy(on, both) {
@@ -392,6 +396,20 @@
         '[G] throws a grenade: it blows up mines and knocks out an enemy base next to you. [F] fires a wire-guided missile at the nearest helicopter, only after you have knocked out a base and moved into it.',
         'The briefing inside the game explains everything: what to do on each field, and how to reach the base.']
     },
+    // נבדק במכונה (31.10): CLOADM, ‏EXEC, מסך הפתיחה וטבלת השיאים, CAN YOU ESCAPE CAVE NO 01??, המערה, והאיש חופר בחיצים.
+    // ההוראות לפי ה-README של המחבר וקוד המקור (כפתור לחוץ + כיוון = חופרים בלי לזוז; BREAK = מוותרים על חיים; Q = חזרה לפתיחה)
+    digit: {
+      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
+        'במסך הפתיחה, עם טבלת השיאים, לוחצים על הכפתור. מופיע CAN YOU ESCAPE CAVE NO 01??, ואחריו המערה הראשונה. יש 25 מערות.',
+        'חופרים באדמה ואוספים יהלומים. LEFT למעלה מראה כמה יהלומים עוד חסרים. כשאוספים מספיק, נפתחת היציאה, וצריך להגיע אליה לפני שה-BONUS נגמר.',
+        'אבנים נופלות כשחופרים מתחתן, ומפלצות מסתובבות במנהרות: שתיהן הורגות. מפלצת הגולגולת הופכת ליהלומים כשהיא מתה, והחייזר מתפוצץ. גם הרפש מתפשט וסוגר דרכים.',
+        'כפתור לחוץ יחד עם כיוון חופר את המשבצת שלידכם בלי לזוז אליה. נתקעתם? [BREAK] מוותר על החיים האלה ומתחיל את המערה מחדש, ו-[Q] חוזר למסך הפתיחה.'],
+      en: ['In this game the arrows are the joystick, and [Space] is its button (or [Alt], [Option] on a Mac). On a phone there is a stick and a fire button under the screen.',
+        'On the title screen, with the high scores, press the button. CAN YOU ESCAPE CAVE NO 01?? appears, then the first cave. There are 25 caves.',
+        'Dig through the earth and collect diamonds. LEFT at the top shows how many diamonds are still missing. Collect enough and the exit opens; reach it before the BONUS runs out.',
+        'Stones fall when you dig under them, and monsters roam the tunnels: both kill. The skull monster turns into diamonds when it dies, and the alien explodes. Slime spreads too and closes off paths.',
+        'Holding the button while pushing a direction digs the square next to you without moving into it. Trapped? [BREAK] gives up this life and restarts the cave, and [Q] goes back to the title screen.']
+    },
     // נבדק במכונה (29.10): CLOADM, ‏EXEC, מסך הפתיחה, התפריט, Extra time? ובחירת דמות. ההוראות לפי המדריך המקורי ל-Dragon (המאגר של Tanglewood)
     tangle: {
       he: ['הרפתקה ביער: Schark, יזם עם כוחות קסם, רוצה לכרות את Tanglewood ולבנות משרדים. יש לכם עשרה ימים לעצור אותו.',
@@ -635,6 +653,7 @@
     champs: ['כשמופיע OK מקלידים {RUN}. המשחק שואל WHICH TEAM WOULD YOU LIKE TO BE?: כותבים שם ולוחצים [ENTER].', 'When OK appears type {RUN}. The game asks WHICH TEAM WOULD YOU LIKE TO BE?: type a name and press [ENTER].'],
     cricket: ['מופיע מסך הפתיחה של Cricket, והמשחק ממשיך לטעון ולהתכונן עוד כמה דקות. אחר כך עונים על השאלות במקלדת.', 'The Cricket title screen appears, and the game goes on loading and preparing for a few minutes. Then answer the questions on the keyboard.'],
     tangle: ['כשמופיע OK מקלידים {EXEC}. אחרי מסך הפתיחה לוחצים [1] למשחק חדש.', 'When OK appears type {EXEC}. After the title screen press [1] for a new game.'],
+    digit: ['הטעינה לוקחת כשתי דקות. כשמופיע OK מקלידים {EXEC}. במסך הפתיחה לוחצים על כפתור הג\'ויסטיק, [רווח].', 'Loading takes about two minutes. When OK appears type {EXEC}. On the title screen press the joystick button, [Space].'],
     ranger: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וב-SELECT LEVEL בוחרים שלב.', 'When loading ends pick a colour: [1], [2] or [3]. On the title screen press [Space], and at SELECT LEVEL pick a level.'],
     cuthbert: ['אחרי הטעינה מופיע LICENSED BY MICRODEAL ונשאר כחמש עד שבע דקות. זה לא תקוע: כך המשחק בנוי. כשמופיע הג\'ונגל, לוחצים [רווח].', 'After loading, LICENSED BY MICRODEAL appears and stays for about five to seven minutes. It is not stuck: the game is built that way. When the jungle appears, press [Space].'],
     dungeon: ['בסוף הטעינה בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וב-SELECT LEVEL בוחרים רמה, [1] עד [3].', 'At the end of loading pick a colour: [1], [2] or [3]. On the title screen press [Space], and at SELECT LEVEL pick a level, [1] to [3].'],
@@ -672,6 +691,7 @@
     champs: ['מנהלים קבוצת כדורגל מהליגה הרביעית עד גביע אירופה: קונים, מוכרים ומשחקים. לשחקן אחד.', 'Manage a football club from the 4th Division to the European Cup: buy, sell and play. 1 player.'],
     cricket: ['משחק קריקט של 40 אוברים: מגישים, חובטים ורצים. נגד המחשב או בשניים. בג\'ויסטיק.', 'A 40-over cricket match: bowl, bat and run. Against the computer or for two. Joystick.'],
     tangle: ['הרפתקה ביער עם חמש דמויות: עוצרים את Schark לפני שהוא כורת את היער. בחיצים ובפקודות.', 'A woodland adventure with five characters: stop Schark before he cuts down the woods. Arrows and typed commands.'],
+    digit: ['חופרים במערות, אוספים יהלומים ובורחים מאבנים נופלות וממפלצות: 25 מערות. בג\'ויסטיק.', 'Dig through caves, collect diamonds and escape falling stones and monsters: 25 caves. Joystick.'],
     ranger: ['רצים, קופצים ויורים: אוספים מפתחות ואוצרות בין עטלפים ועיניים. בג\'ויסטיק.', 'Run, jump and shoot: collect keys and treasure past bats and eyes. Joystick.'],
     count: ['הרפתקת מילים: מתעוררים במיטה זרה, בארץ של רוזן מסתורי. ההרפתקה החמישית של Scott Adams.', 'A text adventure: wake up in a strange bed, in the land of a mysterious Count. Scott Adams\' fifth adventure.'],
     odyssey: ['הרפתקת מילים בחלל: חללית קטנה, אסטרואיד רחוק ואוצרות של ציוויליזציה עתיקה. ההרפתקה השישית של Scott Adams.', 'A text adventure in space: a small scout ship, a distant asteroid and the treasures of an ancient civilisation. Scott Adams\' sixth adventure.'],
@@ -848,9 +868,9 @@
       docs.textContent = EN ? 'with his permission' : 'באישורו';
       docs.rel = 'noopener';
       by.append(EN ? 'By ' : 'מאת ', who, ' · ', docs, EN ? ' · removed on request' : ' · יוסר לפי בקשה');
-    } else if (credit[4] === 'mit') {
-      // קוד פתוח: הרישיון (MIT) והמאגר הרשמי
-      docs.textContent = EN ? 'MIT licence' : 'רישיון MIT';
+    } else if (credit[4] === 'mit' || credit[4] === 'bsd') {
+      // קוד פתוח: הרישיון (MIT או BSD) והמאגר הרשמי
+      docs.textContent = credit[4] === 'mit' ? (EN ? 'MIT licence' : 'רישיון MIT') : (EN ? 'BSD licence' : 'רישיון BSD');
       site.textContent = EN ? 'source code' : 'קוד המקור';
       by.append(EN ? 'By ' : 'מאת ', who, ' · ', docs, ' · ', site);
       return by;

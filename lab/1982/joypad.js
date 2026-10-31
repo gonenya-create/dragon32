@@ -26,6 +26,7 @@
     cricket: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
     spores: { dir: ARROWS, fire: 'space', label: ['רווח', 'SPACE'] },
     tangle: { dir: ARROWS, fire: 'enter', label: ['ENTER', 'ENTER'] },
+    digit: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
     sketch: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] }   // הקלד בעצמך (typein.js): Sketching מצייר בג'ויסטיק
   };
   const css = document.createElement('style');

@@ -1689,6 +1689,38 @@ window.D32_GAMES = {
         32
       ]
     },
+    "digit": {
+      "slug": "dig-it",
+      "drawer": "more",
+      "year": "1986",
+      "tag": [
+        "חפירה ויהלומים",
+        "digging and diamonds"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כשתי דקות",
+        "about two minutes"
+      ],
+      "about": {
+        "he": [
+          "Rolf Michelsen כתב אותו ב-1986 ל-Dragon בשם Dig-It, אחרי ששיחק ב-Boulder Dash ב-Commodore 64 ורצה משהו דומה ל-Dragon. Microdeal מכרה אותו בשם Stone Raider II: היא ביקשה לשנות את השם כדי להשתמש בציורים שכבר היו לה, ולהוציא אותו מהר יותר.",
+          "Michelsen פרסם את קוד המקור ברישיון BSD, ולכן הוא כאן. הקלטת נבנתה מהקוד שלו בלי שום שינוי. זו הגרסה המקורית שלו, Dig-It: הקוד של הגרסה ש-Microdeal מכרה אבד."
+        ],
+        "en": [
+          "Rolf Michelsen wrote it for the Dragon in 1986 as Dig-It, after playing Boulder Dash on the Commodore 64 and wanting something like it on the Dragon. Microdeal sold it as Stone Raider II: it asked for the new name so it could reuse artwork it already had and get the game out sooner.",
+          "Michelsen published the source code under the BSD licence, which is why it is here. The tape was built from his code without any change. This is his original version, Dig-It: the code of the version Microdeal sold has been lost."
+        ]
+      },
+      "icon": [
+        104,
+        80,
+        40
+      ]
+    },
     "champs": {
       "slug": "champions",
       "drawer": "harry",
