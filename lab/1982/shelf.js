@@ -1502,7 +1502,11 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       let sum = type + len;
       for (const b of data) sum += b;
       if ((sum & 255) !== bytes[i + 4 + len]) continue;
-      if (type === 0 && len >= 15) cur = { n: String.fromCharCode(...data.slice(0, 8)).trim(), b: [[0, ...data]] };
+      const name = String.fromCharCode(...data.slice(0, 8)).trim();
+      // כותרת בלי שם אחרי קובץ = החלק השני של אותה קלטת (Donkey King של Microdeal: הטוען, ואחריו המשחק בלי שם).
+      // נשמרים יחד, כדי שהטעינה תביא את שניהם (גונן, 1.11: "לא נטען כבר מלא זמן")
+      if (type === 0 && len >= 15 && !name && !cur && files.length) { cur = files.pop(); cur.b.push([0, ...data]); }
+      else if (type === 0 && len >= 15) cur = { n: name, b: [[0, ...data]] };
       else if (cur && type === 1) cur.b.push([1, ...data]);
       else if (cur && type === 255) { cur.b.push([255]); files.push(cur); cur = null; }
       i += 4 + len;
@@ -1513,13 +1517,19 @@ body.game-open .shelf > :not(.game-view) { display: none; }
   function tapeBytes(files) {
     const leader = new Array(128).fill(0x55);
     let out = [];
-    for (const f of files) {
-      const gap = f.b[0][11];
-      out = out.concat(leader, block(0, f.b[0].slice(1)));
+    for (const f of files) for (const part of parts(f)) {
+      const gap = part[0][11];
+      out = out.concat(leader, block(0, part[0].slice(1)));
       if (!gap) out = out.concat(leader);
-      for (const b of f.b.slice(1)) out = out.concat(gap ? leader : [], block(b[0], b.slice(1)));
+      for (const b of part.slice(1)) out = out.concat(gap ? leader : [], block(b[0], b.slice(1)));
     }
     return new Uint8Array(out);
+  }
+  // קלטת אחת יכולה להכיל כמה קבצים (כותרת לכל אחד): מחלקים לפי הכותרות
+  function parts(f) {
+    const out = [];
+    for (const b of f.b) if (b[0] === 0 || !out.length) out.push([b]); else out[out.length - 1].push(b);
+    return out;
   }
   // קלטת קול ל-Dragon אמיתי (29.10): אותם בתים שה-ROM הקליט, בצליל שה-Dragon טוען מהרשמקול.
   // כמו ההקלטה של המכונה עצמה: 44100 דגימות בשנייה, 8 ביט, חצי שנייה שקט בהתחלה, ועוד חצי שנייה אחרי הכותרת
@@ -1527,11 +1537,14 @@ body.game-open .shelf > :not(.game-view) { display: none; }
   // (0.894886 מגה-הרץ): ביט 0 = 813 מחזורים, ביט 1 = 435 (Ciaran Anscomb, 20.10).
   function tapeWav(f) {
     const RATE = 44100, CPU = 894886, AMP = 86;
-    const leader = new Array(128).fill(0x55), gap = f.b[0][11];
-    const parts = [['quiet', 0.5], ['bytes', leader.concat(block(0, f.b[0].slice(1)))]];
-    if (!gap) parts.push(['quiet', 0.5], ['bytes', leader.concat(...f.b.slice(1).map(b => block(b[0], b.slice(1))))]);
-    else for (const b of f.b.slice(1)) parts.push(['quiet', 0.5], ['bytes', leader.concat(block(b[0], b.slice(1)))]);
-    parts.push(['quiet', 0.1]);
+    const leader = new Array(128).fill(0x55), segs = [];
+    for (const part of parts(f)) {
+      const gap = part[0][11];
+      segs.push(['quiet', 0.5], ['bytes', leader.concat(block(0, part[0].slice(1)))]);
+      if (!gap) segs.push(['quiet', 0.5], ['bytes', leader.concat(...part.slice(1).map(b => block(b[0], b.slice(1))))]);
+      else for (const b of part.slice(1)) segs.push(['quiet', 0.5], ['bytes', leader.concat(block(b[0], b.slice(1)))]);
+    }
+    segs.push(['quiet', 0.1]);
     const out = [];
     let t = 0;
     const quiet = sec => { const end = Math.round((t + sec) * RATE); while (out.length < end) out.push(128); t += sec; };
@@ -1540,7 +1553,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       for (let s = from; s < to; s++) out.push(Math.round(128 + AMP * Math.sin(2 * Math.PI * ((s / RATE - t) / len))));
       t += len;
     };
-    for (const [kind, v] of parts) {
+    for (const [kind, v] of segs) {
       if (kind === 'quiet') quiet(v);
       else for (const byte of v) for (let i = 0; i < 8; i++) bit((byte >> i) & 1);
     }
