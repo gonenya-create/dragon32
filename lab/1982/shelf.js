@@ -1516,10 +1516,32 @@ body.game-open .shelf > :not(.game-view) { display: none; }
     return files;
   }
   // לפי הכותרת: קובץ עם פערים (בית 10 שלה) — מבוא לפני כל בלוק; רציף — מבוא אחד והבלוקים ברצף
+  // קלטת "כמו שהיא" (גונן, 1.11: Manic Miner): טוען מיוחד נגד העתקה, שאחרי הכותרת כותב בלוקים בפורמט משלו, בלי בלוק סוף.
+  // parseCas לא מוצא בה תוכנית שלמה, אז שומרים את כל הבתים של הקובץ כמו שהם (r, ב-base64), ואת הכותרת הראשונה לשם ולסוג
+  function rawTape(bytes) {
+    for (let i = 0; i + 4 < bytes.length; i++) {
+      if (bytes[i] !== 0x55 || bytes[i + 1] !== 0x3c || bytes[i + 2] !== 0 || bytes[i + 3] < 15) continue;
+      const len = bytes[i + 3];
+      if (i + 5 + len > bytes.length) break;
+      const data = Array.from(bytes.slice(i + 4, i + 4 + len));
+      let sum = len;
+      for (const b of data) sum += b;
+      if ((sum & 255) !== bytes[i + 4 + len]) continue;
+      let bin = '';
+      for (let k = 0; k < bytes.length; k += 8192) bin += String.fromCharCode(...bytes.subarray(k, k + 8192));
+      return { n: String.fromCharCode(...data.slice(0, 8)).trim() || 'TAPE', b: [[0, ...data]], r: btoa(bin) };
+    }
+    return null;
+  }
+  function rawBytes(f) {
+    const bin = atob(f.r), out = new Array(bin.length);
+    for (let k = 0; k < bin.length; k++) out[k] = bin.charCodeAt(k);
+    return out.concat(new Array(64).fill(0x55));   // סוף הקובץ: מבוא קצר, כדי שהבית האחרון ייקרא עד הסוף
+  }
   function tapeBytes(files) {
     const leader = new Array(128).fill(0x55);
     let out = [];
-    for (const f of files) for (const part of parts(f)) {
+    for (const f of files) if (f.r) out = out.concat(rawBytes(f)); else for (const part of parts(f)) {
       const gap = part[0][11];
       out = out.concat(leader, block(0, part[0].slice(1)));
       if (!gap) out = out.concat(leader);
@@ -1540,7 +1562,8 @@ body.game-open .shelf > :not(.game-view) { display: none; }
   function tapeWav(f) {
     const RATE = 44100, CPU = 894886, AMP = 86;
     const leader = new Array(128).fill(0x55), segs = [];
-    for (const part of parts(f)) {
+    if (f.r) segs.push(['quiet', 0.5], ['bytes', rawBytes(f)]);
+    else for (const part of parts(f)) {
       const gap = part[0][11];
       segs.push(['quiet', 0.5], ['bytes', leader.concat(block(0, part[0].slice(1)))]);
       if (!gap) segs.push(['quiet', 0.5], ['bytes', leader.concat(...part.slice(1).map(b => block(b[0], b.slice(1))))]);
@@ -1708,7 +1731,9 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       const f = file.files[0];
       file.value = '';
       if (!f) return;
-      const found = parseCas(new Uint8Array(await f.arrayBuffer()));
+      const bytes = new Uint8Array(await f.arrayBuffer());
+      let found = parseCas(bytes);
+      if (!found.length) { const raw = rawTape(bytes); if (raw) found = [raw]; }
       if (found.length) { addTapes(found); if (mineDrawer) mineDrawer.open = true; status.textContent = (EN ? 'Added to my tapes: ' : 'נוסף לקלטות שלי: ') + found.map(t => t.n).join(', '); }
       else status.textContent = EN ? 'No program found in this file.' : 'לא נמצאה תוכנית בקובץ הזה.';
     });
