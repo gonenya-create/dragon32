@@ -30,7 +30,7 @@
     brickout: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },   // ידית: shelf.js מזיז את המחבט בהדרגה לפי החיצים
     snaker: { dir: ARROWS, fire: 'enter', label: ['ENTER', 'ENTER'] },
     sketch: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },   // הקלד בעצמך (typein.js): Sketching מצייר בג'ויסטיק
-    mine: { dir: ARROWS, fire: 'space', label: ['רווח', 'SPACE'] }   // קלטת שלי בשפת מכונה (shelf.js). עם המתג דלוק, רווח הוא גם הכפתור
+    mine: { dir: ARROWS, fire: 'space', label: ['רווח', 'SPACE'] }   // קלטת שלי בשפת מכונה (shelf.js). עם המתג דלוק, הכפתור שולח את כפתור הג'ויסטיק
   };
   const css = document.createElement('style');
   css.textContent = `
@@ -95,10 +95,13 @@
   stick.addEventListener('pointermove', e => { if (game && stick.hasPointerCapture(e.pointerId)) move(e); });
   stick.addEventListener('pointerup', center);
   stick.addEventListener('pointercancel', center);
-  function fireOff() { if (fireDown) { fireDown = false; fireBtn.classList.remove('down'); send('keyup', game.fire); } }
+  // קלטת שלי עם המתג דלוק: הכפתור הוא כפתור הג'ויסטיק (Alt), לא רווח. במק רווח אמיתי הופך ל-Alt (shelf.js), אבל מקש
+  // שנשלח מכאן לא עובר שם, ו-Donkey King של Microdeal קופץ רק בכפתור הג'ויסטיק (גונן, 1.11: באייפון לא הצליח לקפוץ)
+  let fireKey = null;
+  function fireOff() { if (fireDown) { fireDown = false; fireBtn.classList.remove('down'); send('keyup', fireKey); } }
   fireBtn.addEventListener('pointerdown', e => {
     if (!game) return; e.preventDefault(); fireBtn.setPointerCapture(e.pointerId);
-    if (!fireDown) { fireDown = true; fireBtn.classList.add('down'); send('keydown', game.fire); }
+    if (!fireDown) { fireDown = true; fireBtn.classList.add('down'); fireKey = game === GAMES.mine && window.d32Joy ? 'alt' : game.fire; send('keydown', fireKey); }
     canvas.focus({ preventScroll: true });
   });
   fireBtn.addEventListener('pointerup', fireOff);
