@@ -267,10 +267,13 @@ isl_bac8	jmp	sndoff
 
 ; @island $BBC5
 ; לולאת ההשהיה שבסוף ההבהוב: X סיבובים של 8 מחזורים, ו-X חוזר 0 (DRAGON-SPEC-ENTRIES 6: ‏1118 סיבובים = כ-10 אלפיות;
-; XRoar קורא לה delay_1ms, כמו $A7D3 ב-CoCo). Danger Ranger קורא לה ישר, עם X משלו
-isl_bbc5	leax	-1,x
-		bne	isl_bbc5
-		rts
+; XRoar קורא לה delay_1ms, כמו $A7D3 ב-CoCo). $BBC5 טוענת את X בעצמה ($045E), ו-$BBC8 היא הלולאה עם X של הקורא:
+; הטוען של Microdeal ל-Donkey King (31.10) קורא ל-$BBC8 עם X משלו, כדי שהמוזיקה שבקלטת תתנגן. Danger Ranger ו-Cuthbert
+; קוראים ל-$BBC5 (ההמתנה במסך הרישיון של Cuthbert, 512 קריאות, נהיית כ-5 שניות ולא 5 דקות).
+; $B748, $B87E, $8C5B, $ADBD ו-$B3B9 מוצבים ביד, לא בכלי: הסביבה שלהם צפופה מדי. כל אחד עם fill שבודק את הכתובת
+; ($BBC8 = X משלכם: הלולאה עצמה, dlyx בסוף ה-ROM, ב-io.s)
+isl_bbc5	ldx	#$045e
+isl_bbc8	lbra	dlyx
 
 ; @island $BBE5
 ; (בבדיקות בלבד, tools/xr2.mjs מפנה את ה-JMP הזה למחסנית הבדיקות, שמקלידה את השורות. ב-ROM עצמו אין קוד בדיקות)

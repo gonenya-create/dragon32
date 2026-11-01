@@ -520,11 +520,14 @@ gline		lda	GY+1
 9		leas	6,s
 		rts
 ; gdl: אחרי suba: A = המרחק בערך מוחלט, B = הצעד (1 או -1)
-gdl		ldb	#1		; ldb לא נוגע ב-C
+gdl		ldb	#1
 		bcc	1F
 		nega
-		ldb	#-1
+		negb			; B = -1 (שני הקוראים לא בודקים דגלים אחרי gdl: pshs ואז lda/cmpa)
 1		rts
+		fill	$ff,$adbd-*	; בדיקה: אם $ADBD זז, ההרכבה נכשלת
+; $ADBD: PLAY כשהמחרוזת כבר חושבה (ב-FPA0, למשל מ-$8C5B). Chuckie Egg (A&F, 31.10) מנגן כך את המנגינות שלו במצב Dragon
+		lbra	plyx
 
 ; ---------- PCOPY s TO d (קורא 13) ----------
 ; כל דף: 0 → ?FC, ומתחיל אחרי תחילת התוכנית → ?FC (חשבון של 8 ביטים). 1536 בתים, מלמטה למעלה

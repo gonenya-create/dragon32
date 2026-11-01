@@ -102,11 +102,16 @@ cloadm		jsr	<chrget		; ה-M
 clmfn		lbsr	search		; ‏$A095: מכאן, כשהשם כבר במקום
 		tst	HGAP
 		lbne	clm_gap
-		lbsr	getofs		; ההיסט (אחרי החיפוש)
-		pshs	d
-		lda	HTYPE
+		lda	HTYPE		; קודם הסוג, ואז ההיסט (כך $B748 נופל על פקודה)
 		cmpa	#2
 		bne	cfm
+		lbsr	getofs		; ההיסט (אחרי החיפוש)
+		fcb	$8c		; cmpx #: מדלג על ה-tfr (ההיסט כבר ב-D)
+		fill	$ff,$b748-*	; בדיקה: אם $B748 זז, ההרכבה נכשלת
+; $B748: CLOADM אחרי החיפוש, עם ההיסט ב-X. הטוען של Microdeal ל-Donkey King (31.10) נכנס כאן אחרי החיפוש
+; של $B87E, עם X = 0 (מ-$8A), ואחר כך JMP [$9D]. בלי בדיקת הסוג (הכניסה הזו אחרי הבדיקה)
+clm748		tfr	x,d
+		pshs	d
 		ldd	HEXEC
 		addd	,s
 		std	EXECJP
@@ -264,7 +269,11 @@ tblkrd		orcc	#$50
 		adda	BLKTYP
 		sta	CSUM
 		ldx	BLKADR
-		ldb	BLKLEN
+		bra	tbkb87e		; מעל הכניסה של $B87E (3 מחזורים לבלוק)
+		fill	$ff,$b87e-*	; בדיקה: אם $B87E זז, ההרכבה נכשלת
+; $B87E: חיפוש הקובץ בלי לגעת במסך (הטוען של Microdeal ל-Donkey King, 31.10). הקוד בסוף ה-ROM (io.s)
+		lbra	srchq
+tbkb87e		ldb	BLKLEN
 		stb	BLKRES
 		beq	5F
 3		bsr	trbyte
@@ -347,9 +356,4 @@ thl		clr	POLLS
 2		clr	SYNCNT
 9		rts
 
-; הערכים של הקלטת בהדלקה (מועתקים ל-$8F): הבהוב הסמן, מבוא 128 (Dragon 32, גונן 20.10: לבדוק במחשב אמיתי),
-; ספים $12/$0A/$12, השהיית מנוע $DA5C
 ; @endnofill
-tdefs		fcb	50,$00,$80,$12,$0a,$12,$da,$5c
-		fdb	$045e		; $97: השהיית המקלדת (קורא: מדפסת 7.1)
-		fcb	16,116,132	; $99-$9B המדפסת: רוחב שדה הפסיק, שדה הפסיק האחרון, רוחב השורה (קורא 1.5)

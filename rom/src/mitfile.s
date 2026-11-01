@@ -394,9 +394,8 @@ isl_bbb5_e	;@isl
 		cmpa	LPTWID
 		bra	isl_bbc5_e	;@isl
 		fill	$ff,$bbc5-*	;@isl
-isl_bbc5	leax	-1,x	;@isl
-		bne	isl_bbc5	;@isl
-		rts	;@isl
+isl_bbc5	ldx	#$045e	;@isl
+isl_bbc8	lbra	dlyx	;@isl
 isl_bbc5_e	;@isl
 		blo	9F
 		tst	LPAUTO
