@@ -209,11 +209,13 @@
   // קלטת שלי (id = null): ג'ויסטיק מהמקלדת לפי המתג במגירה "הקלטות שלי" (גונן, 31.10: "אני לא יכול לשחק")
   let mineIn = false, myJoy = false;
   try { myJoy = localStorage.getItem('d32-myjoy') === '1'; } catch (e) {}
-  function gameKeys(id) {
+  // mc: קלטת שלי בשפת מכונה. בטלפון מקבלת את לוח המשחק (חיצים ורווח), כי מקש במקלדת המצוירת אי אפשר להחזיק
+  // (גונן, 1.11, על Donkey King באייפון). המתג קובע אם החיצים הם מקשים או הג'ויסטיק
+  function gameKeys(id, mc) {
     mineIn = id === null;
     setJoy(JOY.has(id) || (mineIn && myJoy), BOTH.has(id));
     setPaddle(PADDLE.has(id));
-    if (window.d32Pad) window.d32Pad(id);
+    if (window.d32Pad) window.d32Pad(mineIn && mc ? 'mine' : id);
   }
   // איך משחקים (גונן, 25.10: "לא בטוח שהמשתמשים יבינו איך משחקים"): תיבה נפתחת מתחת לכל משחק בשפת מכונה.
   // [מקש] נהיה מקש מצויר. המקשים לפי התיעוד של המחבר, ונבדקו במכונה. במק: BREAK הוא Esc, ו-CLEAR הוא Home (fn+←).
@@ -1639,7 +1641,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       b.querySelector('.how').textContent = how;
       b.setAttribute('aria-label', f.n + (kind === 2 ? (EN ? ', machine code: CLOADM' : ', שפת מכונה: CLOADM')
         : kind === 0 ? (EN ? ', BASIC program: CLOAD' : ', תוכנית BASIC: CLOAD') : (EN ? ', data file' : ', קובץ נתונים')));
-      b.addEventListener('click', () => { gameKeys(null); play(tapeBytes([f]), '/mine.cas', f.n, b, false, false, kind === 2 ? 'mine' : false); });
+      b.addEventListener('click', () => { gameKeys(null, kind === 2); play(tapeBytes([f]), '/mine.cas', f.n, b, false, false, kind === 2 ? 'mine' : false); });
       const down = document.createElement('button');
       down.type = 'button';
       down.className = 'mini';

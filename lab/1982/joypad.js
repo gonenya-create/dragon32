@@ -29,7 +29,8 @@
     digit: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
     brickout: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },   // ידית: shelf.js מזיז את המחבט בהדרגה לפי החיצים
     snaker: { dir: ARROWS, fire: 'enter', label: ['ENTER', 'ENTER'] },
-    sketch: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] }   // הקלד בעצמך (typein.js): Sketching מצייר בג'ויסטיק
+    sketch: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },   // הקלד בעצמך (typein.js): Sketching מצייר בג'ויסטיק
+    mine: { dir: ARROWS, fire: 'space', label: ['רווח', 'SPACE'] }   // קלטת שלי בשפת מכונה (shelf.js). עם המתג דלוק, רווח הוא גם הכפתור
   };
   const css = document.createElement('style');
   css.textContent = `
