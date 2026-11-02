@@ -103,17 +103,17 @@ rem		ldx	TXTPTR		; עד סוף השורה
 ; RUN [שורה]: משתנים מתאפסים, ומתחילים מהשורה הראשונה (TXTPTR = TXTTAB-1, האפס שב-$1E00) או מהשורה שצוינה
 ; (mit: RUN — CLEARC ואז GOTO)
 run		jsr	HK_RUN		; 19
-		lbsr	gfxrun		; הנקודה האחרונה, זווית וקנה מידה של DRAW (קורא 0.2)
+run85		lbsr	gfxrun		; ‏$85A8 נכנס כאן. הנקודה האחרונה, זווית וקנה מידה של DRAW (קורא 0.2)
 		lbsr	tclose		; הקבצים נסגרים (קורא: קלטת 6)
+		jsr	<chrgot
+		lbeq	$841f		; בלי מספר שורה: כמו במקור (קורא 2.11): TXTPTR לפני התוכנית, משתנים ומחסנית חדשה,
+					; וחוזרים לכתובת החזרה (כאן: הלולאה של הפקודות, ומשם newstt)
 		lbsr	runstk		; ומחסנית חדשה, עם סמן תחתית ל-FOR (mit: STKINI)
 		jsr	<chrgot
-		beq	1F
 		bcc	gosn		; RUN "שם": עם הקלטת, בהמשך (Z=0 כאן, אז ה-lbne שם קופץ)
 		bra	gogo
-1		ldx	TXTTAB
-		leax	-1,x
-		stx	TXTPTR
-		bra	gonew
+; ארבעה בתים פנויים (2.11): RUN התקצר, אבל pr_cr צריך להישאר במקומו (הקפיצות אליו מעבר ל-$903D קצרות)
+pool_run	fcb	$ff,$ff,$ff,$ff
 
 ; GO TO / GO SUB (mit: GOTO 2391, GOSUB 2373)
 go		cmpa	#$bc		; TO

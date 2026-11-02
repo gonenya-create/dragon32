@@ -242,6 +242,7 @@ motor_st	tfr	a,b		; chrget לא נוגע ב-B
 		jsr	<chrget
 		cmpb	#$c2		; OFF
 		bra	isl_bac3_e	;@isl
+nz0999		fcb	$9b,$3e,$bc,$1f,$fd	;@isl 99999999.9499 (mit: NZ0999; עבר לכאן מ-mitfp.s, 2.11)
 		fill	$ff,$bac3-*	;@isl
 		bra	isl_bac8	;@isl
 		jmp	sndon	;@isl

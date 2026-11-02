@@ -692,6 +692,8 @@ scrtch		ldx	TXTTAB
 		bra	isl_85a5_e	;@isl
 		fill	$ff,$85a5-*	;@isl
 		jmp	run	;@isl
+; ‏$85A8 (קורא 2.11): RUN אחרי ה-hook שלו. בלי מספר שורה: כמו $841F, וחוזרים לכתובת שבמחסנית עם מחסנית חדשה
+		jmp	run85	;@isl
 isl_85a5_e	;@isl
 		clr	,x+
 		clr	,x+
