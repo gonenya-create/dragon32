@@ -67,15 +67,20 @@ log		lbsr	sign
 
 ; ---------- SQR ו-^ (mit: SQR, FPWRT) ----------
 ; ^: ARG = הבסיס, FAC = המעריך
-fn_sqr		lbsr	chknum
-		lbsr	movaf
-		ldx	#fhalf
-		lbsr	movfm
+; (fn_sqr עבר ב-2.11 אל לפני $A000, ב-exp.s, כדי לפנות את $A08E-$A094)
 fpwrt		tst	FACEXP
 		beq	exp		; מעריך 0: 1, גם 0^0 (קורא)
 		tst	ARGEXP
 		bra	isl_a095_e	;@isl
-		fill	$ff,$a095-*	;@isl
+; (מ-exp.s, 2.11: ארבעה בתים שהיו פנויים כאן)
+m_ul		fcc	"UL "	;@isl
+		fcb	0	;@isl
+		fill	$ff,$a08e-*	;@isl
+; ‏$A08E (קורא 2.11): CLOADM: הקובץ נסגר ($78 = 0), מדלגים על תו אחד (ה-M), ואז השם, החיפוש והטעינה.
+; ‏$A092: אותו דבר בלי שני הצעדים האלה, כשהמצביע כבר על התו שלפני השם. ‏A לא משנה
+		clr	<FSTATE	;@isl
+		jsr	<chrget	;@isl
+		jmp	clmnm	;@isl
 		jmp	clmfn	;@isl
 isl_a095_e	;@isl
 		bne	1F

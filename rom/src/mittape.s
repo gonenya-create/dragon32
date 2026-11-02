@@ -98,7 +98,7 @@ cfm		lbra	err_fm		; עותק קרוב של efm: שתי קפיצות קצרות �
 
 ; ---------- CLOADM (3.4) ----------
 cloadm		jsr	<chrget		; ה-M
-		lbsr	getfn
+clmnm		lbsr	getfn		; ‏$A092 נכנס כאן
 clmfn		lbsr	search		; ‏$A095: מכאן, כשהשם כבר במקום
 		tst	HGAP
 		lbne	clm_gap

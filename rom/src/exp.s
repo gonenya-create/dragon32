@@ -1172,8 +1172,12 @@ gpatab		fcb	$ac,$0e		; PSET: מחיקה / הדלקה
 		fcb	$c0,$05		; NOT: היפוך / היפוך
 		fcb	0
 ; (מ-mitedit.s)
-m_ul		fcc	"UL "
-		fcb	0
+; (fn_sqr מ-mitmath.s, 2.11: כדי לפנות את $A08E-$A094 לכניסות של CLOADM)
+fn_sqr		lbsr	chknum
+		lbsr	movaf
+		ldx	#fhalf
+		lbsr	movfm
+		lbra	fpwrt
 ; (מ-mitctl.s, 2.11: כדי לפנות מקום ל-$991B)
 m_extra		fcc	"?EXTRA IGNORED"
 		fcb	13,0
