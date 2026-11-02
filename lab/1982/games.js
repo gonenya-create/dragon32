@@ -4,6 +4,16 @@
 window.D32_GAMES = {
   "drawers": [
     {
+      "key": "legends",
+      "he": "האגדות",
+      "en": "Legends",
+      "years": "1983–84",
+      "note": [
+        "המשחקים שכולם זוכרים מהתקופה. בראש המגירה The King: הקוף, החביות והסולמות שבעלי Dragon שיחקו בהם בלי סוף, כאן באישור המחבר, Chris Latham.",
+        "The games everyone remembers from the time. At the top, The King: the ape, the barrels and the ladders that Dragon owners played for hours, here with the permission of its author, Chris Latham."
+      ]
+    },
+    {
       "key": "adams",
       "he": "ההרפתקאות של Scott Adams",
       "en": "Scott Adams' adventures",
@@ -54,7 +64,7 @@ window.D32_GAMES = {
       "key": "more",
       "he": "עוד משחקים מאותה תקופה",
       "en": "More games from the time",
-      "years": "1983–86",
+      "years": "1984–86",
       "note": [
         "משחקים של מחברים שיש לנו מהם משחק אחד. כאן באישורם, או ברישיון פתוח שהם עצמם נתנו.",
         "Games by authors we have one game from. Here with their permission, or under an open licence they gave themselves."
@@ -1961,7 +1971,7 @@ window.D32_GAMES = {
     },
     "downland": {
       "slug": "downland",
-      "drawer": "more",
+      "drawer": "legends",
       "year": "1984",
       "tag": [
         "פלטפורמות",
@@ -1993,7 +2003,7 @@ window.D32_GAMES = {
     },
     "king": {
       "slug": "the-king",
-      "drawer": "more",
+      "drawer": "legends",
       "year": "1983",
       "tag": [
         "פלטפורמות",
