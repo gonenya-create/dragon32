@@ -566,3 +566,376 @@ SHIFT+0, which toggles the lock, is still not implemented: the code it returns i
 7. **RAM $011A–$011F** initial values on D32.
 8. **RND:** whether the D32 uses the same generator variant (this source has the "new" generator selected). The addresses match, so the size is the same, but this is not proven.
 9. **USR parsing:** whether the D32-documented USR1–9 bug is present in this source (not checked).
+
+
+---
+
+> **דוח קורא נוסף (2.11.2026):** 11 כתובות, לקבוצה הראשונה של "כתובות המקור החסרות" (סריקת 620 הקלטות). אותה שיטה, עובדות בלבד במילים של הקורא.
+> מה נכנס ל-ROM ב-2.11: $837D, ‏$BAA5, ‏$BDCF. השאר מחכה לסבב הבא (צריך לפנות להם מקום). $81A5 הוא לא קוד (בתוך טבלה), ו-$8B27 נמצא באמצע פקודה.
+
+## Reader report g1 — 11 more internal ROM entry points (clean room)
+
+Reader: Claude (clean-room "reader"), 2.11.2026. Facts only, in my own words. No code, no instruction sequences, no byte values, no quoted listing text.
+
+## 0. Source, method, calibration
+
+- Source: the published Dragon Data assembler listing (repo davidlinsley/DragonBasic), the D64 "32K-mode" build (module order TAB, BAS, BS2, MTH, EXT, DNL, PU, GRP, MOD, OEM from $8000). It was read in a temp folder outside the project, now deleted.
+- Method: I computed each module's size from its last listed offset plus the length of its last item, and added the sizes in build order. Module start addresses I got: TAB $8000, BAS $82F7, BS2 $8EA4, MTH $90FD, EXT $98E3, DNL $A049, PU $A1CC, GRP $A61D, MOD $B39B, OEM $BB35 (end $BFE9).
+- **Calibration — all anchors land exactly:**
+  - $8B2D = start of the FAC → integer-in-D routine. Match.
+  - $8C37 = start of the integer-in-D → FAC routine. Match.
+  - $8344 = start of the general error routine (error code in B). Match.
+  - $B748 = the CLOADM point after the file search and offset parse, with the offset in X. Match.
+  - $B87E = the point inside "open cassette for input" where the file search is called. Match.
+  - $BBC5 = loads the 10 ms delay count, then falls into the X-countdown loop at $BBC8. Match.
+  - $A000 = start of the 7-word I/O vector table, at the expected place. Match.
+- OCR typos met on the way (checked by instruction-length continuity, none affect the results): one BAS line just before $8434 has a wrong offset; the true sequence lands $8434 exactly.
+
+---
+
+## 1. $991B — CSAVEM "do the save" (after its arguments are parsed)
+
+1. **Entry kind:** part-way into the CSAVEM command. Skipped:
+   - eating the "M" and reading the filename;
+   - evaluating the three addresses onto the stack;
+   - storing the first address into the header's load field ($01E7/$01E8);
+   - the check that last ≥ first (FC error);
+   - storing the exec address into the header's exec field ($01E5/$01E6);
+   - the end-of-statement check.
+2. **Inputs:**
+   - **Stack:** the word at S+4/S+5 is the FIRST address and the word at S+2/S+3 is the LAST address (inclusive). The word at S+0/S+1 is never read. In the BASIC path it holds the exec address, because each argument is left on the stack in order first, last, exec.
+   - **Filename:** the 8 bytes at $01D2–$01D9 (space-padded). The length byte at $01D1 is not used here.
+   - **$01E5/$01E6:** exec address, which goes into the header as is.
+   - **$01E7/$01E8:** load address, which goes into the header as is.
+   - The routine does not set either header address field, so the caller must fill both.
+   - **$78 (cassette-open flag):** must be zero, or an "AO" error is raised.
+   - A and X do not matter: the routine itself sets the file type to "machine code" (2) and both the ASCII and gap flags to false.
+3. **What it does:**
+   - **Header block.** Builds the 15-byte header in the cassette buffer at $01DA: name, type at $01E2, ASCII flag $01E3, gap flag $01E4, and the two address fields left as found. Writes it as a header block (block type 0), using motor on + leader + block + motor off. The open-for-output step marks the cassette open and the buffer empty; the routine then clears $78 (closed) again.
+   - **Data blocks.** Sets the block type to data (1) and starts motor + leader again. Then it loops:
+     - buffer pointer $7E/$7F = current address;
+     - remaining = last − current;
+     - if remaining is negative, go to the end step;
+     - otherwise the block length $7D is 255 if remaining ≥ 255, else remaining + 1;
+     - write the block; the write routine leaves X = next address.
+   - **End.** Drops 6 bytes from the stack and goes to $B6CD (finish save). That sets the block type to EOF (−1) and the length to 0, writes the EOF block (no new leader) and turns the motor off.
+4. **Outputs / changes:**
+   - **Registers:** A, B, X and U are changed.
+   - **Block variables:** $7C ends at EOF (−1), $7D, and $7E/$7F.
+   - **Header and buffer state:** the header bytes $01DA–$01E4. $78 = 0. The buffer count and pointer $79 and $7A/$7B are reset.
+   - **Write scratch:** checksum and byte-count scratch at $80 and $81.
+   - **Cassette motor:** ends off.
+   - **Interrupts:**
+     - During writing, IRQ and FIRQ are masked: the leader writer and the block writer mask them.
+     - The motor-off routine at the very end clears both mask bits, so interrupts are ON at exit, whatever they were before.
+5. **Returns:** yes, by RTS, but **to the word at S+6** (after the 6 bytes are discarded). Example: if the caller pushes first, then last, then any word, and then JMPs here, control comes back to the address that was on the stack before those pushes. If the caller uses JSR, the JSR's own return address sits at S+0 and is ignored; first and last must then be at S+4 and S+2, and the return goes to whatever is at S+6.
+   - Errors never return: AO goes through the general error routine.
+   - There is no BREAK check and no "last < first" check at this entry. If last < first, you get a header block and then an immediate EOF block.
+6. **ROM calls:**
+
+   | Address | Role |
+   |---|---|
+   | $B891 | Open cassette for output / write the header |
+   | $B7CA | Copy 8 bytes (the filename copy) |
+   | $B991 | Motor + leader + block + motor off |
+   | $BE68 | Motor on + leader. Leader length comes from $90/$91. Masks interrupts. |
+   | $B999 | Write one block. Masks interrupts. |
+   | $B6CD | Finish save; reached by a jump |
+   | $B994 | Write a block then motor off |
+   | $BDDC | Motor off; re-enables interrupts |
+   | $BDCF | Motor on + settle delay |
+7. **Confidence:** likely. This is common Microsoft EXT code in the address-compatible region; the BIOS parts it calls are in OEM below $BE7B.
+
+## 2. $BAA5 — SOUND tone generator, entered after the duration is set
+
+1. **Entry kind:** part-way into the SOUND command. Skipped:
+   - parsing the pitch and storing it in $8C;
+   - parsing the duration;
+   - multiplying the duration by 4 and storing it in $8D/$8E.
+
+   The entry starts at "enable the frame interrupt at the PIA".
+2. **Inputs:**
+   - **$8C:** pitch. The delay per half-step counts up from this value to 256, so a higher value means a shorter delay and a higher note.
+   - **$8D/$8E:** 16-bit countdown, in frame-interrupt ticks. The IRQ handler decrements it until it reaches zero (see 6).
+   - **B:** ignored. The routine clears B itself before selecting the sound source, so the callers' B = 0 is harmless but not needed.
+   - **CPU IRQ mask:** the routine never touches it. Interrupts must already be enabled, or $8D/$8E never reaches zero and the tone never ends.
+3. **What it does:**
+   - Sets bit 0 of PIA0 control B ($FF03): the frame-sync interrupt enable at the PIA.
+   - Selects the DAC as the sound-mux source by clearing the select bit in PIA0 control A ($FF01) and in PIA0 control B ($FF03).
+   - Turns on the sound-enable bit, bit 3 of PIA1 control B ($FF23).
+   - Repeats this four-step cycle until $8D/$8E reads zero. Each write to the DAC at $FF20 is followed by the pitch delay:
+     1. mid level;
+     2. full level (all six DAC bits on);
+     3. mid level;
+     4. zero.
+   - The check is made once per four-step cycle.
+   - In this build the two low bits of $FF20 are always written as zero.
+   - At the end it falls into the "sound off" routine, which clears bit 3 of $FF23.
+4. **Changes:**
+   - A: ends as the PIA1 control-B value.
+   - B: ends at 0.
+   - X: ends at 0, because it was used to read the timer.
+   - U: ends at $FF05; the mux-select helper advances it.
+   - $FF03 bit 0 is set and left set. $FF01 bit 3 and $FF03 bit 3 are cleared, so the mux is left on the DAC.
+   - $FF20 is left at zero level.
+   - $FF23 bit 3 is cleared, so sound ends off.
+   - $8D/$8E ends at 0.
+5. **Returns:** RTS (through the sound-off routine at $BAC3).
+6. **ROM calls:**
+
+   | Address | Role |
+   |---|---|
+   | $BAF1 | Mux select from B |
+   | $BAC5 | Sound on |
+   | $BAD4 | One DAC step + delay (mid level) |
+   | $BAD6 | One DAC step + delay (level in A) |
+   | $BAC3 | Sound off (fallen into) |
+   | $BB02 | Timer decrement, inside the IRQ handler |
+
+   The timer decrement at $BB02 leaves the counter alone when it is already zero.
+7. **Confidence:** likely for the behaviour.
+   - Caveat: the D64 source has an explicit one-byte padding exactly in this stretch, between $BAA5 and $BAAE, kept "for address compatibility". So the D32's own bytes here are not shown by this listing. Very probably they are the same steps written one byte longer. Addresses before and after match.
+   - Also unsure whether the D32 writes the two low DAC-port bits the same way.
+
+## 3. $BDCF — cassette motor ON + settle delay (BIOS)
+
+1. **Entry kind:** start of a routine. This is the motor-on routine; jump-table slot $8015 also points here.
+2. **Inputs:** $95/$96 = the 16-bit motor delay count. It is used as a countdown in the X-delay loop. I did not trace where its default is set.
+3. **What it does:** sets bit 3 of PIA1 control A ($FF21), which drives CA2 high and turns the motor relay on. Then it counts X down from the value in $95/$96 to zero in the delay loop at $BBC8. It does nothing else: no leader, no sync, no interrupt change.
+4. **Changes:** A = the new $FF21 value; X = 0; the condition codes come from the loop. The CPU interrupt mask is not touched.
+5. **Returns:** RTS, from the delay loop.
+6. **ROM calls:** $BBC8 (X-countdown delay), reached by a branch.
+7. **Confidence:** likely. It is BIOS (OEM) code below $BE7B. The D64 patched some BIOS routines, but this one shows no sign of D64 specifics.
+
+## 4. $8403 — find BASIC line, entered after its setup
+
+1. **Entry kind:** part-way into "find line". The two steps skipped are:
+   - loading the wanted line number from $2B/$2C into D;
+   - setting X to the program start from $19/$1A.
+
+   GOTO uses this same entry to search from the current line onward.
+2. **Inputs:**
+   - **D = wanted line number**, A = high byte. The routine compares D against each line's number. **It does not read $2B/$2C at this entry.** A caller that only stores the number in $2B/$2C must also have it in D, otherwise the search uses whatever is in D.
+   - **X = address of a line's link field** to start from: a program line start, or $19/$1A for the whole program.
+3. **What it does:** walks the linked line list. At each line:
+   - if the link word is zero (end of program), it sets carry and stops;
+   - otherwise it compares D with the line number stored two bytes into the line;
+   - if D ≤ that number (unsigned), it stops;
+   - otherwise it follows the link.
+
+   Results:
+
+   | Case | Carry | Z | X points to | U |
+   |---|---|---|---|---|
+   | **Found** (equal) | clear | set | the link field of the matching line | its link word |
+   | **Not found, passed it** | set | — | the link field of the first line with a larger number | that line's link word |
+   | **Not found, end of program** | set | — | the zero end-of-program link | 0 |
+
+   In every case $47/$48 (the lower-pointer temp) = X.
+4. **Changes:** X, U, condition codes, $47/$48. D is not changed.
+5. **Returns:** RTS.
+6. **ROM calls:** none.
+7. **Confidence:** likely (common Microsoft BAS code).
+
+## 5. $837D — process a command line (main loop, after the line was read)
+
+1. **Entry kind:** part-way into the immediate-mode main loop. Skipped: the call that reads a line from the keyboard or input device.
+
+   That call normally returns X pointing to the byte *before* the line text, and carry set if BREAK was pressed.
+2. **Inputs:**
+   - **X = address one byte BEFORE the first character of a zero-terminated text line.** The first fetch pre-increments, so with a string " RUN" X points at the leading space, or just before it.
+   - **Carry flag must be clear.** If carry is set, the line is ignored and the loop goes back to read a keyboard line. Clearing A on the 6809 clears carry, which is why callers clear A. The value of A itself does not matter.
+   - **$70 (end-of-file flag) must be zero.** If it is not zero, control goes to the end-of-ASCII-load finisher.
+   - **$6F (device number) must be zero** for a direct command. If it is not zero, a "DS" error is raised.
+3. **What it does:**
+   1. Sets the current line number $68/$69 to all-ones, meaning direct mode.
+   2. Sets the text pointer $A6/$A7 = X and fetches the first non-space character.
+   3. If the line is empty, goes back to the keyboard input loop at $837A.
+   4. If the line starts with a digit, it is a program line: the number is read into $2B/$2C, the line is tokenised and inserted or deleted, variables are cleared, the links are fixed, and control goes back to $837A.
+   5. Otherwise the line is tokenised by $8F67. The tokeniser reads from the text pointer and writes tokens starting one byte before the line buffer, i.e. from $02DC (the buffer is at $02DD). It leaves the text pointer at $02DB, so the next fetch gets the first token, and the crunched length in B.
+   6. Then it jumps to $84D6 to execute the statement(s), inside the normal statement loop at $849F.
+4. **Changes:** U = all-ones; $68/$69; $A6/$A7; the line buffer around $02DC onward; plus everything the executed statement does.
+
+   The stack is **not** reset here. This is why callers adjust the stack themselves. RUN, END, errors and the return to the "OK" prompt reset it later, through $8434.
+5. **Returns:** never. When the direct line ends, the statement loop goes to the end-of-program path, which ends at the "OK" prompt and the main input loop. A RUN in the line starts the program.
+6. **ROM calls:**
+
+   | Address | Role |
+   |---|---|
+   | $8F67 | Tokenise |
+   | $84D6 | Execute (reached by a jump) |
+   | $837A | Back to the main input loop |
+   | $83A3 | Program-line path |
+   | $8344 | Error routine (for the DS error) |
+7. **Confidence:** likely.
+
+## 6. $A08E and $A092 — CLOADM (cassette machine-code load)
+
+### $A08E — the CLOADM command body
+
+1. **Entry kind:** the start of the CLOADM command body. The CLOAD command comes here once it has seen an "M". It lives in the download (DLOAD) module.
+2. **Inputs:**
+   - BASIC text at the text pointer $A6/$A7. The routine first advances the pointer by one character, which is meant to skip the "M".
+   - Then it reads an optional filename expression, or uses none if the statement ends, which means "load the first file found".
+   - After the file is found it reads an optional ",offset" from the same text.
+   - **A is not used**; the routine sets A itself. A caller's A = 0 is harmless but not needed.
+3. **What it does:**
+   1. Forces the cassette-open flag $78 to zero.
+   2. Advances the text pointer by one.
+   3. Reads the filename into $01D1 (length) and $01D2–$01D9 (space-padded).
+   4. Opens the cassette for input. This searches the tape for the named file (see below), reads the header into $01DA–$01E8, and marks the buffer empty.
+   5. **Normal (ungapped) file:** it goes to the ungapped-load code at $B73C:
+      - reads the optional ",offset" into X (0 if none);
+      - if the file type at $01E2 is not "machine code" (2), raises an FM error;
+      - sets the exec address $9D/$9E = header exec $01E5/$01E6 + offset;
+      - sets the load address $7E/$7F = header load $01E7/$01E8 + offset;
+      - starts the motor and gets bit sync, with IRQ and FIRQ masked;
+      - reads blocks straight into memory until the EOF block;
+      - turns the motor off. This re-enables interrupts.
+
+      Errors: a bad read, or a header block in the middle of the file, gives an "IO" error.
+   6. **Gapped file:** the alternative format, as used for assembler object files.
+      - It reads records from the file buffer. Each record has a type, a length and an address (+ offset).
+      - Data records are stored with a write-verify, so writing to ROM gives an error.
+      - The non-data record sets $9D/$9E and closes the file.
+      - The statement must end after the optional offset, or there is a syntax error.
+
+   File search detail: in direct mode (current-line high byte all-ones), the search clears the screen, shows an "S", and displays the filenames it finds.
+4. **Outputs:**
+   - $9D/$9E = execution address. This is why callers then jump through $9D.
+   - Memory is loaded.
+   - The cassette header area $01DA–$01E8 is filled; $01D1–$01D9 holds the filename.
+   - Registers: A, B, X, U and the condition codes are changed.
+   - $7C/$7D/$7E/$7F (block variables) are changed. $78 is changed in the gapped path.
+5. **Returns:** RTS to the caller after a successful load. The ungapped path ends through the motor-off routine, which leaves interrupts enabled.
+   - Errors (AO, IO, FM, SN, or the error raised when tape-search reading fails) go through $8344 and never return.
+6. **ROM calls:**
+
+   | Address | Role |
+   |---|---|
+   | $B7AA | Get filename |
+   | $B87A | Open cassette input (uses the search at $B8B3) |
+   | $B73C | Ungapped load, which continues into $B748 |
+   | $BDE7 | Motor on + bit sync |
+   | $B93E | Block read (vectored) |
+   | $BDDC | Motor off |
+   | $B663 | Close (gapped path) |
+7. **Confidence:** likely.
+
+### $A092 — the same, with two steps skipped
+
+1. **Entry kind:** part-way into CLOADM, 4 bytes after $A08E. Skipped:
+   - forcing $78 to zero;
+   - the one-character advance of the text pointer.
+2. **Inputs:**
+   - The text pointer must already sit on the character just before where the filename would be. The filename reader looks at the *current* character first: if it is a statement end, the filename is empty.
+   - $78 must already be zero, otherwise an "AO" error is raised.
+3. **What it does, returns, changes:** everything else is identical to $A08E.
+4. **Confidence:** likely.
+
+## 7. $85A8 — RUN, after its RAM hook
+
+1. **Entry kind:** part-way into the RUN command. Skipped: one RAM-hook call (the hook used by disk systems for "RUN filename").
+2. **Inputs:**
+   - Text pointer $A6/$A7 at the current BASIC text: either a statement end, or a line number.
+   - The return address on the stack at S+0.
+3. **What it does:**
+   1. Resets the PLAY and DRAW defaults ($98E3): volume, tempo, octave, note length, dot flag, draw angle and scale, and the draw position (128,96).
+   2. Closes all files and devices ($B65C).
+   3. Re-reads the current character.
+   - **No line number:** it goes to $841F. That sets the text pointer to just before the program start, resets the variable, array and string space, and restores DATA. Then $8434 resets the stack (see section 10) and jumps to the return address that was at S+0.
+   - **Line number given:** it clears variables and the stack the same way. Then it reads the line number into $2B/$2C, finds the line ("UL" error if it does not exist), sets the text pointer there, and jumps to the statement loop at $849F.
+4. **Returns:**
+   - In the no-argument case it "returns" to the caller's return address, but with **S reset to the top-of-stack value at $21/$22**, minus one zero byte. Machine code that JSRs here therefore gets control back with a fresh stack and the text pointer at the program start. To actually run the program it must then continue into the statement loop $849F; that is what BASIC does when it returns to its loop.
+   - With a line-number argument it never returns.
+5. **Changes:** most of the BASIC interpreter state:
+   - variables and pointers: $1D/$1E, $1F/$20, $23/$24, $0B/$0C, $2D/$2E, $08, $A6/$A7, the DATA pointer;
+   - S;
+   - registers A, B, X, U.
+6. **ROM calls:**
+
+   | Address | Role |
+   |---|---|
+   | $98E3 | Reset PLAY/DRAW defaults |
+   | $B65C | Close all files and devices |
+   | $841F | Run setup (no-argument path) |
+   | $8424 | Clear variables |
+   | $8434 | Reset the stack |
+   | $85D7 | GOTO logic (line-number path) |
+   | $8403 | Find line (via the GOTO logic) |
+   | $849F | Statement loop |
+7. **Confidence:** likely.
+
+## 8. $81A5 — not a routine entry
+
+**Finding:** $81A5 is in the middle of the statement **dispatch address table** (TAB module). The table is a list of 2-byte routine addresses, one per statement token.
+
+| Address | Content |
+|---|---|
+| $81A4 | Address word of TRON's routine |
+| $81A6 | Address word of TROFF's routine |
+
+So $81A5 is the low byte of the TRON pointer. It is data, not code. A period program probably *reads* a table entry around here, perhaps starting at $81A4 or $81A6. Or it relies on a different D32 table layout. That needs checking against the caller.
+
+**Confidence:** certain that it is not an instruction start in this listing. Likely that the D32 table sits at the same place, since the tables are common code.
+
+## 9. $8B27 — "FAC to non-negative integer in D", mid-instruction entry
+
+1. **Entry kind:** $8B27 is **one byte inside** a 3-byte instruction: the "must be numeric" check call at $8B26. That instruction belongs to the "evaluate a positive integer" helper, which has its start at $8B23, a second entry at $8B21, and the check call as a third entry at $8B26.
+   - If the CPU starts at $8B27, the two operand bytes are decoded as a harmless 2-byte operation that changes only A and the flags.
+   - Execution then continues cleanly at $8B29. This holds because the type-check routine's address is $8874.
+   - Net effect: it is the same as entering at $8B26, minus the type check that runs first. The check is done again at $8B2D anyway.
+2. **Inputs:** the FAC ($4F–$54) holds a numeric value; the type flag $06 should be numeric.
+3. **What it does:**
+   - If the FAC sign byte $54 is negative, it raises an "FC" error.
+   - Otherwise it falls into $8B2D, which checks for numeric ("TM" error if string) and range-checks: a value of 32768 or more gives an "FC" error.
+   - It then truncates and returns the integer.
+4. **Outputs:**
+   - **D = integer 0…32767.** It is also left in FAC bytes $52/$53.
+   - The FAC is left integerised.
+   - A, B and the flags are changed; X may be changed.
+
+   This matches the callers storing D into $2B/$2C as a line number.
+5. **Returns:** RTS. Errors (FC, TM) go through $8344 and never return.
+6. **ROM calls:**
+
+   | Address | Role |
+   |---|---|
+   | $8B2D | FAC → integer in D (fallen into) |
+   | $8874 | Numeric-type check |
+   | FC-error raiser | Error path |
+   | Compare routine | Range check |
+   | Integer-part routine | Truncation |
+7. **Confidence:** likely. The fall-through property depends on the type-check routine sitting at $8874 on the D32 too, which the address compatibility makes very probable.
+
+## 10. $8434 — reset the BASIC stack and flags
+
+1. **Entry kind:** start of a routine. The "clear variables" routine $8424 falls into it, and the error routine calls it.
+2. **Inputs:** the return address at S+0/S+1 (i.e. it must be called by JSR, or have a target address on top of the stack); $21/$22 = stack top.
+3. **What it does:**
+   - Resets the string-temporaries pointer $0B/$0C to the start of the temporaries area $01A9.
+   - Takes the return address off the old stack into X.
+   - Loads S from $21/$22 and pushes one zero byte, a "no FOR/GOSUB" marker.
+   - Clears the CONT pointer $2D/$2E, so CONT is not allowed.
+   - Clears the subscript flag $08.
+   - Jumps to the address in X.
+4. **Outputs / changes:**
+   - S = (contents of $21/$22) − 1, with a zero byte at [S].
+   - X = the return address.
+   - $0B/$0C, $2D/$2E and $08 are changed.
+   - A and B are not changed. The flags come from the last clear.
+5. **Returns:** to the caller's return address by jumping, not by RTS. Everything that was on the stack is discarded: FOR/GOSUB frames and any caller frames.
+6. **ROM calls:** none.
+7. **Confidence:** likely.
+
+---
+
+## 11. Notes for the writer (summary of the surprises)
+
+- **$8403** takes the line number in **D**, not from $2B/$2C. Carry clear means found.
+- **$BAA5** clears B itself and needs IRQs already enabled. Its duration counts frame interrupts.
+- **$991B** reads first at S+4 and last at S+2, ignores S+0, and drops six bytes. It then returns through the word at S+6. The header's exec and load fields ($01E5 and $01E7) and the filename ($01D2) must be preset by the caller.
+- **$837D** needs carry clear (that is the purpose of the caller clearing A) and X one byte before the text. It never returns.
+- **$A08E** ignores A and advances the text pointer one character before reading the filename. **$A092** skips that advance and the closing of $78.
+- **$81A5** is table data, not code.
+- **$8B27** is mid-instruction but slides safely into $8B29.
