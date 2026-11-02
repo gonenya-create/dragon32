@@ -226,6 +226,8 @@ isl_ba77_e	;@isl
 		bra	isl_baa0_e	;@isl
 		fill	$ff,$baa0-*	;@isl
 		jmp	sound2	;@isl
+		fill	$ff,$baa5-*	;@isl
+		jmp	snddur	;@isl
 isl_baa0_e	;@isl
 		lbsr	wrhdr
 		jsr	tleader
@@ -234,9 +236,6 @@ isl_baa0_e	;@isl
 		lbra	wdata
 
 ; ---------- SKIPF (3.7) ----------
-skipf_st	lbsr	getfne
-		lbsr	search
-		lbra	skipfl
 
 ; ---------- MOTOR ON / OFF (3.8) ----------
 motor_st	tfr	a,b		; chrget לא נוגע ב-B
@@ -650,9 +649,9 @@ clm_gap		ldd	HTYPE		; הכותרת תידרס בחוצץ: הסוג וה-ASCII נ
 		lbsr	nochr
 1		bsr	trawb		; סוג
 		pshs	a
-		bsr	trawd		; אורך
+		lbsr	trawd		; אורך
 		tfr	d,y
-		bsr	trawd		; כתובת
+		lbsr	trawd		; כתובת
 		addd	1,s
 		tfr	d,x
 		tst	,s+
@@ -668,12 +667,10 @@ clm_gap		ldd	HTYPE		; הכותרת תידרס בחוצץ: הסוג וה-ASCII נ
 3		stx	EXECJP
 		leas	2,s
 		lbra	tcl1
-; trawd: שני בתים מהקלטת → D (הגבוה קודם)
-trawd		bsr	trawb
-		tfr	a,b
-		bsr	trawb
-		exg	a,b
-		rts
+		fill	$ff,$bdcf-*	; בדיקה: אם $BDCF זז, ההרכבה נכשלת
+; ‏$BDCF (קורא 2.11): המנוע דולק, ואז השהיה של $95/$96 ספירות (A ו-X משתנים). טוענים של Quickbeam (Galactic Gus)
+; ו-Computape (Crazy Foota 2) קוראים לה לפני קריאת בלוק. ‏trawd עבר ל-entries.s כדי לפנות לה מקום
+		jmp	tmoton
 ; trawb: בית מהקלטת. סוף הקובץ באמצע: ?IO
 trawb		lbsr	tchin
 		bne	eio2

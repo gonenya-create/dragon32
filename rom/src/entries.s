@@ -36,3 +36,14 @@ x_mux		pshs	x
 		tfr	b,a
 		lbsr	sndsel
 		puls	x,pc
+; ---- 2.11: הקבוצה הראשונה של כתובות המקור (החוזים: דוח הקורא 2.11, מול מה שהתוכנות עושות) ----
+; trawd: שני בתים מהקלטת → D (הגבוה קודם). עבר לכאן מ-mitfile.s ב-2.11, כדי לפנות את $BDCF
+trawd		lbsr	trawb
+		tfr	a,b
+		lbsr	trawb
+		exg	a,b
+		rts
+; SKIPF (קורא 3.7): עבר לכאן מ-mitfile.s ב-2.11, כדי לפנות מקום ל-$BAA5
+skipf_st	lbsr	getfne
+		lbsr	search
+		lbra	skipfl

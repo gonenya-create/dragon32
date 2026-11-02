@@ -53,7 +53,7 @@ sound2		clra
 		lslb
 		rola
 		std	SNDTMR
-		lda	PIA0+3		; פסיקת השדה פתוחה
+snddur		lda	PIA0+3		; פסיקת השדה פתוחה ($BAA5 נכנס כאן, כשהמשך כבר ב-$8D/$8E)
 		ora	#1
 		sta	PIA0+3
 		clra			; DAC

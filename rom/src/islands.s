@@ -79,8 +79,13 @@ isl_bb26_9	rts
 ; @island $8371
 ; ‏OK ולולאת הפקודות (קורא 8.14). ‏$837A: בלי OK
 		jmp	main_ok
+; ‏$837D (קורא 2.11): הפקודה שב-X+1 (מסתיימת ב-0), בלי לקרוא שורה: מכווצים ומבצעים, ולא חוזרים.
+; טוענים של Incentive (Ket) ו-Dragon Data (Monsters & Magic) שולחים כך " RUN". הקוד יושב במילוי שבין $8374 ל-$837A
+x837d		leax	1,x
+		jmp	mainx
 		fill	$ff,$837a-*
 		jmp	main
+		bra	x837d
 
 ; @island $83ED
 ; חיבור השורות מחדש (קורא 8.15)
@@ -250,6 +255,10 @@ isl_ba7e	stb	,x+
 ; @island $BAA0
 ; SOUND מאוגרים: B = המשך, הטון כבר ב-$8C (קורא 2.7). תוכנות בשפת מכונה קוראות לה ישר (למשל DragonTet, דרך CMOC)
 		jmp	sound2
+; ‏$BAA5 (קורא 2.11): הצליל כשגם המשך כבר במקום: הטון ב-$8C, ומספר השדות ב-$8D/$8E. ‏B לא משנה.
+; ‏Katerpillar Attack ו-Dragon Invaders מנגנים כך, עם הפסיקות פתוחות
+		fill	$ff,$baa5-*
+		jmp	snddur
 
 ; @island $BAC3
 ; ‏$BAC3 הצליל כבוי. ‏$BAC5 דולק (קורא 2.7)

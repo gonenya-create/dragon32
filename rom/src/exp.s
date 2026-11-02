@@ -400,8 +400,11 @@ isl_8342_e	;@isl
 		bra	isl_8371_e	;@isl
 		fill	$ff,$8371-*	;@isl
 		jmp	main_ok	;@isl
+x837d		leax	1,x	;@isl
+		jmp	mainx	;@isl
 		fill	$ff,$837a-*	;@isl
 		jmp	main	;@isl
+		bra	x837d	;@isl
 isl_8371_e	;@isl
 		; מצב ההדלקה (ספר): תוכנית ב-$1E01, אפס ב-$1E00, גבולות הזיכרון והמחרוזות
 		; (FRETOP ו-TEMPPT: נקבעים ב-scrtch/runc)
@@ -486,7 +489,7 @@ main		lbsr	getline
 		std	TXTPTR	;@isl
 		lbra	runstk	;@isl
 isl_841f_e	;@isl
-		lbsr	skipsp
+mainx		lbsr	skipsp		; ‏$837D נכנס כאן, עם X על הטקסט
 		beq	main		; שורה ריקה
 		lbsr	isdig
 		bcc	1F
