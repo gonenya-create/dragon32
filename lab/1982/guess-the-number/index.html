@@ -279,7 +279,8 @@ function press(label, alt, hold = 70) {
   else if (CODE[label]) [key, code] = CODE[label];
   else {
     key = shift && alt ? alt : label;
-    if (/^[A-Z]$/.test(key)) code = 'Key' + key;
+    // SHIFT ואות: לוחצים באמת על SHIFT, כמו ב-Dragon (גונן, 1.11: ב-DK COCO באייפון SHIFT+N שלח רק N, והמשחק חיכה ל-N גדולה)
+    if (/^[A-Z]$/.test(key)) { code = 'Key' + key; needShift = shift; }
     else if (/^[0-9]$/.test(key)) code = 'Digit' + key;
     else if (HOST[key]) { code = HOST[key][0]; needShift = !!HOST[key][1]; }
   }
