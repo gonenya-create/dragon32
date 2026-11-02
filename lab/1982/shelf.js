@@ -1533,6 +1533,39 @@ body.game-open .shelf > :not(.game-view) { display: none; }
     }
     return null;
   }
+  // טוען שמושך בלוקים בעצמו (גונן, 2.11: Time Bandit של Microdeal, Mr. Dig של Computerware): CLOADM טוען רק בלוק קטן שמשתלט
+  // על המחשב, והוא קורא את שאר הבלוקים מהקלטת, ובין בלוק לבלוק עוצר ומדליק את המנוע. בקלטת אמיתית יש לפני כל בלוק מבוא,
+  // אבל בקבצי הארכיון חלק מהבלוקים צמודים זה לזה בלי מבוא, והטוען מפספס אותם. כאן: כל הקובץ כמו שהוא,
+  // ולפני כל בלוק שהמבוא שלפניו קצר נוסף מבוא (128 בתים של $55). הנתונים עצמם לא משתנים
+  function blockAt(bytes, j) {
+    if (j + 3 >= bytes.length || bytes[j] !== 0x3c) return -1;
+    const type = bytes[j + 1], len = bytes[j + 2];
+    if (type !== 0 && type !== 1 && type !== 255) return -1;
+    if ((type === 0 && len < 15) || (type === 255 && len) || j + 3 + len >= bytes.length) return -1;
+    let sum = type + len;
+    for (let k = 0; k < len; k++) sum += bytes[j + 3 + k];
+    return (sum & 255) === bytes[j + 3 + len] ? j + 4 + len : -1;
+  }
+  function gapTape(bytes, used) {
+    const out = [], cuts = [];
+    let n = 0;
+    for (let i = bytes.indexOf(0x3c); i >= 0 && i < bytes.length; ) {
+      const end = blockAt(bytes, i);
+      if (end < 0 || (!n && bytes[i - 1] !== 0x55)) { i++; continue; }
+      let k = i;
+      while (k > 0 && bytes[k - 1] === 0x55) k--;
+      if (i - k < 64) cuts.push(i);   // גם לפני הכותרת הראשונה: בקבצים האלה יש לפניה רק 5 עד 35 בתי מבוא
+      n++; i = end;
+    }
+    if (n <= used || !cuts.length) return null;   // אין בלוקים מעבר לתוכנית, או שלכולם יש מבוא: הדרך הרגילה
+    let last = 0;
+    for (const c of cuts) { out.push(bytes.subarray(last, c), new Uint8Array(128).fill(0x55)); last = c; }
+    out.push(bytes.subarray(last));
+    const all = new Uint8Array(out.reduce((a, b) => a + b.length, 0));
+    let o = 0;
+    for (const b of out) { all.set(b, o); o += b.length; }
+    return rawTape(all);
+  }
   function rawBytes(f) {
     const bin = atob(f.r), out = new Array(bin.length);
     for (let k = 0; k < bin.length; k++) out[k] = bin.charCodeAt(k);
@@ -1733,6 +1766,8 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       if (!f) return;
       const bytes = new Uint8Array(await f.arrayBuffer());
       let found = parseCas(bytes);
+      const gapped = gapTape(bytes, found.reduce((a, t) => a + t.b.length, 0));
+      if (gapped) found = [gapped];
       if (!found.length) { const raw = rawTape(bytes); if (raw) found = [raw]; }
       if (found.length) { addTapes(found); if (mineDrawer) mineDrawer.open = true; status.textContent = (EN ? 'Added to my tapes: ' : 'נוסף לקלטות שלי: ') + found.map(t => t.n).join(', '); }
       else status.textContent = EN ? 'No program found in this file.' : 'לא נמצאה תוכנית בקובץ הזה.';
