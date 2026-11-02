@@ -176,6 +176,17 @@ try {
   // PLAY עדיין עובד אחרי השינוי שם (O, V, L, T, P, X והתו עצמו)
   s = await run(['PLAY "T200O2V20L8CDEP8;O3V31L16.C;O+C;O-V-V+T-T+L4C"', 'PRINT "PLAYOK"']);
   ok('PLAY רץ ונגמר אחרי השינוי באזור $B4B3', /^PLAYOK ?$/m.test(s) && !/ERROR/.test(s), show(tail(s)));
+
+  console.log('הקבוצה הראשונה של כתובות המקור החסרות (קורא 2.11)');
+  // $837D: הפקודה שב-X+1, בלי לקרוא שורה (Monsters & Magic ו-Ket שולחים כך " RUN"). כאן " ?123"
+  s = await run([...poke(0x7000, '8E700A 4F 7E837D 000000 203F313233 00'), 'EXEC &H7000']);
+  ok('$837D מבצע את הפקודה שב-X+1 (" ?123" מדפיס 123)', /^ 123 ?$/m.test(s), show(tail(s)));
+  // $BDCF: המנוע דולק (ביט 3 של $FF21), ואז השהיה, וחוזרים (Galactic Gus, Crazy Foota 2)
+  s = await run([...poke(0x7000, 'BDBDCF 39'), 'EXEC &H7000:PRINT PEEK(&HFF21) AND 8', 'MOTOR OFF']);
+  ok('$BDCF מדליק את המנוע וחוזר', /^ 8 ?$/m.test(s), show(tail(s)));
+  // $BAA5: צליל כשהטון ב-$8C והמשך ב-$8D/$8E, עם הפסיקות פתוחות (Dragon Invaders, Katerpillar Attack). חוזר כשהמשך נגמר
+  s = await run([...poke(0x7000, '8680 978C CC000A DD8D 1CEF 5F BDBAA5 39'), 'EXEC &H7000:PRINT PEEK(&H8D)*256+PEEK(&H8E);"END"']);
+  ok('$BAA5 מנגן את הצליל וחוזר כשהמשך ב-$8D/$8E נגמר', /^ 0 END ?$/m.test(s), show(tail(s)));
 } catch (e) {
   fail++; console.log('  ✗ ' + e.message);
 }
