@@ -187,6 +187,33 @@ try {
   // $BAA5: צליל כשהטון ב-$8C והמשך ב-$8D/$8E, עם הפסיקות פתוחות (Dragon Invaders, Katerpillar Attack). חוזר כשהמשך נגמר
   s = await run([...poke(0x7000, '8680 978C CC000A DD8D 1CEF 5F BDBAA5 39'), 'EXEC &H7000:PRINT PEEK(&H8D)*256+PEEK(&H8E);"END"']);
   ok('$BAA5 מנגן את הצליל וחוזר כשהמשך ב-$8D/$8E נגמר', /^ 0 END ?$/m.test(s), show(tail(s)));
+
+  console.log('הקבוצה השנייה (קורא 2.11)');
+  // $8B27: ‏D → FAC דרך $8C37, ואז $8B27 מחזיר את המספר ב-D (Ket, Immortal Strain). שלילי: ?FC
+  s = await run([...poke(0x7000, 'CC04D2 BD8C37 BD8B27 FD7080 39'), 'EXEC &H7000:PRINT PEEK(&H7080)*256+PEEK(&H7081)']);
+  ok('$8B27 מחזיר את המספר החיובי ב-D (1234)', /^ 1234 ?$/m.test(s), show(tail(s)));
+  s = await run([...poke(0x7000, 'CCFFFB BD8C37 BD8B27 39'), 'EXEC &H7000']);
+  ok('$8B27 עם מספר שלילי: ?FC', /\?FC ERROR/.test(s), show(tail(s)));
+  // $85A8: ‏RUN בלי מספר שורה חוזר לקורא עם מחסנית חדשה ו-TXTPTR לפני התוכנית; הקורא קופץ ל-$849F והתוכנית רצה (Ket, Eddie Steady Go!)
+  s = await run(['10 PRINT "RUN85"', ...poke(0x7000, 'BD85A8 7E849F'), 'EXEC &H7000']);
+  ok('$85A8 ואחריו $849F מריצים את התוכנית מההתחלה', /^RUN85 ?$/m.test(s) && !/ERROR/.test(s), show(tail(s)));
+  // $991B: ‏CSAVEM אחרי הארגומנטים: השם ב-$01D2, הכתובות בכותרת, ההתחלה ב-S+4 והסוף ב-S+2; חוזר דרך המילה שב-S+6 (ישר ל-BASIC)
+  const cas2 = join(tmpdir(), "d32-991b.cas");
+  await rm(cas2, { force: true });
+  s = await run([...poke(0x7100, '01020304'), ...poke(0x01D2, '4142432020202020'), ...poke(0x01E5, '7100 7100'),
+    ...poke(0x7000, '8E7100 3410 8E7103 3410 BD991B 39'), 'EXEC &H7000:PRINT "SAVED"'], { tapeWrite: cas2, timeout: 20 });
+  const tb = await readFile(cas2).catch(() => Buffer.alloc(0));
+  const h = tb.indexOf(Buffer.from([0x3c, 0x00, 0x0f, 0x41, 0x42, 0x43]));
+  const d = tb.indexOf(Buffer.from([0x3c, 0x01, 0x04, 0x01, 0x02, 0x03, 0x04]));
+  ok('$991B כותב כותרת ABC (סוג 2, ‏$7100) ובלוק עם 1 2 3 4, וחוזר ל-BASIC', /^SAVED ?$/m.test(s) && h >= 0 && tb[h + 11] === 2 && tb[h + 14] === 0x71 && tb[h + 16] === 0x71 && d > h, show(tail(s)) + ' ' + h + ' ' + d);
+  // $A08E: ‏CLOADM מהטקסט שב-TXTPTR: מדלג על ה-M וקורא "ABC" (Java Star, Music Maker). ‏$A092: בלי הדילוג (המצביע כבר על המרכאות)
+  const ld = (entry, ptr) => [...poke(0x7080, '4D2241424322 00'), 'POKE &H7100,0:POKE &H7103,0',
+    ...poke(0x7000, `9EA6 3410 8E${ptr} 9FA6 BD${entry} 3510 9FA6 39`), 'EXEC &H7000:PRINT PEEK(&H7100);PEEK(&H7103)'];
+  s = await run(ld('A08E', '7080'), { tapeLoad: cas2, timeout: 30 });
+  ok('$A08E טוען את ABC מהקלטת (1 ו-4 ב-$7100 וב-$7103)', /F ABC +1 {2}4 ?$/m.test(s), show(tail(s)));
+  s = await run(ld('A092', '7081'), { tapeLoad: cas2, timeout: 30 });
+  ok('$A092 טוען את ABC כשהמצביע כבר על המרכאות', /F ABC +1 {2}4 ?$/m.test(s), show(tail(s)));
+  await rm(cas2, { force: true });
 } catch (e) {
   fail++; console.log('  ✗ ' + e.message);
 }
