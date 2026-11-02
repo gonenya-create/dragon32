@@ -54,7 +54,7 @@
 
 ## ממתין לתשובה או להחלטה
 - ~~**הקרדיט של Voodoo Castle ושל Pirate Adventure**~~: Scott אישר "Alexis Adams & Scott Adams" (28.10), והברכה שלו במגירה (afe4664).
-- **Cuthbert in the Jungle:** ייתכן שזה Trapfall של Ken Kalish. צריך לאשר מול Curtis.
+- **Cuthbert in the Jungle:** ✅ זה Trapfall של Ken Kalish. Curtis Boyle אישר ב-1.11.2026, ו-Ken הסכים שכל המשחקים שלו ישותפו.
 - **The King:** של Chris Latham. אם יעלה, רק בשם הזה.
 - **Draconian:** באוויר ברשות של Hughey מ-1997 (29.10). **Alcatraz II:** שלו גם כן, עוד לא נבדק. הודעת נימוס ל-Hughey: רק כשתהיה כתובת (גונן, 29.10).
 - **משחקים יתומים:** יש מדיניות חדשה, ומחכים לסיום הבדיקה של המנהל. הכלל ב-CLAUDE.md יעודכן רק באישור גונן.

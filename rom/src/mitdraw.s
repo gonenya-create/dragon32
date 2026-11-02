@@ -362,7 +362,7 @@ put_st		ldb	#1
 		lda	#'G
 		lbsr	synchk
 		bra	5F
-3		leax	gpatab,pcr	; הפעולה: טוקן, ואחריו הקוד שלה
+3		ldx	#gpatab	; הפעולה: טוקן, ואחריו הקוד שלה
 4		ldb	,x++
 		lbeq	err_sn
 		cmpa	-2,x
@@ -464,7 +464,10 @@ gpbit		lsrb
 		fill	$ff,$b3b4-*	;@isl
 		jmp	reset	;@isl
 isl_b3b4_e	;@isl
-		beq	4F
+; $B3B9 = $00, כמו במקור: משחקים שרצים גם ב-CoCo בודקים את הבית הזה כדי לדעת שהם ב-Dragon (Chuckie Egg של A&F, 31.10).
+; ה-beq הקצר נהיה lbeq עם היסט $0002: הבית העליון של ההיסט (0) יושב ב-$B3B9. אותה קפיצה, אותם דגלים
+		fill	$ff,$b3b7-*	; בדיקה: ה-lbeq מתחיל ב-$B3B7, כך שהיסט 0 שלו ב-$B3B9
+		lbeq	4F
 		lsrb
 		lsrb
 4		lda	,x

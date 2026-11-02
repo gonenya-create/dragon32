@@ -110,13 +110,32 @@
     ['spores', 'Star Spores', 'Star Spores', 'a',
       ['Dave Shadoff · Spectral Associates / Microdeal, 1984', 'https://archive.worldofdragon.org/index.php?title=Star_Spores', null, null, 'love']],
     ['tangle', 'Tanglewood', 'Tanglewood', 'm',
-      ['Ian Murray-Watson · Microdeal, 1986', '/lab/1982/tapes/tanglewood-license.txt', 'https://gitlab.com/amigasourcecodepreservation/tanglewood', null, 'mit']]
+      ['Ian Murray-Watson · Microdeal, 1986', '/lab/1982/tapes/tanglewood-license.txt', 'https://gitlab.com/amigasourcecodepreservation/tanglewood', null, 'mit']],
+    // Dig-It של Rolf Michelsen (1986), ש-Microdeal מכרה בשם Stone Raider II: קוד פתוח ברישיון BSD (המאגר שלו ב-GitHub).
+    // הקלטת נבנתה מקוד המקור בלי שום שינוי (lwasm), ועטופה בקלטת CLOADM רגילה. משתמש ב-$BD41 וב-$BBE5 של ה-ROM. ג'ויסטיק בלבד
+    ['digit', 'Dig-It', 'Dig-It', 'm',
+      ['Rolf Michelsen · Microdeal (as Stone Raider II), 1986', '/lab/1982/tapes/digit-license.txt', 'https://github.com/rolfmichelsen/StoneRaiderII', null, 'bsd']],
+    // מחסניות של ה-CoCo שרצו על ה-Dragon (גונן, 31.10: "זה חלק מהדראגון כי זה היה ככה באמת"; מגירה קטנה). 'c' = מחסנית:
+    // הקובץ המקורי נכנס לחריץ, המחשב נדלק מחדש והמשחק מתחיל לבד; "הוצא" מחזיר ל-BASIC.
+    // Dungeons of Daggorath (DynaMicro / Tandy, 1982): רשות פומבית של Douglas J. Morgan לכל אחד, בתנאי שהמשחק נשאר כמו המקור
+    ['daggorath', 'Dungeons of Daggorath', 'Dungeons of Daggorath', 'c',
+      ['DynaMicro (Douglas J. Morgan, Phillip C. Landmeier, Keith Kiyohara) · Tandy, 1982', '/lab/1982/carts/daggorath-license.txt', null, null, 'grant']],
+    // Snaker של Gary Ritchie (נכתב במרץ 1983, פורסם ב-The Rainbow בינואר 1984): תוכנית BASIC ל-CoCo, והמחבר פרסם אותה ברישיון MIT.
+    // הרישום המקורי שלו (src/snaker.bas) כמו שהוא, בקלטת טקסט כמו ש-CSAVE "SNAKER",A כותב, ו-CLOAD רגיל קורא אותה
+    ['snaker', 'Snaker', 'Snaker', null,
+      ['Gary Ritchie · The Rainbow, January 1984', '/lab/1982/tapes/snaker-license.txt', 'https://github.com/gtritchie/snaker', null, 'mit']],
+    // Brickout של Owen Stenseth (1987; על המסך SUPER BRICKOUT): הופץ בחינם בלוחות המודעות, וב-2021 שוחרר ברישיון MIT.
+    // הקובץ המקורי שלו (BRICKOUT.BIN, קטע אחד ב-$6000, הפעלה ב-$6B25) עטוף בקלטת CLOADM, בלי שום שינוי. ידית: PADDLE
+    ['brickout', 'Brickout', 'Brickout', 'm',
+      ['Owen Stenseth · freeware, 1987', '/lab/1982/tapes/brickout-license.txt', 'https://github.com/digitalbytes/super-brickout', null, 'mit']]
   ];
   // משחקים שצריכים ג'ויסטיק: כשהקלטת נטענת, החיצים במקלדת הופכים לג'ויסטיק הימני ו-Alt (Option במק) לכפתור שלו
-  const JOY = new Set(['ranger', 'devil', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian', 'alcatraz', 'cricket']);
-  // ב-Cricket החובט משתמש בג'ויסטיק השמאלי והמגיש בימני (המדריך של Peaksoft): החיצים מזיזים את שניהם יחד
-  const BOTH = new Set(['cricket']);
+  const JOY = new Set(['ranger', 'devil', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian', 'alcatraz', 'cricket', 'digit', 'snaker']);
+  // ב-Cricket החובט משתמש בג'ויסטיק השמאלי והמגיש בימני (המדריך של Peaksoft): החיצים מזיזים את שניהם יחד.
+  // ב-Snaker הימני מכוון (JOYSTK(0)) והשמאלי קובע מהירות (JOYSTK(3)): למעלה מהר, למטה לאט
+  const BOTH = new Set(['cricket', 'snaker']);
   function setJoy(on, both) {
+    paddle = false; padDir = 0;
     try { Module.ccall('wasm_set_joystick_by_name', null, ['number', 'string'], [0, on ? 'kjoy0' : '']); } catch (e) {}
     try { Module.ccall('wasm_set_joystick_by_name', null, ['number', 'string'], [1, on && both ? 'kjoy0' : '']); } catch (e) {}
     window.d32Joy = !!on;
@@ -134,10 +153,69 @@
     const canvas = document.getElementById('canvas');
     if (canvas) canvas.dispatchEvent(new KeyboardEvent(type, { key: 'Alt', code: 'AltLeft', bubbles: true, cancelable: true }));
   }
+  // משחקי ידית (Brickout): המחבט הולך בדיוק למקום של הג'ויסטיק, כמו ידית אמיתית, ולכן חיצים של ג'ויסטיק מהמקלדת היו מקפיצים אותו
+  // רק לקצוות. כאן הג'ויסטיק הימני הוא הג'ויסטיק הווירטואלי של XRoar (-joy-wasm-virtual): העכבר או האצבע על המסך מזיזים את המחבט
+  // בדיוק למקום שלהם, החיצים (גם מלוח המשחק בטלפון) מזיזים אותו בהדרגה, ו-Alt, רווח או לחיצה בעכבר על המסך הם הכפתור
+  const PADDLE = new Set(['brickout']);
+  let paddle = false, padX = 32768, padDir = 0, padT = 0;
+  function padAxis(v) {
+    padX = Math.max(0, Math.min(65535, Math.round(v)));
+    try { Module.ccall('wasm_js_set_axis', null, ['number', 'number'], [0, padX]); } catch (e) {}
+  }
+  function padButton(on) { try { Module.ccall('wasm_js_set_button', null, ['number', 'number'], [0, on ? 1 : 0]); } catch (e) {} }
+  function setPaddle(on) {
+    paddle = on; padDir = 0; padButton(false);
+    const canvas = document.getElementById('canvas');
+    if (canvas) canvas.style.touchAction = on ? 'none' : '';
+    if (!on) return;
+    try { Module.ccall('wasm_set_joystick_by_name', null, ['number', 'string'], [0, 'wasm']); } catch (e) {}
+    padAxis(32768);
+  }
+  // חץ לחוץ: המחבט נע בקצב קבוע, מקצה לקצה בכשנייה
+  function padRun(t) {
+    if (!paddle || !padDir) return;
+    if (padT) padAxis(padX + padDir * 65535 * Math.min(t - padT, 50) / 1000);
+    padT = t;
+    requestAnimationFrame(padRun);
+  }
+  const PAD_KEYS = { ArrowLeft: -1, ArrowRight: 1 };
+  function padKey(e, down) {
+    if (!paddle) return;
+    const t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    if (e.key in PAD_KEYS) {
+      const d = PAD_KEYS[e.key];
+      if (down && padDir !== d) { padDir = d; padT = 0; requestAnimationFrame(padRun); }
+      if (!down && padDir === d) padDir = 0;
+    } else if (e.key === 'Alt' || e.code === 'Space') {
+      if (!(down && e.repeat)) padButton(down);
+    } else return;
+    e.preventDefault(); e.stopImmediatePropagation();
+  }
+  window.addEventListener('keydown', e => padKey(e, true), true);
+  window.addEventListener('keyup', e => padKey(e, false), true);
+  // העכבר או האצבע: המקום על המסך הוא המקום של המחבט. שטח המשחק הוא בערך 80% מרוחב המסך, בלי המסגרת
+  (function () {
+    const canvas = document.getElementById('canvas');
+    if (!canvas) return;
+    const at = e => { const r = canvas.getBoundingClientRect(); padAxis(((e.clientX - r.left) / r.width - 0.1) / 0.8 * 65535); };
+    canvas.addEventListener('pointermove', e => { if (paddle && (e.pointerType === 'mouse' || e.buttons)) at(e); });
+    canvas.addEventListener('pointerdown', e => { if (!paddle) return; at(e); if (e.pointerType === 'mouse') padButton(true); });
+    const up = e => { if (paddle && e.pointerType === 'mouse') padButton(false); };
+    canvas.addEventListener('pointerup', up);
+    canvas.addEventListener('pointercancel', up);
+  })();
   // כל קלטת שנכנסת לרשמקול: ג'ויסטיק מהמקלדת רק למשחקי ג'ויסטיק, ולוח המשחק לטלפון (joypad.js) רק למשחקים שיש להם מקשים שם
-  function gameKeys(id) {
-    setJoy(JOY.has(id), BOTH.has(id));
-    if (window.d32Pad) window.d32Pad(id);
+  // קלטת שלי (id = null): ג'ויסטיק מהמקלדת לפי המתג במגירה "הקלטות שלי" (גונן, 31.10: "אני לא יכול לשחק")
+  let mineIn = false, myJoy = false;
+  try { myJoy = localStorage.getItem('d32-myjoy') === '1'; } catch (e) {}
+  // mc: קלטת שלי בשפת מכונה. בטלפון מקבלת את לוח המשחק (חיצים ורווח), כי מקש במקלדת המצוירת אי אפשר להחזיק
+  // (גונן, 1.11, על Donkey King באייפון). המתג קובע אם החיצים הם מקשים או הג'ויסטיק
+  function gameKeys(id, mc) {
+    mineIn = id === null;
+    setJoy(JOY.has(id) || (mineIn && myJoy), BOTH.has(id));
+    setPaddle(PADDLE.has(id));
+    if (window.d32Pad) window.d32Pad(mineIn && mc ? 'mine' : id);
   }
   // איך משחקים (גונן, 25.10: "לא בטוח שהמשתמשים יבינו איך משחקים"): תיבה נפתחת מתחת לכל משחק בשפת מכונה.
   // [מקש] נהיה מקש מצויר. המקשים לפי התיעוד של המחבר, ונבדקו במכונה. במק: BREAK הוא Esc, ו-CLEAR הוא Home (fn+←).
@@ -392,6 +470,60 @@
         '[G] throws a grenade: it blows up mines and knocks out an enemy base next to you. [F] fires a wire-guided missile at the nearest helicopter, only after you have knocked out a base and moved into it.',
         'The briefing inside the game explains everything: what to do on each field, and how to reach the base.']
     },
+    // נבדק במכונה (31.10): CLOADM, ‏EXEC, מסך הפתיחה וטבלת השיאים, CAN YOU ESCAPE CAVE NO 01??, המערה, והאיש חופר בחיצים.
+    // ההוראות לפי ה-README של המחבר וקוד המקור (כפתור לחוץ + כיוון = חופרים בלי לזוז; BREAK = מוותרים על חיים; Q = חזרה לפתיחה)
+    // נבדק במכונה (31.10): המחסנית המקורית, מסך הפתיחה, EXAMINE (בתרמיל: WOODEN SWORD ו-PINE TORCH), PULL, ‏USE, ‏LOOK, ‏MOVE, ‏TURN, והמסדרון בתלת-ממד
+    daggorath: {
+      he: ['משחק פקודות: כותבים פקודה באנגלית ולוחצים [ENTER]. למטה רואים מה ביד שמאל ומה ביד ימין (EMPTY: ריקה), ובאמצע את הלב.',
+        'בהתחלה חושך. בתרמיל יש חרב עץ ולפיד: {PULL RIGHT TORCH} ואחר כך {USE RIGHT} מדליקים את הלפיד, ו-{PULL LEFT SWORD} שם את החרב ביד שמאל.',
+        'הולכים ב-{MOVE} (או {MOVE BACK}), ומסתובבים ב-{TURN LEFT}, ‏{TURN RIGHT} או {TURN AROUND}. ‏{LOOK} מראה שוב את המסדרון, ו-{EXAMINE} מה יש בחדר ובתרמיל.',
+        'כשיצור מתקרב, תוקפים ב-{ATTACK LEFT} (ביד עם החרב). ‏{GET RIGHT} מרים חפץ מהרצפה ליד ימין, ‏{STOW RIGHT} מכניס את מה שביד לתרמיל, ‏{DROP RIGHT} זורק אותו, ו-{CLIMB UP} או {CLIMB DOWN} בסולם.',
+        'שמים לב ללב: הוא דופק מהר יותר כשמתאמצים או נפגעים. כשהוא מהיר מדי, מתעלפים, אז נחים רגע לפני שממשיכים. המטרה: לרדת עד הקומה החמישית ולנצח את הקוסם.'],
+      en: ['A command game: type a command in English and press [ENTER]. At the bottom you see what is in your left and right hands (EMPTY when nothing), and the heart in the middle.',
+        'At first it is dark. Your backpack holds a wooden sword and a torch: {PULL RIGHT TORCH} and then {USE RIGHT} light the torch, and {PULL LEFT SWORD} puts the sword in your left hand.',
+        'Walk with {MOVE} (or {MOVE BACK}), and turn with {TURN LEFT}, {TURN RIGHT} or {TURN AROUND}. {LOOK} shows the corridor again, and {EXAMINE} what is in the room and in your backpack.',
+        'When a creature comes near, fight with {ATTACK LEFT} (the hand with the sword). {GET RIGHT} picks something up from the floor into your right hand, {STOW RIGHT} puts what it holds in the backpack, {DROP RIGHT} drops it, and {CLIMB UP} or {CLIMB DOWN} use a ladder.',
+        'Watch the heart: it beats faster when you work hard or get hurt. If it gets too fast you faint, so rest a moment before going on. The goal: go down to the fifth level and defeat the wizard.']
+    },
+    // נבדק במכונה (31.10): CLOADM, ‏EXEC, מסך הפתיחה (INPUT LEVEL 0-9), המחבט הולך למקום של העכבר, והכפתור משחרר את הכדור.
+    // ההוראות לפי ה-README המקורי של המחבר מ-1987 וקוד המקור (25 שלבים; המחבט קורא את הג'ויסטיק הימני, כמו ידית)
+    brickout: {
+      he: ['שוברים את כל הלבנים בכדור. המחבט הולך למקום של העכבר על המסך, כמו ידית של פעם. אפשר גם בחיצים [←] [→], ובטלפון בידית או בגרירת אצבע על המסך.',
+        'במסך הפתיחה, ב-INPUT LEVEL 0-9, לוחצים על מספר כדי לבחור באיזה שלב מתחילים, או על הכפתור כדי להתחיל מיד. יש 25 שלבים.',
+        'יש לבנים שאפשר לשבור רק מלמעלה, רק מהצד או רק מלמטה. ליד SCORE רואים כמה מחבטים נשארו.',
+        'מלבנים נופלות אותיות. תופסים אותן במחבט: E מאריך את המחבט, P נותן מחבט נוסף, B מקפיץ לשלב הבא, S מאט את הכדור, ו-C מדביק את הכדור למחבט עד שלוחצים על הכפתור.',
+        'הכפתור: לחיצה בעכבר על המסך, [רווח] או [Alt] (במק [Option]). בטלפון: כפתור האש.'],
+      en: ['Break all the bricks with the ball. The paddle goes where the mouse is on the screen, like a paddle controller of the time. The arrows [←] [→] work too, and on a phone the stick or dragging a finger on the screen.',
+        'On the title screen, at INPUT LEVEL 0-9, press a number to choose the starting level, or the button to start at once. There are 25 levels.',
+        'Some bricks can only be broken from the top, the side or the bottom. Next to SCORE you see how many paddles are left.',
+        'Letters fall from the bricks. Catch them with the paddle: E expands the paddle, P gives an extra paddle, B breaks through to the next level, S slows the ball, and C makes the ball stick to the paddle until you press the button.',
+        'The button: a mouse click on the screen, [Space] or [Alt] ([Option] on a Mac). On a phone: the fire button.']
+    },
+    // נבדק במכונה (31.10): CLOAD, ‏RUN, מסך הפתיחה עם המנגינה, והנחש זז בחיצים. ההוראות לפי קוד המקור ו-GAMEPLAY.md של המחבר
+    snaker: {
+      he: ['נחש יורד בכביש, ומכוניות צבעוניות עולות מולו מלמטה. מגיעים עד למטה בלי להתנגש, שלוש פעמים. הזמן הוא הניקוד: כמה שפחות, יותר טוב.',
+        'במשחק הזה החיצים הם ג\'ויסטיק: [←] [→] מכוונים את הנחש. [↑] מאיץ ו-[↓] מאט. בטלפון: הידית שמתחת למסך.',
+        'במסך הפתיחה, כש-press ANY key TO START מופיע, לוחצים [ENTER].',
+        'התנגשות במכונית מחזירה את הנחש שורה אחת למעלה, וממשיכים משם.',
+        'שיא חדש? המשחק שואל WHAT IS YOUR NAME: כותבים שם ולוחצים [ENTER]. ב-ANOTHER GAME (Y/N) עונים [Y] או [N].'],
+      en: ['A snake goes down a highway while coloured cars rise towards it from the bottom. Reach the bottom without crashing, three times. Your time is the score: the lower, the better.',
+        'In this game the arrows are the joystick: [←] [→] steer the snake. [↑] speeds up and [↓] slows down. On a phone: the stick under the screen.',
+        'On the title screen, when press ANY key TO START appears, press [ENTER].',
+        'Hitting a car sends the snake back up one row, and you go on from there.',
+        'A new best time? The game asks WHAT IS YOUR NAME: type a name and press [ENTER]. At ANOTHER GAME (Y/N) answer [Y] or [N].']
+    },
+    digit: {
+      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
+        'במסך הפתיחה, עם טבלת השיאים, לוחצים על הכפתור. מופיע CAN YOU ESCAPE CAVE NO 01??, ואחריו המערה הראשונה. יש 25 מערות.',
+        'חופרים באדמה ואוספים יהלומים. LEFT למעלה מראה כמה יהלומים עוד חסרים. כשאוספים מספיק, נפתחת היציאה, וצריך להגיע אליה לפני שה-BONUS נגמר.',
+        'אבנים נופלות כשחופרים מתחתן, ומפלצות מסתובבות במנהרות: שתיהן הורגות. מפלצת הגולגולת הופכת ליהלומים כשהיא מתה, והחייזר מתפוצץ. גם הרפש מתפשט וסוגר דרכים.',
+        'כפתור לחוץ יחד עם כיוון חופר את המשבצת שלידכם בלי לזוז אליה. נתקעתם? [BREAK] מוותר על החיים האלה ומתחיל את המערה מחדש, ו-[Q] חוזר למסך הפתיחה.'],
+      en: ['In this game the arrows are the joystick, and [Space] is its button (or [Alt], [Option] on a Mac). On a phone there is a stick and a fire button under the screen.',
+        'On the title screen, with the high scores, press the button. CAN YOU ESCAPE CAVE NO 01?? appears, then the first cave. There are 25 caves.',
+        'Dig through the earth and collect diamonds. LEFT at the top shows how many diamonds are still missing. Collect enough and the exit opens; reach it before the BONUS runs out.',
+        'Stones fall when you dig under them, and monsters roam the tunnels: both kill. The skull monster turns into diamonds when it dies, and the alien explodes. Slime spreads too and closes off paths.',
+        'Holding the button while pushing a direction digs the square next to you without moving into it. Trapped? [BREAK] gives up this life and restarts the cave, and [Q] goes back to the title screen.']
+    },
     // נבדק במכונה (29.10): CLOADM, ‏EXEC, מסך הפתיחה, התפריט, Extra time? ובחירת דמות. ההוראות לפי המדריך המקורי ל-Dragon (המאגר של Tanglewood)
     tangle: {
       he: ['הרפתקה ביער: Schark, יזם עם כוחות קסם, רוצה לכרות את Tanglewood ולבנות משרדים. יש לכם עשרה ימים לעצור אותו.',
@@ -635,6 +767,10 @@
     champs: ['כשמופיע OK מקלידים {RUN}. המשחק שואל WHICH TEAM WOULD YOU LIKE TO BE?: כותבים שם ולוחצים [ENTER].', 'When OK appears type {RUN}. The game asks WHICH TEAM WOULD YOU LIKE TO BE?: type a name and press [ENTER].'],
     cricket: ['מופיע מסך הפתיחה של Cricket, והמשחק ממשיך לטעון ולהתכונן עוד כמה דקות. אחר כך עונים על השאלות במקלדת.', 'The Cricket title screen appears, and the game goes on loading and preparing for a few minutes. Then answer the questions on the keyboard.'],
     tangle: ['כשמופיע OK מקלידים {EXEC}. אחרי מסך הפתיחה לוחצים [1] למשחק חדש.', 'When OK appears type {EXEC}. After the title screen press [1] for a new game.'],
+    digit: ['הטעינה לוקחת כשתי דקות. כשמופיע OK מקלידים {EXEC}. במסך הפתיחה לוחצים על כפתור הג\'ויסטיק, [רווח].', 'Loading takes about two minutes. When OK appears type {EXEC}. On the title screen press the joystick button, [Space].'],
+    brickout: ['כשמופיע OK מקלידים {EXEC}. במסך הפתיחה לוחצים על מספר, 0 עד 9, או על הכפתור.', 'When OK appears type {EXEC}. On the title screen press a number, 0 to 9, or the button.'],
+    snaker: ['כשמופיע OK מקלידים {RUN}. כשהמנגינה נגמרת לוחצים [ENTER].', 'When OK appears type {RUN}. When the tune ends press [ENTER].'],
+    daggorath: ['אחרי מסך הפתיחה, עם הקוסם, מופיע מסך המשחק. מתחילים להקליד פקודות, למשל {EXAMINE}.', 'After the opening screen with the wizard, the game screen appears. Start typing commands, for example {EXAMINE}.'],
     ranger: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וב-SELECT LEVEL בוחרים שלב.', 'When loading ends pick a colour: [1], [2] or [3]. On the title screen press [Space], and at SELECT LEVEL pick a level.'],
     cuthbert: ['אחרי הטעינה מופיע LICENSED BY MICRODEAL ונשאר כחמש עד שבע דקות. זה לא תקוע: כך המשחק בנוי. כשמופיע הג\'ונגל, לוחצים [רווח].', 'After loading, LICENSED BY MICRODEAL appears and stays for about five to seven minutes. It is not stuck: the game is built that way. When the jungle appears, press [Space].'],
     dungeon: ['בסוף הטעינה בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וב-SELECT LEVEL בוחרים רמה, [1] עד [3].', 'At the end of loading pick a colour: [1], [2] or [3]. On the title screen press [Space], and at SELECT LEVEL pick a level, [1] to [3].'],
@@ -672,6 +808,10 @@
     champs: ['מנהלים קבוצת כדורגל מהליגה הרביעית עד גביע אירופה: קונים, מוכרים ומשחקים. לשחקן אחד.', 'Manage a football club from the 4th Division to the European Cup: buy, sell and play. 1 player.'],
     cricket: ['משחק קריקט של 40 אוברים: מגישים, חובטים ורצים. נגד המחשב או בשניים. בג\'ויסטיק.', 'A 40-over cricket match: bowl, bat and run. Against the computer or for two. Joystick.'],
     tangle: ['הרפתקה ביער עם חמש דמויות: עוצרים את Schark לפני שהוא כורת את היער. בחיצים ובפקודות.', 'A woodland adventure with five characters: stop Schark before he cuts down the woods. Arrows and typed commands.'],
+    digit: ['חופרים במערות, אוספים יהלומים ובורחים מאבנים נופלות וממפלצות: 25 מערות. בג\'ויסטיק.', 'Dig through caves, collect diamonds and escape falling stones and monsters: 25 caves. Joystick.'],
+    brickout: ['שוברים לבנים בכדור ובמחבט, ותופסים אותיות שנופלות: 25 שלבים. בעכבר, כמו ידית.', 'Break bricks with a ball and paddle, and catch the falling letters: 25 levels. Mouse, like a paddle.'],
+    snaker: ['נחש יורד בכביש בין מכוניות שעולות מולו: שלוש ירידות, נגד השעון. בג\'ויסטיק.', 'A snake goes down a highway between cars rising towards it: three runs, against the clock. Joystick.'],
+    daggorath: ['מבוך בתלת-ממד, בזמן אמת: יורדים חמש קומות במבוך, נלחמים ביצורים ומנצחים את הקוסם. בפקודות באנגלית.', 'A real-time 3D maze: go down five levels, fight the creatures and defeat the wizard. Typed English commands.'],
     ranger: ['רצים, קופצים ויורים: אוספים מפתחות ואוצרות בין עטלפים ועיניים. בג\'ויסטיק.', 'Run, jump and shoot: collect keys and treasure past bats and eyes. Joystick.'],
     count: ['הרפתקת מילים: מתעוררים במיטה זרה, בארץ של רוזן מסתורי. ההרפתקה החמישית של Scott Adams.', 'A text adventure: wake up in a strange bed, in the land of a mysterious Count. Scott Adams\' fifth adventure.'],
     odyssey: ['הרפתקת מילים בחלל: חללית קטנה, אסטרואיד רחוק ואוצרות של ציוויליזציה עתיקה. ההרפתקה השישית של Scott Adams.', 'A text adventure in space: a small scout ship, a distant asteroid and the treasures of an ancient civilisation. Scott Adams\' sixth adventure.'],
@@ -848,9 +988,13 @@
       docs.textContent = EN ? 'with his permission' : 'באישורו';
       docs.rel = 'noopener';
       by.append(EN ? 'By ' : 'מאת ', who, ' · ', docs, EN ? ' · removed on request' : ' · יוסר לפי בקשה');
-    } else if (credit[4] === 'mit') {
-      // קוד פתוח: הרישיון (MIT) והמאגר הרשמי
-      docs.textContent = EN ? 'MIT licence' : 'רישיון MIT';
+    } else if (credit[4] === 'grant') {
+      // רשות פומבית של המחבר לכל אחד (Daggorath: Douglas J. Morgan): הקישור לנוסח שלה
+      docs.textContent = EN ? 'public licence' : 'רשות פומבית';
+      by.append(EN ? 'By ' : 'מאת ', who, ' · ', docs, EN ? ' · removed on request' : ' · יוסר לפי בקשה');
+    } else if (credit[4] === 'mit' || credit[4] === 'bsd') {
+      // קוד פתוח: הרישיון (MIT או BSD) והמאגר הרשמי
+      docs.textContent = credit[4] === 'mit' ? (EN ? 'MIT licence' : 'רישיון MIT') : (EN ? 'BSD licence' : 'רישיון BSD');
       site.textContent = EN ? 'source code' : 'קוד המקור';
       by.append(EN ? 'By ' : 'מאת ', who, ' · ', docs, ' · ', site);
       return by;
@@ -927,6 +1071,12 @@
   }, true);
   function loadSteps(id, kind) {
     const m = meta(id), steps = [];
+    if (kind === 'c') {
+      steps.push(T2('לוחצים על הכפתור האדום, והמחסנית נכנסת לחריץ. המחשב נדלק מחדש, והמשחק מתחיל לבד: בלי CLOAD, כמו מחסנית אמיתית.', 'Press the red button, and the cartridge goes into the slot. The computer restarts and the game starts by itself: no CLOAD, like a real cartridge.'),
+        T2('כדי לחזור ל-BASIC לוחצים ⏏ הוצא את המחסנית. גם קלטת אחרת מוציאה אותה לפני שהיא נכנסת לרשמקול.', 'To go back to BASIC press ⏏ Take the cartridge out. Another tape also takes it out before going into the recorder.'));
+      if (AFTER[id]) steps.push(T2(...AFTER[id]));
+      return steps;
+    }
     steps.push(T2('לוחצים על הכפתור האדום, והקלטת נכנסת לרשמקול.', 'Press the red button, and the tape goes into the recorder.'));
     if (!kind) steps.push(T2('מקלידים {CLOAD} ו-[ENTER]. אחרי כמה שניות מופיע OK.', 'Type {CLOAD} and [ENTER]. After a few seconds OK appears.'), T2('מקלידים {RUN} ו-[ENTER].', 'Type {RUN} and [ENTER].'));
     else if (kind === 'm') steps.push(T2('מקלידים {CLOADM} ו-[ENTER]. כשמופיע OK, מקלידים {EXEC} ו-[ENTER].', 'Type {CLOADM} and [ENTER]. When OK appears, type {EXEC} and [ENTER].'));
@@ -977,9 +1127,17 @@
     const go = document.createElement('button');
     go.type = 'button';
     go.className = 'gv-go';
-    go.textContent = T2('▶ הכנס את הקלטת לרשמקול', '▶ Put the tape in the recorder');
+    go.textContent = kind === 'c' ? T2('▶ הכנס את המחסנית לחריץ', '▶ Put the cartridge in the slot') : T2('▶ הכנס את הקלטת לרשמקול', '▶ Put the tape in the recorder');
     go.addEventListener('click', () => load(id, name, b, false, kind));
     info.append(go);
+    if (kind === 'c') {
+      const out = document.createElement('button');
+      out.type = 'button';
+      out.className = 'gv-eject';
+      out.textContent = T2('⏏ הוצא את המחסנית', '⏏ Take the cartridge out');
+      out.addEventListener('click', () => window.d32EjectCart());
+      info.append(out);
+    }
     if (status) info.appendChild(status);
     const media = document.createElement('figure');
     media.className = 'gv-media';
@@ -1125,6 +1283,8 @@
 .gv-tags > span:not(.yr) { font-size: 12px; color: #b9a98f; border: 1px solid #4a3a2a; border-radius: 999px; padding: 0 8px; }
 .gv-go { display: block; width: 100%; border: 0; border-radius: 12px; background: #e0503c; color: #fff; font: inherit; font-weight: 800; font-size: 18px; padding: 12px; box-shadow: 0 4px 0 #6d160b; cursor: pointer; }
 .gv-go:active { transform: translateY(2px); box-shadow: 0 2px 0 #6d160b; }
+.gv-eject { display: none; width: 100%; margin-top: 8px; border: 1.5px solid #5a4430; border-radius: 12px; background: #1b1511; color: #f4efe4; font: inherit; font-weight: 700; font-size: 16px; padding: 10px; cursor: pointer; }
+body.cart-in .gv-eject { display: block; }
 .gv-go.nudge { animation: gv-nudge 0.5s ease-in-out 3; }
 @keyframes gv-nudge { 50% { box-shadow: 0 4px 0 #6d160b, 0 0 0 5px #f2d23a; } }
 .gv-info #tape-status { margin: 8px 0 0; }
@@ -1236,8 +1396,38 @@ body.game-open .shelf > :not(.game-view) { display: none; }
   // auto: מהאפליקציה (?tape=), שם הנוחות: המחשב מקליד CLOAD ו-RUN. לחיצה במכונה: רק מכניסים את הקלטת לרשמקול,
   // ומקלידים בעצמנו, כמו ב-1982 (גונן, 22.10: "מכונת דראגון תהיה המקור... בלי הטבות")
   // mc: קלטת של שפת מכונה: 'm' = CLOADM ואחרי ה-OK גם EXEC; 'a' = CLOADM, והמשחק מתחיל לבד
+  // ---- מחסניות: כמו במחשב האמיתי, מכניסים מחסנית לחריץ, המחשב נדלק מחדש והמשחק מתחיל לבד. מוציאים, וחוזרים ל-BASIC ----
+  let cartIn = null;
+  async function insertCart(id, title, button) {
+    if (typeof Module === 'undefined' || !window.d32Ready) { status.textContent = EN ? 'The computer is still starting. Try again in a moment.' : 'המחשב עוד נדלק. נסו שוב בעוד רגע.'; return; }
+    busy = true;
+    try {
+      const bytes = new Uint8Array(await (await fetch('/lab/1982/carts/' + id + '.ccc')).arrayBuffer());
+      gameKeys(id);
+      FS.writeFile('/cart-' + id + '.ccc', bytes);
+      Module.ccall('wasm_load_file', null, ['string', 'number', 'number'], ['/cart-' + id + '.ccc', 0, 0]);
+      cartIn = id; inTape = id; ram = -1;
+      document.querySelectorAll('.tape').forEach(t => t.classList.toggle('in', t === button));
+      document.body.classList.add('cart-in');
+      status.textContent = EN ? 'The cartridge "' + title + '" is in the slot. The computer restarts, and the game starts by itself.'
+        : 'המחסנית "' + title + '" בחריץ. המחשב נדלק מחדש, והמשחק מתחיל לבד.';
+      document.getElementById('canvas')?.focus({ preventScroll: true });
+      if (innerWidth < 1000) document.querySelector('.tv').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (e) { status.textContent = failed(); }
+    finally { busy = false; }
+  }
+  async function ejectCart() {
+    try { Module.ccall('wasm_set_machine_cart', null, ['string', 'string', 'string', 'string'], ['dragon32', '', '', '']); } catch (e) {}
+    cartIn = null; inTape = null; ram = -1;
+    setJoy(false);
+    document.body.classList.remove('cart-in');
+    document.querySelectorAll('.tape').forEach(t => t.classList.remove('in'));
+    await wait(1500);   // המחשב נדלק מחדש בלי המחסנית, עם ה-BASIC שלנו
+  }
+  window.d32EjectCart = async () => { if (!cartIn) return; await ejectCart(); status.textContent = EN ? 'The cartridge is out. The computer is back in BASIC.' : 'המחסנית בחוץ. המחשב חזר ל-BASIC.'; };
   async function load(id, title, button, auto, mc) {
     if (busy) return;
+    if (mc === 'c') return insertCart(id, title, button);
     try {
       // הקלטת כמו קלטת אמיתית: מה שהמכונה עצמה כתבה עם CSAVE, בפורמט המכווץ (rom/tools/mktapes.mjs)
       const bytes = new Uint8Array(await (await fetch('/lab/1982/tapes/' + id + '.cas')).arrayBuffer());
@@ -1249,6 +1439,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
   async function play(bytes, path, title, button, run, auto, mc) {
     if (busy) return;
     if (typeof Module === 'undefined' || !window.d32Ready) { status.textContent = EN ? 'The computer is still starting. Try again in a moment.' : 'המחשב עוד נדלק. נסו שוב בעוד רגע.'; return; }
+    if (cartIn) await ejectCart();
     busy = true;
     findRam();
     const id = (/^\/tape-(.+)\.cas$/.exec(path) || [])[1] || null;
@@ -1264,8 +1455,8 @@ body.game-open .shelf > :not(.game-view) { display: none; }
         status.textContent = (mc === 'a'
           ? (EN ? 'The tape "' + title + '" is in the recorder. Type CLOADM. Loading can take a few minutes: first S, then F and the tape\'s name' + (next ? '.' : ', and the game starts by itself.')
             : 'הקלטת "' + title + '" ברשמקול. הקלידו CLOADM. הטעינה יכולה לקחת כמה דקות: קודם S, אחר כך F ושם הקלטת' + (next ? '.' : ', ואז המשחק מתחיל לבד.'))
-          : EN ? 'The tape "' + title + '" is in the recorder. Type ' + LOADW + ', and after OK type ' + RUNW + '.'
-          : 'הקלטת "' + title + '" ברשמקול. הקלידו ' + LOADW + ', ואחרי ה-OK הקלידו ' + RUNW + '.') + next;
+          : EN ? 'The tape "' + title + '" is in the recorder. Type ' + LOADW + ', and after OK type ' + RUNW + '.' + (mc === 'mine' ? ' Some games start by themselves.' : '')
+          : 'הקלטת "' + title + '" ברשמקול. הקלידו ' + LOADW + ', ואחרי ה-OK הקלידו ' + RUNW + '.' + (mc === 'mine' ? ' יש משחקים שמתחילים לבד.' : '')) + next;
         document.getElementById('canvas')?.focus({ preventScroll: true });
         return;
       }
@@ -1313,7 +1504,11 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       let sum = type + len;
       for (const b of data) sum += b;
       if ((sum & 255) !== bytes[i + 4 + len]) continue;
-      if (type === 0 && len >= 15) cur = { n: String.fromCharCode(...data.slice(0, 8)).trim(), b: [[0, ...data]] };
+      const name = String.fromCharCode(...data.slice(0, 8)).trim();
+      // כותרת בלי שם אחרי קובץ = החלק השני של אותה קלטת (Donkey King של Microdeal: הטוען, ואחריו המשחק בלי שם).
+      // נשמרים יחד, כדי שהטעינה תביא את שניהם (גונן, 1.11: "לא נטען כבר מלא זמן")
+      if (type === 0 && len >= 15 && !name && !cur && files.length) { cur = files.pop(); cur.b.push([0, ...data]); }
+      else if (type === 0 && len >= 15) cur = { n: name, b: [[0, ...data]] };
       else if (cur && type === 1) cur.b.push([1, ...data]);
       else if (cur && type === 255) { cur.b.push([255]); files.push(cur); cur = null; }
       i += 4 + len;
@@ -1321,16 +1516,77 @@ body.game-open .shelf > :not(.game-view) { display: none; }
     return files;
   }
   // לפי הכותרת: קובץ עם פערים (בית 10 שלה) — מבוא לפני כל בלוק; רציף — מבוא אחד והבלוקים ברצף
+  // קלטת "כמו שהיא" (גונן, 1.11: Manic Miner): טוען מיוחד נגד העתקה, שאחרי הכותרת כותב בלוקים בפורמט משלו, בלי בלוק סוף.
+  // parseCas לא מוצא בה תוכנית שלמה, אז שומרים את כל הבתים של הקובץ כמו שהם (r, ב-base64), ואת הכותרת הראשונה לשם ולסוג
+  function rawTape(bytes) {
+    for (let i = 0; i + 4 < bytes.length; i++) {
+      if (bytes[i] !== 0x55 || bytes[i + 1] !== 0x3c || bytes[i + 2] !== 0 || bytes[i + 3] < 15) continue;
+      const len = bytes[i + 3];
+      if (i + 5 + len > bytes.length) break;
+      const data = Array.from(bytes.slice(i + 4, i + 4 + len));
+      let sum = len;
+      for (const b of data) sum += b;
+      if ((sum & 255) !== bytes[i + 4 + len]) continue;
+      let bin = '';
+      for (let k = 0; k < bytes.length; k += 8192) bin += String.fromCharCode(...bytes.subarray(k, k + 8192));
+      return { n: String.fromCharCode(...data.slice(0, 8)).trim() || 'TAPE', b: [[0, ...data]], r: btoa(bin) };
+    }
+    return null;
+  }
+  // טוען שמושך בלוקים בעצמו (גונן, 2.11: Time Bandit של Microdeal, Mr. Dig של Computerware): CLOADM טוען רק בלוק קטן שמשתלט
+  // על המחשב, והוא קורא את שאר הבלוקים מהקלטת, ובין בלוק לבלוק עוצר ומדליק את המנוע. בקלטת אמיתית יש לפני כל בלוק מבוא,
+  // אבל בקבצי הארכיון חלק מהבלוקים צמודים זה לזה בלי מבוא, והטוען מפספס אותם. כאן: כל הקובץ כמו שהוא,
+  // ולפני כל בלוק שהמבוא שלפניו קצר נוסף מבוא (128 בתים של $55). הנתונים עצמם לא משתנים
+  function blockAt(bytes, j) {
+    if (j + 3 >= bytes.length || bytes[j] !== 0x3c) return -1;
+    const type = bytes[j + 1], len = bytes[j + 2];
+    if (type !== 0 && type !== 1 && type !== 255) return -1;
+    if ((type === 0 && len < 15) || (type === 255 && len) || j + 3 + len >= bytes.length) return -1;
+    let sum = type + len;
+    for (let k = 0; k < len; k++) sum += bytes[j + 3 + k];
+    return (sum & 255) === bytes[j + 3 + len] ? j + 4 + len : -1;
+  }
+  function gapTape(bytes, used) {
+    const out = [], cuts = [];
+    let n = 0;
+    for (let i = bytes.indexOf(0x3c); i >= 0 && i < bytes.length; ) {
+      const end = blockAt(bytes, i);
+      if (end < 0 || (!n && bytes[i - 1] !== 0x55)) { i++; continue; }
+      let k = i;
+      while (k > 0 && bytes[k - 1] === 0x55) k--;
+      if (i - k < 64) cuts.push(i);   // גם לפני הכותרת הראשונה: בקבצים האלה יש לפניה רק 5 עד 35 בתי מבוא
+      n++; i = end;
+    }
+    if (n <= used || !cuts.length) return null;   // אין בלוקים מעבר לתוכנית, או שלכולם יש מבוא: הדרך הרגילה
+    let last = 0;
+    for (const c of cuts) { out.push(bytes.subarray(last, c), new Uint8Array(128).fill(0x55)); last = c; }
+    out.push(bytes.subarray(last));
+    const all = new Uint8Array(out.reduce((a, b) => a + b.length, 0));
+    let o = 0;
+    for (const b of out) { all.set(b, o); o += b.length; }
+    return rawTape(all);
+  }
+  function rawBytes(f) {
+    const bin = atob(f.r), out = new Array(bin.length);
+    for (let k = 0; k < bin.length; k++) out[k] = bin.charCodeAt(k);
+    return out.concat(new Array(64).fill(0x55));   // סוף הקובץ: מבוא קצר, כדי שהבית האחרון ייקרא עד הסוף
+  }
   function tapeBytes(files) {
     const leader = new Array(128).fill(0x55);
     let out = [];
-    for (const f of files) {
-      const gap = f.b[0][11];
-      out = out.concat(leader, block(0, f.b[0].slice(1)));
+    for (const f of files) if (f.r) out = out.concat(rawBytes(f)); else for (const part of parts(f)) {
+      const gap = part[0][11];
+      out = out.concat(leader, block(0, part[0].slice(1)));
       if (!gap) out = out.concat(leader);
-      for (const b of f.b.slice(1)) out = out.concat(gap ? leader : [], block(b[0], b.slice(1)));
+      for (const b of part.slice(1)) out = out.concat(gap ? leader : [], block(b[0], b.slice(1)));
     }
     return new Uint8Array(out);
+  }
+  // קלטת אחת יכולה להכיל כמה קבצים (כותרת לכל אחד): מחלקים לפי הכותרות
+  function parts(f) {
+    const out = [];
+    for (const b of f.b) if (b[0] === 0 || !out.length) out.push([b]); else out[out.length - 1].push(b);
+    return out;
   }
   // קלטת קול ל-Dragon אמיתי (29.10): אותם בתים שה-ROM הקליט, בצליל שה-Dragon טוען מהרשמקול.
   // כמו ההקלטה של המכונה עצמה: 44100 דגימות בשנייה, 8 ביט, חצי שנייה שקט בהתחלה, ועוד חצי שנייה אחרי הכותרת
@@ -1338,11 +1594,15 @@ body.game-open .shelf > :not(.game-view) { display: none; }
   // (0.894886 מגה-הרץ): ביט 0 = 813 מחזורים, ביט 1 = 435 (Ciaran Anscomb, 20.10).
   function tapeWav(f) {
     const RATE = 44100, CPU = 894886, AMP = 86;
-    const leader = new Array(128).fill(0x55), gap = f.b[0][11];
-    const parts = [['quiet', 0.5], ['bytes', leader.concat(block(0, f.b[0].slice(1)))]];
-    if (!gap) parts.push(['quiet', 0.5], ['bytes', leader.concat(...f.b.slice(1).map(b => block(b[0], b.slice(1))))]);
-    else for (const b of f.b.slice(1)) parts.push(['quiet', 0.5], ['bytes', leader.concat(block(b[0], b.slice(1)))]);
-    parts.push(['quiet', 0.1]);
+    const leader = new Array(128).fill(0x55), segs = [];
+    if (f.r) segs.push(['quiet', 0.5], ['bytes', rawBytes(f)]);
+    else for (const part of parts(f)) {
+      const gap = part[0][11];
+      segs.push(['quiet', 0.5], ['bytes', leader.concat(block(0, part[0].slice(1)))]);
+      if (!gap) segs.push(['quiet', 0.5], ['bytes', leader.concat(...part.slice(1).map(b => block(b[0], b.slice(1))))]);
+      else for (const b of part.slice(1)) segs.push(['quiet', 0.5], ['bytes', leader.concat(block(b[0], b.slice(1)))]);
+    }
+    segs.push(['quiet', 0.1]);
     const out = [];
     let t = 0;
     const quiet = sec => { const end = Math.round((t + sec) * RATE); while (out.length < end) out.push(128); t += sec; };
@@ -1351,7 +1611,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       for (let s = from; s < to; s++) out.push(Math.round(128 + AMP * Math.sin(2 * Math.PI * ((s / RATE - t) / len))));
       t += len;
     };
-    for (const [kind, v] of parts) {
+    for (const [kind, v] of segs) {
       if (kind === 'quiet') quiet(v);
       else for (const byte of v) for (let i = 0; i < 8; i++) bit((byte >> i) & 1);
     }
@@ -1407,16 +1667,37 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       p.textContent = EN ? 'No tapes yet.' : 'עוד אין קלטות.';
       mineBox.appendChild(p);
     }
-    for (const f of list.slice().reverse()) {
+    // שתי קבוצות (גונן, 31.10: "להפריד את הקלטות שהם משחקים לבין קלטות שהם תכניות בייסיק"): שפת מכונה, ואחריה BASIC ונתונים
+    const recent = list.slice().reverse();
+    const groups = [[recent.filter(f => f.b[0][9] === 2), EN ? '🎮 Games and machine code' : '🎮 משחקים ושפת מכונה'],
+      [recent.filter(f => f.b[0][9] !== 2), EN ? '📝 BASIC programs' : '📝 תוכניות BASIC']];
+    for (const [items, label] of groups) {
+      if (!items.length) continue;
+      const h = document.createElement('h3');
+      h.className = 'mine-group';
+      h.textContent = label;
+      mineBox.appendChild(h);
+      for (const f of items) addRow(f);
+    }
+  }
+  function addRow(f) {
+    {
       const row = document.createElement('div');
       row.className = 'mytape';
       const b = document.createElement('button');
       b.type = 'button';
       b.className = 'tape';
-      b.innerHTML = '<span></span><small dir="ltr"></small>';
-      b.querySelector('span').textContent = EN ? 'My tape' : 'הקלטת שלי';
-      b.querySelector('small').textContent = f.n;
-      b.addEventListener('click', () => { gameKeys(null); play(tapeBytes([f]), '/mine.cas', f.n, b, false, false); });
+      // השם גדול, ולידו מה יש בקלטת לפי הכותרת שלה (גונן, 31.10: "איך נבחין בין משחק שהורדתי לתכנית כתובה"):
+      // 🎮 שפת מכונה (סוג 2) נטענת ב-CLOADM, 📝 תוכנית BASIC (סוג 0) ב-CLOAD, 📄 קובץ נתונים (סוג 1) נקרא מתוך תוכנית
+      const kind = f.b[0][9];
+      const [icon, how] = kind === 2 ? ['🎮', 'CLOADM'] : kind === 0 ? ['📝', 'CLOAD'] : ['📄', ''];
+      b.innerHTML = '<span class="kind" aria-hidden="true"></span><span class="tname" dir="ltr"></span><span class="how" dir="ltr"></span>';
+      b.querySelector('.kind').textContent = icon;
+      b.querySelector('.tname').textContent = f.n;
+      b.querySelector('.how').textContent = how;
+      b.setAttribute('aria-label', f.n + (kind === 2 ? (EN ? ', machine code: CLOADM' : ', שפת מכונה: CLOADM')
+        : kind === 0 ? (EN ? ', BASIC program: CLOAD' : ', תוכנית BASIC: CLOAD') : (EN ? ', data file' : ', קובץ נתונים')));
+      b.addEventListener('click', () => { gameKeys(null, kind === 2); play(tapeBytes([f]), '/mine.cas', f.n, b, false, false, kind === 2 ? 'mine' : false); });
       const down = document.createElement('button');
       down.type = 'button';
       down.className = 'mini';
@@ -1455,13 +1736,39 @@ body.game-open .shelf > :not(.game-view) { display: none; }
   renderMine();
   // קלטת מקובץ (למשל אחת שהורדתם במכשיר אחר)
   const upload = document.getElementById('tape-upload'), file = document.getElementById('tape-file');
+  // המתג: משחק מקלטת שלי שקורא ג'ויסטיק לא זז בלי ג'ויסטיק. כשהוא דלוק, החיצים הם הג'ויסטיק הימני, ו-Alt או רווח הכפתור,
+  // כמו במשחקי הג'ויסטיק שעל המדף. נזכר בדפדפן הזה
+  if (upload) {
+    const joyBtn = document.createElement('button');
+    joyBtn.type = 'button';
+    joyBtn.className = 'mini upload';
+    joyBtn.id = 'mine-joy';
+    const showJoy = () => {
+      joyBtn.setAttribute('aria-pressed', myJoy ? 'true' : 'false');
+      joyBtn.textContent = '🕹 ' + (EN ? 'Arrows as joystick: ' + (myJoy ? 'on' : 'off') : 'ג\'ויסטיק מהמקלדת: ' + (myJoy ? 'דלוק' : 'כבוי'));
+    };
+    joyBtn.title = EN ? 'For my tapes: the arrows move the right joystick, Alt or Space is its button'
+      : 'לקלטות שלי: החיצים מזיזים את הג\'ויסטיק הימני, ו-Alt או רווח הם הכפתור שלו';
+    showJoy();
+    joyBtn.addEventListener('click', () => {
+      myJoy = !myJoy;
+      try { localStorage.setItem('d32-myjoy', myJoy ? '1' : '0'); } catch (e) {}
+      showJoy();
+      if (mineIn) setJoy(myJoy, false);
+    });
+    upload.after(joyBtn);
+  }
   if (upload && file) {
     upload.addEventListener('click', () => file.click());
     file.addEventListener('change', async () => {
       const f = file.files[0];
       file.value = '';
       if (!f) return;
-      const found = parseCas(new Uint8Array(await f.arrayBuffer()));
+      const bytes = new Uint8Array(await f.arrayBuffer());
+      let found = parseCas(bytes);
+      const gapped = gapTape(bytes, found.reduce((a, t) => a + t.b.length, 0));
+      if (gapped) found = [gapped];
+      if (!found.length) { const raw = rawTape(bytes); if (raw) found = [raw]; }
       if (found.length) { addTapes(found); if (mineDrawer) mineDrawer.open = true; status.textContent = (EN ? 'Added to my tapes: ' : 'נוסף לקלטות שלי: ') + found.map(t => t.n).join(', '); }
       else status.textContent = EN ? 'No program found in this file.' : 'לא נמצאה תוכנית בקובץ הזה.';
     });

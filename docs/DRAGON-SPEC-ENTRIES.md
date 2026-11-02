@@ -283,6 +283,8 @@ The four file-error raisers above share one 3-byte-spaced chain ending in a jump
 | $B7AA | Parse a filename from text into $01D1 (length) / $01D2 | — | likely |
 | $B903 | Skip the current file | — | likely |
 | **$B75B** | CLOADM's load loop, from X | **X = load address.** Motor on and sync (through $BDE7), then blocks to X one after another until the end block (its data is stored too). A header block or a read error gives ?IO. Motor off, returns. The Dragon twin of CoCo $A529 (Color BASIC Unravelled). Microdeal's Athletyx loader calls it directly, once per stage (28.10). | likely |
+| **$B748** | CLOADM after the search, offset in X | **X = offset.** Takes the header already in the buffer: exec address + X → $9D, load address + X, then the load loop of $B75B. Inferred from Microdeal's Dragon loader for Donkey King (1983): after $B87E it does `LDX <$8A` (0) and `JSR $B748`, then `JMP [$9D]` (31.10). Our ROM checks the file type before this point. | likely |
+| **$B87E** | Search for the file without touching the screen | Same contract as the search ($01D1 = 0: any file; else the name at $01D2). Inferred from the same loader: it calls it after `CLR $01D1` while its own title screen is showing, and the screen stays (31.10). Our ROM runs the normal search as if inside a program (no clear, no S/F, no name). | likely |
 | **$84A6 / $84AF** | Start of the statement loop, after the BREAK check | **$84A6:** X = text pointer, saved as the statement start; a zero byte goes to the next line, ':' runs the next statement, anything else is ?SN. **$84AF holds ':'** (the operand of CMPA #':). Microdeal's Cuthbert in the Jungle loader points the text pointer at $84AF and relies on that colon, so our layout matches the original from $84A6 (28.10). | likely |
 
 Block layout used by these routines:
@@ -534,6 +536,24 @@ The original is densely packed. Many useful entries fall through into each other
 5. **Version-specific fixes:** the USR-number parsing bug described for D32 in the spec may be fixed in this D64 source. I did not verify the USR parsing code.
 
 ---
+
+### Added 31.10.2026 (from games that call them)
+
+| Address | What | Contract | Evidence |
+|---|---|---|---|
+| **$BBC5 / $BBC8** | 10 ms delay | **$BBC5** loads X = $045E (1118) itself; **$BBC8** is the loop: X passes of 8 cycles, X returns 0. | Microdeal's Dragon loader for Donkey King calls **$BBC8** with its own X (about 0.5 s) to let the music on the tape play; that only makes sense if $BBC5 sets X. Before this fix our $BBC5 used the caller's X, which made Cuthbert's licence screen wait about 5 minutes instead of about 5 seconds. |
+| **$8C5B** | Evaluate the expression at the text pointer ($A6) into FPA0 | Like the expression evaluator used by commands. | Chuckie Egg (A&F, 1983) in its Dragon mode: `LDX <string>; STX <$A6; JSR $8C5B; JSR $ADBD` for each PLAY tune. |
+| **$ADBD** | PLAY with the string already evaluated (in FPA0) | Plays it like PLAY; returns at the end. | Same game, right after $8C5B. |
+| **$B3B9 = $00** | A fixed ROM byte | Reads $00 on the Dragon. | Chuckie Egg's dual-format code reads $B3B9: 0 → Dragon routines ($9D3D, $BAA0, $8C5B, $ADBD); non-zero → CoCo routines. Our ROM had $54 there, so the game took the CoCo path and hung on the title tune. |
+
+Keyboard changes (1.11.2026):
+
+| Change | What it does | Why |
+|---|---|---|
+| $03F2–$03F5 no longer used | The keyboard scan ($BBE5) keeps its temporaries on the stack. Two of the four bytes were written and never read. | Microdeal's Donkey King keeps its own data at $03F2–$03F3, a hint that the original ROM does not use them. |
+| Alpha lock ($0149) | With $0149 = 0, an unshifted letter returns lowercase ($61–$7A), as in the spec (screen 3a). At power-on $0149 = $FF, so BASIC still gets capitals. | Microdeal's Donkey King writes 0 to $0149 and waits for lowercase 'y' or 'n' at "PRACTICE GAME". With capitals, it never accepted the answer. |
+
+SHIFT+0, which toggles the lock, is still not implemented: the code it returns is not known yet.
 
 ## Open questions
 

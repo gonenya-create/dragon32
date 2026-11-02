@@ -1,0 +1,18 @@
+Dungeons of Daggorath (1982)
+DynaMicro, Inc.: Douglas J. Morgan, Phillip C. Landmeier, Keith Kiyohara; artwork April Landmeier.
+Published by Radio Shack (Tandy) for the TRS-80 Color Computer, cartridge 26-3093.
+
+The cartridge on dragon1982.com (daggorath.ccc) is the original 8K cartridge image, unchanged.
+It is offered under the licence below, granted publicly by Douglas J. Morgan, president of DynaMicro.
+Source of the grant (archived 11 Sep 2010):
+https://web.archive.org/web/20100911232420/http://frodpod.tripod.com/lisence.html
+
+From "Grant of license to reproduce Dungeons of Daggorath", by Douglas J. Morgan:
+
+  "I hereby grant a non-exclusive permanent world-wide license to any and all Color Computer
+  site administrators, emulator developers, programmers or any other person or persons who wish
+  to develop, produce, duplicate, emulate, or distribute the game on the sole condition that they
+  exercise every effort to preserve the game insofar as possible in its original and unaltered form."
+
+  "The game did very well for us. I give it to the world with thanks to all who bought it,
+  played it or enjoyed it."

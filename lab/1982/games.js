@@ -61,6 +61,16 @@ window.D32_GAMES = {
       ]
     },
     {
+      "key": "coco",
+      "he": "משחקים של ה-CoCo שרצו על ה-Dragon",
+      "en": "CoCo games that ran on the Dragon",
+      "years": "1982–87",
+      "note": [
+        "ה-Dragon וה-Tandy CoCo האמריקאי נבנו כמעט מאותם שבבים, עם אותו חריץ מחסניות ואותו BASIC כמעט. הרבה מחסניות וקלטות של ה-CoCo עבדו גם על ה-Dragon, ובעלי Dragon השתמשו בהן. המשחקים כאן לא נכתבו ל-Dragon, אבל רצים עליו בלי שינוי.",
+        "The Dragon and the American Tandy CoCo were built from almost the same chips, with the same cartridge slot and almost the same BASIC. Many CoCo cartridges and tapes also worked on the Dragon, and Dragon owners used them. The games here were not written for the Dragon, but run on it unchanged."
+      ]
+    },
+    {
       "key": "type",
       "he": "הקלד בעצמך",
       "en": "Type it in",
@@ -1687,6 +1697,134 @@ window.D32_GAMES = {
         0,
         36,
         32
+      ]
+    },
+    "digit": {
+      "slug": "dig-it",
+      "drawer": "more",
+      "year": "1986",
+      "tag": [
+        "חפירה ויהלומים",
+        "digging and diamonds"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כשתי דקות",
+        "about two minutes"
+      ],
+      "about": {
+        "he": [
+          "Rolf Michelsen כתב אותו ב-1986 ל-Dragon בשם Dig-It, אחרי ששיחק ב-Boulder Dash ב-Commodore 64 ורצה משהו דומה ל-Dragon. Microdeal מכרה אותו בשם Stone Raider II: היא ביקשה לשנות את השם כדי להשתמש בציורים שכבר היו לה, ולהוציא אותו מהר יותר.",
+          "Michelsen פרסם את קוד המקור ברישיון BSD, ולכן הוא כאן. הקלטת נבנתה מהקוד שלו בלי שום שינוי. זו הגרסה המקורית שלו, Dig-It: הקוד של הגרסה ש-Microdeal מכרה אבד."
+        ],
+        "en": [
+          "Rolf Michelsen wrote it for the Dragon in 1986 as Dig-It, after playing Boulder Dash on the Commodore 64 and wanting something like it on the Dragon. Microdeal sold it as Stone Raider II: it asked for the new name so it could reuse artwork it already had and get the game out sooner.",
+          "Michelsen published the source code under the BSD licence, which is why it is here. The tape was built from his code without any change. This is his original version, Dig-It: the code of the version Microdeal sold has been lost."
+        ]
+      },
+      "icon": [
+        104,
+        80,
+        40
+      ]
+    },
+    "daggorath": {
+      "slug": "dungeons-of-daggorath",
+      "drawer": "coco",
+      "year": "1982",
+      "tag": [
+        "מבוך בתלת-ממד",
+        "3D dungeon"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "מיד: מחסנית",
+        "instant: a cartridge"
+      ],
+      "about": {
+        "he": [
+          "DynaMicro כתבה אותו: Douglas J. Morgan, ‏Phillip C. Landmeier ו-Keith Kiyohara, עם ציורים של April Landmeier. ‏Tandy מכרה אותו ב-1982 כמחסנית למחשב ה-CoCo, לא ל-Dragon. הוא היה מהמשחקים הראשונים של מבוך בתלת-ממד בזמן אמת, ולהיט גדול.",
+          "הוא כאן כי הוא רץ על ה-Dragon בלי שום שינוי, ו-Douglas J. Morgan התיר בפומבי לכל אחד להפיץ אותו, בתנאי שהמשחק נשאר כמו המקור. זו המחסנית המקורית, כמו שהיא."
+        ],
+        "en": [
+          "DynaMicro wrote it: Douglas J. Morgan, Phillip C. Landmeier and Keith Kiyohara, with artwork by April Landmeier. Tandy sold it in 1982 as a cartridge for the CoCo, not for the Dragon. It was one of the first real-time 3D dungeon games, and a big hit.",
+          "It is here because it runs on the Dragon without any change, and Douglas J. Morgan publicly allowed anyone to distribute it, on condition that the game stays as the original. This is the original cartridge, as it was."
+        ]
+      },
+      "icon": [
+        96,
+        24,
+        72
+      ]
+    },
+    "snaker": {
+      "slug": "snaker",
+      "drawer": "coco",
+      "year": "1984",
+      "tag": [
+        "נחש בכביש",
+        "snake on a highway"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "פחות מדקה",
+        "under a minute"
+      ],
+      "about": {
+        "he": [
+          "Gary Ritchie כתב אותו ב-1983 בקנדה ל-Color Computer של Tandy, ושלח אותו בקלטת למגזין The Rainbow. המגזין פרסם אותו בינואר 1984, כתוכנית שהקוראים מקלידים בעצמם.",
+          "הטריק שלו: המסך כולו גולל למעלה, וכך המכוניות עולות והנחש משאיר אחריו שובל, יותר ממה ש-BASIC איטי יכול היה לצייר לבד. ב-2026 הוא פרסם את הקוד ברישיון MIT, ולכן הוא כאן. זו התוכנית המקורית מהמגזין, בלי שום שינוי."
+        ],
+        "en": [
+          "Gary Ritchie wrote it in 1983, in Canada, for Tandy's Color Computer, and mailed it on a cassette to The Rainbow magazine. The magazine printed it in January 1984, as a program readers typed in themselves.",
+          "His trick: the whole screen scrolls up, so the cars rise and the snake leaves a trail, more than slow BASIC could draw on its own. In 2026 he published the code under the MIT licence, which is why it is here. This is the original program from the magazine, without any change."
+        ]
+      },
+      "icon": [
+        32,
+        120,
+        40
+      ]
+    },
+    "brickout": {
+      "slug": "brickout",
+      "drawer": "coco",
+      "year": "1987",
+      "tag": [
+        "שבירת לבנים",
+        "brick breaker"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "פחות מדקה",
+        "under a minute"
+      ],
+      "about": {
+        "he": [
+          "Owen Stenseth כתב אותו בשפת מכונה ב-1987, כשהיה בן 15, ל-Color Computer 2 של Tandy, והעלה אותו ללוחות המודעות של אז כתוכנה חינמית. על המסך הוא נקרא SUPER BRICKOUT.",
+          "ב-2021 הוא פרסם אותו ברישיון MIT, ולכן הוא כאן. זה הקובץ המקורי שלו מ-1987, בלי שום שינוי. המחבט זז לפי הג'ויסטיק בדיוק כמו ידית, ולכן כאן מזיזים אותו בעכבר."
+        ],
+        "en": [
+          "Owen Stenseth wrote it in machine code in 1987, at 15, for Tandy's Color Computer 2, and uploaded it to the bulletin boards of the time as freeware. On the screen it is called SUPER BRICKOUT.",
+          "In 2021 he released it under the MIT licence, which is why it is here. This is his original file from 1987, without any change. The paddle follows the joystick exactly like a paddle controller, so here you move it with the mouse."
+        ]
+      },
+      "icon": [
+        200,
+        200,
+        200
       ]
     },
     "champs": {

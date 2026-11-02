@@ -138,7 +138,9 @@ keyindex	pshs	b,x
 		cmpa	-1,x		; KALL
 		beq	ki_none
 		sta	-1,x
-		clr	KFOUND		; 0 = אין; אחרת האינדקס בטבלה + 1
+		clr	,-s		; KFOUND, במחסנית: 0 = אין; אחרת האינדקס בטבלה + 1
+; (1.11: המשתנים הזמניים עברו מ-$03F2-$03F5 למחסנית. הטוען של Donkey King (Microdeal) שומר שם נתונים,
+; והסריקה שלנו דרסה אותם: המקשים נקלטו רק לפעמים. סימן שהמקור לא משתמש בכתובות האלה)
 		ldd	#$fe00		; A = מסכת העמודה (0 = נסרקת), B = העמודה
 ki_col		sta	PIA0+2
 		pshs	a		; המסכה
@@ -152,28 +154,25 @@ ki_col		sta	PIA0+2
 		cmpb	#3
 		blo	3F
 		anda	#$3f		; שורה 6 היא תו רק בעמודות 0-2 (ENTER, CLEAR, BREAK). SHIFT לא
-3		sta	KNEW
-		tst	KFOUND
+3		tst	1,s		; KFOUND (מעליו במחסנית: המסכה)
 		bne	ki_next
 		tsta
 		beq	ki_next
-		stb	KCOL
-		clr	KROW		; השורה הנמוכה שנלחצה
+		pshs	b		; העמודה
 		incb			; האינדקס + 1 = 8*שורה + עמודה + 1
 4		lsra
 		bcs	5F
-		inc	KROW
 		addb	#8
 		bra	4B
-5		stb	KFOUND
-		ldb	KCOL
+5		stb	2,s		; KFOUND
+		puls	b
 ki_next		puls	a		; המסכה של העמודה הבאה
 		lsla
 		inca
 		incb
 		cmpb	#8
 		blo	ki_col
-		ldb	KFOUND
+		ldb	,s+		; KFOUND
 		beq	ki_none
 		decb
 		lda	7,x		; SHIFT לחוץ? (KPREV+7, שורה 6) → C = 0 כשהוא לחוץ (לחוץ = 0 בטבלה)
@@ -182,7 +181,7 @@ ki_next		puls	a		; המסכה של העמודה הבאה
 		ldx	#KEYMAP		; (LD לא משנה את C)
 		lda	b,x		; התו
 		beq	ki_none
-		bcs	ki_out		; בלי SHIFT
+		bcs	ki_low		; בלי SHIFT
 		cmpb	#16
 		blo	1F
 		cmpa	#$5e		; SHIFT+↑ = $5F (ב-EDIT: יציאה ממצב הוספה)
@@ -195,6 +194,16 @@ ki_next		puls	a		; המסכה של העמודה הבאה
 ki_none		clra
 ki_out		tsta			; Z לפי התו
 		puls	b,x,pc
+; אות בלי SHIFT כשהנעילה ($0149, ALLOCK) כבויה = 0: אות קטנה, כמו במקור (מפרט המסך 3א). בהדלקה $FF: אותיות גדולות.
+; ‏Donkey King (Microdeal) כותב 0 ל-$0149 ומחכה ל-'y' או 'n' קטנות (1.11)
+ki_low		cmpa	#'A
+		blo	ki_out
+		cmpa	#'Z
+		bhi	ki_out
+		tst	$0149
+		bne	ki_out
+		ora	#$20
+		bra	ki_out
 
 ; getkey: מחכה למקש, ומחזיר את התו ב-A. כמו במקור: הבהוב (עם השהיה), ואז סריקה דרך $BBE5, ושוב.
 ; מקש: $60 בתא הסמן, ורק אז הוא חוזר (קורא 2.5, 8.1)
@@ -222,3 +231,25 @@ blink		pshs	a,x
 		bne	2B
 		puls	a,x,pc
 ; @endnofill
+
+; ---- בסוף ה-ROM (31.10): מה שהועבר לכאן כדי לפנות מקום לכניסות $B748, $B87E ו-$BBC8 ----
+; הערכים של הקלטת בהדלקה (מועתקים ל-$8F): הבהוב הסמן, מבוא 128 (Dragon 32, גונן 20.10: לבדוק במחשב אמיתי),
+; ספים $12/$0A/$12, השהיית מנוע $DA5C
+tdefs		fcb	50,$00,$80,$12,$0a,$12,$da,$5c
+		fdb	$045e		; $97: השהיית המקלדת (קורא: מדפסת 7.1)
+		fcb	16,116,132	; $99-$9B המדפסת: רוחב שדה הפסיק, שדה הפסיק האחרון, רוחב השורה (קורא 1.5)
+
+; srchq ($B87E): החיפוש הרגיל (search), כשהשורה הנוכחית אינה "פקודה ישירה": בלי ניקוי, בלי S/F ובלי השם.
+; בלוקים עד כותרת, ואם יש שם בפקודה, עד שהשם מתאים. השורה הנוכחית חוזרת בסוף
+srchq		ldx	CURLIN
+		pshs	x
+		clr	CURLIN
+		lbsr	search
+		puls	x
+		stx	CURLIN
+		rts
+
+; dlyx ($BBC8): X סיבובים של 8 מחזורים, ו-X חוזר 0
+dlyx		leax	-1,x
+		bne	dlyx
+		rts

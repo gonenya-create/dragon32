@@ -457,7 +457,12 @@ fin		clra
 		bsr	fsgn
 fin_lp		bcs	fin_dig		; ספרה
 		cmpa	#'.
-		bne	fin_e
+		bra	fin_dot		; מעל הכניסה של $8C5B (הדגלים של ה-cmpa נשמרים)
+		fill	$ff,$8c5b-*	; בדיקה: אם $8C5B זז, ההרכבה נכשלת
+; $8C5B: חישוב הביטוי שבמצביע הטקסט ($A6) ל-FPA0, כמו בפקודה. Chuckie Egg (A&F, 31.10) קורא לה במצב Dragon
+; עם מחרוזת של PLAY, ואחר כך ל-$ADBD שמנגן אותה
+		lbra	frmevl
+fin_dot		bne	fin_e
 		tst	DPTFLG
 		bne	fin_end		; נקודה שנייה: סוף
 		com	DPTFLG
@@ -545,7 +550,7 @@ mul10		lbsr	movaf
 9		rts
 ovf2		lbra	err_ov		; עוד עותק של ovf, קרוב (קפיצות קצרות)
 div10		lbsr	movaf
-		leax	tenzc,pcr
+		ldx	#tenzc
 		clr	ARISGN
 		lbsr	movfm
 		lbra	fdivt
@@ -555,7 +560,7 @@ div10		lbsr	movaf
 ayint		lda	FACEXP
 		cmpa	#144
 		blo	qint
-		leax	n32768,pcr
+		ldx	#n32768
 		bsr	fcomp
 		lbne	err_fc
 ; qint: FAC → מספר שלם של 32 ביט עם סימן ב-FACHO..FACLO (מעוגל כלפי מטה)
@@ -636,14 +641,14 @@ fout		ldy	#FBUFFR
 2		clrb
 		cmpa	#$80
 		bhi	4F
-		leax	nzmil,pcr	; קטן מ-1: כפול 10^9
+		ldx	#nzmil	; קטן מ-1: כפול 10^9
 		lbsr	fmult
 		ldb	#-9
 4		stb	DECCNT
-fout4		leax	nz9999,pcr
+fout4		ldx	#nz9999
 		bsr	fcomp
 		bgt	fout9		; גדול מהגבול העליון: חלקי 10 (ב-Dragon שוויון לא נחשב, קורא)
-fout3		leax	nz0999,pcr
+fout3		ldx	#nz0999
 		bsr	fcomp
 		bgt	fout5
 		lbsr	mul10
@@ -674,7 +679,7 @@ fout5		lbsr	faddh
 		beq	7F
 		lda	#'0
 		sta	,y+
-7		leax	foutbl,pcr	; תשע הספרות של המספר השלם
+7		ldx	#foutbl	; תשע הספרות של המספר השלם
 8		bsr	fdig
 		stb	,y+
 		dec	DECCNT

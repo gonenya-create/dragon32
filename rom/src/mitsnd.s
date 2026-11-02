@@ -37,7 +37,7 @@ sndoff		ldb	PIA1+3
 ; evnzb: ביטוי → B בין 1 ל-255. שלילי, 0 או מעל 255: ?FC. השבר נחתך (קורא 1.1)
 evnzb		lbsr	evbyte
 		tstb
-		lbeq	pfc
+		beq	pfc
 		rts
 
 ; ---------- SOUND טון,משך (קורא 1) ----------
@@ -104,10 +104,10 @@ snds		lbsr	sndsel
 
 pfc		lbra	err_fc
 ; המחרוזות המקוננות (X) במחסנית: [אורך][כתובת]. הסמן בתחתית: אורך 1, כתובת 0
-play_st		ldx	#0
+play_st		lbsr	frmevl
+plyx		ldx	#0		; $ADBD נכנס כאן, כשהמחרוזת כבר ב-FPA0
 		lda	#1
 		pshs	a,x
-		lbsr	frmevl
 		clra			; DAC והצליל דולק, עוד לפני בדיקת הסוג
 		bsr	snds
 		lbsr	frestr		; לא מחרוזת: ?TM

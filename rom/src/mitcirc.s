@@ -24,7 +24,7 @@ gat		cmpa	#'@
 		lda	#1
 		sta	GSETF
 		tfr	u,x
-		lbra	gscl
+gsclj		lbra	gscl
 
 ; ---------- CIRCLE [@](x,y),r[,c[,יחס[,התחלה[,סוף]]]] (קורא 9) ----------
 circle_st	ldu	#GCX
@@ -32,7 +32,7 @@ circle_st	ldu	#GCX
 		lbsr	cadr		; ,רדיוס 0-65535
 		std	GR
 		ldx	#GR		; הרדיוס מוקטן כמו x (גם GASP זז כאן, וממילא נקבע מיד)
-		lbsr	gscl
+		bsr	gsclj
 		lbsr	gocol
 		ldd	#256		; יחס 1.0
 		std	GASP
@@ -107,7 +107,7 @@ gcpt		tfr	b,a
 		negb
 		addb	#8
 1		pshs	a
-		leau	gctab,pcr
+		ldu	#gctab
 		lslb
 		lslb
 		leau	b,u
