@@ -21,8 +21,12 @@
 		fill	$ff,$89b4-*
 		jmp	err_sn
 
-; @island $8B2D
-; FAC → מספר שלם עם סימן ב-D (קטיעה לכיוון אפס), ?TM למחרוזת, ?FC מחוץ לטווח
+; @island $8B27
+; ‏$8B27 (קורא 2.11): FAC → מספר שלם לא שלילי ב-D. FAC שלילי: ?FC, ואחר כך כמו $8B2D (במקור: באמצע פקודה)
+		tst	<FACSGN
+		bmi	isl_8b2d_fc
+		fcb	$21,$00		; brn: נופלים ל-$8B2D
+; ‏$8B2D: FAC → מספר שלם עם סימן ב-D (קטיעה לכיוון אפס), ?TM למחרוזת, ?FC מחוץ לטווח
 		bsr	chknum
 		lda	FACSGN
 		pshs	a
@@ -32,9 +36,9 @@
 		blo	isl_8b2d_1
 		lda	,s
 		sta	FACSGN
-		leax	n32768,pcr
+		ldx	#n32768
 		bsr	fcomp
-		bne	err_fc
+		bne	isl_8b2d_fc
 		clr	FACSGN
 isl_8b2d_1	bsr	qint
 		ldd	FACMO
@@ -50,7 +54,7 @@ isl_8b2d_2	std	FACMO
 ; @island $8B8A
 ; ‏$8B8A: ‏?BS.  $8B8D: ‏?FC
 		jmp	err_bs
-		jmp	err_fc
+isl_8b2d_fc	jmp	err_fc
 
 ; @island $8C36
 ; ‏$8C36: ‏B בלי סימן → FAC.  $8C37: ‏D עם סימן → FAC (סוף של שגרת USR)
@@ -134,6 +138,8 @@ isl_852b	jsr	$bbe5
 ; @island $85A5
 ; הפקודה RUN (קורא 8.16)
 		jmp	run
+; ‏$85A8 (קורא 2.11): RUN אחרי ה-hook שלו. בלי מספר שורה: כמו $841F, וחוזרים לכתובת שבמחסנית עם מחסנית חדשה
+		jmp	run85
 
 ; @island $8E4F
 ; ‏$8E4F: התו הבא ואז בית. ‏$8E51: ביטוי → B. ‏$8E54: ‏FAC → B (קורא 2.2)
@@ -214,8 +220,19 @@ isl_a0ea	jmp	x_getdev
 ; שורה מהמקלדת ל-$02DD, בלי ה-hook (קורא 30.10: El Diablero קורא כך את הפקודות)
 		jmp	x_inlin
 
-; @island $A095
-; ‏CLOADM אחרי השם: השם כבר ב-$01D1-$01D9 (קורא 30.10: El Diablero טוען כך משחק שמור)
+; @island $991B
+; ‏$991B (קורא 2.11): CSAVEM אחרי הארגומנטים. ההתחלה ב-S+4, הסוף ב-S+2, ‏S+0 לא נקרא; השם ($01D2) והכתובות
+; שבכותרת ($01E5, ‏$01E7) כבר במקום. הסוג 2, בלי ASCII ובלי רווחים; חוזרים דרך המילה שב-S+6
+		leas	2,s
+		jmp	csv2
+
+; @island $A08E
+; ‏$A08E (קורא 2.11): CLOADM: הקובץ נסגר ($78 = 0), מדלגים על תו אחד (ה-M), ואז השם, החיפוש והטעינה.
+; ‏$A092: אותו דבר בלי שני הצעדים האלה, כשהמצביע כבר על התו שלפני השם. ‏A לא משנה
+		clr	<FSTATE
+		jsr	<chrget
+		jmp	clmnm
+; ‏$A095: CLOADM אחרי השם: השם כבר ב-$01D1-$01D9 (קורא 30.10: El Diablero טוען כך משחק שמור)
 		jmp	clmfn
 
 ; @island $B6D4
