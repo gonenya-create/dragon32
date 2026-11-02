@@ -109,6 +109,15 @@
     // הטוען של Microdeal בשלבים (כמו Athletyx). המשחק בודק את המילה ב-$B4B3 כדי לדעת שהוא על Dragon (נוסף ל-ROM, 30.10)
     ['spores', 'Star Spores', 'Star Spores', 'a',
       ['Dave Shadoff · Spectral Associates / Microdeal, 1984', 'https://archive.worldofdragon.org/index.php?title=Star_Spores', null, null, 'love']],
+    // Downland של Michael Aichlmayr (Spectral Associates ו-Tandy, 1983; ל-Dragon מ-Microdeal, 1984): הרשות שלו באתר של L. Curtis Boyle (4.5.2002),
+    // ו-Curtis במייל 2.11.2026: כל האישורים שם הם שיתוף מלא של כל מה שהמחברים עשו. גונן אישר 2.11. מתחיל לבד אחרי CLOADM.
+    // הקלטת: הבלוקים כמו בארכיון, ולפני בלוק עם מבוא קצר נוסף מבוא (כמו ב"הקלטות שלי"); הנתונים לא השתנו
+    ['downland', 'Downland', 'Downland', 'a',
+      ['Michael Aichlmayr · Spectral Associates / Microdeal, 1983–84', 'https://www.lcurtisboyle.com/nitros9/approvals/approvals.html', null, null, 'love']],
+    // The King של Chris Latham (Tom Mix Software, 1983), ל-Dragon מ-Microdeal בשם Donkey King (כך כתוב על המסך): הרשות שלו באתר של Curtis,
+    // ומייל Curtis מ-2.11.2026. גונן אישר 2.11 ("עכשיו"). שני חלקים: טוען, ואחריו המשחק בלי שם. ה-ROM צריך את $B748, $B87E ו-$BBC8 (31.10)
+    ['king', 'The King', 'The King', 'a',
+      ['Chris Latham · Tom Mix Software / Microdeal, 1983', 'https://www.lcurtisboyle.com/nitros9/approvals/approvals.html', null, null, 'love']],
     ['tangle', 'Tanglewood', 'Tanglewood', 'm',
       ['Ian Murray-Watson · Microdeal, 1986', '/lab/1982/tapes/tanglewood-license.txt', 'https://gitlab.com/amigasourcecodepreservation/tanglewood', null, 'mit']],
     // Dig-It של Rolf Michelsen (1986), ש-Microdeal מכרה בשם Stone Raider II: קוד פתוח ברישיון BSD (המאגר שלו ב-GitHub).
@@ -130,7 +139,7 @@
       ['Owen Stenseth · freeware, 1987', '/lab/1982/tapes/brickout-license.txt', 'https://github.com/digitalbytes/super-brickout', null, 'mit']]
   ];
   // משחקים שצריכים ג'ויסטיק: כשהקלטת נטענת, החיצים במקלדת הופכים לג'ויסטיק הימני ו-Alt (Option במק) לכפתור שלו
-  const JOY = new Set(['ranger', 'devil', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian', 'alcatraz', 'cricket', 'digit', 'snaker']);
+  const JOY = new Set(['downland', 'king', 'ranger', 'devil', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian', 'alcatraz', 'cricket', 'digit', 'snaker']);
   // ב-Cricket החובט משתמש בג'ויסטיק השמאלי והמגיש בימני (המדריך של Peaksoft): החיצים מזיזים את שניהם יחד.
   // ב-Snaker הימני מכוון (JOYSTK(0)) והשמאלי קובע מהירות (JOYSTK(3)): למעלה מהר, למטה לאט
   const BOTH = new Set(['cricket', 'snaker']);
@@ -338,6 +347,32 @@
         'This time you are the invader: the last ship left, against the human ships. Your ships wait at the top left, above the line.',
         'The arrow keys move your ship in every direction. Bring it below the line to start, and [Space] fires.',
         'A normal ship is worth 100 points, the flagship 1000. The laser base at the bottom fires at you, and it cannot be destroyed. A bonus ship at 10,000 points.']
+    },
+    // נבדק במכונה (2.11): הטעינה, הצבע, החדר הראשון (CHAMBER 0), הדמות זזה בג'ויסטיק, ונופלים ומאבדים חיים
+    downland: {
+      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
+        'הטעינה לוקחת כשלוש דקות, והמשחק מתחיל לבד. בוחרים צבע: [1] שחור, [2] בהיר, [3] ירוק. אחר כך לוחצים על הכפתור.',
+        'אתם בחדר הראשון של המערה (CHAMBER 0). [←] [→] הולכים, [↑] [↓] מטפסים על חבלים וסולמות, והכפתור קופץ.',
+        'אוספים את האוצרות ואת המפתחות: מפתח פותח דלת לחדר הבא. הטיפות שנופלות מהתקרה ונפילה מגובה עולות חיים.',
+        'המספר למטה מימין הוא הבונוס, והוא יורד עם הזמן. למעלה מופיעים החיים שנשארו ומספר החדר.'],
+      en: ['In this game the arrow keys are a joystick and [Space] is its button (or [Alt], [Option] on a Mac). On a phone there is a stick and a fire button under the screen.',
+        'Loading takes about three minutes, and the game starts by itself. Pick a colour: [1] black, [2] buff, [3] green. Then press the button.',
+        'You are in the first chamber of the cave (CHAMBER 0). [←] [→] walk, [↑] [↓] climb ropes and ladders, and the button jumps.',
+        'Collect the treasure and the keys: a key opens a door to the next chamber. The drops falling from the ceiling, and a fall from a height, cost a life.',
+        'The number at the bottom right is the bonus, and it runs down with time. At the top are the lives you have left and the chamber number.']
+    },
+    // נבדק במכונה (2.11): הטעינה בשני חלקים, מסך הפתיחה (DONKEY KING), השאלות וההוראות. המשחק מתעלם ממקשים כמה שניות אחרי כל שאלה
+    king: {
+      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
+        'הטעינה לוקחת כשלוש דקות, והמשחק מתחיל לבד. על המסך כתוב DONKEY KING: זה השם שבו Microdeal מכרה אותו ל-Dragon.',
+        'המשחק שואל כמה שאלות, ואחרי כל אחת הוא לא מקשיב כמה שניות. מחכים רגע ועונים: [N] מהירות רגילה ([S] איטית), [N] בלי הוראות, [1] שחקן אחד, [N] בלי משחק אימון.',
+        'המטרה: לטפס על הרמפות ועל הסולמות ולהציל את הנערה. [←] [→] הולכים, [↑] [↓] מטפסים, והכפתור קופץ מעל החביות.',
+        'שחקן 1 משתמש בג\'ויסטיק הימני, ושחקן 2 בשמאלי.'],
+      en: ['In this game the arrow keys are a joystick and [Space] is its button (or [Alt], [Option] on a Mac). On a phone there is a stick and a fire button under the screen.',
+        'Loading takes about three minutes, and the game starts by itself. The screen says DONKEY KING: the name Microdeal sold it under for the Dragon.',
+        'The game asks a few questions, and after each one it ignores the keys for a few seconds. Wait a moment, then answer: [N] normal speed ([S] slow), [N] no instructions, [1] one player, [N] no practice game.',
+        'The aim: climb the ramps and ladders and rescue the maiden. [←] [→] walk, [↑] [↓] climb, and the button jumps over the barrels.',
+        'Player 1 uses the right joystick, and player 2 the left.']
     },
     // נבדק במכונה (30.10): הטעינה בשלבים, הצבע, מסך הפתיחה, טבלת השיאים, K ו-1, תנועה בחיצים לשני הצדדים, ומצב ג'ויסטיק
     spores: {
@@ -757,6 +792,8 @@
     spores: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים מקש, ב-JOYSTICK OR KEYBOARD? לוחצים [K], וב-1 OR 2 PLAYERS? לוחצים [1].', 'When loading ends pick a colour: [1], [2] or [3]. On the title screen press a key, at JOYSTICK OR KEYBOARD? press [K], and at 1 OR 2 PLAYERS? press [1].'],
     diablero: ['מופיע מסך הפתיחה: לוחצים מקש, ומקלידים פקודות באנגלית, למשל LOOK ו-[ENTER].', 'The title screen appears: press a key, then type commands in English, for example LOOK and [ENTER].'],
     invrev: ['ב-JOYSTICKS? לוחצים [N], ב-NEED INSTRUCTIONS? לוחצים [N], ואז בוחרים שחקנים, יריות ומהירות במספרים.', 'At JOYSTICKS? press [N], at NEED INSTRUCTIONS? press [N], then choose players, shots and speed with the number keys.'],
+    downland: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. אחר כך לוחצים על הכפתור, והחדר הראשון מתחיל.', 'When loading ends pick a colour: [1], [2] or [3]. Then press the button, and the first chamber starts.'],
+    king: ['כשהטעינה נגמרת עונים על השאלות: [N] למהירות רגילה, [N] בלי הוראות, [1] לשחקן אחד ו-[N] בלי משחק אימון. מחכים שתיים-שלוש שניות לפני כל תשובה.', 'When loading ends answer the questions: [N] for normal speed, [N] for no instructions, [1] for one player and [N] for no practice game. Wait two or three seconds before each answer.'],
     devil: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. ב-SELECT LEVEL בוחרים רמה, [0] עד [5], ומתחילים בכפתור.', 'When loading ends pick a colour: [1], [2] or [3]. At SELECT LEVEL pick a level, [0] to [5], and start with the button.'],
     phantom: ['המשחק שואל על ההוראות: [N] מדלג, [Y] מציג אותן.', 'The game asks about the instructions: [N] skips them, [Y] shows them.'],
     grabber: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. אחרי מסך הפתיחה, ב-NUMBER OF PLAYERS? לוחצים [1].', 'When loading ends pick a colour: [1], [2] or [3]. After the title screen, at NUMBER OF PLAYERS? press [1].'],
@@ -795,6 +832,8 @@
     phantom: ['מבוך תלת-ממדי: צדים רוחות רפאים לפני שהן תופסות אתכם. לשחקן אחד.', '3D maze: hunt the phantoms before they catch you. 1 player.'],
     cuthbert: ['רצים בג\'ונגל, קופצים מעל בורות ובולי עץ ויורדים בסולמות למנהרה, נגד השעון. בג\'ויסטיק.', 'Run through the jungle, jump pits and logs and climb down ladders to the tunnel, against the clock. Joystick.'],
     athletyx: ['תחרות אתלטיקה: ריצה ועוד מקצועות, נגד השעון. בג\'ויסטיק. נכתב רק ל-Dragon.', 'An athletics contest: a sprint and more events, against the clock. Joystick. Written only for the Dragon.'],
+    downland: ['יורדים במערות בחבלים ובסולמות, אוספים אוצרות ומפתחות, ונזהרים מהטיפות שנופלות מהתקרה. בג\'ויסטיק.', 'Climb down through the caves on ropes and ladders, collect treasure and keys, and keep clear of the drops falling from the ceiling. Joystick.'],
+    king: ['קופצים מעל חביות ומטפסים על רמפות וסולמות, כדי להציל את הנערה מהקוף הענק. בג\'ויסטיק, לאחד או לשניים.', 'Jump the barrels and climb the ramps and ladders to rescue the maiden from the giant ape. Joystick, 1 or 2 players.'],
     spores: ['נבגים מהחלל ישנים בקבוצות של שמונה: פוגעים בכל אחד פעמיים, לפני שהדלק נגמר והם מתעוררים. בחיצים.', 'Space spores sleep in groups of eight: hit each one twice, before your fuel runs out and they wake. Arrow keys.'],
     diablero: ['הרפתקת טקסט במדבר: מקלידים פקודות באנגלית ומגלים לאן הדרך מובילה. לשחקן אחד.', 'A text adventure in the desert: type commands in English and find out where the trail leads. 1 player.'],
     invrev: ['Space Invaders הפוך: אתם הפולש האחרון, ונלחמים בספינות של בני האדם. בחיצים, לאחד או לשניים.', 'Space Invaders turned around: you are the last invader, fighting the human ships. Arrow keys, 1 or 2 players.'],

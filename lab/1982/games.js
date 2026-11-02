@@ -54,7 +54,7 @@ window.D32_GAMES = {
       "key": "more",
       "he": "עוד משחקים מאותה תקופה",
       "en": "More games from the time",
-      "years": "1984–86",
+      "years": "1983–86",
       "note": [
         "משחקים של מחברים שיש לנו מהם משחק אחד. כאן באישורם, או ברישיון פתוח שהם עצמם נתנו.",
         "Games by authors we have one game from. Here with their permission, or under an open licence they gave themselves."
@@ -1958,6 +1958,70 @@ window.D32_GAMES = {
         ],
         "link": "https://archive.worldofdragon.org/index.php?title=SAS"
       }
+    },
+    "downland": {
+      "slug": "downland",
+      "drawer": "more",
+      "year": "1984",
+      "tag": [
+        "פלטפורמות",
+        "platform"
+      ],
+      "players": [
+        "שחקן אחד או שניים",
+        "1 or 2 players"
+      ],
+      "load": [
+        "כשלוש דקות",
+        "about three minutes"
+      ],
+      "about": {
+        "he": [
+          "Michael Aichlmayr כתב אותו ל-Color Computer, ו-Spectral Associates מכרה אותו ל-Tandy, שהוציאה אותו ב-1983 על מחסנית. ל-Dragon הוציאה אותו Microdeal ב-1984, על קלטת. כאן ברשותו, לפי האישור שלו באתר של L. Curtis Boyle.",
+          "Dragon User כתב עליו ביקורת חיובית באפריל 1985. עשרה חדרים במערה, ובכל אחד חבלים, סולמות, אוצרות ומפתחות."
+        ],
+        "en": [
+          "Michael Aichlmayr wrote it for the Color Computer, and Spectral Associates sold it to Tandy, who brought it out on cartridge in 1983. Microdeal released it for the Dragon in 1984, on tape. Here with his permission, from his approval on L. Curtis Boyle's site.",
+          "Dragon User gave it a good review in April 1985. Ten chambers in a cave, each with ropes, ladders, treasure and keys."
+        ]
+      },
+      "icon": [
+        64,
+        96,
+        64
+      ]
+    },
+    "king": {
+      "slug": "the-king",
+      "drawer": "more",
+      "year": "1983",
+      "tag": [
+        "פלטפורמות",
+        "platform"
+      ],
+      "players": [
+        "שחקן אחד או שניים",
+        "1 or 2 players"
+      ],
+      "load": [
+        "כשלוש דקות",
+        "about three minutes"
+      ],
+      "about": {
+        "he": [
+          "Chris Latham כתב אותו ל-Color Computer בשם The King, ו-Tom Mix Software הוציאה אותו ב-1983. ל-Dragon הוציאה אותו Microdeal באותה שנה, בשם Donkey King. כאן ברשותו, לפי האישור שלו באתר של L. Curtis Boyle.",
+          "קוף ענק חטף נערה לראש בניין, ומגלגל עליכם חביות. מטפסים ברמפות ובסולמות, וקופצים מעל החביות."
+        ],
+        "en": [
+          "Chris Latham wrote it for the Color Computer as The King, and Tom Mix Software published it in 1983. Microdeal brought it out for the Dragon the same year, as Donkey King. Here with his permission, from his approval on L. Curtis Boyle's site.",
+          "A giant ape has carried a maiden to the top of a building, and rolls barrels down at you. Climb the ramps and ladders, and jump the barrels."
+        ]
+      },
+      "icon": [
+        28,
+        0,
+        64
+      ]
     }
   }
 };
