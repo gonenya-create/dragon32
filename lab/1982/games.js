@@ -2032,6 +2032,38 @@ window.D32_GAMES = {
         0,
         64
       ]
+    },
+    "nerble": {
+      "slug": "nerble-force",
+      "drawer": "more",
+      "year": "1985",
+      "tag": [
+        "יריות",
+        "shooter"
+      ],
+      "players": [
+        "שחקן אחד או שניים",
+        "1 or 2 players"
+      ],
+      "load": [
+        "כשתי דקות",
+        "about two minutes"
+      ],
+      "about": {
+        "he": [
+          "David Crandall כתב אותו ל-Color Computer, ו-Computerware הוציאה אותו ב-1983. ל-Dragon הוציאה אותו Microdeal ב-1985. כאן ברשותו, לפי האישור שלו באתר של L. Curtis Boyle, בתנאי שהקובץ נשאר כמו שהוא.",
+          "Crandall עצמו קרא לו משחק \"נגזר\": הוא בנוי ברוח משחקי הארקייד של אותן שנים, עם חללית, הרים, מכ\"ם וארבע רמות קושי."
+        ],
+        "en": [
+          "David Crandall wrote it for the Color Computer, and Computerware published it in 1983. Microdeal brought it out for the Dragon in 1985. Here with his permission, from his approval on L. Curtis Boyle's site, on condition that the file stays as it is.",
+          "Crandall himself called it a \"derivative\" game: it follows the arcade games of those years, with a ship, hills, a radar and four skill levels."
+        ]
+      },
+      "icon": [
+        96,
+        56,
+        64
+      ]
     }
   }
 };

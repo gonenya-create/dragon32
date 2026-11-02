@@ -118,6 +118,11 @@
     // ומייל Curtis מ-2.11.2026. גונן אישר 2.11 ("עכשיו"). שני חלקים: טוען, ואחריו המשחק בלי שם. ה-ROM צריך את $B748, $B87E ו-$BBC8 (31.10)
     ['king', 'The King', 'The King', 'a',
       ['Chris Latham · Tom Mix Software / Microdeal, 1983', 'https://www.lcurtisboyle.com/nitros9/approvals/approvals.html', null, null, 'love']],
+    // Nerble Force של David Crandall (Computerware, 1983; ל-Dragon מ-Microdeal, 1985): הרשות שלו באתר של L. Curtis Boyle (26.3.2001),
+    // בתנאי שהקובץ נשאר כמו שהוא, ומייל Curtis מ-2.11.2026. גונן אישר 2.11. בקובץ הארכיון כל הביטים היו מוזזים ב-7 ביטים
+    // (ההקלטה התחילה באמצע בית): יישרנו את הגבול בין הבתים, והאותות בקלטת עצמם לא השתנו. הטוען של Microdeal בכותרת, מתחיל לבד
+    ['nerble', 'Nerble Force', 'Nerble Force', 'a',
+      ['David Crandall · Computerware / Microdeal, 1983–85', 'https://www.lcurtisboyle.com/nitros9/approvals/approvals.html', null, null, 'love']],
     ['tangle', 'Tanglewood', 'Tanglewood', 'm',
       ['Ian Murray-Watson · Microdeal, 1986', '/lab/1982/tapes/tanglewood-license.txt', 'https://gitlab.com/amigasourcecodepreservation/tanglewood', null, 'mit']],
     // Dig-It של Rolf Michelsen (1986), ש-Microdeal מכרה בשם Stone Raider II: קוד פתוח ברישיון BSD (המאגר שלו ב-GitHub).
@@ -139,7 +144,7 @@
       ['Owen Stenseth · freeware, 1987', '/lab/1982/tapes/brickout-license.txt', 'https://github.com/digitalbytes/super-brickout', null, 'mit']]
   ];
   // משחקים שצריכים ג'ויסטיק: כשהקלטת נטענת, החיצים במקלדת הופכים לג'ויסטיק הימני ו-Alt (Option במק) לכפתור שלו
-  const JOY = new Set(['downland', 'king', 'ranger', 'devil', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian', 'alcatraz', 'cricket', 'digit', 'snaker']);
+  const JOY = new Set(['downland', 'king', 'nerble', 'ranger', 'devil', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian', 'alcatraz', 'cricket', 'digit', 'snaker']);
   // ב-Cricket החובט משתמש בג'ויסטיק השמאלי והמגיש בימני (המדריך של Peaksoft): החיצים מזיזים את שניהם יחד.
   // ב-Snaker הימני מכוון (JOYSTK(0)) והשמאלי קובע מהירות (JOYSTK(3)): למעלה מהר, למטה לאט
   const BOTH = new Set(['cricket', 'snaker']);
@@ -360,6 +365,19 @@
         'You are in the first chamber of the cave (CHAMBER 0). [←] [→] walk, [↑] [↓] climb ropes and ladders, and the button jumps.',
         'Collect the treasure and the keys: a key opens a door to the next chamber. The drops falling from the ceiling, and a fall from a height, cost a life.',
         'The number at the bottom right is the bonus, and it runs down with time. At the top are the lives you have left and the chamber number.']
+    },
+    // נבדק במכונה (2.11): הטעינה, הצבע, מסך הפתיחה עם הרמות, החללית מסתובבת לשני הצדדים ויורה, המכ"ם
+    nerble: {
+      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
+        'הטעינה לוקחת כשתי דקות, והמשחק מתחיל לבד: קודם TAPE NOW LOADING, ואחר כך המסך של Microdeal. בוחרים צבע: [1], [2] או [3].',
+        'במסך הפתיחה של NERBLE FORCE בוחרים רמה בג\'ויסטיק, מ-SPACE CADET (הכי קלה) עד STARFLEET ADMIRAL, ולוחצים על הכפתור.',
+        '[←] [→] מפנים את החללית וטסים, [↑] [↓] עולים ויורדים, והכפתור יורה. הפס התחתון הוא מכ"ם של כל העולם.',
+        'בתחתית המסך: הנקודות של שחקן שמאל (L) ושל שחקן ימין (R).'],
+      en: ['In this game the arrow keys are a joystick and [Space] is its button (or [Alt], [Option] on a Mac). On a phone there is a stick and a fire button under the screen.',
+        'Loading takes about two minutes, and the game starts by itself: first TAPE NOW LOADING, then the Microdeal screen. Pick a colour: [1], [2] or [3].',
+        'On the NERBLE FORCE title screen choose a level with the joystick, from SPACE CADET (the easiest) to STARFLEET ADMIRAL, and press the button.',
+        '[←] [→] turn the ship and fly, [↑] [↓] climb and dive, and the button fires. The strip at the bottom is a radar of the whole world.',
+        'At the bottom of the screen: the score of the left player (L) and the right player (R).']
     },
     // נבדק במכונה (2.11): הטעינה בשני חלקים, מסך הפתיחה (DONKEY KING), השאלות וההוראות. המשחק מתעלם ממקשים כמה שניות אחרי כל שאלה
     king: {
@@ -793,6 +811,7 @@
     diablero: ['מופיע מסך הפתיחה: לוחצים מקש, ומקלידים פקודות באנגלית, למשל LOOK ו-[ENTER].', 'The title screen appears: press a key, then type commands in English, for example LOOK and [ENTER].'],
     invrev: ['ב-JOYSTICKS? לוחצים [N], ב-NEED INSTRUCTIONS? לוחצים [N], ואז בוחרים שחקנים, יריות ומהירות במספרים.', 'At JOYSTICKS? press [N], at NEED INSTRUCTIONS? press [N], then choose players, shots and speed with the number keys.'],
     downland: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. אחר כך לוחצים על הכפתור, והחדר הראשון מתחיל.', 'When loading ends pick a colour: [1], [2] or [3]. Then press the button, and the first chamber starts.'],
+    nerble: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. במסך הפתיחה בוחרים רמה בג\'ויסטיק, ומתחילים בכפתור.', 'When loading ends pick a colour: [1], [2] or [3]. On the title screen choose a level with the joystick, and start with the button.'],
     king: ['כשהטעינה נגמרת עונים על השאלות: [N] למהירות רגילה, [N] בלי הוראות, [1] לשחקן אחד ו-[N] בלי משחק אימון. מחכים שתיים-שלוש שניות לפני כל תשובה.', 'When loading ends answer the questions: [N] for normal speed, [N] for no instructions, [1] for one player and [N] for no practice game. Wait two or three seconds before each answer.'],
     devil: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. ב-SELECT LEVEL בוחרים רמה, [0] עד [5], ומתחילים בכפתור.', 'When loading ends pick a colour: [1], [2] or [3]. At SELECT LEVEL pick a level, [0] to [5], and start with the button.'],
     phantom: ['המשחק שואל על ההוראות: [N] מדלג, [Y] מציג אותן.', 'The game asks about the instructions: [N] skips them, [Y] shows them.'],
@@ -833,6 +852,7 @@
     cuthbert: ['רצים בג\'ונגל, קופצים מעל בורות ובולי עץ ויורדים בסולמות למנהרה, נגד השעון. בג\'ויסטיק.', 'Run through the jungle, jump pits and logs and climb down ladders to the tunnel, against the clock. Joystick.'],
     athletyx: ['תחרות אתלטיקה: ריצה ועוד מקצועות, נגד השעון. בג\'ויסטיק. נכתב רק ל-Dragon.', 'An athletics contest: a sprint and more events, against the clock. Joystick. Written only for the Dragon.'],
     downland: ['יורדים במערות בחבלים ובסולמות, אוספים אוצרות ומפתחות, ונזהרים מהטיפות שנופלות מהתקרה. בג\'ויסטיק.', 'Climb down through the caves on ropes and ladders, collect treasure and keys, and keep clear of the drops falling from the ceiling. Joystick.'],
+    nerble: ['טסים בחללית מעל הרים ויורים באויבים. המכ"ם למטה מראה את כל העולם. בג\'ויסטיק.', 'Fly a ship over the hills and shoot the enemies. The radar below shows the whole world. Joystick.'],
     king: ['קופצים מעל חביות ומטפסים על רמפות וסולמות, כדי להציל את הנערה מהקוף הענק. בג\'ויסטיק, לאחד או לשניים.', 'Jump the barrels and climb the ramps and ladders to rescue the maiden from the giant ape. Joystick, 1 or 2 players.'],
     spores: ['נבגים מהחלל ישנים בקבוצות של שמונה: פוגעים בכל אחד פעמיים, לפני שהדלק נגמר והם מתעוררים. בחיצים.', 'Space spores sleep in groups of eight: hit each one twice, before your fuel runs out and they wake. Arrow keys.'],
     diablero: ['הרפתקת טקסט במדבר: מקלידים פקודות באנגלית ומגלים לאן הדרך מובילה. לשחקן אחד.', 'A text adventure in the desert: type commands in English and find out where the trail leads. 1 player.'],
