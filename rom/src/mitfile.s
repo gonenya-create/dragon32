@@ -221,7 +221,7 @@ isl_ba77_e	;@isl
 		bsr	cadr
 		std	HEXEC
 		lbsr	nochr
-		lda	#2
+csv2		lda	#2		; ‏$991B נכנס כאן (בלי השורה של ה-pshs: הכתובות כבר במחסנית)
 		clrb
 		bra	isl_baa0_e	;@isl
 		fill	$ff,$baa0-*	;@isl

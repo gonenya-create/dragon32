@@ -1174,6 +1174,9 @@ gpatab		fcb	$ac,$0e		; PSET: מחיקה / הדלקה
 ; (מ-mitedit.s)
 m_ul		fcc	"UL "
 		fcb	0
+; (מ-mitctl.s, 2.11: כדי לפנות מקום ל-$991B)
+m_extra		fcc	"?EXTRA IGNORED"
+		fcb	13,0
 
 ; ---------- שבעת המצביעים ב-$A000 (docs/DRAGON-SPEC-INTERFACES.md 3ב, DRAGON-SPEC-TAPE.md 1.10) ----------
 ; הקוד שלפני הטבלה חייב להיגמר לפני $A000 (אחרת האסמבלר נותן שגיאה). המקום שנשאר פנוי מתמלא ב-$FF
