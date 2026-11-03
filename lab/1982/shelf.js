@@ -123,6 +123,14 @@
     // (ההקלטה התחילה באמצע בית): יישרנו את הגבול בין הבתים, והאותות בקלטת עצמם לא השתנו. הטוען של Microdeal בכותרת, מתחיל לבד
     ['nerble', 'Nerble Force', 'Nerble Force', 'a',
       ['David Crandall · Computerware / Microdeal, 1983–85', 'https://www.lcurtisboyle.com/nitros9/approvals/approvals.html', null, null, 'love']],
+    // Black Sanctum ו-Calixto Island של Ron Krebs (Mark Data Products, 1981; ל-Dragon: Dragon Data). הרשות שלו באתר של L. Curtis Boyle
+    // (15.12.2000: "Please feel free"; "I modified all of our games to run on the Dragon Data version"). הקלטות של Dragon Data
+    // מ-World of Dragon, כמו שהן (גונן אישר את ההורדה 3.11). CLOADM ואז EXEC. ה-ROM צריך את $B505, ‏$BA6B, ‏$B45C ו-$B5C6 (3.11).
+    // שמירת משחק עוד לא: היא צריכה גם את $B7C2 (בסבב הבא), ולכן "איך משחקים" אומר לא להקליד SAVE
+    ['sanctum', 'Black Sanctum', 'Black Sanctum', 'm',
+      ['Ron Krebs · Mark Data Products / Dragon Data, 1981', 'https://www.lcurtisboyle.com/nitros9/approvals/ron_krebs_approval.txt', null, null, 'love']],
+    ['calixto', 'Calixto Island', 'Calixto Island', 'm',
+      ['Ron Krebs · Mark Data Products / Dragon Data, 1981', 'https://www.lcurtisboyle.com/nitros9/approvals/ron_krebs_approval.txt', null, null, 'love']],
     ['tangle', 'Tanglewood', 'Tanglewood', 'm',
       ['Ian Murray-Watson · Microdeal, 1986', '/lab/1982/tapes/tanglewood-license.txt', 'https://gitlab.com/amigasourcecodepreservation/tanglewood', null, 'mit']],
     // Dig-It של Rolf Michelsen (1986), ש-Microdeal מכרה בשם Stone Raider II: קוד פתוח ברישיון BSD (המאגר שלו ב-GitHub).
@@ -234,6 +242,36 @@
   // איך משחקים (גונן, 25.10: "לא בטוח שהמשתמשים יבינו איך משחקים"): תיבה נפתחת מתחת לכל משחק בשפת מכונה.
   // [מקש] נהיה מקש מצויר. המקשים לפי התיעוד של המחבר, ונבדקו במכונה. במק: BREAK הוא Esc, ו-CLEAR הוא Home (fn+←).
   const HOWTO = {
+    // שתי ההרפתקאות של Ron Krebs נבדקו במכונה (3.11): טעינה, EXEC, מסך הפתיחה, השאלה על משחק שמור, LOOK, GO, TAKE INVENTORY,
+    // HELP, ו-QUIT שחוזר ל-BASIC דרך $B45C. SAVE עוד לא (צריך את $B7C2)
+    sanctum: {
+      he: ['הטעינה לוקחת כדקה וחצי. כשמופיע OK מקלידים {EXEC} ו-[ENTER].',
+        'במסך הפתיחה לוחצים מקש. על {WANT TO PLAY A "SAVED" GAME?} לוחצים [N].',
+        'מתחילים בהרים, ליד בקתה, ושלג יורד. מעבר להם מנזר ישן, ובו כוחות של כישוף שחור. צריך למצוא אותם ולהשמיד אותם.',
+        'כותבים פועל ושם עצם באנגלית ולוחצים [ENTER]. למשל {LOOK} (להסתכל), {OPEN DOOR} (לפתוח את הדלת), {TAKE LANTERN} (לקחת את הפנס). ארבע האותיות הראשונות מספיקות.',
+        'הולכים עם {GO} וכיוון: {GO NORTH} (צפונה), {GO SOUTH}, {GO EAST}, {GO WEST}, {GO UP}, {GO DOWN}. {TAKE INVENTORY} מראה מה בידיים.',
+        'עוד אי אפשר לשמור משחק לקלטת: אל תקלידו {SAVE}, כי המחשב ייתקע. {QUIT} מסיים, ועל {HOW ABOUT ANOTHER (Y OR N)?} לוחצים [N] כדי לחזור ל-BASIC.'],
+      en: ['Loading takes about a minute and a half. When OK appears, type EXEC and [ENTER].',
+        'On the title screen press a key. At WANT TO PLAY A "SAVED" GAME? press [N].',
+        'You start in the mountains, by a cabin, with snow falling. Beyond them stands an old monastery, where the forces of black magic are at work. Find them and destroy them.',
+        'Type a verb and a noun, then [ENTER]. For example LOOK, OPEN DOOR, TAKE LANTERN. The first four letters are enough.',
+        'Move with GO and a direction: GO NORTH, GO SOUTH, GO EAST, GO WEST, GO UP, GO DOWN. TAKE INVENTORY shows what you carry.',
+        'Saving a game to tape does not work here yet: do not type SAVE, or the computer will freeze. QUIT ends the game, and at HOW ABOUT ANOTHER (Y OR N)? press [N] to go back to BASIC.']
+    },
+    calixto: {
+      he: ['הטעינה לוקחת כדקה וחצי. כשמופיע OK מקלידים {EXEC} ו-[ENTER].',
+        'במסך הפתיחה לוחצים מקש. על {WANT TO PLAY A \'SAVED\' GAME?} לוחצים [N].',
+        'מתחילים בחדר העבודה של פרופסור Lagarto. משם מגיעים לאי טרופי ולפירמידה של המאיה. צריך למצוא אוצר ולהחזיר אותו למקום שלו.',
+        'כותבים פועל ושם עצם באנגלית ולוחצים [ENTER]. למשל {LOOK} (להסתכל), {OPEN DESK} (לפתוח את השולחן), {READ MESSAGE} (לקרוא את הפתק). ארבע האותיות הראשונות מספיקות.',
+        'הולכים עם {GO} וכיוון: {GO NORTH} (צפונה), {GO SOUTH}, {GO EAST}, {GO WEST}, {GO UP}, {GO DOWN}. {TAKE INVENTORY} מראה מה בידיים, ו-{SCORE} את הניקוד.',
+        'עוד אי אפשר לשמור משחק לקלטת: אל תקלידו {SAVE}, כי המחשב ייתקע. {QUIT} מסיים, ועל {HOW ABOUT ANOTHER (Y OR N)?} לוחצים [N] כדי לחזור ל-BASIC.'],
+      en: ['Loading takes about a minute and a half. When OK appears, type EXEC and [ENTER].',
+        'On the title screen press a key. At WANT TO PLAY A \'SAVED\' GAME? press [N].',
+        'You start in Professor Lagarto\'s study. From there you reach a tropical island and a Mayan pyramid. Find a treasure and return it to its proper place.',
+        'Type a verb and a noun, then [ENTER]. For example LOOK, OPEN DESK, READ MESSAGE. The first four letters are enough.',
+        'Move with GO and a direction: GO NORTH, GO SOUTH, GO EAST, GO WEST, GO UP, GO DOWN. TAKE INVENTORY shows what you carry, and SCORE shows your score.',
+        'Saving a game to tape does not work here yet: do not type SAVE, or the computer will freeze. QUIT ends the game, and at HOW ABOUT ANOTHER (Y OR N)? press [N] to go back to BASIC.']
+    },
     eggs: {
       he: ['מתחילים ב[רווח], או בכפתור של ג\'ויסטיק ימני.',
         '[←] [→] מזיזים את הסל. תופסים את הביצים, אבל לא את כדורי האש.',
@@ -803,6 +841,8 @@
   const ADVQ = ['כשהטעינה נגמרת המשחק שואל שלוש שאלות: עונים [N] ו-[ENTER], אחר כך [ENTER], ושוב [N] ו-[ENTER].',
     'When loading ends the game asks three questions: answer [N] and [ENTER], then [ENTER], then [N] and [ENTER] again.'];
   const AFTER = {
+    sanctum: ['אחרי EXEC מופיע מסך הפתיחה: לוחצים מקש, ועל השאלה על משחק שמור לוחצים [N].', 'After EXEC the title screen appears: press a key, and at the question about a saved game press [N].'],
+    calixto: ['אחרי EXEC מופיע מסך הפתיחה: לוחצים מקש, ועל השאלה על משחק שמור לוחצים [N].', 'After EXEC the title screen appears: press a key, and at the question about a saved game press [N].'],
     eggs: ['המשחק מופיע. מתחילים ב[רווח].', 'The game appears. Press [Space] to start.'],
     blockdown: ['כשהטעינה נגמרת המשחק מתחיל לבד. מתחילים ב[רווח].', 'When loading ends the game starts by itself. Press [Space] to start.'],
     dragontet: ['מופיע תפריט: בוחרים ב[↑] [↓] ומאשרים ב[ENTER].', 'A menu appears: choose with [↑] [↓] and confirm with [ENTER].'],
@@ -844,6 +884,8 @@
   };
   // מה המשחק, בשורה אחת מתחת לשם (גונן, 25.10: "לא מבינים מה זה המשחק"). השם עצמו נשאר כמו שהמחבר כתב
   const DESC = {
+    sanctum: ['הרפתקת מילים: בקתה בהרים המושלגים, מנזר ישן, וכוחות של כישוף שחור שצריך להשמיד.', 'A text adventure: a cabin in the snowy mountains, an old monastery, and forces of black magic to destroy.'],
+    calixto: ['הרפתקת מילים: מחדר העבודה של פרופסור אל אי טרופי ופירמידה של המאיה, בחיפוש אחרי אוצר.', 'A text adventure: from a professor\'s study to a tropical island and a Mayan pyramid, after a treasure.'],
     eggs: ['תופסים בסל את הביצים שהדרקון מטיל. לשחקן אחד.', 'Catch the dragon\'s eggs in a basket. 1 player.'],
     blockdown: ['קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים.', 'Falling blocks: complete the lines. 1 or 2 players.'],
     dragontet: ['קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים.', 'Falling blocks: complete the lines. 1 or 2 players.'],

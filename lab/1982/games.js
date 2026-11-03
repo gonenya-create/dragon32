@@ -31,6 +31,16 @@ window.D32_GAMES = {
       "fold": 5
     },
     {
+      "key": "krebs",
+      "he": "ההרפתקאות של Ron Krebs",
+      "en": "Ron Krebs' adventures",
+      "years": "1981",
+      "note": [
+        "Ron Krebs כתב ב-Mark Data Products את הרפתקאות המילים האלה ל-Color Computer, והתאים אותן בעצמו ל-Dragon. Dragon Data הוציאה אותן על קלטות. כאן באישורו.",
+        "Ron Krebs wrote these text adventures at Mark Data Products for the Color Computer, and adapted them himself for the Dragon. Dragon Data published them on tape. Here with his permission."
+      ]
+    },
+    {
       "key": "period",
       "he": "המשחקים של Ken Kalish",
       "en": "Ken Kalish's games",
@@ -2063,6 +2073,70 @@ window.D32_GAMES = {
         96,
         56,
         64
+      ]
+    },
+    "sanctum": {
+      "slug": "black-sanctum",
+      "drawer": "krebs",
+      "year": "1981",
+      "tag": [
+        "הרפתקת מילים",
+        "text adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כדקה וחצי",
+        "about a minute and a half"
+      ],
+      "about": {
+        "he": [
+          "Ron Krebs כתב אותה ב-Mark Data Products ב-1981, ו-Dragon Data הוציאה אותה ל-Dragon. על המסך: A DRAGON DATA LTD. ADVENTURE, COPYRIGHT (C) 1981 MARK DATA PRODUCTS. כאן באישורו, לפי המכתב שלו באתר של L. Curtis Boyle.",
+          "בקתה בהרים, שלג יורד, ומנזר ישן שבו פועלים כוחות של כישוף שחור. צריך למצוא אותם ולהשמיד אותם."
+        ],
+        "en": [
+          "Ron Krebs wrote it at Mark Data Products in 1981, and Dragon Data published it for the Dragon. The screen says A DRAGON DATA LTD. ADVENTURE, COPYRIGHT (C) 1981 MARK DATA PRODUCTS. Here with his permission, from his letter on L. Curtis Boyle's site.",
+          "A cabin in the mountains, falling snow, and an old monastery where the forces of black magic are at work. Find them and destroy them."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        256
+      ]
+    },
+    "calixto": {
+      "slug": "calixto-island",
+      "drawer": "krebs",
+      "year": "1981",
+      "tag": [
+        "הרפתקת מילים",
+        "text adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כדקה וחצי",
+        "about a minute and a half"
+      ],
+      "about": {
+        "he": [
+          "Ron Krebs כתב אותה ב-Mark Data Products ב-1981, ו-Dragon Data הוציאה אותה ל-Dragon. על המסך: A DRAGON DATA LTD. ADVENTURE, COPYRIGHT (C) 1981 MARK DATA PRODUCTS. כאן באישורו, לפי המכתב שלו באתר של L. Curtis Boyle.",
+          "מתחילים בחדר העבודה של פרופסור Lagarto, ומשם מגיעים לאי טרופי עם פירמידה של המאיה. צריך למצוא אוצר ולהחזיר אותו למקומו."
+        ],
+        "en": [
+          "Ron Krebs wrote it at Mark Data Products in 1981, and Dragon Data published it for the Dragon. The screen says A DRAGON DATA LTD. ADVENTURE, COPYRIGHT (C) 1981 MARK DATA PRODUCTS. Here with his permission, from his letter on L. Curtis Boyle's site.",
+          "You start in Professor Lagarto's study, and from there reach a tropical island with a Mayan pyramid. Find a treasure and return it to its proper place."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        256
       ]
     }
   }
