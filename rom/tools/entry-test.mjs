@@ -169,6 +169,22 @@ try {
   s = await run([...poke(0x7000, 'BDB538 B77080 39'), 'EXEC &H7000', 'Q', 'PRINT PEEK(&H7080)']);
   ok('$B538 מחכה למקש ומחזיר אותו ב-A (קורא 30.10)', /^ 81 ?$/m.test(s), show(tail(s)));
 
+  console.log('Black Sanctum ו-Calixto Island (3.11): ‏$B505, ‏$B5C6, ‏$BA6B, ‏$B45C');
+  // JSR $B505 / STA $7080 / STX $7081 / RTS: מקש בלי ביט 7, בלי הד, X נשמר (X = $1234 לפני)
+  s = await run([...poke(0x7000, '8E1234 BDB505 B77080 BF7081 39'), 'EXEC &H7000', 'Q', 'PRINT PEEK(&H7080);PEEK(&H7081)*256+PEEK(&H7082)']);
+  ok('$B505 מחכה למקש ומחזיר אותו ב-A, ו-X נשמר (קורא 3.11)', /^ 81  4660 ?$/m.test(s), show(tail(s)));
+  // JSR $B5C6: כמו $B5C9, אחרי ה-hook של $0182 (בהדלקה: RTS)
+  s = await run([...poke(0x7000, 'BDB5C6 F77080 B602DD B77084 39'), 'EXEC &H7000', 'HELLO', 'PRINT PEEK(&H7084);PEEK(&H7080)']);
+  ok('$B5C6 קורא שורה ל-$02DD ומחזיר B = התווים + 1 (קורא 3.11)', /^ 72  6 ?$/m.test(s), show(tail(s)));
+  // LDB #n / JSR $BA6B / STX $7062 / RTS: המסך כולו בצבע, X = $0600. התא האחרון: 1 = ירוק ($8F), 0 = שחור ($80), 5 = $CF
+  for (const [n, v] of [[1, 143], [0, 128], [5, 207]]) {
+    s = await run([...poke(0x7000, `C6${n.toString(16).padStart(2, '0')} BDBA6B BF7062 39`), 'EXEC &H7000:PRINT PEEK(&H7062)*256+PEEK(&H7063);PEEK(1535)']);
+    ok(`$BA6B עם B=${n}: המסך בצבע (${v}), ‏X=$0600 (קורא 3.11)`, new RegExp(`^ 1536  ${v} ?$`, 'm').test(s), show(tail(s)));
+  }
+  // JMP $B45C: מסך נקי, OK, ו-BASIC ממשיך (התוכנית נשמרת)
+  s = await run([...poke(0x7000, '7EB45C'), '10 PRINT "KEPT"', 'PRINT "XYZ":EXEC &H7000', 'RUN']);
+  ok('$B45C: חזרה ל-BASIC עם מסך נקי, והתוכנית נשמרת (קורא 3.11)', /^KEPT ?$/m.test(s) && !/XYZ/.test(s), show(tail(s)));
+
   console.log('סימן ה-Dragon ב-‏$B4B3');
   // Star Spores (Microdeal) קורא את המילה ב-$B4B3: $2843 אומר Dragon (ואז מפת המקלדת של ה-Dragon). אחרת הוא חושב שזה CoCo
   s = await run(['PRINT PEEK(&HB4B3);PEEK(&HB4B4)']);

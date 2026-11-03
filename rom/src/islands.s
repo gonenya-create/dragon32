@@ -194,9 +194,17 @@ isl_a0ea	jmp	x_getdev
 		jmp	reset
 
 ; @island $B44F
-; הכניסה החמה של BASIC: מתחילה ב-NOP, כי RESET בודק אותו (קורא 2.11)
-		nop
-		jmp	warm
+; הכניסה החמה של BASIC: מתחילה ב-NOP, כי RESET בודק אותו (קורא 2.11). כמו במקור (קורא 3.11): כאן עצמה
+; מאפסים את PLYTMR ומדליקים את פסיקת השדה ($FF03 ביט 0), ומ-$B45C ההמשך: ההתקן 0, מחסנית חדשה, הפסיקות
+; פתוחות, מסך נקי ו-OK, בלי חזרה. Black Sanctum ו-Calixto Island יוצאים ל-BASIC דרך $B45C. מוצב ביד ב-mitsnd.s
+warm		nop
+		clra
+		clrb
+		std	PLYTMR
+		lda	PIA0+3
+		ora	#1
+		sta	PIA0+3
+		jmp	warm2
 
 ; @island $B469
 ; ‏FIRQ (המחסנית), דרך $010F
@@ -212,12 +220,19 @@ isl_a0ea	jmp	x_getdev
 		clra
 		jmp	csavab
 
+; @island $B505
+; ‏$B505 (קורא 3.11): תו מההתקן הנוכחי, בלי ביט 7. מקלדת: מחכים עם סמן מהבהב, בלי הד, ואז B ו-X נשמרים.
+; Black Sanctum ו-Calixto Island קוראים כך כל מקש. מוצב ביד ב-PLAY (mitsnd.s)
+		jmp	x_inch7
+
 ; @island $B538
 ; מקש מהמקלדת: מחכים עם סמן מהבהב, ובסוף רווח ירוק במקום הסמן. בלי הד, A = המקש, B ו-X נשמרים (קורא 30.10)
 		jmp	getkey
 
-; @island $B5C9
-; שורה מהמקלדת ל-$02DD, בלי ה-hook (קורא 30.10: El Diablero קורא כך את הפקודות)
+; @island $B5C6
+; ‏$B5C6 (קורא 3.11): שורה מהמקלדת, קודם ה-hook של $0182 (Black Sanctum ו-Calixto Island: שם הקלטת לשמירה)
+		jsr	HK_LINE
+; ‏$B5C9: שורה מהמקלדת ל-$02DD, בלי ה-hook (קורא 30.10: El Diablero קורא כך את הפקודות)
 		jmp	x_inlin
 
 ; @island $991B
@@ -242,6 +257,11 @@ isl_a0ea	jmp	x_getdev
 ; @island $B75B
 ; ‏CLOADM מהכתובת שב-X: מנוע, בלוקים לשם עד בלוק הסוף, מנוע כבוי (המקביל של $A529 ב-CoCo. הטוען של Athletyx קורא לה ישר)
 		jmp	clmx
+
+; @island $BA6B
+; ‏$BA6B (קורא 3.11): CLS עם הצבע ב-B, אחרי בדיקת הטווח: 0 שחור, 1-8 גוש מלא בצבע B-1, והסמן בהתחלה.
+; Black Sanctum ו-Calixto Island מנקים כך (B=1) לפני כל מסך טקסט. מוצב ביד ב-csavem (mitfile.s)
+		jmp	x_clsb
 
 ; @island $BA77
 ; ‏$BA77 מסך נקי. ‏$BA79 המסך כולו בתו שב-B. ‏$BA7C מ-X עד הסוף. הסמן בהתחלה, X=$0600 (קורא 8.10)

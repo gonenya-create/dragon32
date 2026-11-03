@@ -82,6 +82,7 @@ isl_b93e_e	equ	47425
 prspc	equ	36857
 pc_bs	equ	48776
 EDCH	equ	221
+x_clsb	equ	40675
 TICKS	equ	274
 GFORE	equ	178
 fmult	equ	35750
@@ -121,6 +122,7 @@ ptab16	equ	46657
 HK_SASG	equ	413
 ed_keys	equ	42375
 KEYMAP	equ	48799
+aud_b	equ	46175
 tgetln	equ	48214
 pool_run	equ	36668
 gfxmode	equ	44078
@@ -162,7 +164,7 @@ err_od	equ	35074
 isl_8b2d_2	equ	35672
 errdir	equ	39365
 isl_8b2d_1	equ	35658
-pletr	equ	46473
+pletr	equ	46476
 if	equ	38931
 clsone	equ	48383
 twopi	equ	41453
@@ -173,12 +175,12 @@ DSCTMP	equ	86
 gvly	equ	44292
 gk_got	equ	49017
 us_cr	equ	42741
-cs_asc	equ	47681
+cs_asc	equ	47674
 GROWB	equ	185
 GX2	equ	195
 trawd	equ	40797
 trawb	equ	48594
-chkblk	equ	47631
+chkblk	equ	47627
 err_no	equ	35134
 gseg	equ	44299
 GCHG	equ	219
@@ -209,7 +211,7 @@ FACOV	equ	99
 shiftr	equ	35438
 HK_LINE	equ	386
 RNPTR	equ	211
-eio	equ	47638
+eio	equ	47634
 ARYREC	equ	246
 llist	equ	36622
 finx	equ	39921
@@ -234,6 +236,7 @@ TBUF	equ	474
 strdn2	equ	39575
 del_st	equ	41808
 GPRMSK	equ	205
+ploop_t	equ	46339
 getdev	equ	47832
 log2c	equ	41438
 clrto	equ	48689
@@ -249,7 +252,7 @@ gcogx	equ	43597
 GPACT	equ	213
 brktst	equ	39275
 TEMPEND	equ	465
-parg	equ	46480
+parg	equ	46483
 gscl	equ	43645
 PHASE	equ	132
 err_ls	equ	35107
@@ -300,6 +303,7 @@ HOOKS	equ	350
 isend	equ	41860
 ed_px	equ	42441
 fsubit	equ	35417
+pfc_t	equ	46301
 ed_cmd	equ	42328
 cr_kw	equ	34346
 FACMO	equ	82
@@ -337,7 +341,6 @@ evbyte	equ	37943
 isl_903d_e	equ	36928
 gk_r	equ	49015
 gl_key	equ	34825
-efm	equ	47641
 x_inch	equ	40759
 rn_shift	equ	42122
 gpbits	equ	45932
@@ -379,6 +382,7 @@ GRR	equ	207
 piaddr	equ	48646
 err_io	equ	35128
 putnew	equ	38094
+warm2	equ	33755
 CRMODE	equ	1016
 zerofc	equ	35570
 devgetln	equ	48256
@@ -418,7 +422,7 @@ clm_gap	equ	48516
 HK_DECR	equ	422
 main_ok	equ	33804
 chkeq	equ	36506
-warm	equ	33742
+warm	equ	46159
 fn_log	equ	41030
 VALTYP	equ	6
 comevb	equ	37937
@@ -430,7 +434,7 @@ fdivt	equ	35795
 movfa	equ	35281
 strlit	equ	38037
 m_brk	equ	39359
-drct	equ	47499
+drct	equ	47495
 numins	equ	39567
 mfdiv	equ	41375
 datlop	equ	39430
@@ -444,7 +448,7 @@ cpy	equ	46790
 mltpl1	equ	35618
 DESC1	equ	298
 troff	equ	41735
-csavp	equ	47655
+csavp	equ	47648
 USANY	equ	218
 getfne	equ	34922
 if_no	equ	38961
@@ -478,7 +482,7 @@ GSTART	equ	186
 devfac	equ	47841
 g2pt	equ	44140
 inloop	equ	39492
-cadr	equ	47715
+cadr	equ	47707
 negfac	equ	35498
 prin	equ	33884
 put_st	equ	45730
@@ -543,7 +547,7 @@ x_getdev	equ	40773
 sgxyp	equ	41617
 DEGREE	equ	85
 x_strout	equ	40746
-search	equ	47503
+search	equ	47499
 pc_adv	equ	48738
 dvar	equ	45238
 SYNCNT	equ	131
@@ -561,7 +565,7 @@ snerr	equ	36561
 isl_991b_e	equ	39200
 getkey	equ	49008
 muldv2	equ	35713
-getofs	equ	47708
+getofs	equ	47700
 USDSC	equ	213
 normal	equ	35545
 m_ul	equ	41097
@@ -584,7 +588,7 @@ HK_CRUN	equ	419
 ENDCHR	equ	2
 NOTELN	equ	225
 fsub	equ	35318
-srch2	equ	47509
+srch2	equ	47505
 dabs	equ	45630
 fn_cos	equ	41245
 eqadr	equ	40345
@@ -610,7 +614,7 @@ dfc	equ	45200
 GLX	equ	199
 logeb2	equ	41443
 GCEND	equ	217
-skipfl	equ	47588
+skipfl	equ	47584
 movaf	equ	35296
 RESLO	equ	22
 LEND	equ	1018
@@ -633,7 +637,7 @@ lnkprg	equ	34188
 gl_new	equ	34822
 optab	equ	33428
 SUBFLG	equ	8
-csave_st	equ	47644
+csave_st	equ	47637
 errtab	equ	33449
 GLC	equ	205
 isl_bbb5_e	equ	48056
@@ -692,7 +696,7 @@ EDNUM	equ	209
 gpset	equ	43734
 frestr	equ	38240
 tchin	equ	48152
-csavem	equ	47721
+csavem	equ	47713
 nochr	equ	34925
 cload_st	equ	46798
 gpush	equ	44956
@@ -700,7 +704,7 @@ gline	equ	44365
 ovf2	equ	36099
 n32768	equ	35160
 GREM	equ	209
-pfc2	equ	46389
+pfc2	equ	46473
 ki_next	equ	48942
 isl_85a5_e	equ	34219
 let	equ	36759
@@ -786,7 +790,7 @@ for	equ	37065
 fn_exp	equ	41174
 mulcur	equ	38864
 inbrk	equ	39424
-audio_st	equ	46163
+audio_st	equ	33742
 strarg	equ	37907
 gdefc	equ	43798
 fn_left	equ	37830
@@ -839,8 +843,8 @@ ed_ins	equ	42594
 us_str	equ	42875
 frmadr	equ	39668
 SCRBAS	equ	188
-x_inlin	equ	34932
 ki_low	equ	48991
+x_inlin	equ	34932
 gmain	equ	44973
 fn_timer	equ	40329
 reset_st	equ	41714
@@ -867,7 +871,7 @@ stmend	equ	37164
 prline	equ	34621
 gosub1	equ	36684
 INTEGR	equ	1
-csavab	equ	47656
+csavab	equ	47649
 cloadm	equ	46894
 chkcom	equ	36512
 fhalf	equ	35161
@@ -1046,6 +1050,7 @@ fin	equ	35906
 ed_head	equ	42324
 darg	equ	45272
 ed_q	equ	42695
+isl_ba6b_e	equ	47726
 incfac	equ	35483
 DSIGN	equ	215
 gaddr	equ	43678

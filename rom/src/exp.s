@@ -443,14 +443,15 @@ isl_8371_e	;@isl
 		leax	banner,pcr	; הכותרת ומיד אחריה OK (אחרי 13 אין שורה חדשה נוספת)
 		bra	mo_puts
 ; warm: ההתחלה החמה (קורא 7.4): התוכנית, המשתנים, TRON, הקבצים, המדפסת ו-$0100-$01FF נשמרים
-warm		nop			; ה-NOP שהאיפוס בודק
-		clra
-		clrb
-		std	PLYTMR
-		lda	PIA0+3		; פסיקת השדה
-		ora	#1
-		sta	PIA0+3
-		clr	DEVNUM
+; audio_st (קורא 3): החלק הראשון של AUDIO ON/OFF. המילה שאחרי AUDIO נשמרת ב-B (chrget לא נוגע בה). OFF: רק
+; מכבים, הבוררים לא משתנים. ההמשך ב-aud_b (mitsnd.s). עבר לכאן ב-3.11, למקום של תחילת warm (עכשיו ב-$B44F)
+audio_st	tfr	a,b
+		jsr	<chrget
+		cmpb	#$c2		; OFF
+		lbeq	sndoff
+		lbra	aud_b
+; warm2 ($B45C נכנס כאן): ההמשך של ההתחלה החמה. התחלתה ($B44F, עם ה-NOP שהאיפוס בודק) ב-mitsnd.s
+warm2		clr	DEVNUM
 		lds	STKTOP		; המחסנית והזמניים; אין CONT
 		clr	,-s
 		lbsr	rcsub

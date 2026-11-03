@@ -78,17 +78,19 @@ sseg		sta	PIA1
 		bne	1B
 		rts
 		fill	$ff,$b44f-*	;@isl
-		nop	;@isl
-		jmp	warm	;@isl
+warm		nop	;@isl
+		clra	;@isl
+		clrb	;@isl
+		std	PLYTMR	;@isl
+		lda	PIA0+3	;@isl
+		ora	#1	;@isl
+		sta	PIA0+3	;@isl
+		jmp	warm2	;@isl
 
-; ---------- AUDIO ON / OFF (קורא 3) ----------
 ; @endnofill
-audio_st	pshs	a		; המילה שאחרי AUDIO נקראת קודם
-		jsr	<chrget
-		puls	a
-		cmpa	#$c2		; OFF: רק מכבים. הבוררים לא משתנים
-		lbeq	sndoff
-		cmpa	#$88		; ON
+; ---------- AUDIO ON / OFF (קורא 3) ----------
+; (3.11: החלק הראשון עבר ל-exp.s, למקום של תחילת warm, שחזרה ל-$B44F כמו במקור, כדי לפנות את $B45C)
+aud_b		cmpb	#$88		; ON (המילה ב-B)
 		lbne	err_sn
 		lda	#1		; כניסת הקלטת
 		bra	isl_b469_e	;@isl
@@ -160,7 +162,7 @@ ploop		lbsr	dget
 		ldb	NOTELN
 		lbsr	parg
 		tstb
-		beq	pfc
+pfc_t		beq	pfc		; (3.11: גם T ו-P קופצים לכאן, Z=1, כדי ש-pfc2 יעבור ליד parg)
 		stb	NOTELN
 		clr	DOTVAL
 31		lbsr	dget		; הנקודות: רק מיד אחרי L
@@ -176,14 +178,16 @@ ploop		lbsr	dget
 		ldb	TEMPO
 		lbsr	parg
 		tstb
-		beq	pfc2
+		beq	pfc_t
 		stb	TEMPO
-		bra	ploop
+ploop_t		bra	ploop
+		fill	$ff,$b505-*	;@isl
+		jmp	x_inch7	;@isl
 5		cmpa	#'P
 		bne	6F
 		lbsr	dval		; רק "=שם;" או ספרות
 		tstb
-		beq	pfc2
+		beq	pfc_t
 		ldx	VOLHI		; השתיקה: תו C בעוצמה $7C/$7C, בלי נקודות, ואחר כך חזרה
 		lda	DOTVAL
 		pshs	a,x
@@ -195,13 +199,12 @@ ploop		lbsr	dget
 		puls	a,x
 		stx	VOLHI
 		sta	DOTVAL
-		lbra	ploop
+		bra	ploop_t		; (3.11: דרך הקפיצה הקרובה, בשביל $B505)
 6		cmpa	#'X
 		bne	7F
 		ldb	#2		; X שם; : מחרוזת אחרת. getstk של 4 בתים (שתי מילים)
 		lbsr	dxstr
-		lbra	ploop
-pfc2		lbra	err_fc
+		bra	ploop_t		; (3.11: דרך הקפיצה הקרובה, בשביל $B505)
 		fill	$ff,$b538-*	;@isl
 		jmp	getkey	;@isl
 7		cmpa	#'N		; N לפני תו: מדלגים
@@ -242,6 +245,7 @@ isl_b54a_e	;@isl
 		ldb	NOTELN
 		bsr	pnote
 		lbra	ploop
+pfc2		lbra	err_fc		; (3.11: עבר לכאן מלפני $B538, ליד parg: קפיצות קצרות)
 pletr		fcb	10,12,1,3,5,6,8
 
 ; parg: הארגומנט של O V L T → B. B = הערך הנוכחי. + - > < משנים אותו, אחרת "=שם;" או ספרות
@@ -256,24 +260,25 @@ parg		pshs	b
 1		cmpa	#'-
 		bne	2F
 		tstb
-		lbeq	pfc2
+		beq	pfc2
 		decb
 		rts
 2		cmpa	#'>
 		bne	3F
 		cmpb	#128
-		lbhs	pfc2
+		bhs	pfc2
 		lslb
 		rts
 3		cmpa	#'<
 		bne	4F
 		tstb
-		lbeq	pfc2
+		beq	pfc2
 		lsrb
 		rts
 4		lbsr	dback
 		lbra	dval
-		fill	$ff,$b5c9-*	;@isl
+		fill	$ff,$b5c6-*	;@isl
+		jsr	HK_LINE	;@isl
 		jmp	x_inlin	;@isl
 
 ; pnote: A = התו (0-11), B = האורך. U = המקום של כתובת החזרה: פסיקת השדה חוזרת לשם כשהתו נגמר (קורא 9)

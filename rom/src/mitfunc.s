@@ -498,7 +498,9 @@ cls_st		jsr	HK_MISC		; 23 (Z נשמר)
 		lbsr	evbyte
 		cmpb	#8
 		bhi	4F
-		lda	#16		; הצבע: 16n+$7F, ול-0: $80
+; x_clsb ($BA6B, קורא 3.11): ‏B = הצבע, אחרי בדיקת הטווח. Black Sanctum ו-Calixto Island מנקים כך (B=1, ירוק).
+; (במקור A=0 בסוף; כאן A = התו של הצבע)
+x_clsb		lda	#16		; הצבע: 16n+$7F, ול-0: $80
 		mul
 		addb	#$7f
 		bmi	1F

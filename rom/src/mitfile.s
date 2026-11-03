@@ -63,9 +63,9 @@ wdata		pshs	d
 		pshs	x
 		subd	,s++		; כמה נשארו
 		beq	3F
-		cmpd	#255
-		bls	2F
-		ldd	#255
+		tsta			; יותר מ-255 (3.11: בבדיקה של A, 4 בתים פחות)
+		beq	2F
+		ldb	#255
 2		stb	BLKLEN
 		lda	#1
 		sta	BLKTYP
@@ -154,7 +154,6 @@ chkblk		bne	eio
 		beq	eio
 		rts
 eio		lbra	err_io
-efm		lbra	err_fm
 
 ; ---------- CSAVE (3.6) ----------
 csave_st	cmpa	#'M
@@ -181,7 +180,7 @@ cs_asc		clra
 		lda	#$ff
 		sta	DEVNUM
 		sta	SPCIO
-		ldd	#$ffff
+		ldb	#$ff		; A כבר $FF (3.11: בית אחד פחות, בשביל $BA6B)
 		std	LEND
 		clra
 		clrb
@@ -201,6 +200,10 @@ cadr		lbsr	comfrm
 ; ---------- CSAVEM (3.14) ----------
 csavem		jsr	<chrget		; ה-M
 		lbsr	getfn
+		bra	isl_ba6b_e	;@isl
+		fill	$ff,$ba6b-*	;@isl
+		jmp	x_clsb	;@isl
+isl_ba6b_e	;@isl
 		bsr	cadr
 		std	HLOAD
 		pshs	d
