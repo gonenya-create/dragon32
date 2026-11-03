@@ -21,7 +21,16 @@
 8. כל הבדיקות עוברות, ואז "מזג".
 
 ## עכשיו
-**גלריית הפרסומות של Dragon Data** (גונן בחר, 27.10). המצב: נבנתה בענף d32/gallery, וממתינה לבדיקה ול"מזג".
+**3.11 (גונן, בישיבה): היעד הבא הוא תוכנות מהתקופה.** בוחרים לפי רשות, פופולריות, ועבודה ב-ROM. עבודה על ה-ROM רק בשביל משחק או תוכנה מסוימים.
+- **באוויר מ-3.11:** Black Sanctum ו-Calixto Island של Ron Krebs, במגירה משלו. שמירת משחק עוד לא עובדת (צריך את $B7C2).
+- **הבא, בסדר שגונן אישר:**
+  1. שמירה וטעינה במשחקים של Krebs ($B7C2, ‏$B6A8, ‏$B87A).
+  2. Cave Hunter ($BAF1, ‏$BAD4, ‏$BAD6).
+  3. Buzzard Bait (המפתח החומרתי).
+  4. Synther 7 (נתקע בטעינה).
+- **תוכנות:** שש כבר רצות (Electronic Author, ‏Drawezee, ‏Jukebox, ‏Touch Typing Tutor, ‏Family Budget, ‏Variable List). מחכים לרשות: נשלחו פניות ל-Daniel Stevens (‏Synther 7) ול-Stewart Orchard (‏Variable List). את הפוסט ב-WoD מפרסם גונן.
+
+**גלריית הפרסומות של Dragon Data** (גונן בחר, 27.10). באוויר מ-27.10.
 - הכתובות: ‎/adverts/ ו-‎/en/adverts/, ודף לכל פרסומת (למשל ‎/adverts/before-we-made-it-clever/), עם תמונה משלה לשיתוף.
 - שש פרסומות בפתיחה: "Before we made it clever", ‏"At last", החוברת "Fire Your Imagination", המחירון של 23 במאי 1983, הדוכן ב-Earls Court ב-1984, ו-Touchmaster.
 - הכללים (מסמך הכללים של המנהל, ~/mac-tools/dragon-rights/gallery-spec.md): קרדיט וקישור לדף המקורי ב-Dragon Data Archive בכל פרסומת, תודה ל-Dan מ-Retro Collective בראש הדף, עיצוב כמו בדף המגזין, 3 כרטיסים בשורה במחשב ואחד בטלפון, תגית סוג (פרסומת, חוברת, עלון, מחירון), סדר לפי זמן, שנה רק אם נבדקה, תקציר ותרגום נאמנים לטקסט, כפתור "התרגום המלא" רק בעברית.
