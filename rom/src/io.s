@@ -249,7 +249,4 @@ srchq		ldx	CURLIN
 		stx	CURLIN
 		rts
 
-; dlyx ($BBC8): X סיבובים של 8 מחזורים, ו-X חוזר 0
-dlyx		leax	-1,x
-		bne	dlyx
-		rts
+; (dlyx עבר ב-3.11 לרווח שלפני $BAD4, ב-mitfile.s, כדי לפנות מקום בסוף ה-ROM לפסיקה)

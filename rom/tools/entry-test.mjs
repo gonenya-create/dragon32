@@ -249,6 +249,14 @@ try {
     'EXEC &H7000:PRINT PEEK(&H7200);PEEK(&H7203);PEEK(&H79);PEEK(&H7A)*256+PEEK(&H7B)'], { tapeLoad: cas3, timeout: 30 });
   ok('$B87A מוצא את GAME בקלטת ($79 = 0, ‏$7A = $01DA), ו-$B75B טוען אחריו את הבלוקים ל-$7200', / 1  4  0  474 ?$/m.test(s), show(tail(s)));
   await rm(cas3, { force: true });
+
+  console.log('Cave Hunter (3.11): ‏$BAF1, ‏$BAD4, ‏$BAD6');
+  // LDB #1 / JSR $BAF1: ביט 3 של $FF01 דולק, של $FF03 כבוי. אחר כך LDB #4 / JSR $BAF1: שניהם כבויים (ה-DAC)
+  s = await run([...poke(0x7000, 'C601 BDBAF1 B6FF01 B77080 B6FF03 B77081 C604 BDBAF1 B6FF01 B77082 B6FF03 B77083 39'), 'EXEC &H7000:PRINT PEEK(&H7080) AND 8;PEEK(&H7081) AND 8;PEEK(&H7082) AND 8;PEEK(&H7083) AND 8']);
+  ok('$BAF1 בוחר את מקור הצליל מ-B (ביט 0 ל-$FF01, ביט 1 ל-$FF03; B=4: שניהם כבויים) (קורא 3.11)', /^ 8  0  0  0 ?$/m.test(s), show(tail(s)));
+  // טון $F0 ב-$8C / LDA #$55 / JSR $BAD6 / STA $7080 / JSR $BAD4 / STA $7081: חוזרות עם A = 0, ו-B נשמר ($33)
+  s = await run([...poke(0x7000, '86F0 978C C633 8655 BDBAD6 B77080 BDBAD4 B77081 F77082 39'), 'EXEC &H7000:PRINT PEEK(&H7080);PEEK(&H7081);PEEK(&H7082)']);
+  ok('$BAD6 ו-$BAD4 כותבים ל-DAC, מחכים לפי הטון, וחוזרים עם A = 0 ו-B שמור (קורא 3.11)', /^ 0  0  51 ?$/m.test(s), show(tail(s)));
 } catch (e) {
   fail++; console.log('  ✗ ' + e.message);
 }

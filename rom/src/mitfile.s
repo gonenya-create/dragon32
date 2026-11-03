@@ -227,67 +227,69 @@ isl_ba77_e	;@isl
 		lbsr	nochr
 csv2		lda	#2		; ‏$991B נכנס כאן (בלי השורה של ה-pshs: הכתובות כבר במחסנית)
 		clrb
-		bra	isl_baa0_e	;@isl
+		lbra	csv2b		; (3.11: ההמשך עבר ל-mitsnd.s, כדי שהצליל יחזור ל-$BAA0)
 		fill	$ff,$baa0-*	;@isl
-		jmp	sound2	;@isl
-		fill	$ff,$baa5-*	;@isl
-		jmp	snddur	;@isl
-isl_baa0_e	;@isl
-		lbsr	wrhdr
-		jsr	tleader
-		puls	d,x		; D = הסוף, X = ההתחלה
-		addd	#1		; כולל הסוף
-		lbra	wdata
-
-; ---------- SKIPF (3.7) ----------
+; ---------- הצליל, בכתובות של המקור (3.11) ----------
+; ‏$BAA0 (קורא 2.7): ‏SOUND מאוגרים: B = המשך, הטון כבר ב-$8C. ‏SNDTMR = 4B שדות
+sound2		lda	#4	;@isl
+		mul	;@isl
+		std	SNDTMR	;@isl
+; ‏$BAA5 (קורא 2.11): הצליל כשהמשך כבר ב-$8D/$8E. פסיקת השדה פתוחה, ה-DAC (דרך $BAF1), הצליל דולק, ואז הגל: מרכז,
+; למעלה, מרכז, למטה. בין כתיבה לכתיבה 23+5N מחזורים (N = 256 פחות הטון), ואחרי הכתיבה התחתונה 31+5N (קורא 1.3)
+snddur		lda	PIA0+3	;@isl
+		ora	#1	;@isl
+		sta	PIA0+3	;@isl
+		clrb	;@isl
+		bsr	isl_baf1	;@isl
+		bsr	isl_bac5	;@isl
+isl_bab4	bsr	isl_bad4	;@isl
+		lda	#$fc	;@isl
+		bsr	isl_bad6	;@isl
+		bsr	isl_bad4	;@isl
+		clra	;@isl
+		bsr	isl_bad6	;@isl
+		ldd	SNDTMR	;@isl
+		bne	isl_bab4	;@isl
+		bra	isl_bac8	;@isl
+		fill	$ff,$bac3-*	;@isl
+; ‏$BAC3 הצליל כבוי. ‏$BAC5 דולק (קורא 2.7)
+		bra	isl_bac8	;@isl
+isl_bac5	jmp	sndon	;@isl
+isl_bac8	jmp	sndoff	;@isl
+; dlyx ($BBC8): X סיבובים של 8 מחזורים, ו-X חוזר 0 (עבר לכאן מסוף ה-ROM ב-3.11)
+dlyx		leax	-1,x
+		bne	dlyx
+		rts
+		fill	$ff,$bad4-*	;@isl
+; ‏$BAD4 (קורא 3.11): ה-DAC במרכז (124), ונופלים ל-$BAD6: ‏A ל-$FF20, ואז השהיה: הטון מ-DP:$8C עולה עד 256.
+; בסוף A = 0 ו-Z=1, והשאר נשמר. ‏Cave Hunter (מחסנית, DP=$04) מנגן כך את הצלילים שלו
+isl_bad4	lda	#$7c	;@isl
+isl_bad6	sta	PIA1	;@isl
+		lda	<SNDFRQ	;@isl
+isl_badb	inca	;@isl
+		bne	isl_badb	;@isl
+		rts	;@isl
+; SOUND (3.13): הטון ואז המשך, כל אחד 1-255 (עבר לכאן מ-mitsnd.s ב-3.11, ליד $BAA0)
+sound_st	lbsr	evnzb
+		stb	SNDFRQ		; נשמר מיד, גם אם המשך שגוי
+		lbsr	chkcom
+		lbsr	evnzb
+		bra	sound2
+		fill	$ff,$baec-*	;@isl
+		jmp	x_audon	;@isl
+		fill	$ff,$baf1-*	;@isl
+; ‏$BAF1 (קורא 3.11): מקור הצליל מ-B (ביט 0 ל-$FF01, ביט 1 ל-$FF03; B=4: ה-DAC). ‏Cave Hunter קורא לה
+isl_baf1	jmp	x_mux	;@isl
 
 ; ---------- MOTOR ON / OFF (3.8) ----------
 motor_st	tfr	a,b		; chrget לא נוגע ב-B
 		jsr	<chrget
 		cmpb	#$c2		; OFF
-		bra	isl_bac3_e	;@isl
-nz0999		fcb	$9b,$3e,$bc,$1f,$fd	;@isl 99999999.9499 (mit: NZ0999; עבר לכאן מ-mitfp.s, 2.11)
-		fill	$ff,$bac3-*	;@isl
-		bra	isl_bac8	;@isl
-		jmp	sndon	;@isl
-isl_bac8	jmp	sndoff	;@isl
-isl_bac3_e	;@isl
 		lbeq	motoff
 		cmpb	#$88		; ON: המנוע והשהיה; הפסיקות לא נחסמות
 		lbne	err_sn
 		jmp	tmoton
 
-; ======================= צעד 3: ההתקנים וקובצי הטקסט =======================
-
-; ---------- מספר התקן (4.1) ----------
-; getdev: [#]ביטוי → DEVNUM. בין -32768 ל-32767 (אחרת ?FC), אחר כך בין -128 ל-127 (אחרת ?DN); נשמר,
-; ורק 0, -1, -2 מותרים (אחרת ?DN; השגיאה מאפסת את DEVNUM)
-getdev		cmpa	#'#
-		bne	1F
-		jsr	<chrget
-1		lbsr	frmevl
-devfac		lbsr	ayint
-		ldb	FACLO
-		sex
-		cmpa	FACMO
-		bra	isl_baec_e	;@isl
-		fill	$ff,$baec-*	;@isl
-		jmp	x_audon	;@isl
-isl_baec_e	;@isl
-		bne	8F
-		stb	DEVNUM
-		tstb			; 2: B עם הדגלים שלו; Z=1 בחזרה = מקובל (גם התקן של הרחבה)
-		jsr	HK_DEVN
-		beq	1F
-		bpl	8F		; חיובי: ?DN
-		cmpb	#$fe		; ‏$FE או $FF; מתחת ל-2-: ?DN
-		blo	8F
-1		clra			; הדגל של הקלטת: $FF רק כש-B = $FF (אז C=0)
-		cmpb	#$ff
-		adca	#$ff
-		sta	SPCIO
-9		rts
-8		lbra	err_dn
 ; istape: Z=1 כשההתקן הוא הקלטת. A משתנה
 istape		lda	DEVNUM
 		inca

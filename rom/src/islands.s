@@ -302,12 +302,15 @@ isl_ba7e	stb	,x+
 		jmp	tsync
 
 ; @island $BAA0
-; SOUND מאוגרים: B = המשך, הטון כבר ב-$8C (קורא 2.7). תוכנות בשפת מכונה קוראות לה ישר (למשל DragonTet, דרך CMOC)
-		jmp	sound2
-; ‏$BAA5 (קורא 2.11): הצליל כשגם המשך כבר במקום: הטון ב-$8C, ומספר השדות ב-$8D/$8E. ‏B לא משנה.
-; ‏Katerpillar Attack ו-Dragon Invaders מנגנים כך, עם הפסיקות פתוחות
-		fill	$ff,$baa5-*
-		jmp	snddur
+; ‏SOUND מאוגרים: B = המשך, הטון כבר ב-$8C (קורא 2.7). מ-3.11 הצליל כולו בכתובות של המקור (mitfile.s): ‏$BAA0 ‏sound2,
+; ‏$BAA5 הצליל כשהמשך כבר ב-$8D/$8E (קורא 2.11), ‏$BAD4/$BAD6 צעד של ה-DAC עם השהיה (קורא 3.11). מוצב ביד
+sound2		lda	#4
+		mul
+		std	SNDTMR
+
+; @island $BAA5
+; ‏$BAA5: הצליל כשהמשך כבר במקום (התחלת snddur, ב-mitfile.s)
+snddur		lda	PIA0+3
 
 ; @island $BAC3
 ; ‏$BAC3 הצליל כבוי. ‏$BAC5 דולק (קורא 2.7)
@@ -315,9 +318,18 @@ isl_ba7e	stb	,x+
 		jmp	sndon
 isl_bac8	jmp	sndoff
 
+; @island $BAD4
+; ‏$BAD4 (קורא 3.11): ה-DAC במרכז (124) ונופלים ל-$BAD6: ‏A ל-$FF20 והשהיה לפי הטון ב-DP:$8C. ‏Cave Hunter. מוצב ביד ב-mitfile.s
+isl_bad4	lda	#$7c
+isl_bad6	sta	PIA1
+
 ; @island $BAEC
 ; מקור הצליל B+1, והצליל דולק (קורא 8.11)
 		jmp	x_audon
+
+; @island $BAF1
+; ‏$BAF1 (קורא 3.11): מקור הצליל מ-B (ביט 0 ל-$FF01, ביט 1 ל-$FF03; B=4: ה-DAC). ‏Cave Hunter. מוצב ביד ב-mitfile.s
+isl_baf1	jmp	x_mux
 
 ; @island $BBB5
 ; הבהוב הסמן (היעד של $8009)

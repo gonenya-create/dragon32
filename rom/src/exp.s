@@ -1216,26 +1216,27 @@ irq		lda	PIA0+3
 irqtk		ldx	TICKS		; ($9D46: כניסה אחרי האישור)
 		leax	1,x
 		stx	TICKS
-		ldd	PLYTMR
+; (3.11, קורא 3.11 סעיף 12: כמו במקור, בלי תלות ב-DP של התוכנית שנקטעה. ‏Cave Hunter רץ עם DP=$04 ומחכה ש-$008D יירד)
+		ldd	>PLYTMR
 		beq	5F
-		subd	PSTEP
+		subd	>PSTEP
 		bls	6F
-		std	PLYTMR
+		std	>PLYTMR
 		rti
 ; התו נגמר (קורא 9.1): חוזרים ישר למי שקרא לתו. U השמור במסגרת מצביע על כתובת החזרה; ה-CC מהמסגרת,
 ; בלי ביט 7, כך ש-RTI מחזיר רק CC ו-PC (והפסיקות פתוחות)
 6		clra
 		clrb
-		std	PLYTMR
+		std	>PLYTMR
 		lda	,s
 		anda	#$7f
 		lds	8,s
 		pshs	a
 		rti
-5		ldx	SNDTMR
+5		ldx	>SNDTMR
 		beq	9F
 		leax	-1,x
-		stx	SNDTMR
+		stx	>SNDTMR
 9		rti
 
 		org	$bff2

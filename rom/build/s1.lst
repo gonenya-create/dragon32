@@ -220,8 +220,8 @@ FFC0                  SAM             equ     $ffc0
 8190 A2D1                             fdb     set_st          ; $9E SET
 8192 A2F2                             fdb     reset_st                ; $9F RESET
 8194 9ED5                             fdb     cls_st          ; $A0 CLS
-8196 BAB6                             fdb     motor_st        ; $A1 MOTOR
-8198 B413                             fdb     sound_st        ; $A2 SOUND
+8196 BAF4                             fdb     motor_st        ; $A1 MOTOR
+8198 BADF                             fdb     sound_st        ; $A2 SOUND
 819A 83CE                             fdb     audio_st        ; $A3 AUDIO
 819C 9B22                             fdb     exec            ; $A4 EXEC
 819E 9F68                             fdb     skipf_st        ; $A5 SKIPF
@@ -892,7 +892,7 @@ FFC0                  SAM             equ     $ffc0
 8705 10B303FA                         cmpd    LEND
 8709 2223                             bhi     9F
 870B BD017F                           jsr     HK_LBRK         ; 12
-870E 1733F9                           lbsr    istape          ; בין השורות: BREAK (לא לקלטת; קורא: מדפסת 1.8)
+870E 1733F6                           lbsr    istape          ; בין השורות: BREAK (לא לקלטת; קורא: מדפסת 1.8)
 8711 2703                             beq     1F
 8713 171250                           lbsr    brkchk
 8716 17FD37           1               lbsr    condcr          ; כל שורה מתחילה בסוף שורה מותנה (קורא: מדפסת 1.8)
@@ -906,7 +906,7 @@ FFC0                  SAM             equ     $ffc0
 8729 10AEA4                           ldy     ,y
 872C 20D1                             bra     3B
 872E 17FD1F           9               lbsr    condcr          ; והאחרונה נגמרת בסוף שורה מותנה
-8731 1733D6                           lbsr    istape
+8731 1733D3                           lbsr    istape
 8734 2706                             beq     8F              ; קלטת (CSAVE ,A): חזרה למי שקרא
 8736 1735C6                           lbsr    clsone          ; LIST / LLIST: סוגרים, ו-OK
 8739 16FCD0                           lbra    main_ok
@@ -1825,7 +1825,7 @@ A230                  fone            equ     expcon+36               ; 1: המ�
 8DB7 8E8953           fout4           ldx     #nz9999
 8DBA 8DAB                             bsr     fcomp
 8DBC 2E0E                             bgt     fout9           ; גדול מהגבול העליון: חלקי 10 (ב-Dragon שוויון לא נחשב, קורא)
-8DBE 8EBABE           fout3           ldx     #nz0999
+8DBE 8E9916           fout3           ldx     #nz0999
 8DC1 8DA4                             bsr     fcomp
 8DC3 2E0E                             bgt     fout5
 8DC5 17FF25                           lbsr    mul10
@@ -2153,8 +2153,8 @@ A230                  fone            equ     expcon+36               ; 1: המ�
 9001 27F9             prlist          beq     pr_cr
 9003 8123                             cmpa    #'#             ; PRINT #התקן[,רשימה] (קורא: קלטת 3.10)
 9005 260A                             bne     1F
-9007 172ACE                           lbsr    getdev
-900A 172B01                           lbsr    chkout
+9007 172409                           lbsr    getdev
+900A 172AFE                           lbsr    chkout
 900D 8DE2                             bsr     prsep
 900F 27EB                             beq     pr_cr
 9011                  1
@@ -2190,13 +2190,13 @@ A230                  fone            equ     expcon+36               ; 1: המ�
 9056 17FD32           3               lbsr    fout
 9059 8E03DA                           ldx     #FBUFFR
 905C 172E36                           lbsr    puts
-905F 172AA8                           lbsr    istape          ; לקלטת: בלי רווח אחרי מספר
+905F 172AA5                           lbsr    istape          ; לקלטת: בלי רווח אחרי מספר
 9062 2708                             beq     4F
 9064 9DA5                             jsr     <chrgot         ; ולפני פסיק גם לא (קורא: מדפסת 1.7)
 9066 812C                             cmpa    #',
 9068 2702                             beq     4F
 906A 8D8D                             bsr     prspc           ; רווח אחרי מספר
-906C 172A9B           4               lbsr    istape          ; לקלטת: CR אחרי כל פריט, וזה גם הסוף
+906C 172A98           4               lbsr    istape          ; לקלטת: CR אחרי כל פריט, וזה גם הסוף
 906F 2607                             bne     5F
 9071 8D89                             bsr     pr_cr
 9073 9DA5                             jsr     <chrgot
@@ -2207,7 +2207,7 @@ A230                  fone            equ     expcon+36               ; 1: המ�
 907C 20BA                             bra     pr_lp
                       ; פסיק (קורא: מדפסת 1.7, 7.2): לפני השדה האחרון, רווחים עד הכפולה הבאה של רוחב השדה; אחרת סוף שורה.
                       ; מסך 16/16/32, מדפסת 16/116/132. לקלטת: כלום
-907E 172A89           pr_comma        lbsr    istape
+907E 172A86           pr_comma        lbsr    istape
 9081 2719                             beq     pr_semi
 9083 172AEE                           lbsr    devpar
 9086 DC6B                             ldd     DEVLCF          ; A = השדה האחרון, B = המקום
@@ -3419,7 +3419,8 @@ A230                  fone            equ     expcon+36               ; 1: המ�
 990E 17F945                           lbsr    frmevl
 9911 17F589                           lbsr    chkrp
 9914 200A                             bra     isl_991b_e      ;@isl
-9916 FFFFFFFFFF                       fill    $ff,$991b-*     ;@isl
+9916 9B3EBC1FFD       nz0999          fcb     $9b,$3e,$bc,$1f,$fd     ; 99999999.9499 (mit: NZ0999). 3.11: עבר לכאן, לרווח שלפני $991B       ;@isl
+991B                                  fill    $ff,$991b-*     ;@isl
                       ; ‏$991B (קורא 2.11): CSAVEM אחרי הארגומנטים. ההתחלה ב-S+4, הסוף ב-S+2, ‏S+0 לא נקרא; השם ($01D2) והכתובות
                       ; שבכותרת ($01E5, ‏$01E7) כבר במקום. הסוג 2, בלי ASCII ובלי רווחים; חוזרים דרך המילה שב-S+6
 991B 3262                             leas    2,s     ;@isl
@@ -3513,8 +3514,8 @@ A230                  fone            equ     expcon+36               ; 1: המ�
 99CC 9DA5             prompt          jsr     <chrgot
 99CE 8123                             cmpa    #'#             ; INPUT #התקן, (קורא: קלטת 3.11)
 99D0 2609                             bne     1F
-99D2 172103                           lbsr    getdev
-99D5 17213D                           lbsr    chkin
+99D2 171A3E                           lbsr    getdev
+99D5 17213A                           lbsr    chkin
 99D8 17F4C5                           lbsr    chkcom
 99DB 8122             1               cmpa    #'"
 99DD 2613                             bne     9F
@@ -3962,9 +3963,9 @@ A230                  fone            equ     expcon+36               ; 1: המ�
 9D35 26FB                             bne     3B
 9D37 2010                             bra     isl_9d3d_e      ;@isl
 9D39 FFFFFFFF                         fill    $ff,$9d3d-*     ;@isl
-9D3D 7EBFBC                           jmp     irq     ;@isl
+9D3D 7EBFB7                           jmp     irq     ;@isl
 9D40 FFFFFFFFFFFF                     fill    $ff,$9d46-*     ;@isl
-9D46 7EBFC4                           jmp     irqtk   ;@isl
+9D46 7EBFBF                           jmp     irqtk   ;@isl
 9D49                  isl_9d3d_e      ;@isl
 9D49 16F782           4               lbra    putnew
                       
@@ -3974,8 +3975,8 @@ A230                  fone            equ     expcon+36               ; 1: המ�
 9D4C 17F66F           fn_pos          lbsr    chknum
 9D4F 966F                             lda     DEVNUM
 9D51 3402                             pshs    a
-9D53 171D8B                           lbsr    devfac
-9D56 171DB5                           lbsr    chkout
+9D53 1716C6                           lbsr    devfac
+9D56 171DB2                           lbsr    chkout
 9D59 171E18                           lbsr    devpar
 9D5C 3502                             puls    a
 9D5E 976F                             sta     DEVNUM
@@ -5506,7 +5507,7 @@ A8E6 2F07                             ble     3F
 A8E8 17E41B                           lbsr    div10
 A8EB 0CDD                             inc     USE
 A8ED 20F1                             bra     2B
-A8EF 8EBABE           3               ldx     #nz0999 ; עד התחתון (כולל): כפול 10
+A8EF 8E9916           3               ldx     #nz0999 ; עד התחתון (כולל): כפול 10
 A8F2 17E472                           lbsr    fcomp
 A8F5 2E07                             bgt     9F
 A8F7 17E3F3                           lbsr    mul10
@@ -7118,43 +7119,39 @@ B410 275F                             beq     pfc
 B412 39                               rts
                       
                       ; ---------- SOUND טון,משך (קורא 1) ----------
-B413 8DF7             sound_st        bsr     evnzb
-B415 D78C                             stb     SNDFRQ          ; נשמר מיד, גם אם המשך שגוי
-B417 17DA86                           lbsr    chkcom
-B41A 8DF0                             bsr     evnzb
-                      ; sound2: כניסה שנייה (קורא 1.6): B = המשך, הטון כבר ב-$8C
-                      ; @nofill: לולאות מתוזמנות, לפי מחזורים. tools/islands.py לא מכניס כאן גושים
-B41C 4F               sound2          clra
-B41D 58                               lslb                    ; 4 שדות לכל יחידה
-B41E 49                               rola
-B41F 58                               lslb
-B420 49                               rola
-B421 DD8D                             std     SNDTMR
-B423 B6FF03           snddur          lda     PIA0+3          ; פסיקת השדה פתוחה ($BAA5 נכנס כאן, כשהמשך כבר ב-$8D/$8E)
-B426 8A01                             ora     #1
-B428 B7FF03                           sta     PIA0+3
-B42B 4F                               clra                    ; DAC
-B42C 8DBA                             bsr     sndsel
-B42E 8DCC                             bsr     sndon
-                      ; הגל: מרכז, למעלה, מרכז, למטה. בין כתיבה לכתיבה 23+5N מחזורים (N = 256 פחות הטון), ואחרי הכתיבה
-                      ; התחתונה 31+5N, כולל בדיקת הזמן. סך הכול 100+20N (קורא 1.3)
-B430 867C             1               lda     #$7c
-B432 8D11                             bsr     sseg
-B434 86FC                             lda     #$fc
-B436 8D0D                             bsr     sseg
-B438 867C                             lda     #$7c
-B43A 8D09                             bsr     sseg
-B43C 4F                               clra
-B43D 8D06                             bsr     sseg
-B43F DC8D                             ldd     SNDTMR
-B441 26ED                             bne     1B
-B443 20BE                             bra     sndoff          ; הבוררים נשארים על DAC, ו-$FF20 על 0
-B445 B7FF20           sseg            sta     PIA1
-B448 D68C                             ldb     SNDFRQ
-B44A 5C               1               incb
-B44B 26FD                             bne     1B
-B44D 39                               rts
-B44E FF                               fill    $ff,$b44f-*     ;@isl
+                      ; (SOUND, ‏sound2, ‏snddur ו-sseg עברו ב-3.11 לכתובות של המקור, $BAA0-$BADE, ב-mitfile.s)
+                      ; ---------- מספר התקן (4.1) ---------- (עבר לכאן מ-mitfile.s ב-3.11, כדי לפנות את $BAA0-$BAF3)
+                      ; getdev: [#]ביטוי → DEVNUM. בין -32768 ל-32767 (אחרת ?FC), אחר כך בין -128 ל-127 (אחרת ?DN); נשמר,
+                      ; ורק 0, -1, -2 מותרים (אחרת ?DN; השגיאה מאפסת את DEVNUM)
+B413 8123             getdev          cmpa    #'#
+B415 2602                             bne     1F
+B417 9D9F                             jsr     <chrget
+B419 17DE3A           1               lbsr    frmevl
+B41C 17D8F5           devfac          lbsr    ayint
+B41F D653                             ldb     FACLO
+B421 1D                               sex
+B422 9152                             cmpa    FACMO
+B424 2616                             bne     8F
+B426 D76F                             stb     DEVNUM
+B428 5D                               tstb                    ; 2: B עם הדגלים שלו; Z=1 בחזרה = מקובל (גם התקן של הרחבה)
+B429 BD0161                           jsr     HK_DEVN
+B42C 2706                             beq     1F
+B42E 2A0C                             bpl     8F              ; חיובי: ?DN
+B430 C1FE                             cmpb    #$fe            ; ‏$FE או $FF; מתחת ל-2-: ?DN
+B432 2508                             blo     8F
+B434 4F               1               clra                    ; הדגל של הקלטת: $FF רק כש-B = $FF (אז C=0)
+B435 C1FF                             cmpb    #$ff
+B437 89FF                             adca    #$ff
+B439 976E                             sta     SPCIO
+B43B 39               9               rts
+B43C 16D4F6           8               lbra    err_dn
+                      ; csv2b: ההמשך של CSAVEM ($991B): הכותרת, מבוא, ואז מההתחלה עד הסוף, כולל הסוף (עבר לכאן מ-mitfile.s ב-3.11)
+B43F 1704E2           csv2b           lbsr    wrhdr
+B442 BDB7AC                           jsr     tleader
+B445 3516                             puls    d,x             ; D = הסוף, X = ההתחלה
+B447 C30001                           addd    #1              ; כולל הסוף
+B44A 16050F                           lbra    wdata
+B44D FFFF                             fill    $ff,$b44f-*     ;@isl
 B44F 12               warm            nop     ;@isl
 B450 4F                               clra    ;@isl
 B451 5F                               clrb    ;@isl
@@ -8033,85 +8030,87 @@ BA93 FD01E5                           std     HEXEC
 BA96 17CDD4                           lbsr    nochr
 BA99 8602             csv2            lda     #2              ; ‏$991B נכנס כאן (בלי השורה של ה-pshs: הכתובות כבר במחסנית)
 BA9B 5F                               clrb
-BA9C 200A                             bra     isl_baa0_e      ;@isl
-BA9E FFFF                             fill    $ff,$baa0-*     ;@isl
-BAA0 7EB41C                           jmp     sound2  ;@isl
-BAA3 FFFF                             fill    $ff,$baa5-*     ;@isl
-BAA5 7EB423                           jmp     snddur  ;@isl
-BAA8                  isl_baa0_e      ;@isl
-BAA8 17FE79                           lbsr    wrhdr
-BAAB BDB7AC                           jsr     tleader
-BAAE 3516                             puls    d,x             ; D = הסוף, X = ההתחלה
-BAB0 C30001                           addd    #1              ; כולל הסוף
-BAB3 16FEA6                           lbra    wdata
-                      
-                      ; ---------- SKIPF (3.7) ----------
+BA9C 16F9A0                           lbra    csv2b           ; (3.11: ההמשך עבר ל-mitsnd.s, כדי שהצליל יחזור ל-$BAA0)
+BA9F FF                               fill    $ff,$baa0-*     ;@isl
+                      ; ---------- הצליל, בכתובות של המקור (3.11) ----------
+                      ; ‏$BAA0 (קורא 2.7): ‏SOUND מאוגרים: B = המשך, הטון כבר ב-$8C. ‏SNDTMR = 4B שדות
+BAA0 8604             sound2          lda     #4      ;@isl
+BAA2 3D                               mul     ;@isl
+BAA3 DD8D                             std     SNDTMR  ;@isl
+                      ; ‏$BAA5 (קורא 2.11): הצליל כשהמשך כבר ב-$8D/$8E. פסיקת השדה פתוחה, ה-DAC (דרך $BAF1), הצליל דולק, ואז הגל: מרכז,
+                      ; למעלה, מרכז, למטה. בין כתיבה לכתיבה 23+5N מחזורים (N = 256 פחות הטון), ואחרי הכתיבה התחתונה 31+5N (קורא 1.3)
+BAA5 B6FF03           snddur          lda     PIA0+3  ;@isl
+BAA8 8A01                             ora     #1      ;@isl
+BAAA B7FF03                           sta     PIA0+3  ;@isl
+BAAD 5F                               clrb    ;@isl
+BAAE 8D41                             bsr     isl_baf1        ;@isl
+BAB0 8D13                             bsr     isl_bac5        ;@isl
+BAB2 8D20             isl_bab4        bsr     isl_bad4        ;@isl
+BAB4 86FC                             lda     #$fc    ;@isl
+BAB6 8D1E                             bsr     isl_bad6        ;@isl
+BAB8 8D1A                             bsr     isl_bad4        ;@isl
+BABA 4F                               clra    ;@isl
+BABB 8D19                             bsr     isl_bad6        ;@isl
+BABD DC8D                             ldd     SNDTMR  ;@isl
+BABF 26F1                             bne     isl_bab4        ;@isl
+BAC1 2005                             bra     isl_bac8        ;@isl
+BAC3                                  fill    $ff,$bac3-*     ;@isl
+                      ; ‏$BAC3 הצליל כבוי. ‏$BAC5 דולק (קורא 2.7)
+BAC3 2003                             bra     isl_bac8        ;@isl
+BAC5 7EB3FC           isl_bac5        jmp     sndon   ;@isl
+BAC8 7EB403           isl_bac8        jmp     sndoff  ;@isl
+                      ; dlyx ($BBC8): X סיבובים של 8 מחזורים, ו-X חוזר 0 (עבר לכאן מסוף ה-ROM ב-3.11)
+BACB 301F             dlyx            leax    -1,x
+BACD 26FC                             bne     dlyx
+BACF 39                               rts
+BAD0 FFFFFFFF                         fill    $ff,$bad4-*     ;@isl
+                      ; ‏$BAD4 (קורא 3.11): ה-DAC במרכז (124), ונופלים ל-$BAD6: ‏A ל-$FF20, ואז השהיה: הטון מ-DP:$8C עולה עד 256.
+                      ; בסוף A = 0 ו-Z=1, והשאר נשמר. ‏Cave Hunter (מחסנית, DP=$04) מנגן כך את הצלילים שלו
+BAD4 867C             isl_bad4        lda     #$7c    ;@isl
+BAD6 B7FF20           isl_bad6        sta     PIA1    ;@isl
+BAD9 968C                             lda     <SNDFRQ ;@isl
+BADB 4C               isl_badb        inca    ;@isl
+BADC 26FD                             bne     isl_badb        ;@isl
+BADE 39                               rts     ;@isl
+                      ; SOUND (3.13): הטון ואז המשך, כל אחד 1-255 (עבר לכאן מ-mitsnd.s ב-3.11, ליד $BAA0)
+BADF 17F92A           sound_st        lbsr    evnzb
+BAE2 D78C                             stb     SNDFRQ          ; נשמר מיד, גם אם המשך שגוי
+BAE4 17D3B9                           lbsr    chkcom
+BAE7 17F922                           lbsr    evnzb
+BAEA 20B4                             bra     sound2
+BAEC                                  fill    $ff,$baec-*     ;@isl
+BAEC 7E9F4E                           jmp     x_audon ;@isl
+BAEF FFFF                             fill    $ff,$baf1-*     ;@isl
+                      ; ‏$BAF1 (קורא 3.11): מקור הצליל מ-B (ביט 0 ל-$FF01, ביט 1 ל-$FF03; B=4: ה-DAC). ‏Cave Hunter קורא לה
+BAF1 7E9F54           isl_baf1        jmp     x_mux   ;@isl
                       
                       ; ---------- MOTOR ON / OFF (3.8) ----------
-BAB6 1F89             motor_st        tfr     a,b             ; chrget לא נוגע ב-B
-BAB8 9D9F                             jsr     <chrget
-BABA C1C2                             cmpb    #$c2            ; OFF
-BABC 200D                             bra     isl_bac3_e      ;@isl
-BABE 9B3EBC1FFD       nz0999          fcb     $9b,$3e,$bc,$1f,$fd     ;@isl 99999999.9499 (mit: NZ0999; עבר לכאן מ-mitfp.s, 2.11)
-BAC3                                  fill    $ff,$bac3-*     ;@isl
-BAC3 2003                             bra     isl_bac8        ;@isl
-BAC5 7EB3FC                           jmp     sndon   ;@isl
-BAC8 7EB403           isl_bac8        jmp     sndoff  ;@isl
-BACB                  isl_bac3_e      ;@isl
-BACB 1027FBC6                         lbeq    motoff
-BACF C188                             cmpb    #$88            ; ON: המנוע והשהיה; הפסיקות לא נחסמות
-BAD1 1026CE27                         lbne    err_sn
-BAD5 7E885B                           jmp     tmoton
+BAF4 1F89             motor_st        tfr     a,b             ; chrget לא נוגע ב-B
+BAF6 9D9F                             jsr     <chrget
+BAF8 C1C2                             cmpb    #$c2            ; OFF
+BAFA 1027FB97                         lbeq    motoff
+BAFE C188                             cmpb    #$88            ; ON: המנוע והשהיה; הפסיקות לא נחסמות
+BB00 1026CDF8                         lbne    err_sn
+BB04 7E885B                           jmp     tmoton
                       
-                      ; ======================= צעד 3: ההתקנים וקובצי הטקסט =======================
-                      
-                      ; ---------- מספר התקן (4.1) ----------
-                      ; getdev: [#]ביטוי → DEVNUM. בין -32768 ל-32767 (אחרת ?FC), אחר כך בין -128 ל-127 (אחרת ?DN); נשמר,
-                      ; ורק 0, -1, -2 מותרים (אחרת ?DN; השגיאה מאפסת את DEVNUM)
-BAD8 8123             getdev          cmpa    #'#
-BADA 2602                             bne     1F
-BADC 9D9F                             jsr     <chrget
-BADE 17D775           1               lbsr    frmevl
-BAE1 17D230           devfac          lbsr    ayint
-BAE4 D653                             ldb     FACLO
-BAE6 1D                               sex
-BAE7 9152                             cmpa    FACMO
-BAE9 2004                             bra     isl_baec_e      ;@isl
-BAEB FF                               fill    $ff,$baec-*     ;@isl
-BAEC 7E9F4E                           jmp     x_audon ;@isl
-BAEF                  isl_baec_e      ;@isl
-BAEF 2616                             bne     8F
-BAF1 D76F                             stb     DEVNUM
-BAF3 5D                               tstb                    ; 2: B עם הדגלים שלו; Z=1 בחזרה = מקובל (גם התקן של הרחבה)
-BAF4 BD0161                           jsr     HK_DEVN
-BAF7 2706                             beq     1F
-BAF9 2A0C                             bpl     8F              ; חיובי: ?DN
-BAFB C1FE                             cmpb    #$fe            ; ‏$FE או $FF; מתחת ל-2-: ?DN
-BAFD 2508                             blo     8F
-BAFF 4F               1               clra                    ; הדגל של הקלטת: $FF רק כש-B = $FF (אז C=0)
-BB00 C1FF                             cmpb    #$ff
-BB02 89FF                             adca    #$ff
-BB04 976E                             sta     SPCIO
-BB06 39               9               rts
-BB07 16CE2B           8               lbra    err_dn
                       ; istape: Z=1 כשההתקן הוא הקלטת. A משתנה
-BB0A 966F             istape          lda     DEVNUM
-BB0C 4C                               inca
-BB0D 39                               rts
+BB07 966F             istape          lda     DEVNUM
+BB09 4C                               inca
+BB0A 39                               rts
                       ; chkout / chkin (4.2): הקלטת חייבת להיות פתוחה לכתיבה / לקריאה. סגורה: ?NO, בכיוון השני: ?FM.
                       ; קריאה מהמדפסת: ?FM
-BB0E BD0170           chkout          jsr     HK_CKOUT        ; 7
-BB11 C602                             ldb     #2
-BB13 200B                             bra     1F
-BB15 BD016D           chkin           jsr     HK_CKIN         ; 6
-BB18 966F                             lda     DEVNUM
-BB1A 81FE                             cmpa    #$fe
-BB1C 2722                             beq     8F
-BB1E C601                             ldb     #1
-BB20 8DE8             1               bsr     istape
-BB22 261B                             bne     9F
-BB24 200F                             bra     isl_bb26_e      ;@isl
-BB26                                  fill    $ff,$bb26-*     ;@isl
+BB0B BD0170           chkout          jsr     HK_CKOUT        ; 7
+BB0E C602                             ldb     #2
+BB10 200B                             bra     1F
+BB12 BD016D           chkin           jsr     HK_CKIN         ; 6
+BB15 966F                             lda     DEVNUM
+BB17 81FE                             cmpa    #$fe
+BB19 2725                             beq     8F
+BB1B C601                             ldb     #1
+BB1D 8DE8             1               bsr     istape
+BB1F 261E                             bne     9F
+BB21 2012                             bra     isl_bb26_e      ;@isl
+BB23 FFFFFF                           fill    $ff,$bb26-*     ;@isl
 BB26 813A                             cmpa    #':     ;@isl
 BB28 240A                             bhs     isl_bb26_9      ;@isl
 BB2A 8120                             cmpa    #$20    ;@isl
@@ -8135,7 +8134,7 @@ BB43 BD0167           chrout          jsr     HK_COUT         ; 4
 BB46 0D6F                             tst     DEVNUM
 BB48 102702F2                         lbeq    putc
 BB4C 3436                             pshs    a,b,x,y
-BB4E 8DBA                             bsr     istape
+BB4E 8DB7                             bsr     istape
 BB50 2706                             beq     0F
 BB52 A6E4                             lda     ,s              ; לא קלטת: המדפסת ($FE)
 BB54 8D54                             bsr     prtout
@@ -8205,7 +8204,7 @@ BBC0 919B                             cmpa    LPTWID
 BBC2 2007                             bra     isl_bbc5_e      ;@isl
 BBC4 FF                               fill    $ff,$bbc5-*     ;@isl
 BBC5 8E045E           isl_bbc5        ldx     #$045e  ;@isl
-BBC8 1603EC           isl_bbc8        lbra    dlyx    ;@isl
+BBC8 16FF00           isl_bbc8        lbra    dlyx    ;@isl
 BBCB                  isl_bbc5_e      ;@isl
 BBCB 2507                             blo     9F
 BBCD 7D0148                           tst     LPAUTO
@@ -8309,7 +8308,7 @@ BC7B 6F84             8               clr     ,x
 BC7D 1A01                             orcc    #1
 BC7F 39                               rts
                       ; devgetln: שורה מההתקן (INPUT, LINE INPUT): מקלדת, או קלטת (סוף הקובץ: ?IE)
-BC80 17FE87           devgetln        lbsr    istape
+BC80 17FE84           devgetln        lbsr    istape
 BC83 1026CB7A                         lbne    getline
 BC87 8DCD                             bsr     tgetln
 BC89 1025CCB4                         lbcs    err_ie
@@ -8324,7 +8323,7 @@ BC98 1027CC69                         lbeq    err_fc
 BC9C A684                             lda     ,x              ; רק התו הראשון
 BC9E 3402                             pshs    a
 BCA0 17D1FD                           lbsr    chkcom
-BCA3 17FE32                           lbsr    getdev
+BCA3 17F76D                           lbsr    getdev
 BCA6 17D1F7                           lbsr    chkcom
 BCA9 17CBBE                           lbsr    getfne
 BCAC 966F                             lda     DEVNUM
@@ -8358,7 +8357,7 @@ BCE2 16CC56           efmo            lbra    err_fm          ; ?FM קרוב (OP
                       
                       ; ---------- CLOSE [#התקן[,#התקן...]] (3.13) ----------
 BCE5 2711             close_st        beq     tclose          ; בלי כלום: הכול
-BCE7 17FDEE           1               lbsr    getdev
+BCE7 17F729           1               lbsr    getdev
 BCEA 8D13                             bsr     clsone
 BCEC 9DA5                             jsr     <chrgot
 BCEE 2738                             beq     9F              ; ה-rts של tclose
@@ -8400,10 +8399,10 @@ BD28 39               9               rts
 BD29 BD0188           fn_eof          jsr     HK_EOF          ; 15
 BD2C 966F                             lda     DEVNUM
 BD2E 3402                             pshs    a
-BD30 17FDAE                           lbsr    devfac          ; B = DEVNUM
+BD30 17F6E9                           lbsr    devfac          ; B = DEVNUM
 BD33 5D                               tstb
 BD34 270E                             beq     1F
-BD36 17FDDC                           lbsr    chkin
+BD36 17FDD9                           lbsr    chkin
 BD39 5F                               clrb
 BD3A 0D79                             tst     CBFCNT
 BD3C 2606                             bne     1F
@@ -8741,39 +8740,37 @@ BFB2 3510                             puls    x
 BFB4 9F68                             stx     CURLIN
 BFB6 39                               rts
                       
-                      ; dlyx ($BBC8): X סיבובים של 8 מחזורים, ו-X חוזר 0
-BFB7 301F             dlyx            leax    -1,x
-BFB9 26FC                             bne     dlyx
-BFBB 39                               rts
+                      ; (dlyx עבר ב-3.11 לרווח שלפני $BAD4, ב-mitfile.s, כדי לפנות מקום בסוף ה-ROM לפסיקה)
                       
                       ; פסיקת השדה (קורא: צליל 4, 9.5): רק כשהדגל ב-$FF03 דולק. TIMER, ואחריו התו של PLAY, ורק אם אין תו: SOUND
-BFBC B6FF03           irq             lda     PIA0+3
-BFBF 2A2C                             bpl     9F
-BFC1 B6FF02                           lda     PIA0+2
-BFC4 BE0112           irqtk           ldx     TICKS           ; ($9D46: כניסה אחרי האישור)
-BFC7 3001                             leax    1,x
-BFC9 BF0112                           stx     TICKS
-BFCC DCE3                             ldd     PLYTMR
-BFCE 2715                             beq     5F
-BFD0 93D5                             subd    PSTEP
-BFD2 2303                             bls     6F
-BFD4 DDE3                             std     PLYTMR
-BFD6 3B                               rti
+BFB7 B6FF03           irq             lda     PIA0+3
+BFBA 2A32                             bpl     9F
+BFBC B6FF02                           lda     PIA0+2
+BFBF BE0112           irqtk           ldx     TICKS           ; ($9D46: כניסה אחרי האישור)
+BFC2 3001                             leax    1,x
+BFC4 BF0112                           stx     TICKS
+                      ; (3.11, קורא 3.11 סעיף 12: כמו במקור, בלי תלות ב-DP של התוכנית שנקטעה. ‏Cave Hunter רץ עם DP=$04 ומחכה ש-$008D יירד)
+BFC7 FC00E3                           ldd     >PLYTMR
+BFCA 2718                             beq     5F
+BFCC B300D5                           subd    >PSTEP
+BFCF 2304                             bls     6F
+BFD1 FD00E3                           std     >PLYTMR
+BFD4 3B                               rti
                       ; התו נגמר (קורא 9.1): חוזרים ישר למי שקרא לתו. U השמור במסגרת מצביע על כתובת החזרה; ה-CC מהמסגרת,
                       ; בלי ביט 7, כך ש-RTI מחזיר רק CC ו-PC (והפסיקות פתוחות)
-BFD7 4F               6               clra
-BFD8 5F                               clrb
-BFD9 DDE3                             std     PLYTMR
-BFDB A6E4                             lda     ,s
-BFDD 847F                             anda    #$7f
-BFDF 10EE68                           lds     8,s
-BFE2 3402                             pshs    a
-BFE4 3B                               rti
-BFE5 9E8D             5               ldx     SNDTMR
-BFE7 2704                             beq     9F
+BFD5 4F               6               clra
+BFD6 5F                               clrb
+BFD7 FD00E3                           std     >PLYTMR
+BFDA A6E4                             lda     ,s
+BFDC 847F                             anda    #$7f
+BFDE 10EE68                           lds     8,s
+BFE1 3402                             pshs    a
+BFE3 3B                               rti
+BFE4 BE008D           5               ldx     >SNDTMR
+BFE7 2705                             beq     9F
 BFE9 301F                             leax    -1,x
-BFEB 9F8D                             stx     SNDTMR
-BFED 3B               9               rti
+BFEB BF008D                           stx     >SNDTMR
+BFEE 3B               9               rti
                       
 BFF2                                  org     $bff2
 BFF2 01000103010F010C                 fdb     $0100,$0103,$010f,$010c,$0106,$0109,$b3b4       ; SWI3 SWI2 FIRQ IRQ SWI NMI דרך ה-RAM (קורא 3.1)

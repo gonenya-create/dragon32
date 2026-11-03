@@ -41,42 +41,38 @@ evnzb		lbsr	evbyte
 		rts
 
 ; ---------- SOUND טון,משך (קורא 1) ----------
-sound_st	bsr	evnzb
-		stb	SNDFRQ		; נשמר מיד, גם אם המשך שגוי
-		lbsr	chkcom
-		bsr	evnzb
-; sound2: כניסה שנייה (קורא 1.6): B = המשך, הטון כבר ב-$8C
-; @nofill: לולאות מתוזמנות, לפי מחזורים. tools/islands.py לא מכניס כאן גושים
-sound2		clra
-		lslb			; 4 שדות לכל יחידה
-		rola
-		lslb
-		rola
-		std	SNDTMR
-snddur		lda	PIA0+3		; פסיקת השדה פתוחה ($BAA5 נכנס כאן, כשהמשך כבר ב-$8D/$8E)
-		ora	#1
-		sta	PIA0+3
-		clra			; DAC
-		bsr	sndsel
-		bsr	sndon
-; הגל: מרכז, למעלה, מרכז, למטה. בין כתיבה לכתיבה 23+5N מחזורים (N = 256 פחות הטון), ואחרי הכתיבה
-; התחתונה 31+5N, כולל בדיקת הזמן. סך הכול 100+20N (קורא 1.3)
-1		lda	#$7c
-		bsr	sseg
-		lda	#$fc
-		bsr	sseg
-		lda	#$7c
-		bsr	sseg
-		clra
-		bsr	sseg
-		ldd	SNDTMR
-		bne	1B
-		bra	sndoff		; הבוררים נשארים על DAC, ו-$FF20 על 0
-sseg		sta	PIA1
-		ldb	SNDFRQ
-1		incb
-		bne	1B
-		rts
+; (SOUND, ‏sound2, ‏snddur ו-sseg עברו ב-3.11 לכתובות של המקור, $BAA0-$BADE, ב-mitfile.s)
+; ---------- מספר התקן (4.1) ---------- (עבר לכאן מ-mitfile.s ב-3.11, כדי לפנות את $BAA0-$BAF3)
+; getdev: [#]ביטוי → DEVNUM. בין -32768 ל-32767 (אחרת ?FC), אחר כך בין -128 ל-127 (אחרת ?DN); נשמר,
+; ורק 0, -1, -2 מותרים (אחרת ?DN; השגיאה מאפסת את DEVNUM)
+getdev		cmpa	#'#
+		bne	1F
+		jsr	<chrget
+1		lbsr	frmevl
+devfac		lbsr	ayint
+		ldb	FACLO
+		sex
+		cmpa	FACMO
+		bne	8F
+		stb	DEVNUM
+		tstb			; 2: B עם הדגלים שלו; Z=1 בחזרה = מקובל (גם התקן של הרחבה)
+		jsr	HK_DEVN
+		beq	1F
+		bpl	8F		; חיובי: ?DN
+		cmpb	#$fe		; ‏$FE או $FF; מתחת ל-2-: ?DN
+		blo	8F
+1		clra			; הדגל של הקלטת: $FF רק כש-B = $FF (אז C=0)
+		cmpb	#$ff
+		adca	#$ff
+		sta	SPCIO
+9		rts
+8		lbra	err_dn
+; csv2b: ההמשך של CSAVEM ($991B): הכותרת, מבוא, ואז מההתחלה עד הסוף, כולל הסוף (עבר לכאן מ-mitfile.s ב-3.11)
+csv2b		lbsr	wrhdr
+		jsr	tleader
+		puls	d,x		; D = הסוף, X = ההתחלה
+		addd	#1		; כולל הסוף
+		lbra	wdata
 		fill	$ff,$b44f-*	;@isl
 warm		nop	;@isl
 		clra	;@isl
