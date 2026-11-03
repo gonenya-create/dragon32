@@ -126,7 +126,7 @@
     // Black Sanctum ו-Calixto Island של Ron Krebs (Mark Data Products, 1981; ל-Dragon: Dragon Data). הרשות שלו באתר של L. Curtis Boyle
     // (15.12.2000: "Please feel free"; "I modified all of our games to run on the Dragon Data version"). הקלטות של Dragon Data
     // מ-World of Dragon, כמו שהן (גונן אישר את ההורדה 3.11). CLOADM ואז EXEC. ה-ROM צריך את $B505, ‏$BA6B, ‏$B45C ו-$B5C6 (3.11).
-    // שמירת משחק עוד לא: היא צריכה גם את $B7C2 (בסבב הבא), ולכן "איך משחקים" אומר לא להקליד SAVE
+    // שמירה וטעינה של משחק (3.11, סבב 4): ‏$B7C2, ‏$B6A8 ו-$B87A. המשחק השמור נכנס ל"הקלטות שלי", ומשם נטען
     ['sanctum', 'Black Sanctum', 'Black Sanctum', 'm',
       ['Ron Krebs · Mark Data Products / Dragon Data, 1981', 'https://www.lcurtisboyle.com/nitros9/approvals/ron_krebs_approval.txt', null, null, 'love']],
     ['calixto', 'Calixto Island', 'Calixto Island', 'm',
@@ -243,34 +243,38 @@
   // [מקש] נהיה מקש מצויר. המקשים לפי התיעוד של המחבר, ונבדקו במכונה. במק: BREAK הוא Esc, ו-CLEAR הוא Home (fn+←).
   const HOWTO = {
     // שתי ההרפתקאות של Ron Krebs נבדקו במכונה (3.11): טעינה, EXEC, מסך הפתיחה, השאלה על משחק שמור, LOOK, GO, TAKE INVENTORY,
-    // HELP, ו-QUIT שחוזר ל-BASIC דרך $B45C. SAVE עוד לא (צריך את $B7C2)
+    // HELP, ו-QUIT שחוזר ל-BASIC דרך $B45C. ובסבב 4: SAVE GAME ל"הקלטות שלי", וטעינה עם Y באותו מקום (שני המשחקים)
     sanctum: {
       he: ['הטעינה לוקחת כדקה וחצי. כשמופיע OK מקלידים {EXEC} ו-[ENTER].',
-        'במסך הפתיחה לוחצים מקש. על {WANT TO PLAY A "SAVED" GAME?} לוחצים [N].',
+        'במסך הפתיחה לוחצים מקש. על {WANT TO PLAY A "SAVED" GAME?} לוחצים [N] (או [Y], כדי להמשיך משחק שמור).',
         'מתחילים בהרים, ליד בקתה, ושלג יורד. מעבר להם מנזר ישן, ובו כוחות של כישוף שחור. צריך למצוא אותם ולהשמיד אותם.',
         'כותבים פועל ושם עצם באנגלית ולוחצים [ENTER]. למשל {LOOK} (להסתכל), {OPEN DOOR} (לפתוח את הדלת), {TAKE LANTERN} (לקחת את הפנס). ארבע האותיות הראשונות מספיקות.',
         'הולכים עם {GO} וכיוון: {GO NORTH} (צפונה), {GO SOUTH}, {GO EAST}, {GO WEST}, {GO UP}, {GO DOWN}. {TAKE INVENTORY} מראה מה בידיים.',
-        'עוד אי אפשר לשמור משחק לקלטת: אל תקלידו {SAVE}, כי המחשב ייתקע. {QUIT} מסיים, ועל {HOW ABOUT ANOTHER (Y OR N)?} לוחצים [N] כדי לחזור ל-BASIC.'],
+        'שמירה: {SAVE GAME}. על {PRESS ENTER WHEN READY} לוחצים [ENTER], ועל {ENTER DATA FILE NAME:} כותבים שם ו-[ENTER]. המשחק נשמר ב"הקלטות שלי", ונגמר.',
+        'כדי להמשיך מאותו מקום: טוענים את המשחק שוב, ועל השאלה על משחק שמור לוחצים [Y], אחר כך [ENTER] ואותו שם. {QUIT} מסיים, ועל {HOW ABOUT ANOTHER (Y OR N)?} לוחצים [N] כדי לחזור ל-BASIC.'],
       en: ['Loading takes about a minute and a half. When OK appears, type EXEC and [ENTER].',
-        'On the title screen press a key. At WANT TO PLAY A "SAVED" GAME? press [N].',
+        'On the title screen press a key. At WANT TO PLAY A "SAVED" GAME? press [N] (or [Y] to carry on a saved game).',
         'You start in the mountains, by a cabin, with snow falling. Beyond them stands an old monastery, where the forces of black magic are at work. Find them and destroy them.',
         'Type a verb and a noun, then [ENTER]. For example LOOK, OPEN DOOR, TAKE LANTERN. The first four letters are enough.',
         'Move with GO and a direction: GO NORTH, GO SOUTH, GO EAST, GO WEST, GO UP, GO DOWN. TAKE INVENTORY shows what you carry.',
-        'Saving a game to tape does not work here yet: do not type SAVE, or the computer will freeze. QUIT ends the game, and at HOW ABOUT ANOTHER (Y OR N)? press [N] to go back to BASIC.']
+        'Saving: SAVE GAME. At PRESS ENTER WHEN READY press [ENTER], and at ENTER DATA FILE NAME: type a name and [ENTER]. The game is saved to My tapes, and ends.',
+        'To carry on from the same place: load the game again, and at the question about a saved game press [Y], then [ENTER] and the same name. QUIT ends the game, and at HOW ABOUT ANOTHER (Y OR N)? press [N] to go back to BASIC.']
     },
     calixto: {
       he: ['הטעינה לוקחת כדקה וחצי. כשמופיע OK מקלידים {EXEC} ו-[ENTER].',
-        'במסך הפתיחה לוחצים מקש. על {WANT TO PLAY A \'SAVED\' GAME?} לוחצים [N].',
+        'במסך הפתיחה לוחצים מקש. על {WANT TO PLAY A \'SAVED\' GAME?} לוחצים [N] (או [Y], כדי להמשיך משחק שמור).',
         'מתחילים בחדר העבודה של פרופסור Lagarto. משם מגיעים לאי טרופי ולפירמידה של המאיה. צריך למצוא אוצר ולהחזיר אותו למקום שלו.',
         'כותבים פועל ושם עצם באנגלית ולוחצים [ENTER]. למשל {LOOK} (להסתכל), {OPEN DESK} (לפתוח את השולחן), {READ MESSAGE} (לקרוא את הפתק). ארבע האותיות הראשונות מספיקות.',
         'הולכים עם {GO} וכיוון: {GO NORTH} (צפונה), {GO SOUTH}, {GO EAST}, {GO WEST}, {GO UP}, {GO DOWN}. {TAKE INVENTORY} מראה מה בידיים, ו-{SCORE} את הניקוד.',
-        'עוד אי אפשר לשמור משחק לקלטת: אל תקלידו {SAVE}, כי המחשב ייתקע. {QUIT} מסיים, ועל {HOW ABOUT ANOTHER (Y OR N)?} לוחצים [N] כדי לחזור ל-BASIC.'],
+        'שמירה: {SAVE GAME}. על {PRESS ENTER WHEN READY} לוחצים [ENTER], ועל {ENTER DATA FILE NAME:} כותבים שם ו-[ENTER]. המשחק נשמר ב"הקלטות שלי", ונגמר.',
+        'כדי להמשיך מאותו מקום: טוענים את המשחק שוב, ועל השאלה על משחק שמור לוחצים [Y], אחר כך [ENTER] ואותו שם. {QUIT} מסיים, ועל {HOW ABOUT ANOTHER (Y OR N)?} לוחצים [N] כדי לחזור ל-BASIC.'],
       en: ['Loading takes about a minute and a half. When OK appears, type EXEC and [ENTER].',
-        'On the title screen press a key. At WANT TO PLAY A \'SAVED\' GAME? press [N].',
+        'On the title screen press a key. At WANT TO PLAY A \'SAVED\' GAME? press [N] (or [Y] to carry on a saved game).',
         'You start in Professor Lagarto\'s study. From there you reach a tropical island and a Mayan pyramid. Find a treasure and return it to its proper place.',
         'Type a verb and a noun, then [ENTER]. For example LOOK, OPEN DESK, READ MESSAGE. The first four letters are enough.',
         'Move with GO and a direction: GO NORTH, GO SOUTH, GO EAST, GO WEST, GO UP, GO DOWN. TAKE INVENTORY shows what you carry, and SCORE shows your score.',
-        'Saving a game to tape does not work here yet: do not type SAVE, or the computer will freeze. QUIT ends the game, and at HOW ABOUT ANOTHER (Y OR N)? press [N] to go back to BASIC.']
+        'Saving: SAVE GAME. At PRESS ENTER WHEN READY press [ENTER], and at ENTER DATA FILE NAME: type a name and [ENTER]. The game is saved to My tapes, and ends.',
+        'To carry on from the same place: load the game again, and at the question about a saved game press [Y], then [ENTER] and the same name. QUIT ends the game, and at HOW ABOUT ANOTHER (Y OR N)? press [N] to go back to BASIC.']
     },
     eggs: {
       he: ['מתחילים ב[רווח], או בכפתור של ג\'ויסטיק ימני.',
