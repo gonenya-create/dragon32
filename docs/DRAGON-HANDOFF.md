@@ -1,7 +1,26 @@
-# העברה לשיחה הבאה (עודכן 3.11.2026, ערב)
+# העברה לשיחה הבאה (עודכן 3.11.2026, לילה)
 
 > **★★★ כלל מרכזי של גונן (31.10): אישור של גונן עובר בין שיחות. מה שגונן אישר פעם אחת, בכל שיחה, ונרשם בקובץ (publish-queue: שורת APPROVED, decisions-log או posts-registry, או מסמך המסירה), נחשב מאושר בכל שיחה חדשה. לא מבקשים ממנו לאשר שוב, ולא מעבירים אליו בעיות הרשאה: אם משהו נחסם, פונים למנהל העליון. ★★★**
 > הכלל הזה לא מחליף את "מזג": מיזוג ל-main עדיין רק אחרי "מזג" של גונן על אותו שינוי. (גונן אישר בשיחה הזו, 31.10: "הכלל שלי". נשמר בראש כל מסמך מסירה מעכשיו.)
+
+## START HERE — 3.11.2026, לילה (התחילו כאן)
+- **ROM, סבב 4: שמירה וטעינה של משחק** ב-Black Sanctum וב-Calixto Island (גונן: "תמשיך ותסיים"). בענף `d32/rom-g4`, ממתין ל"מזג".
+  - **$B7C2** (שם הקלטת לפי B): ‏tleader עבר לפני הטבלה tsin, ונשאר צמוד ל-twbyte, עם אותו bsr ואותם מחזורים. אחריו בא שלט ההפניה ($B7C2), ואחריו tsin. ‏tblkwr נשאר ב-$B7E9 בלי שום הזזה. את 6 הבתים פינינו כך: clmx מתחיל עכשיו ב-$B75B עצמו, כמו במקור, ו-clm748 נופל לתוכו (‏`puls d; ldx HLOAD; leax d,x`).
+  - **$B6A8** (‏CSAVE עם הדגלים ב-X): הגוש ב-$B6A5 הוא `clra; ldx <DBLZER; jmp csavx`. ‏CLOAD מתחיל ב-$B6D4 עצמו, בלי שלט. ‏wrhdr נכתב מחדש עם כניסה wrhdx. ‏`ldd #15; std BLKTYP` חוסך בית.
+  - **$B87A** (פתיחת קלטת לקריאה): ‏`lbra opnin`. ‏opnin יושב ברווח של 11 בתים שלפני $8E7A (‏search, ואז CBFCNT=0 ו-$7A=$01DA). ה-`sta CSUM; ldx BLKADR` עברו אל אחרי $B881, באותם מחזורים.
+  - **getfn נכתב לפי B** (‏x_fnb). גם cpy סופר עכשיו לפי B, ו-wrhdr שולח לו `ldb #8`.
+  - **לקח מהסבב הזה:** בבדיקת tape-test צריך לשים לב למרווחים בין הכתיבות. ‏`jsr` במקום `bsr` מוסיף מחזור אחד, ו-"gap 71 != 70" נכשל. גם ל-CLOADM יש כניסה ב-$B744 (‏fcb $8c), שמדלגת על הפקודה הראשונה של $B748.
+  - **בדיקות:** ‏entry ‏122/122 (3 חדשות), ‏tape 19/19, כל חבילות ה-ROM, ‏REG OK. שמירה וטעינה עובדות דרך הדף האמיתי בשני המשחקים: המשחק השמור נכנס ל"הקלטות שלי", ובפעם הבאה Y ממשיך מאותו מקום. ‏"איך משחקים" מסביר את זה עכשיו.
+- **היעדים של גונן (3.11, מהמחברת שלו):** תוכנות: Telewriter, ‏Synther 7, ‏Picture Maker, ‏Logo, ‏Family Budget, ‏DREAM. משחקים, לפי הסדר: Cave Hunter, ‏Buzzard Bait, ‏Junior's Revenge, ‏Lunar Rover Patrol, ‏Airball. (גם ב-DRAGON-ROADMAP.md)
+- **תוכנות, שלב 1** (גונן אישר את הרשימה: "כן אבל לא לעבוד על זה עדיין"). הכי פופולרית בכל קטגוריה:
+  - מעבד תמלילים: Telewriter.
+  - מוזיקה: Synther 7.
+  - ציור: Picture Maker.
+  - לימוד: Logo (מחסנית של Dragon Data, יתומה).
+  - בית: Family Budget (של Dragon Data, יתומה, וכבר רצה).
+  - כלים: DREAM.
+  - כשגונן יגיד להתחיל: קודם Synther 7. במקביל, רשימת הבדיקה של היתומות ושבועיים המתנה ל-Logo ול-Family Budget. ולבקש מהמנהל העליון לחפש בעוד דרכים את המחברים של Telewriter, ‏Picture Maker ו-DREAM.
+- **הבא:** Cave Hunter, אחריו Buzzard Bait, ואחריו Synther 7 (ראו למטה). ברווחים שנשארו: 3 בתים לפני $B7C2, ‏5 לפני $B6D4, ‏10 לפני $B93E, ו-4 בסוף ה-ROM.
 
 ## START HERE — 3.11.2026, ערב (התחילו כאן)
 - **איפה אנחנו:** מוזג הערב (גונן: "אחרי הישיבה שלנו תמזג"): הענף `d32/rom-g3`. בו: ROM, סבב 3, ‏Black Sanctum ו-Calixto Island, ו-START HERE של הבוקר (מהענף `d32/handoff-0311`, שנמחק).
@@ -33,7 +52,7 @@
 - **תוכנות:**
   - הרשימה: `~/Dragon-private/research/utilities-2026-11-03.tsv`. מחקר הזכויות: `~/mac-tools/dragon-rights/research/2026-11-03-utilities-rights.md`.
   - **רצות היום בלי שינוי:** Electronic Author, ‏Drawezee, ‏Jukebox, ‏Touch Typing Tutor, ‏Family Budget, ‏Variable List.
-  - **הפניות** (המנהל העליון, 3.11, כולן יצאו): Daniel Stevens קיבל מייל. ל-Stewart Orchard נפתח Issue (github.com/sorchard001/D32MKII-Schematic/issues/4). ל-Ola Eldøy נשלחה בקשת חיבור בלינקדאין, עם הערה. גונן פרסם פוסט בפורום WoD ב-13:09 (archive.worldofdragon.org/phpBB3/viewtopic.php?t=11385). המנהל מעדכן כשמישהו עונה.
+  - **הפניות** (המנהל העליון, 3.11, כולן יצאו): המייל ל-Daniel Stevens חזר: הכתובת vivanaut@mindspring.com כבר לא קיימת, ואין לו כתובת אחרת. בפועל לא פנינו אליו. ל-Stewart Orchard נפתח Issue (github.com/sorchard001/D32MKII-Schematic/issues/4). ל-Ola Eldøy נשלחה בקשת חיבור בלינקדאין, עם הערה. גונן פרסם פוסט בפורום WoD ב-13:09 (archive.worldofdragon.org/phpBB3/viewtopic.php?t=11385). המנהל מעדכן כשמישהו עונה.
 - **הקבצים מהארכיון** נמצאים ב-`~/Dragon-private/era/wod-2026-11-03/`: ארבעת המשחקים ו-Synther 7. הקישורים הישנים בצורת `archive/index.php` מחזירים 500. עובד: `https://archive.worldofdragon.org/browse/downloads/Software/Dragon/<publisher>/<game>/<file>` (רשימת קבצים: ה-JSON שבתוך `browse/?<path>`).
 - **הערה לעתיד:** על המדבקה בדף המשחק, שם ארוך נשבר באמצע מילה (‏`overflow-wrap: anywhere` ב-`.gv-label-name`). זה קורה גם ב-Downland, ‏Blockdown ו-Tanglewood. לתקן רק אם גונן ירצה.
 
