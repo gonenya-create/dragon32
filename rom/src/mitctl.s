@@ -111,9 +111,8 @@ return		leax	2,s		; מעל: החזרה ל-gone
 
 ; ---------- DATA, RESTORE ----------
 ; data: עד סוף הפקודה, בלי לעצור על נקודתיים בתוך מרכאות (mit: DATA/DATAN)
-restore		ldx	TXTTAB		; mit: RESTOR — לפני התוכנית (בלי מספר שורה)
-		leax	-1,x
-		stx	DATPTR
+data		lbsr	stmend
+		stx	TXTPTR
 		rts
 
 ; ---------- DEF FN (mit: DEF, GETFNM, FNDOER) ----------
@@ -193,9 +192,10 @@ isl_991b_e	;@isl
 		puls	a
 		sta	4,u
 		rts
-; data (DATA): עבר לכאן ב-2.11, כדי לפנות מקום ל-$991B לפני הכניסה
-data		lbsr	stmend
-		stx	TXTPTR
+; restore (RESTORE): עבר לכאן ב-2.11, כדי לפנות מקום ל-$991B לפני הכניסה
+restore		ldx	TXTTAB		; mit: RESTOR — לפני התוכנית (בלי מספר שורה)
+		leax	-1,x
+		stx	DATPTR
 		rts
 
 ; brkchk: בין פקודות. BREAK עוצר; מקש אחר נשמר בשביל INKEY$. קודם בדיקה מהירה: אף מקש לא לחוץ
