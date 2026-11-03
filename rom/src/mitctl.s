@@ -114,10 +114,6 @@ return		leax	2,s		; מעל: החזרה ל-gone
 data		lbsr	stmend
 		stx	TXTPTR
 		rts
-restore		ldx	TXTTAB		; mit: RESTOR — לפני התוכנית (בלי מספר שורה)
-		leax	-1,x
-		stx	DATPTR
-		rts
 
 ; ---------- DEF FN (mit: DEF, GETFNM, FNDOER) ----------
 ; הפונקציה נשמרת כמשתנה ששמו עם ביט 7 בתו הראשון: [המקום בטקסט 2][הפרמטר 2][0]
@@ -161,6 +157,13 @@ fndoer		bsr	getfnm
 		lbsr	chklp
 		lbsr	frmevl
 		lbsr	chkrp
+		bra	isl_991b_e	;@isl
+		fill	$ff,$991b-*	;@isl
+; ‏$991B (קורא 2.11): CSAVEM אחרי הארגומנטים. ההתחלה ב-S+4, הסוף ב-S+2, ‏S+0 לא נקרא; השם ($01D2) והכתובות
+; שבכותרת ($01E5, ‏$01E7) כבר במקום. הסוג 2, בלי ASCII ובלי רווחים; חוזרים דרך המילה שב-S+6
+		leas	2,s	;@isl
+		jmp	csv2	;@isl
+isl_991b_e	;@isl
 		bsr	cchk
 		puls	x
 		ldd	,x
@@ -188,6 +191,11 @@ fndoer		bsr	getfnm
 		sty	2,u
 		puls	a
 		sta	4,u
+		rts
+; restore (RESTORE): עבר לכאן ב-2.11, כדי לפנות מקום ל-$991B לפני הכניסה
+restore		ldx	TXTTAB		; mit: RESTOR — לפני התוכנית (בלי מספר שורה)
+		leax	-1,x
+		stx	DATPTR
 		rts
 
 ; brkchk: בין פקודות. BREAK עוצר; מקש אחר נשמר בשביל INKEY$. קודם בדיקה מהירה: אף מקש לא לחוץ
@@ -379,8 +387,6 @@ m_qq		fcc	"?"		; "??" ו-"? "
 m_qs		fcc	"? "
 		fcb	0
 m_redo		fcc	"?REDO"
-		fcb	13,0
-m_extra		fcc	"?EXTRA IGNORED"
 		fcb	13,0
 ; getstk: יש מקום במחסנית ל-B בתים, ועוד רזרבה? אחרת ?OM (mit: GETSTK; הרזרבה 58 — קורא, משוחזר, פתוח)
 ; בודקים דרך reason (mitary.s): S-2 < STREND+B+58  ⇔  S-2 <= (STREND+B-5)+62

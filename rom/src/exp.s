@@ -692,6 +692,8 @@ scrtch		ldx	TXTTAB
 		bra	isl_85a5_e	;@isl
 		fill	$ff,$85a5-*	;@isl
 		jmp	run	;@isl
+; ‏$85A8 (קורא 2.11): RUN אחרי ה-hook שלו. בלי מספר שורה: כמו $841F, וחוזרים לכתובת שבמחסנית עם מחסנית חדשה
+		jmp	run85	;@isl
 isl_85a5_e	;@isl
 		clr	,x+
 		clr	,x+
@@ -1172,8 +1174,15 @@ gpatab		fcb	$ac,$0e		; PSET: מחיקה / הדלקה
 		fcb	$c0,$05		; NOT: היפוך / היפוך
 		fcb	0
 ; (מ-mitedit.s)
-m_ul		fcc	"UL "
-		fcb	0
+; (fn_sqr מ-mitmath.s, 2.11: כדי לפנות את $A08E-$A094 לכניסות של CLOADM)
+fn_sqr		lbsr	chknum
+		lbsr	movaf
+		ldx	#fhalf
+		lbsr	movfm
+		lbra	fpwrt
+; (מ-mitctl.s, 2.11: כדי לפנות מקום ל-$991B)
+m_extra		fcc	"?EXTRA IGNORED"
+		fcb	13,0
 
 ; ---------- שבעת המצביעים ב-$A000 (docs/DRAGON-SPEC-INTERFACES.md 3ב, DRAGON-SPEC-TAPE.md 1.10) ----------
 ; הקוד שלפני הטבלה חייב להיגמר לפני $A000 (אחרת האסמבלר נותן שגיאה). המקום שנשאר פנוי מתמלא ב-$FF

@@ -41,7 +41,7 @@ fone		equ	expcon+36		; 1: המקדם האחרון של expcon (mitconst.s), או
 tenzc		fcb	$84,$20,$00,$00,$00	; 10
 nzmil		fcb	$9e,$6e,$6b,$28,$00	; 10^9            (mit: NZMIL)
 nz9999		fcb	$9e,$6e,$6b,$27,$fd	; 999999999.499   (mit: NZ9999)
-nz0999		fcb	$9b,$3e,$bc,$1f,$fd	; 99999999.9499   (mit: NZ0999)
+; (nz0999 עבר ב-2.11 לחמשת הבתים הפנויים שלפני $BAC3, ב-mitfile.s, כדי לפנות מקום ל-$85A8)
 n32768		fcb	$90			; -32768
 fhalf		fcb	$80,$00,$00,$00,$00	; 0.5 (גם הסוף של -32768)
 foutbl		fdb	$05f5,$e100		; 10^8 ... 1
@@ -118,7 +118,7 @@ movaf		ldx	FACEXP		; דרך X: A ו-B נשמרים
 		rts
 
 ; ---------- חיבור וחיסור (mit: FADD 4944, FSUBT 4903) ----------
-faddh		leax	fhalf,pcr
+faddh		ldx	#fhalf
 fadd		bsr	conupk
 		bra	faddt
 fsub		bsr	conupk
@@ -183,7 +183,7 @@ fsubit		neg	FACOV		; סימנים שונים: הגדול פחות הקטן (0 פ
 		sbca	1,x
 		std	FACHO
 		rora			; C = יצא שלילי → ביט 7 של A
-		lbra	fltst
+		bra	fltst
 
 ; shiftr: מזיז את המנטיסה ב-1..4,X ימינה ב-B סיביות, דרך FACOV. ממלא מלמעלה בביט 7 של BITS
 ; (mit: SHIFTR/ROLSHF 5100)
@@ -298,9 +298,12 @@ mltply		bne	mltpl1
 9		rts
 mltpl1		lsra
 		ora	#$80		; סמן: הלולאה נגמרת כשהוא יוצא
-1		bcc	2F
-		pshs	a
-		bra	isl_8b2d_e	;@isl
+		bra	1F		; (2.11: הלולאה עברה אל אחרי $8B2D, כדי לפנות את $8B27)
+		fill	$ff,$8b27-*	;@isl
+; ‏$8B27 (קורא 2.11): FAC → מספר שלם לא שלילי ב-D. באמצע פקודה במקור; FAC שלילי: ?FC, ואחר כך כמו $8B2D
+		tst	<FACSGN	;@isl
+		bmi	isl_8b2d_fc	;@isl
+		fcb	$21,$00	;@isl (brn: נופלים ל-$8B2D)
 		fill	$ff,$8b2d-*	;@isl
 		lbsr	chknum	;@isl
 		lda	FACSGN	;@isl
@@ -311,9 +314,9 @@ mltpl1		lsra
 		blo	isl_8b2d_1	;@isl
 		lda	,s	;@isl
 		sta	FACSGN	;@isl
-		leax	n32768,pcr	;@isl
+		ldx	#n32768	;@isl
 		lbsr	fcomp	;@isl
-		lbne	err_fc	;@isl
+		bne	isl_8b2d_fc	;@isl
 		clr	FACSGN	;@isl
 isl_8b2d_1	lbsr	qint	;@isl
 		ldd	FACMO	;@isl
@@ -326,6 +329,8 @@ isl_8b2d_2	std	FACMO	;@isl
 		tstb	;@isl
 		rts	;@isl
 isl_8b2d_e	;@isl
+1		bcc	2F
+		pshs	a
 		ldd	RESMO
 		addd	ARGMO
 		std	RESMO
@@ -353,7 +358,7 @@ muldv2		tst	ARGEXP
 		bra	isl_8b8a_e	;@isl
 		fill	$ff,$8b8a-*	;@isl
 		jmp	err_bs	;@isl
-		jmp	err_fc	;@isl
+isl_8b2d_fc	jmp	err_fc	;@isl
 isl_8b8a_e	;@isl
 		subd	#128
 		ble	8F
