@@ -33,7 +33,7 @@
 - **תוכנות:**
   - הרשימה: `~/Dragon-private/research/utilities-2026-11-03.tsv`. מחקר הזכויות: `~/mac-tools/dragon-rights/research/2026-11-03-utilities-rights.md`.
   - **רצות היום בלי שינוי:** Electronic Author, ‏Drawezee, ‏Jukebox, ‏Touch Typing Tutor, ‏Family Budget, ‏Variable List.
-  - **הפניות** (המנהל העליון, 3.11): Daniel Stevens קיבל מייל. ל-Stewart Orchard נפתח Issue בגיטהאב. לגבי Ola Eldøy, המנהל שואל את גונן איך לפנות. את הפוסט ב-WoD גונן מפרסם בעצמו.
+  - **הפניות** (המנהל העליון, 3.11, כולן יצאו): Daniel Stevens קיבל מייל. ל-Stewart Orchard נפתח Issue (github.com/sorchard001/D32MKII-Schematic/issues/4). ל-Ola Eldøy נשלחה בקשת חיבור בלינקדאין, עם הערה. גונן פרסם פוסט בפורום WoD ב-13:09 (archive.worldofdragon.org/phpBB3/viewtopic.php?t=11385). המנהל מעדכן כשמישהו עונה.
 - **הקבצים מהארכיון** נמצאים ב-`~/Dragon-private/era/wod-2026-11-03/`: ארבעת המשחקים ו-Synther 7. הקישורים הישנים בצורת `archive/index.php` מחזירים 500. עובד: `https://archive.worldofdragon.org/browse/downloads/Software/Dragon/<publisher>/<game>/<file>` (רשימת קבצים: ה-JSON שבתוך `browse/?<path>`).
 - **הערה לעתיד:** על המדבקה בדף המשחק, שם ארוך נשבר באמצע מילה (‏`overflow-wrap: anywhere` ב-`.gv-label-name`). זה קורה גם ב-Downland, ‏Blockdown ו-Tanglewood. לתקן רק אם גונן ירצה.
 
