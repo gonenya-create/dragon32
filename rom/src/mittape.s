@@ -33,36 +33,37 @@ getfn		ldx	#FNAME
 		bra	isl_b6a5_e	;@isl
 		fill	$ff,$b6a5-*	;@isl
 		clra	;@isl
-		jmp	csavab	;@isl
+		ldx	<DBLZER	;@isl
+		jmp	csavx	;@isl
 isl_b6a5_e	;@isl
 		ldd	#$2008		; 8 רווחים
 1		sta	,x+
 		decb
-		bne	1B
-		clr	FNLEN
+		bne	1B		; B = 0
 		jsr	<chrgot
-		beq	9F
+		beq	x_fnb		; בלי שם: FNLEN = 0
 		lbsr	frmevl
 		lbsr	frestr		; לא מחרוזת: ?TM
-		sta	FNLEN
+		tfr	a,b
+; x_fnb ($B7C2, קורא 3.11): ‏FNLEN = B, ואם B לא 0, מעתיקים B בתים מ-X ל-$01D2 (בלי גבול). בסוף B = 0.
+; Black Sanctum ו-Calixto Island קובעים כך את שם הקלטת של משחק שמור
+x_fnb		stb	FNLEN
 		beq	9F
 		ldu	#FNAME
-; cpy: A בתים מ-X ל-U (A לא 0)
-cpy		ldb	,x+
-		stb	,u+
-		deca
+; cpy: B בתים מ-X ל-U (B לא 0)
+cpy		lda	,x+
+		sta	,u+
+		decb
 		bne	cpy
 9		rts
 
 ; CLOAD ו-CLOADM עברו לכאן מ-mitfile.s (28.10): כך הכתובת המקורית $B75B (CLOADM מכתובת) נופלת בקוד רגיל,
 ; לפני הלולאות המתוזמנות, והן נגמרות לפני $B93E
 ; ---------- CLOAD (3.3) ----------
-cload_st	clr	FSTATE		; סוגרים בכוח (מה שחיכה לכתיבה הולך לאיבוד)
-		cmpa	#'M
-		bra	isl_b6d4_e	;@isl
 		fill	$ff,$b6d4-*	;@isl
-		jmp	cload_st	;@isl
-isl_b6d4_e	;@isl
+; ‏$B6D4: הפקודה CLOAD מתחילה כאן עצמה, כמו במקור (3.11: בלי שלט הפניה, כדי לפנות מקום ל-$B6A8)
+cload_st	clr	FSTATE		; סוגרים בכוח (מה שחיכה לכתיבה הולך לאיבוד)	;@isl
+		cmpa	#'M	;@isl
 		beq	cloadm
 		leas	2,s		; CLOAD לא חוזר לתוכנית
 		lbsr	getfne
@@ -87,7 +88,7 @@ isl_b6d4_e	;@isl
 		stx	VARTAB
 		bsr	motoff
 		lbsr	prcr
-		leax	m_ok,pcr	; OK ושורה חדשה, גם בתוכנית
+		ldx	#m_ok		; OK ושורה חדשה, גם בתוכנית (3.11: ldx, בית אחד פחות)
 		lbsr	puts
 		lbsr	lnkprg		; קישורים חדשים (תוכנית שנשמרה בכתובת אחרת)
 		lbsr	runstk
@@ -115,18 +116,15 @@ clm748		tfr	x,d
 		ldd	HEXEC
 		addd	,s
 		std	EXECJP
-		ldd	HLOAD
-		addd	,s
-		bra	isl_b75b_e	;@isl
+		puls	d		; ההיסט
+		ldx	HLOAD
+		leax	d,x		; הכתובת (3.11: ב-X, ונופלים ל-clmx ב-$B75B)
+		nop	;@isl
 		fill	$ff,$b75b-*	;@isl
-		jmp	clmx	;@isl
-isl_b75b_e	;@isl
-		std	,s
-		fcb	$8c		; cmpx #: מדלג על ה-pshs (הכתובת כבר במחסנית)
 ; clmx ($B75B, כמו $A529 ב-CoCo לפי Color BASIC Unravelled): הטעינה עצמה, מהכתובת שב-X. מנוע וסנכרון,
 ; בלוקים לשם עד בלוק הסוף (גם הנתונים שבו), ?IO על כותרת או שגיאת קריאה. בסוף המנוע כבוי, וחוזרים.
 ; הטוען של Microdeal (Athletyx) טוען דרכה את המשחק בחלקים, כל אחד לכתובת שהקוד הקודם קבע
-clmx		pshs	x		; הסנכרון מאפס את X (המנוע)
+clmx		pshs	x		; הסנכרון מאפס את X (המנוע). מ-3.11 clmx מתחילה ב-$B75B עצמה	;@isl
 		jsr	$bde7		; מנוע וסנכרון דרך הכתובת המקורית, כמו במקור (XRoar מזהה אותה ומשלים מבוא קצר בקובצי CAS)
 		puls	x
 2		stx	BLKADR
@@ -168,13 +166,10 @@ twbyte		pshs	a
 		lda	,y+		; אינדקס 34
 		nop
 		bra	5B
-tsin		fcb	$80,$90,$a8,$b8,$c8,$d8,$e8,$f0,$f8
-		fcb	$f8,$f8,$f0,$e8,$d8,$c8,$b8,$a8,$90
-		fcb	$78,$68,$50,$40,$30,$20,$10,$08,$00
-		fcb	$00,$00,$08,$10,$20,$30,$40,$50,$68
 
 ; ---------- מבוא (קורא 1.4) ----------
-; tleader: פסיקות חסומות, מנוע (עם ההשהיה), ואז LDRCNT בתים של $55 (0 = 65536). B ו-Y נשמרים
+; tleader: פסיקות חסומות, מנוע (עם ההשהיה), ואז LDRCNT בתים של $55 (0 = 65536). B ו-Y נשמרים.
+; (3.11: עבר לפני הטבלה tsin, כדי ש-$B7C2 ייפול אחריו. ה-bsr ל-twbyte נשאר, וכך גם המחזורים בין הבתים)
 tleader		orcc	#$50
 		lbsr	tmoton
 		pshs	b,y
@@ -184,6 +179,12 @@ tleader		orcc	#$50
 		leax	-1,x
 		bne	1B
 		puls	b,y,pc
+		fill	$ff,$b7c2-*	;@isl
+		jmp	x_fnb	;@isl
+tsin		fcb	$80,$90,$a8,$b8,$c8,$d8,$e8,$f0,$f8
+		fcb	$f8,$f8,$f0,$e8,$d8,$c8,$b8,$a8,$90
+		fcb	$78,$68,$50,$40,$30,$20,$10,$08,$00
+		fcb	$00,$00,$08,$10,$20,$30,$40,$50,$68
 
 ; ---------- כתיבת בלוק (קורא 1.5) ----------
 ; tblkwr: סוג ב-$7C, אורך ב-$7D, נתונים ב-$7E. קודם סכום הביקורת, ואז $55 $3C סוג אורך נתונים סכום $55.
@@ -267,13 +268,16 @@ tblkrd		orcc	#$50
 		bsr	trbyte
 		sta	BLKLEN
 		adda	BLKTYP
-		sta	CSUM
-		ldx	BLKADR
-		bra	tbkb87e		; מעל הכניסה של $B87E (3 מחזורים לבלוק)
+		bra	tbkb87e		; מעל $B87A ו-$B87E. ה-sta וה-ldx עברו לשם (3.11): אותם מחזורים, 3+4+5
+; ‏$B87A (קורא 3.11): פתיחת הקלטת לקריאה: החיפוש (בפקודה ישירה: S, השמות ו-F), הכותרת ב-$01DA, ‏$79 = 0,
+; ‏$7A = $01DA, והמנוע כבוי. Black Sanctum ו-Calixto Island טוענים כך משחק שמור. הקוד: opnin (mitfp.s)
+		lbra	opnin	;@isl
 		fill	$ff,$b87e-*	; בדיקה: אם $B87E זז, ההרכבה נכשלת
 ; $B87E: חיפוש הקובץ בלי לגעת במסך (הטוען של Microdeal ל-Donkey King, 31.10). הקוד בסוף ה-ROM (io.s)
 		lbra	srchq
-tbkb87e		ldb	BLKLEN
+tbkb87e		sta	CSUM
+		ldx	BLKADR
+		ldb	BLKLEN
 		stb	BLKRES
 		beq	5F
 3		bsr	trbyte

@@ -230,6 +230,25 @@ try {
   s = await run(ld('A092', '7081'), { tapeLoad: cas2, timeout: 30 });
   ok('$A092 טוען את ABC כשהמצביע כבר על המרכאות', /F ABC +1 {2}4 ?$/m.test(s), show(tail(s)));
   await rm(cas2, { force: true });
+
+  console.log('שמירה וטעינה של משחק, כמו ב-Black Sanctum וב-Calixto Island (3.11): ‏$B7C2, ‏$B6A8, ‏$B87A');
+  // LDX #$7080 / LDB #3 / JSR $B7C2: ‏FNLEN = 3 והשם XYZ ב-$01D2. בסוף B = 0
+  s = await run([...poke(0x7080, '58595A'), ...poke(0x7000, '8E7080 C603 BDB7C2 F77090 39'), 'EXEC &H7000:PRINT PEEK(&H1D1);PEEK(&H1D2);PEEK(&H1D4);PEEK(&H7090)']);
+  ok('$B7C2 מעתיק B בתים מ-X לשם ($01D2) וקובע את האורך ($01D1), ו-B = 0 בסוף', /^ 3  88  90  0 ?$/m.test(s), show(tail(s)));
+  // $B6A8: הסוג ב-A (2), הדגלים ב-X (0), השם GAME, ושומר מ-[$19] עד [$1B] בלי הסוף. TXTTAB ו-VARTAB חוזרים אחר כך
+  const cas3 = join(tmpdir(), "d32-b6a8.cas");
+  await rm(cas3, { force: true });
+  s = await run([...poke(0x7100, '01020304'), ...poke(0x01D2, '47414D4520202020'), ...poke(0x01E5, '7100 7100'),
+    ...poke(0x7000, '9E19 3410 9E1B 3410 8E7100 9F19 8E7104 9F1B 8602 8E0000 BDB6A8 3510 9F1B 3510 9F19 39'), 'EXEC &H7000:PRINT "SAVED"'], { tapeWrite: cas3, timeout: 20 });
+  const tg = await readFile(cas3).catch(() => Buffer.alloc(0));
+  const hg = tg.indexOf(Buffer.from([0x3c, 0x00, 0x0f, 0x47, 0x41, 0x4d, 0x45]));
+  const dg = tg.indexOf(Buffer.from([0x3c, 0x01, 0x04, 0x01, 0x02, 0x03, 0x04]));
+  ok('$B6A8 כותב כותרת GAME (סוג 2, בלי ASCII ובלי פערים) ובלוק של 4 בתים, בלי הסוף ($7104), וחוזר', /^SAVED ?$/m.test(s) && hg >= 0 && tg[hg + 11] === 2 && tg[hg + 12] === 0 && tg[hg + 13] === 0 && dg > hg, show(tail(s)) + ' ' + hg + ' ' + dg);
+  // $B87A ואחריו $B75B, כמו בטעינת משחק שמור: מוצאים את GAME, ואז הבלוקים ל-$7200. ‏$79 = 0 ו-$7A = $01DA
+  s = await run(['POKE &H7200,0:POKE &H7203,0', ...poke(0x01D1, '04 47414D4520202020'), ...poke(0x7000, 'BDB87A 8E7200 BDB75B 39'),
+    'EXEC &H7000:PRINT PEEK(&H7200);PEEK(&H7203);PEEK(&H79);PEEK(&H7A)*256+PEEK(&H7B)'], { tapeLoad: cas3, timeout: 30 });
+  ok('$B87A מוצא את GAME בקלטת ($79 = 0, ‏$7A = $01DA), ו-$B75B טוען אחריו את הבלוקים ל-$7200', / 1  4  0  474 ?$/m.test(s), show(tail(s)));
+  await rm(cas3, { force: true });
 } catch (e) {
   fail++; console.log('  ✗ ' + e.message);
 }

@@ -743,6 +743,12 @@ isl_8e4f_e	;@isl
 2		leas	2,s
 		leax	4,x
 		bra	isl_8e7a_e	;@isl
+; opnin ($B87A, קורא 3.11): החיפוש, ואז הכותרת היא תחילת החוצץ: ‏CBFCNT = 0 ו-$7A = $01DA (כמו במקור). ברווח שלפני $8E7A
+opnin		lbsr	search
+		clr	<CBFCNT
+		ldx	#TBUF
+		stx	<$7a
+		rts
 		fill	$ff,$8e7a-*	;@isl
 		jmp	x_adrbyt	;@isl
 		fill	$ff,$8e7e-*	;@isl

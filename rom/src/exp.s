@@ -32,6 +32,7 @@ FRETOP		equ	$23
 MEMSIZ		equ	$27
 LINNUM		equ	$2b		; מספר שורה (קורא: שימוש במקור)
 CURSOR		equ	$88		; כתובת הסמן (ספר)
+DBLZER		equ	$8a		; זוג אפסים (DRAGON-SPEC-MEMORY). ‏$B6A6 טוען ממנו X = 0, כמו במקור
 CBLCNT		equ	$8f		; מונה ההבהוב של הסמן (קורא: 50 בהדלקה)
 TICKS		equ	$0112		; TIMER (ספר: Inside)
 

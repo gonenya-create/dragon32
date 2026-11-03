@@ -33,22 +33,21 @@ rblk		ldx	#TBUF
 		rts
 ; wrhdr: הכותרת. A = סוג הקובץ, B = הדגלים (ASCII ופערים שווים בכל סוגי השמירה). קובץ פתוח: ?AO.
 ; רק השם, הסוג והדגלים נכתבים; בתי הביצוע והטעינה נשארים כמו שהם (CSAVEM כותב אותם לפני)
-wrhdr		tst	FSTATE
+wrhdr		stb	HASCII
+		stb	HGAP
+wrhdx		tst	FSTATE		; ‏csavx נכנס כאן, כשהדגלים כבר במקום
 		lbne	err_ao
 		sta	HTYPE
-		stb	HASCII
-		stb	HGAP
 		ldx	#FNAME
 		bra	isl_b93e_e	;@isl
 		fill	$ff,$b93e-*	;@isl
 		jmp	tblkrd	;@isl
 isl_b93e_e	;@isl
 		ldu	#TBUF
-		lda	#8
+		ldb	#8
 		lbsr	cpy
-		clr	BLKTYP
-		lda	#15
-		sta	BLKLEN
+		ldd	#15		; סוג 0, אורך 15 (3.11: בבת אחת, בית אחד פחות)
+		std	BLKTYP
 ; wblkt: החוצץ כבלוק. wblk: כתיבת בלוק שלמה: מבוא (מנוע + השהיה), בלוק, מנוע כבוי
 wblkt		ldx	#TBUF
 		stx	BLKADR
@@ -162,8 +161,10 @@ csave_st	cmpa	#'M
 		jsr	<chrgot
 		bne	1F
 csavp		clra			; תוכנית, בינארי, רציף ($B6A5: אחרי השם)
-csavab		clrb			; ‏$B6A6: הסוג כבר ב-A
-		lbsr	wrhdr
+		ldx	<DBLZER
+; csavx ($B6A8, קורא 3.11): הסוג ב-A, הדגלים ב-X (הגבוה ASCII, הנמוך פערים). מ-[$19] עד [$1B], בלי הסוף
+csavx		stx	HASCII
+		lbsr	wrhdx
 		jsr	tleader
 		ldx	TXTTAB		; מתחילת התוכנית עד VARTAB (כולל שני האפסים של הסוף)
 		ldd	VARTAB
