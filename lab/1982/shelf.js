@@ -121,6 +121,11 @@
     // Nerble Force של David Crandall (Computerware, 1983; ל-Dragon מ-Microdeal, 1985): הרשות שלו באתר של L. Curtis Boyle (26.3.2001),
     // בתנאי שהקובץ נשאר כמו שהוא, ומייל Curtis מ-2.11.2026. גונן אישר 2.11. בקובץ הארכיון כל הביטים היו מוזזים ב-7 ביטים
     // (ההקלטה התחילה באמצע בית): יישרנו את הגבול בין הבתים, והאותות בקלטת עצמם לא השתנו. הטוען של Microdeal בכותרת, מתחיל לבד
+    // Buzzard Bait של The Rugby Circle (‏Rob Lech ו-Troy Dahlman; ‏Tom Mix Software, 1983; ל-Dragon מ-Microdeal, 1984): הרשות שלהם
+    // באתר של L. Curtis Boyle (5.2.2001). הקלטת של Microdeal מ-World of Dragon, כמו שהיא (גונן אישר את ההורדה 3.11).
+    // הטוען נכנס לנקודות החיבור של BASIC ($017F) ומתחיל לבד. המפתח החומרתי: dongle() למעלה
+    ['buzzard', 'Buzzard Bait', 'Buzzard Bait', 'a',
+      ['Rob Lech & Troy Dahlman (The Rugby Circle) · Tom Mix Software / Microdeal, 1983–84', 'https://www.lcurtisboyle.com/nitros9/approvals/the_rugby_circle.txt', null, null, 'love']],
     ['nerble', 'Nerble Force', 'Nerble Force', 'a',
       ['David Crandall · Computerware / Microdeal, 1983–85', 'https://www.lcurtisboyle.com/nitros9/approvals/approvals.html', null, null, 'love']],
     // Black Sanctum ו-Calixto Island של Ron Krebs (Mark Data Products, 1981; ל-Dragon: Dragon Data). הרשות שלו באתר של L. Curtis Boyle
@@ -130,6 +135,10 @@
     ['sanctum', 'Black Sanctum', 'Black Sanctum', 'm',
       ['Ron Krebs · Mark Data Products / Dragon Data, 1981', 'https://www.lcurtisboyle.com/nitros9/approvals/ron_krebs_approval.txt', null, null, 'love']],
     ['calixto', 'Calixto Island', 'Calixto Island', 'm',
+      ['Ron Krebs · Mark Data Products / Dragon Data, 1981', 'https://www.lcurtisboyle.com/nitros9/approvals/ron_krebs_approval.txt', null, null, 'love']],
+    // Cave Hunter של Ron Krebs (Mark Data Products; מחסנית של Dragon Data, 1981): אותה רשות. המחסנית המקורית מ-World of Dragon,
+    // כמו שהיא (4K). ה-ROM צריך את $BAF1, ‏$BAD4 ו-$BAD6 (3.11: הצליל חזר לכתובות של המקור)
+    ['cavehunter', 'Cave Hunter', 'Cave Hunter', 'c',
       ['Ron Krebs · Mark Data Products / Dragon Data, 1981', 'https://www.lcurtisboyle.com/nitros9/approvals/ron_krebs_approval.txt', null, null, 'love']],
     ['tangle', 'Tanglewood', 'Tanglewood', 'm',
       ['Ian Murray-Watson · Microdeal, 1986', '/lab/1982/tapes/tanglewood-license.txt', 'https://gitlab.com/amigasourcecodepreservation/tanglewood', null, 'mit']],
@@ -152,7 +161,7 @@
       ['Owen Stenseth · freeware, 1987', '/lab/1982/tapes/brickout-license.txt', 'https://github.com/digitalbytes/super-brickout', null, 'mit']]
   ];
   // משחקים שצריכים ג'ויסטיק: כשהקלטת נטענת, החיצים במקלדת הופכים לג'ויסטיק הימני ו-Alt (Option במק) לכפתור שלו
-  const JOY = new Set(['downland', 'king', 'nerble', 'ranger', 'devil', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian', 'alcatraz', 'cricket', 'digit', 'snaker']);
+  const JOY = new Set(['downland', 'king', 'buzzard', 'cavehunter', 'nerble', 'ranger', 'devil', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian', 'alcatraz', 'cricket', 'digit', 'snaker']);
   // ב-Cricket החובט משתמש בג'ויסטיק השמאלי והמגיש בימני (המדריך של Peaksoft): החיצים מזיזים את שניהם יחד.
   // ב-Snaker הימני מכוון (JOYSTK(0)) והשמאלי קובע מהירות (JOYSTK(3)): למעלה מהר, למטה לאט
   const BOTH = new Set(['cricket', 'snaker']);
@@ -233,15 +242,70 @@
   try { myJoy = localStorage.getItem('d32-myjoy') === '1'; } catch (e) {}
   // mc: קלטת שלי בשפת מכונה. בטלפון מקבלת את לוח המשחק (חיצים ורווח), כי מקש במקלדת המצוירת אי אפשר להחזיק
   // (גונן, 1.11, על Donkey King באייפון). המתג קובע אם החיצים הם מקשים או הג'ויסטיק
+  // המפתח החומרתי (dongle) של Buzzard Bait (3.11): במקור תקע קטן בשקע הג'ויסטיק השמאלי, ובלעדיו המשחק כותב
+  // INSERT DONGLE & RELOAD ונעצר. אחרי הלוגו המשחק קורא את הג'ויסטיק השמאלי ומחכה לארבעה מצבים, אחד אחרי השני:
+  // Y בין 7 ל-15, ‏X בין 0 ל-6, ‏X בין 45 ל-55, ‏Y בין 25 ל-35 (מתוך 63). התקע המקורי משתנה עם הזמן, אז כאן הג'ויסטיק הווירטואלי
+  // של XRoar בשקע השמאלי עובר בין ארבעה מצבים שמכסים את כולם, כל 30 אלפיות. המשחק עצמו לא משתנה. כשהוא מבקש
+  // REMOVE DONGLE, מסך הפתיחה (SELECT COLOUR) מופיע, והתקע יוצא, כמו שהמשחק מבקש
+  const DONGLE = new Set(['buzzard']);
+  let dongleT = 0, dongleW = 0;
+  function dongle(on) {
+    clearInterval(dongleT); clearInterval(dongleW); dongleT = dongleW = 0;
+    if (!on) return;
+    try { Module.ccall('wasm_set_joystick_by_name', null, ['number', 'string'], [1, 'wasm']); } catch (e) { return; }
+    const v = n => n * 1024 + 512, S = [[3, 11], [50, 11], [50, 30], [3, 30]];
+    let i = 0;
+    dongleT = setInterval(() => {
+      const [x, y] = S[i++ % 4];
+      try { Module.ccall('wasm_js_set_axis', null, ['number', 'number'], [0, v(x)]); Module.ccall('wasm_js_set_axis', null, ['number', 'number'], [1, v(y)]); } catch (e) {}
+    }, 30);
+    dongleW = setInterval(() => {
+      if (!/SELECT COLOUR/.test((window.d32Screen?.() || []).join('\n'))) return;
+      dongle(false);
+      // שחקן 1 משחק בג'ויסטיק השמאלי (נבדק 3.11): אחרי שהתקע יוצא, החיצים ו-Alt (או רווח) הם הג'ויסטיק בשני השקעים
+      try { Module.ccall('wasm_set_joystick_by_name', null, ['number', 'string'], [1, 'kjoy0']); } catch (e) {}
+    }, 1000);
+  }
   function gameKeys(id, mc) {
     mineIn = id === null;
     setJoy(JOY.has(id) || (mineIn && myJoy), BOTH.has(id));
     setPaddle(PADDLE.has(id));
+    dongle(DONGLE.has(id));
     if (window.d32Pad) window.d32Pad(mineIn && mc ? 'mine' : id);
   }
   // איך משחקים (גונן, 25.10: "לא בטוח שהמשתמשים יבינו איך משחקים"): תיבה נפתחת מתחת לכל משחק בשפת מכונה.
   // [מקש] נהיה מקש מצויר. המקשים לפי התיעוד של המחבר, ונבדקו במכונה. במק: BREAK הוא Esc, ו-CLEAR הוא Home (fn+←).
   const HOWTO = {
+    // Cave Hunter נבדק במכונה (3.11): המחסנית המקורית, מסכי הפתיחה, המבוך, הג'ויסטיק מכניס את הצייד למבוך, היצורים והזהב.
+    // מה המשחק: לפי הדף של L. Curtis Boyle
+    cavehunter: {
+      he: ['במשחק הזה החיצים הם ג\'ויסטיק. בטלפון יש מתחת למסך ידית.',
+        'המחסנית נכנסת לחריץ והמשחק מתחיל לבד: קודם המסך של Dragon Data ו-Mark Data, אחר כך CAVE HUNTER, ואז המבוך.',
+        'אתם הצייד, למעלה בכניסה למבוך. הזהב (המטילים הצהובים) בתחתית. מביאים מטיל אחד בכל פעם בחזרה לכניסה.',
+        'היצורים במבוך מסוכנים. הכדורים האדומים נותנים כוח לזמן קצר, ואז אפשר להכות את היצורים.',
+        'למעלה משמאל: הנקודות. למעלה מימין: כמה חיים נשארו.'],
+      en: ['In this game the arrow keys are a joystick. On a phone there is a stick under the screen.',
+        'The cartridge goes in the slot and the game starts by itself: first the Dragon Data and Mark Data screen, then CAVE HUNTER, then the maze.',
+        'You are the hunter, at the entrance at the top of the maze. The gold (the yellow bars) is at the bottom. Bring one bar at a time back to the entrance.',
+        'The creatures in the maze are dangerous. The red pills give you power for a short time, and then you can knock the creatures out.',
+        'Top left: the score. Top right: the lives you have left.']
+    },
+    // Buzzard Bait נבדק במכונה (3.11): הקלטת המקורית של Microdeal, המפתח הווירטואלי עובר את הבדיקה, מסך הפתיחה עם REMOVE DONGLE,
+    // בחירת צבע, 1 OR 2 PLAYERS, ‏PREPARE TO JOUST ‏WAVE 1, והמשחק
+    buzzard: {
+      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
+        'במקור המשחק עבד רק עם מפתח חומרתי (dongle) בשקע הג\'ויסטיק השמאלי. כאן המכונה מחברת מפתח וירטואלי בזמן הטעינה, ומוציאה אותו כשהמשחק כותב {REMOVE DONGLE}.',
+        'הטעינה לוקחת כארבע דקות, והמשחק מתחיל לבד: קודם הלוגו של Tom Mix, ואחר כך מסך הפתיחה. בוחרים צבע: [1], [2] או [3].',
+        'על {1 OR 2 PLAYERS?} לוחצים [1] או [2].',
+        'רוכבים על ציפור מעופפת בין צוקים. הכפתור מנפנף בכנפיים, ו-[←] [→] מכוונים. מפילים רוכב אויב כשפוגעים בו מלמעלה.',
+        'בתחתית המסך: הנקודות של שני השחקנים.'],
+      en: ['In this game the arrow keys are a joystick and [Space] is its button (or [Alt], [Option] on a Mac). On a phone there is a stick and a fire button under the screen.',
+        'The original only worked with a hardware dongle in the left joystick port. Here the machine plugs in a virtual dongle while loading, and takes it out when the game says REMOVE DONGLE.',
+        'Loading takes about four minutes, and the game starts by itself: first the Tom Mix logo, then the title screen. Pick a colour: [1], [2] or [3].',
+        'At 1 OR 2 PLAYERS? press [1] or [2].',
+        'You ride a flying bird between the ledges. The button flaps its wings, and [←] [→] steer. Knock an enemy rider off by hitting him from above.',
+        'At the bottom of the screen: the scores of both players.']
+    },
     // שתי ההרפתקאות של Ron Krebs נבדקו במכונה (3.11): טעינה, EXEC, מסך הפתיחה, השאלה על משחק שמור, LOOK, GO, TAKE INVENTORY,
     // HELP, ו-QUIT שחוזר ל-BASIC דרך $B45C. ובסבב 4: SAVE GAME ל"הקלטות שלי", וטעינה עם Y באותו מקום (שני המשחקים)
     sanctum: {
@@ -845,6 +909,8 @@
   const ADVQ = ['כשהטעינה נגמרת המשחק שואל שלוש שאלות: עונים [N] ו-[ENTER], אחר כך [ENTER], ושוב [N] ו-[ENTER].',
     'When loading ends the game asks three questions: answer [N] and [ENTER], then [ENTER], then [N] and [ENTER] again.'];
   const AFTER = {
+    cavehunter: ['המשחק מתחיל לבד. כשמופיע המבוך, החיצים מכניסים את הצייד פנימה.', 'The game starts by itself. When the maze appears, the arrows take the hunter inside.'],
+    buzzard: ['אחרי הלוגו מופיע מסך הפתיחה: בוחרים צבע ב-[1], [2] או [3], ועל 1 OR 2 PLAYERS? לוחצים [1].', 'After the logo the title screen appears: pick a colour with [1], [2] or [3], and at 1 OR 2 PLAYERS? press [1].'],
     sanctum: ['אחרי EXEC מופיע מסך הפתיחה: לוחצים מקש, ועל השאלה על משחק שמור לוחצים [N].', 'After EXEC the title screen appears: press a key, and at the question about a saved game press [N].'],
     calixto: ['אחרי EXEC מופיע מסך הפתיחה: לוחצים מקש, ועל השאלה על משחק שמור לוחצים [N].', 'After EXEC the title screen appears: press a key, and at the question about a saved game press [N].'],
     eggs: ['המשחק מופיע. מתחילים ב[רווח].', 'The game appears. Press [Space] to start.'],
@@ -888,6 +954,8 @@
   };
   // מה המשחק, בשורה אחת מתחת לשם (גונן, 25.10: "לא מבינים מה זה המשחק"). השם עצמו נשאר כמו שהמחבר כתב
   const DESC = {
+    cavehunter: ['מבוך עם יצורים: מביאים את מטילי הזהב מהתחתית אל הכניסה, ובכדורים האדומים מכים את היצורים. בג\'ויסטיק.', 'A maze with creatures: bring the gold bars from the bottom up to the entrance, and use the red pills to knock the creatures out. Joystick.'],
+    buzzard: ['רוכבים על ציפור מעופפת ומפילים רוכבי אויב מלמעלה. היה צריך מפתח חומרתי, וכאן המכונה מחברת מפתח וירטואלי. בג\'ויסטיק.', 'Ride a flying bird and knock enemy riders off from above. It needed a hardware dongle, and here the machine plugs in a virtual one. Joystick.'],
     sanctum: ['הרפתקת מילים: בקתה בהרים המושלגים, מנזר ישן, וכוחות של כישוף שחור שצריך להשמיד.', 'A text adventure: a cabin in the snowy mountains, an old monastery, and forces of black magic to destroy.'],
     calixto: ['הרפתקת מילים: מחדר העבודה של פרופסור אל אי טרופי ופירמידה של המאיה, בחיפוש אחרי אוצר.', 'A text adventure: from a professor\'s study to a tropical island and a Mayan pyramid, after a treasure.'],
     eggs: ['תופסים בסל את הביצים שהדרקון מטיל. לשחקן אחד.', 'Catch the dragon\'s eggs in a basket. 1 player.'],

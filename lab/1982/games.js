@@ -32,12 +32,12 @@ window.D32_GAMES = {
     },
     {
       "key": "krebs",
-      "he": "ההרפתקאות של Ron Krebs",
-      "en": "Ron Krebs' adventures",
+      "he": "המשחקים של Ron Krebs",
+      "en": "Ron Krebs' games",
       "years": "1981",
       "note": [
-        "Ron Krebs כתב ב-Mark Data Products את הרפתקאות המילים האלה ל-Color Computer, והתאים אותן בעצמו ל-Dragon. Dragon Data הוציאה אותן על קלטות. כאן באישורו.",
-        "Ron Krebs wrote these text adventures at Mark Data Products for the Color Computer, and adapted them himself for the Dragon. Dragon Data published them on tape. Here with his permission."
+        "Ron Krebs כתב ב-Mark Data Products את המשחקים האלה ל-Color Computer, והתאים אותם בעצמו ל-Dragon. Dragon Data הוציאה אותם, על קלטות ועל מחסנית. כאן באישורו.",
+        "Ron Krebs wrote these games at Mark Data Products for the Color Computer, and adapted them himself for the Dragon. Dragon Data published them, on tape and on cartridge. Here with his permission."
       ]
     },
     {
@@ -2011,6 +2011,38 @@ window.D32_GAMES = {
         64
       ]
     },
+    "buzzard": {
+      "slug": "buzzard-bait",
+      "drawer": "legends",
+      "year": "1983",
+      "tag": [
+        "פעולה",
+        "action"
+      ],
+      "players": [
+        "שחקן אחד או שניים",
+        "1 or 2 players"
+      ],
+      "load": [
+        "כארבע דקות",
+        "about four minutes"
+      ],
+      "about": {
+        "he": [
+          "Rob Lech ו-Troy Dahlman, מ-The Rugby Circle, כתבו אותו ל-Color Computer, ו-Tom Mix Software הוציאה אותו ב-1983. ל-Dragon הוציאה אותו Microdeal ב-1984. כאן ברשותם, לפי המכתב של Rob Lech באתר של L. Curtis Boyle.",
+          "הגרסה של Microdeal עבדה רק עם מפתח חומרתי (dongle) בשקע הג'ויסטיק השמאלי, נגד העתקה. כאן המכונה מחברת מפתח וירטואלי, והמשחק עצמו נשאר כמו שהיה. חברי הפורום World of Dragon בחרו בו כאחד המשחקים האהובים ביותר."
+        ],
+        "en": [
+          "Rob Lech and Troy Dahlman of The Rugby Circle wrote it for the Color Computer, and Tom Mix Software published it in 1983. Microdeal brought it out for the Dragon in 1984. Here with their permission, from Rob Lech's letter on L. Curtis Boyle's site.",
+          "Microdeal's version only worked with a hardware dongle in the left joystick port, against copying. Here the machine plugs in a virtual dongle, and the game itself stays as it was. Members of the World of Dragon forum named it one of their favourite games."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        256
+      ]
+    },
     "king": {
       "slug": "the-king",
       "drawer": "legends",
@@ -2131,6 +2163,38 @@ window.D32_GAMES = {
         "en": [
           "Ron Krebs wrote it at Mark Data Products in 1981, and Dragon Data published it for the Dragon. The screen says A DRAGON DATA LTD. ADVENTURE, COPYRIGHT (C) 1981 MARK DATA PRODUCTS. Here with his permission, from his letter on L. Curtis Boyle's site.",
           "You start in Professor Lagarto's study, and from there reach a tropical island with a Mayan pyramid. Find a treasure and return it to its proper place."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        256
+      ]
+    },
+    "cavehunter": {
+      "slug": "cave-hunter",
+      "drawer": "krebs",
+      "year": "1981",
+      "tag": [
+        "מבוך",
+        "maze"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "מיד: מחסנית",
+        "at once: a cartridge"
+      ],
+      "about": {
+        "he": [
+          "Ron Krebs כתב אותו ב-Mark Data Products, ו-Dragon Data הוציאה אותו על מחסנית. כאן באישורו, לפי המכתב שלו באתר של L. Curtis Boyle.",
+          "בפרסומת \"סוף סוף\" של Dragon Data כתוב עליו: למצוא את הזהב החבוי זה קשה, אבל לשרוד את היצורים המרושעים עלול להיות בלתי אפשרי."
+        ],
+        "en": [
+          "Ron Krebs wrote it at Mark Data Products, and Dragon Data published it on cartridge. Here with his permission, from his letter on L. Curtis Boyle's site.",
+          "Dragon Data's \"At last\" advert said of it: finding the hidden gold is hard, but surviving the attacks of evil creatures may prove impossible."
         ]
       },
       "icon": [
