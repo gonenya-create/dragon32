@@ -59,9 +59,8 @@
   d.querySelector('.drawer-count').textContent = PAGES.length;
   d.querySelector('.typein-note').textContent = T('בשנות ה-80 מגזינים הדפיסו תוכניות שקוראים שלחו, וכולם הקלידו אותן בעצמם. פותחים את העמוד המקורי, מקלידים ומריצים.',
     'In the 1980s magazines printed programs sent in by readers, and everyone typed them in. Open the original page, type it in and run it.');
-  // הסדר הכרונולוגי של הארון (גונן, 27.10): אחרי ההרפתקאות של 1983–84, לפני המשחקים החדשים מהקהילה
-  const after = document.querySelector('#tapes [data-drawer="community"]');
-  if (after) after.before(d); else cabinet.insertBefore(d, mine);
+  // בתחתית הארון, מתחת ל"הקלטות שלי" (גונן, 3.11)
+  if (mine) mine.after(d); else cabinet.appendChild(d);
   const yr = document.createElement('span'); yr.className = 'yr'; yr.dir = 'ltr'; yr.textContent = '1983–85'; d.querySelector('summary').appendChild(yr);
   const grid = d.querySelector('.tapes');
 
