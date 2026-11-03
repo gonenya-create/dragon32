@@ -46,7 +46,7 @@ sndsel	equ	46056
 isl_bbc8	equ	48072
 pr_lp	equ	36920
 GBRD	equ	216
-ptab8	equ	46705
+ptab8	equ	46540
 isl_bbc5	equ	48069
 HK_MISC	equ	416
 wbuf	equ	48138
@@ -88,7 +88,7 @@ fmult	equ	35750
 FNAME	equ	466
 prnum	equ	34733
 mo_puts	equ	33810
-motoff	equ	46741
+motoff	equ	46746
 goto1	equ	36705
 clear	equ	40597
 GARBFL	equ	7
@@ -117,7 +117,7 @@ midst	equ	38396
 SAM	equ	65472
 isl_aa10_e	equ	43539
 CURTOL	equ	244
-ptab16	equ	46657
+ptab16	equ	46643
 HK_SASG	equ	413
 ed_keys	equ	42375
 KEYMAP	equ	48799
@@ -127,7 +127,7 @@ pool_run	equ	36668
 gfxmode	equ	44078
 poke	equ	39704
 HEXEC	equ	485
-getfn	equ	46752
+getfn	equ	46763
 gc_move	equ	38593
 gocol	equ	43814
 irqtk	equ	49087
@@ -163,7 +163,7 @@ err_od	equ	35074
 isl_8b2d_2	equ	35672
 errdir	equ	39365
 isl_8b2d_1	equ	35658
-pletr	equ	46476
+pletr	equ	46477
 if	equ	38931
 clsone	equ	48383
 twopi	equ	41453
@@ -247,13 +247,13 @@ twlo	equ	47286
 faddh	equ	35311
 tleader	equ	47020
 GASP	equ	209
-pseg16	equ	46638
+pseg16	equ	46633
 gvl	equ	44296
 gcogx	equ	43597
 GPACT	equ	213
 brktst	equ	39275
 TEMPEND	equ	465
-parg	equ	46483
+parg	equ	46484
 gscl	equ	43645
 PHASE	equ	132
 err_ls	equ	35107
@@ -448,12 +448,13 @@ csavx	equ	47650
 getfnm	equ	39149
 ayint	equ	36116
 PSTEP	equ	213
-cpy	equ	46791
+cpy	equ	46794
 mltpl1	equ	35618
 DESC1	equ	298
 troff	equ	41735
 csavp	equ	47647
 USANY	equ	218
+pn8	equ	46585
 getfne	equ	34922
 DBLZER	equ	138
 DEVCFW	equ	106
@@ -543,7 +544,7 @@ inloop0	equ	39490
 pr_comma	equ	36990
 VOLLO	equ	224
 gpop	equ	44980
-pstart	equ	46619
+pstart	equ	46614
 sgxyr	equ	41665
 DOTVAL	equ	229
 ARISGN	equ	98
@@ -672,7 +673,7 @@ movstr	equ	38133
 err_bs	equ	35089
 DEFPNT	equ	75
 thl	equ	47354
-pgo	equ	46635
+pgo	equ	46630
 isl_bbc5_e	equ	48075
 ARGMOH	equ	94
 fdig	equ	36415
@@ -709,7 +710,7 @@ gline	equ	44365
 ovf2	equ	36099
 n32768	equ	35160
 GREM	equ	209
-pfc2	equ	46473
+pfc2	equ	46474
 ki_next	equ	48942
 isl_85a5_e	equ	34219
 let	equ	36759
@@ -857,7 +858,7 @@ clm748	equ	46920
 gpushs	equ	44945
 gpushr	equ	44953
 GACTB	equ	181
-pnote	equ	46540
+pnote	equ	46694
 pmfc	equ	44008
 motor_st	equ	47860
 clrfac	equ	36158
@@ -920,13 +921,13 @@ mpoly	equ	41322
 qshft	equ	35850
 HK_NEWS	equ	410
 GCPOS	equ	215
-pseg8	equ	46648
+pseg8	equ	46576
 edfin	equ	41846
 msktab	equ	38034
 GPEND	equ	209
 ARYTAB	equ	29
 negnrm	equ	35543
-x_fnb	equ	46783
+x_fnb	equ	46786
 HALFLIM	equ	147
 stpend	equ	39308
 fn_peek	equ	39695

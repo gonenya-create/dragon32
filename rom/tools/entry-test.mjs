@@ -257,6 +257,12 @@ try {
   // טון $F0 ב-$8C / LDA #$55 / JSR $BAD6 / STA $7080 / JSR $BAD4 / STA $7081: חוזרות עם A = 0, ו-B נשמר ($33)
   s = await run([...poke(0x7000, '86F0 978C C633 8655 BDBAD6 B77080 BDBAD4 B77081 F77082 39'), 'EXEC &H7000:PRINT PEEK(&H7080);PEEK(&H7081);PEEK(&H7082)']);
   ok('$BAD6 ו-$BAD4 כותבים ל-DAC, מחכים לפי הטון, וחוזרים עם A = 0 ו-B שמור (קורא 3.11)', /^ 0  0  51 ?$/m.test(s), show(tail(s)));
+
+  console.log('Synther 7 (3.11): ‏$B663');
+  // $6F = 5 (לא קלטת), ‏$78 = 1: ‏JSR $B663 מאפס רק את $6F, ו-X ו-B נשמרים. אחר כך $6F = $FF (קלטת לקריאה): גם $78 מתאפס
+  s = await run([...poke(0x7000, '8605 976F 8601 9778 8E1234 C656 BDB663 BF7080 F77082 966F B77083 9678 B77084 86FF 976F BDB663 9678 B77085 966F B77086 39'),
+    'EXEC &H7000:PRINT PEEK(&H7080)*256+PEEK(&H7081);PEEK(&H7082);PEEK(&H7083);PEEK(&H7084);PEEK(&H7085);PEEK(&H7086)']);
+  ok('$B663 סוגר את ההתקן שב-$6F: ‏$6F = 0 תמיד, ‏$78 מתאפס רק בקלטת, ו-X ו-B נשמרים (קורא 3.11)', /^ 4660  86  0  1  0  0 ?$/m.test(s), show(tail(s)));
 } catch (e) {
   fail++; console.log('  ✗ ' + e.message);
 }

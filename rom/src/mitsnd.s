@@ -239,7 +239,7 @@ isl_b54a_e	;@isl
 		cmpa	#11
 		bhi	pfc2
 		ldb	NOTELN
-		bsr	pnote
+		lbsr	pnote		; (3.11: lbsr, כי pnote עבר אחרי $B663)
 		lbra	ploop
 pfc2		lbra	err_fc		; (3.11: עבר לכאן מלפני $B538, ליד parg: קפיצות קצרות)
 pletr		fcb	10,12,1,3,5,6,8
@@ -277,35 +277,18 @@ parg		pshs	b
 		jsr	HK_LINE	;@isl
 		jmp	x_inlin	;@isl
 
-; pnote: A = התו (0-11), B = האורך. U = המקום של כתובת החזרה: פסיקת השדה חוזרת לשם כשהתו נגמר (קורא 9)
+; הסדר כאן (טבלה, שגרות, טבלה, ואחרי $B663 ההתחלה של pnote) נקבע כך ש-$B663 ייפול בדיוק על קפיצה,
+; והקפיצות הקצרות עדיין מגיעות (3.11)
+ptab8		fcb	166,156,147,139,131,123,116,109,103,97,91,86
+		fcb	81,76,71,67,63,59,55,52,49,46,43,40
+		fcb	38,35,33,31,29,27,25,24,22,20,19,18
 ; @nofill: לולאות מתוזמנות, לפי מחזורים. tools/islands.py לא מכניס כאן גושים
-pnote		pshs	a
-		lda	TEMPO
-		mul
-		std	PSTEP		; כל שדה מוריד אורך × קצב
-		leau	1,s
-		lda	OCTAVE		; המקום בטבלה: אוקטבה × 12 + התו
-		ldb	#12
-		mul
-		addb	,s+
-		cmpb	#24
-		bhs	1F
-		lslb			; אוקטבות 1-2: ספירה של 16 ביט
-		leay	ptab16,pcr
-		leay	b,y
-		bsr	pstart
-		lda	#$7c
-		pshs	a
-2		lda	,s		; מרכז, גבוה, מרכז, נמוך: 26+8n מחזורים, ואחרי הנמוך 29+8n
-		bsr	pseg16
-		lda	VOLHI
-		bsr	pseg16
-		lda	,s
-		bsr	pseg16
-		lda	VOLLO
-		bsr	pseg16
-		bra	2B
-1		leay	ptab8-24,pcr	; אוקטבות 3-5: ספירה של 8 ביט
+pseg8		sta	PIA1
+		ldb	,y
+1		decb
+		bne	1B
+		rts
+pn8		leay	ptab8-24,pcr	; אוקטבות 3-5: ספירה של 8 ביט
 		leay	b,y
 		bsr	pstart
 		lda	#$7c
@@ -336,14 +319,38 @@ pseg16		sta	PIA1
 1		leax	-1,x
 		bne	1B
 		rts
-pseg8		sta	PIA1
-		ldb	,y
-1		decb
-		bne	1B
-		rts
 ; @endnofill
 ptab16		fdb	424,400,378,356,336,317,299,282,266,251,237,223
 		fdb	211,199,187,177,166,157,148,139,131,124,117,110
-ptab8		fcb	166,156,147,139,131,123,116,109,103,97,91,86
-		fcb	81,76,71,67,63,59,55,52,49,46,43,40
-		fcb	38,35,33,31,29,27,25,24,22,20,19,18
+; @endnofill
+		fill	$ff,$b663-*	;@isl
+		jmp	clsone	;@isl
+; pnote: A = התו (0-11), B = האורך. U = המקום של כתובת החזרה: פסיקת השדה חוזרת לשם כשהתו נגמר (קורא 9)
+; @nofill
+pnote		pshs	a
+		lda	TEMPO
+		mul
+		std	PSTEP		; כל שדה מוריד אורך × קצב
+		leau	1,s
+		lda	OCTAVE		; המקום בטבלה: אוקטבה × 12 + התו
+		ldb	#12
+		mul
+		addb	,s+
+		cmpb	#24
+		lbhs	pn8		; (3.11: ארוך, pn8 לפני $B663)
+		lslb			; אוקטבות 1-2: ספירה של 16 ביט
+		leay	ptab16,pcr
+		leay	b,y
+		bsr	pstart
+		lda	#$7c
+		pshs	a
+2		lda	,s		; מרכז, גבוה, מרכז, נמוך: 26+8n מחזורים, ואחרי הנמוך 29+8n
+		bsr	pseg16
+		lda	VOLHI
+		bsr	pseg16
+		lda	,s
+		bsr	pseg16
+		lda	VOLLO
+		bsr	pseg16
+		bra	2B
+; @endnofill

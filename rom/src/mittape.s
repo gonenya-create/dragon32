@@ -29,13 +29,12 @@ motoff		lda	PIA1+1
 ; ---------- שם הקובץ (עבר לכאן מ-mitfile.s ב-22.10: ממלא את המקום שלפני הלולאות המתוזמנות) ----------
 ; (getfne ו-nochr עברו ל-exp.s, לפני $A000, כדי לפנות מקום לכניסה $B6A6: 30.10)
 ; getfn (3.1): השם מתמלא ברווחים. אם יש ביטוי: מחרוזת, וכל התווים שלה מועתקים מ-FNAME (שם ארוך גולש לחוצץ)
-getfn		ldx	#FNAME
-		bra	isl_b6a5_e	;@isl
 		fill	$ff,$b6a5-*	;@isl
 		clra	;@isl
 		ldx	<DBLZER	;@isl
 		jmp	csavx	;@isl
 isl_b6a5_e	;@isl
+getfn		ldx	#FNAME
 		ldd	#$2008		; 8 רווחים
 1		sta	,x+
 		decb
