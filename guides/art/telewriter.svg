@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 140" role="img" aria-label="Telewriter">
+<rect width="240" height="140" fill="#1b1611"/>
+<rect x="28" y="12" width="184" height="104" rx="10" fill="#3a3129"/>
+<rect x="38" y="20" width="164" height="86" rx="4" fill="#9ae66e"/>
+<g fill="#1f3d12">
+<rect x="46" y="28" width="96" height="5"/><rect x="46" y="38" width="140" height="5"/><rect x="46" y="48" width="128" height="5"/>
+<rect x="46" y="58" width="146" height="5"/><rect x="46" y="68" width="84" height="5"/><rect x="46" y="82" width="110" height="5"/>
+<rect x="160" y="80" width="7" height="9"><animate attributeName="opacity" values="1;1;0;0" dur="1.1s" repeatCount="indefinite"/></rect>
+</g>
+<rect x="44" y="118" width="152" height="14" rx="3" fill="#2a231c"/>
+<g fill="#6b5d4d"><rect x="50" y="121" width="10" height="8" rx="1"/><rect x="63" y="121" width="10" height="8" rx="1"/><rect x="76" y="121" width="10" height="8" rx="1"/><rect x="89" y="121" width="62" height="8" rx="1"/><rect x="154" y="121" width="10" height="8" rx="1"/><rect x="167" y="121" width="10" height="8" rx="1"/><rect x="180" y="121" width="10" height="8" rx="1"/></g>
+</svg>

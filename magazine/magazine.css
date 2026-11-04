@@ -73,3 +73,5 @@ a:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
 .keys th { white-space: nowrap; width: 1%; }
 kbd { font: 700 14px/1.2 'Courier New', monospace; background: #fffaf0; border: 1.5px solid var(--ink); border-radius: 4px; padding: 1px 5px; box-shadow: 1px 1px 0 var(--ink); }
 .listing { background: #0e3b12; color: #8dff8d; font: 16px/1.5 'Courier New', monospace; padding: 12px 14px; border: 2px solid var(--ink); overflow-x: auto; break-inside: avoid; text-align: left; }
+.cover-art { display: block; width: 100%; height: auto; border-bottom: 2px solid var(--ink); }
+.guide-art { display: block; width: 100%; max-width: 480px; height: auto; margin: 6px auto 18px; border: 2px solid var(--ink); }

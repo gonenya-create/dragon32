@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 140" role="img" aria-label="DREAM">
+<rect width="240" height="140" fill="#1b1611"/>
+<rect x="18" y="10" width="204" height="120" rx="10" fill="#3a3129"/>
+<rect x="28" y="18" width="184" height="104" rx="4" fill="#0e3b12"/>
+<g fill="#8dff8d" font-family="'Courier New',monospace" font-size="11" font-weight="700" xml:space="preserve">
+<text x="36" y="34">  LDX #$0400</text><text x="36" y="48">  LDA #'A</text><text x="36" y="62">LOOP STA ,X+</text><text x="36" y="76">  CMPX #$0600</text><text x="36" y="90">  BLO LOOP</text><text x="36" y="104">  RTS</text>
+</g>
+<rect x="64" y="108" width="7" height="10" fill="#8dff8d"><animate attributeName="opacity" values="1;1;0;0" dur="1.1s" repeatCount="indefinite"/></rect>
+</svg>
