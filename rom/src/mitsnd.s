@@ -73,6 +73,8 @@ csv2b		lbsr	wrhdr
 		puls	d,x		; D = הסוף, X = ההתחלה
 		addd	#1		; כולל הסוף
 		lbra	wdata
+; סוף PLAY (4.11, חבילה 8: כאן, ברווח שלפני $B44F, כדי שהכניסה $B482 תיכנס)
+pend		bra	sndoff		; הסמן: סוף PLAY
 		fill	$ff,$b44f-*	;@isl
 warm		nop	;@isl
 		clra	;@isl
@@ -100,9 +102,18 @@ snds		lbsr	sndsel
 ; ---------- PLAY מחרוזת (קורא 2, 9) ----------
 ; (plyini עבר ל-exp.s, לפני $A000, כדי לפנות מקום לכניסה $B538: 30.10)
 
-; (4.11, חבילה 8: PLAY סודר מחדש, כדי לפנות את $B482 להשהיה. הסמן בתחתית הוא עכשיו רק כתובת 0,
-; ובסוף PLAY לא שומרים אותו ב-DLEN/DPTR. שלושה חלקים לפני $B482 נגמרים בקפיצה, כך שאף אחד לא נופל לתוכה)
-pend		bra	sndoff		; הסמן: סוף PLAY
+; (4.11, חבילה 8: PLAY סודר מחדש, כדי לפנות את $B482 להשהיה. החלקים שלפני $B482 נגמרים בקפיצה,
+; כך שאף אחד לא נופל לתוכה. בסוף PLAY נשארים, כמו במקור, $D8=1 ו-$D9-$DA=0)
+pfc		lbra	err_fc
+p_ch		cmpa	#';
+		beq	ploop
+		cmpa	#''
+		beq	ploop
+		cmpa	#'O
+		beq	p_oct
+		bra	p_v
+; ‏$B482: השהיה. X סיבובים, ו-X חוזר 0 (קורא: חבילה 8). Junior's Revenge קורא לה ב-JSR
+		jmp	dlyx	;@isl
 ; O אוקטבה
 p_oct		ldb	OCTAVE
 		incb
@@ -112,21 +123,12 @@ p_oct		ldb	OCTAVE
 		bhs	pfc
 		stb	OCTAVE
 		bra	ploop
-; ‏$B482: השהיה. X סיבובים, ו-X חוזר 0 (קורא: חבילה 8). Junior's Revenge קורא לה ב-JSR
-		jmp	dlyx	;@isl
-pfc		lbra	err_fc
-p_ch		cmpa	#';
-		beq	ploop
-		cmpa	#''
-		beq	ploop
-		cmpa	#'O
-		beq	p_oct
-		bra	p_v
-; המחרוזות המקוננות (X) במחסנית: [אורך][כתובת]. הסמן בתחתית: כתובת 0
+; המחרוזות המקוננות (X) במחסנית: [אורך][כתובת]. הסמן בתחתית: אורך 1, כתובת 0
 play_st		lbsr	frmevl
 plyx		ldx	#0		; $ADBD נכנס כאן, כשהמחרוזת כבר ב-FPA0
-		clra			; DAC והצליל דולק, עוד לפני בדיקת הסוג
+		lda	#1
 		pshs	a,x
+		clra			; DAC והצליל דולק, עוד לפני בדיקת הסוג
 		bsr	snds
 		lbsr	frestr		; לא מחרוזת: ?TM
 pset		sta	DLEN
