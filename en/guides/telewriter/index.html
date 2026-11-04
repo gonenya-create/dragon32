@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to use Telewriter — Software of the Day</title>
+<meta name="description" content="A short guide to the Telewriter word processor on the Dragon 32: loading, the menu, editing keys and traps.">
+<meta property="og:title" content="<bdi>Telewriter</bdi>: the word processor that turned the Dragon into a typewriter">
+<meta property="og:description" content="A short guide to the Telewriter word processor on the Dragon 32: loading, the menu, editing keys and traps.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/en/guides/telewriter/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/guides/telewriter/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;700&amp;family=Rubik:wght@400;700;900&amp;display=swap">
+<link rel="stylesheet" href="/magazine/magazine.css">
+</head>
+<body>
+<nav class="site" aria-label="Navigation">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/guides/telewriter/" lang="he" hreflang="he">עברית</a>
+  <a href="/en/guides/">All guides</a>
+  <a href="/en/">← Back to the computer</a>
+</nav>
+<main class="sheet">
+<header class="mast">
+  <div class="mast-top"><span>A Dragon 1982 series</span><span dir="ltr">TELEWRITER · 1983</span></div>
+  <p class="mast-name">Software of the Day</p>
+  <div class="stripes" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+</header>
+<article class="story">
+<span class="kicker">Word processing</span>
+<h1><bdi>Telewriter</bdi>: the word processor that turned the Dragon into a typewriter</h1>
+<p class="standfirst">Telewriter by Cognitec came out in 1981 for the TRS-80 Color Computer and reached the Dragon in 1983 through Microdeal. It showed 51 characters per line instead of the usual 32, which is why people loved it. Here is how to start.</p>
+<div class="cols">
+<h2>Which version to load</h2>
+<p>The tape has four versions in a row: TELE/G, TELE/E, TELE/C and TELE/T. The editor is the same in all of them, and they differ only in printer support. With no printer, or an ordinary one, load TELE/G, the first on the tape. Each version is followed by a sample text called DEMO, and at the end there is a small program called CONVERT that moves BASIC programs into the editor and back.</p>
+<h2>Loading</h2>
+<p>Type <kbd>CLOADM</kbd> and <kbd>ENTER</kbd>. When OK appears, type <kbd>EXEC</kbd> and <kbd>ENTER</kbd>. At the copyright screen press <kbd>ENTER</kbd> again to reach the main menu.</p>
+<h2>The key that matters: CLEAR</h2>
+<p>Every editor command is CLEAR plus a letter: hold <kbd>CLEAR</kbd> and press the letter. In an emulator on an ordinary computer, CLEAR is usually the <kbd>Home</kbd> key.</p>
+<h2>The main menu</h2>
+<p>Press one letter, no ENTER:</p>
+<table class="keys"><tr><th scope="row"><kbd dir="ltr">C</kbd></th><td>New text</td></tr><tr><th scope="row"><kbd dir="ltr">E</kbd></th><td>Back to the editor and your text</td></tr><tr><th scope="row"><kbd dir="ltr">S</kbd></th><td>Save to tape (name up to 8 characters)</td></tr><tr><th scope="row"><kbd dir="ltr">R</kbd></th><td>Load a text from tape</td></tr><tr><th scope="row"><kbd dir="ltr">A</kbd></th><td>Add a text from tape to the end</td></tr><tr><th scope="row"><kbd dir="ltr">V</kbd></th><td>Check that a save on tape is good</td></tr><tr><th scope="row"><kbd dir="ltr">W</kbd></th><td>Count words and lines</td></tr></table>
+<p>SPACE shows how many characters are left, about 18,000, or some 9 pages. When it asks <bdi>SURE??..</bdi>, only a capital Y followed by ENTER goes ahead; a small y sends you back to the menu.</p>
+<h2>In the editor</h2>
+<p>There is no overwrite mode: every key is inserted at the cursor.</p>
+<table class="keys"><tr><th scope="row"><kbd dir="ltr">BREAK</kbd></th><td>Deletes the character under the cursor. In the editor this is the delete key!</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR + @</kbd></th><td>Deletes the character before the cursor</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR + K</kbd></th><td>Deletes from the cursor to the end of the line</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR + ↑ / ↓</kbd></th><td>Top / bottom of the text</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR + → / ←</kbd></th><td>End / start of the line</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR + A</kbd></th><td>Re-flows the paragraphs</td></tr><tr><th scope="row"><kbd dir="ltr">SHIFT + 0</kbd></th><td>Lower case or capitals</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR + M</kbd></th><td>Back to the menu (the text stays in memory)</td></tr></table>
+<h2>Copy, delete and find</h2>
+<table class="keys"><tr><th scope="row"><kbd dir="ltr">CLEAR + B</kbd></th><td>Begin mark</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR + E</kbd></th><td>End mark</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR + C</kbd></th><td>Copies the marked block to the cursor</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR + X</kbd></th><td>Deletes from the cursor to the end mark, with no question</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR + Z</kbd></th><td>Removes all marks</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR + F</kbd></th><td>Find a word</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR + N</kbd></th><td>Next match</td></tr></table>
+<p>To move a block, copy it and then delete the original.</p>
+<h2>Traps</h2>
+<p>If your text suddenly vanishes, you probably pressed CLEAR + S, a fast mode that hides the end of the text; CLEAR + U brings it back. A line that should not join the one before it, like a list item, should start with a space or have a blank line before it. With no printer connected, do not print: the program may hang. Save before every print.</p>
+<h2>The first five minutes</h2>
+<p>In the menu press C: the white screen is the editor. Press SHIFT + 0 and type a sentence. Put the cursor on a letter and delete it with BREAK. Then CLEAR + M, and in the menu W: how many words did you write? Finally E takes you back to your text.</p>
+<p class="note">This guide is in our own words, for Dragon owners who have the original program. We do not host the program or its original manual. We tried every step on an emulated machine with the same chips.</p>
+</div>
+<p class="more"><a href="/en/guides/">All guides</a> · <a href="/en/magazine/">What Dragon Owners Were Reading</a> · <a href="/en/dragon-history/">The history of the Dragon</a></p>
+</article>
+</main>
+</body>
+</html>

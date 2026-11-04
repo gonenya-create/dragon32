@@ -1599,6 +1599,11 @@ if (part('lessons and magazine')) {
     const r = await p.goto(new URL(path, PAGE).href);
     check(`${path} loads`, r.ok() && /archive\.org|Dragon User/.test(await p.content()));
   }
+  for (const path of ['/guides/', '/guides/telewriter/', '/guides/synther-7/', '/guides/dream/', '/en/guides/', '/en/guides/telewriter/', '/en/guides/synther-7/', '/en/guides/dream/']) {
+    const r = await p.goto(new URL(path, PAGE).href);
+    const html = await p.content();
+    check(`${path} (software guide) loads, links its other language, has no download link`, r.ok() && /hreflang="(he|en)"/.test(html) && !/\.(cas|wav|zip|rom|pdf)"/i.test(html));
+  }
   {
     const r = await p.request.get(new URL('/assets/poster/dragon1982-poster-a3.pdf', PAGE).href);
     const pages = await Promise.all(['/posters/', '/en/posters/', '/', '/en/'].map(u => p.request.get(new URL(u, PAGE).href).then(x => x.text())));
