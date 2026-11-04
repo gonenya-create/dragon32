@@ -163,7 +163,6 @@ err_od	equ	35074
 isl_8b2d_2	equ	35672
 errdir	equ	39365
 isl_8b2d_1	equ	35658
-pletr	equ	46477
 if	equ	38931
 clsone	equ	48383
 twopi	equ	41453
@@ -253,7 +252,7 @@ gcogx	equ	43597
 GPACT	equ	213
 brktst	equ	39275
 TEMPEND	equ	465
-parg	equ	46484
+parg	equ	46485
 gscl	equ	43645
 PHASE	equ	132
 err_ls	equ	35107
@@ -710,7 +709,7 @@ gline	equ	44365
 ovf2	equ	36099
 n32768	equ	35160
 GREM	equ	209
-pfc2	equ	46474
+pfc2	equ	46482
 ki_next	equ	48942
 isl_85a5_e	equ	34219
 let	equ	36759

@@ -214,9 +214,12 @@ ploop_t		bra	ploop
 		jmp	chrout	;@isl
 isl_b54a_e	;@isl
 		bhi	9F
-		leax	pletr-'A,pcr	; C=1 D=3 E=5 F=6 G=8 A=10 B=12
-		ldb	a,x
-		pshs	b
+		suba	#'C		; (4.11: חישוב במקום טבלה, כדי לפנות את $B58F) C=1 D=3 E=5 F=6 G=8 A=10 B=12:
+		bge	84F		; k = המרחק מ-C (A ו-B: 5 ו-6), והתו = 2k+1 עד E, ‏2k מ-F
+		adda	#7
+84		cmpa	#3		; C=1 כש-k < 3
+		rola
+		pshs	a
 		lbsr	dget		; # או + מעלים, - מוריד. בלי מעבר אוקטבה
 		bcs	83F
 		cmpa	#'#
@@ -241,8 +244,9 @@ isl_b54a_e	;@isl
 		ldb	NOTELN
 		lbsr	pnote		; (3.11: lbsr, כי pnote עבר אחרי $B663)
 		lbra	ploop
-pfc2		lbra	err_fc		; (3.11: עבר לכאן מלפני $B538, ליד parg: קפיצות קצרות)
-pletr		fcb	10,12,1,3,5,6,8
+		fill	$ff,$b58f-*	;@isl
+		jmp	putc	;@isl
+pfc2		lbra	err_fc		; (3.11: עבר לכאן מלפני $B538, ליד parg: קפיצות קצרות. 4.11: אחרי $B58F)
 
 ; parg: הארגומנט של O V L T → B. B = הערך הנוכחי. + - > < משנים אותו, אחרת "=שם;" או ספרות
 parg		pshs	b
