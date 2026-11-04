@@ -275,6 +275,11 @@ try {
   s = await run([...poke(0x7000, '108E1234 CE5678 BD978E 10BF7080 FF7082 964F B77084 39'),
     'EXEC &H7000:PRINT PEEK(&H7080)*256+PEEK(&H7081);PEEK(&H7082)*256+PEEK(&H7083);-(PEEK(&H7084)<=128)']);
   ok('$978E נותן שבר חדש ב-FAC, ו-Y ו-U נשמרים (קורא 4.11)', /^ 4660  22136  1 ?$/m.test(s), show(tail(s)));
+  console.log("Junior's Revenge (4.11): ‏$B482");
+  // השהיה: X סיבובים, X חוזר 0, ו-A, ‏B ו-Y נשמרים
+  s = await run([...poke(0x7000, '8E1234 861F C6FF 108E5678 BDB482 BF7080 B77082 F77083 10BF7084 39'),
+    'EXEC &H7000:PRINT PEEK(&H7080)*256+PEEK(&H7081);PEEK(&H7082);PEEK(&H7083);PEEK(&H7084)*256+PEEK(&H7085)']);
+  ok('$B482 משהה: X חוזר 0, ו-A, ‏B ו-Y נשמרים (קורא 4.11)', /^ 0  31  255  22136 ?$/m.test(s), show(tail(s)));
 } catch (e) {
   fail++; console.log('  ✗ ' + e.message);
 }

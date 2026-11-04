@@ -100,31 +100,11 @@ snds		lbsr	sndsel
 ; ---------- PLAY מחרוזת (קורא 2, 9) ----------
 ; (plyini עבר ל-exp.s, לפני $A000, כדי לפנות מקום לכניסה $B538: 30.10)
 
-pfc		lbra	err_fc
-; המחרוזות המקוננות (X) במחסנית: [אורך][כתובת]. הסמן בתחתית: אורך 1, כתובת 0
-play_st		lbsr	frmevl
-plyx		ldx	#0		; $ADBD נכנס כאן, כשהמחרוזת כבר ב-FPA0
-		lda	#1
-		pshs	a,x
-		clra			; DAC והצליל דולק, עוד לפני בדיקת הסוג
-		bsr	snds
-		lbsr	frestr		; לא מחרוזת: ?TM
-		sta	DLEN
-		stx	DPTR
-ploop		lbsr	dget
-		bcc	1F
-		puls	a,x		; המחרוזת נגמרה: חוזרים לחיצונית
-		sta	DLEN
-		stx	DPTR
-		bne	ploop
-		lbra	sndoff		; הסמן: סוף PLAY
-1		cmpa	#';
-		beq	ploop
-		cmpa	#''
-		beq	ploop
-		cmpa	#'O
-		bne	2F
-		ldb	OCTAVE
+; (4.11, חבילה 8: PLAY סודר מחדש, כדי לפנות את $B482 להשהיה. הסמן בתחתית הוא עכשיו רק כתובת 0,
+; ובסוף PLAY לא שומרים אותו ב-DLEN/DPTR. שלושה חלקים לפני $B482 נגמרים בקפיצה, כך שאף אחד לא נופל לתוכה)
+pend		bra	sndoff		; הסמן: סוף PLAY
+; O אוקטבה
+p_oct		ldb	OCTAVE
 		incb
 		lbsr	parg
 		decb
@@ -132,11 +112,35 @@ ploop		lbsr	dget
 		bhs	pfc
 		stb	OCTAVE
 		bra	ploop
+; ‏$B482: השהיה. X סיבובים, ו-X חוזר 0 (קורא: חבילה 8). Junior's Revenge קורא לה ב-JSR
+		jmp	dlyx	;@isl
+pfc		lbra	err_fc
+p_ch		cmpa	#';
+		beq	ploop
+		cmpa	#''
+		beq	ploop
+		cmpa	#'O
+		beq	p_oct
+		bra	p_v
+; המחרוזות המקוננות (X) במחסנית: [אורך][כתובת]. הסמן בתחתית: כתובת 0
+play_st		lbsr	frmevl
+plyx		ldx	#0		; $ADBD נכנס כאן, כשהמחרוזת כבר ב-FPA0
+		clra			; DAC והצליל דולק, עוד לפני בדיקת הסוג
+		pshs	a,x
+		bsr	snds
+		lbsr	frestr		; לא מחרוזת: ?TM
+pset		sta	DLEN
+		stx	DPTR
+		beq	pend		; כתובת 0: הסמן, סוף PLAY
+ploop		lbsr	dget
+		bcc	p_ch
+		puls	a,x		; המחרוזת נגמרה: חוזרים לחיצונית
+		bra	pset
 ; ‏$B4B3: שני בתים שתוכנות של אז בודקות כדי לדעת שהן על Dragon ולא על CoCo. Star Spores (Microdeal) קורא שם את
 ; המילה $2843, ואם היא שם הוא עובר למפת המקלדת של ה-Dragon (החיצים בשורה אחרת). העובדה מהקוד של המשחק עצמו (30.10).
 ; הם באים אחרי קפיצה, אז אף אחד לא מריץ אותם. entry-test בודק שהם במקום
 		fcb	$28,$43
-2		cmpa	#'V
+p_v		cmpa	#'V
 		bne	3F
 		ldb	VOLHI		; העוצמה הנוכחית: הגבוה חלקי 4, פחות 31
 		lsrb

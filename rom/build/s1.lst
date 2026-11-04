@@ -243,7 +243,7 @@ FFC0                  SAM             equ     $ffc0
 81BE B137                             fdb     draw_st         ; $B5 DRAW
 81C0 ADC0                             fdb     pcopy_st                ; $B6 PCOPY
 81C2 ABA1                             fdb     pmode_st                ; $B7 PMODE
-81C4 B474                             fdb     play_st         ; $B8 PLAY
+81C4 B496                             fdb     play_st         ; $B8 PLAY
 81C6 88FC                             fdb     err_sn          ; $B9 DLOAD
 81C8 A39E                             fdb     renum           ; $BA RENUM
 81CA 5347CE           fntab           fcs     "SGN"
@@ -6216,7 +6216,7 @@ ADBB 50                               negb                    ; B = -1 (שני �
 ADBC 39               1               rts
 ADBD                                  fill    $ff,$adbd-*     ; בדיקה: אם $ADBD זז, ההרכבה נכשלת
                       ; $ADBD: PLAY כשהמחרוזת כבר חושבה (ב-FPA0, למשל מ-$8C5B). Chuckie Egg (A&F, 31.10) מנגן כך את המנגינות שלו במצב Dragon
-ADBD 1606B7                           lbra    plyx
+ADBD 1606D9                           lbra    plyx
                       
                       ; ---------- PCOPY s TO d (קורא 13) ----------
                       ; כל דף: 0 → ?FC, ומתחיל אחרי תחילת התוכנית → ?FC (חשבון של 8 ביטים). 1536 בתים, מלמטה למעלה
@@ -7122,7 +7122,7 @@ B40B 39                               rts
                       ; evnzb: ביטוי → B בין 1 ל-255. שלילי, 0 או מעל 255: ?FC. השבר נחתך (קורא 1.1)
 B40C 17E028           evnzb           lbsr    evbyte
 B40F 5D                               tstb
-B410 275F                             beq     pfc
+B410 2773                             beq     pfc
 B412 39                               rts
                       
                       ; ---------- SOUND טון,משך (קורא 1) ----------
@@ -7185,43 +7185,47 @@ B46F 208B                             bra     sndon           ; קצרה (בית
                       ; ---------- PLAY מחרוזת (קורא 2, 9) ----------
                       ; (plyini עבר ל-exp.s, לפני $A000, כדי לפנות מקום לכניסה $B538: 30.10)
                       
-B471 16D491           pfc             lbra    err_fc
-                      ; המחרוזות המקוננות (X) במחסנית: [אורך][כתובת]. הסמן בתחתית: אורך 1, כתובת 0
-B474 17DDDF           play_st         lbsr    frmevl
-B477 8E0000           plyx            ldx     #0              ; $ADBD נכנס כאן, כשהמחרוזת כבר ב-FPA0
-B47A 8601                             lda     #1
-B47C 3412                             pshs    a,x
-B47E 4F                               clra                    ; DAC והצליל דולק, עוד לפני בדיקת הסוג
-B47F 8DEB                             bsr     snds
-B481 17E0DC                           lbsr    frestr          ; לא מחרוזת: ?TM
-B484 97D8                             sta     DLEN
-B486 9FD9                             stx     DPTR
-B488 17FC08           ploop           lbsr    dget
-B48B 240B                             bcc     1F
-B48D 3512                             puls    a,x             ; המחרוזת נגמרה: חוזרים לחיצונית
-B48F 97D8                             sta     DLEN
-B491 9FD9                             stx     DPTR
-B493 26F3                             bne     ploop
-B495 16FF6B                           lbra    sndoff          ; הסמן: סוף PLAY
-B498 813B             1               cmpa    #';
-B49A 27EC                             beq     ploop
-B49C 8127                             cmpa    #''
-B49E 27E8                             beq     ploop
-B4A0 814F                             cmpa    #'O
-B4A2 2611                             bne     2F
-B4A4 D6DE                             ldb     OCTAVE
-B4A6 5C                               incb
-B4A7 1700EB                           lbsr    parg
-B4AA 5A                               decb
-B4AB C105                             cmpb    #5
-B4AD 24C2                             bhs     pfc
-B4AF D7DE                             stb     OCTAVE
-B4B1 20D5                             bra     ploop
+                      ; (4.11, חבילה 8: PLAY סודר מחדש, כדי לפנות את $B482 להשהיה. הסמן בתחתית הוא עכשיו רק כתובת 0,
+                      ; ובסוף PLAY לא שומרים אותו ב-DLEN/DPTR. שלושה חלקים לפני $B482 נגמרים בקפיצה, כך שאף אחד לא נופל לתוכה)
+B471 2090             pend            bra     sndoff          ; הסמן: סוף PLAY
+                      ; O אוקטבה
+B473 D6DE             p_oct           ldb     OCTAVE
+B475 5C                               incb
+B476 17011C                           lbsr    parg
+B479 5A                               decb
+B47A C105                             cmpb    #5
+B47C 2407                             bhs     pfc
+B47E D7DE                             stb     OCTAVE
+B480 2028                             bra     ploop
+                      ; ‏$B482: השהיה. X סיבובים, ו-X חוזר 0 (קורא: חבילה 8). Junior's Revenge קורא לה ב-JSR
+B482 7EBACB                           jmp     dlyx    ;@isl
+B485 16D47D           pfc             lbra    err_fc
+B488 813B             p_ch            cmpa    #';
+B48A 271E                             beq     ploop
+B48C 8127                             cmpa    #''
+B48E 271A                             beq     ploop
+B490 814F                             cmpa    #'O
+B492 27DF                             beq     p_oct
+B494 201F                             bra     p_v
+                      ; המחרוזות המקוננות (X) במחסנית: [אורך][כתובת]. הסמן בתחתית: כתובת 0
+B496 17DDBD           play_st         lbsr    frmevl
+B499 8E0000           plyx            ldx     #0              ; $ADBD נכנס כאן, כשהמחרוזת כבר ב-FPA0
+B49C 4F                               clra                    ; DAC והצליל דולק, עוד לפני בדיקת הסוג
+B49D 3412                             pshs    a,x
+B49F 8DCB                             bsr     snds
+B4A1 17E0BC                           lbsr    frestr          ; לא מחרוזת: ?TM
+B4A4 97D8             pset            sta     DLEN
+B4A6 9FD9                             stx     DPTR
+B4A8 27C7                             beq     pend            ; כתובת 0: הסמן, סוף PLAY
+B4AA 17FBE6           ploop           lbsr    dget
+B4AD 24D9                             bcc     p_ch
+B4AF 3512                             puls    a,x             ; המחרוזת נגמרה: חוזרים לחיצונית
+B4B1 20F1                             bra     pset
                       ; ‏$B4B3: שני בתים שתוכנות של אז בודקות כדי לדעת שהן על Dragon ולא על CoCo. Star Spores (Microdeal) קורא שם את
                       ; המילה $2843, ואם היא שם הוא עובר למפת המקלדת של ה-Dragon (החיצים בשורה אחרת). העובדה מהקוד של המשחק עצמו (30.10).
                       ; הם באים אחרי קפיצה, אז אף אחד לא מריץ אותם. entry-test בודק שהם במקום
 B4B3 2843                             fcb     $28,$43
-B4B5 8156             2               cmpa    #'V
+B4B5 8156             p_v             cmpa    #'V
 B4B7 261A                             bne     3F
 B4B9 D6DF                             ldb     VOLHI           ; העוצמה הנוכחית: הגבוה חלקי 4, פחות 31
 B4BB 54                               lsrb
@@ -7229,7 +7233,7 @@ B4BC 54                               lsrb
 B4BD C01F                             subb    #31
 B4BF 1700D3                           lbsr    parg
 B4C2 C11F                             cmpb    #31
-B4C4 22AB                             bhi     pfc
+B4C4 22BF                             bhi     pfc
 B4C6 58                               lslb
 B4C7 58                               lslb
 B4C8 1F98                             tfr     b,a             ; גבוה = 126+4V, נמוך = 124-4V
@@ -7237,23 +7241,23 @@ B4CA 8B7E                             adda    #126
 B4CC 50                               negb
 B4CD CB7C                             addb    #124
 B4CF DDDF                             std     VOLHI
-B4D1 20B5                             bra     ploop
+B4D1 20D7                             bra     ploop
 B4D3 814C             3               cmpa    #'L
 B4D5 261E                             bne     4F
 B4D7 D6E1                             ldb     NOTELN
 B4D9 1700B9                           lbsr    parg
 B4DC 5D                               tstb
-B4DD 2792             pfc_t           beq     pfc             ; (3.11: גם T ו-P קופצים לכאן, Z=1, כדי ש-pfc2 יעבור ליד parg)
+B4DD 27A6             pfc_t           beq     pfc             ; (3.11: גם T ו-P קופצים לכאן, Z=1, כדי ש-pfc2 יעבור ליד parg)
 B4DF D7E1                             stb     NOTELN
 B4E1 0FE5                             clr     DOTVAL
 B4E3 17FBAD           31              lbsr    dget            ; הנקודות: רק מיד אחרי L
-B4E6 25A0                             bcs     ploop
+B4E6 25C2                             bcs     ploop
 B4E8 812E                             cmpa    #'.
 B4EA 2604                             bne     32F
 B4EC 0CE5                             inc     DOTVAL
 B4EE 20F3                             bra     31B
 B4F0 17FBBA           32              lbsr    dback
-B4F3 2093                             bra     ploop
+B4F3 20B5                             bra     ploop
 B4F5 8154             4               cmpa    #'T
 B4F7 260F                             bne     5F
 B4F9 D6E2                             ldb     TEMPO
@@ -7261,7 +7265,7 @@ B4FB 170097                           lbsr    parg
 B4FE 5D                               tstb
 B4FF 27DC                             beq     pfc_t
 B501 D7E2                             stb     TEMPO
-B503 2083             ploop_t         bra     ploop
+B503 20A5             ploop_t         bra     ploop
 B505                                  fill    $ff,$b505-*     ;@isl
 B505 7E9F32                           jmp     x_inch7 ;@isl
 B508 8150             5               cmpa    #'P
@@ -7328,7 +7332,7 @@ B582 810B                             cmpa    #11
 B584 220C                             bhi     pfc2
 B586 D6E1                             ldb     NOTELN
 B588 1700DB                           lbsr    pnote           ; (3.11: lbsr, כי pnote עבר אחרי $B663)
-B58B 16FEFA                           lbra    ploop
+B58B 16FF1C                           lbra    ploop
 B58E FF                               fill    $ff,$b58f-*     ;@isl
 B58F 7EBE3E                           jmp     putc    ;@isl
 B592 16D370           pfc2            lbra    err_fc          ; (3.11: עבר לכאן מלפני $B538, ליד parg: קפיצות קצרות. 4.11: אחרי $B58F)

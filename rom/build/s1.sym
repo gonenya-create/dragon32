@@ -82,6 +82,7 @@ prspc	equ	36857
 pc_bs	equ	48776
 EDCH	equ	221
 x_clsb	equ	40675
+p_oct	equ	46195
 TICKS	equ	274
 GFORE	equ	178
 fmult	equ	35750
@@ -293,7 +294,7 @@ HK_COUT	equ	359
 tblkwr	equ	47081
 rl_hdr	equ	42075
 ts2	equ	47298
-play_st	equ	46196
+play_st	equ	46230
 circle_st	equ	44542
 lrange	equ	34508
 fin_end	equ	36006
@@ -308,6 +309,7 @@ fsubit	equ	35417
 isl_bac5	equ	47813
 pfc_t	equ	46301
 ed_cmd	equ	42328
+p_ch	equ	46216
 cr_kw	equ	34346
 FACMO	equ	82
 renum	equ	41886
@@ -316,7 +318,7 @@ comfrm	equ	37456
 mzero	equ	41212
 twslot	equ	32798
 synchk	equ	36517
-plyx	equ	46199
+plyx	equ	46233
 log	equ	41033
 lowtab	equ	35026
 movdsc	equ	38129
@@ -385,6 +387,7 @@ piaddr	equ	48646
 err_io	equ	35128
 putnew	equ	38094
 warm2	equ	33755
+pset	equ	46244
 CRMODE	equ	1016
 zerofc	equ	35570
 devgetln	equ	48256
@@ -459,6 +462,7 @@ DBLZER	equ	138
 DEVCFW	equ	106
 if_no	equ	38966
 wrhdx	equ	47402
+pend	equ	46193
 pr_semi	equ	37020
 strcmp	equ	38196
 wrhdr	equ	47396
@@ -725,7 +729,7 @@ CBFCNT	equ	121
 fretmp	equ	38248
 m_err	equ	33503
 SHIFTED	equ	48855
-pfc	equ	46193
+pfc	equ	46213
 reset	equ	33524
 gc_pass	equ	38526
 prspcs	equ	37053
@@ -982,6 +986,7 @@ SCREEN	equ	1024
 GCX	equ	203
 scrtch	equ	34208
 gdl	equ	44470
+p_v	equ	46261
 on	equ	39027
 mem_om	equ	40658
 fn_sin	equ	41255
@@ -995,7 +1000,7 @@ cr_lp2	equ	34402
 HK_CLONE	equ	374
 line_st	equ	41762
 exec	equ	39714
-ploop	equ	46216
+ploop	equ	46250
 ptrget0	equ	37291
 HALFMAX	equ	148
 EDFLG	equ	216

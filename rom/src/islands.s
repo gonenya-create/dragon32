@@ -210,6 +210,10 @@ warm		nop
 ; ‏FIRQ (המחסנית), דרך $010F
 		jmp	firq
 
+; @island $B482
+; השהיה: X סיבובים (Junior's Revenge, חבילה 8)
+		jmp	dlyx
+
 ; @island $B54A
 ; תו להתקן הנוכחי (היעד של $A002)
 		jmp	chrout
