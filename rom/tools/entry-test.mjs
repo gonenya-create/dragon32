@@ -263,6 +263,18 @@ try {
   s = await run([...poke(0x7000, '8605 976F 8601 9778 8E1234 C656 BDB663 BF7080 F77082 966F B77083 9678 B77084 86FF 976F BDB663 9678 B77085 966F B77086 39'),
     'EXEC &H7000:PRINT PEEK(&H7080)*256+PEEK(&H7081);PEEK(&H7082);PEEK(&H7083);PEEK(&H7084);PEEK(&H7085);PEEK(&H7086)']);
   ok('$B663 סוגר את ההתקן שב-$6F: ‏$6F = 0 תמיד, ‏$78 מתאפס רק בקלטת, ו-X ו-B נשמרים (קורא 3.11)', /^ 4660  86  0  1  0  0 ?$/m.test(s), show(tail(s)));
+
+  console.log('Telewriter (4.11): ‏$B58F');
+  // ‏$6F = $FE (מדפסת): ‏$B58F כותב למסך בכל זאת, ו-U נשמר
+  s = await run([...poke(0x7000, '86FE 976F CE1234 8648 BDB58F FF7080 0F6F 39'),
+    'CLS:EXEC &H7000:A=PEEK(1024):PRINT A;PEEK(&H7080)*256+PEEK(&H7081)']);
+  ok('$B58F כותב את התו למסך גם כשההתקן הוא המדפסת, ו-U נשמר (קורא 4.11)', /^H 72  4660 ?$/m.test(s), show(tail(s)));
+
+  console.log('Airball (4.11): ‏$978E');
+  // ‏Y ו-U נשמרים, והתוצאה ב-FAC קטנה מ-1 (המעריך עד $80)
+  s = await run([...poke(0x7000, '108E1234 CE5678 BD978E 10BF7080 FF7082 964F B77084 39'),
+    'EXEC &H7000:PRINT PEEK(&H7080)*256+PEEK(&H7081);PEEK(&H7082)*256+PEEK(&H7083);-(PEEK(&H7084)<=128)']);
+  ok('$978E נותן שבר חדש ב-FAC, ו-Y ו-U נשמרים (קורא 4.11)', /^ 4660  22136  1 ?$/m.test(s), show(tail(s)));
 } catch (e) {
   fail++; console.log('  ✗ ' + e.message);
 }
