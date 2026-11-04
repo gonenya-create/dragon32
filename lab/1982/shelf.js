@@ -1806,13 +1806,11 @@ body.game-open .shelf > :not(.game-view) { display: none; }
     a.click();
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
   }
+  // קלטת חדשה מחליפה קלטות קודמות עם אותו שם, אבל כל הקבצים שבה נשארים, גם כשיש בה כמה קבצים עם אותו שם
+  // (4.11: ב-Telewriter יש DEMO אחרי כל אחת מארבע הגרסאות. נשאר רק האחרון, ו-READ IN מ-TELE/G חיפש אותו דקות)
   function addTapes(files) {
-    const list = myTapes();
-    for (const f of files) {
-      const at = list.findIndex(t => t.n === f.n);
-      if (at >= 0) list.splice(at, 1);
-      list.push(f);
-    }
+    const names = new Set(files.map(f => f.n));
+    const list = myTapes().filter(t => !names.has(t.n)).concat(files);
     if (!keep(list)) status.textContent = EN ? 'No room left to keep the tape in this browser.' : 'אין מקום לשמור את הקלטת בדפדפן הזה.';
     renderMine();
     insertLibrary();
