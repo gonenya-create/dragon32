@@ -4,7 +4,7 @@ sincon	equ	41525
 dget	equ	45203
 POLLS	equ	130
 getadr	equ	39671
-strfb	equ	40072
+strfb	equ	40076
 fn_sgn	equ	37804
 sgnr	equ	36197
 GCBEST	equ	236
@@ -55,12 +55,12 @@ POLYPT	equ	100
 getstk	equ	39659
 us_ft	equ	43439
 datbk1	equ	39528
-rndmul	equ	39859
-fn_fix	equ	39863
+rndmul	equ	39863
+fn_fix	equ	39867
 isl_b54a_e	equ	46413
 FRETOP	equ	35
 snddur	equ	47781
-radix	equ	39927
+radix	equ	39931
 fn_usr	equ	40477
 error	equ	33905
 gogo	equ	36698
@@ -156,14 +156,14 @@ tpoll	equ	47274
 BITS	equ	91
 frmevl	equ	37462
 us_pct	equ	43494
-fndoer	equ	39173
+fndoer	equ	39178
 savq	equ	35827
 isl_849f_e	equ	33978
 err_od	equ	35074
 isl_8b2d_2	equ	35672
 errdir	equ	39365
 isl_8b2d_1	equ	35658
-if	equ	38931
+if	equ	38936
 clsone	equ	48383
 twopi	equ	41453
 preset_st	equ	43838
@@ -214,7 +214,7 @@ RNPTR	equ	211
 eio	equ	47633
 ARYREC	equ	246
 llist	equ	36622
-finx	equ	39921
+finx	equ	39925
 orop	equ	37968
 ARGEXP	equ	92
 USSG	equ	207
@@ -225,7 +225,7 @@ faddt	equ	35324
 fin_lp	equ	35925
 PIA1	equ	65312
 rem	equ	36633
-tkget	equ	38995
+tkget	equ	39000
 go	equ	36672
 PIA0	equ	65280
 close_st	equ	48357
@@ -257,7 +257,7 @@ gscl	equ	43645
 PHASE	equ	132
 err_ls	equ	35107
 gline_st	equ	44196
-getdef	equ	38821
+getdef	equ	38826
 chkin	equ	47890
 atncon	equ	41556
 fltail	equ	35534
@@ -444,7 +444,7 @@ LPTWID	equ	155
 PLYTMR	equ	227
 fn_pos	equ	40268
 csavx	equ	47650
-getfnm	equ	39149
+getfnm	equ	39154
 ayint	equ	36116
 PSTEP	equ	213
 cpy	equ	46794
@@ -457,7 +457,7 @@ pn8	equ	46585
 getfne	equ	34922
 DBLZER	equ	138
 DEVCFW	equ	106
-if_no	equ	38961
+if_no	equ	38966
 wrhdx	equ	47402
 pr_semi	equ	37020
 strcmp	equ	38196
@@ -469,7 +469,7 @@ gl_ent	equ	34820
 x_css2	equ	44065
 fpwrt	equ	41089
 ary_bs	equ	38741
-nz0999	equ	39190
+nz0999	equ	40256
 x_adrbyt	equ	40738
 CELL	equ	134
 BITLIM	equ	146
@@ -478,7 +478,7 @@ GY	equ	191
 GX	equ	189
 samset	equ	44126
 VARTAB	equ	27
-dim	equ	38919
+dim	equ	38924
 nzmil	equ	35150
 isl_9d3d_e	equ	40265
 clmx	equ	46939
@@ -488,6 +488,7 @@ devfac	equ	46108
 g2pt	equ	44140
 inloop	equ	39492
 cadr	equ	47710
+isl_978e_e	equ	38801
 negfac	equ	35498
 prin	equ	33884
 put_st	equ	45730
@@ -527,12 +528,12 @@ ary_new	equ	38744
 banner	equ	34957
 fin_ed	equ	35977
 fcerr	equ	37957
-fn_val	equ	39881
+fn_val	equ	39885
 FACEXP	equ	79
 ed_rest	equ	42483
 DPTR	equ	217
 fout	equ	36235
-fn_str	equ	40066
+fn_str	equ	40070
 DEVWID	equ	109
 csv2	equ	47769
 main	equ	33813
@@ -652,10 +653,10 @@ prlist	equ	36865
 gpbit	equ	45967
 runc	equ	34225
 HLOAD	equ	487
-fn_instr	equ	40078
+fn_instr	equ	40082
 fdiv	equ	35792
 logcn2	equ	41463
-def	equ	39103
+def	equ	39108
 sgxy	equ	41620
 skipf_st	equ	40808
 gcpt	equ	44673
@@ -770,7 +771,7 @@ isdig	equ	34267
 FNLEN	equ	465
 GSETF	equ	194
 FBUFPT	equ	100
-fn_hex	equ	40010
+fn_hex	equ	40014
 evnzb	equ	46092
 LINNUM	equ	43
 CSUM	equ	128
@@ -794,7 +795,7 @@ opnin	equ	36463
 stkmain	equ	33846
 for	equ	37065
 fn_exp	equ	41174
-mulcur	equ	38864
+mulcur	equ	38869
 inbrk	equ	39424
 audio_st	equ	33742
 strarg	equ	37907
@@ -809,7 +810,7 @@ KPRE	equ	1017
 MEMSIZ	equ	39
 tmoton	equ	34907
 m_ov	equ	41331
-fn_strng	equ	40195
+fn_strng	equ	40199
 RNSTEP	equ	207
 us_no	equ	42806
 chkstr	equ	37932
@@ -837,7 +838,7 @@ GPBIT	equ	212
 defusr	equ	40533
 brkchk	equ	39270
 rnd_adv	equ	39771
-ptrsub	equ	39165
+ptrsub	equ	39170
 fntab	equ	33226
 evcol	equ	43768
 ed_cr	equ	42698
@@ -861,7 +862,7 @@ pnote	equ	46694
 pmfc	equ	44008
 motor_st	equ	47860
 clrfac	equ	36158
-if_do	equ	38952
+if_do	equ	38957
 gone	equ	36555
 g2gl	equ	44187
 isl_bd52_e	equ	48469
@@ -880,7 +881,7 @@ chkcom	equ	36512
 fhalf	equ	35161
 ed_bs	equ	42558
 cls_st	equ	40661
-return	equ	39068
+return	equ	39073
 stop	equ	39293
 fn_chr	equ	38362
 prompt	equ	39372
@@ -899,7 +900,7 @@ chrtpl	equ	36494
 gonew	equ	36700
 rl_ref	equ	41990
 GACT	equ	180
-cchk	equ	39162
+cchk	equ	39167
 wblkt	equ	47438
 ki_out	equ	48988
 us_orf	equ	43025
@@ -956,7 +957,7 @@ x_mux	equ	40788
 cl_asc	equ	48460
 fout3	equ	36286
 isl_957a_e	equ	38269
-data	equ	39097
+data	equ	39102
 irq	equ	49079
 us_digi	equ	43480
 chkrp	equ	36509
@@ -981,7 +982,7 @@ SCREEN	equ	1024
 GCX	equ	203
 scrtch	equ	34208
 gdl	equ	44470
-on	equ	39022
+on	equ	39027
 mem_om	equ	40658
 fn_sin	equ	41255
 trmnok	equ	39621
@@ -1016,7 +1017,7 @@ USL	equ	217
 fndfor	equ	37193
 TEMPST	equ	425
 ARGMO	equ	95
-ary_x	equ	38858
+ary_x	equ	38863
 MOTDLY	equ	149
 newstt	equ	36527
 USF	equ	212
@@ -1033,7 +1034,7 @@ stpdrop	equ	39306
 CHARAC	equ	1
 givb	equ	35521
 BLKTYP	equ	124
-ary_om	equ	38861
+ary_om	equ	38866
 OCTAVE	equ	222
 efmo	equ	48354
 newstk	equ	36751
@@ -1070,7 +1071,7 @@ ed_h	equ	42590
 fn_tan	equ	41338
 err_st	equ	35110
 ed_e	equ	42675
-reason	equ	38902
+reason	equ	38907
 ed_d	equ	42553
 isl_a0ea	equ	41194
 ed_c	equ	42563

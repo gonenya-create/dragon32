@@ -82,6 +82,10 @@ isl_9772_e	;@isl
 		addd	CURTOL
 		bcs	ary_om
 		pshs	d
+		bra	isl_978e_e	;@isl
+		fill	$ff,$978e-*	;@isl
+		jmp	rnd_adv	;@isl
+isl_978e_e	;@isl
 		bsr	reason
 		puls	d
 		std	STREND

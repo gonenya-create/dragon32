@@ -36,7 +36,9 @@ rnd_seed	ldd	FACHO
 		std	RNDX
 		ldd	FACMO
 		std	RNDX+2
-rnd_adv		clra			; המכפלה המלאה, 8 בתים, הגבוה ראשון: שורה לכל בית של המצב
+; ‏$978E (קורא 4.11) מגיע לכאן: שבר חדש ב-FAC, ‏Y ו-U נשמרים כמו במקור (Airball)
+rnd_adv		pshs	y,u
+		clra			; המכפלה המלאה, 8 בתים, הגבוה ראשון: שורה לכל בית של המצב
 		clrb
 		std	RACC+4
 		std	RACC+6
@@ -75,7 +77,8 @@ rnd_adv		clra			; המכפלה המלאה, 8 בתים, הגבוה ראשון: ש
 		lda	#$80
 		sta	FACEXP
 		clr	FACSGN
-		lbra	normal
+		lbsr	normal
+		puls	y,u,pc
 rndmul		fdb	$40e6,$4dab	; 1088834987 (קורא)
 
 ; ---------- FIX: קיטום לכיוון אפס (קורא) ----------
@@ -275,6 +278,7 @@ fn_strng	lbsr	chklp		; "(" (כמו במקור: השגרה קוראת את האר
 		bra	isl_9d3d_e	;@isl
 		fill	$ff,$9d3d-*	;@isl
 		jmp	irq	;@isl
+nz0999		fcb	$9b,$3e,$bc,$1f,$fd	; 99999999.9499 (mit: NZ0999). 4.11: עבר לכאן מלפני $991B, כדי לפנות מקום ל-$978E
 		fill	$ff,$9d46-*	;@isl
 		jmp	irqtk	;@isl
 isl_9d3d_e	;@isl
