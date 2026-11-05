@@ -87,7 +87,7 @@ HK_DECR		equ	$01a6		; 25 פתיחת שורה (LIST, EDIT)		; ספר: STKTOP אח
 		jmp	swinit		; $8003 אתחול תוכנה
 		jmp	$bbe5		; $8006 מקלדת (כמו במקור: דרך $BBE5)
 		jmp	blink		; $8009 הבהוב הסמן
-		jmp	putc		; $800C פלט למסך
+		jmp	putcr		; $800C פלט למסך (כמו במקור: דרך $BCAB, בלי מצב טקסט; קורא 10.6)
 		jmp	prtout		; $800F פלט למדפסת
 		jmp	joyrd		; $8012 ג'ויסטיקים
 		jmp	tmoton		; $8015 מנוע דולק
@@ -1185,6 +1185,9 @@ fn_sqr		lbsr	chknum
 ; (מ-mitctl.s, 2.11: כדי לפנות מקום ל-$991B)
 m_extra		fcc	"?EXTRA IGNORED"
 		fcb	13,0
+; (6.11: עבר לכאן מלפני $A08E, כדי לפנות מקום ל-$A749 של Picture Maker)
+m_ul		fcc	"UL "
+		fcb	0
 
 ; ---------- שבעת המצביעים ב-$A000 (docs/DRAGON-SPEC-INTERFACES.md 3ב, DRAGON-SPEC-TAPE.md 1.10) ----------
 ; הקוד שלפני הטבלה חייב להיגמר לפני $A000 (אחרת האסמבלר נותן שגיאה). המקום שנשאר פנוי מתמלא ב-$FF

@@ -59,8 +59,9 @@ clrxd		stx	CURSOR
 ; putc: התו ב-A למסך במקום הסמן (קורא: docs/DRAGON-SPEC-SCREEN.md, סעיף 3)
 ; קודם חוזרים למצב טקסט (SAMALP). $20-$3F → $60-$7F; $40-$5F ו-$80-$FF כמו שהם; $60-$7F → $00-$1F (הפוך).
 ; 13: רווחים עד סוף השורה (כולל התא הנוכחי) ושורה חדשה. 8: תא אחד אחורה ורווח. שאר תווי הבקרה: כלום
-putc		pshs	a,b,x
-		bsr	txtmode
+putc		bsr	txtmode
+; putcr ($BCAB, ו-$800C): אותו דבר בלי לחזור למצב טקסט (קורא 10.6): A, ‏B ו-X נשמרים
+putcr		pshs	a,b,x
 		ldx	CURSOR
 		cmpa	#13
 		beq	pc_cr
@@ -103,10 +104,12 @@ pc_bs		cmpx	#SCREEN
 		stx	CURSOR
 putc_done	puls	a,b,x,pc
 
-; puts: מחרוזת ב-X שמסתיימת ב-0
-puts		lda	,x+		; להתקן שב-DEVNUM
+; puts ($99E6): מחרוזת ב-X שמסתיימת ב-0, להתקן שב-DEVNUM. כמו במקור (קורא 10.5): X נעצר על ה-0, ‏A = 0 ו-Z = 1.
+; (במקור יש גם תקרה של 249 תווים ו-B סופר; אצלנו B לא משתנה, ואין תקרה)
+puts		lda	,x
 		beq	1F
 		lbsr	chrout
+		leax	1,x
 		bra	puts
 1		rts
 

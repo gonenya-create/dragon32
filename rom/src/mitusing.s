@@ -68,6 +68,7 @@ us_lit		lda	,x		; תו רגיל
 		lbsr	chrout
 		inc	USPOS
 		bra	us_scan
+		fcb	$ff		; (6.11: בית ריפוד, כדי ש-$A749 ייפול על גבול פקודה)
 3		leas	2,s
 4		leax	1,x
 		stb	USW		; A = ! או %: לא 0 (סוג מחרוזת)
@@ -78,6 +79,10 @@ us_ok		tst	USEND
 		tfr	x,d		; USPOS = X פחות תחילת התבנית
 		subd	2,u
 		stb	USPOS
+		bra	isl_a749_e	;@isl
+		fill	$ff,$a749-*	;@isl
+		jmp	gline_st	;@isl
+isl_a749_e	;@isl
 		lbsr	frmevl
 		puls	a
 		inc	USANY
@@ -98,23 +103,6 @@ us_sep		jsr	<chrgot
 3		inc	USEND
 		bra	us_scan
 
-us_str		lbsr	frestr		; A = האורך, X = התווים
-		sta	USN
-		ldb	USW		; התחלה עד הרוחב, ורווחים מימין
-1		tst	USN
-		beq	2F
-		dec	USN
-		lda	,x+
-		lbsr	chrout
-		decb
-		bne	1B
-2		tstb			; חסרים 129 ומעלה: לא משלימים (קורא: בדיקת המונה במקור)
-		ble	us_sep
-		lda	#$20
-3		lbsr	chrout
-		decb
-		bne	3B
-		bra	us_sep
 
 ; us_nf: שדה מספרי (קורא, סעיף 2): [+] [** / $$ / **$] [# ,]... [. #...] [^^^^] [+ / -]
 us_nf		pshs	x
@@ -152,6 +140,24 @@ us_nf		pshs	x
 		bsr	us_pre1
 		bra	3B
 
+; (6.11: us_str עבר לכאן, אחרי us_nf, כדי שהקפיצה הקצרה מ-us_nf ל-us_no תגיע גם עם $A749 ביניהן)
+us_str		lbsr	frestr		; A = האורך, X = התווים
+		sta	USN
+		ldb	USW		; התחלה עד הרוחב, ורווחים מימין
+1		tst	USN
+		beq	2F
+		dec	USN
+		lda	,x+
+		lbsr	chrout
+		decb
+		bne	1B
+2		tstb			; חסרים 129 ומעלה: לא משלימים (קורא: בדיקת המונה במקור)
+		ble	us_sep
+		lda	#$20
+3		lbsr	chrout
+		decb
+		bne	3B
+		bra	us_sep
 ; us_ch: A = התו ב-X (0 אחרי הסוף)
 us_ch		clra
 		cmpx	USEPT
@@ -231,6 +237,7 @@ USF		equ	$d4	; תו המילוי (רווח או *)
 USBASE		equ	$fc		; 2 בתים: מקום העבודה במחסנית (הכתובת $FC-$FD פנויה גם במקור)
 ; מקום העבודה: 9 הספרות בהתחלה, והחלק שלפני הנקודה מ-+16 (שלושה תאים לפניו: %, הסימן וה-$).
 ; במחסנית, כי מאגר השורה מחזיק עכשיו את השורה שרצה (קורא: קלטת 11)
+
 USSZ		equ	48
 
 us_numw		leas	-USSZ,s
@@ -338,17 +345,17 @@ us_dg		lbsr	faddh
 		lbsr	qint
 		ldy	USBASE
 		ldx	#foutbl
+1		lbsr	fdig
+		stb	,y+		; (6.11: שתי הפקודות האלה עברו לפני $A93A, לפנות מקום ל-$A95D)
 		bra	isl_a93a_e	;@isl
 		fill	$ff,$a93a-*	;@isl
 		jmp	txtmode	;@isl
 isl_a93a_e	;@isl
-1		lbsr	fdig
-		stb	,y+
 		cmpx	#foutbl+36	; תשע החזקות
 		blo	1B
 ; us_out: מהספרות לפלט: החלק השלם (פסיקים), מילוי, סימן ו-$, התאמה לרוחב (%), נקודה, שבר, מעריך, סימן נגרר
-us_out		ldy	USBASE
-		leay	16,y
+us_out		leay	7,y		; Y = USBASE+9 אחרי תשע הספרות, ועכשיו USBASE+16 (6.11: 3 בתים פחות מ-ldy/leay)
+		leax	,y		; X = USBASE+16 עד 5 למטה (us_digi לא נוגע ב-X; 6.11)
 		ldb	USP		; i = 0 .. P-1. אין ספרות לפני הנקודה: i = P-1 בלבד ("0")
 		decb
 		bmi	2F
@@ -361,6 +368,12 @@ us_out		ldy	USBASE
 		bne	22F
 		tstb
 		beq	22F
+		bra	isl_a95d_e	;@isl
+		fill	$ff,$a95d-*	;@isl
+		pshs	d,x	;@isl
+		lbsr	gfxmode	;@isl
+		puls	d,x,pc	;@isl
+isl_a95d_e	;@isl
 		pshs	b
 		lda	USP
 		suba	,s+
@@ -372,8 +385,7 @@ us_out		ldy	USBASE
 22		bsr	us_digi
 		bra	2B
 3		clr	,y		; Y = הסוף (0 אחריו)
-		ldu	USBASE
-		leau	16,u		; אפסים ופסיקים מובילים → מילוי, חוץ מהתו האחרון
+		leau	,x		; U = USBASE+16 (X מ-us_out). אפסים ופסיקים מובילים → מילוי, חוץ מהתו האחרון
 		lda	USF
 		sta	-1,u
 		sta	-2,u
@@ -386,9 +398,7 @@ us_out		ldy	USBASE
 		bne	5F
 41		sta	,u+
 		bra	4B
-5		ldx	USBASE
-		leax	16,x		; לפני הספרה הראשונה (U): $ צף, ולפניו הסימן. X = ההתחלה
-		ldb	USFLG
+5		ldb	USFLG		; לפני הספרה הראשונה (U): $ צף, ולפניו הסימן. X = ההתחלה
 		bitb	#4
 		beq	6F
 		lda	#'$
@@ -409,9 +419,8 @@ us_ft		tfr	y,d		; התאמה לרוחב L. B = האורך
 		bne	8F
 		leax	1,x
 		bra	us_ft
-8		lda	USD		; אפס לפני נקודה וספרת שבר: מסירים, הסימן וה-$ נשארים
-		deca
-		bmi	us_pct
+8		tst	USD		; אפס לפני נקודה וספרת שבר: מסירים, הסימן וה-$ נשארים
+		ble	us_pct		; USD <= 0 (6.11: במקום lda/deca/bmi, בית אחד פחות; USD לא -128)
 		lda	-1,y
 		cmpa	#'0
 		bne	us_pct
@@ -445,18 +454,18 @@ us_fit		ldb	USD
 3		lda	USFLG
 		bita	#$40
 		beq	5F
-		lda	#'E
-		sta	,y+
-		lda	#'+
+		ldd	#'E*256+'+	; E וסימן + (6.11: בבת אחת, בית אחד פחות)
+		std	,y++
 		ldb	USX
 		bpl	4F
+		negb
+		lda	#'-		; מעריך שלילי: - במקום ה-+
+		sta	-1,y
 		bra	isl_aa10_e	;@isl
 		fill	$ff,$aa10-*	;@isl
 		jmp	x_css	;@isl
 isl_aa10_e	;@isl
-		negb
-		lda	#'-
-4		sta	,y+
+4
 		lda	#'0-1
 41		inca
 		subb	#10

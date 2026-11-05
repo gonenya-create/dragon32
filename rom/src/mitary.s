@@ -67,6 +67,9 @@ ary_new		stx	ARYREC
 4		ldd	,x++		; DIM: האינדקס ועוד 1
 		addd	#1
 		bra	isl_9772_e	;@isl
+; TROFF (6.11: עבר לכאן מ-mitedit.s, לפנות מקום ל-$A749)
+troff		clr	TRCFLG
+		rts
 		fill	$ff,$9772-*	;@isl
 		jmp	fn_rnd	;@isl
 isl_9772_e	;@isl

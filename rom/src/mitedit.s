@@ -7,12 +7,6 @@ RNOLD		equ	$d1		; הסף (השורה הישנה הראשונה שממוספרת)
 RNPTR		equ	$d3		; DEL / RENUM: מצביע לשורה
 RNNEW		equ	$d5		; המספר החדש הראשון
 
-; ---------- TRON / TROFF ----------
-tron		lda	#$4f
-		sta	TRCFLG
-		rts
-troff		clr	TRCFLG
-		rts
 ; trace: בכניסה לשורה בתוכנית: [n] בלי רווחים (קורא)
 trace		tst	TRCFLG
 		beq	9F

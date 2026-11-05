@@ -285,6 +285,23 @@ try {
   s = await run([...poke(0x7000, '8E1234 861F C6FF 108E5678 BDB480 3401 BF7080 B77082 F77083 10BF7084 3502 B77086 39'),
     'EXEC &H7000:PRINT PEEK(&H7080)*256+PEEK(&H7081);PEEK(&H7082);PEEK(&H7083);PEEK(&H7084)*256+PEEK(&H7085);PEEK(&H7086) AND 4']);
   ok('$B480 משהה חצי שנייה: X חוזר 0, ‏Z = 1, ו-A, ‏B ו-Y נשמרים (קורא 5.11)', /^ 0  31  255  22136  4 ?$/m.test(s), show(tail(s)));
+  console.log('Picture Maker (6.11): ‏$99E6 $BCAB $A95D $A749 $AC87 $B238');
+  // $99E6: מחרוזת שמסתיימת ב-0 (ב-X) למסך. X נעצר על ה-0, ו-A = 0
+  s = await run([...poke(0x7100, '484900'), ...poke(0x7000, '8E7100 BD99E6 BF7080 B77082 39'),
+    'CLS:EXEC &H7000:PRINT:PRINT PEEK(&H7080)*256+PEEK(&H7081);PEEK(&H7082)']);
+  ok('$99E6 מדפיס עד ה-0: X על ה-0, ‏A = 0 (קורא 10.5)', /^HI\n 28930  0 ?$/m.test(s), show(tail(s)));
+  // $A95D: מצב גרפי לפי PMODE (4 = GM 7), ו-A, ‏B ו-X נשמרים. ‏$BCAB: תו למסך הטקסט בלי לחזור למצב טקסט
+  s = await run(['PMODE 4,1', ...poke(0x7000, '8E1234 CC5678 BDA95D BF7080 FD7082 B6FF22 B77084 8641 BDBCAB B6FF22 B77085 BF7086 39'),
+    'CLS:EXEC &H7000:PRINT:PRINT PEEK(&H7080)*256+PEEK(&H7081);PEEK(&H7082)*256+PEEK(&H7083);PEEK(&H7084) AND 240;PEEK(&H7085) AND 240;PEEK(&H7086)*256+PEEK(&H7087)']);
+  ok('$A95D עובר לגרפיקה ושומר A, ‏B ו-X; ‏$BCAB כותב A למסך ונשאר בגרפיקה, X נשמר (קורא 10.1, 10.6)', /^A\n 4660  22136  240  240  4660 ?$/m.test(s), show(tail(s)));
+  // LINE, PAINT ו-CIRCLE מהכניסה של המפזר: $A6 על הטקסט (עם האסימונים), A = התו הראשון. ‏$A6 נשמר מסביב, כמו ב-Picture Maker
+  const stmt = (a, text) => [...poke(0x7100, text), ...poke(0x7000, `DCA6 3406 8E7100 9FA6 A684 BD${a} 3510 9FA6 39`)];
+  s = await run(['PMODE 4,1:PCLS', ...stmt('A749', '28302C3029 C4 2832302C323029 2C AC 00'), 'EXEC &H7000:A=PPOINT(10,10):B=PPOINT(10,0):PRINT A;B']);
+  ok('$A749 (LINE) מצייר קו מ-(0,0) ל-(20,20) (קורא 10.4)', /^ 1  0 ?$/m.test(s), show(tail(s)));
+  s = await run(['PMODE 4,1:PCLS', ...stmt('B238', '283132382C393629 2C 3230 00'), 'EXEC &H7000:A=PPOINT(148,96):B=PPOINT(128,96):PRINT A;B']);
+  ok('$B238 (CIRCLE) מצייר עיגול ברדיוס 20 סביב (128,96) (קורא 10.3)', /^ 1  0 ?$/m.test(s), show(tail(s)));
+  s = await run(['PMODE 3,1:PCLS:COLOR 4,1:LINE(10,10)-(30,30),PSET,B', ...stmt('AC87', '2832302C323029 2C 32 2C 34 00'), 'EXEC &H7000:A=PPOINT(20,20):B=PPOINT(40,40):PRINT A;B']);
+  ok('$AC87 (PAINT) צובע בצבע 2 בתוך מלבן בצבע 4 (קורא 10.2)', /^ 2  1 ?$/m.test(s), show(tail(s)));
 } catch (e) {
   fail++; console.log('  ✗ ' + e.message);
 }

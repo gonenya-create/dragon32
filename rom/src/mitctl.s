@@ -232,18 +232,9 @@ stpend		pshs	cc
 		bcc	3F
 		lbsr	condcr
 		ldx	#m_brk
-		lbsr	puts
+		bsr	x_puts		; ($99E6 קרוב: בית אחד פחות)
 		lbsr	prin
 3		lbra	endcon
-cont		bne	9B
-		ldd	OLDTXT		; 0: אחרי RUN, עריכה, שגיאה או NEW (mit: STKINI)
-		lbeq	err_cn
-		std	TXTPTR
-		ldd	OLDLIN
-		std	CURLIN
-		rts
-m_brk		fcc	"BREAK"
-		fcb	0
 ; errdir: במצב ישיר: ?ID (mit: ERRDIR). CURLIN=$FFFF; בית עליון $FF אין בשורה אמיתית (עד 63999).
 ; ממשיכים ב-prompt: "הנחיה"; אם יש (INPUT, LINE INPUT. ב-DEF התו הוא FN, ואין כלום)
 errdir		lda	CURLIN
@@ -266,9 +257,19 @@ prompt		jsr	<chrgot
 		lbsr	synchk
 		lbsr	strprt
 9		rts
+; (6.11: READ עבר לכאן, ו-errdir/prompt עברו לפני CONT, כדי ש-$99E6 ייפול מיד אחרי סוף של שגרה)
+read		ldx	DATPTR
+		lda	#$80
+		sta	INPFLG
+		bra	inloop0
+execrts		rts			; EXEC בלי כתובת אחרי ההדלקה (6.11: עבר לכאן, אחרי READ, לפני $99E6)
+		fill	$ff,$99e6-*	;@isl
+x_puts		jmp	puts	;@isl
+m_brk		fcc	"BREAK"
+		fcb	0
 ; qinlin: "? " ושורה מהמקלדת. BREAK: עוצרים, ו-CONT חוזר ל-INPUT
 qinlin		ldx	#m_qs
-qinlx		lbsr	puts		; לקלטת שפתוחה לקריאה: נזרק
+qinlx		bsr	x_puts		; ($99E6 קרוב) לקלטת שפתוחה לקריאה: נזרק
 		lbsr	devgetln
 		bcc	9B		; (ה-rts של prompt)
 		leas	2,s		; qinlin
@@ -276,6 +277,14 @@ qinlx		lbsr	puts		; לקלטת שפתוחה לקריאה: נזרק
 inbrk		ldx	TXTBEG
 		stx	TXTPTR
 		bra	stpdrop
+; (6.11: CONT עבר לכאן, אחרי inbrk, כדי שהקפיצה הקצרה ל-stpdrop תגיע. ה-9B שלו מגיע ל-rts של prompt)
+cont		bne	9B
+		ldd	OLDTXT		; 0: אחרי RUN, עריכה, שגיאה או NEW (mit: STKINI)
+		lbeq	err_cn
+		std	TXTPTR
+		ldd	OLDLIN
+		std	CURLIN
+		rts
 
 ; ---------- READ / INPUT (mit: READ, INPUT, INLOOP) ----------
 ; הנתונים: מצביע אחד על רשימת המשתנים (TXTPTR, נשמר ב-VARTXT) ואחד על הנתונים (INPPTR),
@@ -294,10 +303,6 @@ datlop		lbsr	data
 		cmpa	#$86		; DATA
 		bne	datlop
 		bra	datbk1
-read		ldx	DATPTR
-		lda	#$80
-		sta	INPFLG
-		bra	inloop0
 input		bsr	errdir		; לא במצב ישיר: ?ID; ואחר כך ההנחיה
 		lda	#',
 		sta	BUFMIN
@@ -422,5 +427,4 @@ exec		beq	1F		; בלי כתובת: האחרונה
 		bsr	frmadr
 		std	EXECJP
 1		jmp	[EXECJP]	; קוד המכונה חוזר ב-RTS ישר ל-gone
-execrts		rts
 

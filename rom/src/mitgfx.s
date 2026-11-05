@@ -24,14 +24,6 @@ GCHG		equ	$db		; PAINT: כל נקודה שמשנה בית מדליקה כאן ב
 GANGLE		equ	$e8		; DRAW: הזווית 0-3
 GSCALE		equ	$e9		; DRAW: קנה המידה 0-62
 
-; gfxrun: בהדלקה ובכל RUN (קורא 0.2): הנקודה האחרונה (128,96), זווית וקנה מידה 0
-gfxrun		ldd	#128
-		std	GLX
-		ldb	#96
-		std	GLY
-		clrb			; A כבר 0: הזווית וקנה המידה (GANGLE, GSCALE צמודים)
-		std	GANGLE
-		lbra	plyini		; ברירות PLAY (קורא: צליל 0.2)
 
 ; ---------- קואורדינטות (קורא 0.4) ----------
 ; gpar: "(x,y)" ל-U. gcoord: "x,y" ל-U (x ב-U, y ב-U+2, שני בתים כל אחד).
@@ -371,6 +363,17 @@ glgx		ldd	GLX
 		ldd	GLY
 		std	GY
 		rts
+		fill	$ff,$ac87-*	;@isl
+		jmp	paint_st	;@isl
+; (6.11: gfxrun עבר לכאן מתחילת הקובץ, כדי ש-$AC87 של PAINT ייפול מיד אחרי glgx, בלי קפיצה מעליו)
+; gfxrun: בהדלקה ובכל RUN (קורא 0.2): הנקודה האחרונה (128,96), זווית וקנה מידה 0
+gfxrun		ldd	#128
+		std	GLX
+		ldb	#96
+		std	GLY
+		clrb			; A כבר 0: הזווית וקנה המידה (GANGLE, GSCALE צמודים)
+		std	GANGLE
+		lbra	plyini		; ברירות PLAY (קורא: צליל 0.2)
 g2gl		ldd	GX2
 		std	GLX
 		ldd	GY2
@@ -529,25 +532,3 @@ gdl		ldb	#1
 ; $ADBD: PLAY כשהמחרוזת כבר חושבה (ב-FPA0, למשל מ-$8C5B). Chuckie Egg (A&F, 31.10) מנגן כך את המנגינות שלו במצב Dragon
 		lbra	plyx
 
-; ---------- PCOPY s TO d (קורא 13) ----------
-; כל דף: 0 → ?FC, ומתחיל אחרי תחילת התוכנית → ?FC (חשבון של 8 ביטים). 1536 בתים, מלמטה למעלה
-pcopy_st	bsr	gpage
-		pshs	d
-		lda	#$bc		; TO
-		lbsr	synchk
-		bsr	gpage
-		tfr	d,u
-		puls	x
-		ldy	#768
-1		ldd	,x++
-		std	,u++
-		leay	-1,y
-		bne	1B
-		rts
-; gpage: מספר דף → D = כתובת הדף (gpg0 ליד PMODE)
-gpage		lbsr	gpg0
-		cmpb	TXTTAB
-		lbhs	err_fc
-		tfr	b,a
-		clrb
-		rts

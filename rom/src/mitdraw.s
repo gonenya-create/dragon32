@@ -135,8 +135,7 @@ dmval		bsr	dgetf
 		rts
 
 ; המחרוזות המקוננות (X) נשמרות במחסנית: [אורך][כתובת]. הסמן בתחתית: כתובת 0
-draw_st		lbsr	frmevl
-		lbsr	frestr		; לא מחרוזת: ?TM
+draw_st		lbsr	evstr		; לא מחרוזת: ?TM
 		sta	DLEN
 		stx	DPTR
 		clra
@@ -283,6 +282,10 @@ dabs		ldd	GX2
 		bne	3F
 		lbsr	g2gl
 3		lbsr	gscl2
+		bra	isl_b238_e	;@isl
+		fill	$ff,$b238-*	;@isl
+		jmp	circle_st	;@isl
+isl_b238_e	;@isl
 		tst	DB
 		bne	4F
 		lbsr	gline
@@ -324,6 +327,29 @@ gmin		lda	1,x
 		stb	7,x
 		rts
 
+; ---------- PCOPY s TO d (קורא 13) ----------
+; (6.11: עבר לכאן מ-mitgfx.s, כדי ש-$B238 של CIRCLE ייפול על גבול פקודה)
+; כל דף: 0 → ?FC, ומתחיל אחרי תחילת התוכנית → ?FC (חשבון של 8 ביטים). 1536 בתים, מלמטה למעלה
+pcopy_st	bsr	gpage
+		pshs	d
+		lda	#$bc		; TO
+		lbsr	synchk
+		bsr	gpage
+		tfr	d,u
+		puls	x
+		ldy	#768
+pc_lp		ldd	,x++
+		std	,u++
+		leay	-1,y
+		bne	pc_lp
+		rts
+; gpage: מספר דף → D = כתובת הדף (gpg0 ליד PMODE)
+gpage		lbsr	gpg0
+		cmpb	TXTTAB
+		lbhs	err_fc
+		tfr	b,a
+		clrb
+		rts
 ; ---------- GET / PUT [@](x1,y1)-(x2,y2),מערך[,G | ,פעולה] (קורא 12) ----------
 ; הנקודה האחרונה לא משתנה. בלי המשך: העתקת בתים; עם המשך: ביט אחרי ביט
 get_st		clrb

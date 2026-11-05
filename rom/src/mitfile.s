@@ -40,6 +40,10 @@ wrhdx		tst	FSTATE		; ‏csavx נכנס כאן, כשהדגלים כבר במקו�
 		sta	HTYPE
 		ldx	#FNAME
 		bra	isl_b93e_e	;@isl
+; evstr: ביטוי שחייב להיות מחרוזת (לא מחרוזת: ?TM), ומשחררים אותה: A = האורך, X = התווים. 6.11: ארבעה מקומות
+; קוראים לכאן במקום שתי קריאות, וכך התפנו 6 בתים לכתובות של Picture Maker
+evstr		lbsr	frmevl
+		lbra	frestr
 		fill	$ff,$b93e-*	;@isl
 		jmp	tblkrd	;@isl
 isl_b93e_e	;@isl
@@ -408,16 +412,23 @@ isl_bbc5_e	;@isl
 		beq	2F
 		clr	LPTPOS
 9		puls	a,b,x,pc
+; (6.11: wbuf עבר לכאן, לפני $BBE5, וסוף השורה של המדפסת עבר אחרי הכניסה. כך אין קפיצה מעליה, והתפנו בתים
+; ל-$BCAB של Picture Maker)
+wbuf		lda	#1		; wbuf: החוצץ כבלוק נתונים, עם מבוא ומנוע משלו
+		sta	BLKTYP
+		ldb	CBFCNT
+		stb	BLKLEN
+		lbsr	wblkt
+		clr	CBFCNT
+		rts
+		fill	$ff,$bbe5-*	;@isl
+		jmp	keyindex	;@isl
 2		tst	LPTPOS		; סוף שורה
 		bne	3F
 		lda	#$20
 		bsr	lpsend
 3		ldx	#LPEOL
 		ldb	,x+		; כמה בתים (עד 6)
-		bra	isl_bbe5_e	;@isl
-		fill	$ff,$bbe5-*	;@isl
-		jmp	keyindex	;@isl
-isl_bbe5_e	;@isl
 		beq	5F
 4		lda	,x+
 		bsr	lpsend
@@ -436,15 +447,6 @@ lpsend		pshs	b
 		stb	PIA1
 		clr	PIA1
 		puls	b,pc
-
-; wbuf: החוצץ כבלוק נתונים, עם מבוא ומנוע משלו
-wbuf		lda	#1
-		sta	BLKTYP
-		ldb	CBFCNT
-		stb	BLKLEN
-		lbsr	wblkt
-		clr	CBFCNT
-		rts
 
 ; ---------- קלט תו מהקלטת ----------
 ; tchin: התו הבא מהחוצץ → A. חוצץ ריק: EOFFLG = $FF (ו-Z=0). כשהתו האחרון נלקח, ממלאים מיד. B ו-X נשמרים
@@ -502,7 +504,7 @@ tgetln		jsr	HK_LINE		; 13
 2		clr	,x		; C=0
 		rts
 8		clr	,x
-		orcc	#1
+		coma			; C=1 (6.11: במקום orcc #1, בית אחד פחות; A לא בשימוש בסוף הקובץ)
 		rts
 ; devgetln: שורה מההתקן (INPUT, LINE INPUT): מקלדת, או קלטת (סוף הקובץ: ?IE)
 devgetln	lbsr	istape
@@ -513,8 +515,7 @@ devgetln	lbsr	istape
 
 ; ---------- OPEN "I"|"O",#התקן,[שם] (3.9) ----------
 open_st		jsr	HK_OPEN		; 1
-		lbsr	frmevl
-		lbsr	frestr		; ?TM
+		lbsr	evstr		; ?TM
 		tsta
 		lbeq	err_fc
 		lda	,x		; רק התו הראשון
@@ -524,6 +525,10 @@ open_st		jsr	HK_OPEN		; 1
 		lbsr	chkcom
 		lbsr	getfne
 		lda	DEVNUM
+		bra	isl_bcab_e	;@isl
+		fill	$ff,$bcab-*	;@isl
+		jmp	putcr	;@isl
+isl_bcab_e	;@isl
 		clr	DEVNUM
 		puls	b
 		cmpb	#'O

@@ -114,7 +114,7 @@ fn_val		lbsr	frestr
 finx		cmpa	#'&
 		lbne	fin
 ; radix: &H = בסיס 16, &O או & = בסיס 8. שלם בלי סימן של 16 ביט; גלישה: ?OV (קורא)
-radix		ldx	#0
+radix		ldx	<DBLZER		; X = 0 (6.11: מזוג האפסים, בית אחד פחות מ-ldx #0)
 		ldb	#8
 		pshs	b,x		; [0] = הבסיס, [1-2] = הערך
 		jsr	<chrget

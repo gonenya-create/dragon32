@@ -41,8 +41,7 @@ getfn		ldx	#FNAME
 		bne	1B		; B = 0
 		jsr	<chrgot
 		beq	x_fnb		; בלי שם: FNLEN = 0
-		lbsr	frmevl
-		lbsr	frestr		; לא מחרוזת: ?TM
+		lbsr	evstr		; לא מחרוזת: ?TM
 		tfr	a,b
 ; x_fnb ($B7C2, קורא 3.11): ‏FNLEN = B, ואם B לא 0, מעתיקים B בתים מ-X ל-$01D2 (בלי גבול). בסוף B = 0.
 ; Black Sanctum ו-Calixto Island קובעים כך את שם הקלטת של משחק שמור
@@ -55,6 +54,10 @@ cpy		lda	,x+
 		decb
 		bne	cpy
 9		rts
+; ---------- TRON (6.11: עבר לכאן מ-mitedit.s, לפנות מקום ל-$A749) ----------
+tron		lda	#$4f
+		sta	TRCFLG
+		rts
 
 ; CLOAD ו-CLOADM עברו לכאן מ-mitfile.s (28.10): כך הכתובת המקורית $B75B (CLOADM מכתובת) נופלת בקוד רגיל,
 ; לפני הלולאות המתוזמנות, והן נגמרות לפני $B93E

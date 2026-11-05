@@ -71,10 +71,9 @@ log		lbsr	sign
 fpwrt		tst	FACEXP
 		beq	exp		; מעריך 0: 1, גם 0^0 (קורא)
 		tst	ARGEXP
+		bne	1F
+		tst	FACSGN		; בסיס 0: מעריך שלילי ?/0 (קורא), אחרת 0
 		bra	isl_a095_e	;@isl
-; (מ-exp.s, 2.11: ארבעה בתים שהיו פנויים כאן)
-m_ul		fcc	"UL "	;@isl
-		fcb	0	;@isl
 		fill	$ff,$a08e-*	;@isl
 ; ‏$A08E (קורא 2.11): CLOADM: הקובץ נסגר ($78 = 0), מדלגים על תו אחד (ה-M), ואז השם, החיפוש והטעינה.
 ; ‏$A092: אותו דבר בלי שני הצעדים האלה, כשהמצביע כבר על התו שלפני השם. ‏A לא משנה
@@ -83,8 +82,6 @@ m_ul		fcc	"UL "	;@isl
 		jmp	clmnm	;@isl
 		jmp	clmfn	;@isl
 isl_a095_e	;@isl
-		bne	1F
-		tst	FACSGN		; בסיס 0: מעריך שלילי ?/0 (קורא), אחרת 0
 		lbmi	err_dv0
 		bra	mzero
 1		ldx	#TEMPF3		; שומרים את המעריך
@@ -115,6 +112,8 @@ isl_a095_e	;@isl
 fn_exp		lbsr	chknum
 exp		ldx	#logeb2	; x*log2(e)
 		lbsr	fmult		; ב-Dragon: מעוגל כרגיל, ואז מפרידים (קורא; ב-mit מוסיפים 80 לבית הנוסף)
+		lbsr	movaf		; ARG = y (6.11: שתי הפקודות האלה עברו לפני $A0E3, לפנות מקום אחריה)
+		clr	FACOV
 		bra	isl_a0e3_e	;@isl
 		fill	$ff,$a0e3-*	;@isl
 		bsr	isl_a0e5	;@isl
@@ -123,8 +122,6 @@ isl_a0e5	bsr	isl_a0ea	;@isl
 		rts	;@isl
 isl_a0ea	jmp	x_getdev	;@isl
 isl_a0e3_e	;@isl
-		lbsr	movaf		; ARG = y
-		clr	FACOV
 		lda	FACEXP
 		cmpa	#$88		; |y| >= 128: גדול מדי
 		blo	2F

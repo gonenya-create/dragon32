@@ -265,8 +265,7 @@ midst		jsr	<chrget		; אחרי $FF
 3		pshs	b		; כמה
 		lbsr	chkrp
 		lbsr	chkeq		; =
-		lbsr	frmevl
-		lbsr	frestr		; A = האורך, X = הכתובת
+		lbsr	evstr		; A = האורך, X = הכתובת
 		pshs	a,x		; 0=אורך B$, 1=כתובת, 3=כמה, 4=התחלה, 5=המתאר
 		ldu	5,s
 		ldb	4,s
