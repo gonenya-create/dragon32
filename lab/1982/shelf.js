@@ -1709,7 +1709,9 @@ body.game-open .shelf > :not(.game-view) { display: none; }
   // טוען שמושך בלוקים בעצמו (גונן, 2.11: Time Bandit של Microdeal, Mr. Dig של Computerware): CLOADM טוען רק בלוק קטן שמשתלט
   // על המחשב, והוא קורא את שאר הבלוקים מהקלטת, ובין בלוק לבלוק עוצר ומדליק את המנוע. בקלטת אמיתית יש לפני כל בלוק מבוא,
   // אבל בקבצי הארכיון חלק מהבלוקים צמודים זה לזה בלי מבוא, והטוען מפספס אותם. כאן: כל הקובץ כמו שהוא,
-  // ולפני כל בלוק שהמבוא שלפניו קצר נוסף מבוא (128 בתים של $55). הנתונים עצמם לא משתנים
+  // ולפני כל בלוק שהמבוא שלפניו קצר נוסף מבוא (256 בתים של $55, כמו שהמקור כותב). הנתונים עצמם לא משתנים.
+  // 5.11, Junior's Revenge: הטוען שלו מדליק את המנוע פעמיים ברצף, וכל הדלקה מחכה חצי שנייה כשהקלטת זזה (כמו במקור).
+  // עם 128 בתים המבוא נגמר באמצע ההמתנה השנייה, והבלוקים הראשונים נקראו עם שגיאה
   function blockAt(bytes, j) {
     if (j + 3 >= bytes.length || bytes[j] !== 0x3c) return -1;
     const type = bytes[j + 1], len = bytes[j + 2];
@@ -1732,7 +1734,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
     }
     if (n <= used || !cuts.length) return null;   // אין בלוקים מעבר לתוכנית, או שלכולם יש מבוא: הדרך הרגילה
     let last = 0;
-    for (const c of cuts) { out.push(bytes.subarray(last, c), new Uint8Array(128).fill(0x55)); last = c; }
+    for (const c of cuts) { out.push(bytes.subarray(last, c), new Uint8Array(256).fill(0x55)); last = c; }
     out.push(bytes.subarray(last));
     const all = new Uint8Array(out.reduce((a, b) => a + b.length, 0));
     let o = 0;
@@ -2117,6 +2119,9 @@ body.game-open .shelf > :not(.game-view) { display: none; }
     const sig = rows.slice(at, end + 1).join('\n') + at;
     if (sig === lastDone) return;
     lastDone = sig;
+    // 5.11, Junior's Revenge: התוכנית שנטענה שמה קפיצה בנקודת החיבור של קלט שורה ($0182, אחרי ההדלקה RTS).
+    // כש-OK מופיע, הקפיצה מפעילה טוען שממשיך לקרוא מהקלטת מאותו מקום, כמו ברשמקול אמיתי. לא מריצים אחורה
+    if (HEAPU8[ram + 0x182] !== 0x39) return;
     insertLibrary();
   }, 700);
   const ready = setInterval(() => { if (window.d32Ready) { clearInterval(ready); setTimeout(insertLibrary, 2000); } }, 300);
