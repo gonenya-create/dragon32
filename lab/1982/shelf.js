@@ -1934,6 +1934,46 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       if (mineIn) setJoy(myJoy, false);
     });
     upload.after(joyBtn);
+    // מחסנית מקובץ (גונן, 5.11: Logo): קובץ מחסנית (.ccc / .rom) נכנס לחריץ, המחשב נדלק מחדש והמחסנית מתחילה לבד.
+    // לחיצה נוספת מוציאה אותה. המחסנית לא נשמרת בדפדפן: בוחרים את הקובץ בכל פעם, כמו להכניס מחסנית ביד
+    const cartBtn = document.createElement('button'), cartFile = document.createElement('input');
+    cartBtn.type = 'button';
+    cartBtn.className = 'mini upload';
+    cartBtn.id = 'cart-upload';
+    cartFile.type = 'file';
+    cartFile.id = 'cart-file';
+    cartFile.accept = '.ccc,.rom,.bin';
+    cartFile.hidden = true;
+    const showCart = () => { cartBtn.textContent = cartIn === 'mine' ? (EN ? '⏏ Take the cartridge out' : '⏏ להוציא את המחסנית') : (EN ? '🎴 Load a cartridge from a file' : '🎴 טעינת מחסנית מקובץ'); };
+    showCart();
+    cartBtn.addEventListener('click', async () => {
+      if (cartIn === 'mine') { await window.d32EjectCart(); showCart(); return; }
+      cartFile.click();
+    });
+    cartFile.addEventListener('change', async () => {
+      const f = cartFile.files[0];
+      cartFile.value = '';
+      if (!f || busy) return;
+      if (typeof Module === 'undefined' || !window.d32Ready) { status.textContent = EN ? 'The computer is still starting. Try again in a moment.' : 'המחשב עוד נדלק. נסו שוב בעוד רגע.'; return; }
+      const bytes = new Uint8Array(await f.arrayBuffer());
+      // חריץ המחסניות של ה-Dragon: עד 16K, מ-$C000
+      if (!bytes.length || bytes.length > 16384) { status.textContent = EN ? 'This file is not a Dragon cartridge.' : 'הקובץ הזה לא מחסנית של Dragon.'; return; }
+      busy = true;
+      try {
+        if (cartIn) await ejectCart();
+        FS.writeFile('/cart-mine.ccc', bytes);
+        Module.ccall('wasm_load_file', null, ['string', 'number', 'number'], ['/cart-mine.ccc', 0, 0]);
+        cartIn = 'mine'; inTape = null; ram = -1;
+        document.querySelectorAll('.tape').forEach(t => t.classList.remove('in'));
+        document.body.classList.add('cart-in');
+        const name = f.name.replace(/\.[^.]*$/, '');
+        status.textContent = EN ? 'The cartridge "' + name + '" is in the slot. The computer restarts, and the cartridge starts by itself.'
+          : 'המחסנית "' + name + '" בחריץ. המחשב נדלק מחדש, והמחסנית מתחילה לבד.';
+        document.getElementById('canvas')?.focus({ preventScroll: true });
+      } catch (e) { status.textContent = failed(); }
+      finally { busy = false; showCart(); }
+    });
+    joyBtn.after(cartBtn, cartFile);
   }
   if (upload && file) {
     upload.addEventListener('click', () => file.click());
