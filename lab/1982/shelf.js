@@ -1723,16 +1723,20 @@ body.game-open .shelf > :not(.game-view) { display: none; }
   }
   function gapTape(bytes, used) {
     const out = [], cuts = [];
-    let n = 0;
+    let n = 0, prev = -1, other = false;
     for (let i = bytes.indexOf(0x3c); i >= 0 && i < bytes.length; ) {
       const end = blockAt(bytes, i);
       if (end < 0 || (!n && bytes[i - 1] !== 0x55)) { i++; continue; }
       let k = i;
       while (k > 0 && bytes[k - 1] === 0x55) k--;
       if (i - k < 64) cuts.push(i);   // גם לפני הכותרת הראשונה: בקבצים האלה יש לפניה רק 5 עד 35 בתי מבוא
-      n++; i = end;
+      // 5.11, Lunar Rover Patrol: בין הבלוקים יש נתונים בפורמט של המשחק עצמו (הטוען שלו מצייר אותם על המסך).
+      // בנייה מחדש מהבלוקים בלבד זורקת אותם, והטעינה נתקעת: שומרים את כל הקלטת כמו שהיא
+      if (prev >= 0 && k - prev >= 16) other = true;
+      n++; prev = end; i = end;
     }
-    if (n <= used || !cuts.length) return null;   // אין בלוקים מעבר לתוכנית, או שלכולם יש מבוא: הדרך הרגילה
+    if (!other && (n <= used || !cuts.length)) return null;   // אין בלוקים מעבר לתוכנית, או שלכולם יש מבוא: הדרך הרגילה
+    if (!cuts.length) return rawTape(bytes);
     let last = 0;
     for (const c of cuts) { out.push(bytes.subarray(last, c), new Uint8Array(256).fill(0x55)); last = c; }
     out.push(bytes.subarray(last));
