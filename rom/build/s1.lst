@@ -243,7 +243,7 @@ FFC0                  SAM             equ     $ffc0
 81BE B137                             fdb     draw_st         ; $B5 DRAW
 81C0 ADC0                             fdb     pcopy_st                ; $B6 PCOPY
 81C2 ABA1                             fdb     pmode_st                ; $B7 PMODE
-81C4 B494                             fdb     play_st         ; $B8 PLAY
+81C4 B48D                             fdb     play_st         ; $B8 PLAY
 81C6 88FC                             fdb     err_sn          ; $B9 DLOAD
 81C8 A39E                             fdb     renum           ; $BA RENUM
 81CA 5347CE           fntab           fcs     "SGN"
@@ -6216,7 +6216,7 @@ ADBB 50                               negb                    ; B = -1 (שני �
 ADBC 39               1               rts
 ADBD                                  fill    $ff,$adbd-*     ; בדיקה: אם $ADBD זז, ההרכבה נכשלת
                       ; $ADBD: PLAY כשהמחרוזת כבר חושבה (ב-FPA0, למשל מ-$8C5B). Chuckie Egg (A&F, 31.10) מנגן כך את המנגינות שלו במצב Dragon
-ADBD 1606D7                           lbra    plyx
+ADBD 1606D0                           lbra    plyx
                       
                       ; ---------- PCOPY s TO d (קורא 13) ----------
                       ; כל דף: 0 → ?FC, ומתחיל אחרי תחילת התוכנית → ?FC (חשבון של 8 ביטים). 1536 בתים, מלמטה למעלה
@@ -7122,7 +7122,7 @@ B40B 39                               rts
                       ; evnzb: ביטוי → B בין 1 ל-255. שלילי, 0 או מעל 255: ?FC. השבר נחתך (קורא 1.1)
 B40C 17E028           evnzb           lbsr    evbyte
 B40F 5D                               tstb
-B410 275F                             beq     pfc
+B410 2773                             beq     pfc
 B412 39                               rts
                       
                       ; ---------- SOUND טון,משך (קורא 1) ----------
@@ -7176,56 +7176,61 @@ B45C 7E83DB                           jmp     warm2   ;@isl
 B45F C188             aud_b           cmpb    #$88            ; ON (המילה ב-B)
 B461 1026D497                         lbne    err_sn
 B465 8601                             lda     #1              ; כניסת הקלטת
-B467 2003                             bra     isl_b469_e      ;@isl
+B467 2003                             bra     snds            ;@isl
 B469                                  fill    $ff,$b469-*     ;@isl
 B469 7E83F0                           jmp     firq    ;@isl
 B46C                  isl_b469_e      ;@isl
-                      ; snds: sndsel ואז sndon
-B46C 17FF79           snds            lbsr    sndsel
-B46F 208B                             bra     sndon           ; קצרה (בית אחד פחות, בשביל $B4B3: 30.10)
                       
                       ; ---------- PLAY מחרוזת (קורא 2, 9) ----------
                       ; (plyini עבר ל-exp.s, לפני $A000, כדי לפנות מקום לכניסה $B538: 30.10)
                       
-                      ; (4.11, חבילה 8: PLAY סודר מחדש, כדי לפנות את $B482 להשהיה. החלקים שלפני $B482 נגמרים בקפיצה,
-                      ; כך שאף אחד לא נופל לתוכה. בסוף PLAY נשארים, כמו במקור, $D8=1 ו-$D9-$DA=0)
-B471 16D491           pfc             lbra    err_fc
-B474 813B             p_ch            cmpa    #';
-B476 2732                             beq     ploop
-B478 8127                             cmpa    #''
-B47A 272E                             beq     ploop
-B47C 814F                             cmpa    #'O
-B47E 2705                             beq     p_oct
-B480 2033                             bra     p_v
+                      ; (5.11, חבילה 9: PLAY סודר שוב, כדי לפנות את $B480-$B484 להשהיה של המקור: $B480 טוען X מ-$8A (תמיד 0)
+                      ; ונופל ל-$B482. Junior's Revenge קורא ל-$B480 ב-JSR כשהוא נפסל (קורא: חבילה 9). החלקים שלפני $B480
+                      ; נגמרים בקפיצה. ההתחלה של PLAY והקריאה של התווים עברו לפני $B480, והבדיקות של ; ' O אחרי $B485)
+                      ; snds: sndsel ואז sndon
+B46C 17FF79           snds            lbsr    sndsel
+B46F 208B                             bra     sndon           ; קצרה (בית אחד פחות, בשביל $B4B3: 30.10)
+                      ; O אוקטבה
+B471 D6DE             p_oct           ldb     OCTAVE
+B473 5C                               incb
+B474 17011E                           lbsr    parg
+B477 5A                               decb
+B478 C105                             cmpb    #5
+B47A 2409                             bhs     pfc
+B47C D7DE                             stb     OCTAVE
+B47E 2021                             bra     ploop
+B480                                  fill    $ff,$b480-*
+                      ; ‏$B480: השהיה של חצי שנייה. X = 0 (65,536 סיבובים), ונופלים ל-$B482
+B480 9E8A                             ldx     <DBLZER ;@isl
                       ; ‏$B482: השהיה. X סיבובים, ו-X חוזר 0 (קורא: חבילה 8). Junior's Revenge קורא לה ב-JSR
 B482 7EBACB                           jmp     dlyx    ;@isl
-                      ; O אוקטבה
-B485 D6DE             p_oct           ldb     OCTAVE
-B487 5C                               incb
-B488 17010A                           lbsr    parg
-B48B 5A                               decb
-B48C C105                             cmpb    #5
-B48E 24E1                             bhs     pfc
-B490 D7DE                             stb     OCTAVE
-B492 2016                             bra     ploop
+B485 16D47D           pfc             lbra    err_fc
+B488 3512             pdone           puls    a,x             ; המחרוזת נגמרה: חוזרים לחיצונית
+B48A 200F                             bra     pset
+B48C FF                               fill    $ff,$b48d-*
                       ; המחרוזות המקוננות (X) במחסנית: [אורך][כתובת]. הסמן בתחתית: אורך 1, כתובת 0
-B494 17DDBF           play_st         lbsr    frmevl
-B497 8E0000           plyx            ldx     #0              ; $ADBD נכנס כאן, כשהמחרוזת כבר ב-FPA0
-B49A 8601                             lda     #1
-B49C 3412                             pshs    a,x
-B49E 4F                               clra                    ; DAC והצליל דולק, עוד לפני בדיקת הסוג
-B49F 8DCB                             bsr     snds
-B4A1 17E0BC                           lbsr    frestr          ; לא מחרוזת: ?TM
-B4A4 97D8             pset            sta     DLEN
-B4A6 9FD9                             stx     DPTR
-B4A8 27A3                             beq     pend            ; כתובת 0: הסמן, סוף PLAY
-B4AA 17FBE6           ploop           lbsr    dget
-B4AD 24C5                             bcc     p_ch
-B4AF 3512                             puls    a,x             ; המחרוזת נגמרה: חוזרים לחיצונית
-B4B1 20F1                             bra     pset
+B48D 17DDC6           play_st         lbsr    frmevl
+B490 4F               plyx            clra                    ; $ADBD נכנס כאן, כשהמחרוזת כבר ב-FPA0. ה-DAC והצליל דולק, עוד לפני בדיקת הסוג
+B491 8DD9                             bsr     snds            ; ‏A חוזר 0
+B493 9E8A                             ldx     <DBLZER         ; X = 0
+B495 4C                               inca                    ; A = 1
+B496 3412                             pshs    a,x
+B498 17E0C5                           lbsr    frestr          ; לא מחרוזת: ?TM
+B49B 97D8             pset            sta     DLEN
+B49D 9FD9                             stx     DPTR
+B49F 27AC                             beq     pend            ; כתובת 0: הסמן, סוף PLAY
+B4A1 17FBEF           ploop           lbsr    dget
+B4A4 25E2                             bcs     pdone
+B4A6 813B             p_ch            cmpa    #';
+B4A8 27F7                             beq     ploop
+B4AA 8127                             cmpa    #''
+B4AC 27F3                             beq     ploop
+B4AE 814F                             cmpa    #'O
+B4B0 27BF                             beq     p_oct
                       ; ‏$B4B3: שני בתים שתוכנות של אז בודקות כדי לדעת שהן על Dragon ולא על CoCo. Star Spores (Microdeal) קורא שם את
                       ; המילה $2843, ואם היא שם הוא עובר למפת המקלדת של ה-Dragon (החיצים בשורה אחרת). העובדה מהקוד של המשחק עצמו (30.10).
-                      ; הם באים אחרי קפיצה, אז אף אחד לא מריץ אותם. entry-test בודק שהם במקום
+                      ; (5.11: הם האופרנד של CMPX # שמתחיל ב-$B4B2: הקריאה של התווים עוברת דרכם ל-p_v, ורק הדגלים משתנים. entry-test בודק אותם)
+B4B2 8C                               fcb     $8c             ; CMPX #$2843
 B4B3 2843                             fcb     $28,$43
 B4B5 8156             p_v             cmpa    #'V
 B4B7 261A                             bne     3F
@@ -7235,7 +7240,7 @@ B4BC 54                               lsrb
 B4BD C01F                             subb    #31
 B4BF 1700D3                           lbsr    parg
 B4C2 C11F                             cmpb    #31
-B4C4 22AB                             bhi     pfc
+B4C4 22BF                             bhi     pfc
 B4C6 58                               lslb
 B4C7 58                               lslb
 B4C8 1F98                             tfr     b,a             ; גבוה = 126+4V, נמוך = 124-4V
@@ -7243,23 +7248,23 @@ B4CA 8B7E                             adda    #126
 B4CC 50                               negb
 B4CD CB7C                             addb    #124
 B4CF DDDF                             std     VOLHI
-B4D1 20D7                             bra     ploop
+B4D1 20CE                             bra     ploop
 B4D3 814C             3               cmpa    #'L
 B4D5 261E                             bne     4F
 B4D7 D6E1                             ldb     NOTELN
 B4D9 1700B9                           lbsr    parg
 B4DC 5D                               tstb
-B4DD 2792             pfc_t           beq     pfc             ; (3.11: גם T ו-P קופצים לכאן, Z=1, כדי ש-pfc2 יעבור ליד parg)
+B4DD 27A6             pfc_t           beq     pfc             ; (3.11: גם T ו-P קופצים לכאן, Z=1, כדי ש-pfc2 יעבור ליד parg)
 B4DF D7E1                             stb     NOTELN
 B4E1 0FE5                             clr     DOTVAL
 B4E3 17FBAD           31              lbsr    dget            ; הנקודות: רק מיד אחרי L
-B4E6 25C2                             bcs     ploop
+B4E6 25B9                             bcs     ploop
 B4E8 812E                             cmpa    #'.
 B4EA 2604                             bne     32F
 B4EC 0CE5                             inc     DOTVAL
 B4EE 20F3                             bra     31B
 B4F0 17FBBA           32              lbsr    dback
-B4F3 20B5                             bra     ploop
+B4F3 20AC                             bra     ploop
 B4F5 8154             4               cmpa    #'T
 B4F7 260F                             bne     5F
 B4F9 D6E2                             ldb     TEMPO
@@ -7267,7 +7272,7 @@ B4FB 170097                           lbsr    parg
 B4FE 5D                               tstb
 B4FF 27DC                             beq     pfc_t
 B501 D7E2                             stb     TEMPO
-B503 20A5             ploop_t         bra     ploop
+B503 209C             ploop_t         bra     ploop
 B505                                  fill    $ff,$b505-*     ;@isl
 B505 7E9F32                           jmp     x_inch7 ;@isl
 B508 8150             5               cmpa    #'P
@@ -7334,7 +7339,7 @@ B582 810B                             cmpa    #11
 B584 220C                             bhi     pfc2
 B586 D6E1                             ldb     NOTELN
 B588 1700DB                           lbsr    pnote           ; (3.11: lbsr, כי pnote עבר אחרי $B663)
-B58B 16FF1C                           lbra    ploop
+B58B 16FF13                           lbra    ploop
 B58E FF                               fill    $ff,$b58f-*     ;@isl
 B58F 7EBE3E                           jmp     putc    ;@isl
 B592 16D370           pfc2            lbra    err_fc          ; (3.11: עבר לכאן מלפני $B538, ליד parg: קפיצות קצרות. 4.11: אחרי $B58F)

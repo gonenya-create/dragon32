@@ -91,29 +91,20 @@ warm		nop	;@isl
 aud_b		cmpb	#$88		; ON (המילה ב-B)
 		lbne	err_sn
 		lda	#1		; כניסת הקלטת
-		bra	isl_b469_e	;@isl
+		bra	snds		;@isl
 		fill	$ff,$b469-*	;@isl
 		jmp	firq	;@isl
 isl_b469_e	;@isl
-; snds: sndsel ואז sndon
-snds		lbsr	sndsel
-		bra	sndon		; קצרה (בית אחד פחות, בשביל $B4B3: 30.10)
 
 ; ---------- PLAY מחרוזת (קורא 2, 9) ----------
 ; (plyini עבר ל-exp.s, לפני $A000, כדי לפנות מקום לכניסה $B538: 30.10)
 
-; (4.11, חבילה 8: PLAY סודר מחדש, כדי לפנות את $B482 להשהיה. החלקים שלפני $B482 נגמרים בקפיצה,
-; כך שאף אחד לא נופל לתוכה. בסוף PLAY נשארים, כמו במקור, $D8=1 ו-$D9-$DA=0)
-pfc		lbra	err_fc
-p_ch		cmpa	#';
-		beq	ploop
-		cmpa	#''
-		beq	ploop
-		cmpa	#'O
-		beq	p_oct
-		bra	p_v
-; ‏$B482: השהיה. X סיבובים, ו-X חוזר 0 (קורא: חבילה 8). Junior's Revenge קורא לה ב-JSR
-		jmp	dlyx	;@isl
+; (5.11, חבילה 9: PLAY סודר שוב, כדי לפנות את $B480-$B484 להשהיה של המקור: $B480 טוען X מ-$8A (תמיד 0)
+; ונופל ל-$B482. Junior's Revenge קורא ל-$B480 ב-JSR כשהוא נפסל (קורא: חבילה 9). החלקים שלפני $B480
+; נגמרים בקפיצה. ההתחלה של PLAY והקריאה של התווים עברו לפני $B480, והבדיקות של ; ' O אחרי $B485)
+; snds: sndsel ואז sndon
+snds		lbsr	sndsel
+		bra	sndon		; קצרה (בית אחד פחות, בשביל $B4B3: 30.10)
 ; O אוקטבה
 p_oct		ldb	OCTAVE
 		incb
@@ -123,24 +114,38 @@ p_oct		ldb	OCTAVE
 		bhs	pfc
 		stb	OCTAVE
 		bra	ploop
+		fill	$ff,$b480-*
+; ‏$B480: השהיה של חצי שנייה. X = 0 (65,536 סיבובים), ונופלים ל-$B482
+		ldx	<DBLZER	;@isl
+; ‏$B482: השהיה. X סיבובים, ו-X חוזר 0 (קורא: חבילה 8). Junior's Revenge קורא לה ב-JSR
+		jmp	dlyx	;@isl
+pfc		lbra	err_fc
+pdone		puls	a,x		; המחרוזת נגמרה: חוזרים לחיצונית
+		bra	pset
+		fill	$ff,$b48d-*
 ; המחרוזות המקוננות (X) במחסנית: [אורך][כתובת]. הסמן בתחתית: אורך 1, כתובת 0
 play_st		lbsr	frmevl
-plyx		ldx	#0		; $ADBD נכנס כאן, כשהמחרוזת כבר ב-FPA0
-		lda	#1
+plyx		clra			; $ADBD נכנס כאן, כשהמחרוזת כבר ב-FPA0. ה-DAC והצליל דולק, עוד לפני בדיקת הסוג
+		bsr	snds		; ‏A חוזר 0
+		ldx	<DBLZER		; X = 0
+		inca			; A = 1
 		pshs	a,x
-		clra			; DAC והצליל דולק, עוד לפני בדיקת הסוג
-		bsr	snds
 		lbsr	frestr		; לא מחרוזת: ?TM
 pset		sta	DLEN
 		stx	DPTR
 		beq	pend		; כתובת 0: הסמן, סוף PLAY
 ploop		lbsr	dget
-		bcc	p_ch
-		puls	a,x		; המחרוזת נגמרה: חוזרים לחיצונית
-		bra	pset
+		bcs	pdone
+p_ch		cmpa	#';
+		beq	ploop
+		cmpa	#''
+		beq	ploop
+		cmpa	#'O
+		beq	p_oct
 ; ‏$B4B3: שני בתים שתוכנות של אז בודקות כדי לדעת שהן על Dragon ולא על CoCo. Star Spores (Microdeal) קורא שם את
 ; המילה $2843, ואם היא שם הוא עובר למפת המקלדת של ה-Dragon (החיצים בשורה אחרת). העובדה מהקוד של המשחק עצמו (30.10).
-; הם באים אחרי קפיצה, אז אף אחד לא מריץ אותם. entry-test בודק שהם במקום
+; (5.11: הם האופרנד של CMPX # שמתחיל ב-$B4B2: הקריאה של התווים עוברת דרכם ל-p_v, ורק הדגלים משתנים. entry-test בודק אותם)
+		fcb	$8c		; CMPX #$2843
 		fcb	$28,$43
 p_v		cmpa	#'V
 		bne	3F

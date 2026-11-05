@@ -280,6 +280,11 @@ try {
   s = await run([...poke(0x7000, '8E1234 861F C6FF 108E5678 BDB482 BF7080 B77082 F77083 10BF7084 39'),
     'EXEC &H7000:PRINT PEEK(&H7080)*256+PEEK(&H7081);PEEK(&H7082);PEEK(&H7083);PEEK(&H7084)*256+PEEK(&H7085)']);
   ok('$B482 משהה: X חוזר 0, ו-A, ‏B ו-Y נשמרים (קורא 4.11)', /^ 0  31  255  22136 ?$/m.test(s), show(tail(s)));
+  console.log("Junior's Revenge (5.11): ‏$B480");
+  // חצי שנייה: X נטען מ-$8A (תמיד 0) ונופל ל-$B482. גם כש-X = $1234 לפני: X חוזר 0, ‏Z = 1 (נשמר ב-PSHS CC), ו-A, ‏B ו-Y נשמרים
+  s = await run([...poke(0x7000, '8E1234 861F C6FF 108E5678 BDB480 3401 BF7080 B77082 F77083 10BF7084 3502 B77086 39'),
+    'EXEC &H7000:PRINT PEEK(&H7080)*256+PEEK(&H7081);PEEK(&H7082);PEEK(&H7083);PEEK(&H7084)*256+PEEK(&H7085);PEEK(&H7086) AND 4']);
+  ok('$B480 משהה חצי שנייה: X חוזר 0, ‏Z = 1, ו-A, ‏B ו-Y נשמרים (קורא 5.11)', /^ 0  31  255  22136  4 ?$/m.test(s), show(tail(s)));
 } catch (e) {
   fail++; console.log('  ✗ ' + e.message);
 }
