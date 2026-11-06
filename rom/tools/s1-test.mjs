@@ -122,6 +122,8 @@ await check('READ numbers across lines and statements, signs, unquoted strings',
 await check('READ past the end: ?OD; text read as a number: ?SN in the DATA line', ['10 DATA 1', '20 READ A,B', 'RUN', '20 READ A$:READ A', '30 DATA X', 'RUN'], screenHas(/\?OD ERROR IN 20\nOK\n20 READ A\$:READ A\n30 DATA X\nRUN\n\?SN ERROR IN 30\nOK$/));
 await check('INPUT with a prompt and two values (L-INPUT-01 values)', ['10 INPUT "X";A$,B$', '20 PRINT "[";A$;"][";B$;"]"', 'RUN', 'A,B'], screenHas(/RUN\nX\? A,B\n\[A\]\[B\]\nOK$/));
 await check('INPUT: number, ?? for more, ?REDO, ?EXTRA IGNORED (messages: mit, open on hardware)', ['10 INPUT A,B', '20 PRINT A+B', '30 INPUT C:PRINT C', 'RUN', '1', 'X', '2,3', '4,5'], screenHas(/RUN\n\? 1\n\?\? X\n\?REDO\n\? 2,3\n 5\n\? 4,5\n\?EXTRA IGNORED\n 4\nOK$/));
+await check('INPUT, empty ENTER: goes on, number = 0, string = "" (reader g11; Family Budget 6.11)', ['10 A=5:B$="X"', '20 INPUT A', '30 INPUT B$', '40 PRINT A;"[";B$;"]"', 'RUN', '', ''], screenHas(/RUN\n\?\s*\n\?\s*\n 0 \[\]\nOK$/));
+await check('INPUT A,B with an empty ENTER: A = 0, then ?? for B', ['10 INPUT A,B', '20 PRINT A;B', 'RUN', '', '7'], screenHas(/RUN\n\?\s*\n\?\? 7\n 0  7\nOK$/));
 await check('INPUT in direct mode: ?ID', ['INPUT A'], screenHas(/INPUT A\n\?ID ERROR\nOK$/));
 await check('STOP prints BREAK IN line; CONT goes on, variables kept', ['10 A$="A":STOP:PRINT A$', 'RUN', 'CONT'], screenHas(/RUN\nBREAK IN 10\nOK\nCONT\nA\nOK$/));
 await check('CONT inside a FOR loop and a GOSUB (the stack survives)', ['10 GOSUB 20:PRINT "E":END', '20 FOR I=1 TO 3:PRINT I;:STOP:NEXT:RETURN', 'RUN', 'CONT', 'CONT', 'CONT'], screenHas(/ 1\nBREAK IN 20\nOK\nCONT\n 2\nBREAK IN 20\nOK\nCONT\n 3\nBREAK IN 20\nOK\nCONT\nE\nOK$/));

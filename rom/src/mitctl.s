@@ -3,7 +3,7 @@
 ; READ/INPUT/INLOOP 2905-3105, RESTOR 2196, STOP/END/CONT 2227-2268, DEF/FNDOER 4162-4240, PEEK/POKE 4808).
 ; התאמות ל-Dragon (קורא: מפרט הזיכרון): רשומת GOSUB של 5 בתים עם $BD, ELSE עם מונה IF מקוננים (IFCNT),
 ; הכתובות הקבועות של DATA/INPUT/CONT, ושגיאות RG OD ID CN UF.
-; התנהגויות שהספרים לא קובעים (הודעות INPUT, ENTER ריק, BREAK בתוך INPUT): כמו ב-mit, ופתוחות לבדיקה
+; התנהגויות שהספרים לא קובעים (הודעות INPUT, BREAK בתוך INPUT; ENTER ריק נסגר 6.11 לפי קורא g11): כמו ב-mit, ופתוחות לבדיקה
 ; במחשב אמיתי (docs/DRAGON-STAGE1.md).
 ;
 ; Portions translated from Microsoft BASIC-M6502, Copyright (c) Microsoft Corporation, MIT License.
@@ -306,12 +306,8 @@ datlop		lbsr	data
 input		bsr	errdir		; לא במצב ישיר: ?ID; ואחר כך ההנחיה
 		lda	#',
 		sta	BUFMIN
-		bsr	qinlin
-		tst	DEVNUM		; מהקלטת: גם שורה ריקה היא נתון
-		bne	2F
-		tst	LINBUF		; ENTER בלי כלום: התוכנית נעצרת בשקט, ו-CONT חוזר ל-INPUT (mit: STPEND)
-		beq	inbrk		; C=0 כבר מ-qinlin (tst לא משנה את C)
-2		ldx	#BUFMIN
+		bsr	qinlin		; ENTER בלי כלום: כמו במקור, לא נעצרים. מספר = 0, מחרוזת = "" (קורא g11)
+		ldx	#BUFMIN
 		clr	INPFLG
 inloop0		stx	INPPTR
 inloop		lbsr	ptrget0			; המשתנה (נוצר אם אין)
