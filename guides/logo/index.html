@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>איך עובדים עם Dragon Logo — תוכנות של אז</title>
+<meta name="description" content="מדריך קצר בעברית ל-Dragon Logo, מחסנית של Dragon Data: מצבי העבודה, פקודות הצב, ופרוצדורה ראשונה.">
+<meta property="og:title" content="<bdi>Dragon Logo</bdi>: לומדים לתכנת עם צב">
+<meta property="og:description" content="מדריך קצר בעברית ל-Dragon Logo, מחסנית של Dragon Data: מצבי העבודה, פקודות הצב, ופרוצדורה ראשונה.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/guides/logo/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/guides/logo/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;700&amp;family=Rubik:wght@400;700;900&amp;display=swap">
+<link rel="stylesheet" href="/magazine/magazine.css">
+</head>
+<body>
+<nav class="site" aria-label="ניווט">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/en/guides/logo/" lang="en" hreflang="en">English</a>
+  <a href="/guides/">כל המדריכים</a>
+  <a href="/">← חזרה למחשב</a>
+</nav>
+<main class="sheet">
+<header class="mast">
+  <div class="mast-top"><span>הסדרה של <bdi>Dragon 1982</bdi></span><span dir="ltr">DRAGON LOGO · 1982–84</span></div>
+  <p class="mast-name">תוכנות של אז</p>
+  <div class="stripes" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+</header>
+<article class="story">
+<span class="kicker">חינוך</span>
+<h1><bdi>Dragon Logo</bdi>: לומדים לתכנת עם צב</h1>
+<p class="standfirst"><bdi>Dragon Logo</bdi> של <bdi>Larry Kheriaty</bdi> ו-<bdi>George Gerhold</bdi> (‏<bdi>Micropi</bdi>, ‏1982) יצאה במחסנית בהוצאת <bdi>Dragon Data</bdi>. זו אותה תוכנה שנמכרה ל-<bdi>Color Computer</bdi> בשם <bdi>Color Logo</bdi>. נותנים פקודות לצב קטן על המסך, והוא מצייר. כך ילדים למדו לתכנת.</p>
+<img class="guide-art" src="/guides/art/logo.svg" alt="" width="480" height="280">
+<div class="cols">
+<h2>הפעלה</h2>
+<p>מכניסים את המחסנית כשהמחשב כבוי, ומדליקים. מופיע <bdi dir="ltr">LOGO:</bdi>, וזה התפריט: לוחצים אות אחת, בלי <bdi>ENTER</bdi>.</p>
+<table class="keys"><tr><th scope="row"><kbd dir="ltr">R</kbd></th><td>מצב ריצה: המסך לצב, ושלוש שורות לפקודות בתחתית</td></tr><tr><th scope="row"><kbd dir="ltr">E</kbd></th><td>העורך: כאן כותבים פרוצדורות</td></tr><tr><th scope="row"><kbd dir="ltr">S, T, ENTER</kbd></th><td>שמירה של כל הפרוצדורות לקלטת</td></tr><tr><th scope="row"><kbd dir="ltr">L, T, ENTER</kbd></th><td>טעינה מקלטת</td></tr><tr><th scope="row"><kbd dir="ltr">P</kbd></th><td>הדפסה במדפסת</td></tr><tr><th scope="row"><kbd dir="ltr">BREAK</kbd></th><td>מכל מצב: חזרה ל-LOGO:</td></tr></table>
+<h2>הצעדים הראשונים</h2>
+<p>לוחצים <kbd>R</kbd>, ומקלידים פקודה אחת בכל שורה, עם רווח לפני המספר, ו-<kbd>ENTER</kbd>. <bdi dir="ltr">FD 40</bdi> מזיז את הצב 40 צעדים קדימה, ו-<bdi dir="ltr">RT 90</bdi> מסובב אותו ימינה ברבע סיבוב.</p>
+<table class="keys"><tr><th scope="row"><kbd dir="ltr">FD / BK</kbd></th><td>קדימה / אחורה</td></tr><tr><th scope="row"><kbd dir="ltr">RT / LT</kbd></th><td>סיבוב ימינה / שמאלה, במעלות</td></tr><tr><th scope="row"><kbd dir="ltr">PU / PD</kbd></th><td>מרימים את העט / מורידים אותו</td></tr><tr><th scope="row"><kbd dir="ltr">HOME</kbd></th><td>חזרה למרכז, עם הפנים למעלה</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR</kbd></th><td>מנקה את המסך</td></tr><tr><th scope="row"><kbd dir="ltr">HT / ST</kbd></th><td>מסתירים את הצב / מראים אותו</td></tr><tr><th scope="row"><kbd dir="ltr">PC 0–3</kbd></th><td>צבע העט</td></tr><tr><th scope="row"><kbd dir="ltr">BG 0–3</kbd></th><td>צבע הרקע</td></tr></table>
+<h2>פרוצדורה ראשונה</h2>
+<p>הפרוצדורה היא מילה חדשה שמלמדים את הצב. לוחצים <kbd>BREAK</kbd>, אחר כך <kbd>E</kbd>, ומקלידים:</p>
+<pre class="listing" dir="ltr">TO SQUARE
+REPEAT 4 (FD 30 RT 90)
+END
+TO FLOWER :N
+REPEAT :N (SQUARE RT 360/:N)
+END</pre>
+<p>לוחצים <kbd>BREAK</kbd> ואז <kbd>R</kbd>, ומקלידים <bdi dir="ltr">FLOWER 12</bdi>. הצב מצייר 12 ריבועים סביב המרכז, כמו פרח. <bdi dir="ltr">:N</bdi> הוא מספר שמעבירים לפרוצדורה.</p>
+<h2>מה שונה כאן מ-Logo אחרות</h2>
+<ul>
+<li><b>סוגריים עגולים.</b> <bdi dir="ltr">REPEAT 4 (FD 30 RT 90)</bdi>, ולא סוגריים מרובעים כמו ברוב גרסאות ה-<bdi>Logo</bdi>.</li>
+<li><b><bdi>REPEAT</bdi> רק בתוך פרוצדורה.</b> במצב ריצה עובדות רק פקודות פשוטות, אחת בשורה. לולאות ותנאים כותבים בעורך.</li>
+<li><b>רווח אחרי כל מילה.</b> <bdi dir="ltr">FD40</bdi> בלי רווח נותן הודעה שהצב לא מכיר את המילה. כל מקש ממשיך.</li>
+<li><b>מספרים שלמים בלבד.</b> אין שברים, ואין רשימות. במקום זה יש כמה צבים בבת אחת, ומצב <bdi>DOODLE</bdi> לילדים קטנים: לוחצים <kbd>@</kbd> במצב ריצה, ומציירים במקשי הספרות.</li>
+<li><b>עיגול.</b> <bdi dir="ltr">REPEAT 36 (FD 6 RT 10)</bdi> בתוך פרוצדורה נותן עיגול יפה.</li>
+<li><b>לא נוגעים בשורות התחתונות.</b> צב שנכנס לשלוש שורות הפקודות נמרח כשהטקסט זז.</li>
+</ul>
+<p class="note">המדריך כתוב במילים שלנו, לבעלי <bdi>Dragon</bdi> שיש להם את התוכנה המקורית. אנחנו לא מעלים את התוכנה עצמה ולא את המדריך המקורי. בדקנו כל צעד על מכונה עם אותו מעבד ואותו מסך.</p>
+</div>
+<p class="more"><a href="/guides/">כל המדריכים</a> · <a href="/magazine/">מה קראו בעלי <bdi>Dragon</bdi></a> · <a href="/dragon-history/">ההיסטוריה של ה-<bdi>Dragon</bdi></a></p>
+</article>
+</main>
+</body>
+</html>

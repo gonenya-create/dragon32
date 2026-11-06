@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to use Dragon Logo — Software of the Day</title>
+<meta name="description" content="A short guide to Dragon Logo, the Dragon Data cartridge: the modes, the turtle commands and a first procedure.">
+<meta property="og:title" content="<bdi>Dragon Logo</bdi>: learning to program with a turtle">
+<meta property="og:description" content="A short guide to Dragon Logo, the Dragon Data cartridge: the modes, the turtle commands and a first procedure.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/en/guides/logo/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/guides/logo/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;700&amp;family=Rubik:wght@400;700;900&amp;display=swap">
+<link rel="stylesheet" href="/magazine/magazine.css">
+</head>
+<body>
+<nav class="site" aria-label="Navigation">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/guides/logo/" lang="he" hreflang="he">עברית</a>
+  <a href="/en/guides/">All guides</a>
+  <a href="/en/">← Back to the computer</a>
+</nav>
+<main class="sheet">
+<header class="mast">
+  <div class="mast-top"><span>A Dragon 1982 series</span><span dir="ltr">DRAGON LOGO · 1982–84</span></div>
+  <p class="mast-name">Software of the Day</p>
+  <div class="stripes" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+</header>
+<article class="story">
+<span class="kicker">Education</span>
+<h1><bdi>Dragon Logo</bdi>: learning to program with a turtle</h1>
+<p class="standfirst">Dragon Logo by Larry Kheriaty and George Gerhold (Micropi, 1982) came on a cartridge from Dragon Data. It is the same program the Color Computer sold as Color Logo. You give orders to a small turtle on the screen, and it draws. This is how children learned to program.</p>
+<img class="guide-art" src="/guides/art/logo.svg" alt="" width="480" height="280">
+<div class="cols">
+<h2>Starting</h2>
+<p>Put the cartridge in with the computer switched off, then switch on. You see <bdi dir="ltr">LOGO:</bdi>, and that is the menu: press one letter, without <bdi>ENTER</bdi>.</p>
+<table class="keys"><tr><th scope="row"><kbd dir="ltr">R</kbd></th><td>Run mode: the screen for the turtle, and three lines for commands at the bottom</td></tr><tr><th scope="row"><kbd dir="ltr">E</kbd></th><td>The editor: this is where you write procedures</td></tr><tr><th scope="row"><kbd dir="ltr">S, T, ENTER</kbd></th><td>Save all procedures to tape</td></tr><tr><th scope="row"><kbd dir="ltr">L, T, ENTER</kbd></th><td>Load from tape</td></tr><tr><th scope="row"><kbd dir="ltr">P</kbd></th><td>Print on a printer</td></tr><tr><th scope="row"><kbd dir="ltr">BREAK</kbd></th><td>From any mode: back to LOGO:</td></tr></table>
+<h2>First steps</h2>
+<p>Press <kbd>R</kbd> and type one command per line, with a space before the number, then <kbd>ENTER</kbd>. <bdi dir="ltr">FD 40</bdi> moves the turtle 40 steps forward, and <bdi dir="ltr">RT 90</bdi> turns it right a quarter turn.</p>
+<table class="keys"><tr><th scope="row"><kbd dir="ltr">FD / BK</kbd></th><td>Forward / back</td></tr><tr><th scope="row"><kbd dir="ltr">RT / LT</kbd></th><td>Turn right / left, in degrees</td></tr><tr><th scope="row"><kbd dir="ltr">PU / PD</kbd></th><td>Pen up / pen down</td></tr><tr><th scope="row"><kbd dir="ltr">HOME</kbd></th><td>Back to the middle, facing up</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR</kbd></th><td>Clears the screen</td></tr><tr><th scope="row"><kbd dir="ltr">HT / ST</kbd></th><td>Hide / show the turtle</td></tr><tr><th scope="row"><kbd dir="ltr">PC 0–3</kbd></th><td>Pen colour</td></tr><tr><th scope="row"><kbd dir="ltr">BG 0–3</kbd></th><td>Background colour</td></tr></table>
+<h2>A first procedure</h2>
+<p>A procedure is a new word you teach the turtle. Press <kbd>BREAK</kbd>, then <kbd>E</kbd>, and type:</p>
+<pre class="listing" dir="ltr">TO SQUARE
+REPEAT 4 (FD 30 RT 90)
+END
+TO FLOWER :N
+REPEAT :N (SQUARE RT 360/:N)
+END</pre>
+<p>Press <kbd>BREAK</kbd>, then <kbd>R</kbd>, and type <bdi dir="ltr">FLOWER 12</bdi>. The turtle draws 12 squares around the middle, like a flower. <bdi dir="ltr">:N</bdi> is a number you hand to the procedure.</p>
+<h2>What is different from other Logos</h2>
+<ul>
+<li><b>Round brackets.</b> <bdi dir="ltr">REPEAT 4 (FD 30 RT 90)</bdi>, not the square brackets most Logos use.</li>
+<li><b><bdi>REPEAT</bdi> only inside a procedure.</b> Run mode takes only simple commands, one per line. Loops and conditions go in the editor.</li>
+<li><b>A space after every word.</b> <bdi dir="ltr">FD40</bdi> with no space says the turtle does not know that word. Any key carries on.</li>
+<li><b>Whole numbers only.</b> No fractions and no lists. Instead you get several turtles at once, and a <bdi>DOODLE</bdi> mode for small children: press <kbd>@</kbd> in run mode and draw with the number keys.</li>
+<li><b>A circle.</b> <bdi dir="ltr">REPEAT 36 (FD 6 RT 10)</bdi> inside a procedure gives a good circle.</li>
+<li><b>Keep out of the bottom lines.</b> A turtle that wanders into the three command lines gets smeared when the text scrolls.</li>
+</ul>
+<p class="note">This guide is in our own words, for Dragon owners who have the original program. We do not host the program or its original manual. We tried every step on an emulated machine with the same chips.</p>
+</div>
+<p class="more"><a href="/en/guides/">All guides</a> · <a href="/en/magazine/">What Dragon Owners Were Reading</a> · <a href="/en/dragon-history/">The history of the Dragon</a></p>
+</article>
+</main>
+</body>
+</html>
