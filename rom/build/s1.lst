@@ -386,7 +386,7 @@ FFC0                  SAM             equ     $ffc0
 833F 2006                             bra     isl_8342_e      ;@isl
 8341 FF                               fill    $ff,$8342-*     ;@isl
 8342 C60C                             ldb     #12     ;@isl
-8344 7E8471                           jmp     error   ;@isl
+8344 7E8472                           jmp     error   ;@isl
 8347                  isl_8342_e      ;@isl
 8347 A7C0                             sta     ,u+
 8349 5A                               decb
@@ -520,41 +520,41 @@ FFC0                  SAM             equ     $ffc0
                       ; לפי ההתקן: המקום מפרמטרי ההתקן; לקלטת תמיד (כך LIST לקלטת מתחיל כל שורה ב-CR)
 8450 173721           condcr          lbsr    devpar
 8453 0D6E                             tst     SPCIO
-8455 2615                             bne     prcr
+8455 2616                             bne     prcr
 8457 0D6C                             tst     DEVPOS
-8459 2611                             bne     prcr
+8459 2612                             bne     prcr
 845B 39                               rts
                       ; prin: " IN n" אם בתוכנית, ושורה חדשה
-845C DC68             prin            ldd     CURLIN
+845C 9668             prin            lda     CURLIN
 845E 4C                               inca                    ; $FFxx = שורה ישירה (מספרי השורות עד 63999)
-845F 270B                             beq     prcr
-8461 4A                               deca
-8462 308DFE80                         leax    m_in,pcr
-8466 173A2C                           lbsr    puts
-8469 170341                           lbsr    prnum
+845F 270C                             beq     prcr
+8461 308DFE81                         leax    m_in,pcr
+8465 173A2D                           lbsr    puts            ; puts משנה את A: את מספר השורה קוראים רק אחריו (6.11: שורה 490 הודפסה 234)
+8468 DC68                             ldd     CURLIN
+846A 170340                           lbsr    prnum
                       ; prcr: שורה חדשה
-846C 860D             prcr            lda     #13
-846E 1636D2                           lbra    chrout
+846D 860D             prcr            lda     #13
+846F 1636D1                           lbra    chrout
                       
-8471 BD018E           error           jsr     HK_ERR1         ; נקודות החיבור 17 ו-18, עם B = הקוד
-8474 BD0191                           jsr     HK_ERR2
-8477 10DE21                           lds     STKTOP          ; mit: STKINI — מחסנית, זמניים, ואין המשך
-847A 0F6F                             clr     DEVNUM          ; כל שגיאה: חזרה למסך (קורא: קלטת 4.3)
-847C 6FE2                             clr     ,-s
-847E 3404                             pshs    b
-8480 172F80                           lbsr    sndoff          ; כל שגיאה: הצליל והמנוע כבויים (קורא: צליל 1.1)
-8483 173214                           lbsr    motoff
-8486 17013C                           lbsr    rcsub
-8489 8DC5                             bsr     condcr
-848B 863F                             lda     #'?
-848D 1736B3                           lbsr    chrout
-8490 3504                             puls    b
-8492 308DFE13                         leax    errtab,pcr      ; שתי האותיות מהטבלה, לפי B
-8496 3A                               abx
-8497 A680                             lda     ,x+
-8499 1736A7                           lbsr    chrout
-849C 201C                             bra     isl_849f_e      ;@isl
-849E FF                               fill    $ff,$849f-*     ;@isl
+8472 BD018E           error           jsr     HK_ERR1         ; נקודות החיבור 17 ו-18, עם B = הקוד
+8475 BD0191                           jsr     HK_ERR2
+8478 10DE21                           lds     STKTOP          ; mit: STKINI — מחסנית, זמניים, ואין המשך
+847B 0F6F                             clr     DEVNUM          ; כל שגיאה: חזרה למסך (קורא: קלטת 4.3)
+847D 6FE2                             clr     ,-s
+847F 3404                             pshs    b
+8481 172F7F                           lbsr    sndoff          ; כל שגיאה: הצליל והמנוע כבויים (קורא: צליל 1.1)
+8484 173213                           lbsr    motoff
+8487 17013B                           lbsr    rcsub
+848A 8DC4                             bsr     condcr
+848C 863F                             lda     #'?
+848E 1736B2                           lbsr    chrout
+8491 3504                             puls    b
+8493 308DFE12                         leax    errtab,pcr      ; שתי האותיות מהטבלה, לפי B
+8497 3A                               abx
+8498 A680                             lda     ,x+
+849A 1736A6                           lbsr    chrout
+849D 201B                             bra     isl_849f_e      ;@isl
+849F                                  fill    $ff,$849f-*     ;@isl
 849F 7E8EAF                           jmp     newstt  ;@isl
 84A2 FFFFFFFF                         fill    $ff,$84a6-*     ;@isl
 84A6 9EA6                             ldx     <TXTPTR ;@isl
@@ -1041,7 +1041,7 @@ FFC0                  SAM             equ     $ffc0
 8841 6F84             gl_done         clr     ,x
 8843 8104                             cmpa    #4              ; C=1 ב-BREAK
 8845 3401                             pshs    cc
-8847 17FC22                           lbsr    prcr
+8847 17FC23                           lbsr    prcr
 884A 3595                             puls    cc,b,x,pc
                       ; plyini (עבר מ-mitsnd.s, 30.10): ברירות המחדל, בהדלקה ובכל RUN (קורא 0.2): O3 (נשמר 2), עוצמה $B8/$44, L4, T2, בלי נקודות
 884C CC4404           plyini          ldd     #$4404
@@ -1168,7 +1168,7 @@ FFC0                  SAM             equ     $ffc0
 8941 C630             err_ie          ldb     #48
 8943 8C                               fcb     $8c             ; cmpx #: מדלג על ה-ldb הבא
 8944 C632             err_ds          ldb     #50
-8946 16FB28                           lbra    error           ; (השרשרת עברה לכאן ב-22.10, רחוק מהכתובות הקבועות)
+8946 16FB29                           lbra    error           ; (השרשרת עברה לכאן ב-22.10, רחוק מהכתובות הקבועות)
 8949                                  include "mitfp.s"
                       ; Dragon 1982 BASIC — ניסוי שלב 1ב: חשבון נקודה צפה.
                       ; תרגום ל-6809 של שגרות החשבון של BASIC-M6502 (mit, מספרי השורות ב-rom/mit/m6502.asm), בפורמט של 5 בתים:
@@ -7566,7 +7566,7 @@ B70B 2718                             beq     7F              ; כותרת בא�
 B70D 2AE7                             bpl     1B              ; $01-$7F: נתונים. $80-$FF: הסוף
 B70F 9F1B                             stx     VARTAB
 B711 8D87                             bsr     motoff
-B713 17CD56                           lbsr    prcr
+B713 17CD57                           lbsr    prcr
 B716 8E88B9                           ldx     #m_ok           ; OK ושורה חדשה, גם בתוכנית (3.11: ldx, בית אחד פחות)
 B719 170779                           lbsr    puts
 B71C 17CE6D                           lbsr    lnkprg          ; קישורים חדשים (תוכנית שנשמרה בכתובת אחרת)

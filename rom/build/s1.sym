@@ -62,7 +62,7 @@ FRETOP	equ	35
 snddur	equ	47781
 radix	equ	39923
 fn_usr	equ	40477
-error	equ	33905
+error	equ	33906
 gogo	equ	36698
 TEMPPT	equ	11
 mchk	equ	41323
@@ -749,7 +749,7 @@ isl_b238_e	equ	45627
 GPRADR	equ	203
 chkout	equ	47883
 OLDTXT	equ	45
-prcr	equ	33900
+prcr	equ	33901
 HK_EOF	equ	392
 rn_map	equ	42155
 isl_851b_e	equ	34078

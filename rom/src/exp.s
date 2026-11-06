@@ -519,12 +519,12 @@ condcr		lbsr	devpar
 		bne	prcr
 		rts
 ; prin: " IN n" אם בתוכנית, ושורה חדשה
-prin		ldd	CURLIN
+prin		lda	CURLIN
 		inca			; $FFxx = שורה ישירה (מספרי השורות עד 63999)
 		beq	prcr
-		deca
 		leax	m_in,pcr
-		lbsr	puts
+		lbsr	puts		; puts משנה את A: את מספר השורה קוראים רק אחריו (6.11: שורה 490 הודפסה 234)
+		ldd	CURLIN
 		lbsr	prnum
 ; prcr: שורה חדשה
 prcr		lda	#13
