@@ -1979,6 +1979,82 @@ window.D32_GAMES = {
         "link": "https://archive.worldofdragon.org/index.php?title=SAS"
       }
     },
+    "hangit": {
+      "slug": "hang-it",
+      "drawer": "harry",
+      "year": "1983",
+      "tag": [
+        "מילים",
+        "words"
+      ],
+      "players": [
+        "שחקן אחד או שניים",
+        "1 or 2 players"
+      ],
+      "load": [
+        "כדקה וחצי",
+        "about a minute and a half"
+      ],
+      "about": {
+        "he": [
+          "המשחק הראשון ש-Harry Whitehouse כתב, עוד לפני Peaksoft. הוא הקליד בעצמו 1,000 שמות של ערים וכפרים, פרסם אותו במודעה קטנה, והעתיק את הקלטות על שולחן האוכל.",
+          "\"מחריד\", הוא קורא לו היום. אבל ממנו התחיל הכול: לקונים שלו הוא מכר אחר כך את Death's Head Hole ואת Lionheart."
+        ],
+        "en": [
+          "The first game Harry Whitehouse wrote, before Peaksoft. He typed in 1,000 town and village names himself, advertised it in a small ad, and copied the tapes on the dining table.",
+          "\"Appalling\", he calls it today. But it started everything: he later sold Death's Head Hole and Lionheart to the same buyers."
+        ]
+      },
+      "icon": [
+        200,
+        24,
+        64
+      ]
+    },
+    "dhh": {
+      "slug": "deaths-head-hole",
+      "drawer": "harry",
+      "year": "1983",
+      "tag": [
+        "הרפתקה",
+        "adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כשתי דקות",
+        "about two minutes"
+      ],
+      "about": {
+        "he": [
+          "המשחק השני של Harry Whitehouse: הדמיה של הצלה במערה אמיתית בגבעות Mendip שבאנגליה. במודעה הראשונה של Champions! הוא עוד קיבל את המקום הראשון.",
+          "אין כאן פקודות מוקלדות כמו בהרפתקאות אחרות: כל מה שצריך לדעת מוצג על המסך, ומשחקים בכמה מקשים. על העטיפה: \"פורץ דרך חדשה בסימולציות למחשב הביתי\" (Dragon Club News)."
+        ],
+        "en": [
+          "Harry Whitehouse's second game: a simulation of a rescue in a real cave in England's Mendip Hills. In the first advert for Champions! it still had top billing.",
+          "No typed commands, unlike other adventures: everything you need is on the screen, and you play with a few keys. The inlay quotes Dragon Club News: \"Breaks new ground in home computer simulations\"."
+        ]
+      },
+      "icon": [
+        24,
+        120,
+        24
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/dhh.jpg",
+        "credit": [
+          "העטיפה המקורית של Peaksoft. סריקה:",
+          "The original Peaksoft cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/browse/?downloads/Software/Dragon/Peaksoft/Death's%20Head%20Hole"
+      }
+    },
     "downland": {
       "slug": "downland",
       "drawer": "legends",

@@ -94,6 +94,13 @@
       ['Tim Love · Peaksoft, 1984', 'https://timlovescricket.blogspot.com/', null, null, 'love']],
     // Tanglewood (Microdeal, 1986): קוד פתוח ברישיון MIT מ-2018 (Ian Murray-Watson, Pete Lyon, ובהסכמת John Symes).
     // הקלטת מהמאגר הרשמי נגמרת בביט האחרון, אז נוספו אחריה 16 בתי מבוא (כמו בקלטת אמיתית); הנתונים כמו שהם
+    // Hang It! של Harry Whitehouse (1983), המשחק הראשון שלו: איש תלוי עם 1,000 שמות של ערים וכפרים בבריטניה. הרשות שלו במייל, 29.10.2026
+    // ("Yes that's fine by me"); גונן החליט להעלות 6.11. BASIC, הקלטת מהארכיון כמו שהיא
+    ['hangit', 'Hang It!', 'Hang It!', null,
+      ['Harry Whitehouse · Peaksoft, 1983', 'http://www.peaksoft.uk/peaksoftstory', null, null, 'love']],
+    // Death's Head Hole של Harry Whitehouse (1983), הצלה במערה. אותה רשות. BASIC, הקלטת המקורית [!] (לא הגרסה ש"תוקנה" בארכיון)
+    ['dhh', 'Death\'s Head Hole', 'Death\'s Head Hole', null,
+      ['Harry Whitehouse · Peaksoft, 1983', 'http://www.peaksoft.uk/peaksoftstory', null, null, 'love']],
     // Champions! של Harry Whitehouse (Peaksoft, 1983), משחק ניהול כדורגל: הרשות שלו במייל, 29.10.2026.
     // תוכנית BASIC; הקלטת מהארכיון רצה כמו שהיא
     ['champs', 'Champions!', 'Champions!', null,
@@ -592,6 +599,28 @@
         'Bowling: before the delivery move the arrow that marks where the bowler releases. At the second tone move the joystick to choose the ball.',
         'Batting: first the joystick sets the height of the bat, after [Space] its angle and position. Running: joystick left to run, right to stay.']
     },
+    // נבדק במכונה (6.11): CLOAD, ‏RUN, ‏SOLO?, ניחוש אותיות והתלייה. ההוראות לפי דף ההוראות המקורי
+    hangit: {
+      he: ['איש תלוי: המחשב בוחר שם של עיר או כפר בבריטניה (יש לו 1,000 כאלה), ומראה כוכבית במקום כל אות. מנחשים אות אחרי אות.',
+        'כל אות נכונה מופיעה במקום שלה. על כל טעות מתווסף עוד חלק לאיש שעל הגרדום. אם הוא נשלם לפני שגיליתם את השם, מופיע YOU\'RE HANGED!.',
+        'ל-DO YOU WANT TO PLAY SOLO? לוחצים [Y] כדי לשחק נגד המחשב. יש המתנה של כמה שניות, רק בפעם הראשונה, בזמן שהמחשב קורא את רשימת המילים.',
+        'אפשר גם לשחק בשניים: לוחצים [N], ואחד מקליד מילה או משפט בשביל השני. בסוף לוחצים [@], ועל טעות לוחצים [^].'],
+      en: ['Hangman: the computer picks the name of a town or village in Britain (it knows 1,000 of them), and shows an asterisk for each letter. Guess one letter at a time.',
+        'A right letter appears in its place. Each wrong one adds another part to the man on the gallows. If he is finished before you find the name, YOU\'RE HANGED! appears.',
+        'At DO YOU WANT TO PLAY SOLO? press [Y] to play the computer. There is a wait of a few seconds, only the first time, while it reads its word lists.',
+        'You can also play in pairs: press [N], and one player types a word or phrase for the other. Press [@] when finished, and [^] to fix a mistake.']
+    },
+    // נבדק במכונה (6.11): CLOAD, ‏RUN, הפתיחה, NOVICE/EXPERT, ציוד רגיל, מסך המערה, צפונה, הקשבה ואזור לא נחקר. ההוראות לפי העטיפה ודף ההוראות המקוריים
+    dhh: {
+      he: ['שלושה חוקרי מערות אבדו עמוק ב-Death\'s Head Hole, ליד הכפר Priddy שבסומרסט. אתם וחבריכם בצוות ההצלה יורדים להציל את שלושתם, לפני שהגשם מציף את המעברים.',
+        'רוב הזמן משחקים בארבעה מקשים: [N] [S] [E] [W] לצפון, דרום, מזרח ומערב. על המסך כתוב לאן אפשר ללכת. כיוון שלא כתוב הוא אזור לא נחקר: מסוכן, ומעייף יותר.',
+        '[L] מקשיבים: שומעים אם יש חוקר אבוד בקרבת מקום. [F] אוכלים מנת מזון. [P] הניקוד, רק בכניסה ובחלק הראשון של המערה. [G] מוותרים.',
+        'שמרו על הכוח (FITNESS) ועל הפנסים (LIGHTS): הם יורדים כל הזמן. בעזרת סולם יורדים בירידה תלולה, בעזרת חבל מטפסים, בעזרת אֵת פותחים מעבר סתום, וציוד הצלילה מעביר מעבר מוצף. לתהום לא נכנסים אף פעם.'],
+      en: ['Three cavers are lost deep in Death\'s Head Hole, near the village of Priddy in Somerset. You and your rescue team go down to save all three, before the rain floods the passages.',
+        'Most of the time you play with four keys: [N] [S] [E] [W] for north, south, east and west. The screen tells you which ways are open. A way it doesn\'t name is unexplored: dangerous, and more tiring.',
+        '[L] listens for a lost caver nearby. [F] eats a food pack. [P] gives the score, only at the entrance and in the first part of the cave. [G] gives up.',
+        'Watch your FITNESS and your LIGHTS: they run down all the time. A ladder gets you down a pitch, a rope up a climb, a shovel through a choked passage, and the sub-aqua set through a sump. Never step into a chasm.']
+    },
     // נבדק במכונה (29.10): CLOAD, ‏RUN, שם הקבוצה, ההקדמה, מסך הקבוצה והתפריט. ההוראות לפי העטיפה המקורית של Peaksoft
     champs: {
       he: ['אתם המנהלים של קבוצה בליגה הרביעית. המטרה: להביא אותה לאליפות הליגה הראשונה, ומשם לגביע אירופה.',
@@ -928,6 +957,8 @@
     grabber: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. אחרי מסך הפתיחה, ב-NUMBER OF PLAYERS? לוחצים [1].', 'When loading ends pick a colour: [1], [2] or [3]. After the title screen, at NUMBER OF PLAYERS? press [1].'],
     draconian: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וכשמופיע NUMBER OF PLAYERS? לוחצים [1].', 'When loading ends pick a colour: [1], [2] or [3]. On the title screen press [Space], and when NUMBER OF PLAYERS? appears press [1].'],
     alcatraz: ['כשמופיע OK מקלידים {RUN}. ל-DRAGON OR TANDY COLOR? לוחצים [D], ול-JOYSTICKS? לוחצים [Y].', 'When OK appears type {RUN}. At DRAGON OR TANDY COLOR? press [D], and at JOYSTICKS? press [Y].'],
+    hangit: ['כשמופיע OK מקלידים {RUN}. ל-DO YOU WANT TO PLAY SOLO? לוחצים [Y], ומחכים כמה שניות עד PLEASE GUESS A LETTER.', 'When OK appears type {RUN}. At DO YOU WANT TO PLAY SOLO? press [Y], and wait a few seconds for PLEASE GUESS A LETTER.'],
+    dhh: ['כשמופיע OK מקלידים {RUN}. ל-ADDITIONAL INSTRUCTIONS? לוחצים [Y] או [N]. אחר כך [N] למתחילים (NOVICE), ול-STANDARD RANGE OF EQUIPMENT? לוחצים [Y].', 'When OK appears type {RUN}. At ADDITIONAL INSTRUCTIONS? press [Y] or [N]. Then [N] for NOVICE, and at STANDARD RANGE OF EQUIPMENT? press [Y].'],
     lionht: ['כשמופיע OK מקלידים {RUN}. אחרי מסך הפתיחה, ב-SKILL LEVEL (1-5)? מקלידים מספר ו-[ENTER].', 'When OK appears type {RUN}. After the title screen, at SKILL LEVEL (1-5)? type a number and [ENTER].'],
     sas: ['כשמופיע OK מקלידים {RUN}. הפתיחה מוקלדת לאט, כמו במכונת כתיבה. ל-BRIEFING? לוחצים [Y] או [N].', 'When OK appears type {RUN}. The opening types out slowly, like a typewriter. At BRIEFING? press [Y] or [N].'],
     champs: ['כשמופיע OK מקלידים {RUN}. המשחק שואל WHICH TEAM WOULD YOU LIKE TO BE?: כותבים שם ולוחצים [ENTER].', 'When OK appears type {RUN}. The game asks WHICH TEAM WOULD YOU LIKE TO BE?: type a name and press [ENTER].'],
@@ -976,6 +1007,8 @@
     grabber: ['שני מבוכים בבת אחת: אוספים מטילים ומחזירים אותם למרכז, ובורחים ממפלצות. בג\'ויסטיק.', 'Two mazes at once: collect the bars, bring them back to the middle and escape the monsters. Joystick.'],
     draconian: ['טסים בחלל לכל כיוון, משמידים בסיסים ומצילים אסטרונאוטים, לפני שהדרקון מגיע. בג\'ויסטיק.', 'Fly through space in any direction, destroy bases and rescue astronauts before the dragon arrives. Joystick.'],
     alcatraz: ['בורחים מכלא Alcatraz II ונזהרים מהשומרים. בג\'ויסטיק.', 'Escape from the prison of Alcatraz II and keep away from the guards. Joystick.'],
+    hangit: ['איש תלוי עם 1,000 שמות של ערים וכפרים בבריטניה. נגד המחשב או בשניים.', 'Hangman with 1,000 British towns and villages. Against the computer or for two.'],
+    dhh: ['הצלה במערה: מוצאים שלושה חוקרי מערות אבודים לפני שהכוח והפנסים נגמרים. במקשי הכיוונים.', 'A cave rescue: find three lost cavers before your fitness and lights run out. Direction keys.'],
     lionht: ['ריצ\'רד לב הארי אוסף את הצלבנים שלו ביער, ובורח מהצבא של הנסיך ג\'ון. בחיצים.', 'Richard the Lionheart gathers his crusaders in the forest and escapes Prince John\'s army. Arrow keys.'],
     sas: ['אימון SAS: חוצים שדות מוקשים, נזהרים מסיורים וממסוקים, ומשמידים את בסיס האויב. בחיצים.', 'SAS training: cross minefields, dodge patrols and gunships, and destroy the enemy base. Arrow keys.'],
     champs: ['מנהלים קבוצת כדורגל מהליגה הרביעית עד גביע אירופה: קונים, מוכרים ומשחקים. לשחקן אחד.', 'Manage a football club from the 4th Division to the European Cup: buy, sell and play. 1 player.'],
