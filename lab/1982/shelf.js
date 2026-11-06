@@ -93,7 +93,7 @@
     ['alcatraz', 'Alcatraz II', 'Alcatraz II', null,
       ['Mike Hughey · Spectral Associates / Microdeal, 1982', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']],
     // Ninja Warrior של Charles Forsythe (The Programmer's Guild, 1983): הרשות שלו באתר של L. Curtis Boyle (3.4.2005: "Yes, please do!").
-    // הקלטת מ-World of Dragon כמו שהיא (גונן אישר 6.11). CLOADM ואז EXEC. במקלדת: [K] ואז מספר השחקנים; [K] [O] [N] [M] (קוד המשחק, $1658)
+    // הקלטת מ-World of Dragon כמו שהיא (גונן אישר 6.11). CLOADM ואז EXEC. במקלדת: [K] ואז מספר השחקנים; [K] קפיצה, [O] בעיטה (העטיפה), [N] קדימה, [M] אחורה (קוד המשחק, $1658)
     ['ninja', 'Ninja Warrior', 'Ninja Warrior', 'm',
       ['Charles Forsythe · The Programmer\'s Guild, 1983', 'https://www.lcurtisboyle.com/nitros9/approvals/charles_forsythe_approval.txt', null, null, 'love']],
     // Tim Love's Cricket (Peaksoft, 1984): רשות מ-Tim Love במייל, 29.10.2026. שלושה חלקים בקלטת: טוען, BASIC וקוד מכונה.
@@ -723,27 +723,29 @@
         'A bomb with a hole in the middle is a super-bomb: worth more, and costs more if it lands. The red mines chase your ship whatever its colour. Three ships to start, and another every 10,000 points.',
         'When loading ends the title and a demo appear. At SELECT 1 OR 2 PLAYERS press [1] or [2], and at SELECT LEVEL a number from [1] to [4].']
     },
-    // נבדק במכונה (6.11): CLOADM, ‏EXEC, מסך הפתיחה, תפריט השליטה, ‏READY PLAYER ONE, ובעיטה ב-[K] ששוברת סלע. המקשים לפי קוד המשחק
+    // נבדק במכונה (6.11): CLOADM, ‏EXEC, מסך הפתיחה, תפריט השליטה, ‏READY PLAYER ONE, וסלע נשבר. המקשים לפי העטיפה המקורית ולפי קוד המשחק
     ninja: {
-      he: ['לוחם נינג\'ה בדרך: סלעים מתגלגלים אליו, ובהמשך גם כדורי אש, חיצים ונינג\'ות אחרים. בועטים בהם כדי לשבור אותם, וקופצים מעל בורות.',
+      he: ['לוחם נינג\'ה בדרך: סלעים מתגלגלים אליו, ובהמשך גם כדורי אש, חיצים ונינג\'ות אחרים. בועטים בסלעים כדי לשבור אותם, וקופצים מעל בורות ומכשולים.',
         'כל שלב הוא חגורה בצבע אחר, מהחגורה הלבנה והלאה, וכל אחד קשה יותר מהקודם. עד שישה שחקנים, בתורות.',
         'במסך הפתיחה לוחצים מקש. כתוב JOYSTICK CONTROL SET: לוחצים [K] כדי לשחק במקלדת, ואחר כך את מספר השחקנים, [1] עד [6].',
-        'במקלדת: [K] בועטים, [O] קופצים, ו-[N] ו-[M] זזים. בועטים כשהסלע כבר צמוד לרגליים.'],
-      en: ['A ninja on the road: rocks roll towards him, and later fireballs, arrows and other ninjas. Kick them to break them, and jump over the holes.',
+        'במקלדת: [K] קופצים, [O] בועטים, [N] מתקדמים ו-[M] נסוגים. העצה מהעטיפה: הכי הרבה נקודות מקבלים על בעיטה בסלעים, והתזמון הוא הכול.'],
+      en: ['A ninja on the road: rocks roll towards him, and later fireballs, arrows and other ninjas. Kick the rocks to break them, and jump over holes and obstacles.',
         'Each level is a belt of another colour, from the white belt up, each harder than the last. Up to six players, taking turns.',
         'On the title screen press a key. It says JOYSTICK CONTROL SET: press [K] to play on the keyboard, then the number of players, [1] to [6].',
-        'On the keyboard: [K] kicks, [O] jumps, and [N] and [M] move. Kick when the rock is right at your feet.']
+        'On the keyboard: [K] jumps, [O] kicks, [N] advances and [M] retreats. The inlay\'s advice: kicking the rocks scores most, and timing is everything.']
     },
-    // נבדק במכונה (6.11): הטעינה, מסך הפתיחה, המסדרון במוזיאון, ‏GO SOUTH ו-TAKE INVENTORY. העלילה לפי Solution Archive
+    // נבדק במכונה (6.11): הטעינה, מסך הפתיחה, המסדרון במוזיאון, ‏GO SOUTH ו-TAKE INVENTORY. הפקודות לפי העטיפה המקורית, העלילה לפי Solution Archive
     vortex: {
       he: ['הרפתקה של מסע בזמן, עם תמונה לכל מקום. מתחילים במוזיאון גדול עם הרבה תצוגות. צריך למצוא תשעה אוצרים, הפזורים בתקופות שונות, ולהחזיר אותם לחדר העבודה של אוצר המוזיאון.',
         'הטעינה ארוכה: כארבע דקות, ובסופה מופיע מסך של Mark Data Products. לוחצים מקש, ומופיע המסדרון הראשון.',
-        'כותבים פקודות באנגלית ולוחצים [ENTER]. הולכים עם {GO} וכיוון: {GO NORTH}, {GO SOUTH}, {GO EAST}, {GO WEST}. {TAKE INVENTORY} מראה מה בידיים.',
-        'מתחת לתמונה כתוב לאן אפשר ללכת (Obvious directions) ומה רואים (I see). כמו ב-Black Sanctum וב-Calixto Island, אותם מחברים: פועל ושם עצם.'],
+        'כותבים פועל ושם עצם באנגלית ולוחצים [ENTER], למשל {GET BOX} (לקחת את הקופסה), {EXAMINE BOX} (לבדוק אותה), {UNLOCK DOOR} (לפתוח את המנעול). {GET ALL} לוקח את כל מה שאפשר, ו-{PUT ALL} מניח הכול.',
+        'יש קיצורים: [N] [S] [E] [W] לכיוונים, [U] למעלה, [D] למטה, [G] לקחת, [P] להניח, [I] מה בידיים, ו-[L] להסתכל. מתחת לתמונה כתוב לאן אפשר ללכת ומה רואים, אבל לא כל חפץ מופיע בתמונה: קוראים את הטקסט, ובודקים כל חפץ.',
+        '{SAVE} שומר את המשחק, ו-{LOAD} ממשיך ממנו בפעם אחרת. {SCORE} מראה כמה מהלכים עשיתם.'],
       en: ['A time-travel adventure, with a picture for every place. You start in a large museum with many exhibits. Find nine treasures scattered through time, and bring them back to the museum curator\'s work room.',
         'The load is long: about four minutes, and at the end a Mark Data Products screen appears. Press a key, and the first hallway appears.',
-        'Type commands in English and press [ENTER]. Move with {GO} and a direction: {GO NORTH}, {GO SOUTH}, {GO EAST}, {GO WEST}. {TAKE INVENTORY} shows what you carry.',
-        'Under the picture it says which ways you can go (Obvious directions) and what you see (I see). Like Black Sanctum and Calixto Island, by the same authors: a verb and a noun.']
+        'Type a verb and a noun in English and press [ENTER], for example {GET BOX}, {EXAMINE BOX}, {UNLOCK DOOR}. {GET ALL} picks up everything you can carry, and {PUT ALL} puts it all down.',
+        'There are short forms: [N] [S] [E] [W] for directions, [U] up, [D] down, [G] get, [P] put, [I] inventory and [L] look. Under the picture it says where you can go and what you see, but not every object shows in the picture: read the text, and examine everything.',
+        '{SAVE} saves your game, and {LOAD} carries on from it another time. {SCORE} shows how many moves you have made.']
     },
     digit: {
       he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
@@ -1063,7 +1065,7 @@
     cricket: ['משחק קריקט של 40 אוברים: מגישים, חובטים ורצים. נגד המחשב או בשניים. בג\'ויסטיק.', 'A 40-over cricket match: bowl, bat and run. Against the computer or for two. Joystick.'],
     tangle: ['הרפתקה ביער עם חמש דמויות: עוצרים את Schark לפני שהוא כורת את היער. בחיצים ובפקודות.', 'A woodland adventure with five characters: stop Schark before he cuts down the woods. Arrows and typed commands.'],
     chameleon: ['חללית שמחליפה צבע תופסת פצצות של חומר ושל אנטי-חומר לפני שהן נוחתות. בג\'ויסטיק.', 'A colour-changing ship catches bombs of matter and anti-matter before they land. Joystick.'],
-    ninja: ['לוחם נינג\'ה בועט בסלעים, בכדורי אש ובנינג\'ות, וקופץ מעל בורות, חגורה אחרי חגורה. במקלדת.', 'A ninja kicks rocks, fireballs and other ninjas and jumps the holes, belt after belt. Keyboard.'],
+    ninja: ['לוחם נינג\'ה בועט בסלעים וקופץ מעל בורות, כדורי אש וחיצים, חגורה אחרי חגורה. במקלדת.', 'A ninja kicks rocks and jumps holes, fireballs and arrows, belt after belt. Keyboard.'],
     vortex: ['הרפתקה עם תמונות: מסע בזמן מתוך מוזיאון, ותשעה אוצרים להחזיר. בפקודות באנגלית.', 'An adventure with pictures: time travel from a museum, and nine treasures to bring back. English commands.'],
     digit: ['חופרים במערות, אוספים יהלומים ובורחים מאבנים נופלות וממפלצות: 25 מערות. בג\'ויסטיק.', 'Dig through caves, collect diamonds and escape falling stones and monsters: 25 caves. Joystick.'],
     brickout: ['שוברים לבנים בכדור ובמחבט, ותופסים אותיות שנופלות: 25 שלבים. בעכבר, כמו ידית.', 'Break bricks with a ball and paddle, and catch the falling letters: 25 levels. Mouse, like a paddle.'],

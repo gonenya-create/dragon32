@@ -1749,7 +1749,19 @@ window.D32_GAMES = {
         200,
         200,
         24
-      ]
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/chameleon.jpg",
+        "credit": [
+          "העטיפה המקורית של המחסנית. סריקה:",
+          "The original cartridge cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://worldofdragon.org/index.php?title=Starship_Chameleon"
+      }
     },
     "ninja": {
       "slug": "ninja-warrior",
@@ -1781,7 +1793,19 @@ window.D32_GAMES = {
         200,
         64,
         200
-      ]
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/ninja.jpg",
+        "credit": [
+          "העטיפה המקורית של The Programmer's Guild. סריקה:",
+          "The original Programmer's Guild cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/browse/?downloads/Software/Dragon/Programmers%20Guild/Ninja%20Warrior"
+      }
     },
     "vortex": {
       "slug": "the-vortex-factor",
@@ -1813,7 +1837,19 @@ window.D32_GAMES = {
         24,
         24,
         24
-      ]
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/vortex.jpg",
+        "credit": [
+          "העטיפה המקורית של Microdeal. סריקה:",
+          "The original Microdeal cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://worldofdragon.org/index.php?title=The_Vortex_Factor"
+      }
     },
     "digit": {
       "slug": "dig-it",
