@@ -74,7 +74,7 @@ window.D32_GAMES = {
       "key": "more",
       "he": "עוד משחקים מאותה תקופה",
       "en": "More games from the time",
-      "years": "1984–86",
+      "years": "1983–86",
       "note": [
         "משחקים של מחברים שיש לנו מהם משחק אחד. כאן באישורם, או ברישיון פתוח שהם עצמם נתנו.",
         "Games by authors we have one game from. Here with their permission, or under an open licence they gave themselves."
@@ -1717,6 +1717,102 @@ window.D32_GAMES = {
         0,
         36,
         32
+      ]
+    },
+    "chameleon": {
+      "slug": "starship-chameleon",
+      "drawer": "period",
+      "year": "1983",
+      "tag": [
+        "ארקייד",
+        "arcade"
+      ],
+      "players": [
+        "שחקן אחד או שניים",
+        "1 or 2 players"
+      ],
+      "load": [
+        "כשתי דקות",
+        "about two minutes"
+      ],
+      "about": {
+        "he": [
+          "Ken Kalish כתב אותו ל-Computerware ב-1982. ל-Dragon הוא היה מהמשחקים הראשונים של Dragon Data עצמה, על מחסנית, וב-1985 Microdeal הוציאה אותו שוב על קלטת. זו הקלטת.",
+          "רעיון פשוט עם טוויסט: החללית צריכה להיות בצבע של הפצצה כדי להשמיד אותה, וכל הזמן מחליפים צבע."
+        ],
+        "en": [
+          "Ken Kalish wrote it for Computerware in 1982. On the Dragon it was one of Dragon Data's own first games, on cartridge, and in 1985 Microdeal brought it out again on tape. This is that tape.",
+          "A simple idea with a twist: the ship must be the colour of the bomb to destroy it, so you keep switching colours."
+        ]
+      },
+      "icon": [
+        200,
+        200,
+        24
+      ]
+    },
+    "ninja": {
+      "slug": "ninja-warrior",
+      "drawer": "more",
+      "year": "1983",
+      "tag": [
+        "ארקייד",
+        "arcade"
+      ],
+      "players": [
+        "עד שישה שחקנים",
+        "up to 6 players"
+      ],
+      "load": [
+        "כדקה",
+        "about a minute"
+      ],
+      "about": {
+        "he": [
+          "Charles Forsythe כתב אותו ל-The Programmer's Guild ב-1983. ב-Dragon User נכתבו עליו שתי ביקורות, ובבריטניה הפיצו אותו Program Factory ו-Computape.",
+          "החגורות של הקראטה הן השלבים: כל חגורה מוסיפה מכשולים חדשים. L. Curtis Boyle, ששומר את ארכיון ה-CoCo, כותב עליו: \"כיף גדול לשחק\"."
+        ],
+        "en": [
+          "Charles Forsythe wrote it for The Programmer's Guild in 1983. Dragon User reviewed it twice, and in Britain Program Factory and Computape distributed it.",
+          "The karate belts are the levels: each belt adds new obstacles. L. Curtis Boyle, who keeps the CoCo archive, calls it \"very fun to play\"."
+        ]
+      },
+      "icon": [
+        200,
+        64,
+        200
+      ]
+    },
+    "vortex": {
+      "slug": "the-vortex-factor",
+      "drawer": "more",
+      "year": "1985",
+      "tag": [
+        "הרפתקה",
+        "adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כארבע דקות",
+        "about four minutes"
+      ],
+      "about": {
+        "he": [
+          "Bob Withers ו-Stephen O'Dea כתבו אותו ב-Mark Data Products, אותו צוות של הגרסאות עם התמונות של Black Sanctum ו-Calixto Island. ל-Dragon הוציאה אותו Microdeal.",
+          "בסקר הקוראים של Dragon User בנובמבר 1986 הוא הגיע למקום הרביעי. ב-1996 כתב Withers שמותר להפיץ את המשחקים שלו."
+        ],
+        "en": [
+          "Bob Withers and Stephen O'Dea wrote it at Mark Data Products, the team behind the picture versions of Black Sanctum and Calixto Island. Microdeal published it for the Dragon.",
+          "It came fourth in the Dragon User readers' poll of November 1986. In 1996 Withers wrote that his games may be distributed."
+        ]
+      },
+      "icon": [
+        24,
+        24,
+        24
       ]
     },
     "digit": {

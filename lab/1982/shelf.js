@@ -42,6 +42,10 @@
     // חלק אחד שמתחיל לבד אחרי CLOADM; הקלטת מהארכיון כמו שהיא. משחק עם ידית
     ['devil', 'Devil Assault', 'Devil Assault', 'a',
       ['Ken Kalish · Tom Mix / Microdeal, 1983', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
+    // Starship Chameleon של Ken Kalish (Computerware, 1982; ל-Dragon: מחסנית של Dragon Data ב-1983, וקלטת של Microdeal ב-1985).
+    // הקלטת של Microdeal מ-World of Dragon, כמו שהיא (גונן אישר 6.11). הטוען נכנס לנקודות החיבור ($017F) ומתחיל לבד. משחק עם ידית
+    ['chameleon', 'Starship Chameleon', 'Starship Chameleon', 'a',
+      ['Ken Kalish · Computerware / Dragon Data / Microdeal, 1983', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
     // נכתב רק ל-Dragon (לפי Curtis Boyle). על המסך: (C)1983, ו-COPYRIGHT 1984 של Microdeal
     ['dungeon', 'Dungeon Raid', 'Dungeon Raid', 'a',
       ['Ken Kalish · Microdeal, 1983–84', 'http://www.lcurtisboyle.com/nitros9/interview.html', null, null, 'kalish']],
@@ -88,6 +92,10 @@
     // 15 בתי מבוא לפני כל בלוק, והמכונה צריכה מבוא ארוך כמו בקלטת אמיתית: המבוא הוארך, הנתונים כמו שהם (29.10)
     ['alcatraz', 'Alcatraz II', 'Alcatraz II', null,
       ['Mike Hughey · Spectral Associates / Microdeal, 1982', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']],
+    // Ninja Warrior של Charles Forsythe (The Programmer's Guild, 1983): הרשות שלו באתר של L. Curtis Boyle (3.4.2005: "Yes, please do!").
+    // הקלטת מ-World of Dragon כמו שהיא (גונן אישר 6.11). CLOADM ואז EXEC. במקלדת: [K] ואז מספר השחקנים; [K] [O] [N] [M] (קוד המשחק, $1658)
+    ['ninja', 'Ninja Warrior', 'Ninja Warrior', 'm',
+      ['Charles Forsythe · The Programmer\'s Guild, 1983', 'https://www.lcurtisboyle.com/nitros9/approvals/charles_forsythe_approval.txt', null, null, 'love']],
     // Tim Love's Cricket (Peaksoft, 1984): רשות מ-Tim Love במייל, 29.10.2026. שלושה חלקים בקלטת: טוען, BASIC וקוד מכונה.
     // שורה 10 שלו, CLOADM"":GOTO280, חשפה באג ב-ROM שלנו (תוקן 29.10). המבוא הוארך כמו ב-Alcatraz
     ['cricket', 'Tim Love\'s Cricket', 'Tim Love\'s Cricket', 'a',
@@ -135,6 +143,10 @@
       ['Rob Lech & Troy Dahlman (The Rugby Circle) · Tom Mix Software / Microdeal, 1983–84', 'https://www.lcurtisboyle.com/nitros9/approvals/the_rugby_circle.txt', null, null, 'love']],
     ['nerble', 'Nerble Force', 'Nerble Force', 'a',
       ['David Crandall · Computerware / Microdeal, 1983–85', 'https://www.lcurtisboyle.com/nitros9/approvals/approvals.html', null, null, 'love']],
+    // The Vortex Factor של Bob Withers ו-Stephen O'Dea (Mark Data Products, 1985; ל-Dragon מ-Microdeal): הרשות של Withers במכתב שבארכיון CLEAR
+    // (23.1.1996: "you have my permission to distribute them"; גונן קיבל את מכתבי CLEAR כמקור 6.11). הקלטת של Microdeal כמו שהיא. מתחילה לבד
+    ['vortex', 'The Vortex Factor', 'The Vortex Factor', 'a',
+      ['Bob Withers & Stephen O\'Dea · Mark Data Products / Microdeal, 1985', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']],
     // Black Sanctum ו-Calixto Island של Ron Krebs (Mark Data Products, 1981; ל-Dragon: Dragon Data). הרשות שלו באתר של L. Curtis Boyle
     // (15.12.2000: "Please feel free"; "I modified all of our games to run on the Dragon Data version"). הקלטות של Dragon Data
     // מ-World of Dragon, כמו שהן (גונן אישר את ההורדה 3.11). CLOADM ואז EXEC. ה-ROM צריך את $B505, ‏$BA6B, ‏$B45C ו-$B5C6 (3.11).
@@ -168,7 +180,7 @@
       ['Owen Stenseth · freeware, 1987', '/lab/1982/tapes/brickout-license.txt', 'https://github.com/digitalbytes/super-brickout', null, 'mit']]
   ];
   // משחקים שצריכים ג'ויסטיק: כשהקלטת נטענת, החיצים במקלדת הופכים לג'ויסטיק הימני ו-Alt (Option במק) לכפתור שלו
-  const JOY = new Set(['downland', 'king', 'buzzard', 'cavehunter', 'nerble', 'ranger', 'devil', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian', 'alcatraz', 'cricket', 'digit', 'snaker']);
+  const JOY = new Set(['chameleon', 'downland', 'king', 'buzzard', 'cavehunter', 'nerble', 'ranger', 'devil', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian', 'alcatraz', 'cricket', 'digit', 'snaker']);
   // ב-Cricket החובט משתמש בג'ויסטיק השמאלי והמגיש בימני (המדריך של Peaksoft): החיצים מזיזים את שניהם יחד.
   // ב-Snaker הימני מכוון (JOYSTK(0)) והשמאלי קובע מהירות (JOYSTK(3)): למעלה מהר, למטה לאט
   const BOTH = new Set(['cricket', 'snaker']);
@@ -700,6 +712,39 @@
         'Hitting a car sends the snake back up one row, and you go on from there.',
         'A new best time? The game asks WHAT IS YOUR NAME: type a name and press [ENTER]. At ANOTHER GAME (Y/N) answer [Y] or [N].']
     },
+    // נבדק במכונה (6.11): הטעינה, מסך הפתיחה, 1 OR 2 PLAYERS, ‏SELECT LEVEL, החללית זזה בחיצים ומחליפה צבע בכפתור
+    chameleon: {
+      he: ['אתם החללית Chameleon, ושומרים על הכוכב שלכם: האויב מפיל עליו פצצות מלמעלה, ואתם עוצרים אותן לפני שהן נוחתות.',
+        'יש פצצות כחולות, של חומר, ופצצות צהובות, של אנטי-חומר. משמידים פצצה כשנוגעים בה, אבל רק כשהחללית באותו צבע שלה. כפתור הג\'ויסטיק מחליף את הצבע של החללית.',
+        'פצצה עם חור באמצע היא פצצת-על: שווה יותר, ומורידה יותר אם היא נוחתת. המוקשים האדומים רודפים אחרי החללית, בכל צבע. שלוש חלליות בהתחלה, ועוד אחת כל 10,000 נקודות.',
+        'כשהטעינה נגמרת מופיעים שם המשחק ומסך הדגמה. ל-SELECT 1 OR 2 PLAYERS לוחצים [1] או [2], ול-SELECT LEVEL לוחצים מספר מ-[1] עד [4].'],
+      en: ['You are the Starship Chameleon, guarding your planet: the enemy drops bombs on it from above, and you stop them before they land.',
+        'There are blue bombs, of matter, and yellow ones, of anti-matter. You destroy a bomb by running into it, but only when your ship is the same colour. The joystick button switches your ship\'s colour.',
+        'A bomb with a hole in the middle is a super-bomb: worth more, and costs more if it lands. The red mines chase your ship whatever its colour. Three ships to start, and another every 10,000 points.',
+        'When loading ends the title and a demo appear. At SELECT 1 OR 2 PLAYERS press [1] or [2], and at SELECT LEVEL a number from [1] to [4].']
+    },
+    // נבדק במכונה (6.11): CLOADM, ‏EXEC, מסך הפתיחה, תפריט השליטה, ‏READY PLAYER ONE, ובעיטה ב-[K] ששוברת סלע. המקשים לפי קוד המשחק
+    ninja: {
+      he: ['לוחם נינג\'ה בדרך: סלעים מתגלגלים אליו, ובהמשך גם כדורי אש, חיצים ונינג\'ות אחרים. בועטים בהם כדי לשבור אותם, וקופצים מעל בורות.',
+        'כל שלב הוא חגורה בצבע אחר, מהחגורה הלבנה והלאה, וכל אחד קשה יותר מהקודם. עד שישה שחקנים, בתורות.',
+        'במסך הפתיחה לוחצים מקש. כתוב JOYSTICK CONTROL SET: לוחצים [K] כדי לשחק במקלדת, ואחר כך את מספר השחקנים, [1] עד [6].',
+        'במקלדת: [K] בועטים, [O] קופצים, ו-[N] ו-[M] זזים. בועטים כשהסלע כבר צמוד לרגליים.'],
+      en: ['A ninja on the road: rocks roll towards him, and later fireballs, arrows and other ninjas. Kick them to break them, and jump over the holes.',
+        'Each level is a belt of another colour, from the white belt up, each harder than the last. Up to six players, taking turns.',
+        'On the title screen press a key. It says JOYSTICK CONTROL SET: press [K] to play on the keyboard, then the number of players, [1] to [6].',
+        'On the keyboard: [K] kicks, [O] jumps, and [N] and [M] move. Kick when the rock is right at your feet.']
+    },
+    // נבדק במכונה (6.11): הטעינה, מסך הפתיחה, המסדרון במוזיאון, ‏GO SOUTH ו-TAKE INVENTORY. העלילה לפי Solution Archive
+    vortex: {
+      he: ['הרפתקה של מסע בזמן, עם תמונה לכל מקום. מתחילים במוזיאון גדול עם הרבה תצוגות. צריך למצוא תשעה אוצרים, הפזורים בתקופות שונות, ולהחזיר אותם לחדר העבודה של אוצר המוזיאון.',
+        'הטעינה ארוכה: כארבע דקות, ובסופה מופיע מסך של Mark Data Products. לוחצים מקש, ומופיע המסדרון הראשון.',
+        'כותבים פקודות באנגלית ולוחצים [ENTER]. הולכים עם {GO} וכיוון: {GO NORTH}, {GO SOUTH}, {GO EAST}, {GO WEST}. {TAKE INVENTORY} מראה מה בידיים.',
+        'מתחת לתמונה כתוב לאן אפשר ללכת (Obvious directions) ומה רואים (I see). כמו ב-Black Sanctum וב-Calixto Island, אותם מחברים: פועל ושם עצם.'],
+      en: ['A time-travel adventure, with a picture for every place. You start in a large museum with many exhibits. Find nine treasures scattered through time, and bring them back to the museum curator\'s work room.',
+        'The load is long: about four minutes, and at the end a Mark Data Products screen appears. Press a key, and the first hallway appears.',
+        'Type commands in English and press [ENTER]. Move with {GO} and a direction: {GO NORTH}, {GO SOUTH}, {GO EAST}, {GO WEST}. {TAKE INVENTORY} shows what you carry.',
+        'Under the picture it says which ways you can go (Obvious directions) and what you see (I see). Like Black Sanctum and Calixto Island, by the same authors: a verb and a noun.']
+    },
     digit: {
       he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
         'במסך הפתיחה, עם טבלת השיאים, לוחצים על הכפתור. מופיע CAN YOU ESCAPE CAVE NO 01??, ואחריו המערה הראשונה. יש 25 מערות.',
@@ -964,6 +1009,9 @@
     champs: ['כשמופיע OK מקלידים {RUN}. המשחק שואל WHICH TEAM WOULD YOU LIKE TO BE?: כותבים שם ולוחצים [ENTER].', 'When OK appears type {RUN}. The game asks WHICH TEAM WOULD YOU LIKE TO BE?: type a name and press [ENTER].'],
     cricket: ['מופיע מסך הפתיחה של Cricket, והמשחק ממשיך לטעון ולהתכונן עוד כמה דקות. אחר כך עונים על השאלות במקלדת.', 'The Cricket title screen appears, and the game goes on loading and preparing for a few minutes. Then answer the questions on the keyboard.'],
     tangle: ['כשמופיע OK מקלידים {EXEC}. אחרי מסך הפתיחה לוחצים [1] למשחק חדש.', 'When OK appears type {EXEC}. After the title screen press [1] for a new game.'],
+    chameleon: ['הטעינה מתחילה לבד. ל-SELECT 1 OR 2 PLAYERS לוחצים [1], ול-SELECT LEVEL מספר מ-[1] עד [4].', 'The game starts by itself. At SELECT 1 OR 2 PLAYERS press [1], and at SELECT LEVEL a number from [1] to [4].'],
+    ninja: ['כשמופיע OK מקלידים {EXEC}. במסך הפתיחה לוחצים מקש, אחר כך [K] (מקלדת) ו-[1] לשחקן אחד.', 'When OK appears type {EXEC}. On the title screen press a key, then [K] (keyboard) and [1] for one player.'],
+    vortex: ['הטעינה לוקחת כארבע דקות ומתחילה לבד. במסך של Mark Data Products לוחצים מקש.', 'Loading takes about four minutes and starts by itself. On the Mark Data Products screen press a key.'],
     digit: ['הטעינה לוקחת כשתי דקות. כשמופיע OK מקלידים {EXEC}. במסך הפתיחה לוחצים על כפתור הג\'ויסטיק, [רווח].', 'Loading takes about two minutes. When OK appears type {EXEC}. On the title screen press the joystick button, [Space].'],
     brickout: ['כשמופיע OK מקלידים {EXEC}. במסך הפתיחה לוחצים על מספר, 0 עד 9, או על הכפתור.', 'When OK appears type {EXEC}. On the title screen press a number, 0 to 9, or the button.'],
     snaker: ['כשמופיע OK מקלידים {RUN}. כשהמנגינה נגמרת לוחצים [ENTER].', 'When OK appears type {RUN}. When the tune ends press [ENTER].'],
@@ -1014,6 +1062,9 @@
     champs: ['מנהלים קבוצת כדורגל מהליגה הרביעית עד גביע אירופה: קונים, מוכרים ומשחקים. לשחקן אחד.', 'Manage a football club from the 4th Division to the European Cup: buy, sell and play. 1 player.'],
     cricket: ['משחק קריקט של 40 אוברים: מגישים, חובטים ורצים. נגד המחשב או בשניים. בג\'ויסטיק.', 'A 40-over cricket match: bowl, bat and run. Against the computer or for two. Joystick.'],
     tangle: ['הרפתקה ביער עם חמש דמויות: עוצרים את Schark לפני שהוא כורת את היער. בחיצים ובפקודות.', 'A woodland adventure with five characters: stop Schark before he cuts down the woods. Arrows and typed commands.'],
+    chameleon: ['חללית שמחליפה צבע תופסת פצצות של חומר ושל אנטי-חומר לפני שהן נוחתות. בג\'ויסטיק.', 'A colour-changing ship catches bombs of matter and anti-matter before they land. Joystick.'],
+    ninja: ['לוחם נינג\'ה בועט בסלעים, בכדורי אש ובנינג\'ות, וקופץ מעל בורות, חגורה אחרי חגורה. במקלדת.', 'A ninja kicks rocks, fireballs and other ninjas and jumps the holes, belt after belt. Keyboard.'],
+    vortex: ['הרפתקה עם תמונות: מסע בזמן מתוך מוזיאון, ותשעה אוצרים להחזיר. בפקודות באנגלית.', 'An adventure with pictures: time travel from a museum, and nine treasures to bring back. English commands.'],
     digit: ['חופרים במערות, אוספים יהלומים ובורחים מאבנים נופלות וממפלצות: 25 מערות. בג\'ויסטיק.', 'Dig through caves, collect diamonds and escape falling stones and monsters: 25 caves. Joystick.'],
     brickout: ['שוברים לבנים בכדור ובמחבט, ותופסים אותיות שנופלות: 25 שלבים. בעכבר, כמו ידית.', 'Break bricks with a ball and paddle, and catch the falling letters: 25 levels. Mouse, like a paddle.'],
     snaker: ['נחש יורד בכביש בין מכוניות שעולות מולו: שלוש ירידות, נגד השעון. בג\'ויסטיק.', 'A snake goes down a highway between cars rising towards it: three runs, against the clock. Joystick.'],
