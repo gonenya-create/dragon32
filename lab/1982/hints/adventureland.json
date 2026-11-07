@@ -1,0 +1,247 @@
+{
+ "note": "Hints for Adventureland in our own words. Every step was played and checked on the Dragon machine (7.11.2026): 13 treasures, 100 of 100. Each question has three levels: a small hint, a clearer hint and the full solution.",
+ "he": [
+  {
+   "q": "מה בכלל צריך לעשות?",
+   "h": [
+    "מחפשים חפצים שהשם שלהם מוקף בכוכביות, למשל {*GOLDEN FISH*}. אלה האוצרות. יש 13.",
+    "את האוצרות צריך להביא למקום אחד ולהשאיר שם. המקום מוסתר בביצה, מדרום לאחו. קראו את מה שכתוב על קורי העכביש שבראש העץ.",
+    "בביצה: {CLIMB TREE}, ‏{READ WEB}, ‏{GO DOWN}. עם הגרזן מחוף האגם: {CHOP TREE} ואז {GO STUMP}. בתוך הגדם משאירים כל אוצר ({DROP OX}, למשל) ובודקים ב-{SCORE}."
+   ]
+  },
+  {
+   "q": "משהו עוקץ אותי בביצה ({CHIGGERS})",
+   "h": [
+    "העקיצות לא עוברות לבד. אחרי כמה צעדים בלי טיפול, מתים.",
+    "התרופה נמצאת בביצה עצמה. השלט באחו מרמז עליה.",
+    "מיד אחרי עקיצה כותבים {GET MUD}. הבוץ מרפא, ומגן גם מפני דבורים. אבל לא נכנסים איתו לאחו: הדרקון מריח אותו."
+   ]
+  },
+  {
+   "q": "נתקעתי בביצה הטובענית, צפונית לאגם",
+   "h": [
+    "עם דברים ביד אי אפשר לצאת משם.",
+    "על הגרזן כתובה מילת קסם. היא שולחת את מה שמחזיקים למקום אחר.",
+    "{GET OX}, ואז {SAY BUNYON}: הגרזן והשור הכחול עפים לחורשה שממערב לביצה. עכשיו, עם ידיים ריקות, {SWIM}. מהחורשה לוקחים אחר כך את הגרזן, את השור ואת הפרי."
+   ]
+  },
+  {
+   "q": "מה עושים עם המנורה?",
+   "h": [
+    "זאת לא רק מנורה.",
+    "נסו לשפשף אותה, אבל לא יותר מדי.",
+    "בגדם: {RUB LAMP} פעמיים. השד משאיר טבעת יהלום ואחר כך צמיד יהלום. בפעם השלישית הוא כועס, ומתים. מתחת לגדם ({GO DOWN}) מחכה גם סיר אודמים."
+   ]
+  },
+  {
+   "q": "חושך, ומתתי במעבר",
+   "h": [
+    "לא הולכים בחושך. צריך אור.",
+    "המנורה צריכה אש. ליד הבור שאין לו תחתית, מזרחית לביצה, יש משהו שמדליק.",
+    "{GO HOLE} ליד הבור, ‏{GET FLINT}, ואז {LIGHT LAMP}. המנורה לא דולקת לנצח (המשחק מזהיר {LIGHT RUNS OUT}), ולכן כשיוצאים לאור: {UNLIGHT LAMP}. כדאי להשאיר את אבן הצור ליד הדלת שמתחת לגדם, כדי להדליק שוב בכל פעם שיורדים."
+   ]
+  },
+  {
+   "q": "הדלת מתחת לגדם נעולה",
+   "h": [
+    "מפתחות לא תמיד נמצאים על הקרקע.",
+    "חפשו גבוה, במקום שכבר טיפסתם אליו.",
+    "צרור המפתחות נמצא בראש העץ שבביצה. מתחת לגדם: {GO DOWN}, ‏{GO HOLE}, ‏{UNLOCK DOOR}, ואז {GO HALL}."
+   ]
+  },
+  {
+   "q": "חלון סגור בלבנים",
+   "h": [
+    "משהו בביצה יכול להתפוצץ.",
+    "צריך כלי שאפשר למלא בו גז. יש כזה בחדר שמדרום למערה הגדולה.",
+    "{TAKE BLADDER} בחדר הכניסה המלכותי. בביצה: {TAKE GAS}. בחדר שמעליו ({GO UP}): {DROP BLADDER}, ואז {LIGHT GAS} (צריך את אבן הצור). אף פעם לא מדליקים את הגז כשהוא ביד."
+   ]
+  },
+  {
+   "q": "דוב על המדף שמעבר לתהום",
+   "h": [
+    "הדוב רזה וקופצני.",
+    "תבהילו אותו.",
+    "{GO HOLE} דרך החלון, ‏{JUMP}, ואז {YELL}: הדוב נבהל ונופל. לוקחים את המראה ({TAKE MIRROR}), ‏{GO THRONE} ו-{TAKE CROWN}. חוזרים ב-{GO WEST} ו-{JUMP}. בחדר נשארו לבנים: {TAKE BRICKS}."
+   ]
+  },
+  {
+   "q": "המראה נשברה",
+   "h": [
+    "המראה שבירה מאוד.",
+    "צריך משהו רך מתחתיה.",
+    "בגדם מניחים קודם את השטיח ({DROP RUG}), ורק אחר כך את המראה ({DROP MIRROR}). היא נוחתת עליו בשלום, ומראה רמז."
+   ]
+  },
+  {
+   "q": "איך מוצאים את הדרך במבוך הבורות?",
+   "h": [
+    "הרבה מקומות נראים אותו דבר. שימו לב לשלטים ולחצים.",
+    "כמעט הכול הולך למטה. רק פעם אחת פונים.",
+    "מהמערה הגדולה: {GO DOWN}, ‏{GO DOWN}, ‏{GO DOWN}, ‏{GO WEST}, ‏{GO DOWN} (שם השטיח), ‏{GO DOWN} (תחתית התהום, עם הרשת). ברגל אי אפשר לצאת משם."
+   ]
+  },
+  {
+   "q": "איך יוצאים מהמבוך?",
+   "h": [
+    "קראו את השלט בתחתית התהום.",
+    "למילת הקסם צריך את השטיח.",
+    "מחזיקים את השטיח ואומרים {SAY AWAY} פעמיים: בפעם הראשונה הוא עולה לחדר של השטיח, ובשנייה הוא נוחת באחו. שטיח מעופף!"
+   ]
+  },
+  {
+   "q": "האבן הלוהטת בלבה",
+   "h": [
+    "הלבנים מהחלון חסינות לאש.",
+    "בונים בהן סכר, ואחר כך מקררים.",
+    "מביאים לתחתית התהום את הלבנים ובקבוק מים (ממלאים באגם ב-{GET WATER}). ‏{BUILD DAM}, ואז {POUR WATER} (שומעים {SIZZLE}), ואז {TAKE FIREBRICKS}: ביד יש עכשיו {*FIRESTONE*} קרה."
+   ]
+  },
+  {
+   "q": "הדג מת לי",
+   "h": [
+    "דג לא חי בלי מים.",
+    "צריך גם רשת וגם בקבוק מלא.",
+    "עם הרשת והבקבוק, ליד האגם: {GET WATER}, ‏{CATCH FISH}, ומיד לגדם: {DROP FISH}."
+   ]
+  },
+  {
+   "q": "הדבש, הדבורים והדרקון",
+   "h": [
+    "הדבורים עוקצות. הבוץ מגן.",
+    "דרקון לא אוהב עקיצות. המראה מרמזת על זה.",
+    "יורדים עם בוץ, בקבוק ריק ({POUR WATER}) והשטיח לחדר הכוורת ({GO NORTH} פעמיים מהמערה). ‏{TAKE HONEY}, ‏{TAKE BEES}, ‏{DROP MUD} (לא מביאים בוץ לדרקון), ‏{SAY AWAY} פעמיים. באחו: {DROP BEES}, והדרקון עף ומשאיר ביצים: {GET EGGS}. הדבורים נחנקות בבקבוק אם הדרך ארוכה, ולכן כדאי לעוף."
+   ]
+  },
+  {
+   "q": "מתתי. זה הסוף?",
+   "h": [
+    "לא בפעם הראשונה.",
+    "אחרי מוות ראשון מגיעים לחדר מעורפל, {LIMBO}.",
+    "מ-{LIMBO} יוצאים ב-{GO EAST} ומקבלים הזדמנות נוספת, עם מה שהחזקתם. מוות שני מסיים את המשחק."
+   ]
+  }
+ ],
+ "en": [
+  {
+   "q": "What am I supposed to do?",
+   "h": [
+    "Look for things whose name has stars around it, like *GOLDEN FISH*. Those are the treasures. There are 13.",
+    "The treasures have to be taken to one place and left there. It is hidden in the swamp, south of the meadow. Read what is written on the web at the top of the tree.",
+    "In the swamp: {CLIMB TREE}, {READ WEB}, {GO DOWN}. With the axe from the lake shore: {CHOP TREE}, then {GO STUMP}. Leave every treasure inside the stump ({DROP OX}, for example) and check with {SCORE}."
+   ]
+  },
+  {
+   "q": "Something keeps biting me in the swamp (CHIGGERS)",
+   "h": [
+    "The bites don't go away by themselves. A few moves without a cure and you die.",
+    "The cure is in the swamp itself. The sign in the meadow hints at it.",
+    "Right after a bite type {GET MUD}. Mud heals you, and also protects you from bees. But don't take it into the meadow: the dragon smells it."
+   ]
+  },
+  {
+   "q": "I'm stuck in the quicksand bog north of the lake",
+   "h": [
+    "You can't get out of there with things in your hands.",
+    "The axe has a magic word on it. It sends what you hold somewhere else.",
+    "{GET OX}, then {SAY BUNYON}: the axe and the blue ox fly to the grove west of the swamp. Now, with empty hands, {SWIM}. Later pick up the axe, the ox and the fruit in the grove."
+   ]
+  },
+  {
+   "q": "What is the lamp for?",
+   "h": [
+    "It isn't only a lamp.",
+    "Try rubbing it, but don't be greedy.",
+    "In the stump: {RUB LAMP} twice. The genie leaves a diamond ring, then a diamond bracelet. The third time he gets angry, and you die. Under the stump ({GO DOWN}) there is also a pot of rubies."
+   ]
+  },
+  {
+   "q": "It's dark, and I died in the passage",
+   "h": [
+    "Never walk in the dark. You need light.",
+    "The lamp needs fire. By the bottomless hole, east of the swamp, there is something that makes sparks.",
+    "{GO HOLE} at the hole, {GET FLINT}, then {LIGHT LAMP}. The lamp doesn't last forever (the game warns LIGHT RUNS OUT), so when you are back in daylight, {UNLIGHT LAMP}. Leave the flint by the door under the stump, so you can light up again every time you go down."
+   ]
+  },
+  {
+   "q": "The door under the stump is locked",
+   "h": [
+    "Keys aren't always on the ground.",
+    "Look high up, somewhere you have already climbed.",
+    "The ring of keys is at the top of the tree in the swamp. Under the stump: {GO DOWN}, {GO HOLE}, {UNLOCK DOOR}, then {GO HALL}."
+   ]
+  },
+  {
+   "q": "A bricked-up window",
+   "h": [
+    "Something in the swamp can explode.",
+    "You need something to fill with gas. There is one in the room south of the large cavern.",
+    "{TAKE BLADDER} in the royal anteroom. In the swamp: {TAKE GAS}. In the room above the anteroom ({GO UP}): {DROP BLADDER}, then {LIGHT GAS} (you need the flint). Never light the gas while you hold it."
+   ]
+  },
+  {
+   "q": "A bear on the ledge across the chasm",
+   "h": [
+    "The bear is thin and jumpy.",
+    "Give him a fright.",
+    "{GO HOLE} through the window, {JUMP}, then {YELL}: the bear is startled and falls. Take the mirror ({TAKE MIRROR}), {GO THRONE} and {TAKE CROWN}. Come back with {GO WEST} and {JUMP}. The room still has bricks: {TAKE BRICKS}."
+   ]
+  },
+  {
+   "q": "The mirror broke",
+   "h": [
+    "The mirror is very fragile.",
+    "It needs something soft under it.",
+    "In the stump put down the rug first ({DROP RUG}), and only then the mirror ({DROP MIRROR}). It lands safely on the rug, and shows a hint."
+   ]
+  },
+  {
+   "q": "How do I find my way in the maze of pits?",
+   "h": [
+    "Many places look the same. Watch the signs and the arrow.",
+    "Almost everything goes down. You turn only once.",
+    "From the large cavern: {GO DOWN}, {GO DOWN}, {GO DOWN}, {GO WEST}, {GO DOWN} (the rug is there), {GO DOWN} (the bottom of the chasm, with the net). You can't walk out of there."
+   ]
+  },
+  {
+   "q": "How do I get out of the maze?",
+   "h": [
+    "Read the sign at the bottom of the chasm.",
+    "The magic word needs the rug.",
+    "Hold the rug and {SAY AWAY} twice: the first time it rises to the rug's room, the second time it lands in the meadow. A flying carpet!"
+   ]
+  },
+  {
+   "q": "The glowing stone in the lava",
+   "h": [
+    "The bricks from the window don't burn.",
+    "Build a dam with them, then cool things down.",
+    "Bring the bricks and a bottle of water (fill it at the lake with {GET WATER}) to the bottom of the chasm. {BUILD DAM}, then {POUR WATER} (you hear SIZZLE), then {TAKE FIREBRICKS}: you now hold a cold *FIRESTONE*."
+   ]
+  },
+  {
+   "q": "My fish died",
+   "h": [
+    "A fish can't live without water.",
+    "You need the net and a full bottle.",
+    "With the net and the bottle, at the lake: {GET WATER}, {CATCH FISH}, and straight to the stump: {DROP FISH}."
+   ]
+  },
+  {
+   "q": "The honey, the bees and the dragon",
+   "h": [
+    "Bees sting. Mud protects you.",
+    "A dragon doesn't like stings. The mirror hints at it.",
+    "Go down with mud, an empty bottle ({POUR WATER}) and the rug to the hive ({GO NORTH} twice from the cavern). {TAKE HONEY}, {TAKE BEES}, {DROP MUD} (never bring mud to the dragon), {SAY AWAY} twice. In the meadow: {DROP BEES}, and the dragon flies off and leaves its eggs: {GET EGGS}. Bees suffocate in the bottle on a long walk, so fly."
+   ]
+  },
+  {
+   "q": "I died. Is that the end?",
+   "h": [
+    "Not the first time.",
+    "After your first death you wake up in a misty room, LIMBO.",
+    "Leave LIMBO with {GO EAST} and you get another chance, with what you were holding. A second death ends the game."
+   ]
+  }
+ ]
+}

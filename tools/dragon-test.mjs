@@ -1766,6 +1766,18 @@ if (part('real machine lab')) {
       more?.click(); r.after = rows.filter(b => getComputedStyle(b).display !== 'none').length; r.gone = !document.querySelector('.cabinet [data-drawer="adams"] .rows-more'); return r; });
     check(`${path} Scott Adams' drawer: 5 adventures shown and "+ 8 more", each row with its number and theme, the original cover as its icon`,
       fold.n === 13 && fold.hidden === 8 && fold.more && /#6\u2069 · /.test(fold.tg) && fold.cv === 11 && fold.after === 13 && fold.gone, JSON.stringify(fold));
+    // רמזים (7.11): ב-Adventureland לשונית רביעית, 15 שאלות, וכל מדרגה נפתחת רק אחרי הקודמת
+    const hints = await p.evaluate(async () => {
+      document.querySelector('.tape.row[data-id="adventureland"]').click();
+      await new Promise(f => setTimeout(f, 800));
+      const v = document.querySelector('.game-view'), q = v.querySelector('.hint-q');
+      const r = { tab: [...v.querySelectorAll('.gv-tabs button')].pop().textContent, n: v.querySelectorAll('.hint-q').length, lv: q ? q.querySelectorAll('.hint-lv').length : 0,
+        nested: !!(q && q.querySelector('.hint-lv0 .hint-lv1 .hint-lv2')), closed: q ? !q.open && !q.querySelector('.hint-lv[open]') : false };
+      v.querySelector('.gv-back').click();
+      return r;
+    });
+    check(`${path} Adventureland has a hints tab: 15 questions, each a small hint, a clearer hint and the full solution, one inside the other, all closed`,
+      /^(רמזים|Hints)$/.test(hints.tab) && hints.n === 15 && hints.lv === 3 && hints.nested && hints.closed, JSON.stringify(hints));
     // דף משחק ליד המכונה, עם כתובת משלו; "חזרה לארון" חוזר
     const gv = await p.evaluate(async () => {
       const out = [];
@@ -1778,8 +1790,8 @@ if (part('real machine lab')) {
       return { out, after: location.pathname, closed: !document.body.classList.contains('game-open') };
     });
     const pre = path;
-    check(`${path} every game opens its own page beside the machine, at its own address, with the 3 tabs (how to load, how to play, about), the red button and the credit; "back to the cabinet" returns`,
-      gv.out.length === 68 && gv.out.every(g => g.open && g.url.startsWith(pre) && g.url.length > pre.length + 3 && g.tabs === 3 && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go) && gv.after === pre && gv.closed, JSON.stringify(gv.out.filter(g => !(g.open && g.tabs === 3 && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go)).slice(0, 3)));
+    check(`${path} every game opens its own page beside the machine, at its own address, with the 3 tabs (how to load, how to play, about; + hints in a game we finished), the red button and the credit; "back to the cabinet" returns`,
+      gv.out.length === 68 && gv.out.every(g => g.open && g.url.startsWith(pre) && g.url.length > pre.length + 3 && (g.tabs === 3 || (g.tabs === 4 && g.id === 'adventureland')) && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go) && gv.after === pre && gv.closed, JSON.stringify(gv.out.filter(g => !(g.open && (g.tabs === 3 || (g.tabs === 4 && g.id === 'adventureland')) && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go)).slice(0, 3)));
     // העטיפה המקורית (30.10): רק במשחק שיש עליו רשות (El Diablero, מארכיון Dragon Data), בלשונית "על המשחק", עם קרדיט וקישור. התמונה נטענת
     const cv = await browser.newPage({ viewport: { width: 1280, height: 900 } });
     await cv.goto(base.replace(/\/$/, '') + path + 'el-diablero/'); await cv.waitForTimeout(1500);

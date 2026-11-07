@@ -330,6 +330,8 @@
   }
   // איך משחקים (גונן, 25.10: "לא בטוח שהמשתמשים יבינו איך משחקים"): תיבה נפתחת מתחת לכל משחק בשפת מכונה.
   // [מקש] נהיה מקש מצויר. המקשים לפי התיעוד של המחבר, ונבדקו במכונה. במק: BREAK הוא Esc, ו-CLEAR הוא Home (fn+←).
+  // משחקים שיש להם רמזים (lab/1982/hints/<id>.json): רק אחרי שעברנו אותם עד הסוף במכונה
+  const HINTS = new Set(['adventureland']);
   const HOWTO = {
     // Cave Hunter נבדק במכונה (3.11): המחסנית המקורית, מסכי הפתיחה, המבוך, הג'ויסטיק מכניס את הצייד למבוך, היצורים והזהב.
     // מה המשחק: לפי הדף של L. Curtis Boyle
@@ -1645,6 +1647,41 @@
     mk(T2('על המשחק', 'About'), pane => {
       for (const s of (m.about ? m.about[EN ? 'en' : 'he'] : [])) { const p = document.createElement('p'); p.textContent = s; pane.appendChild(p); }
     });
+    // רמזים (גונן, 7.11: "יפה"): במשחקים שעברנו עד הסוף במכונה. כל שאלה נפתחת לשלוש מדרגות, וכל מדרגה רק בלחיצה,
+    // כדי שאף אחד לא יראה פתרון בטעות. התוכן ב-/lab/1982/hints/<id>.json
+    if (HINTS.has(id)) mk(T2('רמזים', 'Hints'), pane => {
+      const intro = document.createElement('p');
+      intro.textContent = T2('נתקעתם? בחרו שאלה. קודם רמז קטן, אחר כך רמז ברור יותר, ורק בסוף הפתרון המלא.',
+        'Stuck? Pick a question. First a small hint, then a clearer one, and only at the end the full solution.');
+      pane.appendChild(intro);
+      const load = async () => {
+        try {
+          const d = await (await fetch('/lab/1982/hints/' + id + '.json')).json();
+          const LV = [T2('רמז קטן', 'Small hint'), T2('רמז ברור יותר', 'Clearer hint'), T2('הפתרון המלא', 'Full solution')];
+          for (const item of d[EN ? 'en' : 'he']) {
+            const q = document.createElement('details');
+            q.className = 'hint-q';
+            const sm = document.createElement('summary');
+            sm.append(...keyLine(item.q).childNodes);   // {CHIGGERS}: מילה באנגלית בכיוון שלה
+            q.appendChild(sm);
+            let host = q;
+            item.h.forEach((t, i) => {
+              const lv = document.createElement('details');
+              lv.className = 'hint-lv hint-lv' + i;
+              const ls = document.createElement('summary');
+              ls.textContent = LV[i];
+              const ul = document.createElement('ul');
+              ul.appendChild(keyLine(t));
+              lv.append(ls, ul);
+              host.appendChild(lv);
+              host = lv;   // המדרגה הבאה מופיעה רק אחרי שפותחים את זאת
+            });
+            pane.appendChild(q);
+          }
+        } catch (e) { intro.textContent = T2('הרמזים לא נטענו. נסו שוב.', 'The hints did not load. Try again.'); }
+      };
+      load();
+    });
     const paneBox = document.createElement('div');
     paneBox.className = 'gv-panes';
     paneBox.append(...panes);
@@ -1747,6 +1784,14 @@ body.cart-in .gv-eject { display: block; }
 .gv-pane { padding: 10px 2px 4px; line-height: 1.7; }
 .gv-pane ol, .gv-pane ul { margin: 0; padding-inline-start: 22px; display: grid; gap: 6px; }
 .gv-pane p { margin: 0 0 8px; }
+.hint-q { border: 1px solid #4a3a2a; border-radius: 10px; margin: 6px 0; background: #1b1511; }
+.hint-q > summary { cursor: pointer; padding: 8px 12px; font-weight: 700; color: var(--accent, #f2d23a); min-height: 40px; display: flex; align-items: center; }
+.hint-lv { margin: 0 12px 8px; }
+.hint-lv > summary { cursor: pointer; display: inline-block; font-size: 14px; font-weight: 700; padding: 4px 12px; border-radius: 999px; border: 1px solid #5a4430; color: #d8c8a8; min-height: 32px; }
+.hint-lv[open] > summary { background: #2a2119; }
+.hint-lv2 > summary { border-color: #8c1f12; color: #ffb3a6; }
+.hint-lv > ul { list-style: none; padding: 6px 4px 2px; margin: 0; }
+.hint-lv .cmd, .hint-q > summary .cmd { white-space: nowrap; font-weight: 700; }
 .game-view .tape-credit { margin: 10px 0 0; padding-top: 8px; border-top: 1px solid #4a3a2a; }
 body.game-open .shelf > :not(.game-view) { display: none; }
 @media (min-width: 1100px) {
