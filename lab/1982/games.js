@@ -1746,9 +1746,9 @@ window.D32_GAMES = {
         ]
       },
       "icon": [
-        200,
-        200,
-        24
+        110,
+        7,
+        52
       ],
       "cover": {
         "src": "/lab/1982/covers/chameleon.jpg",
@@ -1790,9 +1790,9 @@ window.D32_GAMES = {
         ]
       },
       "icon": [
-        200,
-        64,
-        200
+        20,
+        122,
+        84
       ],
       "cover": {
         "src": "/lab/1982/covers/ninja.jpg",
@@ -1834,9 +1834,9 @@ window.D32_GAMES = {
         ]
       },
       "icon": [
-        24,
-        24,
-        24
+        64,
+        0,
+        120
       ],
       "cover": {
         "src": "/lab/1982/covers/vortex.jpg",
