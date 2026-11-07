@@ -1,5 +1,75 @@
 {
  "note": "Hints for Adventureland in our own words. Every step was played and checked on the Dragon machine (7.11.2026): 13 treasures, 100 of 100. Each question has three levels: a small hint, a clearer hint and the full solution.",
+ "where": "Each question has \"at\": words from the top of the screen (where the player is). The hint button beside the screen shows the questions whose words are on the screen now.",
+ "at": [
+  [
+   "FOREST",
+   "SUNNY MEADOW",
+   "DISMAL SWAMP",
+   "HOLLOW STUMP",
+   "TOP OF AN OAK"
+  ],
+  [
+   "DISMAL SWAMP",
+   "TALL CYPRESS"
+  ],
+  [
+   "QUICK-SAND BOG",
+   "SHORE OF A LAKE"
+  ],
+  [
+   "HOLLOW STUMP",
+   "ROOT CHAMBER"
+  ],
+  [
+   "SEMI-DARK HOLE",
+   "SLOPING HALL",
+   "TOO DARK",
+   "BOTTOMLESS"
+  ],
+  [
+   "SEMI-DARK HOLE",
+   "ROOT CHAMBER",
+   "TALL CYPRESS"
+  ],
+  [
+   "ROYAL CHAMBER",
+   "ROYAL ANTEROOM"
+  ],
+  [
+   "NARROW LEDGE",
+   "THRONE ROOM",
+   "ROYAL CHAMBER"
+  ],
+  [
+   "HOLLOW STUMP",
+   "NARROW LEDGE"
+  ],
+  [
+   "LARGE CAVERN",
+   "MAZE OF PITS",
+   "MEMORY CHIP"
+  ],
+  [
+   "MAZE OF PITS",
+   "VERY DEEP"
+  ],
+  [
+   "VERY DEEP",
+   "ROYAL CHAMBER"
+  ],
+  [
+   "SHORE OF A LAKE"
+  ],
+  [
+   "8 SIDED",
+   "LONG TUNNEL",
+   "SUNNY MEADOW"
+  ],
+  [
+   "MISTY ROOM"
+  ]
+ ],
  "he": [
   {
    "q": "מה בכלל צריך לעשות?",

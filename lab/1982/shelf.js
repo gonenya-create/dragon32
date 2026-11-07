@@ -327,11 +327,102 @@
     setPaddle(PADDLE.has(id));
     dongle(DONGLE.has(id));
     if (window.d32Pad) window.d32Pad(mineIn && mc ? 'mine' : id);
+    hintButton(id);
   }
   // איך משחקים (גונן, 25.10: "לא בטוח שהמשתמשים יבינו איך משחקים"): תיבה נפתחת מתחת לכל משחק בשפת מכונה.
   // [מקש] נהיה מקש מצויר. המקשים לפי התיעוד של המחבר, ונבדקו במכונה. במק: BREAK הוא Esc, ו-CLEAR הוא Home (fn+←).
   // משחקים שיש להם רמזים (lab/1982/hints/<id>.json): רק אחרי שעברנו אותם עד הסוף במכונה
   const HINTS = new Set(['adventureland']);
+  const hintData = {};
+  const hintsFor = id => (hintData[id] = hintData[id] || fetch('/lab/1982/hints/' + id + '.json').then(r => { if (!r.ok) throw 0; return r.json(); }).catch(e => { delete hintData[id]; throw e; }));
+  // שאלה אחת: נפתחת לרמז קטן, ובתוכו הרמז הברור, ובתוכו הפתרון. כל מדרגה מופיעה רק אחרי שפותחים את הקודמת
+  function hintBlock(item) {
+    const LV = [T2('רמז קטן', 'Small hint'), T2('רמז ברור יותר', 'Clearer hint'), T2('הפתרון המלא', 'Full solution')];
+    const q = document.createElement('details');
+    q.className = 'hint-q';
+    const sm = document.createElement('summary');
+    sm.append(...keyLine(item.q).childNodes);   // {CHIGGERS}: מילה באנגלית בכיוון שלה
+    q.appendChild(sm);
+    let host = q;
+    item.h.forEach((t, i) => {
+      const lv = document.createElement('details');
+      lv.className = 'hint-lv hint-lv' + i;
+      const ls = document.createElement('summary');
+      ls.textContent = LV[i];
+      const ul = document.createElement('ul');
+      ul.appendChild(keyLine(t));
+      lv.append(ls, ul);
+      host.appendChild(lv);
+      host = lv;
+    });
+    return q;
+  }
+  // כפתור "💡 רמז" ליד המסך (גונן, 7.11: "רמז ליד המסך שמלווה את השלב"): מופיע כשקלטת של משחק עם רמזים בפנים.
+  // הוא קורא את ראש המסך (בהרפתקאות של Scott Adams שם תמיד כתוב איפה השחקן) ומראה רק את השאלות של המקום הזה.
+  // כל השאלות נשארות בלשונית "רמזים" שמתחת למקלדת
+  let hintId = null, hintUI = null, hintKey = '', hintTimer = 0;
+  function roomText() {
+    const rows = (window.d32Screen?.() || []).map(r => r.replace(/[\x00-\x1f]/g, ' '));
+    const sep = rows.findIndex(r => r.includes('<----'));
+    return (sep > 0 ? rows.slice(0, sep) : rows.slice(0, 4)).join(' ').replace(/\s+/g, ' ');
+  }
+  async function hintFill(force) {
+    if (!hintUI || hintUI.pop.hidden || !hintId) return;
+    let d;
+    try { d = await hintsFor(hintId); } catch (e) { hintUI.title.textContent = T2('הרמזים לא נטענו. נסו שוב.', 'The hints did not load. Try again.'); return; }
+    const text = roomText();
+    const idx = d.at.map((a, i) => a.some(w => text.includes(w)) ? i : -1).filter(i => i >= 0);
+    const key = idx.join(',');
+    if (!force && key === hintKey) return;   // אותו מקום: לא נוגעים, כדי שרמז שנפתח יישאר פתוח
+    hintKey = key;
+    hintUI.title.textContent = idx.length ? T2('רמזים למקום שבו אתם עכשיו', 'Hints for where you are now')
+      : T2('לא זיהיתי איפה אתם במשחק. הנה כל השאלות:', "I can't tell where you are in the game. Here are all the questions:");
+    const items = d[EN ? 'en' : 'he'];
+    hintUI.list.replaceChildren(...(idx.length ? idx : items.map((x, i) => i)).map(i => hintBlock(items[i])));
+  }
+  function hintPop(open) {
+    if (!hintUI) return;
+    hintUI.pop.hidden = !open;
+    hintUI.btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    clearInterval(hintTimer); hintTimer = 0;
+    if (open) { hintKey = null; hintFill(true); hintTimer = setInterval(() => hintFill(false), 2000); }
+  }
+  function hintButton(id) {
+    hintId = HINTS.has(id) ? id : null;
+    if (!hintId) { if (hintUI) { hintPop(false); hintUI.btn.hidden = true; } return; }
+    if (!hintUI) {
+      const kbd = document.getElementById('kbd');
+      if (!kbd) return;
+      const btn = document.createElement('button');
+      btn.type = 'button'; btn.className = 'hint-btn';
+      btn.textContent = T2('💡 רמז', '💡 Hint');
+      const pop = document.createElement('div');
+      pop.className = 'hint-pop'; pop.hidden = true;
+      pop.setAttribute('role', 'dialog');
+      const head = document.createElement('div'); head.className = 'hint-pop-head';
+      const title = document.createElement('b');
+      const x = document.createElement('button'); x.type = 'button'; x.className = 'hint-pop-x'; x.textContent = '✕';
+      x.setAttribute('aria-label', T2('סגירה', 'Close'));
+      head.append(title, x);
+      const list = document.createElement('div');
+      const all = document.createElement('button');
+      all.type = 'button'; all.className = 'hint-pop-all';
+      all.textContent = T2('כל השאלות, בלשונית "רמזים" למטה ↓', 'All the questions, in the Hints tab below ↓');
+      all.addEventListener('click', () => {
+        hintPop(false);
+        const tab = [...document.querySelectorAll('.game-view .gv-tabs button')].find(b => /^(רמזים|Hints)$/.test(b.textContent));
+        if (tab) { if (document.body.classList.contains('full')) document.getElementById('full-close')?.click(); tab.click(); tab.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      });
+      pop.append(head, list, all);
+      kbd.parentNode.insertBefore(btn, kbd);
+      kbd.parentNode.insertBefore(pop, kbd);
+      btn.addEventListener('click', () => hintPop(pop.hidden));
+      x.addEventListener('click', () => hintPop(false));
+      hintUI = { btn, pop, title, list };
+    }
+    hintUI.btn.hidden = false;
+    hintPop(false);
+  }
   const HOWTO = {
     // Cave Hunter נבדק במכונה (3.11): המחסנית המקורית, מסכי הפתיחה, המבוך, הג'ויסטיק מכניס את הצייד למבוך, היצורים והזהב.
     // מה המשחק: לפי הדף של L. Curtis Boyle
@@ -1654,33 +1745,8 @@
       intro.textContent = T2('נתקעתם? בחרו שאלה. קודם רמז קטן, אחר כך רמז ברור יותר, ורק בסוף הפתרון המלא.',
         'Stuck? Pick a question. First a small hint, then a clearer one, and only at the end the full solution.');
       pane.appendChild(intro);
-      const load = async () => {
-        try {
-          const d = await (await fetch('/lab/1982/hints/' + id + '.json')).json();
-          const LV = [T2('רמז קטן', 'Small hint'), T2('רמז ברור יותר', 'Clearer hint'), T2('הפתרון המלא', 'Full solution')];
-          for (const item of d[EN ? 'en' : 'he']) {
-            const q = document.createElement('details');
-            q.className = 'hint-q';
-            const sm = document.createElement('summary');
-            sm.append(...keyLine(item.q).childNodes);   // {CHIGGERS}: מילה באנגלית בכיוון שלה
-            q.appendChild(sm);
-            let host = q;
-            item.h.forEach((t, i) => {
-              const lv = document.createElement('details');
-              lv.className = 'hint-lv hint-lv' + i;
-              const ls = document.createElement('summary');
-              ls.textContent = LV[i];
-              const ul = document.createElement('ul');
-              ul.appendChild(keyLine(t));
-              lv.append(ls, ul);
-              host.appendChild(lv);
-              host = lv;   // המדרגה הבאה מופיעה רק אחרי שפותחים את זאת
-            });
-            pane.appendChild(q);
-          }
-        } catch (e) { intro.textContent = T2('הרמזים לא נטענו. נסו שוב.', 'The hints did not load. Try again.'); }
-      };
-      load();
+      hintsFor(id).then(d => { for (const item of d[EN ? 'en' : 'he']) pane.appendChild(hintBlock(item)); })
+        .catch(() => { intro.textContent = T2('הרמזים לא נטענו. נסו שוב.', 'The hints did not load. Try again.'); });
     });
     const paneBox = document.createElement('div');
     paneBox.className = 'gv-panes';
@@ -1792,6 +1858,13 @@ body.cart-in .gv-eject { display: block; }
 .hint-lv2 > summary { border-color: #8c1f12; color: #ffb3a6; }
 .hint-lv > ul { list-style: none; padding: 6px 4px 2px; margin: 0; }
 .hint-lv .cmd, .hint-q > summary .cmd { white-space: nowrap; font-weight: 700; }
+.hint-btn { display: block; margin: 12px 0 0 auto; padding: 8px 14px; border: 1.5px solid #5a4430; border-radius: 999px; background: #1b1511; color: #f4efe4; font: inherit; font-size: 15px; cursor: pointer; touch-action: manipulation; }
+.hint-btn[hidden], .hint-pop[hidden] { display: none; }
+.hint-btn[aria-expanded="true"] { background: #2a2119; color: var(--accent, #f2d23a); }
+.hint-pop { margin-top: 8px; padding: 10px 12px; border: 1.5px solid #5a4430; border-radius: 12px; background: #15110e; color: #f4efe4; max-height: 50vh; overflow-y: auto; font-size: 15px; line-height: 1.6; }
+.hint-pop-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+.hint-pop-x { flex: none; width: 34px; height: 34px; border: 1px solid #4d4238; border-radius: 50%; background: #1b1511; color: #b9a98f; font: 700 16px/1 sans-serif; cursor: pointer; }
+.hint-pop-all { display: block; margin: 8px 0 2px; padding: 6px 0; border: 0; background: none; color: var(--accent, #f2d23a); font: inherit; font-size: 14px; text-decoration: underline; cursor: pointer; }
 .game-view .tape-credit { margin: 10px 0 0; padding-top: 8px; border-top: 1px solid #4a3a2a; }
 body.game-open .shelf > :not(.game-view) { display: none; }
 @media (min-width: 1100px) {
