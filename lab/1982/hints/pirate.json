@@ -1,0 +1,373 @@
+{
+ "note": "Hints for Pirate Adventure in our own words. Every step was played and checked on the Dragon machine (7.11.2026): 2 treasures, 100 of 100. Each question has three levels: a small hint, a clearer hint and the full solution.",
+ "where": "Each question has \"at\": words from the top of the screen (where the player is). The hint button beside the screen shows the questions whose words are on the screen now.",
+ "at": [
+  [
+   "FLAT IN LONDON",
+   "ALCOVE"
+  ],
+  [
+   "ALCOVE",
+   "SECRET PASSAGEWAY",
+   "OUTSIDE AN OPEN WINDOW"
+  ],
+  [
+   "NEVER NEVER LAND",
+   "OUTSIDE AN OPEN WINDOW",
+   "SANDY BEACH"
+  ],
+  [
+   "GRASS SHACK",
+   "MEADOW"
+  ],
+  [
+   "TOP OF A HILL",
+   "LARGE CAVERN"
+  ],
+  [
+   "LARGE CAVERN",
+   "TOOL SHED"
+  ],
+  [
+   "SANDY BEACH",
+   "FLAT IN LONDON",
+   "TOOL SHED"
+  ],
+  [
+   "FLAT IN LONDON"
+  ],
+  [
+   "SANDY BEACH"
+  ],
+  [
+   "SHALLOW LAGOON",
+   "IN THE OCEAN",
+   "NEVER NEVER LAND"
+  ],
+  [
+   "LONG HALLWAY",
+   "CAVE RIDDEN",
+   "MAZE OF CAVES",
+   "IN A PIT"
+  ],
+  [
+   "SHALLOW LAGOON"
+  ],
+  [
+   "SANDY BEACH",
+   "LARGE CAVERN"
+  ],
+  [
+   "ABOARD PIRATE SHIP",
+   "MUSTY ATTIC"
+  ],
+  [
+   "BEACH AT *TREASURE*",
+   "SPOOKY OLD GRAVEYARD"
+  ],
+  [
+   "SACKED AND DESERTED",
+   "LARGE BARREN FIELD"
+  ],
+  [
+   "LARGE BARREN FIELD"
+  ],
+  [
+   "SPOOKY OLD GRAVEYARD",
+   "BEACH AT *TREASURE*",
+   "ABOARD PIRATE SHIP"
+  ]
+ ],
+ "he": [
+  {
+   "q": "מה בכלל צריך לעשות?",
+   "h": [
+    "השלט בדירה בלונדון אומר לאן מביאים את האוצרות. מחפשים חפצים שהשם שלהם מוקף בכוכביות.",
+    "יש רק שני אוצרות, ושניהם רחוק מכאן, באי אחר. הספר שבארון הספרים מספר עליהם.",
+    "בגומחה שלמעלה ({GO STAIRS}): {GET BOOK}, ואז {READ BOOK}. אוצרים: {*DUBLEONS*} ו-{*RARE STAMPS*}. מביאים את שניהם לדירה, {DROP DUBLEONS}, ‏{DROP STAMPS}, ואז {SCORE}."
+   ]
+  },
+  {
+   "q": "איך יוצאים מהדירה?",
+   "h": [
+    "הספר עושה יותר מסתם להיקרא.",
+    "כשלוקחים את הספר נפתח מעבר סודי. בספר עצמו כתובה מילת קסם, ואומרים אותה מחוץ לחלון.",
+    "קודם, בדירה: {GET RUM}, ‏{GET SNEAKERS}, ‏{GET CRACKERS}. ‏{GET BOOK} פותח מעבר לעליית הגג ({GO PASSAGE}, ‏{E}). שם: {GET BAG}, ‏{GET TORCH}, ‏{OPEN BAG} (נופלים גפרורים), {DROP BAG}, ‏{GET MATCHES}. חוזרים ({W}, ‏{W}), ‏{GO WINDOW}, ועם הספר והנעליים ביד: {SAY YOHO}. מגיעים לחוף באי."
+   ]
+  },
+  {
+   "q": "החלקתי ונפלתי, ואני ב-{NEVER NEVER LAND}",
+   "h": [
+    "על המדף הצר צריך נעליים שלא מחליקות.",
+    "בכל פעם שאומרים את מילת הקסם צריך להחזיק גם את הספר וגם את נעלי הספורט. גם בדרך חזרה מהאי.",
+    "לא אומרים {SAY YOHO} בלי {SAFETY SNEAKERS} וגם הספר ביד. אם כבר נפלתם והספר אצלכם, {SAY YOHO} מחזיר אתכם למדף. בלי הספר נתקעים שם, ואין ברירה אלא להתחיל מחדש."
+   ]
+  },
+  {
+   "q": "פיראט מרושע בבקתה",
+   "h": [
+    "פיראטים אוהבים משקה מסוים.",
+    "הבאתם משהו מהדירה בלונדון שהוא ישמח לקבל.",
+    "בבקתה: {GIVE RUM}. הפיראט בורח עם הבקבוק. עכשיו לוקחים את התיבה ({GET CHEST}) ואת התוכי ({GET PARROT}). התוכי נשאר איתכם כל עוד יש לכם את שק הקרקרים. את התיבה משאירים בחוף."
+   ]
+  },
+  {
+   "q": "לא נכנס בסדק, ובפנים חושך",
+   "h": [
+    "לא כל דבר עובר בסדק צר.",
+    "הספר גדול מדי. ובפנים צריך אור: יש לפיד, וצריך משהו כדי להדליק אותו.",
+    "משאירים את הספר בחוף. על הגבעה: {LIGHT TORCH} (הגפרורים מהתיק שבעליית הגג), ואז {GO CRACK}. כשיוצאים החוצה: {UNLIGHT TORCH}."
+   ]
+  },
+  {
+   "q": "מה יש במערה הגדולה?",
+   "h": [
+    "יש שם צריף כלים.",
+    "שני כלים חשובים עכשיו, ועוד אחד מאוחר יותר. את העצים ואת המפרשים אי אפשר להוציא דרך הסדק.",
+    "{GO SHED}, ‏{GET HAMMER}, ‏{GET WINGS}. את האת ({SHOVEL}), העצים והמפרשים לוקחים מאוחר יותר, בדרך אחרת. יוצאים ב-{N} ואז {GO CRACK}."
+   ]
+  },
+  {
+   "q": "אני סוחב יותר מדי",
+   "h": [
+    "אפשר להחזיק רק שישה דברים.",
+    "החוף הוא מקום טוב להשאיר בו דברים. אבל לא את מה שצריך לנסיעה ללונדון.",
+    "בחוף משאירים כל מה שלא צריך עכשיו ({DROP TORCH}, ‏{DROP MATCHES}, ‏{DROP WINGS}, ‏{DROP CRACKERS}, ‏{DROP PARROT}). התוכי נשאר ליד הקרקרים. לפני {SAY YOHO} לוקחים את הספר ואת הנעליים."
+   ]
+  },
+  {
+   "q": "השטיח בדירה ממוסמר לרצפה",
+   "h": [
+    "מסמרים שולפים בכלי מתאים.",
+    "יש פטיש עם טפרים בצריף הכלים שבמערה.",
+    "עם הפטיש בדירה: {PULL NAILS} (המסמרים נשארים אצלכם, הם יצטרכו לספינה). {GET RUG}, ומתחתיו מפתחות: {GET KEYS}. את השטיח אפשר להשאיר ({DROP RUG})."
+   ]
+  },
+  {
+   "q": "התיבה נעולה",
+   "h": [
+    "למה לא לנסות את המפתחות שמצאתם?",
+    "אחרי שהיא פתוחה, כדאי להסתכל בה יותר מפעם אחת.",
+    "בחוף, עם המפתחות: {UNLOCK CHEST}, ואז {LOOK CHEST} פעמיים. יוצאות תוכניות ומפה. {READ PLANS} אומר מה צריך לספינה, ו-{READ MAP} אומר איפה לחפור."
+   ]
+  },
+  {
+   "q": "טבעתי באוקיינוס",
+   "h": [
+    "לא כדאי לשחות בלי עזרה.",
+    "בצריף הכלים יש משהו שעוזר לצוף. ובאוקיינוס יש משהו שאפשר לתפוס.",
+    "צריך ביד את מצופי הידיים ({WATER WINGS}) ואת הבקבוק הריק. הבקבוק מופיע בעליית הגג אחרי שנותנים לפיראט את הרום. מהלגונה {N}, ‏{GET WATER}, ‏{CATCH FISH}, ואז {S}."
+   ]
+  },
+  {
+   "q": "הדלת במסדרון נעולה מהצד השני",
+   "h": [
+    "אל הצד השני מגיעים בדרך אחרת.",
+    "למרגלות הגבעה יש מערות. ובבור שמתחת להן מחכים תנינים רעבים.",
+    "עם לפיד דולק, הדג והמפתחות: למרגלות הגבעה {GO CAVE}, ואז {D}. בבור: {GIVE FISH}. לפעמים התנינים אוכלים רק בתור הבא, ולכן כותבים {LOOK} עד שהם הולכים, ואז {UNLOCK DOOR} ו-{GO HALL}. במערה הגדולה: {GET LUMBER}, ‏{GET SAILS}, ובצריף {GET SHOVEL}. חוזרים: {N}, ‏{W}, ‏{GO PIT}, ‏{U}, ‏{W}."
+   ]
+  },
+  {
+   "q": "העוגן תקוע בחול",
+   "h": [
+    "צריך לשחרר אותו.",
+    "האת מצריף הכלים.",
+    "בלגונה, עם האת ביד: {DIG ANCHOR}, ואז {GET ANCHOR}."
+   ]
+  },
+  {
+   "q": "איך בונים ספינה?",
+   "h": [
+    "התוכניות מהתיבה אומרות מה צריך.",
+    "כל החלקים צריכים להיות בחוף, שם כבר מחכים השדרית והתורן.",
+    "בחוף צריכים להיות הפטיש, המסמרים, העצים, המפרשים והעוגן. אז: {BUILD SHIP}."
+   ]
+  },
+  {
+   "q": "הספינה לא מפליגה",
+   "h": [
+    "ספינה צריכה צוות. ויש גם ים שעולה ויורד.",
+    "הפיראט ששתה את הרום נרדם בעליית הגג. וגם מפה צריך.",
+    "בעליית הגג: {WAKE PIRATE}, והוא מחכה על הספינה. לוקחים את המפה, עולים ({GO SHIP}) ו-{SET SAIL}. אם הוא מחכה לגאות: {WAIT}, ושוב {SET SAIL}."
+   ]
+  },
+  {
+   "q": "הפיראט מחכה למשהו באי האוצר",
+   "h": [
+    "הוא שוב צמא.",
+    "החוף של אי האוצר מסתיר משהו. צריך את האת.",
+    "בחוף: {DIG}, ‏{GET RUM}, ‏{GIVE RUM}. הוא הולך לישון בבית הקברות שמדרום."
+   ]
+  },
+  {
+   "q": "נחשים במנזר",
+   "h": [
+    "צריך חבר אמיץ.",
+    "התוכי לא מפחד מנחשים.",
+    "במנזר, עם התוכי: {DROP PARROT}. הוא מגרש את הנחשים. אחר כך {GET DUBLEONS}, ואפשר גם להחזיר את התוכי ({GET PARROT})."
+   ]
+  },
+  {
+   "q": "איפה האוצר השני?",
+   "h": [
+    "קראו את המפה.",
+    "סופרים צעדים בשדה הריק, ואז חופרים.",
+    "בשדה, עם האת: {WALK 30}, ‏{DIG}, ‏{OPEN BOX}, ‏{GET STAMPS}."
+   ]
+  },
+  {
+   "q": "איך חוזרים הביתה?",
+   "h": [
+    "הפיראט שוב ישן.",
+    "בלי צוות ובלי מפה הספינה לא זזה.",
+    "עם המפה ביד: בבית הקברות {WAKE PIRATE}, ‏{N}, ‏{GO SHIP}, ‏{SET SAIL}. בחוף של האי הראשון: {GO SHORE}, לוקחים את הספר והנעליים, {SAY YOHO}, ‏{GO WINDOW}, ‏{D}, משאירים את שני האוצרות ו-{SCORE}."
+   ]
+  }
+ ],
+ "en": [
+  {
+   "q": "What am I supposed to do?",
+   "h": [
+    "The sign in the London flat says where treasures go. Look for things whose name has stars around it.",
+    "There are only two treasures, both far away on another island. The book in the bookcase tells you about them.",
+    "In the alcove upstairs ({GO STAIRS}): {GET BOOK}, then {READ BOOK}. The treasures are {*DUBLEONS*} and {*RARE STAMPS*}. Bring both to the flat, {DROP DUBLEONS}, {DROP STAMPS}, then {SCORE}."
+   ]
+  },
+  {
+   "q": "How do I get out of the flat?",
+   "h": [
+    "The book does more than just get read.",
+    "Taking the book opens a secret passage. The book also has a magic word, which you say outside the window.",
+    "First, in the flat: {GET RUM}, {GET SNEAKERS}, {GET CRACKERS}. {GET BOOK} opens a passage to the attic ({GO PASSAGE}, {E}). There: {GET BAG}, {GET TORCH}, {OPEN BAG} (matches fall out), {DROP BAG}, {GET MATCHES}. Go back ({W}, {W}), {GO WINDOW}, and holding the book and the sneakers: {SAY YOHO}. You land on the island beach."
+   ]
+  },
+  {
+   "q": "I slipped and fell, and I'm in NEVER NEVER LAND",
+   "h": [
+    "The narrow ledge needs shoes that don't slip.",
+    "Every time you say the magic word you must hold both the book and the safety sneakers. On the way back from the island too.",
+    "Never {SAY YOHO} without the {SAFETY SNEAKERS} and the book in hand. If you fell and still have the book, {SAY YOHO} takes you back to the ledge. Without the book you are stuck there and have to start over."
+   ]
+  },
+  {
+   "q": "A wicked pirate in the shack",
+   "h": [
+    "Pirates like a certain drink.",
+    "You brought something from the London flat that he'll be glad to get.",
+    "In the shack: {GIVE RUM}. The pirate runs off with it. Now take the chest ({GET CHEST}) and the parrot ({GET PARROT}). The parrot stays with you as long as you have the sack of crackers. Leave the chest on the beach."
+   ]
+  },
+  {
+   "q": "It won't fit through the crack, and it's dark inside",
+   "h": [
+    "Not everything goes through a narrow crack.",
+    "The book is too big. And inside you need light: there is a torch, and you need something to light it.",
+    "Leave the book on the beach. On the hill: {LIGHT TORCH} (the matches from the bag in the attic), then {GO CRACK}. When you come back out: {UNLIGHT TORCH}."
+   ]
+  },
+  {
+   "q": "What's in the large cavern?",
+   "h": [
+    "There is a tool shed.",
+    "Two tools matter now, one more later. The lumber and the sails can't go through the crack.",
+    "{GO SHED}, {GET HAMMER}, {GET WINGS}. The shovel, the lumber and the sails come later, another way. Leave with {N}, then {GO CRACK}."
+   ]
+  },
+  {
+   "q": "I'm carrying too much",
+   "h": [
+    "You can hold only six things.",
+    "The beach is a good place to leave things. But not what you need for the trip to London.",
+    "Leave on the beach whatever you don't need now ({DROP TORCH}, {DROP MATCHES}, {DROP WINGS}, {DROP CRACKERS}, {DROP PARROT}). The parrot stays by the crackers. Before {SAY YOHO}, pick up the book and the sneakers."
+   ]
+  },
+  {
+   "q": "The rug in the flat is nailed to the floor",
+   "h": [
+    "Nails come out with the right tool.",
+    "There is a claw hammer in the tool shed in the cavern.",
+    "With the hammer in the flat: {PULL NAILS} (you keep the nails, the ship needs them). {GET RUG}, and keys are under it: {GET KEYS}. You can leave the rug ({DROP RUG})."
+   ]
+  },
+  {
+   "q": "The chest is locked",
+   "h": [
+    "Why not try the keys you found?",
+    "Once it is open, look in it more than once.",
+    "On the beach, with the keys: {UNLOCK CHEST}, then {LOOK CHEST} twice. Out come plans and a map. {READ PLANS} tells you what the ship needs, and {READ MAP} tells you where to dig."
+   ]
+  },
+  {
+   "q": "I drowned in the ocean",
+   "h": [
+    "Don't swim without help.",
+    "The tool shed has something that keeps you afloat. And there is something in the ocean to catch.",
+    "Hold the {WATER WINGS} and the empty bottle. The bottle shows up in the attic after you give the pirate the rum. From the lagoon {N}, {GET WATER}, {CATCH FISH}, then {S}."
+   ]
+  },
+  {
+   "q": "The door in the hallway is locked from the other side",
+   "h": [
+    "You reach the other side another way.",
+    "There are caves at the foot of the hill. Hungry crocodiles wait in the pit below them.",
+    "With a lit torch, the fish and the keys: at the foot of the hill {GO CAVE}, then {D}. In the pit: {GIVE FISH}. Sometimes the crocodiles eat only on the next turn, so type {LOOK} until they leave, then {UNLOCK DOOR} and {GO HALL}. In the large cavern: {GET LUMBER}, {GET SAILS}, and in the shed {GET SHOVEL}. Back out: {N}, {W}, {GO PIT}, {U}, {W}."
+   ]
+  },
+  {
+   "q": "The anchor is stuck in the sand",
+   "h": [
+    "It needs to be freed.",
+    "The shovel from the tool shed.",
+    "In the lagoon, holding the shovel: {DIG ANCHOR}, then {GET ANCHOR}."
+   ]
+  },
+  {
+   "q": "How do I build a ship?",
+   "h": [
+    "The plans from the chest tell you what you need.",
+    "All the parts must be on the beach, where the keel and mast already are.",
+    "The hammer, nails, lumber, sails and anchor must be on the beach. Then: {BUILD SHIP}."
+   ]
+  },
+  {
+   "q": "The ship won't sail",
+   "h": [
+    "A ship needs a crew. And the sea goes up and down.",
+    "The pirate who drank the rum fell asleep in the attic. You also need a map.",
+    "In the attic: {WAKE PIRATE}, and he waits on the ship. Take the map, board ({GO SHIP}) and {SET SAIL}. If he is waiting for the tide: {WAIT}, then {SET SAIL} again."
+   ]
+  },
+  {
+   "q": "The pirate expects something on Treasure Island",
+   "h": [
+    "He's thirsty again.",
+    "The beach of Treasure Island hides something. You need the shovel.",
+    "On the beach: {DIG}, {GET RUM}, {GIVE RUM}. He goes to sleep in the graveyard to the south."
+   ]
+  },
+  {
+   "q": "Snakes in the monastery",
+   "h": [
+    "You need a brave friend.",
+    "The parrot isn't afraid of snakes.",
+    "In the monastery, with the parrot: {DROP PARROT}. It drives the snakes away. Then {GET DUBLEONS}, and you can take the parrot back ({GET PARROT})."
+   ]
+  },
+  {
+   "q": "Where is the second treasure?",
+   "h": [
+    "Read the map.",
+    "Count your steps in the empty field, then dig.",
+    "In the field, with the shovel: {WALK 30}, {DIG}, {OPEN BOX}, {GET STAMPS}."
+   ]
+  },
+  {
+   "q": "How do I get home?",
+   "h": [
+    "The pirate is asleep again.",
+    "Without a crew and a map the ship won't move.",
+    "With the map in hand: in the graveyard {WAKE PIRATE}, {N}, {GO SHIP}, {SET SAIL}. On the first island's beach: {GO SHORE}, pick up the book and the sneakers, {SAY YOHO}, {GO WINDOW}, {D}, leave both treasures and {SCORE}."
+   ]
+  }
+ ]
+}

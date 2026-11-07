@@ -332,7 +332,7 @@
   // איך משחקים (גונן, 25.10: "לא בטוח שהמשתמשים יבינו איך משחקים"): תיבה נפתחת מתחת לכל משחק בשפת מכונה.
   // [מקש] נהיה מקש מצויר. המקשים לפי התיעוד של המחבר, ונבדקו במכונה. במק: BREAK הוא Esc, ו-CLEAR הוא Home (fn+←).
   // משחקים שיש להם רמזים (lab/1982/hints/<id>.json): רק אחרי שעברנו אותם עד הסוף במכונה
-  const HINTS = new Set(['adventureland']);
+  const HINTS = new Set(['adventureland', 'pirate', 'voodoo']);
   const hintData = {};
   const hintsFor = id => (hintData[id] = hintData[id] || fetch('/lab/1982/hints/' + id + '.json').then(r => { if (!r.ok) throw 0; return r.json(); }).catch(e => { delete hintData[id]; throw e; }));
   // שאלה אחת: נפתחת לרמז קטן, ובתוכו הרמז הברור, ובתוכו הפתרון. כל מדרגה מופיעה רק אחרי שפותחים את הקודמת
@@ -1851,7 +1851,7 @@ body.cart-in .gv-eject { display: block; }
 .gv-pane ol, .gv-pane ul { margin: 0; padding-inline-start: 22px; display: grid; gap: 6px; }
 .gv-pane p { margin: 0 0 8px; }
 .hint-q { border: 1px solid #4a3a2a; border-radius: 10px; margin: 6px 0; background: #1b1511; }
-.hint-q > summary { cursor: pointer; padding: 8px 12px; font-weight: 700; color: var(--accent, #f2d23a); min-height: 40px; display: flex; align-items: center; }
+.hint-q > summary { cursor: pointer; padding: 10px 12px; font-weight: 700; color: var(--accent, #f2d23a); min-height: 40px; display: block; }
 .hint-lv { margin: 0 12px 8px; }
 .hint-lv > summary { cursor: pointer; display: inline-block; font-size: 14px; font-weight: 700; padding: 4px 12px; border-radius: 999px; border: 1px solid #5a4430; color: #d8c8a8; min-height: 32px; }
 .hint-lv[open] > summary { background: #2a2119; }

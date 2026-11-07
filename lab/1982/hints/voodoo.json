@@ -1,0 +1,376 @@
+{
+ "note": "Hints for Voodoo Castle in our own words. Every step was played and checked on the Dragon machine (7.11.2026), to the game's own ending: Count Cristo is freed. Each question has three levels: a small hint, a clearer hint and the full solution.",
+ "where": "Each question has \"at\": words from the top of the screen (where the player is). Many rooms are called just ROOM IN THE CASTLE, so some questions use an item that shows in that room (BIG KETTLE, ANIMAL HEADS). The hint button beside the screen shows the questions whose words are on the screen now.",
+ "at": [
+  [
+   "CHAPEL",
+   "COFFIN"
+  ],
+  [
+   "LARGE FIREPLACE",
+   "BALLROOM",
+   "DUSTY IDOL"
+  ],
+  [
+   "TORTURE CHAMBER",
+   "TINY OPEN DOOR",
+   "LAB"
+  ],
+  [
+   "LAB",
+   "CAST IRON POT",
+   "ARMORY"
+  ],
+  [
+   "GRAVEYARD"
+  ],
+  [
+   "TUNNEL",
+   "STONE DOOR"
+  ],
+  [
+   "SLIPPERY CHUTE",
+   "MAEGEN",
+   "CRYSTAL BALL"
+  ],
+  [
+   "PLAQUE",
+   "STAIRWELL"
+  ],
+  [
+   "BIG KETTLE",
+   "TOO DARK"
+  ],
+  [
+   "ANIMAL HEADS",
+   "SAFE"
+  ],
+  [
+   "CHAPEL",
+   "COFFIN",
+   "THERE'S A MAN"
+  ],
+  [
+   "CHIMNEY",
+   "CLOSED FLUE",
+   "LARGE FIREPLACE"
+  ],
+  [
+   "NARROW PART",
+   "CHIMNEY SWEEP"
+  ],
+  [
+   "PARLOR",
+   "STATUE"
+  ],
+  [
+   "CRACK IN THE",
+   "JU-JU BAG"
+  ],
+  [
+   "HIDDEN VOODOO ROOM",
+   "PAGE TORN"
+  ],
+  [
+   "OPEN WINDOW",
+   "LEDGE"
+  ],
+  [
+   "CHAPEL",
+   "COFFIN",
+   "VOODOO"
+  ]
+ ],
+ "he": [
+  {
+   "q": "מה בכלל צריך לעשות?",
+   "h": [
+    "במשחק הזה אין אוצרות. מתחילים בקפלה, ליד הארון.",
+    "פותחים את הארון ומסתכלים בו. השלט מספר על קללה שצריך להסיר.",
+    "{OPEN COFFIN}, ‏{TAKE RING}, ואחר כך {LOOK COFFIN}: הרוזן {COUNT CRISTO} מקולל. המטרה היא לשחרר אותו. בדרך מוצאים ספר שמסביר איך, וכשמצליחים המשחק נגמר בהודעה {THE ADVENTURE IS OVER}."
+   ]
+  },
+  {
+   "q": "מה עושים עם האליל המאובק שבאח?",
+   "h": [
+    "מתחת לאבק מסתתר משהו מיוחד. בהמשך תצטרכו אור.",
+    "לוקחים אותו ומנקים אותו.",
+    "מאולם הנשפים: {ENTER FIREPLACE}, ‏{GET IDOL}, יוצאים ב-{S} ואז {CLEAN IDOL}: האליל מתחיל לזהור. הוא המנורה של המשחק. שומרים אותו עד הסוף."
+   ]
+  },
+  {
+   "q": "הדלת בחדר העינויים קטנה מדי",
+   "h": [
+    "לא הדלת צריכה לגדול. אתם צריכים לקטון.",
+    "במעבדה יש כימיקלים עם תווית. מערבבים ושותים.",
+    "במעבדה (מזרחה מהחדר עם הסיר): {GET CHEMICALS}. בחדר העינויים: {MIX CHEMICALS}, ‏{DRINK CHEMICALS} (עכשיו אתם בגובה מטר ועשרים), ואז {GO DOOR} לבית הקברות."
+   ]
+  },
+  {
+   "q": "מבחנות מתפוצצות במעבדה",
+   "h": [
+    "צריך משהו שמגן.",
+    "בנשקייה יש ציוד של אבירים.",
+    "בנשקייה (מזרחה מחדר העינויים): {GET SHIELD}. נכנסים למעבדה רק עם המגן. בין הביקורים אפשר להשאיר אותו בחדר עם הסיר, שליד המעבדה ({DROP SHIELD}), ולקחת אותו שוב לפני כל כניסה. בביקור השני לוקחים מהמעבדה גם את השקית ({GET BAG})."
+   ]
+  },
+  {
+   "q": "מה עושים בבית הקברות?",
+   "h": [
+    "קחו את מה שרואים, ואז הסתכלו טוב בקברים.",
+    "בין הקברים מסתתר משהו שמביא מזל.",
+    "{GET SAW}, ואז {LOOK GRAVES} ו-{GET CLOVER}. את המסור ואת התלתן לוקחים איתכם."
+   ]
+  },
+  {
+   "q": "דלת אבן ענקית במנהרה",
+   "h": [
+    "בדלת קבועה אבן חן. ראיתם כבר אחת כמוה.",
+    "הטבעת מהארון מתאימה לדלת.",
+    "המנהרה מזרחית לקפלה. {WAVE RING}: הדלת נעלמת ונגלית מגלשה. {DROP RING}, ואז {SLIDE CHUTE}."
+   ]
+  },
+  {
+   "q": "החלקתי במגלשה. איך חוזרים?",
+   "h": [
+    "המגלשה עולה רק בכיוון אחד. חפשו יציאה אחרת.",
+    "יש חור בקיר, ובחדר שמאחוריו כדור בדולח.",
+    "לוקחים את הלוח ({GET PLAQUE}), ואז {GO HOLE} ו-{LOOK BALL}: הרוחות מגרשות אתכם בחזרה למנהרה. שם לוקחים את הסכין ({GET KNIFE}) ומשאירים אותה בקפלה ({DROP KNIFE})."
+   ]
+  },
+  {
+   "q": "האותיות על הלוח קטנות מדי",
+   "h": [
+    "צריך משהו שמגדיל.",
+    "בחדר המדרגות יש זכוכית שבורה.",
+    "בחדר המדרגות (דרומית לקפלה): {GET GLASS}. עם הזכוכית ביד אפשר לקרוא את הלוח ({READ PLAQUE}), ובו שני מספרים של כספת. אנחנו קראנו אותו בבור שמתחת לקומקום (ראו את השאלה הבאה)."
+   ]
+  },
+  {
+   "q": "הקומקום הגדול, והחושך שמתחתיו",
+   "h": [
+    "הקומקום מסתיר משהו.",
+    "מזיזים אותו ויורדים, גם אם חשוך. אין צורך ללכת שם לשום מקום.",
+    "בחדר שמזרחית לחדר המדרגות: {MOVE KETTLE}. אנחנו השארנו את האליל למעלה ({DROP IDOL}), ואז {GO HOLE}. בחושך: {READ PLAQUE}, ‏{DROP PLAQUE}, ‏{DROP GLASS}, ‏{GET FOOT} (רגל של ארנב, למזל), ואז {U} ו-{GET IDOL}. לא זזים בחושך לשום כיוון אחר."
+   ]
+  },
+  {
+   "q": "איפה הכספת?",
+   "h": [
+    "משהו תלוי על הקיר ומסתיר אותה.",
+    "מורידים את ראשי החיות, ואז משתמשים במספרים מהלוח.",
+    "בחדר שצפונית לקומקום: {GET HEADS}, ‏{DROP HEADS}. מופיעה כספת: {TURN 38}, ‏{TURN 33}, ואז {GET HAMMER}."
+   ]
+  },
+  {
+   "q": "יש איש בקפלה",
+   "h": [
+    "כדאי שיהיה לכם מזל לפני שתמשיכו.",
+    "את רגל הארנב משאירים עליו.",
+    "בקפלה: {DROP FOOT}. המשחק שואל {ON WHAT?}, וכותבים {ON MAN}. נשמע רעם, וממשיכים."
+   ]
+  },
+  {
+   "q": "הארובה מעל האח",
+   "h": [
+    "פותחים את מה שסוגר אותה, ועולים.",
+    "בארובה יש קרשים ממוסמרים וסורג. הפטיש והמסור עוזרים.",
+    "באח: {OPEN FLUE}, ‏{GO FLUE}. עם הפטיש: {GET NAILS}, ואז {GET BOARDS}. מאחוריהם יש סורג: {SAW GRATING} (עם המסור), ואז {PUSH BUTTON}."
+   ]
+  },
+  {
+   "q": "מאוורר שאב אותי למעלה, ויש שם מישהו תקוע",
+   "h": [
+    "מישהו צריך עזרה.",
+    "פשוט דוחפים אותו.",
+    "{PUSH SWEEP}: מנקה הארובות יוצא ונותן לכם פתק. יורדים ב-{D} פעמיים, ואז {S}."
+   ]
+  },
+  {
+   "q": "פסל אבן בטרקלין",
+   "h": [
+    "קראו את הפתק ממנקה הארובות.",
+    "בפתק כתובה מילת קסם שמחזירה אבן לחיים.",
+    "בחדר המדרגות: {GO STAIRS}. בטרקלין: {READ PAPER}, ואז {SAY ZAP}. הפסל נסדק, ומישהו ממלמל בחדר. יורדים ב-{D}."
+   ]
+  },
+  {
+   "q": "סדק בקיר, בחדר שמתחת למגלשה",
+   "h": [
+    "הסדק צר מדי. צריך קסם וודו.",
+    "במעבדה יש שקית וודו. מנופפים בה.",
+    "לוקחים את השקית מהמעבדה (עם המגן). חוזרים למנהרה, {SLIDE CHUTE}, ואז {WAVE BAG}: הסדק מתרחב. {GO CRACK}."
+   ]
+  },
+  {
+   "q": "מה עושים בחדר הוודו הסודי?",
+   "h": [
+    "יש כאן דף קרוע. גם בשקית מסתתר משהו.",
+    "פותחים את השקית וקוראים את שני החלקים.",
+    "{DROP GRATING}, ‏{DROP PAPER}, ‏{GET PAGE}, ‏{OPEN BAG}, ‏{GET BOOK}, ‏{READ BOOK}, ‏{READ PAGE}. ביחד הם מסבירים איך מסירים את הקללה. {DROP BOOK}, ‏{DROP PAGE}, ‏{GET STICK}. חוזרים: {S}, ‏{GO HOLE}, ‏{LOOK BALL}."
+   ]
+  },
+  {
+   "q": "הדף אומר שצריך בובה",
+   "h": [
+    "עורב צועק משהו בחוץ.",
+    "צפונית לקפלה יש חלון פתוח.",
+    "מהקפלה: {N}, ‏{GO WINDOW}, ‏{GET DOLL}, ואז {S} פעמיים חזרה לקפלה."
+   ]
+  },
+  {
+   "q": "איך מסירים את הקללה?",
+   "h": [
+    "עשו בדיוק מה שכתוב בספר ובדף.",
+    "צריך את הסכין ביד, את המקל, את האליל הזוהר ואת הבובה, בקפלה.",
+    "בקפלה, עם האליל, הבובה והמקל: {DROP NAILS}, ‏{GET KNIFE}, ‏{CIRCLE COFFIN}, ‏{WAVE STICK}, ואז {YELL CHANT}. הסיכות נופלות מהבובה, הרוזן יוצא חופשי, והמשחק נגמר בניצחון."
+   ]
+  }
+ ],
+ "en": [
+  {
+   "q": "What am I supposed to do?",
+   "h": [
+    "There are no treasures in this game. Start in the chapel, by the coffin.",
+    "Open the coffin and look at it. The sign talks about a curse to lift.",
+    "{OPEN COFFIN}, {TAKE RING}, then later {LOOK COFFIN}: {COUNT CRISTO} has been cursed. Your goal is to free him. On the way you find a book that tells you how, and when you succeed the game ends with {THE ADVENTURE IS OVER}."
+   ]
+  },
+  {
+   "q": "What is the dusty idol in the fireplace for?",
+   "h": [
+    "Something special hides under the dust. Later you will need light.",
+    "Take it and clean it.",
+    "From the ballroom: {ENTER FIREPLACE}, {GET IDOL}, go back {S}, then {CLEAN IDOL}: the idol starts to glow. It is the game's lamp. Keep it to the end."
+   ]
+  },
+  {
+   "q": "The door in the torture chamber is too small",
+   "h": [
+    "The door doesn't need to grow. You need to shrink.",
+    "There are labeled chemicals in the lab. Mix them and drink.",
+    "In the lab (east of the room with the pot): {GET CHEMICALS}. In the torture chamber: {MIX CHEMICALS}, {DRINK CHEMICALS} (you are now 4 feet tall), then {GO DOOR} to the graveyard."
+   ]
+  },
+  {
+   "q": "Test tubes explode in the lab",
+   "h": [
+    "You need something that protects you.",
+    "The armory has a knight's gear.",
+    "In the armory (east of the torture chamber): {GET SHIELD}. Only go into the lab with the shield. Between visits you can leave it in the room with the pot, next to the lab ({DROP SHIELD}), and pick it up again before each visit. On the second visit also take the bag from the lab ({GET BAG})."
+   ]
+  },
+  {
+   "q": "What do I do in the graveyard?",
+   "h": [
+    "Take what you see, then look closely at the graves.",
+    "Something lucky hides among the graves.",
+    "{GET SAW}, then {LOOK GRAVES} and {GET CLOVER}. Take the saw and the clover with you."
+   ]
+  },
+  {
+   "q": "A massive stone door in the tunnel",
+   "h": [
+    "A gem is set in the door. You have seen one like it.",
+    "The ring from the coffin fits the door.",
+    "The tunnel is east of the chapel. {WAVE RING}: the door vanishes and a chute appears. {DROP RING}, then {SLIDE CHUTE}."
+   ]
+  },
+  {
+   "q": "I slid down the chute. How do I get back?",
+   "h": [
+    "The chute only goes one way. Look for another exit.",
+    "There is a hole in the wall, and a crystal ball behind it.",
+    "Take the plaque ({GET PLAQUE}), then {GO HOLE} and {LOOK BALL}: the spirits drive you back to the tunnel. Take the knife there ({GET KNIFE}) and leave it in the chapel ({DROP KNIFE})."
+   ]
+  },
+  {
+   "q": "The print on the plaque is too small",
+   "h": [
+    "You need something that magnifies.",
+    "There is broken glass in the stairwell.",
+    "In the stairwell (south of the chapel): {GET GLASS}. With the glass in hand you can read the plaque ({READ PLAQUE}): it gives two numbers for a safe. We read it in the hole under the kettle (see the next question)."
+   ]
+  },
+  {
+   "q": "The big kettle, and the dark under it",
+   "h": [
+    "The kettle hides something.",
+    "Move it and go down, even though it's dark. You don't need to walk anywhere down there.",
+    "In the room east of the stairwell: {MOVE KETTLE}. We left the idol up top ({DROP IDOL}), then {GO HOLE}. In the dark: {READ PLAQUE}, {DROP PLAQUE}, {DROP GLASS}, {GET FOOT} (a lucky rabbit's foot), then {U} and {GET IDOL}. Don't move any other way in the dark."
+   ]
+  },
+  {
+   "q": "Where is the safe?",
+   "h": [
+    "Something hangs on the wall and hides it.",
+    "Take down the animal heads, then use the numbers from the plaque.",
+    "In the room north of the kettle: {GET HEADS}, {DROP HEADS}. A safe appears: {TURN 38}, {TURN 33}, then {GET HAMMER}."
+   ]
+  },
+  {
+   "q": "There's a man in the chapel",
+   "h": [
+    "Get some luck before you go on.",
+    "Leave the rabbit's foot on him.",
+    "In the chapel: {DROP FOOT}. The game asks {ON WHAT?}, and you type {ON MAN}. Thunder claps, and you go on."
+   ]
+  },
+  {
+   "q": "The chimney above the fireplace",
+   "h": [
+    "Open what closes it, and climb up.",
+    "There are nailed boards and a grating in the chimney. The hammer and the saw help.",
+    "In the fireplace: {OPEN FLUE}, {GO FLUE}. With the hammer: {GET NAILS}, then {GET BOARDS}. Behind them is a grating: {SAW GRATING} (with the saw), then {PUSH BUTTON}."
+   ]
+  },
+  {
+   "q": "A fan sucked me up, and someone is stuck there",
+   "h": [
+    "Someone needs help.",
+    "Just give him a push.",
+    "{PUSH SWEEP}: the chimney sweep pops out and hands you a paper. Go {D} twice, then {S}."
+   ]
+  },
+  {
+   "q": "A stone statue in the parlor",
+   "h": [
+    "Read the sweep's paper.",
+    "The paper has a magic word that brings stone back to life.",
+    "In the stairwell: {GO STAIRS}. In the parlor: {READ PAPER}, then {SAY ZAP}. The statue cracks, and someone mumbles in the room. Go back {D}."
+   ]
+  },
+  {
+   "q": "A crack in the wall, in the room under the chute",
+   "h": [
+    "The crack is too narrow. You need voodoo magic.",
+    "There is a voodoo bag in the lab. Wave it.",
+    "Take the bag from the lab (with the shield). Go back to the tunnel, {SLIDE CHUTE}, then {WAVE BAG}: the crack widens. {GO CRACK}."
+   ]
+  },
+  {
+   "q": "What do I do in the hidden voodoo room?",
+   "h": [
+    "There is a torn page here. The bag also hides something.",
+    "Open the bag and read both parts.",
+    "{DROP GRATING}, {DROP PAPER}, {GET PAGE}, {OPEN BAG}, {GET BOOK}, {READ BOOK}, {READ PAGE}. Together they tell you how to lift the curse. {DROP BOOK}, {DROP PAGE}, {GET STICK}. Go back: {S}, {GO HOLE}, {LOOK BALL}."
+   ]
+  },
+  {
+   "q": "The page says I need a doll",
+   "h": [
+    "A raven cries something outside.",
+    "North of the chapel there is an open window.",
+    "From the chapel: {N}, {GO WINDOW}, {GET DOLL}, then {S} twice back to the chapel."
+   ]
+  },
+  {
+   "q": "How do I lift the curse?",
+   "h": [
+    "Do exactly what the book and the page say.",
+    "You need the knife in hand, the stick, the glowing idol and the doll, in the chapel.",
+    "In the chapel, with the idol, the doll and the stick: {DROP NAILS}, {GET KNIFE}, {CIRCLE COFFIN}, {WAVE STICK}, then {YELL CHANT}. The pins fall out of the doll, the Count is free, and the game ends in victory."
+   ]
+  }
+ ]
+}
