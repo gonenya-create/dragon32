@@ -549,7 +549,9 @@ error		jsr	HK_ERR1		; נקודות החיבור 17 ו-18, עם B = הקוד
 		lbsr	chrout
 		bra	isl_849f_e	;@isl
 		fill	$ff,$849f-*	;@isl
-		jmp	newstt	;@isl
+		jsr	HK_NEWS		; 21. כמו במקור (קורא 7.11): 7 בתים עד $84A6, ו-hook שמדלג 4 בתים מדלג על הפסיקות ועל ה-BREAK (The Sword and the Sorcerer)	;@isl
+		andcc	#$af		; הפסיקות פתוחות בתחילת כל פקודה (קורא: קלטת 5, צליל 1.2)	;@isl
+		bsr	$851b		; BREAK? דרך הכניסה של $851B (mit: ISCNTC)	;@isl
 		fill	$ff,$84a6-*	;@isl
 		ldx	<TXTPTR	;@isl
 		stx	<TXTBEG		; תחילת הפקודה: לשם חוזרים אחרי קלט שגוי ב-INPUT (קורא: TXTBEG)	;@isl
@@ -1005,7 +1007,8 @@ pow10		fdb	10000,1000,100,10,1,0
 getline		jsr	HK_LINE		; 13
 gl_ent		pshs	b,x
 gl_new		ldx	#LINBUF
-gl_key		lbsr	getkey		; הסמן מהבהב בתוך getkey (קורא)
+gl_key		jsr	HK_CIN		; 5: לפני כל מקש, כמו במקור (קורא 7.11: Bonka ו-Vultures נכנסים כאן, ב-$016A)
+		lbsr	getkey		; הסמן מהבהב בתוך getkey (קורא)
 		cmpa	#13
 		beq	gl_done
 		cmpa	#8

@@ -92,6 +92,10 @@
     // 15 בתי מבוא לפני כל בלוק, והמכונה צריכה מבוא ארוך כמו בקלטת אמיתית: המבוא הוארך, הנתונים כמו שהם (29.10)
     ['alcatraz', 'Alcatraz II', 'Alcatraz II', null,
       ['Mike Hughey · Spectral Associates / Microdeal, 1982', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']],
+    // Williamsburg Adventure של Mike Hughey (Chromasette, 1981; ל-Dragon מ-Microdeal, 1982; בתוכנית: AUTHOR :MIKE HUGHEY): אותו מכתב מ-1997,
+    // שמזכיר אותה בשם. BASIC: ‏CLOAD ואז RUN. הקלטת מ-World of Dragon כמו שהיא (גונן, 7.11: "אני רוצה את כולם")
+    ['williamsburg', 'Williamsburg Adventure', 'Williamsburg Adventure', null,
+      ['Mike Hughey · Chromasette / Microdeal, 1981–82', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']],
     // Ninja Warrior של Charles Forsythe (The Programmer's Guild, 1983): הרשות שלו באתר של L. Curtis Boyle (3.4.2005: "Yes, please do!").
     // הקלטת מ-World of Dragon כמו שהיא (גונן אישר 6.11). CLOADM ואז EXEC. במקלדת: [K] ואז מספר השחקנים; [K] קפיצה, [O] בעיטה (העטיפה), [N] קדימה, [M] אחורה (קוד המשחק, $1658)
     ['ninja', 'Ninja Warrior', 'Ninja Warrior', 'm',
@@ -100,6 +104,15 @@
     // שורה 10 שלו, CLOADM"":GOTO280, חשפה באג ב-ROM שלנו (תוקן 29.10). המבוא הוארך כמו ב-Alcatraz
     ['cricket', 'Tim Love\'s Cricket', 'Tim Love\'s Cricket', 'a',
       ['Tim Love · Peaksoft, 1984', 'https://timlovescricket.blogspot.com/', null, null, 'love']],
+    // שלושת המשחקים של Paul Garner (Blaby Computer Games, 1984–85): המכתב שלו בארכיון CLEAR (26.2.1998: "you have my permission"),
+    // שמונה את שלושתם. הקלטות כמו שהן (גונן, 7.11). נטענות לתוך $00A6 ומתחילות לבד. The Sword and the Sorcerer מכוון את ה-hook של $019A
+    // לדלג 4 בתים: לכן לולאת הפקודות מתחילה ב-$849F כמו במקור (ROM, 7.11). Starman Jones ו-The Wizard's Lair בג'ויסטיק
+    ['starman', 'Starman Jones', 'Starman Jones', 'a',
+      ['Paul Garner (landscape: P. L. Thomas) · Blaby Computer Games, 1984', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']],
+    ['sword', 'The Sword and the Sorcerer', 'The Sword and the Sorcerer', 'a',
+      ['Paul Garner (graphics: B. M. Burrows) · Blaby Computer Games, 1985', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']],
+    ['wizlair', 'The Wizard\'s Lair', 'The Wizard\'s Lair', 'a',
+      ['Paul Garner · Blaby Computer Games, 1985', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']],
     // Tanglewood (Microdeal, 1986): קוד פתוח ברישיון MIT מ-2018 (Ian Murray-Watson, Pete Lyon, ובהסכמת John Symes).
     // הקלטת מהמאגר הרשמי נגמרת בביט האחרון, אז נוספו אחריה 16 בתי מבוא (כמו בקלטת אמיתית); הנתונים כמו שהם
     // Hang It! של Harry Whitehouse (1983), המשחק הראשון שלו: איש תלוי עם 1,000 שמות של ערים וכפרים בבריטניה. הרשות שלו במייל, 29.10.2026
@@ -120,6 +133,10 @@
     // וזה חשף שהטבלה שלנו נשמרה הפוך מהמקור (תוקן ב-ROM, 29.10). הקלטת כמו שהיא
     ['sas', 'SAS', 'SAS', null,
       ['Harry Whitehouse · Peaksoft, 1983', 'http://www.peaksoft.uk/peaksoftstory', null, null, 'love']],
+    // Tea Time של Adrian Eddleston (גרפיקה: Stephen Eddleston-McGrath; ‏Pocket Money Software, 1984): הרשות שלו באתר של L. Curtis Boyle (#42).
+    // הקלטת מ-World of Dragon כמו שהיא (גונן, 7.11). מתחילה לבד. ג'ויסטיק
+    ['teatime', 'Tea Time', 'Tea Time', 'a',
+      ['Adrian Eddleston · Pocket Money Software, 1984', 'https://www.lcurtisboyle.com/nitros9/approvals/adrian_eddleston_approval.txt', null, null, 'love']],
     // Star Spores של Dave Shadoff (Spectral Associates, 1983; ל-Dragon מ-Microdeal): הרשות שלו במייל, 25.10.2026. הקלטת מהארכיון כמו שהיא.
     // הטוען של Microdeal בשלבים (כמו Athletyx). המשחק בודק את המילה ב-$B4B3 כדי לדעת שהוא על Dragon (נוסף ל-ROM, 30.10)
     ['spores', 'Star Spores', 'Star Spores', 'a',
@@ -143,6 +160,15 @@
       ['Rob Lech & Troy Dahlman (The Rugby Circle) · Tom Mix Software / Microdeal, 1983–84', 'https://www.lcurtisboyle.com/nitros9/approvals/the_rugby_circle.txt', null, null, 'love']],
     ['nerble', 'Nerble Force', 'Nerble Force', 'a',
       ['David Crandall · Computerware / Microdeal, 1983–85', 'https://www.lcurtisboyle.com/nitros9/approvals/approvals.html', null, null, 'love']],
+    // שלושת המשחקים של John Morrison (J. Morrison Micros, 1983): המכתב של בנו Robert Morrison בארכיון CLEAR (11.5.1996:
+    // "We have no objections to you distributing our software"). הקלטות כמו שהן (גונן, 7.11). Bonka ו-Vultures נכנסים ב-$016A, ה-hook של קלט התו:
+    // בגללם getline קורא לו לפני כל מקש, כמו במקור (ROM, 7.11). Maurice Minor ו-Vultures בג'ויסטיק הימני, Bonka במקלדת
+    ['bonka', 'Bonka', 'Bonka', 'a',
+      ['John Morrison · J. Morrison (Micros), 1983', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']],
+    ['vultures', 'Vultures', 'Vultures', 'a',
+      ['John Morrison · J. Morrison (Micros), 1983', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']],
+    ['maurice', 'Maurice Minor', 'Maurice Minor', 'a',
+      ['John Morrison · J. Morrison (Micros), 1983', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']],
     // Shenanigans,‏ Sea Search ו-Trekboer של Bob Withers ו-Stephen O'Dea (Mark Data Products, 1983–84; ל-Dragon מ-Dragon Data ומ-Microdeal):
     // אותו מכתב של Withers בארכיון CLEAR, שמונה את שלושתם (גונן, 7.11: "מאשר את שלושתם"). הקלטות כמו שהן. Sea Search יצא ב-Dragon בשמו
     // הראשון, Sea Quest (כך כתוב במסך הפתיחה, ובקרדיטים Stephen ו-Kathy O'Dea, ‏Bob ו-Dollie Withers); השם הוחלף בגלל משחק של Activision.
@@ -190,7 +216,7 @@
       ['Owen Stenseth · freeware, 1987', '/lab/1982/tapes/brickout-license.txt', 'https://github.com/digitalbytes/super-brickout', null, 'mit']]
   ];
   // משחקים שצריכים ג'ויסטיק: כשהקלטת נטענת, החיצים במקלדת הופכים לג'ויסטיק הימני ו-Alt (Option במק) לכפתור שלו
-  const JOY = new Set(['chameleon', 'downland', 'king', 'buzzard', 'cavehunter', 'nerble', 'ranger', 'devil', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian', 'alcatraz', 'cricket', 'digit', 'snaker']);
+  const JOY = new Set(['teatime', 'vultures', 'maurice', 'starman', 'wizlair', 'chameleon', 'downland', 'king', 'buzzard', 'cavehunter', 'nerble', 'ranger', 'devil', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian', 'alcatraz', 'cricket', 'digit', 'snaker']);
   // ב-Cricket החובט משתמש בג'ויסטיק השמאלי והמגיש בימני (המדריך של Peaksoft): החיצים מזיזים את שניהם יחד.
   // ב-Snaker הימני מכוון (JOYSTK(0)) והשמאלי קובע מהירות (JOYSTK(3)): למעלה מהר, למטה לאט
   const BOTH = new Set(['cricket', 'snaker']);
@@ -595,6 +621,90 @@
         'The title screen appears. Press [Space], or wait, and NUMBER OF PLAYERS? appears. When the question is on the screen press [1] for one player, or [2] for two.',
         'The arrows point your ship, and it flies that way. [Space] fires. The map on the right shows the bases.',
         'The goal: destroy all the bases in the sector and rescue the astronauts held in them. Watch out for mines, asteroids and fire from the bases. Take too long and a giant dragon comes after you.']
+    },
+    // נבדק במכונה (7.11): CLOAD, ‏RUN, ההקדמה והמקום הראשון. ההוראות מתוך ההקדמה של המשחק
+    williamsburg: {
+      he: ['הרפתקת טקסט ב-Williamsburg הקולוניאלית שבווירג\'יניה, עם מקומות לפי העיר האמיתית. המטרה: למצוא את פרסת הזהב המפורסמת, שמוסתרת אי שם בעיר, ולהביא אותה הביתה. בדרך יש שוטרים, קצב, מבוך ורוחות.',
+        'כשמופיע OK מקלידים {RUN}. ל-INTRODUCTION (Y/N)? לוחצים [Y] כדי לקרוא את ההקדמה, ובכל מסך לוחצים מקש או [ENTER].',
+        'כותבים פקודה של שתי מילים באנגלית ולוחצים [ENTER], למשל {GET BOOK}, {OPEN DOOR} או {SHUT WINDOW}. אם המחשב לא מבין, מנסים מילים אחרות.',
+        'הולכים בכיוונים עם {N}, ‏{S}, ‏{E} ו-{W}. בראש המסך כתוב איפה אתם, מה רואים ולאן אפשר ללכת. נתקעתם? {HELP}.'],
+      en: ['A text adventure in colonial Williamsburg, Virginia, with places from the real town. The goal: find the famous Golden Horseshoe, hidden somewhere in the city, and bring it home. On the way there are police, a butcher, a maze and ghosts.',
+        'When OK appears type {RUN}. At INTRODUCTION (Y/N)? press [Y] to read the introduction, and press a key or [ENTER] on each screen.',
+        'Type a two-word command in English and press [ENTER], for example {GET BOOK}, {OPEN DOOR} or {SHUT WINDOW}. If the computer does not understand, try other words.',
+        'Move with {N}, {S}, {E} and {W}. The top of the screen shows where you are, what you see and where you can go. Stuck? {HELP}.']
+    },
+    // נבדק במכונה (7.11): הטעינה, בחירת הצבע, הפתיחה, בחירת הרמה והמסך הראשון. הקומקום זז בג'ויסטיק. המסכים לפי האתר של L. Curtis Boyle
+    teatime: {
+      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
+        'הטעינה מתחילה לבד. במסך הפתיחה בוחרים צבע: [1] שחור, [2] צהבהב, [3] ירוק. אחרי ההסבר מופיע SELECT START LEVEL: מקלידים מספר מ-[1] עד [8] ולוחצים [ENTER].',
+        'משחק פעולה במטבח, בשלושה מסכים. במסך הראשון תופסים את טיפות התה בקומקום, וממלאים את הספל הצמא שבפינה. מזיזים את הקומקום בחיצים.',
+        'במסך השני מתחמקים מקוביות סוכר שנופלות: פגיעה אחת עוד אפשר לשרוד, השנייה הורגת. במסך השלישי, במזווה, עולים במעליות ואוספים ערמות של תה, ובסוף מחברים את הקומקום לכיסוי שלו.'],
+      en: ['In this game the arrow keys are a joystick and [Space] is its button (or [Alt], [Option] on a Mac). On a phone there is a stick and a fire button under the screen.',
+        'Loading starts by itself. On the title screen choose a colour: [1] black, [2] buff, [3] green. After the explanation, SELECT START LEVEL appears: type a number from [1] to [8] and press [ENTER].',
+        'An action game in a kitchen, in three screens. On the first, catch the tea drops in your teapot and fill the thirsty mug in the corner. Move the teapot with the arrows.',
+        'On the second, dodge falling sugar cubes: you can survive one hit, the second kills. On the third, in the pantry, ride lifts to collect piles of tea, and at the end bring the teapot to its cosy.']
+    },
+    // נבדק במכונה (7.11): הטעינה (מתחילה ב-hook של $016A), ההוראות, השם, המהירות, מספר המפלצות והקומות. ההוראות מהמסך של המשחק
+    bonka: {
+      he: ['משחק סולמות וקומות: מפלצות כחולות מסתובבות בקומות. חופרים בור, וכשמפלצת נופלת לתוכו, נותנים לה מכה בראש. כמה שהיא נופלת יותר רחוק, מקבלים יותר נקודות.',
+        'הטעינה מתחילה לבד. מופיע הסבר: לוחצים מקש. המשחק שואל NAME PLEASE (כותבים שם ו-[ENTER]), ‏SPEED (מהירות, [1] עד [4]) ו-MEANIES (כמה מפלצות, [1] עד [9]).',
+        'במשחק הזה משחקים במקלדת: החיצים מזיזים את האיש ומעלים ומורידים אותו בסולמות, ו-[רווח] חופר או נותן מכה.'],
+      en: ['A game of ladders and floors: blue meanies roam the floors. Dig a hole, and when a meanie falls into it, bonk it on the head. The further it falls, the more points you get.',
+        'Loading starts by itself. An explanation appears: press a key. The game asks NAME PLEASE (type a name and [ENTER]), SPEED ([1] to [4]) and MEANIES (how many, [1] to [9]).',
+        'This game is played on the keyboard: the arrows move your man and take him up and down the ladders, and [Space] digs or bonks.']
+    },
+    // נבדק במכונה (7.11): הטעינה (מתחילה ב-hook של $016A), בחירת המהירות, הלהקה ויריות. ג'ויסטיק ימני
+    vultures: {
+      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
+        'הטעינה מתחילה לבד. במסך הפתיחה בוחרים מהירות, SLOW, ‏MEDIUM או FAST, בחץ ימינה או שמאלה, ולוחצים על הכפתור כדי להתחיל.',
+        'משחק יריות: להקת נשרים מעליכם, והם צוללים ומפילים דברים. אתם בתחתית המסך: זזים ימינה ושמאלה בחיצים ויורים בכפתור.'],
+      en: ['In this game the arrow keys are a joystick and [Space] is its button (or [Alt], [Option] on a Mac). On a phone there is a stick and a fire button under the screen.',
+        'Loading starts by itself. On the title screen choose a speed, SLOW, MEDIUM or FAST, with the right or left arrow, and press the button to start.',
+        'A shooting game: a flock of vultures above you dives and drops things. You are at the bottom of the screen: move left and right with the arrows and fire with the button.']
+    },
+    // נבדק במכונה (7.11): הטעינה, שם הנהג, רמת הקושי והנסיעה במסלול. ג'ויסטיק ימני: הכפתור הוא דוושת הגז
+    maurice: {
+      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
+        'הטעינה מתחילה לבד. במסך הפתיחה לוחצים מקש. ל-DRIVERS NAME PLEASE? כותבים שם ולוחצים [ENTER], ואז בוחרים רמת קושי מ-[1] (KINGPIN, הכי קשה) עד [6] (SUNDAY DRIVER).',
+        'מכונית Morris Minor קטנה נכנסה בטעות למסלול של מרוץ גרנד פרי. הכפתור הוא הגז: לוחצים כדי לנסוע. החיצים למעלה ולמטה מזיזים את המכונית בין הנתיבים, ועוקפים את מכוניות המרוץ.',
+        'למעלה מוצג מד הנזק (100% כשהמכונית שלמה), ולמטה הזמן והמיילים. כל התנגשות פוגעת במכונית. בסוף יש טבלת שיאים.'],
+      en: ['In this game the arrow keys are a joystick and [Space] is its button (or [Alt], [Option] on a Mac). On a phone there is a stick and a fire button under the screen.',
+        'Loading starts by itself. On the title screen press a key. At DRIVERS NAME PLEASE? type a name and press [ENTER], then choose a skill level from [1] (KINGPIN, the hardest) to [6] (SUNDAY DRIVER).',
+        'A little Morris Minor has wandered onto a Grand Prix track. The button is the accelerator: hold it to drive. The up and down arrows move the car between lanes, past the racing cars.',
+        'At the top is the damage meter (100% when the car is whole), and at the bottom the time and the miles. Every crash damages the car. At the end there is a hall of fame.']
+    },
+    // נבדק במכונה (7.11): הטעינה, התמונה, הקרדיטים, טבלת השיאים והטיסה מעל הנוף. ג'ויסטיק
+    starman: {
+      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
+        'הטעינה ארוכה, כשלוש וחצי דקות: קודם מופיעה תמונה של Starman Jones, ואחר כך הקרדיטים עם Press fire to continue. לוחצים על הכפתור, ובטבלת השיאים שוב.',
+        'Starman Jones, החוקר מהמשחק Caverns of Chaos, טס בחללית מעל נוף של כוכב. מזיזים את החללית בחיצים ויורים בכפתור.',
+        'בתחתית המסך מוצגים הדלק (FUEL), מספר החיים (שלושה בהתחלה), הניקוד והשיא.'],
+      en: ['In this game the arrow keys are a joystick and [Space] is its button (or [Alt], [Option] on a Mac). On a phone there is a stick and a fire button under the screen.',
+        'The load is long, about three and a half minutes: first a picture of Starman Jones appears, then the credits with Press fire to continue. Press the button, and again at the high-score table.',
+        'Starman Jones, the explorer from the game Caverns of Chaos, flies his ship over a planet\'s landscape. Move the ship with the arrows and fire with the button.',
+        'The bottom of the screen shows the FUEL, the lives (three to start), the score and the high score.']
+    },
+    // נבדק במכונה (7.11): הטעינה (ה-hook של $019A, שמדלג על בדיקת ה-BREAK), המבוך, התפריט, ‏INVENTORY. המבוך לפי הביקורת ב-Dragon User
+    sword: {
+      he: ['הרפתקה במבוך של 225 מקומות, עם תמונה של המסדרון שלפניכם. עוברים מקום אחרי מקום, נלחמים במי שפוגשים, ומנסים לצאת בחיים.',
+        'הטעינה, כשלוש דקות, מתחילה לבד. מופיע מסך השם, ואחריו התמונה של המבוך והתפריט.',
+        'החיצים מזיזים אתכם במבוך. כל צעד עולה בכוח: YOUR STRENGTH IS מראה כמה נשאר.',
+        'הפעולות במקשי המספרים: [1] להתקיף, [2] לסחור, [3] לשחד, [4] להחליף נשק, [5] לברוח, [6] לאכול או לשתות, [7] מה אתם נושאים, [8] לקחת. בהתחלה יש לכם חרב קסם, מגן רומי, אוכל ושיקוי קסם.'],
+      en: ['An adventure in a maze of 225 places, with a picture of the corridor ahead of you. Go from place to place, fight whatever you meet, and try to get out alive.',
+        'Loading, about three minutes, starts by itself. The title screen appears, then the picture of the maze and the menu.',
+        'The arrows move you through the maze. Every step costs strength: YOUR STRENGTH IS shows how much is left.',
+        'The actions are on the number keys: [1] attack, [2] trade, [3] bribe, [4] change weapon, [5] run, [6] eat or drink, [7] inventory, [8] take. You start with a magic sword, a Roman shield, food and a magic potion.']
+    },
+    // נבדק במכונה (7.11): הטעינה, ההוראות ([I]), טבלת השיאים והמבוך. ההוראות מהמסך של המשחק. ג'ויסטיק
+    wizlair: {
+      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
+        'הטעינה ארוכה, כשלוש וחצי דקות. במסך הפתיחה [I] מראה הוראות, והכפתור ממשיך. בטבלת השיאים לוחצים שוב על הכפתור.',
+        'שדים גנבו חפצים מהמקדש שלכם. אוספים את כל החלקים של ארבעת החפצים שמפוזרים במבוך: כדי לקחת חפץ פשוט עוברים עליו. מפתחות פותחים דלתות, ושרביטים יורים כדורי אש בלי לבזבז כוח.',
+        'אם פס הכוח למטה יורד מתחת לאפס, מתים. כדי למלא אותו, חוזרים למקדש ועוברים על המשבצת המסומנת ב-X אדום. כשעומדים על המקום הנכון, החיצים למעלה ולמטה מעלים ומורידים בין הקומות של המבוך.'],
+      en: ['In this game the arrow keys are a joystick and [Space] is its button (or [Alt], [Option] on a Mac). On a phone there is a stick and a fire button under the screen.',
+        'The load is long, about three and a half minutes. On the title screen [I] shows instructions, and the button carries on. At the high-score table press the button again.',
+        'Demons have stolen artifacts from your sanctuary. Collect all the pieces of the four artifacts scattered about the maze: to take an item, just pass over it. Keys open doors, and wands cast fireballs at no cost.',
+        'If the power bar at the bottom falls below zero, you die. To refill it, return to your sanctuary and pass over the square marked with a red X. On the right spot, the up and down arrows take you between the levels of the maze.']
     },
     // נבדק במכונה (29.10): CLOAD, ‏RUN, ‏DRAGON OR TANDY, ‏JOYSTICKS?, השומרים זזים במבוך. ההוראות מהתוכנית INSTRUCT שבצד השני של הקלטת
     alcatraz: {
@@ -1052,6 +1162,14 @@
     phantom: ['המשחק שואל על ההוראות: [N] מדלג, [Y] מציג אותן.', 'The game asks about the instructions: [N] skips them, [Y] shows them.'],
     grabber: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. אחרי מסך הפתיחה, ב-NUMBER OF PLAYERS? לוחצים [1].', 'When loading ends pick a colour: [1], [2] or [3]. After the title screen, at NUMBER OF PLAYERS? press [1].'],
     draconian: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וכשמופיע NUMBER OF PLAYERS? לוחצים [1].', 'When loading ends pick a colour: [1], [2] or [3]. On the title screen press [Space], and when NUMBER OF PLAYERS? appears press [1].'],
+    williamsburg: ['כשמופיע OK מקלידים {RUN}. ל-INTRODUCTION (Y/N)? לוחצים [Y] או [N].', 'When OK appears type {RUN}. At INTRODUCTION (Y/N)? press [Y] or [N].'],
+    teatime: ['המשחק מתחיל לבד. בוחרים צבע, [1] עד [3], ואחר כך רמה, [1] עד [8], ו-[ENTER].', 'The game starts by itself. Choose a colour, [1] to [3], then a level, [1] to [8], and [ENTER].'],
+    bonka: ['המשחק מתחיל לבד. לוחצים מקש, ועונים על השם, המהירות ומספר המפלצות.', 'The game starts by itself. Press a key, and answer the name, the speed and the number of meanies.'],
+    vultures: ['המשחק מתחיל לבד. בוחרים מהירות בחיצים ולוחצים על הכפתור.', 'The game starts by itself. Choose a speed with the arrows and press the button.'],
+    maurice: ['המשחק מתחיל לבד. לוחצים מקש, כותבים שם, ובוחרים רמה מ-[1] עד [6].', 'The game starts by itself. Press a key, type a name, and choose a level from [1] to [6].'],
+    starman: ['המשחק מתחיל לבד. ב-Press fire to continue ובטבלת השיאים לוחצים על הכפתור.', 'The game starts by itself. At Press fire to continue and at the high-score table press the button.'],
+    sword: ['המשחק מתחיל לבד, ומופיע המבוך עם התפריט.', 'The game starts by itself, and the maze appears with the menu.'],
+    wizlair: ['המשחק מתחיל לבד. [I] להוראות, ואחר כך הכפתור, וגם בטבלת השיאים.', 'The game starts by itself. [I] for instructions, then the button, and again at the high-score table.'],
     alcatraz: ['כשמופיע OK מקלידים {RUN}. ל-DRAGON OR TANDY COLOR? לוחצים [D], ול-JOYSTICKS? לוחצים [Y].', 'When OK appears type {RUN}. At DRAGON OR TANDY COLOR? press [D], and at JOYSTICKS? press [Y].'],
     hangit: ['כשמופיע OK מקלידים {RUN}. ל-DO YOU WANT TO PLAY SOLO? לוחצים [Y], ומחכים כמה שניות עד PLEASE GUESS A LETTER.', 'When OK appears type {RUN}. At DO YOU WANT TO PLAY SOLO? press [Y], and wait a few seconds for PLEASE GUESS A LETTER.'],
     dhh: ['כשמופיע OK מקלידים {RUN}. ל-ADDITIONAL INSTRUCTIONS? לוחצים [Y] או [N]. אחר כך [N] למתחילים (NOVICE), ול-STANDARD RANGE OF EQUIPMENT? לוחצים [Y].', 'When OK appears type {RUN}. At ADDITIONAL INSTRUCTIONS? press [Y] or [N]. Then [N] for NOVICE, and at STANDARD RANGE OF EQUIPMENT? press [Y].'],
@@ -1108,6 +1226,14 @@
     dungeon: ['רצים במסדרונות של מבוך ויורים ביצורים ובדלתות, נגד השעון. בג\'ויסטיק. נכתב רק ל-Dragon.', 'Race down dungeon corridors, shooting creatures and doors against the clock. Joystick. Written only for the Dragon.'],
     grabber: ['שני מבוכים בבת אחת: אוספים מטילים ומחזירים אותם למרכז, ובורחים ממפלצות. בג\'ויסטיק.', 'Two mazes at once: collect the bars, bring them back to the middle and escape the monsters. Joystick.'],
     draconian: ['טסים בחלל לכל כיוון, משמידים בסיסים ומצילים אסטרונאוטים, לפני שהדרקון מגיע. בג\'ויסטיק.', 'Fly through space in any direction, destroy bases and rescue astronauts before the dragon arrives. Joystick.'],
+    williamsburg: ['הרפתקת טקסט בעיר הקולוניאלית Williamsburg: מחפשים את פרסת הזהב. בפקודות באנגלית.', 'A text adventure in colonial Williamsburg: find the Golden Horseshoe. English commands.'],
+    teatime: ['משחק פעולה במטבח: תופסים טיפות תה, מתחמקים מסוכר ואוספים תה במזווה. בג\'ויסטיק.', 'Action in a kitchen: catch tea drops, dodge sugar and collect tea in the pantry. Joystick.'],
+    bonka: ['חופרים בורות בקומות ונותנים מכה למפלצות שנופלות לתוכם. במקלדת.', 'Dig holes on the floors and bonk the meanies that fall in. Keyboard.'],
+    vultures: ['משחק יריות נגד להקה של נשרים שצוללים ומפילים דברים. בג\'ויסטיק.', 'A shooter against a flock of diving, bombing vultures. Joystick.'],
+    maurice: ['Morris Minor קטנה במרוץ גרנד פרי: עוקפים, נזהרים מהתנגשויות. בג\'ויסטיק.', 'A little Morris Minor in a Grand Prix: overtake and avoid crashes. Joystick.'],
+    starman: ['החוקר Starman Jones טס בחללית מעל נוף של כוכב, ושומר על הדלק. בג\'ויסטיק.', 'Explorer Starman Jones flies over a planet\'s landscape, watching his fuel. Joystick.'],
+    sword: ['הרפתקה במבוך של 225 מקומות: נלחמים, סוחרים ומנסים לצאת בחיים. במקלדת.', 'An adventure in a maze of 225 places: fight, trade and try to get out alive. Keyboard.'],
+    wizlair: ['אוספים במבוך את החפצים שהשדים גנבו ומחזירים אותם למקדש. בג\'ויסטיק.', 'Collect the artifacts the demons stole from the maze and return them to your sanctuary. Joystick.'],
     alcatraz: ['בורחים מכלא Alcatraz II ונזהרים מהשומרים. בג\'ויסטיק.', 'Escape from the prison of Alcatraz II and keep away from the guards. Joystick.'],
     hangit: ['איש תלוי עם 1,000 שמות של ערים וכפרים בבריטניה. נגד המחשב או בשניים.', 'Hangman with 1,000 British towns and villages. Against the computer or for two.'],
     dhh: ['הצלה במערה: מוצאים שלושה חוקרי מערות אבודים לפני שהכוח והפנסים נגמרים. במקשי הכיוונים.', 'A cave rescue: find three lost cavers before your fitness and lights run out. Direction keys.'],

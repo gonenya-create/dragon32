@@ -45,10 +45,8 @@ synchk		pshs	a
 
 ; ---------- לולאת הפקודות (mit: NEWSTT 2138, GONE 2165) ----------
 ; TXTPTR מצביע על התו שלפני הפקודה הבאה. 0 = סוף שורה: הקישור שאחריו אומר מה הלאה
-newstt		jsr	HK_NEWS		; 21
-		andcc	#$af		; הפסיקות פתוחות בתחילת כל פקודה (קורא: קלטת 5, צליל 1.2)
-		lbsr	brkchk		; BREAK? (mit: ISCNTC)
-		jmp	$84a6		; newst2, באותו סדר כמו במקור (islands.s)
+newstt		jmp	$849f		; ה-hook, הפסיקות ובדיקת ה-BREAK בכתובת המקורית (islands.s, $849F)
+		fill	$ff,8		; 8 בתים פנויים (שם ישב קודם ה-hook), כדי שהקוד שאחרי לא יזוז
 newst3		ldd	1,x		; הקישור (X = מצביע הטקסט, מ-$84A6)
 		lbeq	endcon		; סוף התוכנית (או סוף השורה הישירה)
 		ldd	3,x

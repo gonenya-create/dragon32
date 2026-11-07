@@ -56,8 +56,8 @@ window.D32_GAMES = {
       "en": "Mike Hughey's games",
       "years": "1982–84",
       "note": [
-        "Mike Hughey כתב משחקים בשפת מכונה ל-Color Computer, ו-Tom Mix Software ממישיגן הוציאה אותם. ל-Dragon הוציאה אותם Microdeal בבריטניה. ב-1997 הוא כתב שהוא ישמח שיפיצו אותם בחופשיות, בכל צורה. כאן ברשותו.",
-        "Mike Hughey wrote machine-code games for the Color Computer, and Tom Mix Software of Michigan published them. Microdeal brought them out for the Dragon in Britain. In 1997 he wrote that he would be thrilled for them to be distributed freely, in whatever format. Here with his permission."
+        "Mike Hughey כתב משחקים ל-Color Computer. את משחקי שפת המכונה שלו הוציאה Tom Mix Software ממישיגן, ואת Williamsburg Adventure פרסם Chromasette, כתב עת על קלטות. ל-Dragon הוציאה אותם Microdeal בבריטניה. ב-1997 הוא כתב שהוא ישמח שיפיצו אותם בחופשיות, בכל צורה. כאן ברשותו.",
+        "Mike Hughey wrote games for the Color Computer. Tom Mix Software of Michigan published his machine-code games, and Chromasette, a magazine on tape, published Williamsburg Adventure. Microdeal brought them out for the Dragon in Britain. In 1997 he wrote that he would be thrilled for them to be distributed freely, in whatever format. Here with his permission."
       ]
     },
     {
@@ -71,6 +71,16 @@ window.D32_GAMES = {
       ]
     },
     {
+      "key": "morrison",
+      "he": "המשחקים של John Morrison",
+      "en": "John Morrison's games",
+      "years": "1983",
+      "note": [
+        "John Morrison הקים את J. Morrison (Micros), וכתב לה משחקים ל-Dragon. ב-1996 כתב בנו, Robert Morrison, שאין להם התנגדות שיפיצו את התוכנות שלהם. כאן ברשותם.",
+        "John Morrison founded J. Morrison (Micros) and wrote Dragon games for it. In 1996 his son, Robert Morrison, wrote that they have no objection to their software being distributed. Here with their permission."
+      ]
+    },
+    {
       "key": "withers",
       "he": "ההרפתקאות של Bob Withers",
       "en": "Bob Withers' adventures",
@@ -78,6 +88,16 @@ window.D32_GAMES = {
       "note": [
         "Bob Withers ו-Stephen O'Dea כתבו ב-Mark Data Products סדרה של הרפתקאות עם תמונות ל-Color Computer, בעזרת Kathy O'Dea ו-Dollie Withers. ל-Dragon הוציאו אותן Dragon Data ו-Microdeal. ב-1996 כתב Withers שמותר להפיץ אותן. כאן ברשותו.",
         "Bob Withers and Stephen O'Dea wrote a series of adventures with pictures for the Color Computer at Mark Data Products, with help from Kathy O'Dea and Dollie Withers. Dragon Data and Microdeal published them for the Dragon. In 1996 Withers wrote that they may be distributed. Here with his permission."
+      ]
+    },
+    {
+      "key": "garner",
+      "he": "המשחקים של Paul Garner",
+      "en": "Paul Garner's games",
+      "years": "1984–85",
+      "note": [
+        "Paul Garner כתב משחקים ל-Dragon ב-Blaby Computer Games, מהחברות שתמכו ב-Dragon הכי הרבה זמן. ב-1998 כתב שמותר להפיץ את שלושת המשחקים האלה. כאן ברשותו.",
+        "Paul Garner wrote Dragon games at Blaby Computer Games, one of the Dragon's longest-standing supporters. In 1998 he gave permission to distribute these three games. Here with his permission."
       ]
     },
     {
@@ -1653,6 +1673,38 @@ window.D32_GAMES = {
         "link": "https://archive.worldofdragon.org/index.php?title=Tim_Love%27s_Cricket"
       }
     },
+    "teatime": {
+      "slug": "tea-time",
+      "drawer": "more",
+      "year": "1984",
+      "tag": [
+        "פעולה",
+        "action"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כשתי דקות",
+        "about two minutes"
+      ],
+      "about": {
+        "he": [
+          "Adrian Eddleston, פרופסור, כתב אותו ל-Dragon, ובנו Stephen Eddleston-McGrath צייר את הגרפיקה. הוציאה אותו Pocket Money Software, תווית של משחקים זולים.",
+          "האישור שלו נמצא ברשימת האישורים של L. Curtis Boyle."
+        ],
+        "en": [
+          "Adrian Eddleston, a professor, wrote it for the Dragon, and his son Stephen Eddleston-McGrath drew the graphics. Pocket Money Software, a budget label, published it.",
+          "His approval is on L. Curtis Boyle's list of approvals."
+        ]
+      },
+      "icon": [
+        80,
+        40,
+        96
+      ]
+    },
     "spores": {
       "slug": "star-spores",
       "drawer": "more",
@@ -1696,6 +1748,102 @@ window.D32_GAMES = {
         ],
         "link": "https://archive.worldofdragon.org/index.php?title=Star_Spores"
       }
+    },
+    "starman": {
+      "slug": "starman-jones",
+      "drawer": "garner",
+      "year": "1984",
+      "tag": [
+        "פעולה",
+        "action"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כשלוש וחצי דקות",
+        "about three and a half minutes"
+      ],
+      "about": {
+        "he": [
+          "Paul Garner כתב אותו, ו-P. L. Thomas צייר את הנוף. Starman Jones הוא הדמות של Thomas מהמשחק Caverns of Chaos, ומופיע כאן ברשותו (כך כתוב על המסך). הוציאה אותו Blaby Computer Games.",
+          "ב-1998 כתב Garner שמותר להפיץ את המשחק."
+        ],
+        "en": [
+          "Paul Garner wrote it, and P. L. Thomas drew the landscape. Starman Jones is Thomas's character from Caverns of Chaos, and appears here by his permission (as the screen says). Blaby Computer Games published it.",
+          "In 1998 Garner wrote that the game may be distributed."
+        ]
+      },
+      "icon": [
+        64,
+        120,
+        96
+      ]
+    },
+    "sword": {
+      "slug": "the-sword-and-the-sorcerer",
+      "drawer": "garner",
+      "year": "1985",
+      "tag": [
+        "הרפתקה",
+        "adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כשלוש דקות",
+        "about three minutes"
+      ],
+      "about": {
+        "he": [
+          "Paul Garner כתב אותו, ו-B. M. Burrows צייר את הגרפיקה. הוציאה אותו Blaby Computer Games. Dragon User כתב עליו ביקורת בינואר 1986.",
+          "ב-1998 כתב Garner שמותר להפיץ את המשחק."
+        ],
+        "en": [
+          "Paul Garner wrote it, and B. M. Burrows drew the graphics. Blaby Computer Games published it. Dragon User reviewed it in January 1986.",
+          "In 1998 Garner wrote that the game may be distributed."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        104
+      ]
+    },
+    "wizlair": {
+      "slug": "the-wizards-lair",
+      "drawer": "garner",
+      "year": "1985",
+      "tag": [
+        "מבוך",
+        "maze"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כשלוש וחצי דקות",
+        "about three and a half minutes"
+      ],
+      "about": {
+        "he": [
+          "Paul Garner כתב אותו, וחברים מ-Blaby עזרו (על המסך: P. Garner and Co.). הוציאה אותו Blaby Computer Games.",
+          "ב-1998 כתב Garner שמותר להפיץ את המשחק."
+        ],
+        "en": [
+          "Paul Garner wrote it, with help from friends at Blaby (on screen: P. Garner and Co.). Blaby Computer Games published it.",
+          "In 1998 Garner wrote that the game may be distributed."
+        ]
+      },
+      "icon": [
+        16,
+        8,
+        112
+      ]
     },
     "tangle": {
       "slug": "tanglewood",
@@ -1773,6 +1921,38 @@ window.D32_GAMES = {
         "link": "https://worldofdragon.org/index.php?title=Starship_Chameleon"
       }
     },
+    "williamsburg": {
+      "slug": "williamsburg-adventure",
+      "drawer": "hughey",
+      "year": "1982",
+      "tag": [
+        "הרפתקת טקסט",
+        "text adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כדקה",
+        "about a minute"
+      ],
+      "about": {
+        "he": [
+          "Mike Hughey כתב אותה ל-Color Computer, וכתב העת על קלטות Chromasette פרסם אותה ב-1981. ל-Dragon הוציאה אותה Microdeal. בתוכנית עצמה כתוב AUTHOR :MIKE HUGHEY.",
+          "ב-1997 הוא כתב שמותר להפיץ אותה, יחד עם המשחקים האחרים שלו."
+        ],
+        "en": [
+          "Mike Hughey wrote it for the Color Computer, and Chromasette, a magazine on tape, published it in 1981. Microdeal published it for the Dragon. The program itself says AUTHOR :MIKE HUGHEY.",
+          "In 1997 he wrote that it may be distributed, along with his other games."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        128
+      ]
+    },
     "ninja": {
       "slug": "ninja-warrior",
       "drawer": "more",
@@ -1816,6 +1996,102 @@ window.D32_GAMES = {
         ],
         "link": "https://archive.worldofdragon.org/browse/?downloads/Software/Dragon/Programmers%20Guild/Ninja%20Warrior"
       }
+    },
+    "bonka": {
+      "slug": "bonka",
+      "drawer": "morrison",
+      "year": "1983",
+      "tag": [
+        "סולמות",
+        "ladders"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "פחות מדקה",
+        "under a minute"
+      ],
+      "about": {
+        "he": [
+          "John Morrison כתב אותו ל-Dragon בשפת מכונה. Dragon User כתב עליו בסקירת המשחקים של אוגוסט 1983.",
+          "ב-1996 כתב בנו שאין להם התנגדות שיפיצו את התוכנות שלהם."
+        ],
+        "en": [
+          "John Morrison wrote it for the Dragon in machine code. Dragon User covered it in its games round-up of August 1983.",
+          "In 1996 his son wrote that they have no objection to their software being distributed."
+        ]
+      },
+      "icon": [
+        24,
+        8,
+        96
+      ]
+    },
+    "vultures": {
+      "slug": "vultures",
+      "drawer": "morrison",
+      "year": "1983",
+      "tag": [
+        "יריות",
+        "shooter"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "פחות מדקה",
+        "under a minute"
+      ],
+      "about": {
+        "he": [
+          "John Morrison כתב אותו ל-Dragon בשפת מכונה. Dragon User כתב עליו ביקורת באוקטובר 1983 ובינואר 1984.",
+          "ב-1996 כתב בנו שאין להם התנגדות שיפיצו את התוכנות שלהם."
+        ],
+        "en": [
+          "John Morrison wrote it for the Dragon in machine code. Dragon User reviewed it in October 1983 and January 1984.",
+          "In 1996 his son wrote that they have no objection to their software being distributed."
+        ]
+      },
+      "icon": [
+        64,
+        16,
+        128
+      ]
+    },
+    "maurice": {
+      "slug": "maurice-minor",
+      "drawer": "morrison",
+      "year": "1983",
+      "tag": [
+        "מרוצים",
+        "racing"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כדקה",
+        "about a minute"
+      ],
+      "about": {
+        "he": [
+          "John Morrison כתב אותו ל-Dragon. השם הוא משחק מילים על Morris Minor, מכונית בריטית קטנה, ועל Morrison. Dragon User כתב עליו ביקורת במרץ 1984.",
+          "ב-1996 כתב בנו שאין להם התנגדות שיפיצו את התוכנות שלהם."
+        ],
+        "en": [
+          "John Morrison wrote it for the Dragon. The name plays on the Morris Minor, a small British car, and on Morrison. Dragon User reviewed it in March 1984.",
+          "In 1996 his son wrote that they have no objection to their software being distributed."
+        ]
+      },
+      "icon": [
+        24,
+        16,
+        192
+      ]
     },
     "shenan": {
       "slug": "shenanigans",
