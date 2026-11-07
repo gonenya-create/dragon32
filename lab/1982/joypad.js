@@ -5,7 +5,8 @@
 (function () {
   const EN = document.documentElement.lang === 'en';
   const K = { up: ['ArrowUp', 'ArrowUp'], down: ['ArrowDown', 'ArrowDown'], left: ['ArrowLeft', 'ArrowLeft'], right: ['ArrowRight', 'ArrowRight'],
-    space: [' ', 'Space'], enter: ['Enter', 'Enter'], alt: ['Alt', 'AltLeft'], Z: ['Z', 'KeyZ'], C: ['C', 'KeyC'], S: ['S', 'KeyS'], X: ['X', 'KeyX'] };
+    space: [' ', 'Space'], enter: ['Enter', 'Enter'], alt: ['Alt', 'AltLeft'], Z: ['Z', 'KeyZ'], C: ['C', 'KeyC'], S: ['S', 'KeyS'], X: ['X', 'KeyX'],
+    K: ['K', 'KeyK'], O: ['O', 'KeyO'], N: ['N', 'KeyN'], M: ['M', 'KeyM'], G: ['G', 'KeyG'] };
   const ARROWS = { up: 'up', down: 'down', left: 'left', right: 'right' };
   // המקשים של כל משחק, לפי תיבת "איך משחקים" שלו. במשחקי ג'ויסטיק (shelf.js, ‏JOY) החיצים הם הידית ו-Alt הכפתור
   const GAMES = {
@@ -30,6 +31,23 @@
     brickout: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },   // ידית: shelf.js מזיז את המחבט בהדרגה לפי החיצים
     snaker: { dir: ARROWS, fire: 'enter', label: ['ENTER', 'ENTER'] },
     sketch: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },   // הקלד בעצמך (typein.js): Sketching מצייר בג'ויסטיק
+    // גונן, 7.11 (מהאייפון: "אין ג'ויסטיק רק חיצים ולא ברור איך יורים"): משחקי הג'ויסטיק מהמגירות של Morrison,
+    // ‏Garner, ‏Microdeal ו-Hughey היו ב-JOY של shelf.js ובתיבת "איך משחקים" שלהם, אבל לא כאן
+    teatime: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
+    vultures: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
+    maurice: { dir: ARROWS, fire: 'alt', label: ['גז', 'GAS'] },
+    starman: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
+    wizlair: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
+    chameleon: { dir: ARROWS, fire: 'alt', label: ['צבע', 'COLOUR'] },
+    downland: { dir: ARROWS, fire: 'alt', label: ['קפיצה', 'JUMP'] },
+    king: { dir: ARROWS, fire: 'alt', label: ['קפיצה', 'JUMP'] },
+    buzzard: { dir: ARROWS, fire: 'alt', label: ['כנפיים', 'FLAP'] },
+    cavehunter: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
+    nerble: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
+    // משחקי פעולה במקלדת: הלוח שולח את המקשים מתיבת "איך משחקים"
+    bonka: { dir: ARROWS, fire: 'space', label: ['רווח', 'SPACE'] },
+    ninja: { dir: { up: 'K', down: 'K', left: 'M', right: 'N' }, fire: 'O', label: ['בעיטה', 'KICK'] },   // [K] קפיצה, [N] קדימה, [M] אחורה, [O] בעיטה
+    sas: { dir: ARROWS, fire: 'G', label: ['רימון', 'GRENADE'] },   // [F] (טיל) נשאר במקלדת
     mine: { dir: ARROWS, fire: 'space', label: ['רווח', 'SPACE'] }   // קלטת שלי בשפת מכונה (shelf.js). עם המתג דלוק, הכפתור שולח את כפתור הג'ויסטיק
   };
   const css = document.createElement('style');
