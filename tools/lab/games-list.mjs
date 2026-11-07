@@ -2,10 +2,13 @@
 // נבנית מ-games.js ומ-shelf.js, כך שמשחק חדש במדף נכנס לרשימה לבד.
 // שלושה חלקים: משחקים מהתקופה (לפי סדר המגירות), משחקים חדשים מהקהילה, ומה שכתבנו בעצמנו.
 // הרצה: node tools/lab/games-list.mjs          (בונה מחדש)
-//        node tools/lab/games-list.mjs --check  (בודק שהדפים מעודכנים; חלק מ-npm test)
+//        node tools/lab/games-list.mjs --check  (בודק שהדפים וה-PDF מעודכנים; חלק מ-npm test)
+// לכל דף יש גם PDF מוכן להורדה (גונן, 7.11: כפתור ההדפסה לא עבד באייפון). ה-PDF נבנה מהדף עצמו בדפדפן (playwright),
+// ולידו נשמרת טביעת האצבע של הדף שממנו נבנה (.sha), כדי ש---check יידע אם ה-PDF ישן.
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
+import { createHash } from 'node:crypto';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const check = process.argv.includes('--check');
@@ -32,6 +35,8 @@ const rowsOf = key => order.filter(id => G.games[id].drawer === key)
 const firstSentence = s => (s.match(/^.*?[.!?](?=\s|$)/) || [s])[0];
 
 let bad = 0;
+const PDF = 'dragon1982-games.pdf';
+const toPdf = [];
 for (const en of [false, true]) {
   const lang = en ? 'en' : 'he', base = en ? '/en/lab/1982/' : '/lab/1982/';
   const t = (h, e) => en ? e : h;
@@ -45,8 +50,8 @@ for (const en of [false, true]) {
   let n = 0;
   const periodRows = period.map(d => {
     const ids = rowsOf(d.key); if (!ids.length) return '';
-    return `<tr class="grp"><th colspan="5" scope="rowgroup">${dname(d)} <span class="cnt">${t(ids.length + ' משחקים', ids.length + (ids.length === 1 ? ' game' : ' games'))}</span></th></tr>\n` +
-      ids.map(id => { const g = G.games[id]; return `<tr><td class="num">${++n}</td><td class="name">${link(id)}</td><td>${L(author(id))}</td><td class="topic">${en ? esc(g.tag[1]) : esc(g.tag[0])}</td><td class="yr">${L(g.year)}</td></tr>`; }).join('\n');
+    return `<tbody class="drawer"><tr class="grp"><th colspan="5" scope="rowgroup">${dname(d)} <span class="cnt">${t(ids.length + ' משחקים', ids.length + (ids.length === 1 ? ' game' : ' games'))}</span></th></tr>\n` +
+      ids.map(id => { const g = G.games[id]; return `<tr><td class="num">${++n}</td><td class="name">${link(id)}</td><td>${L(author(id))}</td><td class="topic">${en ? esc(g.tag[1]) : esc(g.tag[0])}</td><td class="yr">${L(g.year)}</td></tr>`; }).join('\n') + '</tbody>';
   }).join('\n');
   const comm = rowsOf('community');
   const commRows = comm.map((id, i) => { const g = G.games[id]; return `<tr><td class="num">${i + 1}</td><td class="name">${link(id)}</td><td>${L(author(id))}</td><td class="topic">${en ? esc(g.tag[1]) : esc(g.tag[0])}</td><td class="yr">${L(g.year)}</td></tr>`; }).join('\n');
@@ -89,7 +94,7 @@ h1 { font-size: clamp(24px, 5vw, 34px); margin: 14px 0 6px; }
 .stat b { display: block; font-size: 26px; color: #ffd166; }
 nav.top { display: flex; gap: 14px; justify-content: space-between; flex-wrap: wrap; padding: 14px 0; font-size: 14px; }
 nav.top a { color: var(--link); }
-button.print { font: inherit; font-size: 14px; background: var(--card); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 4px 12px; cursor: pointer; }
+a.print { display: inline-block; text-decoration: none; font-size: 14px; background: var(--card); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 4px 12px; cursor: pointer; }
 h2 { font-size: 22px; margin: 28px 0 4px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 h2 .tag { font-size: 12px; color: #fff; background: var(--red); border-radius: 99px; padding: 2px 10px; }
 h2 .tag.g { background: var(--green); }
@@ -116,6 +121,7 @@ td.yr { font-variant-numeric: tabular-nums; }
   thead th, tr.grp th, tbody tr:nth-child(even) td { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   thead { display: table-header-group; }
   tr { break-inside: avoid; }
+  tbody.drawer, .keep { break-inside: avoid; }
   .tbl { overflow: visible; border: 0; }
   td.name a { border: 0; }
 }
@@ -133,16 +139,16 @@ td.yr { font-variant-numeric: tabular-nums; }
 </div>
 </header>
 <div class="wrap">
-<nav class="top"><a href="${base}">${t('← חזרה למכונה', '← Back to the machine')}</a><span><button class="print" type="button" onclick="print()">${t('🖨 הדפסה או שמירה כ-PDF', '🖨 Print or save as PDF')}</button> &nbsp; <a href="${en ? '/lab/1982/games/' : '/en/lab/1982/games/'}" hreflang="${en ? 'he' : 'en'}">${en ? 'עברית' : 'English'}</a></span></nav>
+<nav class="top"><a href="${base}">${t('← חזרה למכונה', '← Back to the machine')}</a><span><a class="print" href="./${PDF}" download>${t('⬇️ הורדת הרשימה כ-PDF', '⬇️ Download the list as PDF')}</a> &nbsp; <a href="${en ? '/lab/1982/games/' : '/en/lab/1982/games/'}" hreflang="${en ? 'he' : 'en'}">${en ? 'עברית' : 'English'}</a></span></nav>
 
 <h2>${t(`${periodCount} משחקים מהתקופה`, `${periodCount} games from the time`)} <span class="tag">${t('במדף', 'on the shelf')}</span></h2>
 <p class="lead">${t('מסודרים לפי המגירות במדף של המכונה. לוחצים על שם של משחק כדי לפתוח אותו.', 'In the order of the drawers on the machine\'s shelf. Click a game\'s name to open it.')}</p>
 <div class="tbl"><table>
 <thead><tr><th>#</th><th>${t('שם', 'Name')}</th><th>${t('מחבר', 'Author')}</th><th>${t('נושא', 'Subject')}</th><th>${t('שנה', 'Year')}</th></tr></thead>
-<tbody>
 ${periodRows}
-</tbody></table></div>
+</table></div>
 
+<div class="keep">
 <h2>${t(`${comm.length} משחקים חדשים מהקהילה`, `${comm.length} new games from the community`)} <span class="tag">${t('במדף', 'on the shelf')}</span></h2>
 <p class="lead">${t('נכתבו בשנים האחרונות על ידי חובבי <span dir="ltr">Dragon</span>.', 'Written in recent years by Dragon fans.')}</p>
 <div class="tbl"><table>
@@ -151,6 +157,8 @@ ${periodRows}
 ${commRows}
 </tbody></table></div>
 
+</div>
+<div class="keep">
 <h2>${t(`${ours.length} המשחקים שכתבנו`, `${ours.length} games we wrote`)} <span class="tag g">${t('מתוצרת <span dir="ltr">Dragon 1982</span>', 'Made by Dragon 1982')}</span></h2>
 <p class="lead">${t('כתבנו אותם ב-2026, בשביל המכונה הזאת.', 'We wrote them in 2026, for this machine.')}</p>
 <div class="tbl"><table>
@@ -159,12 +167,39 @@ ${commRows}
 ${oursRows}
 </tbody></table></div>
 </div>
+</div>
 </body>
 </html>
 `;
   const out = join(root, base.slice(1), 'games', 'index.html');
-  if (check) { let old = ''; try { old = await readFile(out, 'utf8'); } catch {} if (old !== html) { bad++; console.log('out of date: ' + base + 'games/'); } }
-  else { await mkdir(join(root, base.slice(1), 'games'), { recursive: true }); await writeFile(out, html); }
+  const sha = createHash('sha256').update(html).digest('hex'), shaFile = join(root, base.slice(1), 'games', PDF + '.sha');
+  if (check) {
+    let old = ''; try { old = await readFile(out, 'utf8'); } catch {} if (old !== html) { bad++; console.log('out of date: ' + base + 'games/'); }
+    let oldSha = ''; try { oldSha = (await readFile(shaFile, 'utf8')).trim(); await readFile(join(root, base.slice(1), 'games', PDF)); } catch {}
+    if (oldSha !== sha) { bad++; console.log('PDF out of date: ' + base + 'games/' + PDF); }
+  } else {
+    await mkdir(join(root, base.slice(1), 'games'), { recursive: true }); await writeFile(out, html);
+    toPdf.push({ url: U + base + 'games/', html, pdf: join(root, base.slice(1), 'games', PDF), shaFile, sha });
+  }
+}
+if (toPdf.length) {
+  // הדף נטען בכתובת האמיתית שלו (התשובה מגיעה מכאן, לא מהאתר), כדי שהקישורים בתוך ה-PDF יובילו לאתר
+  const { chromium } = await import(join(root, 'tools/node_modules/playwright-core/index.mjs'));
+  const killer = setTimeout(() => { console.log('PDF: hard time limit'); process.exit(2); }, 120000);
+  const browser = await chromium.launch({ channel: 'chrome' });
+  try {
+    for (const j of toPdf) {
+      const page = await browser.newPage();
+      await page.route(j.url, r => r.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body: j.html }));
+      await page.goto(j.url, { waitUntil: 'networkidle' });
+      await page.evaluate(() => document.fonts.ready);
+      await page.pdf({ path: j.pdf, format: 'A4', printBackground: true, margin: { top: '12mm', bottom: '14mm', left: '10mm', right: '10mm' },
+        displayHeaderFooter: true, headerTemplate: '<span></span>',
+        footerTemplate: '<div style="width:100%;text-align:center;font-size:8px;color:#999;font-family:Arial">dragon1982.com · <span class="pageNumber"></span> / <span class="totalPages"></span></div>' });
+      await writeFile(j.shaFile, j.sha + '\n');
+      await page.close();
+    }
+  } finally { await browser.close(); clearTimeout(killer); }
 }
 if (check && bad) { console.log('the games list is out of date: run node tools/lab/games-list.mjs'); process.exit(1); }
 console.log(check ? 'the games list is up to date' : 'built the games list (he + en)');
