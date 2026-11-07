@@ -143,6 +143,16 @@
       ['Rob Lech & Troy Dahlman (The Rugby Circle) · Tom Mix Software / Microdeal, 1983–84', 'https://www.lcurtisboyle.com/nitros9/approvals/the_rugby_circle.txt', null, null, 'love']],
     ['nerble', 'Nerble Force', 'Nerble Force', 'a',
       ['David Crandall · Computerware / Microdeal, 1983–85', 'https://www.lcurtisboyle.com/nitros9/approvals/approvals.html', null, null, 'love']],
+    // Shenanigans,‏ Sea Search ו-Trekboer של Bob Withers ו-Stephen O'Dea (Mark Data Products, 1983–84; ל-Dragon מ-Dragon Data ומ-Microdeal):
+    // אותו מכתב של Withers בארכיון CLEAR, שמונה את שלושתם (גונן, 7.11: "מאשר את שלושתם"). הקלטות כמו שהן. Sea Search יצא ב-Dragon בשמו
+    // הראשון, Sea Quest (כך כתוב במסך הפתיחה, ובקרדיטים Stephen ו-Kathy O'Dea, ‏Bob ו-Dollie Withers); השם הוחלף בגלל משחק של Activision.
+    // שניים הראשונים: CLOADM ואז EXEC. ‏Trekboer מתחיל לבד. שמירה וטעינה של משחק נבדקו במכונה (7.11)
+    ['shenan', 'Shenanigans', 'Shenanigans', 'm',
+      ['Bob Withers & Stephen O\'Dea · Mark Data Products / Dragon Data, 1983', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']],
+    ['seasearch', 'Sea Search', 'Sea Search', 'm',
+      ['Stephen & Kathy O\'Dea, Bob & Dollie Withers · Mark Data Products / Dragon Data, 1983', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']],
+    ['trekboer', 'Trekboer', 'Trekboer', 'a',
+      ['Stephen O\'Dea & Bob Withers · Mark Data Products / Microdeal, 1984–85', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']],
     // The Vortex Factor של Bob Withers ו-Stephen O'Dea (Mark Data Products, 1985; ל-Dragon מ-Microdeal): הרשות של Withers במכתב שבארכיון CLEAR
     // (23.1.1996: "you have my permission to distribute them"; גונן קיבל את מכתבי CLEAR כמקור 6.11). הקלטת של Microdeal כמו שהיא. מתחילה לבד
     ['vortex', 'The Vortex Factor', 'The Vortex Factor', 'a',
@@ -734,6 +744,45 @@
         'On the title screen press a key. It says JOYSTICK CONTROL SET: press [K] to play on the keyboard, then the number of players, [1] to [6].',
         'On the keyboard: [K] jumps, [O] kicks, [N] advances and [M] retreats. The inlay\'s advice: kicking the rocks scores most, and timing is everything.']
     },
+    // נבדק במכונה (7.11): הטעינה, מסך הפתיחה, הדירה, ‏SCORE,‏ SAVE GAME ו-LOAD GAME. העלילה לפי האתר של L. Curtis Boyle, הפקודות כמו בשאר הסדרה
+    shenan: {
+      he: ['הרפתקה מצחיקה עם תמונה לכל מקום: מחפשים את סיר הזהב שבקצה הקשת. מתחילים בדירה קטנה, עם מיטה ישנה, שידה וחלון סגור.',
+        'כשמופיע OK מקלידים {EXEC}. מופיע מסך הפתיחה של Mark Data Products: לוחצים מקש, ומופיעה הדירה.',
+        'כותבים פועל ושם עצם באנגלית ולוחצים [ENTER], למשל {GET BED} או {EXAMINE DRESSER}. יש קיצורים: [N] [S] [E] [W] לכיוונים, [U] למעלה, [D] למטה, [I] מה בידיים, ו-[L] להסתכל.',
+        'מתחת לתמונה כתוב מה רואים. בודקים כל חפץ: לא הכול מופיע בתמונה, והרבה רמזים מסתתרים בתיאורים.',
+        '{SAVE GAME} שומר את המשחק על הקלטת, ו-{LOAD GAME} ממשיך ממנו. {SCORE} מראה כמה מהלכים עשיתם.'],
+      en: ['A funny adventure with a picture for every place: you are after the pot of gold at the end of the rainbow. You start in a small flat, with an old bed, a dresser and a closed window.',
+        'When OK appears type {EXEC}. The Mark Data Products title screen appears: press a key, and the flat appears.',
+        'Type a verb and a noun in English and press [ENTER], for example {GET BED} or {EXAMINE DRESSER}. There are short forms: [N] [S] [E] [W] for directions, [U] up, [D] down, [I] inventory and [L] look.',
+        'Under the picture it says what you see. Examine everything: not all of it shows in the picture, and many clues hide in the descriptions.',
+        '{SAVE GAME} saves your game on tape, and {LOAD GAME} carries on from it. {SCORE} shows how many moves you have made.']
+    },
+    // נבדק במכונה (7.11): הטעינה, מסך הפתיחה (Sea Quest), החוף, ‏INVENTORY. העלילה לפי האתר של L. Curtis Boyle
+    seasearch: {
+      he: ['הרפתקה מתחת לים ולידו, עם תמונה לכל מקום: אוספים אוצרים ועוברים מכשולים. יש בה מפלים וכרישים שזזים על המסך. מתחילים על חוף חולי.',
+        'כשמופיע OK מקלידים {EXEC}. מסך הפתיחה, עם השם Sea Quest, מצטייר לאט: מחכים לו ולוחצים מקש, ואחר כך [ENTER].',
+        'כותבים פועל ושם עצם באנגלית ולוחצים [ENTER], למשל {READ SIGN} או {GO EAST}. יש קיצורים: [N] [S] [E] [W] לכיוונים, [U] למעלה, [D] למטה, [I] מה בידיים, ו-[L] להסתכל.',
+        'מתחת לתמונה כתוב לאן אפשר ללכת ומה רואים. בודקים כל חפץ, וקוראים כל שלט.',
+        '{SAVE GAME} שומר את המשחק על הקלטת, ו-{LOAD GAME} ממשיך ממנו. {SCORE} מראה כמה מהלכים עשיתם.'],
+      en: ['An adventure by and under the sea, with a picture for every place: collect treasures and get past obstacles. It has waterfalls and sharks that move on the screen. You start on a sandy beach.',
+        'When OK appears type {EXEC}. The title screen, named Sea Quest, draws slowly: wait for it and press a key, then [ENTER].',
+        'Type a verb and a noun in English and press [ENTER], for example {READ SIGN} or {GO EAST}. There are short forms: [N] [S] [E] [W] for directions, [U] up, [D] down, [I] inventory and [L] look.',
+        'Under the picture it says where you can go and what you see. Examine everything, and read every sign.',
+        '{SAVE GAME} saves your game on tape, and {LOAD GAME} carries on from it. {SCORE} shows how many moves you have made.']
+    },
+    // נבדק במכונה (7.11): הטעינה, מסך הפתיחה, חדר הבקרה, ‏LOOK ו-INVENTORY. הפקודות והעלילה לפי ההוראות המקוריות
+    trekboer: {
+      he: ['הרפתקה בחלל עם תמונה לכל מקום. המאה ה-21: וירוס קטלני מאיים על כדור הארץ, ואתם על החללית Trekboer, בדרך לחפש תרופה בקצוות החלל. לפי ההוראות, שם החללית הוא הרמז הראשון.',
+        'הטעינה לוקחת כארבע דקות ומתחילה לבד. במסך הפתיחה לוחצים מקש, ומופיע חדר הבקרה.',
+        'כותבים פועל ושם עצם באנגלית ולוחצים [ENTER], למשל {GET BOX}, {EXAMINE BOX}, {UNLOCK DOOR} או {GO NORTH}. {GET ALL} לוקח את כל מה שאפשר, ו-{PUT ALL} מניח הכול.',
+        'יש קיצורים: [N] [S] [E] [W] לכיוונים, [U] למעלה, [D] למטה, [G] לקחת, [P] להניח, [I] מה בידיים, ו-[L] להסתכל. לא תמיד הכיוונים הם הדרך היחידה: בודקים כל חפץ, וגם מה שלא מופיע בתמונה.',
+        '{SAVE GAME} שומר את המשחק על הקלטת, ו-{LOAD GAME} ממשיך ממנו. {SCORE} מראה כמה מהלכים עשיתם.'],
+      en: ['A space adventure with a picture for every place. The 21st century: a deadly virus threatens Earth, and you are aboard the starship Trekboer, off to search the far reaches of space for a cure. The instructions say the ship\'s name is the first clue.',
+        'Loading takes about four minutes and starts by itself. On the title screen press a key, and the control room appears.',
+        'Type a verb and a noun in English and press [ENTER], for example {GET BOX}, {EXAMINE BOX}, {UNLOCK DOOR} or {GO NORTH}. {GET ALL} picks up everything you can carry, and {PUT ALL} puts it all down.',
+        'There are short forms: [N] [S] [E] [W] for directions, [U] up, [D] down, [G] get, [P] put, [I] inventory and [L] look. Compass directions are not always the only way: examine everything, including what is not in the picture.',
+        '{SAVE GAME} saves your game on tape, and {LOAD GAME} carries on from it. {SCORE} shows how many moves you have made.']
+    },
     // נבדק במכונה (6.11): הטעינה, מסך הפתיחה, המסדרון במוזיאון, ‏GO SOUTH ו-TAKE INVENTORY. הפקודות לפי העטיפה המקורית, העלילה לפי Solution Archive
     vortex: {
       he: ['הרפתקה של מסע בזמן, עם תמונה לכל מקום. מתחילים במוזיאון גדול עם הרבה תצוגות. צריך למצוא תשעה אוצרים, הפזורים בתקופות שונות, ולהחזיר אותם לחדר העבודה של אוצר המוזיאון.',
@@ -1013,7 +1062,10 @@
     tangle: ['כשמופיע OK מקלידים {EXEC}. אחרי מסך הפתיחה לוחצים [1] למשחק חדש.', 'When OK appears type {EXEC}. After the title screen press [1] for a new game.'],
     chameleon: ['הטעינה מתחילה לבד. ל-SELECT 1 OR 2 PLAYERS לוחצים [1], ול-SELECT LEVEL מספר מ-[1] עד [4].', 'The game starts by itself. At SELECT 1 OR 2 PLAYERS press [1], and at SELECT LEVEL a number from [1] to [4].'],
     ninja: ['כשמופיע OK מקלידים {EXEC}. במסך הפתיחה לוחצים מקש, אחר כך [K] (מקלדת) ו-[1] לשחקן אחד.', 'When OK appears type {EXEC}. On the title screen press a key, then [K] (keyboard) and [1] for one player.'],
-    vortex: ['הטעינה לוקחת כארבע דקות ומתחילה לבד. במסך של Mark Data Products לוחצים מקש.', 'Loading takes about four minutes and starts by itself. On the Mark Data Products screen press a key.'],
+    shenan: ['כשמופיע OK מקלידים {EXEC}. במסך הפתיחה של Mark Data Products לוחצים מקש.', 'When OK appears type {EXEC}. On the Mark Data Products title screen press a key.'],
+    seasearch: ['כשמופיע OK מקלידים {EXEC}. מסך הפתיחה מצטייר לאט: מחכים לו, לוחצים מקש ואחר כך [ENTER].', 'When OK appears type {EXEC}. The title screen draws slowly: wait for it, press a key, then [ENTER].'],
+    trekboer: ['המשחק מתחיל לבד בסוף הטעינה. במסך הפתיחה לוחצים מקש.', 'The game starts by itself when loading ends. On the title screen press a key.'],
+    vortex: ['המשחק מתחיל לבד בסוף הטעינה. במסך של Mark Data Products לוחצים מקש.', 'The game starts by itself when loading ends. On the Mark Data Products screen press a key.'],
     digit: ['הטעינה לוקחת כשתי דקות. כשמופיע OK מקלידים {EXEC}. במסך הפתיחה לוחצים על כפתור הג\'ויסטיק, [רווח].', 'Loading takes about two minutes. When OK appears type {EXEC}. On the title screen press the joystick button, [Space].'],
     brickout: ['כשמופיע OK מקלידים {EXEC}. במסך הפתיחה לוחצים על מספר, 0 עד 9, או על הכפתור.', 'When OK appears type {EXEC}. On the title screen press a number, 0 to 9, or the button.'],
     snaker: ['כשמופיע OK מקלידים {RUN}. כשהמנגינה נגמרת לוחצים [ENTER].', 'When OK appears type {RUN}. When the tune ends press [ENTER].'],
@@ -1066,6 +1118,9 @@
     tangle: ['הרפתקה ביער עם חמש דמויות: עוצרים את Schark לפני שהוא כורת את היער. בחיצים ובפקודות.', 'A woodland adventure with five characters: stop Schark before he cuts down the woods. Arrows and typed commands.'],
     chameleon: ['חללית שמחליפה צבע תופסת פצצות של חומר ושל אנטי-חומר לפני שהן נוחתות. בג\'ויסטיק.', 'A colour-changing ship catches bombs of matter and anti-matter before they land. Joystick.'],
     ninja: ['לוחם נינג\'ה בועט בסלעים וקופץ מעל בורות, כדורי אש וחיצים, חגורה אחרי חגורה. במקלדת.', 'A ninja kicks rocks and jumps holes, fireballs and arrows, belt after belt. Keyboard.'],
+    shenan: ['הרפתקה מצחיקה עם תמונות: מחפשים את סיר הזהב שבקצה הקשת. בפקודות באנגלית.', 'A funny adventure with pictures: find the pot of gold at the end of the rainbow. English commands.'],
+    seasearch: ['הרפתקה עם תמונות ליד הים ומתחתיו: אוצרים, מפלים וכרישים. בפקודות באנגלית.', 'An adventure with pictures by and under the sea: treasures, waterfalls and sharks. English commands.'],
+    trekboer: ['הרפתקה עם תמונות בחלל: מחפשים תרופה לווירוס שמאיים על כדור הארץ. בפקודות באנגלית.', 'An adventure with pictures in space: find a cure for a virus that threatens Earth. English commands.'],
     vortex: ['הרפתקה עם תמונות: מסע בזמן מתוך מוזיאון, ותשעה אוצרים להחזיר. בפקודות באנגלית.', 'An adventure with pictures: time travel from a museum, and nine treasures to bring back. English commands.'],
     digit: ['חופרים במערות, אוספים יהלומים ובורחים מאבנים נופלות וממפלצות: 25 מערות. בג\'ויסטיק.', 'Dig through caves, collect diamonds and escape falling stones and monsters: 25 caves. Joystick.'],
     brickout: ['שוברים לבנים בכדור ובמחבט, ותופסים אותיות שנופלות: 25 שלבים. בעכבר, כמו ידית.', 'Break bricks with a ball and paddle, and catch the falling letters: 25 levels. Mouse, like a paddle.'],

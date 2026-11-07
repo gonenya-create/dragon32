@@ -71,6 +71,16 @@ window.D32_GAMES = {
       ]
     },
     {
+      "key": "withers",
+      "he": "ההרפתקאות של Bob Withers",
+      "en": "Bob Withers' adventures",
+      "years": "1983–85",
+      "note": [
+        "Bob Withers ו-Stephen O'Dea כתבו ב-Mark Data Products סדרה של הרפתקאות עם תמונות ל-Color Computer, בעזרת Kathy O'Dea ו-Dollie Withers. ל-Dragon הוציאו אותן Dragon Data ו-Microdeal. ב-1996 כתב Withers שמותר להפיץ אותן. כאן ברשותו.",
+        "Bob Withers and Stephen O'Dea wrote a series of adventures with pictures for the Color Computer at Mark Data Products, with help from Kathy O'Dea and Dollie Withers. Dragon Data and Microdeal published them for the Dragon. In 1996 Withers wrote that they may be distributed. Here with his permission."
+      ]
+    },
+    {
       "key": "more",
       "he": "עוד משחקים מאותה תקופה",
       "en": "More games from the time",
@@ -1807,9 +1817,117 @@ window.D32_GAMES = {
         "link": "https://archive.worldofdragon.org/browse/?downloads/Software/Dragon/Programmers%20Guild/Ninja%20Warrior"
       }
     },
+    "shenan": {
+      "slug": "shenanigans",
+      "drawer": "withers",
+      "year": "1983",
+      "tag": [
+        "הרפתקה",
+        "adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כשלוש דקות",
+        "about three minutes"
+      ],
+      "about": {
+        "he": [
+          "Bob Withers ו-Stephen O'Dea כתבו אותו ב-Mark Data Products. זו ההרפתקה המקורית הראשונה שלהם בסדרת ההרפתקאות עם התמונות, עם פחות אנימציה מהבאות אחריה ויותר הומור. ל-Dragon הוציאה אותו Dragon Data.",
+          "ב-1996 כתב Withers שמותר להפיץ את המשחקים שלו."
+        ],
+        "en": [
+          "Bob Withers and Stephen O'Dea wrote it at Mark Data Products. It was their first original adventure in the series with pictures, with less animation than the later ones and more humour. Dragon Data published it for the Dragon.",
+          "In 1996 Withers wrote that his games may be distributed."
+        ]
+      },
+      "icon": [
+        76,
+        0,
+        116
+      ]
+    },
+    "seasearch": {
+      "slug": "sea-search",
+      "drawer": "withers",
+      "year": "1983",
+      "tag": [
+        "הרפתקה",
+        "adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כשלוש דקות",
+        "about three minutes"
+      ],
+      "about": {
+        "he": [
+          "Stephen ו-Bob כתבו אותו ב-Mark Data Products, ו-Kathy O'Dea ו-Dollie Withers תכננו איתם את המשחק. בהתחלה קראו לו Sea Quest, ובשם הזה הוציאה אותו Dragon Data ל-Dragon (כך כתוב במסך הפתיחה). אחר כך הוחלף השם ל-Sea Search, בגלל משחק של Activision.",
+          "ב-1996 כתב Withers שמותר להפיץ את המשחקים שלו, ובהם Sea Search."
+        ],
+        "en": [
+          "Stephen and Bob wrote it at Mark Data Products, and Kathy O'Dea and Dollie Withers designed the game with them. It was first called Sea Quest, and Dragon Data published it for the Dragon under that name (it is on the title screen). The name later changed to Sea Search, because of an Activision game.",
+          "In 1996 Withers wrote that his games, Sea Search among them, may be distributed."
+        ]
+      },
+      "icon": [
+        140,
+        0,
+        112
+      ]
+    },
+    "trekboer": {
+      "slug": "trekboer",
+      "drawer": "withers",
+      "year": "1984",
+      "tag": [
+        "הרפתקה",
+        "adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כארבע דקות",
+        "about four minutes"
+      ],
+      "about": {
+        "he": [
+          "Stephen O'Dea ו-Bob Withers כתבו אותו ב-Mark Data Products, עם רובוטים ומסכים שזזים בתמונות. ל-Dragon הוציאה אותו Microdeal ב-1985.",
+          "Dragon User כתב עליו ביקורת בדצמבר 1985, חילק אותו כפרס בתחרות, ופרסם עליו רמזים בטור ההרפתקאות שלו. ב-1996 כתב Withers שמותר להפיץ את המשחקים שלו."
+        ],
+        "en": [
+          "Stephen O'Dea and Bob Withers wrote it at Mark Data Products, with robots and screens that move in the pictures. Microdeal published it for the Dragon in 1985.",
+          "Dragon User reviewed it in December 1985, gave it away as a competition prize, and ran hints for it in its adventure column. In 1996 Withers wrote that his games may be distributed."
+        ]
+      },
+      "icon": [
+        72,
+        0,
+        112
+      ],
+      "cover": {
+        "src": "/lab/1982/covers/trekboer.jpg",
+        "credit": [
+          "העטיפה המקורית של Microdeal. סריקה:",
+          "The original Microdeal cover. Scan:"
+        ],
+        "from": [
+          "ארכיון World of Dragon",
+          "World of Dragon archive"
+        ],
+        "link": "https://archive.worldofdragon.org/browse/downloads/Software/Dragon/Microdeal/Trekboer/"
+      }
+    },
     "vortex": {
       "slug": "the-vortex-factor",
-      "drawer": "more",
+      "drawer": "withers",
       "year": "1985",
       "tag": [
         "הרפתקה",
