@@ -1,0 +1,181 @@
+<!doctype html>
+<!-- נוצר ב-tools/lab/games-list.mjs מ-games.js ו-shelf.js. לא לערוך ביד. -->
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>כל המשחקים במדף — Dragon 1982</title>
+<meta name="description" content="58 משחקים מקוריים מימי ה-Dragon 32, שרצים במכונה באישור היוצרים: שם, מחבר, נושא, שנה ומדף.">
+<meta property="og:title" content="כל המשחקים במדף — Dragon 1982">
+<meta property="og:description" content="58 משחקים מקוריים מימי ה-Dragon 32, שרצים במכונה באישור היוצרים: שם, מחבר, נושא, שנה ומדף.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dragon1982.com/lab/1982/games/">
+<link rel="canonical" href="https://dragon1982.com/lab/1982/games/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/lab/1982/games/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/lab/1982/games/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;700&amp;family=Press+Start+2P&amp;display=swap">
+<style>
+:root { --ink:#1d1b26; --bg:#fbfaf6; --card:#fff; --band:#f6f3ec; --line:#e2ddd0; --muted:#7d7869; --grp:#efeaf8; --grp-ink:#4a3d70; --head:#1d1b26; --head-ink:#fff; --link:#2a5db0; --red:#c8102e; --green:#2f8f4e; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ink:#ece9f2; --bg:#14121b; --card:#1c1a25; --band:#211f2b; --line:#2f2c3b; --muted:#9a95aa; --grp:#2a2440; --grp-ink:#cfc3f2; --head:#000; --head-ink:#fff; --link:#8fb4ff; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: "IBM Plex Sans Hebrew", Arial, sans-serif; font-size: 15px; line-height: 1.45; }
+.wrap { max-width: 980px; margin: 0 auto; padding: 0 16px 48px; }
+header.hero { background: linear-gradient(160deg,#16141f 0%,#2a2238 100%); color: #fff; padding: 28px 16px 24px; text-align: center; position: relative; }
+header.hero::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 6px; background: repeating-linear-gradient(90deg,var(--red) 0 25%,#ffd166 25% 50%,var(--green) 50% 75%,#3a7bd5 75% 100%); }
+.pix { font-family: "Press Start 2P", monospace; color: #7CFC8A; font-size: clamp(16px, 4vw, 26px); text-shadow: 0 0 12px rgba(124,252,138,.45); }
+h1 { font-size: clamp(24px, 5vw, 34px); margin: 14px 0 6px; }
+.sub { opacity: .85; margin: 0; }
+.stats { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
+.stat { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18); border-radius: 12px; padding: 10px 16px; min-width: 120px; }
+.stat b { display: block; font-size: 26px; color: #ffd166; }
+nav.top { display: flex; gap: 14px; justify-content: space-between; flex-wrap: wrap; padding: 14px 0; font-size: 14px; }
+nav.top a { color: var(--link); }
+button.print { font: inherit; font-size: 14px; background: var(--card); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 4px 12px; cursor: pointer; }
+h2 { font-size: 22px; margin: 28px 0 4px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+h2 .tag { font-size: 12px; color: #fff; background: var(--red); border-radius: 99px; padding: 2px 10px; }
+h2 .tag.g { background: var(--green); }
+.lead { color: var(--muted); margin: 0 0 12px; }
+.tbl { overflow-x: auto; border-radius: 10px; border: 1px solid var(--line); background: var(--card); }
+table { width: 100%; border-collapse: collapse; }
+thead th { background: var(--head); color: var(--head-ink); text-align: start; padding: 9px 10px; font-size: 14px; position: sticky; top: 0; }
+td { padding: 7px 10px; border-top: 1px solid var(--line); vertical-align: top; }
+tbody tr:nth-child(even):not(.grp) td { background: var(--band); }
+tr.grp th { background: var(--grp); color: var(--grp-ink); text-align: start; font-size: 16px; padding: 10px; border-top: 2px solid #5b4a8a; }
+tr.grp .cnt { font-weight: 400; font-size: 13px; opacity: .8; margin-inline-start: 8px; }
+td.num { color: var(--muted); width: 2.5em; text-align: center; font-variant-numeric: tabular-nums; }
+td.name { font-weight: 700; }
+td.name a { color: inherit; text-decoration: none; border-bottom: 1px dotted var(--muted); }
+td.name a:hover { color: var(--link); }
+td.topic, td.yr, td.lng { white-space: nowrap; }
+td.yr { font-variant-numeric: tabular-nums; }
+@media (max-width: 640px) { td, thead th { padding: 6px 6px; font-size: 13.5px; } td.topic { white-space: normal; } }
+@media print {
+  @page { size: A4; margin: 12mm; }
+  body { background: #fff; color: #000; font-size: 10.5pt; }
+  nav.top { display: none; }
+  header.hero { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  thead th, tr.grp th, tbody tr:nth-child(even) td { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  thead { display: table-header-group; }
+  tr { break-inside: avoid; }
+  .tbl { overflow: visible; border: 0; }
+  td.name a { border: 0; }
+}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="pix">DRAGON 32</div>
+<h1>כל המשחקים במדף</h1>
+<p class="sub">המשחקים שרצים ב<a href="/lab/1982/" style="color:#ffd166">מכונת ה-<span dir="ltr">Dragon</span></a>, כל אחד באישור היוצרים</p>
+<div class="stats">
+<div class="stat"><b>58</b>משחקים מהתקופה</div>
+<div class="stat"><b>2</b>משחקים מהקהילה</div>
+<div class="stat"><b>8</b>משחקים שכתבנו</div>
+</div>
+</header>
+<div class="wrap">
+<nav class="top"><a href="/lab/1982/">← חזרה למכונה</a><span><button class="print" type="button" onclick="print()">🖨 הדפסה או שמירה כ-PDF</button> &nbsp; <a href="/en/lab/1982/games/" hreflang="en">English</a></span></nav>
+
+<h2>58 משחקים מהתקופה <span class="tag">במדף</span></h2>
+<p class="lead">מסודרים לפי המגירות במדף של המכונה. לוחצים על שם של משחק כדי לפתוח אותו.</p>
+<div class="tbl"><table>
+<thead><tr><th>#</th><th>שם</th><th>מחבר</th><th>נושא</th><th>שנה</th></tr></thead>
+<tbody>
+<tr class="grp"><th colspan="5" scope="rowgroup">האגדות <span class="cnt">3 משחקים</span></th></tr>
+<tr><td class="num">1</td><td class="name"><a href="/lab/1982/the-king/"><span dir="ltr">The King</span></a></td><td><span dir="ltr">Chris Latham</span></td><td class="topic">פלטפורמות</td><td class="yr"><span dir="ltr">1983</span></td></tr>
+<tr><td class="num">2</td><td class="name"><a href="/lab/1982/buzzard-bait/"><span dir="ltr">Buzzard Bait</span></a></td><td><span dir="ltr">Rob Lech &amp; Troy Dahlman (The Rugby Circle)</span></td><td class="topic">פעולה</td><td class="yr"><span dir="ltr">1983</span></td></tr>
+<tr><td class="num">3</td><td class="name"><a href="/lab/1982/downland/"><span dir="ltr">Downland</span></a></td><td><span dir="ltr">Michael Aichlmayr</span></td><td class="topic">פלטפורמות</td><td class="yr"><span dir="ltr">1984</span></td></tr>
+<tr class="grp"><th colspan="5" scope="rowgroup">ההרפתקאות של <span dir="ltr">Scott Adams</span> <span class="cnt">13 משחקים</span></th></tr>
+<tr><td class="num">4</td><td class="name"><a href="/lab/1982/adventureland/"><span dir="ltr">Adventureland</span></a></td><td><span dir="ltr">Scott Adams</span></td><td class="topic">הרפתקת מילים</td><td class="yr"><span dir="ltr">1979</span></td></tr>
+<tr><td class="num">5</td><td class="name"><a href="/lab/1982/pirate-adventure/"><span dir="ltr">Pirate Adventure</span></a></td><td><span dir="ltr">Alexis Adams &amp; Scott Adams</span></td><td class="topic">הרפתקת מילים</td><td class="yr"><span dir="ltr">1979</span></td></tr>
+<tr><td class="num">6</td><td class="name"><a href="/lab/1982/secret-mission/"><span dir="ltr">Secret Mission</span></a></td><td><span dir="ltr">Scott Adams</span></td><td class="topic">הרפתקת מילים</td><td class="yr"><span dir="ltr">1979</span></td></tr>
+<tr><td class="num">7</td><td class="name"><a href="/lab/1982/voodoo-castle/"><span dir="ltr">Voodoo Castle</span></a></td><td><span dir="ltr">Alexis Adams &amp; Scott Adams</span></td><td class="topic">הרפתקת מילים</td><td class="yr"><span dir="ltr">1979</span></td></tr>
+<tr><td class="num">8</td><td class="name"><a href="/lab/1982/the-count/"><span dir="ltr">The Count</span></a></td><td><span dir="ltr">Scott Adams</span></td><td class="topic">הרפתקת מילים</td><td class="yr"><span dir="ltr">1979</span></td></tr>
+<tr><td class="num">9</td><td class="name"><a href="/lab/1982/strange-odyssey/"><span dir="ltr">Strange Odyssey</span></a></td><td><span dir="ltr">Scott Adams</span></td><td class="topic">הרפתקת מילים</td><td class="yr"><span dir="ltr">1979</span></td></tr>
+<tr><td class="num">10</td><td class="name"><a href="/lab/1982/mystery-fun-house/"><span dir="ltr">Mystery Fun House</span></a></td><td><span dir="ltr">Scott Adams</span></td><td class="topic">הרפתקת מילים</td><td class="yr"><span dir="ltr">1979</span></td></tr>
+<tr><td class="num">11</td><td class="name"><a href="/lab/1982/pyramid-of-doom/"><span dir="ltr">Pyramid of Doom</span></a></td><td><span dir="ltr">Alvin Files &amp; Scott Adams</span></td><td class="topic">הרפתקת מילים</td><td class="yr"><span dir="ltr">1979</span></td></tr>
+<tr><td class="num">12</td><td class="name"><a href="/lab/1982/ghost-town/"><span dir="ltr">Ghost Town</span></a></td><td><span dir="ltr">Scott Adams</span></td><td class="topic">הרפתקת מילים</td><td class="yr"><span dir="ltr">1980</span></td></tr>
+<tr><td class="num">13</td><td class="name"><a href="/lab/1982/savage-island-1/"><span dir="ltr">Savage Island Part 1</span></a></td><td><span dir="ltr">Scott Adams</span></td><td class="topic">הרפתקת מילים</td><td class="yr"><span dir="ltr">1981</span></td></tr>
+<tr><td class="num">14</td><td class="name"><a href="/lab/1982/savage-island-2/"><span dir="ltr">Savage Island Part 2</span></a></td><td><span dir="ltr">Scott Adams &amp; Rus Wetmore</span></td><td class="topic">הרפתקת מילים</td><td class="yr"><span dir="ltr">1981</span></td></tr>
+<tr><td class="num">15</td><td class="name"><a href="/lab/1982/golden-voyage/"><span dir="ltr">The Golden Voyage</span></a></td><td><span dir="ltr">William Demas &amp; Scott Adams</span></td><td class="topic">הרפתקת מילים</td><td class="yr"><span dir="ltr">1981</span></td></tr>
+<tr><td class="num">16</td><td class="name"><a href="/lab/1982/sorcerer-of-claymorgue-castle/"><span dir="ltr">Sorcerer of Claymorgue Castle</span></a></td><td><span dir="ltr">Scott Adams</span></td><td class="topic">הרפתקת מילים</td><td class="yr"><span dir="ltr">1984</span></td></tr>
+<tr class="grp"><th colspan="5" scope="rowgroup">המשחקים של <span dir="ltr">Ron Krebs</span> <span class="cnt">3 משחקים</span></th></tr>
+<tr><td class="num">17</td><td class="name"><a href="/lab/1982/black-sanctum/"><span dir="ltr">Black Sanctum</span></a></td><td><span dir="ltr">Ron Krebs</span></td><td class="topic">הרפתקת מילים</td><td class="yr"><span dir="ltr">1981</span></td></tr>
+<tr><td class="num">18</td><td class="name"><a href="/lab/1982/calixto-island/"><span dir="ltr">Calixto Island</span></a></td><td><span dir="ltr">Ron Krebs</span></td><td class="topic">הרפתקת מילים</td><td class="yr"><span dir="ltr">1981</span></td></tr>
+<tr><td class="num">19</td><td class="name"><a href="/lab/1982/cave-hunter/"><span dir="ltr">Cave Hunter</span></a></td><td><span dir="ltr">Ron Krebs</span></td><td class="topic">מבוך</td><td class="yr"><span dir="ltr">1981</span></td></tr>
+<tr class="grp"><th colspan="5" scope="rowgroup">המשחקים של <span dir="ltr">Ken Kalish</span> <span class="cnt">10 משחקים</span></th></tr>
+<tr><td class="num">20</td><td class="name"><a href="/lab/1982/escape/"><span dir="ltr">Escape</span></a></td><td><span dir="ltr">Ken Kalish</span></td><td class="topic">מבוך חידות</td><td class="yr"><span dir="ltr">1982</span></td></tr>
+<tr><td class="num">21</td><td class="name"><a href="/lab/1982/invaders-revenge/"><span dir="ltr">Invaders Revenge</span></a></td><td><span dir="ltr">Ken Kalish</span></td><td class="topic">יריות</td><td class="yr"><span dir="ltr">1982</span></td></tr>
+<tr><td class="num">22</td><td class="name"><a href="/lab/1982/el-diablero/"><span dir="ltr">El Diablero</span></a></td><td><span dir="ltr">Ken Kalish</span></td><td class="topic">הרפתקת טקסט</td><td class="yr"><span dir="ltr">1982</span></td></tr>
+<tr><td class="num">23</td><td class="name"><a href="/lab/1982/phantom-slayer/"><span dir="ltr">Phantom Slayer</span></a></td><td><span dir="ltr">Ken Kalish</span></td><td class="topic">מבוך תלת-ממדי</td><td class="yr"><span dir="ltr">1983</span></td></tr>
+<tr><td class="num">24</td><td class="name"><a href="/lab/1982/danger-ranger/"><span dir="ltr">Danger Ranger</span></a></td><td><span dir="ltr">Ken Kalish</span></td><td class="topic">ג'ויסטיק</td><td class="yr"><span dir="ltr">1983</span></td></tr>
+<tr><td class="num">25</td><td class="name"><a href="/lab/1982/cuthbert-in-the-jungle/"><span dir="ltr">Cuthbert in the Jungle</span></a></td><td><span dir="ltr">Ken Kalish</span></td><td class="topic">ג'ויסטיק</td><td class="yr"><span dir="ltr">1983</span></td></tr>
+<tr><td class="num">26</td><td class="name"><a href="/lab/1982/devil-assault/"><span dir="ltr">Devil Assault</span></a></td><td><span dir="ltr">Ken Kalish</span></td><td class="topic">יריות</td><td class="yr"><span dir="ltr">1983</span></td></tr>
+<tr><td class="num">27</td><td class="name"><a href="/lab/1982/starship-chameleon/"><span dir="ltr">Starship Chameleon</span></a></td><td><span dir="ltr">Ken Kalish</span></td><td class="topic">ארקייד</td><td class="yr"><span dir="ltr">1983</span></td></tr>
+<tr><td class="num">28</td><td class="name"><a href="/lab/1982/dungeon-raid/"><span dir="ltr">Dungeon Raid</span></a></td><td><span dir="ltr">Ken Kalish</span></td><td class="topic">ג'ויסטיק</td><td class="yr"><span dir="ltr">1983–84</span></td></tr>
+<tr><td class="num">29</td><td class="name"><a href="/lab/1982/athletyx/"><span dir="ltr">Athletyx</span></a></td><td><span dir="ltr">Ken Kalish</span></td><td class="topic">ג'ויסטיק</td><td class="yr"><span dir="ltr">1984–85</span></td></tr>
+<tr class="grp"><th colspan="5" scope="rowgroup">המשחקים של <span dir="ltr">Mike Hughey</span> <span class="cnt">4 משחקים</span></th></tr>
+<tr><td class="num">30</td><td class="name"><a href="/lab/1982/alcatraz-ii/"><span dir="ltr">Alcatraz II</span></a></td><td><span dir="ltr">Mike Hughey</span></td><td class="topic">בריחה מהכלא</td><td class="yr"><span dir="ltr">1982</span></td></tr>
+<tr><td class="num">31</td><td class="name"><a href="/lab/1982/williamsburg-adventure/"><span dir="ltr">Williamsburg Adventure</span></a></td><td><span dir="ltr">Mike Hughey</span></td><td class="topic">הרפתקת טקסט</td><td class="yr"><span dir="ltr">1982</span></td></tr>
+<tr><td class="num">32</td><td class="name"><a href="/lab/1982/grabber/"><span dir="ltr">Grabber</span></a></td><td><span dir="ltr">Mike Hughey</span></td><td class="topic">מבוך</td><td class="yr"><span dir="ltr">1983</span></td></tr>
+<tr><td class="num">33</td><td class="name"><a href="/lab/1982/draconian/"><span dir="ltr">Draconian</span></a></td><td><span dir="ltr">Mike Hughey</span></td><td class="topic">יריות בחלל</td><td class="yr"><span dir="ltr">1984</span></td></tr>
+<tr class="grp"><th colspan="5" scope="rowgroup">המשחקים של <span dir="ltr">Harry Whitehouse</span> <span class="cnt">5 משחקים</span></th></tr>
+<tr><td class="num">34</td><td class="name"><a href="/lab/1982/hang-it/"><span dir="ltr">Hang It!</span></a></td><td><span dir="ltr">Harry Whitehouse</span></td><td class="topic">מילים</td><td class="yr"><span dir="ltr">1983</span></td></tr>
+<tr><td class="num">35</td><td class="name"><a href="/lab/1982/deaths-head-hole/"><span dir="ltr">Death's Head Hole</span></a></td><td><span dir="ltr">Harry Whitehouse</span></td><td class="topic">הרפתקה</td><td class="yr"><span dir="ltr">1983</span></td></tr>
+<tr><td class="num">36</td><td class="name"><a href="/lab/1982/champions/"><span dir="ltr">Champions!</span></a></td><td><span dir="ltr">Harry Whitehouse</span></td><td class="topic">ניהול כדורגל</td><td class="yr"><span dir="ltr">1983</span></td></tr>
+<tr><td class="num">37</td><td class="name"><a href="/lab/1982/lionheart/"><span dir="ltr">Lionheart</span></a></td><td><span dir="ltr">Harry Whitehouse</span></td><td class="topic">הרפתקה</td><td class="yr"><span dir="ltr">1983</span></td></tr>
+<tr><td class="num">38</td><td class="name"><a href="/lab/1982/sas/"><span dir="ltr">SAS</span></a></td><td><span dir="ltr">Harry Whitehouse</span></td><td class="topic">פעולה</td><td class="yr"><span dir="ltr">1983</span></td></tr>
+<tr class="grp"><th colspan="5" scope="rowgroup">המשחקים של <span dir="ltr">John Morrison</span> <span class="cnt">3 משחקים</span></th></tr>
+<tr><td class="num">39</td><td class="name"><a href="/lab/1982/bonka/"><span dir="ltr">Bonka</span></a></td><td><span dir="ltr">John Morrison</span></td><td class="topic">סולמות</td><td class="yr"><span dir="ltr">1983</span></td></tr>
+<tr><td class="num">40</td><td class="name"><a href="/lab/1982/vultures/"><span dir="ltr">Vultures</span></a></td><td><span dir="ltr">John Morrison</span></td><td class="topic">יריות</td><td class="yr"><span dir="ltr">1983</span></td></tr>
+<tr><td class="num">41</td><td class="name"><a href="/lab/1982/maurice-minor/"><span dir="ltr">Maurice Minor</span></a></td><td><span dir="ltr">John Morrison</span></td><td class="topic">מרוצים</td><td class="yr"><span dir="ltr">1983</span></td></tr>
+<tr class="grp"><th colspan="5" scope="rowgroup">ההרפתקאות של <span dir="ltr">Bob Withers</span> <span class="cnt">4 משחקים</span></th></tr>
+<tr><td class="num">42</td><td class="name"><a href="/lab/1982/shenanigans/"><span dir="ltr">Shenanigans</span></a></td><td><span dir="ltr">Bob Withers &amp; Stephen O'Dea</span></td><td class="topic">הרפתקה</td><td class="yr"><span dir="ltr">1983</span></td></tr>
+<tr><td class="num">43</td><td class="name"><a href="/lab/1982/sea-search/"><span dir="ltr">Sea Search</span></a></td><td><span dir="ltr">Stephen &amp; Kathy O'Dea, Bob &amp; Dollie Withers</span></td><td class="topic">הרפתקה</td><td class="yr"><span dir="ltr">1983</span></td></tr>
+<tr><td class="num">44</td><td class="name"><a href="/lab/1982/trekboer/"><span dir="ltr">Trekboer</span></a></td><td><span dir="ltr">Stephen O'Dea &amp; Bob Withers</span></td><td class="topic">הרפתקה</td><td class="yr"><span dir="ltr">1984</span></td></tr>
+<tr><td class="num">45</td><td class="name"><a href="/lab/1982/the-vortex-factor/"><span dir="ltr">The Vortex Factor</span></a></td><td><span dir="ltr">Bob Withers &amp; Stephen O'Dea</span></td><td class="topic">הרפתקה</td><td class="yr"><span dir="ltr">1985</span></td></tr>
+<tr class="grp"><th colspan="5" scope="rowgroup">המשחקים של <span dir="ltr">Paul Garner</span> <span class="cnt">3 משחקים</span></th></tr>
+<tr><td class="num">46</td><td class="name"><a href="/lab/1982/starman-jones/"><span dir="ltr">Starman Jones</span></a></td><td><span dir="ltr">Paul Garner (landscape: P. L. Thomas)</span></td><td class="topic">פעולה</td><td class="yr"><span dir="ltr">1984</span></td></tr>
+<tr><td class="num">47</td><td class="name"><a href="/lab/1982/the-sword-and-the-sorcerer/"><span dir="ltr">The Sword and the Sorcerer</span></a></td><td><span dir="ltr">Paul Garner (graphics: B. M. Burrows)</span></td><td class="topic">הרפתקה</td><td class="yr"><span dir="ltr">1985</span></td></tr>
+<tr><td class="num">48</td><td class="name"><a href="/lab/1982/the-wizards-lair/"><span dir="ltr">The Wizard's Lair</span></a></td><td><span dir="ltr">Paul Garner</span></td><td class="topic">מבוך</td><td class="yr"><span dir="ltr">1985</span></td></tr>
+<tr class="grp"><th colspan="5" scope="rowgroup">עוד משחקים מאותה תקופה <span class="cnt">7 משחקים</span></th></tr>
+<tr><td class="num">49</td><td class="name"><a href="/lab/1982/ninja-warrior/"><span dir="ltr">Ninja Warrior</span></a></td><td><span dir="ltr">Charles Forsythe</span></td><td class="topic">ארקייד</td><td class="yr"><span dir="ltr">1983</span></td></tr>
+<tr><td class="num">50</td><td class="name"><a href="/lab/1982/tim-loves-cricket/"><span dir="ltr">Tim Love's Cricket</span></a></td><td><span dir="ltr">Tim Love</span></td><td class="topic">ספורט</td><td class="yr"><span dir="ltr">1984</span></td></tr>
+<tr><td class="num">51</td><td class="name"><a href="/lab/1982/tea-time/"><span dir="ltr">Tea Time</span></a></td><td><span dir="ltr">Adrian Eddleston</span></td><td class="topic">פעולה</td><td class="yr"><span dir="ltr">1984</span></td></tr>
+<tr><td class="num">52</td><td class="name"><a href="/lab/1982/star-spores/"><span dir="ltr">Star Spores</span></a></td><td><span dir="ltr">Dave Shadoff</span></td><td class="topic">יריות</td><td class="yr"><span dir="ltr">1984</span></td></tr>
+<tr><td class="num">53</td><td class="name"><a href="/lab/1982/nerble-force/"><span dir="ltr">Nerble Force</span></a></td><td><span dir="ltr">David Crandall</span></td><td class="topic">יריות</td><td class="yr"><span dir="ltr">1985</span></td></tr>
+<tr><td class="num">54</td><td class="name"><a href="/lab/1982/tanglewood/"><span dir="ltr">Tanglewood</span></a></td><td><span dir="ltr">Ian Murray-Watson</span></td><td class="topic">הרפתקה</td><td class="yr"><span dir="ltr">1986</span></td></tr>
+<tr><td class="num">55</td><td class="name"><a href="/lab/1982/dig-it/"><span dir="ltr">Dig-It</span></a></td><td><span dir="ltr">Rolf Michelsen</span></td><td class="topic">חפירה ויהלומים</td><td class="yr"><span dir="ltr">1986</span></td></tr>
+<tr class="grp"><th colspan="5" scope="rowgroup">משחקים של ה-<span dir="ltr">CoCo</span> שרצו על ה-<span dir="ltr">Dragon</span> <span class="cnt">3 משחקים</span></th></tr>
+<tr><td class="num">56</td><td class="name"><a href="/lab/1982/dungeons-of-daggorath/"><span dir="ltr">Dungeons of Daggorath</span></a></td><td><span dir="ltr">DynaMicro (Douglas J. Morgan, Phillip C. Landmeier, Keith Kiyohara)</span></td><td class="topic">מבוך בתלת-ממד</td><td class="yr"><span dir="ltr">1982</span></td></tr>
+<tr><td class="num">57</td><td class="name"><a href="/lab/1982/snaker/"><span dir="ltr">Snaker</span></a></td><td><span dir="ltr">Gary Ritchie</span></td><td class="topic">נחש בכביש</td><td class="yr"><span dir="ltr">1984</span></td></tr>
+<tr><td class="num">58</td><td class="name"><a href="/lab/1982/brickout/"><span dir="ltr">Brickout</span></a></td><td><span dir="ltr">Owen Stenseth</span></td><td class="topic">שבירת לבנים</td><td class="yr"><span dir="ltr">1987</span></td></tr>
+</tbody></table></div>
+
+<h2>2 משחקים חדשים מהקהילה <span class="tag">במדף</span></h2>
+<p class="lead">נכתבו בשנים האחרונות על ידי חובבי <span dir="ltr">Dragon</span>.</p>
+<div class="tbl"><table>
+<thead><tr><th>#</th><th>שם</th><th>מחבר</th><th>נושא</th><th>שנה</th></tr></thead>
+<tbody>
+<tr><td class="num">1</td><td class="name"><a href="/lab/1982/blockdown/"><span dir="ltr">Blockdown</span></a></td><td><span dir="ltr">Ciaran Anscomb</span></td><td class="topic">קוביות</td><td class="yr"><span dir="ltr">2021</span></td></tr>
+<tr><td class="num">2</td><td class="name"><a href="/lab/1982/dragontet/"><span dir="ltr">DragonTet</span></a></td><td><span dir="ltr">Salva Kantero</span></td><td class="topic">קוביות</td><td class="yr"><span dir="ltr">2025</span></td></tr>
+</tbody></table></div>
+
+<h2>8 המשחקים שכתבנו <span class="tag g">מתוצרת <span dir="ltr">Dragon 1982</span></span></h2>
+<p class="lead">כתבנו אותם ב-2026, בשביל המכונה הזאת.</p>
+<div class="tbl"><table>
+<thead><tr><th>#</th><th>שם</th><th>שפה</th><th>על מה</th></tr></thead>
+<tbody>
+<tr><td class="num">1</td><td class="name"><a href="/lab/1982/guess-the-number/">נחש את המספר</a></td><td class="lng"><span dir="ltr">BASIC</span></td><td>המחשב חושב על מספר בין 1 ל-100, ואתם מנחשים.</td></tr>
+<tr><td class="num">2</td><td class="name"><a href="/lab/1982/moon-lander/">נחיתה על הירח</a></td><td class="lng"><span dir="ltr">BASIC</span></td><td>נוחתים על הירח: בכל תור מחליטים כמה דלק לשרוף, ומנסים לנחות במהירות קטנה מ-5.</td></tr>
+<tr><td class="num">3</td><td class="name"><a href="/lab/1982/maths-quiz/">חידון חשבון</a></td><td class="lng"><span dir="ltr">BASIC</span></td><td>עשר שאלות חיבור וחיסור, ובסוף הציון.</td></tr>
+<tr><td class="num">4</td><td class="name"><a href="/lab/1982/rock-paper-scissors/">אבן, נייר, מספריים</a></td><td class="lng"><span dir="ltr">BASIC</span></td><td>אבן, נייר, מספריים נגד המחשב.</td></tr>
+<tr><td class="num">5</td><td class="name"><a href="/lab/1982/dragon-cave/">מערת הדרקון</a></td><td class="lng"><span dir="ltr">BASIC</span></td><td>הרפתקה קטנה: מערה חשוכה, עשן יוצא ממנה, ואתם בוחרים מה לעשות.</td></tr>
+<tr><td class="num">6</td><td class="name"><a href="/lab/1982/screen-drawing/">ציור על המסך</a></td><td class="lng"><span dir="ltr">BASIC</span></td><td>ציור בצבעים על מסך הגרפיקה: שמש, שמיים ועוד, עם PMODE, CIRCLE ו-LINE.</td></tr>
+<tr><td class="num">7</td><td class="name"><a href="/lab/1982/horse-race/">מרוץ סוסים</a></td><td class="lng"><span dir="ltr">BASIC</span></td><td>מהמרים על אחד משלושה סוסים, ורואים את המרוץ על המסך.</td></tr>
+<tr><td class="num">8</td><td class="name"><a href="/lab/1982/dragon-eggs/">ביצי הדרקון</a></td><td class="lng">שפת מכונה</td><td>המשחק הראשון שכתבנו בשפת מכונה למכונה הזאת, ב-2026.</td></tr>
+</tbody></table></div>
+</div>
+</body>
+</html>
