@@ -1,0 +1,366 @@
+{
+ "note": "Hints for Pyramid of Doom in our own words. Every step was played and checked on the Dragon machine (8.11.2026): 13 treasures, 100 of 100. Each question has three levels: a small hint, a clearer hint and the full solution.",
+ "where": "Each question has \"at\": words from the top of the screen (where the player is). The hint button beside the screen shows the questions whose words are on the screen now.",
+ "at": [
+  [
+   "DESERT",
+   "HIEROGLYPHICS ROOM"
+  ],
+  [
+   "DESERT",
+   "POOL OF WATER",
+   "IN A HOLE"
+  ],
+  [
+   "SITTING ROOM"
+  ],
+  [
+   "SITTING ROOM",
+   "HALLWAY"
+  ],
+  [
+   "SLOPING CRAWLWAY"
+  ],
+  [
+   "HALLWAY",
+   "HIEROGLYPHICS ROOM"
+  ],
+  [
+   "ROCKY ENTRANCE-WAY",
+   "SARCOPHAGUS",
+   "BURIAL ROOM"
+  ],
+  [
+   "HIDDEN ALCOVE",
+   "BURIAL ROOM"
+  ],
+  [
+   "LONG, NARROW"
+  ],
+  [
+   "TOO DARK TO SEE",
+   "MIRRORS EVERYWHERE",
+   "DRESSING ROOM"
+  ],
+  [
+   "TALL ROOM"
+  ],
+  [
+   "NARROW LEDGE",
+   "SITTING ROOM"
+  ],
+  [
+   "PRISON CELL"
+  ],
+  [
+   "NARROW LEDGE",
+   "THRONE ROOM"
+  ],
+  [
+   "THRONE ROOM"
+  ],
+  [
+   "TREASURE ROOM"
+  ],
+  [
+   "TREASURE ROOM",
+   "TOP OF A PYRAMID"
+  ],
+  [
+   "DINING HALL",
+   "HIEROGLYPHICS ROOM"
+  ]
+ ],
+ "he": [
+  {
+   "q": "מה בכלל צריך לעשות?",
+   "h": [
+    "השלט ליד הפירמידה מזהיר, אבל המטרה היא בדיוק זאת: להוציא את האוצרות מהקברים. חפצים שהשם שלהם מוקף בכוכביות הם אוצרות.",
+    "בתוך הפירמידה יש חדר עם כתובת על הקיר שאומרת לאן מביאים את האוצרות. יש 13 אוצרות.",
+    "החדר הוא {HIEROGLYPHICS ROOM}, ממזרח לחדר המזבח. {READ HIEROGLYPHICS} אומר להשאיר שם את האוצרות. מביאים לשם את כל 13 האוצרות, משאירים אותם שם (למשל {DROP NECKLACE}) וכותבים {SCORE}."
+   ]
+  },
+  {
+   "q": "איך נכנסים לפירמידה?",
+   "h": [
+    "לדלת יש חור מנעול גדול. המפתח לא רחוק, וגם המוט שבחול שימושי.",
+    "המוט שבחול הוא בעצם את חפירה. מפתח אחד נמצא בבריכה, ואחר קבור במדבר. וחופרים גם ליד הפירמידה.",
+    "בהתחלה: {GET POLE} (מקבלים את חפירה), {GET WATER} (ממלאים את המימייה). {GO POOL}, ‏{GET KEY}, ‏{E}, ‏{N}, ‏{E}, ‏{DIG}, ‏{GET KEY} (מפתח קטן). {S} אל הפירמידה, {DIG}, ‏{GO HOLE}, ‏{UNLOCK DOOR}, ‏{U}, ‏{UNLOCK DOOR}. משאירים את האת ({DROP SHOVEL}), ‏{LIGHT FLASHLITE}, ‏{GO DOOR}."
+   ]
+  },
+  {
+   "q": "יש משהו בחדר עם האח?",
+   "h": [
+    "אפר לא תמיד ריק.",
+    "מסתכלים מקרוב באפר ובאח. וגם גוש פחם שמוצאים שם שווה ניקוי.",
+    "{LOOK ASHES}, ‏{LOOK FIREPLACE}, ‏{GET NECKLACE} ({*GOLD NECKLACE*}). אחר כך {GET COAL} ו-{WASH COAL}, ומתחת לפחם יש {*RUBY*}."
+   ]
+  },
+  {
+   "q": "בסל יש קוברה",
+   "h": [
+    "מה מרגיע נחשים לפי האגדות?",
+    "במסדרון שליד חדר האוכל יש כלי נגינה.",
+    "במסדרון: {GET FLUTE}. בחדר עם האח: {PLAY FLUTE}. הקוברה זוחלת החוצה ופותחת מעבר מאחורי האח. {DROP FLUTE}, ואז {GO PASSAGEWAY}."
+   ]
+  },
+  {
+   "q": "עכברושים רעבים במעבר",
+   "h": [
+    "לא נשארים לידם.",
+    "לא צריך לעשות להם כלום.",
+    "פשוט ממשיכים: {N}, לחדר המזבח. אצלנו הם לא נגעו בנו."
+   ]
+  },
+  {
+   "q": "צדפה ענקית במסדרון",
+   "h": [
+    "גם צדפה צריכה לאכול.",
+    "בחדר ההירוגליפים יש משהו אכיל.",
+    "בחדר ההירוגליפים: {GET JERKY}. במסדרון: {FEED OYSTER}, ואז {GET PEARL} ({*BLACK PEARL*})."
+   ]
+  },
+  {
+   "q": "מומיה מפחידה בחדר הקבורה",
+   "h": [
+    "משהו בחדר שורף ומחזיק אותה ערה.",
+    "את העלים הבוערים אפשר לכבות. מהבריכה שבמדבר לקחתם משהו.",
+    "בכניסה: {OPEN SARCOPHAGUS}, ‏{GO SARCOPHAGUS}, ‏{D}. עם המימייה המלאה: {POUR WATER}. המומיה נרדמת. {DROP CANTEEN}, ‏{GET TAPESTRY} ({*ANTIQUE TAPESTRY*})."
+   ]
+  },
+  {
+   "q": "מה יש בגומחה?",
+   "h": [
+    "מסתכלים בכל דבר, גם בדברים מפחידים.",
+    "בתוך הגולגולת יש משהו, ובקופסה צריך להסתכל יותר מפעם אחת.",
+    "{GO ALCOVE}, ‏{GET SKULL}, ‏{LOOK SKULL}, ‏{GET TEETH} ({*GOLD TEETH*}). אחר כך {LOOK BOX} פעמיים, ו-{GET GLOVE}. את הגולגולת ואת הכפפה שומרים."
+   ]
+  },
+  {
+   "q": "פתח סגור בלבנים",
+   "h": [
+    "אפשר לשבור אותו, אבל לא ביד חשופה.",
+    "כפפת הברזל מהגומחה.",
+    "{WEAR GLOVE}, ‏{HIT DOOR}. אחר כך {REMOVE GLOVE} ו-{DROP GLOVE} (תצטרכו אותה שוב בהמשך, היא נשארת כאן). את החבל שכאן תצטרכו מאוחר יותר."
+   ]
+  },
+  {
+   "q": "חושך, והפנס נכבה מעצמו",
+   "h": [
+    "בחדר המראות האור מסנוור. צריך להסתדר בלי לראות.",
+    "אפשר למשש. ואחרי שיוצאים מחדר המראות, מדליקים שוב.",
+    "בחושך: {FEEL FLOOR}, ‏{GET COIN} ({*GOLD COIN*}). הולכים {E} בחושך (מופיעה אזהרה, אבל זה עובד), ואז {LIGHT FLASHLITE} ו-{GET SCARAB} ({*GOLD SCARAB*}). חוזרים {W}, ‏{W}, ושוב {LIGHT FLASHLITE}."
+   ]
+  },
+  {
+   "q": "שלד בלי ראש ומוט בתקרה",
+   "h": [
+    "חסר לו משהו.",
+    "הבאתם משהו מהגומחה שמתאים לו.",
+    "מחדר הקבורה {S}. כאן: {DROP SKULL}. השלד שם את הגולגולת, מושך במוט ומוריד סולם. לוקחים גם את המסור ({GET SAW}) כשיש מקום. {GO LADDER}."
+   ]
+  },
+  {
+   "q": "מה עושים עם האודם?",
+   "h": [
+    "לא כל מה שנוצץ נספר.",
+    "מתחת למדף יש בריכת חומצה.",
+    "במדף: {GET SAPPHIRE} ({*SAPPHIRE*}), ואז {THROW RUBY}. האודם נשרף בחומצה, ובכל זאת הגענו ל-100: הוא לא נכלל ב-13 האוצרות."
+   ]
+  },
+  {
+   "q": "תא כלא עם חוקר מת",
+   "h": [
+    "החוקר כבר לא צריך את מה שיש לו.",
+    "מסתכלים בחוקר ובערימת הזבל.",
+    "{S} מהמדף. {LOOK EXPLORER}, ‏{LOOK RUBBISH}, ‏{GET PIN} ({*GOLD PIN*}), ‏{GET CARVING} ({*JADE CARVING*}). הנווד צועק לברוח, ויוצאים: {W}, ‏{D}, ‏{N}, ‏{U}, ‏{W}."
+   ]
+  },
+  {
+   "q": "חור בתקרה מעל המדף",
+   "h": [
+    "צריך משהו לטפס בו.",
+    "החבל שליד הפתח השבור.",
+    "לוקחים את שני המפתחות, את הכפפה ואת החבל ({GET GLOVE}, ‏{GET ROPE}) ואת המסור. (אצלנו לקחנו גם את האקדח בחזרה, {GET PISTOL}, אבל לא היה בו צורך.) במדף: {THROW ROPE}, ‏{GO ROPE}. בחדר הכס: {OPEN CHEST}, ‏{GET CROWN} ({*PLATINUM CROWN*})."
+   ]
+  },
+  {
+   "q": "איך יוצאים מחדר הכס למעלה?",
+   "h": [
+    "משהו תלוי מהתקרה.",
+    "מושכים בשרשרת.",
+    "{PULL CHAIN}. מופיע גרם מדרגות לולייני: {GO STAIRS}."
+   ]
+  },
+  {
+   "q": "תיבת האוצר נעולה",
+   "h": [
+    "המפתחות מהמדבר עוד שימושיים. אבל לא כדאי לגעת בה ביד חשופה.",
+    "לובשים את כפפת הברזל לפני שפותחים.",
+    "עם שני המפתחות: {WEAR GLOVE}, ‏{UNLOCK COFFER}. אחר כך {DROP KEY} פעמיים, {REMOVE GLOVE}, ‏{DROP GLOVE}, ‏{LOOK COFFER}, ‏{GET BRACELET} ({*EMERALD BRACELET*})."
+   ]
+  },
+  {
+   "q": "סורגים על החלון",
+   "h": [
+    "כלי מהחדר הגבוה.",
+    "המסור.",
+    "{SAW BARS}, ‏{GO WINDOW}. בראש הפירמידה: {GET BAR} ({*PLATINUM BAR*}). חוזרים: {W}, ‏{D}, ‏{D}, ‏{W}, ‏{D}, ‏{N}, ‏{U}, ‏{W}, ואל חדר ההירוגליפים."
+   ]
+  },
+  {
+   "q": "יש לי 12 אוצרות. איפה האחרון?",
+   "h": [
+    "הוא היה מול העיניים כל הזמן, בחדר שעברתם בו הרבה.",
+    "השולחן בחדר האוכל מסתיר משהו. המסור עוזר.",
+    "בחדר האוכל, עם המסור: {SAW TABLE}, ‏{GET NECKLACE} ({*DIAMOND NECKLACE*}). בחדר ההירוגליפים: {DROP NECKLACE} ו-{SCORE}. מופיע: {FANTASTIC! YOU SOLVED IT ALL!}"
+   ]
+  }
+ ],
+ "en": [
+  {
+   "q": "What am I supposed to do?",
+   "h": [
+    "The sign by the pyramid warns you off, but that is the goal: get the treasures out of the tombs. Things with stars around their name are treasures.",
+    "Inside the pyramid a room has writing on the wall that says where treasures go. There are 13 treasures.",
+    "It is the {HIEROGLYPHICS ROOM}, east of the altar room. {READ HIEROGLYPHICS} says to leave treasures there. Bring all 13 treasures, drop them there (for example {DROP NECKLACE}) and type {SCORE}."
+   ]
+  },
+  {
+   "q": "How do I get into the pyramid?",
+   "h": [
+    "The door has a large keyhole. The key isn't far, and the pole in the sand is useful too.",
+    "The pole in the sand is really a shovel. One key is in the pool, another is buried in the desert. And dig by the pyramid too.",
+    "At the start: {GET POLE} (you get a shovel), {GET WATER} (fills the canteen). {GO POOL}, {GET KEY}, {E}, {N}, {E}, {DIG}, {GET KEY} (a tiny key). {S} to the pyramid, {DIG}, {GO HOLE}, {UNLOCK DOOR}, {U}, {UNLOCK DOOR}. Leave the shovel ({DROP SHOVEL}), {LIGHT FLASHLITE}, {GO DOOR}."
+   ]
+  },
+  {
+   "q": "Is there anything in the room with the fireplace?",
+   "h": [
+    "Ashes aren't always empty.",
+    "Look closely at the ashes and the fireplace. A lump of coal you find there is worth cleaning.",
+    "{LOOK ASHES}, {LOOK FIREPLACE}, {GET NECKLACE} ({*GOLD NECKLACE*}). Then {GET COAL} and {WASH COAL}, and under the coal is a {*RUBY*}."
+   ]
+  },
+  {
+   "q": "There's a cobra in the basket",
+   "h": [
+    "What calms snakes in the old stories?",
+    "The hallway next to the dining hall has a musical instrument.",
+    "In the hallway: {GET FLUTE}. In the room with the fireplace: {PLAY FLUTE}. The cobra crawls out and opens a passage behind the fireplace. {DROP FLUTE}, then {GO PASSAGEWAY}."
+   ]
+  },
+  {
+   "q": "Starving rats in the crawlway",
+   "h": [
+    "Don't hang around them.",
+    "You don't need to do anything to them.",
+    "Just keep going: {N}, to the altar room. They didn't touch us."
+   ]
+  },
+  {
+   "q": "A giant oyster in the hallway",
+   "h": [
+    "Oysters need to eat too.",
+    "There is something to eat in the hieroglyphics room.",
+    "In the hieroglyphics room: {GET JERKY}. In the hallway: {FEED OYSTER}, then {GET PEARL} ({*BLACK PEARL*})."
+   ]
+  },
+  {
+   "q": "A fearsome mummy in the burial room",
+   "h": [
+    "Something in the room is burning and keeping it awake.",
+    "The burning leaves can be put out. You took something from the pool in the desert.",
+    "In the entrance: {OPEN SARCOPHAGUS}, {GO SARCOPHAGUS}, {D}. With the full canteen: {POUR WATER}. The mummy falls asleep. {DROP CANTEEN}, {GET TAPESTRY} ({*ANTIQUE TAPESTRY*})."
+   ]
+  },
+  {
+   "q": "What's in the alcove?",
+   "h": [
+    "Look at everything, even the scary things.",
+    "There is something inside the skull, and the box needs more than one look.",
+    "{GO ALCOVE}, {GET SKULL}, {LOOK SKULL}, {GET TEETH} ({*GOLD TEETH*}). Then {LOOK BOX} twice, and {GET GLOVE}. Keep the skull and the glove."
+   ]
+  },
+  {
+   "q": "A bricked-up doorway",
+   "h": [
+    "You can break it, but not with a bare hand.",
+    "The iron glove from the alcove.",
+    "{WEAR GLOVE}, {HIT DOOR}. Then {REMOVE GLOVE} and {DROP GLOVE} (you'll need it again later, it stays here). You'll need the rope here later too."
+   ]
+  },
+  {
+   "q": "It's dark, and the flashlight switched itself off",
+   "h": [
+    "In the mirror room the light blinds you. You have to manage without seeing.",
+    "You can feel around. And after you leave the mirror room, light it again.",
+    "In the dark: {FEEL FLOOR}, {GET COIN} ({*GOLD COIN*}). Go {E} in the dark (there's a warning, but it works), then {LIGHT FLASHLITE} and {GET SCARAB} ({*GOLD SCARAB*}). Go back {W}, {W}, and {LIGHT FLASHLITE} again."
+   ]
+  },
+  {
+   "q": "A headless skeleton and a bar in the ceiling",
+   "h": [
+    "He's missing something.",
+    "You brought something from the alcove that fits him.",
+    "From the burial room go {S}. Here: {DROP SKULL}. The skeleton puts on the skull, pulls the bar and lowers a ladder. Take the saw too ({GET SAW}) when you have room. {GO LADDER}."
+   ]
+  },
+  {
+   "q": "What do I do with the ruby?",
+   "h": [
+    "Not everything that shines counts.",
+    "There's a pool of acid below the ledge.",
+    "On the ledge: {GET SAPPHIRE} ({*SAPPHIRE*}), then {THROW RUBY}. The ruby burns up in the acid, and we still reached 100: it isn't one of the 13 treasures."
+   ]
+  },
+  {
+   "q": "A prison cell with a dead explorer",
+   "h": [
+    "The explorer doesn't need his things any more.",
+    "Look at the explorer and the pile of rubbish.",
+    "{S} from the ledge. {LOOK EXPLORER}, {LOOK RUBBISH}, {GET PIN} ({*GOLD PIN*}), {GET CARVING} ({*JADE CARVING*}). The nomad shouts to run, so leave: {W}, {D}, {N}, {U}, {W}."
+   ]
+  },
+  {
+   "q": "A hole in the ceiling above the ledge",
+   "h": [
+    "You need something to climb.",
+    "The rope by the broken doorway.",
+    "Take both keys, the glove and the rope ({GET GLOVE}, {GET ROPE}) and the saw. (We also took the pistol back with {GET PISTOL}; it was never needed.) On the ledge: {THROW ROPE}, {GO ROPE}. In the throne room: {OPEN CHEST}, {GET CROWN} ({*PLATINUM CROWN*})."
+   ]
+  },
+  {
+   "q": "How do I get up from the throne room?",
+   "h": [
+    "Something hangs from the ceiling.",
+    "Pull the chain.",
+    "{PULL CHAIN}. A spiral staircase appears: {GO STAIRS}."
+   ]
+  },
+  {
+   "q": "The treasure coffer is locked",
+   "h": [
+    "The keys from the desert are still useful. But don't touch it with a bare hand.",
+    "Wear the iron glove before you open it.",
+    "With both keys: {WEAR GLOVE}, {UNLOCK COFFER}. Then {DROP KEY} twice, {REMOVE GLOVE}, {DROP GLOVE}, {LOOK COFFER}, {GET BRACELET} ({*EMERALD BRACELET*})."
+   ]
+  },
+  {
+   "q": "Bars on the window",
+   "h": [
+    "A tool from the tall room.",
+    "The saw.",
+    "{SAW BARS}, {GO WINDOW}. On top of the pyramid: {GET BAR} ({*PLATINUM BAR*}). Back: {W}, {D}, {D}, {W}, {D}, {N}, {U}, {W}, and on to the hieroglyphics room."
+   ]
+  },
+  {
+   "q": "I have 12 treasures. Where is the last one?",
+   "h": [
+    "It was in front of you all along, in a room you passed many times.",
+    "The table in the dining hall hides something. The saw helps.",
+    "In the dining hall, with the saw: {SAW TABLE}, {GET NECKLACE} ({*DIAMOND NECKLACE*}). In the hieroglyphics room: {DROP NECKLACE} and {SCORE}. You get: {FANTASTIC! YOU SOLVED IT ALL!}"
+   ]
+  }
+ ]
+}
