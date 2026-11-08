@@ -1,0 +1,361 @@
+{
+ "note": "Hints for Calixto Island in our own words. Every step was played and checked on the Dragon machine (8.11.2026), to the game's own ending: the crown is back in the professor's study (CONGRATULATIONS...YOU DID IT !). Each question has three levels: a small hint, a clearer hint and the full solution.",
+ "where": "Each question has \"at\": a short piece of the room description as the game prints it. In this game the place is not in a fixed header, it scrolls with the text, so the whole screen is searched. Some questions also use an item that shows in the room (UNFRIENDLY NATIVES, MICE) or a message (DARK HERE, LEAKING).",
+ "screen": "all",
+ "at": [
+  [
+   "COMFORTABLE STUDY",
+   "ANTIQUE TABLE"
+  ],
+  [
+   "COMFORTABLE STUDY",
+   "DIMLY LIT ATTIC"
+  ],
+  [
+   "DIMLY LIT ATTIC",
+   "WOODEN CHEST"
+  ],
+  [
+   "COMFORTABLE STUDY",
+   "ORIENTAL RUG",
+   "TRAP DOOR"
+  ],
+  [
+   "MUSTY STORAGE CELLAR",
+   "STORAGE CABINET",
+   "DARK HERE"
+  ],
+  [
+   "SECRET",
+   "LOOKING DEVICE",
+   "PULSING LIGHTS"
+  ],
+  [
+   "MARSHY FIELD",
+   "STEEP ROCKY HILL",
+   "HILLTOP"
+  ],
+  [
+   "OLD STORAGE SHED",
+   "MICE"
+  ],
+  [
+   "GRASS SHACK",
+   "TRADER JACK"
+  ],
+  [
+   "ROLLTOP DESK",
+   "COMFORTABLE STUDY"
+  ],
+  [
+   "DIMLY LIT ATTIC",
+   "COMFORTABLE STUDY",
+   "PRINT IS TOO SMALL"
+  ],
+  [
+   "TROPICAL JUNGLE",
+   "DENSE JUNGLE"
+  ],
+  [
+   "MAYAN PYRAMID",
+   "MAYAN ARTWORK",
+   "HUNGRY LOOKING SNAKE",
+   "DARK HERE"
+  ],
+  [
+   "WARM TROPICAL BEACH",
+   "OLD STORAGE SHED",
+   "DEFLATED RUBBER BOAT"
+  ],
+  [
+   "RUBBER BOAT",
+   "LOT OF OCEAN",
+   "LEAKING"
+  ],
+  [
+   "SHORE OF CALIXTO",
+   "UNFRIENDLY NATIVES"
+  ],
+  [
+   "NATIVE CEREMONIAL AREA",
+   "PAGAN IDOL",
+   "SHORE OF CALIXTO"
+  ]
+ ],
+ "he": [
+  {
+   "q": "מה בכלל צריך לעשות?",
+   "h": [
+    "יש במשחק אוצר אחד בלבד. משהו שמונח בחדר העבודה של הפרופסור יכוון אתכם.",
+    "בודקים את השולחן העתיק ומוצאים פתק. ההוראות המלאות כתובות במיקרופילם שנעול בשולחן הכתיבה.",
+    "{EXAMINE TABLE}, ‏{GET MESSAGE}, ‏{READ MESSAGE}. המיקרופילם (שאלה בהמשך) מגלה שהאוצר קבור ליד האליל באי {CALIXTO}. מביאים אותו לחדר העבודה, משאירים אותו שם ({DROP CROWN}) וכותבים {SCORE}."
+   ]
+  },
+  {
+   "q": "המשחק לא מבין {INVENTORY}, ולא מצליח להרים עוד חפצים",
+   "h": [
+    "למשחק הזה יש מילים משלו. נסו לבקש רשימה במשפט שלם.",
+    "אפשר לסחוב רק ארבעה דברים, והמגפיים שנועלים נספרים ביניהם.",
+    "כותבים {TAKE INVENTORY}. מחזיקים לכל היותר ארבעה חפצים, כולל המגפיים. מניחים חפצים בצד עם {DROP} וחוזרים אליהם אחר כך. פקודות הליכה: {GO NORTH}, ‏{GO UP}, או {GO} ושם של מקום שרואים, למשל {GO STAIRS}."
+   ]
+  },
+  {
+   "q": "מה יש בעליית הגג?",
+   "h": [
+    "התיבה הישנה לא ריקה.",
+    "פותחים אותה ובודקים אותה יותר מפעם אחת.",
+    "{OPEN CHEST}, ‏{EXAMINE CHEST}, ‏{GET SPECTACLES}, שוב {EXAMINE CHEST}, ‏{GET MANUAL}, ‏{READ MANUAL}. את המשקפיים משאירים כאן ({DROP SPECTACLES}). לוקחים את הפנס ({GET FLASHLIGHT}). קופסת התכשיטים והתיבה עצמה יועילו מאוחר יותר."
+   ]
+  },
+  {
+   "q": "אין יציאה מחדר העבודה חוץ מהמדרגות",
+   "h": [
+    "משהו על הרצפה מסתיר דרך.",
+    "מרימים את השטיח.",
+    "{GET RUG}: מתחתיו יש דלת סתרים. {OPEN DOOR} מגלה סולם, ו-{GO LADDER} יורד למרתף. את השטיח שומרים, הוא שווה משהו."
+   ]
+  },
+  {
+   "q": "המרתף חשוך, ואין ממנו דרך הלאה",
+   "h": [
+    "קודם צריך אור. אחר כך, הארון שווה בדיקה יסודית.",
+    "בודקים את הארון פעמיים: פעם אחת מוצאים בו חפץ, ובפעם השנייה משהו נסתר.",
+    "{LIGHT FLASHLIGHT}. ‏{EXAMINE CABINET}, ‏{OPEN CABINET}, ‏{GET MOUSETRAP}, ושוב {EXAMINE CABINET}: יש מתג נסתר. {PUSH SWITCH} פותח מעבר סודי, ו-{GO PASSAGE}, ‏{GO SOUTH} מובילים למעבדה. המשאבה והדלי שבמרתף יידרשו בהמשך. השלט במעבר רומז: מכבים את הפנס כשלא צריך אותו ({UNLIGHT FLASHLIGHT})."
+   ]
+  },
+  {
+   "q": "איך מפעילים את המכשיר המוזר במעבדה?",
+   "h": [
+    "יש לו ספר הוראות. קראתם אותו כבר בעליית הגג?",
+    "קוראים את ההוראות שוב כשיושבים בתוך המכשיר.",
+    "{GO DEVICE}, ‏{READ MANUAL}, ואז {ACTIVATE ENERGIZER} ו-{PRESS BUTTON}. המכשיר עובר בין המעבדה לשדה ליד גבעה. אפשר להשאיר בו את ההוראות. כל מה שמניחים בתוך המכשיר נוסע איתו, וכך מעבירים יותר מארבעה חפצים בנסיעה אחת. לפני הנסיעה הראשונה נועלים במעבדה את מגפי ההליכה ({WEAR BOOTS})."
+   ]
+  },
+  {
+   "q": "מה לוקחים לצד השני?",
+   "h": [
+    "בצד השני יש גבעה תלולה, ומעבר לה חוף ומחסן. תצטרכו כמה דברים מהבית.",
+    "בנסיעה הראשונה: המגפיים, הפנס, השטיח ומלכודת העכברים. גם המשאבה והדלי יגיעו לשם בסוף.",
+    "במשחק שלנו: {DROP RUG} ו-{DROP MOUSETRAP} בתוך המכשיר, הולכים עם הפנס למרתף, {GET PUMP}, ‏{GET BUCKET}, חוזרים ומניחים אותם במכשיר. אחר כך {GET RUG}, ‏{GET MOUSETRAP} ונוסעים. בשדה מוציאים את המשאבה ואת הדלי ומשאירים אותם על הקרקע. עם המגפיים: {GO HILL}, ‏{GO UP}."
+   ]
+  },
+  {
+   "q": "יש עכברים במחסן",
+   "h": [
+    "יש לכם משהו מהמרתף שנועד בדיוק לזה.",
+    "משאירים את המלכודת במחסן. העכברים יחכו בה עד שתצטרכו אותם.",
+    "{GO SHED}, ‏{DROP MOUSETRAP}. בביקור הבא, כשבאמת צריך אותם, כותבים {GET MICE}. זהירות: אחרי שלקחתם את העכברים, לא מניחים אותם. במשחק הראשון שלנו הנחנו אותם בשדה, ואי אפשר היה לתפוס אותם שוב."
+   ]
+  },
+  {
+   "q": "מה {TRADER JACK} רוצה?",
+   "h": [
+    "הוא סוחר. הוא נותן חפץ תמורת חפץ.",
+    "בפעם הראשונה הוא שמח לקבל משהו שלקחתם מרצפת חדר העבודה. בפעם השנייה הוא רוצה משהו לאחסן בו את הגרוטאות שלו.",
+    "מהגבעה: {GO PATH}, ‏{GO SHACK}. ‏{TRADE RUG}, ‏{GET KEYS}. בביקור הבא: {TRADE CHEST} (התיבה הריקה מעליית הגג), ‏{GET MACHETE}. יוצאים ב-{GO EAST}."
+   ]
+  },
+  {
+   "q": "שולחן הכתיבה נעול",
+   "h": [
+    "מישהו בצד השני מחזיק את מה שצריך.",
+    "חוזרים הביתה עם המפתחות של {TRADER JACK}.",
+    "בחדר העבודה: {UNLOCK DESK}, ‏{EXAMINE DESK}, ‏{DROP KEYS}, ‏{GET MICROFILM}. דרך הבית: מהשדה {GO DEVICE}, נוסעים, ואז {GO LABORATORY}, ‏{GO PASSAGEWAY}, ‏{LIGHT FLASHLIGHT}, ‏{GO NORTH}, ‏{GO UP}."
+   ]
+  },
+  {
+   "q": "האותיות במיקרופילם קטנות מדי",
+   "h": [
+    "מצאתם משהו שעוזר לראות טוב יותר.",
+    "המשקפיים נשארו בעליית הגג.",
+    "{GO STAIRS}, ‏{WEAR SPECTACLES}, ‏{READ MICROFILM}: האוצר קבור ליד האליל באי. אחר כך {DROP MICROFILM}, ‏{DROP SPECTACLES}, ולוקחים את התיבה הריקה ואת קופסת התכשיטים: {GET CHEST}, ‏{GET BOX}. חוזרים למכשיר ונוסעים."
+   ]
+  },
+  {
+   "q": "הג'ונגל צפוף מדי",
+   "h": [
+    "צריך כלי חד.",
+    "את הכלי מקבלים מ-{TRADER JACK}.",
+    "מהשדה {GO WEST}, ואז {CUT PATH} עם הסכין הגדולה, ו-{GO PATH} אל הפירמידה."
+   ]
+  },
+  {
+   "q": "נחש רעב שומר על המשוטים",
+   "h": [
+    "נחשים אוהבים חטיף קטן.",
+    "מביאים את העכברים מהמחסן.",
+    "{GO CREVICE}, ‏{LIGHT FLASHLIGHT}, ואז {GO SOUTH}, ‏{GO EAST}, ‏{GO SOUTH}. ‏{FEED SNAKE}: הוא לוקח עכבר ונעלם. {GET PADDLES}. חזרה: {GO NORTH}, ‏{GO WEST}, ‏{GO NORTH}, ‏{GO CREVICE}, ‏{UNLIGHT FLASHLIGHT}, ‏{GO NORTH}, ‏{GO EAST}."
+   ]
+  },
+  {
+   "q": "איך מגיעים לאי?",
+   "h": [
+    "במחסן יש סירה, אבל היא לא מוכנה לשימוש.",
+    "צריך את הסירה, את המשאבה, את המשוטים, את הדלי, את האת מהמחסן ואת קופסת התכשיטים. מעבירים אותם לחוף בכמה סיבובים. את המגפיים אפשר להוריד בחוף.",
+    "במשחק שלנו: בשדה {DROP MACHETE}, ‏{DROP FLASHLIGHT}, ‏{GET PUMP}, ‏{GET BUCKET}, ואז {GO HILL}, ‏{GO UP}, ‏{GO PATH} ומניחים הכול בחוף. {GO UP}, ‏{GO SHED}, ‏{GET BOX}, ‏{GET BOAT}, ‏{GET SHOVEL}, ‏{GO WEST}, ‏{GO PATH}, ‏{DROP BOAT}, ‏{DROP BOOTS}. אחר כך {GET PUMP}, ‏{GET PADDLES}, ‏{INFLATE BOAT}, ‏{GO BOAT}, ‏{DROP BOX}, ‏{GO BEACH}, ‏{GET BUCKET}, ‏{GO BOAT}."
+   ]
+  },
+  {
+   "q": "טבעתי בים",
+   "h": [
+    "הסירה דולפת, והמשחק אומר לכם מה לעשות. אין זמן לשום דבר אחר.",
+    "צריך את הדלי בסירה, ולעשות את זה מיד.",
+    "{ROW BOAT}, ומיד אחריו {BAIL WATER}, ואז שוב {ROW BOAT}. אפילו {LOOK} באמצע מטביע אתכם. מוות כאן מסיים את כל המשחק, ואז מתחילים מההתחלה."
+   ]
+  },
+  {
+   "q": "ילידים לא ידידותיים בחוף",
+   "h": [
+    "אולי מתנה תשפר את מצב הרוח שלהם.",
+    "משהו נוצץ מעליית הגג.",
+    "בסירה: {DROP BUCKET}, ‏{DROP PADDLES}, ‏{GET BOX}. ‏{GO SHORE}, ‏{GIVE BOX}: הם לוקחים את התכשיטים והולכים. עכשיו {GO CLEARING}."
+   ]
+  },
+  {
+   "q": "איפה האוצר, ואיך חוזרים הביתה?",
+   "h": [
+    "המיקרופילם אמר איפה האוצר קבור. הבאתם כלי מתאים.",
+    "חופרים ליד האליל, יותר מפעם אחת. בדרך חזרה הסירה שוב תהיה בלי אוויר.",
+    "{DIG SAND} שלוש פעמים, {GET CROWN}: זה {* MONTEZUMA'S JEWELLED CROWN *}. ‏{GO EAST}, ‏{INFLATE BOAT}, ‏{GO BOAT}, ‏{DROP SHOVEL}, ‏{GET PADDLES}, ‏{GET BUCKET}, ‏{ROW BOAT}, ‏{BAIL WATER}, ‏{ROW BOAT}. ‏{DROP BUCKET}, ‏{DROP PADDLES}, ‏{DROP PUMP}, ‏{GO BEACH}, ‏{WEAR BOOTS}, ‏{GO UP}, ‏{GO NORTH}, ‏{GO DOWN}. המכשיר נעלם מהשדה באמצע המשחק, ועכשיו הוא חזר: {GET FLASHLIGHT}, ‏{GO DEVICE}, ‏{ACTIVATE ENERGIZER}, ‏{PRESS BUTTON}. בבית, בחדר העבודה: {DROP CROWN}, ‏{SCORE}."
+   ]
+  }
+ ],
+ "en": [
+  {
+   "q": "What am I supposed to do?",
+   "h": [
+    "There is only one treasure. Something in the professor's study points the way.",
+    "Examine the antique table to find a note. The full story is on a microfilm locked in the desk.",
+    "{EXAMINE TABLE}, {GET MESSAGE}, {READ MESSAGE}. The microfilm (see below) says the treasure is buried by the idol on {CALIXTO} island. Bring it back to the study, drop it there ({DROP CROWN}) and type {SCORE}."
+   ]
+  },
+  {
+   "q": "It doesn't understand {INVENTORY}, and I can't pick up more",
+   "h": [
+    "This game has its own words. Ask for the list in a full phrase.",
+    "You can carry only four things, and the boots you wear count too.",
+    "Type {TAKE INVENTORY}. You hold four items at most, boots included. Leave things with {DROP} and come back for them. To move: {GO NORTH}, {GO UP}, or {GO} plus a place you can see, like {GO STAIRS}."
+   ]
+  },
+  {
+   "q": "What's in the attic?",
+   "h": [
+    "The old chest is not empty.",
+    "Open it and examine it more than once.",
+    "{OPEN CHEST}, {EXAMINE CHEST}, {GET SPECTACLES}, {EXAMINE CHEST} again, {GET MANUAL}, {READ MANUAL}. Leave the spectacles here ({DROP SPECTACLES}). Take the flashlight ({GET FLASHLIGHT}). The jewelry box and the chest itself are useful later."
+   ]
+  },
+  {
+   "q": "No way out of the study except the stairs",
+   "h": [
+    "Something on the floor hides a way.",
+    "Pick up the rug.",
+    "{GET RUG}: there is a trap door under it. {OPEN DOOR} shows a ladder, and {GO LADDER} leads down to the cellar. Keep the rug, it is worth something."
+   ]
+  },
+  {
+   "q": "The cellar is dark and leads nowhere",
+   "h": [
+    "First you need light. Then the cabinet is worth a careful look.",
+    "Examine the cabinet twice: first you find an item, then something hidden.",
+    "{LIGHT FLASHLIGHT}. {EXAMINE CABINET}, {OPEN CABINET}, {GET MOUSETRAP}, then {EXAMINE CABINET} again: a hidden switch. {PUSH SWITCH} opens a secret passage; {GO PASSAGE}, {GO SOUTH} lead to the lab. The pump and bucket here are needed later. The sign in the passage hints: turn the light off when you don't need it ({UNLIGHT FLASHLIGHT})."
+   ]
+  },
+  {
+   "q": "How do I work the strange device in the lab?",
+   "h": [
+    "It has a manual. Did you read it in the attic?",
+    "Read the manual again while sitting inside the device.",
+    "{GO DEVICE}, {READ MANUAL}, then {ACTIVATE ENERGIZER} and {PRESS BUTTON}. The device travels between the lab and a field by a hill. You can leave the manual in it. Whatever you drop inside the device travels with it, so you can move more than four things in one trip. Before the first trip, put on the hiking boots in the lab ({WEAR BOOTS})."
+   ]
+  },
+  {
+   "q": "What do I take to the other side?",
+   "h": [
+    "Over there is a steep hill, a beach and a shed. You need several things from the house.",
+    "First trip: the boots, the flashlight, the rug and the mousetrap. The pump and the bucket must get there too.",
+    "In our game: {DROP RUG} and {DROP MOUSETRAP} inside the device, go with the light to the cellar, {GET PUMP}, {GET BUCKET}, bring them back to the device. Then {GET RUG}, {GET MOUSETRAP} and travel. In the field take out the pump and bucket and leave them there. With the boots on: {GO HILL}, {GO UP}."
+   ]
+  },
+  {
+   "q": "There are mice in the shed",
+   "h": [
+    "You have something from the cellar made just for this.",
+    "Leave the trap in the shed. The mice will wait in it until you need them.",
+    "{GO SHED}, {DROP MOUSETRAP}. Next time, when you really need them, type {GET MICE}. Careful: once you have the mice, never drop them. In our first game we dropped them in the field and could not catch them again."
+   ]
+  },
+  {
+   "q": "What does {TRADER JACK} want?",
+   "h": [
+    "He is a trader: one item for another.",
+    "The first time he likes something you took off the study floor. The second time he wants something to keep his junk in.",
+    "From the hilltop: {GO PATH}, {GO SHACK}. {TRADE RUG}, {GET KEYS}. Next visit: {TRADE CHEST} (the empty chest from the attic), {GET MACHETE}. Leave with {GO EAST}."
+   ]
+  },
+  {
+   "q": "The desk is locked",
+   "h": [
+    "Someone on the other side has what you need.",
+    "Come home with {TRADER JACK}'s keys.",
+    "In the study: {UNLOCK DESK}, {EXAMINE DESK}, {DROP KEYS}, {GET MICROFILM}. The way home: from the field {GO DEVICE}, travel, then {GO LABORATORY}, {GO PASSAGEWAY}, {LIGHT FLASHLIGHT}, {GO NORTH}, {GO UP}."
+   ]
+  },
+  {
+   "q": "The microfilm print is too small",
+   "h": [
+    "You found something that helps you see better.",
+    "The spectacles are still in the attic.",
+    "{GO STAIRS}, {WEAR SPECTACLES}, {READ MICROFILM}: the treasure is buried by the idol on the island. Then {DROP MICROFILM}, {DROP SPECTACLES}, and take the empty chest and the jewelry box: {GET CHEST}, {GET BOX}. Go back to the device and travel."
+   ]
+  },
+  {
+   "q": "The jungle is too thick",
+   "h": [
+    "You need a sharp tool.",
+    "{TRADER JACK} has it.",
+    "From the field {GO WEST}, then {CUT PATH} with the machete, and {GO PATH} to the pyramid."
+   ]
+  },
+  {
+   "q": "A hungry snake guards the paddles",
+   "h": [
+    "Snakes like a small snack.",
+    "Bring the mice from the shed.",
+    "{GO CREVICE}, {LIGHT FLASHLIGHT}, then {GO SOUTH}, {GO EAST}, {GO SOUTH}. {FEED SNAKE}: it takes a mouse and leaves. {GET PADDLES}. Back: {GO NORTH}, {GO WEST}, {GO NORTH}, {GO CREVICE}, {UNLIGHT FLASHLIGHT}, {GO NORTH}, {GO EAST}."
+   ]
+  },
+  {
+   "q": "How do I get to the island?",
+   "h": [
+    "There is a boat in the shed, but it isn't ready.",
+    "You need the boat, the pump, the paddles, the bucket, the shovel from the shed and the jewelry box. Carry them to the beach in a few rounds. You can take off the boots on the beach.",
+    "In our game: in the field {DROP MACHETE}, {DROP FLASHLIGHT}, {GET PUMP}, {GET BUCKET}, then {GO HILL}, {GO UP}, {GO PATH} and drop it all on the beach. {GO UP}, {GO SHED}, {GET BOX}, {GET BOAT}, {GET SHOVEL}, {GO WEST}, {GO PATH}, {DROP BOAT}, {DROP BOOTS}. Then {GET PUMP}, {GET PADDLES}, {INFLATE BOAT}, {GO BOAT}, {DROP BOX}, {GO BEACH}, {GET BUCKET}, {GO BOAT}."
+   ]
+  },
+  {
+   "q": "I drowned at sea",
+   "h": [
+    "The boat leaks, and the game tells you what to do. There is no time for anything else.",
+    "You need the bucket in the boat, and you must act at once.",
+    "{ROW BOAT}, right away {BAIL WATER}, then {ROW BOAT} again. Even a {LOOK} in between drowns you. Dying ends the whole game, and you start over."
+   ]
+  },
+  {
+   "q": "Unfriendly natives on the shore",
+   "h": [
+    "Maybe a gift will cheer them up.",
+    "Something shiny from the attic.",
+    "In the boat: {DROP BUCKET}, {DROP PADDLES}, {GET BOX}. {GO SHORE}, {GIVE BOX}: they take the jewelry and wander off. Now {GO CLEARING}."
+   ]
+  },
+  {
+   "q": "Where is the treasure, and how do I get home?",
+   "h": [
+    "The microfilm said where it is buried. You brought the right tool.",
+    "Dig by the idol, more than once. On the way back the boat is flat again.",
+    "{DIG SAND} three times, {GET CROWN}: it is {* MONTEZUMA'S JEWELLED CROWN *}. {GO EAST}, {INFLATE BOAT}, {GO BOAT}, {DROP SHOVEL}, {GET PADDLES}, {GET BUCKET}, {ROW BOAT}, {BAIL WATER}, {ROW BOAT}. {DROP BUCKET}, {DROP PADDLES}, {DROP PUMP}, {GO BEACH}, {WEAR BOOTS}, {GO UP}, {GO NORTH}, {GO DOWN}. The device vanished from the field mid-game; now it is back: {GET FLASHLIGHT}, {GO DEVICE}, {ACTIVATE ENERGIZER}, {PRESS BUTTON}. Home, in the study: {DROP CROWN}, {SCORE}."
+   ]
+  }
+ ]
+}

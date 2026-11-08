@@ -332,7 +332,7 @@
   // איך משחקים (גונן, 25.10: "לא בטוח שהמשתמשים יבינו איך משחקים"): תיבה נפתחת מתחת לכל משחק בשפת מכונה.
   // [מקש] נהיה מקש מצויר. המקשים לפי התיעוד של המחבר, ונבדקו במכונה. במק: BREAK הוא Esc, ו-CLEAR הוא Home (fn+←).
   // משחקים שיש להם רמזים (lab/1982/hints/<id>.json): רק אחרי שעברנו אותם עד הסוף במכונה
-  const HINTS = new Set(['adventureland', 'pirate', 'voodoo', 'mission', 'count', 'odyssey', 'pyramid', 'funhouse', 'ghost', 'golden', 'savage1', 'savage2', 'claymorgue']);
+  const HINTS = new Set(['adventureland', 'pirate', 'voodoo', 'mission', 'count', 'odyssey', 'pyramid', 'funhouse', 'ghost', 'golden', 'savage1', 'savage2', 'claymorgue', 'calixto', 'sanctum']);
   const hintData = {};
   const hintsFor = id => (hintData[id] = hintData[id] || fetch('/lab/1982/hints/' + id + '.json').then(r => { if (!r.ok) throw 0; return r.json(); }).catch(e => { delete hintData[id]; throw e; }));
   // שאלה אחת: נפתחת לרמז קטן, ובתוכו הרמז הברור, ובתוכו הפתרון. כל מדרגה מופיעה רק אחרי שפותחים את הקודמת
@@ -361,16 +361,17 @@
   // הוא קורא את ראש המסך (בהרפתקאות של Scott Adams שם תמיד כתוב איפה השחקן) ומראה רק את השאלות של המקום הזה.
   // כל השאלות נשארות בלשונית "רמזים" שמתחת למקלדת
   let hintId = null, hintUI = null, hintKey = '', hintTimer = 0;
-  function roomText() {
+  // במשחקים של Mark Data אין שם מקום קבוע בראש המסך: תיאור החדר גולל עם הטקסט, אז מחפשים בכל המסך ("screen": "all" בקובץ הרמזים)
+  function roomText(all) {
     const rows = (window.d32Screen?.() || []).map(r => r.replace(/[\x00-\x1f]/g, ' '));
     const sep = rows.findIndex(r => r.includes('<----'));
-    return (sep > 0 ? rows.slice(0, sep) : rows.slice(0, 4)).join(' ').replace(/\s+/g, ' ');
+    return (all ? rows : sep > 0 ? rows.slice(0, sep) : rows.slice(0, 4)).join(' ').replace(/\s+/g, ' ');
   }
   async function hintFill(force) {
     if (!hintUI || hintUI.pop.hidden || !hintId) return;
     let d;
     try { d = await hintsFor(hintId); } catch (e) { hintUI.title.textContent = T2('הרמזים לא נטענו. נסו שוב.', 'The hints did not load. Try again.'); return; }
-    const text = roomText();
+    const text = roomText(d.screen === 'all');
     const idx = d.at.map((a, i) => a.some(w => text.includes(w)) ? i : -1).filter(i => i >= 0);
     const key = idx.join(',');
     if (!force && key === hintKey) return;   // אותו מקום: לא נוגעים, כדי שרמז שנפתח יישאר פתוח

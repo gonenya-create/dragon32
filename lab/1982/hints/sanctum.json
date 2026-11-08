@@ -1,0 +1,380 @@
+{
+ "note": "Hints for The Black Sanctum (Mark Data Products, 1981) in our own words. Every step was played and checked on the Dragon machine (8.11.2026), to the game's own ending: the evil circle bursts into flame. Each question has three levels: a small hint, a clearer hint and the full solution.",
+ "where": "This game has no fixed place line at the top: the room description scrolls with the text. So each question's \"at\" holds a short piece of the room description (or of an item or message seen there), exactly as printed. Many monastery rooms are called just LONG, NARROW CORRIDOR.",
+ "screen": "all",
+ "at": [
+  [
+   "RUGGED MOUNTAIN COUNTRY",
+   "RUSTIC MOUNTAIN"
+  ],
+  [
+   "RUGGED MOUNTAIN COUNTRY",
+   "LIVING ROOM OF A",
+   "I DON'T UNDERSTAND"
+  ],
+  [
+   "RUSTIC MOUNTAIN",
+   "LIVING ROOM OF A"
+  ],
+  [
+   "DIMLY LIT BEDROOM"
+  ],
+  [
+   "LARGE CLOSET",
+   "FULL LENGTH MIRROR"
+  ],
+  [
+   "LONG, NARROW CORRIDOR",
+   "BRONZE PLAQUE",
+   "END OF A CORRIDOR",
+   "END OF CORRIDOR"
+  ],
+  [
+   "OLD STUDY ROOM"
+  ],
+  [
+   "UPSTAIRS LOFT",
+   "SMALL ROOM",
+   "CARETAKER"
+  ],
+  [
+   "BRONZE PLAQUE",
+   "HEAVY WOODEN DOOR"
+  ],
+  [
+   "CATHEDRAL CEILING",
+   "PIPE ORGAN"
+  ],
+  [
+   "BLACK WALLS",
+   "SMALL ALCOVE",
+   "IT'S DARK HERE",
+   "UNLIT LANTERN"
+  ],
+  [
+   "STRANGE PLACE",
+   "PARALYZED"
+  ],
+  [
+   "UNDERGROUND CRYPT",
+   "WOODEN COFFIN",
+   "OPEN COFFIN"
+  ],
+  [
+   "SMALL ALCOVE",
+   "UPSTAIRS LOFT",
+   "ARCHED PASSAGE",
+   "WON'T FIT"
+  ],
+  [
+   "DIMLY LIT BEDROOM",
+   "STATUE OF A YOUNG WOMAN"
+  ],
+  [
+   "RUSTIC MOUNTAIN",
+   "LIVING ROOM OF A",
+   "DEEP SNOW"
+  ],
+  [
+   "BLACK WALLS",
+   "BLACK RAVEN"
+  ],
+  [
+   "UNDERGROUND CRYPT",
+   "BLACK WALLS",
+   "ARCHED PASSAGE"
+  ]
+ ],
+ "he": [
+  {
+   "q": "מה בכלל צריך לעשות?",
+   "h": [
+    "מתחילים בהרים, בשלג. הבקתה שבאופק היא הדרך היחידה להתקדם. כדאי לאסוף משהו מהעצים עוד לפני שנכנסים.",
+    "המטרה: למצוא את כוח הרשע ולהשמיד אותו. בדרך תפגשו רוח של בישוף, והוא יגיד לכם בדיוק מה להביא לו.",
+    "{GET NEEDLES} (מחטי האורן נחוצות בסוף), ואז {GO CABIN}. הבישוף שבקריפטה מבקש שבעה דברים: מזבח, כיסוי לבן, מים טהורים, מחטי אורן, נוצה שחורה, קווצת שיער ומלח. כשמביאים הכול, המשחק נגמר בהודעה {YOU DESTROYED THEM !}."
+   ]
+  },
+  {
+   "q": "המשחק לא מבין את הפקודות שלי",
+   "h": [
+    "למשחק הזה יש אוצר מילים משלו, שונה ממשחקי הרפתקה אחרים. כמעט כל פקודה היא שתי מילים: פועל ושם.",
+    "הולכים עם {GO} ושם המקום או החפץ, למשל דלת או מדרגות. גם הכיוונים כתובים במלואם, אות אחת לא עובדת.",
+    "{GO NORTH}, ‏{GO SOUTH}, ‏{GO EAST}, ‏{GO WEST}, ‏{GO DOWN}, וגם {GO DOOR}, ‏{GO STAIRS}. כדי לראות מה אתם נושאים כותבים {TAKE INVENTORY}. אפשר לשאת חמישה חפצים בלבד, אז משאירים דברים בדרך ({DROP}) וחוזרים אליהם."
+   ]
+  },
+  {
+   "q": "השלג חוסם את דלת הבקתה",
+   "h": [
+    "זה קורה בהמשך המשחק, ואז כבר מאוחר מדי לחפש כלי בחוץ.",
+    "ליד דלת הבקתה, בחוץ, מונח כלי. קחו אותו פנימה כבר בכניסה הראשונה.",
+    "בכניסה: {GET SHOVEL}, ‏{OPEN DOOR}, ‏{GO DOOR}, ‏{CLOSE DOOR}, ‏{DROP SHOVEL}. כשהשלג חוסם את הדלת: {GET SHOVEL}, ‏{OPEN DOOR}, ‏{DIG SNOW} ואז {GO DOOR}."
+   ]
+  },
+  {
+   "q": "מה עושים עם האישה שעל המיטה?",
+   "h": [
+    "היא בטראנס ואי אפשר להעיר אותה. אבל היא מחזיקה משהו, ויש לה משהו שתצטרכו.",
+    "קראו את הפתק שבידה וזכרו את המילים. גם הסדין הלבן שעל המיטה שימושי.",
+    "{EXAMINE WOMAN}, ‏{GET NOTE}, ‏{READ NOTE}: המילים {INVOCARE EPISCOPUS} יצילו אתכם בהמשך. קחו גם את הסדין: {GET SHEET}. זה הכיסוי הלבן למזבח. את קווצת השיער שלה גוזרים בהמשך."
+   ]
+  },
+  {
+   "q": "מה עושים בארון? יש שם מראה",
+   "h": [
+    "גם הגלימה וגם המראה חשובות מאוד.",
+    "את הגלימה לוקחים ונושאים כל הזמן. המראה היא דלת.",
+    "{GO CLOSET}, ‏{GET ROBE}, ‏{GO MIRROR}: עוברים למנזר. כל עוד הגלימה אצלכם, הנזירים בגלימות השחורות רק מהנהנים וממשיכים. בלעדיה הם הופכים אתכם לאבן. כדי לחזור לבקתה נכנסים שוב למראה, במסדרון שאליו הגעתם."
+   ]
+  },
+  {
+   "q": "הלכתי לאיבוד במסדרונות המנזר",
+   "h": [
+    "כל המסדרונות נראים אותו דבר, והם לא בנויים כמו מפה רגילה. נקודת הציון היא השלט עם השנה 1739.",
+    "מהמראה הולכים דרומה לשלט. ממנו מזרחה ואז צפונה מגיעים לחדר העבודה, ומערבה מגיעים לדלת הכבדה.",
+    "משלט {BRONZE PLAQUE}: {GO EAST}, ‏{GO NORTH} = חדר העבודה. מחדר העבודה: {GO EAST}, ‏{GO SOUTH}, ‏{GO EAST} = הגומחה עם הפנס. מחדר העבודה: {GO SOUTH}, ‏{GO SOUTH}, ‏{GO SOUTH} = המדרגות לעליית הגג. מהשלט צפונה חוזרים למראה."
+   ]
+  },
+  {
+   "q": "בחדר העבודה יש רק מדפים",
+   "h": [
+    "מדפי הספרים מסתירים יותר ממה שנראה. בדקו אותם יותר מפעם אחת.",
+    "בבדיקה הראשונה מופיע כתב יד ישן, ובשנייה דף עם תווים. הדף הוא החשוב.",
+    "{EXAMINE BOOKCASES} פעמיים, ואז {GET PARCHMENT} ו-{READ PARCHMENT}: זאת פוגה של באך. שומרים אותה בשביל העוגב."
+   ]
+  },
+  {
+   "q": "השומר הזקן מגרש אותי מעליית הגג",
+   "h": [
+    "הוא לא מסוכן, אבל לא נותן לגעת בדברים שלו. אולי הוא צמא?",
+    "יש לכם משהו מהבקתה שהוא ישמח לקבל.",
+    "מביאים את כד היין מהסלון ({GET JUG}) ובעליית הגג כותבים {GIVE JUG}. הוא יורד לשתות ונרדם. מיד לוקחים {GET KEYS} ו-{GET SHEARS}, כי כשהוא מתעורר הוא חוזר ולא נותן לקחת. את הכד הריק לוקחים מהחדר הקטן שבו הוא ישן: ממדרגות עליית הגג {GO NORTH}, ‏{GO EAST}, ‏{GET JUG}."
+   ]
+  },
+  {
+   "q": "הדלת הכבדה ליד השלט לא נפתחת",
+   "h": [
+    "היא נעולה.",
+    "המפתחות אצל השומר הזקן.",
+    "עם צרור המפתחות, ליד השלט: {UNLOCK DOOR} ואז {GO DOOR}. מגיעים לאולם עם עוגב גדול."
+   ]
+  },
+  {
+   "q": "מה עושים עם העוגב?",
+   "h": [
+    "מנגנים בו, אבל צריך לדעת מה לנגן.",
+    "מה שמצאתם בחדר העבודה הוא יצירה לעוגב.",
+    "כשהדף עם התווים אצלכם: {PLAY FUGUE}. העוגב זז ונפתח מעבר סודי. {GO PASSAGE} מוביל לחדר עם קירות שחורים ומעגל על הרצפה."
+   ]
+  },
+  {
+   "q": "מאחורי הדוכן חשוך, ואני לא רואה כלום",
+   "h": [
+    "צריך אור. הפנס נמצא במנזר, והגפרורים מוסתרים בבקתה.",
+    "הגפרורים על מדף האח שבסלון. הפנס בגומחה קטנה במנזר. השמן מספיק לכ-50 תורות בלבד, אז מכבים אותו מיד כשיוצאים מהחושך.",
+    "בסלון: {EXAMINE MANTLE}, ‏{GET MATCHES}. בגומחה: {GET LANTERN}. בחדר השחור: {LIGHT LANTERN}, ואז {GO OPENING} אל המעבר שמתחת למנזר. ביציאה מהחושך: {UNLIGHT LANTERN}. הליכה בחושך מסוכנת: אפשר ליפול."
+   ]
+  },
+  {
+   "q": "נפלתי בחושך, ואני משותק במקום מוזר",
+   "h": [
+    "זה לא הסוף. היזכרו במה שהיה כתוב בפתק.",
+    "קוראים לבישוף לעזרה, במילים מהפתק.",
+    "כותבים {INVOCARE EPISCOPUS}: אור לבן, ואתם חוזרים לארון שבבקתה, עם כל מה שהחזקתם. משם {GO MIRROR} וחוזרים למנזר."
+   ]
+  },
+  {
+   "q": "מה יש בקריפטה?",
+   "h": [
+    "יש שם ארון מתים. פתחו אותו, ואז תהיו בשקט ותקשיבו.",
+    "רוח הבישוף רוצה לעזור, וגם משאירה לכם כלי שימושי.",
+    "בקריפטה: {OPEN COFFIN}, ‏{EXAMINE COFFIN}, ‏{LISTEN}: הבישוף מונה את כל מה שצריך להביא. קחו את הפטיש: {GET HAMMER}."
+   ]
+  },
+  {
+   "q": "איך בונים מזבח?",
+   "h": [
+    "דרוש עץ, מסמרים וכלים. העץ כבר מסמר פתח אחר במנזר.",
+    "הקרשים על הפתח שבגומחה. עם הפטיש מוציאים את המסמרים, ובונים בעליית הגג, ליד המסור. המזבח גדול מדי לפתח שמאחורי הדוכן.",
+    "בגומחה, עם הפטיש: {PULL NAILS}, ‏{GET BOARDS}, ‏{GET NAILS}. בעליית הגג (המסור שם): {BUILD ALTAR}, ‏{GET ALTAR}. מביאים אותו לקריפטה דרך הפתח שבגומחה: {GO DOORWAY}, ‏{GO NORTH}, ‏{DROP ALTAR}. דרך הפתח בחדר השחור הוא לא עובר."
+   ]
+  },
+  {
+   "q": "איך משיגים קווצת שיער?",
+   "h": [
+    "צריך מספריים, ולעשות את זה בזמן.",
+    "מספרי הגינה בעליית הגג. ברגע שיוצאים מהבקתה החוצה, האישה נעלמת. היא הופכת לפסל בחדר השחור.",
+    "עם המספריים, בחדר השינה: {CUT HAIR} ואז {GET HAIR}. עושים את זה לפני שיוצאים מהבקתה החוצה."
+   ]
+  },
+  {
+   "q": "איפה מוצאים מים טהורים?",
+   "h": [
+    "יורד שלג בחוץ.",
+    "צריך כלי שאפשר לשים בו שלג.",
+    "עם הכד הריק, מחוץ לבקתה: {GET SNOW}. בדרך חזרה למנזר השלג נמס, והכד מתמלא מים."
+   ]
+  },
+  {
+   "q": "העורב בורח כשאני מנסה לתפוס אותו",
+   "h": [
+    "צריך כלי לתפוס איתו ציפור.",
+    "בסלון של הבקתה יש רשת פרפרים.",
+    "עם הרשת, בחדר השחור: {CATCH RAVEN}, ואז {GET FEATHER}. אחר כך {DROP RAVEN}."
+   ]
+  },
+  {
+   "q": "יש לי הכול. איך מנצחים?",
+   "h": [
+    "חסר עוד דבר אחד, והוא כבר מחכה בחדר השחור.",
+    "המעגל על הרצפה עשוי ממלח. מביאים הכול לקריפטה ומקשיבים לבישוף. האפר שהוא נותן חוזר לחדר השחור.",
+    "בחדר השחור: {GET SALT}. בקריפטה משאירים את שבעת הדברים, ואז {LISTEN}: הבישוף שורף אותם לאפר קדוש. {GET ASH}, חוזרים לחדר השחור ({GO SOUTH}, ‏{GO OPENING}), ואז {THROW ASH} ומיד {INVOCARE EPISCOPUS}. ניצחתם!"
+   ]
+  }
+ ],
+ "en": [
+  {
+   "q": "What am I supposed to do?",
+   "h": [
+    "You start in snowy mountains. The cabin in the distance is the only way forward. Take something from the trees before you go in.",
+    "Your goal is to find the evil force and destroy it. On the way you meet a bishop's ghost, who tells you exactly what to bring him.",
+    "{GET NEEDLES} (the pine needles are needed at the end), then {GO CABIN}. The bishop in the crypt asks for seven things: an altar, a white cloth, pure water, pine needles, a black feather, a lock of hair and salt. When you bring them all, the game ends with {YOU DESTROYED THEM !}."
+   ]
+  },
+  {
+   "q": "The game doesn't understand my commands",
+   "h": [
+    "This game has its own words, unlike other adventures. Almost every command is two words: a verb and a noun.",
+    "Move with {GO} plus a place or thing, like a door or stairs. Directions are typed in full: one letter doesn't work.",
+    "{GO NORTH}, {GO SOUTH}, {GO EAST}, {GO WEST}, {GO DOWN}, and also {GO DOOR}, {GO STAIRS}. To see what you carry, type {TAKE INVENTORY}. You can carry only five things, so leave things on the way ({DROP}) and come back for them."
+   ]
+  },
+  {
+   "q": "Snow blocks the cabin door",
+   "h": [
+    "This happens later in the game, when it's too late to look for a tool outside.",
+    "A tool lies outside, by the cabin door. Take it inside on your first visit.",
+    "On the way in: {GET SHOVEL}, {OPEN DOOR}, {GO DOOR}, {CLOSE DOOR}, {DROP SHOVEL}. When snow blocks the door: {GET SHOVEL}, {OPEN DOOR}, {DIG SNOW}, then {GO DOOR}."
+   ]
+  },
+  {
+   "q": "What about the woman on the bed?",
+   "h": [
+    "She's in a trance and can't be woken. But she's holding something, and she has something you will need.",
+    "Read the note in her hand and remember the words. The white sheet on the bed is useful too.",
+    "{EXAMINE WOMAN}, {GET NOTE}, {READ NOTE}: the words {INVOCARE EPISCOPUS} will save you later. Take the sheet too: {GET SHEET}. It is the altar's white cloth. You cut a lock of her hair later."
+   ]
+  },
+  {
+   "q": "What do I do in the closet? There's a mirror",
+   "h": [
+    "Both the robe and the mirror matter a lot.",
+    "Take the robe and carry it all the time. The mirror is a door.",
+    "{GO CLOSET}, {GET ROBE}, {GO MIRROR}: you go to the monastery. While you carry the robe, the black-robed monks just nod and walk on. Without it they turn you to stone. To go back to the cabin, enter the mirror again in the corridor where you arrived."
+   ]
+  },
+  {
+   "q": "I'm lost in the monastery corridors",
+   "h": [
+    "All corridors look the same, and they don't follow a normal map. Your landmark is the plaque with the year 1739.",
+    "From the mirror go south to the plaque. From there east and north is the study; west is the heavy door.",
+    "From the {BRONZE PLAQUE}: {GO EAST}, {GO NORTH} = the study. From the study: {GO EAST}, {GO SOUTH}, {GO EAST} = the alcove with the lantern. From the study: {GO SOUTH}, {GO SOUTH}, {GO SOUTH} = the stairs to the loft. North from the plaque takes you back to the mirror."
+   ]
+  },
+  {
+   "q": "The study has nothing but bookcases",
+   "h": [
+    "The bookcases hide more than they show. Search them more than once.",
+    "The first search shows an old manuscript, the second a sheet of music. The music is what matters.",
+    "{EXAMINE BOOKCASES} twice, then {GET PARCHMENT} and {READ PARCHMENT}: it's a Bach fugue. Keep it for the organ."
+   ]
+  },
+  {
+   "q": "The old caretaker chases me out of the loft",
+   "h": [
+    "He isn't dangerous, but he won't let you touch his things. Maybe he's thirsty?",
+    "You have something from the cabin he would love.",
+    "Bring the jug of wine from the living room ({GET JUG}) and in the loft type {GIVE JUG}. He goes down to drink and falls asleep. Take {GET KEYS} and {GET SHEARS} right away: when he wakes up he comes back and won't let you. Take the empty jug from the small room where he sleeps: from the loft stairs {GO NORTH}, {GO EAST}, {GET JUG}."
+   ]
+  },
+  {
+   "q": "The heavy door by the plaque won't open",
+   "h": [
+    "It's locked.",
+    "The keys are with the old caretaker.",
+    "With the ring of keys, at the plaque: {UNLOCK DOOR}, then {GO DOOR}. You reach a hall with a big organ."
+   ]
+  },
+  {
+   "q": "What do I do with the organ?",
+   "h": [
+    "You play it, but you need to know what to play.",
+    "What you found in the study is a piece for the organ.",
+    "Carrying the sheet of music: {PLAY FUGUE}. The organ moves and a secret passage opens. {GO PASSAGE} leads to a room with black walls and a circle on the floor."
+   ]
+  },
+  {
+   "q": "It's dark behind the lectern and I can't see",
+   "h": [
+    "You need light. The lantern is in the monastery; the matches are hidden in the cabin.",
+    "The matches are on the fireplace mantle in the living room. The lantern is in a small alcove in the monastery. It only has oil for about 50 turns, so put it out as soon as you leave the dark.",
+    "In the living room: {EXAMINE MANTLE}, {GET MATCHES}. In the alcove: {GET LANTERN}. In the black room: {LIGHT LANTERN}, then {GO OPENING} to the passage under the monastery. When you leave the dark: {UNLIGHT LANTERN}. Walking in the dark is dangerous: you can fall."
+   ]
+  },
+  {
+   "q": "I fell in the dark and I'm paralyzed in a strange place",
+   "h": [
+    "It's not the end. Remember what the note said.",
+    "Call the bishop for help, with the words from the note.",
+    "Type {INVOCARE EPISCOPUS}: a white light, and you are back in the cabin's closet with everything you carried. From there {GO MIRROR} to return to the monastery."
+   ]
+  },
+  {
+   "q": "What's in the crypt?",
+   "h": [
+    "There's a coffin. Open it, then be quiet and listen.",
+    "The bishop's ghost wants to help, and leaves you a useful tool.",
+    "In the crypt: {OPEN COFFIN}, {EXAMINE COFFIN}, {LISTEN}: the bishop lists everything you must bring. Take the hammer: {GET HAMMER}."
+   ]
+  },
+  {
+   "q": "How do I build an altar?",
+   "h": [
+    "You need wood, nails and tools. The wood is already nailed over another doorway in the monastery.",
+    "The boards are on the doorway in the alcove. Pull the nails with the hammer, and build in the loft, by the saw. The altar is too big for the opening behind the lectern.",
+    "In the alcove, with the hammer: {PULL NAILS}, {GET BOARDS}, {GET NAILS}. In the loft (the saw is there): {BUILD ALTAR}, {GET ALTAR}. Carry it to the crypt through the alcove doorway: {GO DOORWAY}, {GO NORTH}, {DROP ALTAR}. It won't pass through the opening in the black room."
+   ]
+  },
+  {
+   "q": "How do I get a lock of hair?",
+   "h": [
+    "You need shears, and you must do it in time.",
+    "The garden shears are in the loft. As soon as you step out of the cabin, the woman vanishes: she becomes a statue in the black room.",
+    "With the shears, in the bedroom: {CUT HAIR}, then {GET HAIR}. Do it before you go out of the cabin."
+   ]
+  },
+  {
+   "q": "Where do I find pure water?",
+   "h": [
+    "It's snowing outside.",
+    "You need something to put snow in.",
+    "With the empty jug, outside the cabin: {GET SNOW}. On the way back to the monastery the snow melts and the jug fills with water."
+   ]
+  },
+  {
+   "q": "The raven flies away when I try to catch it",
+   "h": [
+    "You need a tool for catching a bird.",
+    "There's a butterfly net in the cabin's living room.",
+    "With the net, in the black room: {CATCH RAVEN}, then {GET FEATHER}. Then {DROP RAVEN}."
+   ]
+  },
+  {
+   "q": "I have everything. How do I win?",
+   "h": [
+    "One more thing is missing, and it's already waiting in the black room.",
+    "The circle on the floor is made of salt. Bring everything to the crypt and listen to the bishop. The ash he gives you goes back to the black room.",
+    "In the black room: {GET SALT}. Leave all seven things in the crypt, then {LISTEN}: the bishop burns them into sanctified ash. {GET ASH}, go back to the black room ({GO SOUTH}, {GO OPENING}), then {THROW ASH} and right away {INVOCARE EPISCOPUS}. You win!"
+   ]
+  }
+ ]
+}
