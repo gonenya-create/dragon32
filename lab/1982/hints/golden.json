@@ -1,0 +1,353 @@
+{
+ "note": "Hints for The Golden Voyage in our own words. Every step was played and checked on the Dragon machine (8.11.2026), to the game's own ending: the old king drinks from the chalice and turns young (MISSION ACCOMPLISHED). Each question has three levels: a small hint, a clearer hint and the full solution.",
+ "where": "Each question has \"at\": words from the top of the screen (where the player is). The hint button beside the screen shows the questions whose words are on the screen now.",
+ "at": [
+  [
+   "ROYAL PALACE",
+   "PERSIAN CITY"
+  ],
+  [
+   "PERSIAN CITY",
+   "PERSIAN BAY"
+  ],
+  [
+   "LARGE SHIP",
+   "PERSIAN BAY"
+  ],
+  [
+   "LARGE SHIP",
+   "CROW'S-NEST"
+  ],
+  [
+   "LARGE SHIP",
+   "SMALL ISLAND",
+   "SANDY BEACH",
+   "ROCKY STRAND"
+  ],
+  [
+   "SMALL ISLAND",
+   "MOUNTAIN"
+  ],
+  [
+   "DENSE JUNGLE",
+   "GRASSY PLAIN",
+   "SANDY BEACH"
+  ],
+  [
+   "DENSE JUNGLE"
+  ],
+  [
+   "ROCKY STRAND",
+   "LONG STAIRCASE"
+  ],
+  [
+   "LONG STAIRCASE",
+   "DARK CAVERN",
+   "HIDDEN CHAMBER"
+  ],
+  [
+   "SACRED TEMPLE"
+  ],
+  [
+   "HIDDEN CHAMBER",
+   "SMALL ISLAND"
+  ],
+  [
+   "SMALL ISLAND",
+   "DARK CAVERN"
+  ],
+  [
+   "HIDDEN CHAMBER",
+   "MUSTY HALLWAY",
+   "DAMP GROTTO"
+  ],
+  [
+   "DEEP PIT"
+  ],
+  [
+   "ENORMOUS CAVE",
+   "ROYAL PALACE"
+  ],
+  [
+   "DEEP PIT",
+   "ENORMOUS CAVE",
+   "LARGE SHIP"
+  ]
+ ],
+ "he": [
+  {
+   "q": "מה בכלל צריך לעשות?",
+   "h": [
+    "המלך הזקן בארמון מבקש עזרה. מקשיבים למה שהוא אומר כשנכנסים אליו.",
+    "המלך צריך לשתות משהו מיוחד בתוך כלי מיוחד. אין אוצרות לאסוף, ויש מגבלת זמן.",
+    "בעיר: ‏{W}, ‏{N}, ‏{GO PALACE}. המלך נותן לכם {BAG OF GOLD}: ‏{GET BAG}. המטרה: למצוא את {GOLD CHALICE}, למלא אותו בנוזל הנכון ולהביא למלך ({GIVE CHALICE}). כשמצליחים, המלך נעשה צעיר והמשחק נגמר בהודעה {MISSION ACCOMPLISHED}."
+   ]
+  },
+  {
+   "q": "הסוחרים לא נותנים לי כלום",
+   "h": [
+    "יש לכם שק זהב. תשתמשו בו.",
+    "קונים כל דבר לפני שלוקחים אותו. השק נשאר אצלכם אחרי כל קנייה.",
+    "עם השק ביד, בעיר שבה יש מצפן ({S} מהארמון): ‏{BUY COMPASS}, ‏{BUY TELESCOPE}, ‏{BUY TABLET}, ואז {GET COMPASS}, ‏{GET TELESCOPE}, ‏{GET TABLET}. מזרחה ({E}): ‏{BUY SANDALS}, ‏{GET SANDALS}, ‏{WEAR SANDALS}. במפרץ ({W}, ‏{W}): ‏{BUY SHIP}, ואז {GO SHIP}."
+   ]
+  },
+  {
+   "q": "איך מפליגים?",
+   "h": [
+    "ספינה עם עוגן במים לא זזה. וצריך לדעת לאיזה כיוון.",
+    "מרימים עוגן, ובלי מצפן על הסיפון לא יודעים לאן. מפליגים בכיווני רוח.",
+    "על הסיפון: ‏{DROP BAG}, ‏{DROP COMPASS} (המצפן יכול להישאר על הסיפון), ‏{RAISE ANCHOR}, ואז {SAIL WEST} או {SAIL EAST} וכו׳. מפת הים מפרס: מערבה אי קטן, דרומה חוף סלעי, מזרחה פעמיים חוף חולי. חוזרים לפרס הפוך: מהאי {SAIL EAST}, מהחוף הסלעי {SAIL NORTH}, מהחוף החולי {SAIL WEST} פעמיים."
+   ]
+  },
+  {
+   "q": "הפלגתי, אבל אין שום אדמה באופק",
+   "h": [
+    "צריך להסתכל רחוק יותר, וגבוה יותר.",
+    "על התורן יש תצפית. ושם צריך את מה שקניתם אצל הסוחר.",
+    "עם הטלסקופ ביד: ‏{GO MAST}, ‏{EXAMINE TELESCOPE}. מופיעה האדמה ({LAND HO!}). יורדים ב-{D}. עושים את זה פעם אחת בכל מקום חדש. אחר כך אפשר {DROP TELESCOPE} על הסיפון ולקחת אותו שוב כשצריך."
+   ]
+  },
+  {
+   "q": "איך יורדים לחוף, ואיך חוזרים לספינה?",
+   "h": [
+    "לפני שעוזבים את הספינה, דואגים שהיא תחכה לכם.",
+    "מטילים עוגן ואז הולכים אל היבשה שרואים. העקרבים בחוף לא מזיקים למי שנועל משהו.",
+    "{DROP ANCHOR}, ואז {GO ISLAND}, ‏{GO BEACH} או {GO STRAND} (לפי המקום). הסנדלים כבר עליכם ({WEAR SANDALS}), אז העקרבים לא מפריעים. חוזרים ב-{GO SHIP}, ולפני הפלגה {RAISE ANCHOR}."
+   ]
+  },
+  {
+   "q": "מה יש באי הקטן?",
+   "h": [
+    "שני כלים חשובים מחכים באי: אחד לחפירה ואחד להגנה.",
+    "אחד במערב האי, והשני על ההר.",
+    "מהספינה {GO ISLAND}, ואז {W}, ‏{GET SHOVEL}, ‏{E}, ‏{N}, ‏{GO MOUNTAIN}, ‏{GET SWORD}, ‏{D}, ‏{S}, ‏{GO SHIP}."
+   ]
+  },
+  {
+   "q": "איפה חופרים?",
+   "h": [
+    "כותבים רק {DIG}, בלי מילה נוספת.",
+    "בג׳ונגל יש שלושה דברים קבורים, ובמישור שליד החוף הסלעי עוד אחד.",
+    "עם האת: בחוף החולי {GO JUNGLE}, ‏{N} (ליד המערה): ‏{DIG}, ‏{GET TORCH}, ושוב {DIG}, ‏{GET STONE}. אחר כך דרומה ({S}, החלק של הג׳ונגל שבו נכנסתם): ‏{DIG}, ‏{GET ROPE}. במישור הדשא ({S} מהחוף הסלעי): ‏{DIG}, ‏{GET KEY}."
+   ]
+  },
+  {
+   "q": "מה עושים עם לוח האבן שקניתי?",
+   "h": [
+    "בלוח יש ציור. הוא מראה לאן הוא שייך.",
+    "הלוח מצייר מערה. במערה שבג׳ונגל יש מזרקה מוזרה. לא נכנסים לתוכה בעצמכם.",
+    "בג׳ונגל, ליד המערה: ‏{GO CAVE} (חושך, לא נורא), ‏{DROP TABLET}. המשחק שואל {WHERE?} ועונים {IN FOUNTAIN}: ‏{PLOOSH}. יוצאים ב-{W}. בחושך הולכים רק ליציאה הנכונה: צעד לכיוון שאין בו יציאה מפיל אתכם אל מותכם. משם {S} (כאן חופרים את החבל) ואז {W} לחוף."
+   ]
+  },
+  {
+   "q": "פסל האלה התעורר ורודף אחריי",
+   "h": [
+    "אל תפחדו ממנו: הוא יעזור לכם בלי לרצות. אבל רק מי שמחזיק נשק יכול להתגונן.",
+    "הוא הולך אחריכם לכל מקום. תובילו אותו למקום גבוה ותנו לו דחיפה.",
+    "עם החרב ביד. אם הפסל עוד לא התעורר, מסתובבים קצת בחוף הסלעי (למשל {INVENTORY}) עד {STATUE COMES TO LIFE!}. אז {GO STAIRCASE} (הוא בא אחריכם) ו-{PUSH STATUE}: הוא מתגלגל במדרגות. למטה ({STEP DOWN}): ‏{EXAMINE RUBBLE}, ‏{GET STONE}."
+   ]
+  },
+  {
+   "q": "הלפיד לא דולק",
+   "h": [
+    "צריך משהו שעושה ניצוצות.",
+    "על המדרגות הארוכות מחכה משהו כזה.",
+    "על המדרגות, עם הלפיד: ‏{LIGHT TORCH}. לא צריך לקחת את הצור והפלדה. כאן אפשר גם להשאיר דברים שכבר לא צריך: ‏{DROP SWORD}, ‏{DROP SHOVEL}."
+   ]
+  },
+  {
+   "q": "מה יש במקדש?",
+   "h": [
+    "מסתכלים מקרוב על כל דבר במקדש. וגם מתפללים.",
+    "על המזבח יש כלי זהב. בחדר שמצפון יש תיבה נעולה, והמפתח קבור במישור הדשא.",
+    "מהמדרגות {STEP UP}, ‏{W}: ‏{EXAMINE ALTAR}, ‏{GET CHALICE}. {N}: ‏{OPEN CHEST} (עם המפתח), ‏{EXAMINE CHEST}, ‏{GET MASK}, ‏{DROP KEY}. {S}: ‏{PRAY} פותח {HIDDEN PASSAGE}."
+   ]
+  },
+  {
+   "q": "יש לי אבנים קטנות שבורות",
+   "h": [
+    "האבנים הן חלקים של משהו אחד. כמה חלקים יש?",
+    "שלוש אבנים: מהג׳ונגל, מההריסות בחוף הסלעי, ומהחדר הנסתר שמאחורי המעבר. מניחים את שלושתן יחד על האדמה.",
+    "בחדר הנסתר: ‏{W}, ‏{GET STONE}. עם שלוש האבנים, באי הקטן ({GO ISLAND}, ‏{N}): ‏{DROP STONE} שלוש פעמים: ‏{THE STONES MYSTERIOUSLY UNITE!}. {GET TABLET}: עליו ציור של הר והמילה {SUN}."
+   ]
+  },
+  {
+   "q": "מה עושים עם הלוח החדש?",
+   "h": [
+    "המילה שעל הלוח היא מילת קסם. אומרים אותה ליד ההר.",
+    "נפתח סדק אל מערה חשוכה, ושם שוב מזרקה מוזרה.",
+    "באי, ליד ההר, עם הלוח והלפיד הדולק: ‏{SAY SUN}: נפתח {CREVICE}. {GO CREVICE}, ‏{DROP TABLET}, ‏{IN FOUNTAIN}. האדמה רועדת, ועכשיו {EXAMINE FOUNTAIN}: ‏{GET GLOBE}. חוזרים ב-{GO CREVICE}."
+   ]
+  },
+  {
+   "q": "איך יורדים לבור העמוק?",
+   "h": [
+    "כששני הלוחות במזרקות, האדמה רעדה ונפתח משהו בחדר הנסתר.",
+    "דרך המסדרון מגיעים למערה עם בור וזקיף אבן. החבל מהג׳ונגל יעזור.",
+    "קחו מהספינה את המסכה, הגביע והחבל. במקדש {GO PASSAGE}, ‏{GO HALLWAY}, ‏{E}. {TIE ROPE}, ‏{TO STALAGMITE}, ‏{DROP ROPE}, ‏{IN PIT}, ‏{GO ROPE}."
+   ]
+  },
+  {
+   "q": "ענק עם עין אחת לא נותן לי לעבור",
+   "h": [
+    "אור חזק מאוד יכול לעוור. אבל לא כדאי שתתעוורו גם אתם.",
+    "הכדור הלבן מתנפץ בהבזק. לפני כן שמים משהו על הפנים.",
+    "בבור, לפני שהולכים דרומה: ‏{WEAR MASK}. {S}, ומיד {DROP GLOBE}: הקיקלופ מתעוור. מיד {GO CAVE}. לא מתעכבים ליד הקיקלופ העיוור: הוא עלול לדרוך עליכם, גם בדרך חזרה. יש בזה מזל, ואם לא הצלחתם מתחילים מחדש."
+   ]
+  },
+  {
+   "q": "באיזה נוזל ממלאים את הגביע?",
+   "h": [
+    "לא מים, ולא המזרקה המוזרה. משהו מרשים יותר.",
+    "במערה הענקית שמעבר לקיקלופ יש מזרקה מפוארת. ממלאים, אבל לא נכנסים לתוכה. ואז ממהרים: הזמן קצר.",
+    "{W}: ‏{FILL CHALICE}. חוזרים מהר: ‏{E}, ‏{N}, ‏{N}, ‏{GO ROPE}, ‏{W}, ‏{N}, ‏{N}, ‏{E}, ‏{GO STAIRCASE}, ‏{STEP DOWN}, ‏{GO SHIP}, ‏{RAISE ANCHOR}, ‏{SAIL NORTH}, ‏{GO CITY}, ‏{E}, ‏{N}, ‏{GO PALACE}, ‏{GIVE CHALICE}."
+   ]
+  },
+  {
+   "q": "כתוב {LIGHT RUNS OUT IN} ונגמר לי הזמן",
+   "h": [
+    "הזמן במשחק הזה מוגבל. כל צעד מיותר עולה ביוקר.",
+    "מתכננים מראש: אוספים בכל ביקור את כל מה שצריך מאותו מקום, ומשאירים על הסיפון מה שלא צריך עכשיו.",
+    "סדר שעבד אצלנו בלי לישון אף לילה: פרס (קניות) ← האי (את, חרב) ← החוף החולי (חבל, לפיד, אבן, הלוח במזרקה) ← החוף הסלעי (מפתח, פסל, אבן, גביע, מסכה, אבן) ← האי (שלוש האבנים, ‏{SAY SUN}, כדור) ← החוף הסלעי (בור, קיקלופ, מזרקה) ← הארמון. ההודעה מופיעה כשנשארים פחות מ-25 צעדים. במשחק הראשון שלנו היא התחילה בבור, ונשארו לנו בסוף שני צעדים בלבד."
+   ]
+  }
+ ],
+ "en": [
+  {
+   "q": "What am I supposed to do?",
+   "h": [
+    "The old king in the palace needs help. Listen to what he says when you walk in.",
+    "The king must drink something special from a special cup. There are no treasures to collect, and there is a time limit.",
+    "In the city: {W}, {N}, {GO PALACE}. The king gives you a {BAG OF GOLD}: {GET BAG}. The goal: find the {GOLD CHALICE}, fill it with the right liquid and bring it to the king ({GIVE CHALICE}). When it works the king turns young and the game ends with {MISSION ACCOMPLISHED}."
+   ]
+  },
+  {
+   "q": "The merchants won't give me anything",
+   "h": [
+    "You have a bag of gold. Use it.",
+    "Buy each thing before you take it. You keep the bag after every purchase.",
+    "With the bag, in the city with the compass ({S} from the palace): {BUY COMPASS}, {BUY TELESCOPE}, {BUY TABLET}, then {GET COMPASS}, {GET TELESCOPE}, {GET TABLET}. East ({E}): {BUY SANDALS}, {GET SANDALS}, {WEAR SANDALS}. At the bay ({W}, {W}): {BUY SHIP}, then {GO SHIP}."
+   ]
+  },
+  {
+   "q": "How do I sail?",
+   "h": [
+    "An anchored ship does not move. And you need to know which way is which.",
+    "Raise the anchor, and keep a compass on deck. Sail by compass directions.",
+    "On deck: {DROP BAG}, {DROP COMPASS} (the compass can stay on deck), {RAISE ANCHOR}, then {SAIL WEST}, {SAIL EAST} and so on. The sea map from Persia: west is a small island, south is a rocky strand, east twice is a sandy beach. Back to Persia the other way: from the island {SAIL EAST}, from the strand {SAIL NORTH}, from the beach {SAIL WEST} twice."
+   ]
+  },
+  {
+   "q": "I sailed, but there is no land in sight",
+   "h": [
+    "You need to look further, and from higher up.",
+    "There is a lookout on the mast. Take what you bought from the merchant.",
+    "Holding the telescope: {GO MAST}, {EXAMINE TELESCOPE}. Land appears ({LAND HO!}). Come down with {D}. Do it once at each new place. Then you can {DROP TELESCOPE} on deck and pick it up again when needed."
+   ]
+  },
+  {
+   "q": "How do I go ashore, and back to the ship?",
+   "h": [
+    "Before you leave the ship, make sure it waits for you.",
+    "Drop the anchor, then go to the land you can see. The scorpions on the shore are no problem if your feet are covered.",
+    "{DROP ANCHOR}, then {GO ISLAND}, {GO BEACH} or {GO STRAND} (depending on where you are). You already wear the sandals ({WEAR SANDALS}), so the scorpions don't hurt. Come back with {GO SHIP}, and before sailing {RAISE ANCHOR}."
+   ]
+  },
+  {
+   "q": "What is on the small island?",
+   "h": [
+    "Two important tools wait on the island: one for digging and one for defence.",
+    "One is in the west of the island, the other on the mountain.",
+    "From the ship {GO ISLAND}, then {W}, {GET SHOVEL}, {E}, {N}, {GO MOUNTAIN}, {GET SWORD}, {D}, {S}, {GO SHIP}."
+   ]
+  },
+  {
+   "q": "Where do I dig?",
+   "h": [
+    "Type just {DIG}, with no second word.",
+    "Three things are buried in the jungle, and one more on the plain by the rocky strand.",
+    "With the shovel: from the sandy beach {GO JUNGLE}, {N} (by the cave): {DIG}, {GET TORCH}, and again {DIG}, {GET STONE}. Later go south ({S}, the part of the jungle where you came in): {DIG}, {GET ROPE}. On the grassy plain ({S} from the rocky strand): {DIG}, {GET KEY}."
+   ]
+  },
+  {
+   "q": "What do I do with the stone tablet I bought?",
+   "h": [
+    "The tablet has a picture. It shows where it belongs.",
+    "It shows a cave. The cave in the jungle has a strange fountain. Don't go into it yourself.",
+    "In the jungle by the cave: {GO CAVE} (it's dark, that's fine), {DROP TABLET}. The game asks {WHERE?}, answer {IN FOUNTAIN}: {PLOOSH}. Leave with {W}. In the dark move only through the right exit: a step where there is no exit makes you fall to your death. Then {S} (dig the rope here) and {W} to the beach."
+   ]
+  },
+  {
+   "q": "The goddess statue came alive and is chasing me",
+   "h": [
+    "Don't fear it: it will help you without meaning to. But only someone holding a weapon can defend himself.",
+    "It follows you everywhere. Lead it somewhere high and give it a push.",
+    "Hold the sword. If the statue has not woken yet, spend a few turns on the rocky strand (for example {INVENTORY}) until {STATUE COMES TO LIFE!}. Then {GO STAIRCASE} (it follows) and {PUSH STATUE}: it falls down the stairs. Below ({STEP DOWN}): {EXAMINE RUBBLE}, {GET STONE}."
+   ]
+  },
+  {
+   "q": "The torch won't light",
+   "h": [
+    "You need something that makes sparks.",
+    "Something like that waits on the long staircase.",
+    "On the staircase, holding the torch: {LIGHT TORCH}. You don't need to pick up the flint and steel. You can also leave things you no longer need here: {DROP SWORD}, {DROP SHOVEL}."
+   ]
+  },
+  {
+   "q": "What is in the temple?",
+   "h": [
+    "Look closely at everything in the temple. And pray.",
+    "There is a gold cup on the altar. The room to the north has a locked chest, and the key is buried on the grassy plain.",
+    "From the stairs {STEP UP}, {W}: {EXAMINE ALTAR}, {GET CHALICE}. {N}: {OPEN CHEST} (with the key), {EXAMINE CHEST}, {GET MASK}, {DROP KEY}. {S}: {PRAY} opens a {HIDDEN PASSAGE}."
+   ]
+  },
+  {
+   "q": "I have small broken stones",
+   "h": [
+    "The stones are pieces of one thing. How many pieces are there?",
+    "Three stones: from the jungle, from the rubble on the rocky strand, and from the hidden chamber behind the passage. Put all three on the ground together.",
+    "In the hidden chamber: {W}, {GET STONE}. With all three stones, on the small island ({GO ISLAND}, {N}): {DROP STONE} three times: {THE STONES MYSTERIOUSLY UNITE!}. {GET TABLET}: it shows a mountain and the word {SUN}."
+   ]
+  },
+  {
+   "q": "What do I do with the new tablet?",
+   "h": [
+    "The word on the tablet is a magic word. Say it by the mountain.",
+    "A crack opens into a dark cavern, and there is a strange fountain again.",
+    "On the island by the mountain, with the tablet and the lit torch: {SAY SUN}: a {CREVICE} opens. {GO CREVICE}, {DROP TABLET}, {IN FOUNTAIN}. The ground shakes, and now {EXAMINE FOUNTAIN}: {GET GLOBE}. Back out with {GO CREVICE}."
+   ]
+  },
+  {
+   "q": "How do I get down the deep pit?",
+   "h": [
+    "Once both tablets are in fountains, the ground shook and something opened in the hidden chamber.",
+    "The hallway leads to a grotto with a pit and a stalagmite. The rope from the jungle helps.",
+    "Take the mask, the chalice and the rope from the ship. In the temple {GO PASSAGE}, {GO HALLWAY}, {E}. {TIE ROPE}, {TO STALAGMITE}, {DROP ROPE}, {IN PIT}, {GO ROPE}."
+   ]
+  },
+  {
+   "q": "A one-eyed giant won't let me pass",
+   "h": [
+    "Very strong light can blind. But you don't want to go blind too.",
+    "The white globe breaks in a flash. Cover your face first.",
+    "In the pit, before going south: {WEAR MASK}. {S}, then at once {DROP GLOBE}: the cyclops goes blind. At once {GO CAVE}. Don't linger by the blind cyclops: he may step on you, also on the way back. It is partly luck, and if it fails you start again."
+   ]
+  },
+  {
+   "q": "What liquid goes into the chalice?",
+   "h": [
+    "Not water, and not the strange fountain. Something grander.",
+    "The enormous cave past the cyclops has a magnificent fountain. Fill the cup, but don't go into the fountain. Then hurry: time is short.",
+    "{W}: {FILL CHALICE}. Hurry back: {E}, {N}, {N}, {GO ROPE}, {W}, {N}, {N}, {E}, {GO STAIRCASE}, {STEP DOWN}, {GO SHIP}, {RAISE ANCHOR}, {SAIL NORTH}, {GO CITY}, {E}, {N}, {GO PALACE}, {GIVE CHALICE}."
+   ]
+  },
+  {
+   "q": "It says {LIGHT RUNS OUT IN} and I'm running out of time",
+   "h": [
+    "Time is limited in this game. Every wasted move costs.",
+    "Plan ahead: on each visit take everything you need from that place, and leave on deck what you don't need right now.",
+    "An order that worked for us without sleeping a single night: Persia (shopping) → island (shovel, sword) → sandy beach (rope, torch, stone, tablet in the fountain) → rocky strand (key, statue, stone, chalice, mask, stone) → island (three stones, {SAY SUN}, globe) → rocky strand (pit, cyclops, fountain) → palace. The warning shows when fewer than 25 moves are left. In our first game it started in the pit, and we had only two moves to spare at the end."
+   ]
+  }
+ ]
+}
