@@ -1,0 +1,380 @@
+{
+ "note": "Hints for Ghost Town in our own words. Every step was played and checked on the Dragon machine (8.11.2026): 13 treasures, 100 of 100, and 50 of 50 bonus points in 178 moves. On this tape the keg must be left in the saloon, not in the telegraph office (see the safe question). Each question has three levels: a small hint, a clearer hint and the full solution.",
+ "where": "Each question has \"at\": words from the top of the screen (where the player is). In the dark (the mine, and the town at night) the top of the screen only says ITS TOO DARK TO SEE!, so those questions use TOO DARK. The hint button beside the screen shows the questions whose words are on the screen now.",
+ "at": [
+  [
+   "GHOST TOWN",
+   "DRY GOODS STORE"
+  ],
+  [
+   "TELEGRAPH OFFICE"
+  ],
+  [
+   "JAIL",
+   "STALL"
+  ],
+  [
+   "JAIL",
+   "CELL",
+   "BARBERSHOP"
+  ],
+  [
+   "SALOON",
+   "WRAITHLIKE"
+  ],
+  [
+   "RIDGE ABOVE A NARROW"
+  ],
+  [
+   "ENTRANCE TO A MINE",
+   "TOO DARK"
+  ],
+  [
+   "LARGE FIELD",
+   "STABLE",
+   "MANURE"
+  ],
+  [
+   "OLE PAINT",
+   "STALL",
+   "MANURE PILE"
+  ],
+  [
+   "STOREROOM",
+   "HOOF PRINT",
+   "OLE PAINT"
+  ],
+  [
+   "HIDDEN CANYON",
+   "TEEPEE",
+   "INDIAN GHOST"
+  ],
+  [
+   "LARGE SAFE",
+   "KEG OF",
+   "PILE OF"
+  ],
+  [
+   "LOBBY",
+   "HOTEL ROOM",
+   "BEHIND THE COUNTER"
+  ],
+  [
+   "SALOON",
+   "MIRROR"
+  ],
+  [
+   "JAIL",
+   "GO BOARD",
+   "DRY GOODS STORE"
+  ],
+  [
+   "BOOT HILL",
+   "GRAVE"
+  ],
+  [
+   "RIDGE ABOVE A RAVINE",
+   "MOUNTAIN TRAIL",
+   "LINE SHACK",
+   "ROOT CELLAR",
+   "SMOKING OPEN SAFE"
+  ],
+  [
+   "SALOON",
+   "TOO DARK",
+   "GETTING"
+  ]
+ ],
+ "he": [
+  {
+   "q": "מה בכלל צריך לעשות?",
+   "h": [
+    "מחפשים חפצים שהשם שלהם מוקף בכוכביות, למשל {*GOLD NUGGET*}. אלה האוצרות, ויש 13.",
+    "את כל האוצרות מביאים לחנות שבה מתחילים, {DRY GOODS STORE}, ומשאירים אותם שם. יש גם 50 נקודות בונוס, ורובן ניתנות על מהירות.",
+    "מהעיירה שבה מתחילים: {W}, ‏{GO STORE}. לוקחים מכאן את האת ואת הגפרורים ({GET SHOVEL}, ‏{GET MATCHES}). בחנות משאירים כל אוצר ({DROP SPURS}, למשל) ובודקים ב-{SCORE}. בונוס: מחברים את החוטים במשרד הטלגרף ופותחים את דלת הכלא כבר בתחילת המשחק, חופרים בתקרת המכרה ומכינים אבק שריפה מוקדם, ומסיימים את הרכיבה על הסוס מהר. גם כמה פעולות קטנות בדרך נותנות בונוס. אנחנו סיימנו ב-178 מהלכים, עם 50 מתוך 50."
+   ]
+  },
+  {
+   "q": "מה עושים במשרד הטלגרף?",
+   "h": [
+    "הכספת הגדולה נעולה, אבל אפשר להזיז אותה.",
+    "מאחורי הכספת יש שני חוטים קרועים. מחברים אותם. כדאי לעשות את זה מיד, כי זה נותן בונוס.",
+    "מהחנות: {N}, ‏{W}, ‏{GO OFFICE}, ואז {MOVE SAFE} ו-{CONNECT WIRES}. ללחוץ על המפתח של הטלגרף כאן לא צריך."
+   ]
+  },
+  {
+   "q": "דלת הכלא סגורה, והבריח מבפנים",
+   "h": [
+    "הבריח עשוי מתכת. צריך משהו שמושך מתכת.",
+    "בתא של הסוס, באורווה, יש פרסה. כאן היא עובדת כמו מגנט.",
+    "מהעיירה של משרד הטלגרף: {W}, ‏{GO STABLE}, ‏{GO STALL}, ‏{GET HORSESHOE}, ‏{S}, ‏{S}, ואז שלוש פעמים {E}. מול הכלא: {WITH HORSESHOE}. שומרים את הפרסה, צריך אותה בהמשך."
+   ]
+  },
+  {
+   "q": "בתוך הכלא יש עוד דלת, נעולה",
+   "h": [
+    "המפתח מסתתר במספרה, בתוך משהו שלובשים.",
+    "מנערים את הכובע.",
+    "{GO BARBERSHOP}, ‏{SHAKE HAT}, ‏{GET KEY}, ‏{S}, ‏{GO JAIL}, ‏{OPEN DOOR}. את המפתח אפשר להשאיר שם ({DROP KEY}). אחר כך {GO DOOR}, ‏{GET HAMMER} ו-{N}. את האקדח הזהוב, {*GOLDEN DERRINGER*}, לקחנו רק בביקור מאוחר יותר ({GET GUN})."
+   ]
+  },
+  {
+   "q": "רוח מנגנת בפסנתר בסלון",
+   "h": [
+    "גם רוחות אוהבות קהל.",
+    "תנו לה מחיאות כפיים.",
+    "{GO SALOON}, ‏{CLAP}: הרוח קדה ונעלמת. זה נותן נקודות בונוס. את הפעמון, {LARGE BELL}, לוקחים בביקור מאוחר יותר."
+   ]
+  },
+  {
+   "q": "אי אפשר לרדת לערוץ, הוא מלא שיחים",
+   "h": [
+    "שיחים יבשים נשרפים מהר.",
+    "יש לכם גפרורים מהחנות.",
+    "מהעיירה ממשיכים מערבה עד ההתפצלות, {FORK IN THE ROAD}, ואז {S}. שם: {LIGHT BRUSH}, ואז {GO RAVINE}. אנחנו השארנו את הגפרורים על הרכס ({DROP MATCHES}) ולא נזקקנו להם יותר."
+   ]
+  },
+  {
+   "q": "במכרה חושך מוחלט",
+   "h": [
+    "לא חייבים לראות כדי לפעול. מספיק לדעת לאן הולכים.",
+    "המכרה קטן: יורדים למטה, ואז דרומה. בחדר האחרון חופרים בתקרה. המשחק מזהיר שמסוכן ללכת בחושך, אבל בדרך הזאת עברנו בשלום.",
+    "בערוץ: {GET CHARCOAL}, ‏{GO MINE}, ‏{GET BULLET} (זה {*SILVER BULLET*}), ‏{D}, ‏{S}, ‏{DIG ROOF}, ‏{GET NUGGET}. חוזרים: {N}, ואז שלוש פעמים {U}. לא השתמשנו בנר בכלל."
+   ]
+  },
+  {
+   "q": "איך מכינים אבק שריפה?",
+   "h": [
+    "צריך שלושה חומרים: פחם, גופרית ומלחת. את הפחם כבר לקחתם בערוץ.",
+    "את שני האחרים חופרים: אחד בשדה הגדול, ואחד בערימת הזבל שבאורווה.",
+    "מההתפצלות: {N} לשדה, {DIG}, ‏{GET POWDER}. חוזרים: {S}, ‏{E}, ‏{E}, ‏{GO STABLE}. שם: {DIG MANURE} ואז {MIX GUNPOWDER}. ערימת אבק השריפה נשארת באורווה."
+   ]
+  },
+  {
+   "q": "הסוס לא זז",
+   "h": [
+    "על גב הסוס מחכה אוצר, ומה שעושים בו מרגיז את הסוס.",
+    "משתמשים בדורבנות על הסוס. הוא יעיף אתכם, אבל ישאיר חור בקיר.",
+    "{GO STALL}, ‏{GO PAINT}, ‏{GET SPURS}, ואז {SPUR PAINT}: נוחתים בערימת הזבל. {GET UP} ו-{GO STALL}: עכשיו יש בקיר חור."
+   ]
+  },
+  {
+   "q": "איך רוכבים על הסוס?",
+   "h": [
+    "לסוס חסרה פרסה. במחסן שמאחורי החור יש מה שצריך כדי לפרזל אותו.",
+    "צריך מסמרים, פרסה ופטיש. אחר כך אומרים לסוס את המילה שכל קאובוי אומר.",
+    "{GO HOLE}, ‏{GET KEG}, ‏{N}, ‏{EMPTY KEG} (החבית הריקה נשארת אצלכם, שמרו אותה), ואז {SHOE PAINT}, כשהפרסה והפטיש אצלכם. את הפטיש אפשר להשאיר ({DROP HAMMER}). אחר כך {GO PAINT} ו-{SAY GIDDYUP}: רכיבה ארוכה עד {HIDDEN CANYON}."
+   ]
+  },
+  {
+   "q": "איך יוצאים מהקניון הנסתר?",
+   "h": [
+    "בטיפי יש כלי שמזמן מישהו.",
+    "מכים בתוף, ומברכים לשלום את מי שמופיע, כמו בסרטי מערבונים.",
+    "{GO TEEPEE}, ‏{GET TOM}, ‏{GET NECKLACE}, ‏{BEAT TOM}: מופיעה רוח של אינדיאני. {SAY HOW}: נוחתים בערימת הזבל שבאורווה. אחר כך {GET UP}."
+   ]
+  },
+  {
+   "q": "איך פותחים את הכספת? (חבית אבק השריפה)",
+   "h": [
+    "את הכספת לא פותחים, מפוצצים. והטלגרף יכול לשלוח ניצוץ מרחוק.",
+    "ממלאים את החבית הריקה באבק השריפה. חשוב: בגרסה הזאת של המשחק הניצוץ מגיע לסלון, לא למשרד הטלגרף. לכן החבית צריכה לעמוד בסלון.",
+    "באורווה, ליד ערימת אבק השריפה ועם החבית הריקה: {WITH GUNPOWDER}, ואז {GET KEG}. אחר כך {S}, ‏{E}, ‏{E}, ‏{GO SALOON}, ‏{DROP KEG}. החבית מחכה שם עד שלוחצים על המפתח בצריף שבהרים, {LINE SHACK}."
+   ]
+  },
+  {
+   "q": "מה עושים במלון?",
+   "h": [
+    "מאחורי הדלפק יש אוצר, ובחדר יש שירות חדרים.",
+    "לוקחים את הפעמון מהסלון ומצלצלים בו בחדר.",
+    "בסלון: {GET BELL}. בעיירה של משרד הטלגרף: {GO HOTEL}, ‏{GO COUNTER}, ‏{GET CASHBOX}, ‏{N}, ‏{E}. בחדר: {RING BELL}, ומופיעה מיטה. אחר כך {MOVE BED} ו-{GET TAPE}."
+   ]
+  },
+  {
+   "q": "מה עושים עם המראה בסלון?",
+   "h": [
+    "מאחורי המראה יש משהו. צריך לשבור אותה בזהירות.",
+    "קודם מדביקים עליה את נייר הדבק מהמלון.",
+    "{GO SALOON}, ‏{TAPE MIRROR}, ‏{BREAK MIRROR}: נפתח חור בקיר. {GO HOLE}, ‏{GET BOARD} (זה {*ORIENTAL GO BOARD*}), ואז {E}."
+   ]
+  },
+  {
+   "q": "קול רפאים בכלא מדבר על 200 דולר",
+   "h": [
+    "זה משפט ממשחק קופסה מפורסם. מה עושים בו כדי לקבל 200?",
+    "עם לוח המשחק ביד, עוברים ב\"התחלה\".",
+    "בחנות, עם {*ORIENTAL GO BOARD*} ביד: {PASS GO}. האוצר {* $200 *} מופיע מיד בחנות. אחר כך {DROP BOARD}."
+   ]
+  },
+  {
+   "q": "נחש רעשן על גבעת הקברים",
+   "h": [
+    "צריך לירות בו, אבל האקדח הזהוב הוא לא בדיוק אקדח.",
+    "האקדח מהכלא עושה את העבודה. אחר כך חופרים.",
+    "בכלא: {GET GUN}. מהעיירה שבה מתחילים: {E}, ‏{E}. שם: {SHOOT SNAKE}, ‏{DIG}, ‏{GO GRAVE}, ‏{GET COIN}, ‏{KILL WORM} (זה נותן בונוס), ואז {U}. בשביל החפירה צריך את האת."
+   ]
+  },
+  {
+   "q": "איך מגיעים לצריף בהרים ומפוצצים את הכספת?",
+   "h": [
+    "מהרכס שמעל הערוץ הצר אפשר לקפוץ לצד השני. שם יש צריף עם טלגרף.",
+    "בצריף לוחצים על המפתח, כשהחבית כבר בסלון. והרצפה חורקת: מתחת לקרש רופף יש מרתף.",
+    "מהרכס: {JUMP RAVINE}, ‏{W}, ‏{GO SHACK}, ‏{TAP KEY}: נשמע {BOOM!}. אחר כך {GET PLANK}, ‏{GO HOLE}, ‏{GET PELTS}, ‏{U}. חוזרים: {S}, ‏{E}, ‏{JUMP RAVINE}, ‏{N}, ומזרחה עד העיירה שבה עמד משרד הטלגרף. במקומו יש עכשיו כספת פתוחה שמעלה עשן: {LOOK SAFE}, ‏{GET BAG}."
+   ]
+  },
+  {
+   "q": "חסר לי עוד אוצר",
+   "h": [
+    "יש דברים שקורים רק בלילה.",
+    "בלילה יש בסלון ריקוד רפאים. מצטרפים אליו.",
+    "מחכים לשקיעה ({SUNSET!}). אצלנו היא הגיעה בערך במהלך 170. בחושך: {GO SALOON}, ‏{DANCE}, וזוכים ב-{*SILVER CUP*}. אחר כך {S}, ‏{GO STORE}, ‏{DROP CUP}, ‏{SCORE}."
+   ]
+  }
+ ],
+ "en": [
+  {
+   "q": "What am I supposed to do?",
+   "h": [
+    "Look for things whose name has stars around it, like {*GOLD NUGGET*}. Those are the treasures. There are 13.",
+    "Take every treasure to the shop where you start, the {DRY GOODS STORE}, and leave it there. There are also 50 bonus points, most of them for speed.",
+    "From the starting street: {W}, {GO STORE}. Take the shovel and the matches ({GET SHOVEL}, {GET MATCHES}). Leave each treasure in the store ({DROP SPURS}, for example) and check with {SCORE}. Bonus: splice the wires in the telegraph office and open the jail door right at the start, dig the mine roof and make gunpowder early, and finish the horse ride fast. A few small actions on the way also give bonus points. We finished in 178 moves with 50 of 50."
+   ]
+  },
+  {
+   "q": "What do I do in the telegraph office?",
+   "h": [
+    "The big safe is locked, but you can move it.",
+    "Behind the safe there are two broken wires. Join them. Do it at once: it gives bonus points.",
+    "From the store: {N}, {W}, {GO OFFICE}, then {MOVE SAFE} and {CONNECT WIRES}. You don't need to press the telegraph key here."
+   ]
+  },
+  {
+   "q": "The jail door is bolted from the inside",
+   "h": [
+    "The bolt is metal. You need something that pulls metal.",
+    "In the horse's stall, in the stable, there is a horseshoe. Here it works like a magnet.",
+    "From the telegraph office street: {W}, {GO STABLE}, {GO STALL}, {GET HORSESHOE}, {S}, {S}, then {E} three times. In front of the jail: {WITH HORSESHOE}. Keep the horseshoe, you need it later."
+   ]
+  },
+  {
+   "q": "Inside the jail there is another door, locked",
+   "h": [
+    "The key is hidden in the barbershop, inside something you wear.",
+    "Shake the hat.",
+    "{GO BARBERSHOP}, {SHAKE HAT}, {GET KEY}, {S}, {GO JAIL}, {OPEN DOOR}. You can leave the key there ({DROP KEY}). Then {GO DOOR}, {GET HAMMER} and {N}. We took the {*GOLDEN DERRINGER*} only on a later visit ({GET GUN})."
+   ]
+  },
+  {
+   "q": "A ghost is playing the piano in the saloon",
+   "h": [
+    "Ghosts like an audience too.",
+    "Give it a round of applause.",
+    "{GO SALOON}, {CLAP}: the ghost bows and vanishes. This gives bonus points. Take the {LARGE BELL} on a later visit."
+   ]
+  },
+  {
+   "q": "I can't get into the ravine: it's full of brush",
+   "h": [
+    "Dry brush burns fast.",
+    "You have matches from the store.",
+    "From the town go west to the {FORK IN THE ROAD}, then {S}. There: {LIGHT BRUSH}, then {GO RAVINE}. We left the matches on the ridge ({DROP MATCHES}) and never needed them again."
+   ]
+  },
+  {
+   "q": "The mine is pitch dark",
+   "h": [
+    "You don't have to see to act. You only need to know where you're going.",
+    "The mine is small: go down, then south. In the last room dig the roof. The game warns that moving in the dark is dangerous, but on this route we were fine.",
+    "In the ravine: {GET CHARCOAL}, {GO MINE}, {GET BULLET} (the {*SILVER BULLET*}), {D}, {S}, {DIG ROOF}, {GET NUGGET}. Back out: {N}, then {U} three times. We never used the candle."
+   ]
+  },
+  {
+   "q": "How do I make gunpowder?",
+   "h": [
+    "You need three things: charcoal, sulphur and saltpetre. You already took the charcoal in the ravine.",
+    "You dig up the other two: one in the large field, one in the manure pile in the stable.",
+    "From the fork: {N} to the field, {DIG}, {GET POWDER}. Back: {S}, {E}, {E}, {GO STABLE}. There: {DIG MANURE}, then {MIX GUNPOWDER}. The pile of gunpowder stays in the stable."
+   ]
+  },
+  {
+   "q": "The horse won't move",
+   "h": [
+    "A treasure is waiting on the horse's back, and using it makes the horse angry.",
+    "Use the spurs on the horse. He throws you off, but leaves a hole in the wall.",
+    "{GO STALL}, {GO PAINT}, {GET SPURS}, then {SPUR PAINT}: you land in the manure pile. {GET UP} and {GO STALL}: now there is a hole in the wall."
+   ]
+  },
+  {
+   "q": "How do I ride the horse?",
+   "h": [
+    "The horse is missing a shoe. The storeroom behind the hole has what you need to shoe him.",
+    "You need nails, a horseshoe and a hammer. Then say the word every cowboy says.",
+    "{GO HOLE}, {GET KEG}, {N}, {EMPTY KEG} (keep the empty keg), then {SHOE PAINT} with the horseshoe and the hammer. You can leave the hammer ({DROP HAMMER}). Then {GO PAINT} and {SAY GIDDYUP}: a long ride to the {HIDDEN CANYON}."
+   ]
+  },
+  {
+   "q": "How do I get out of the hidden canyon?",
+   "h": [
+    "In the teepee there is something that calls someone.",
+    "Beat the drum, and greet whoever appears the way they do in old westerns.",
+    "{GO TEEPEE}, {GET TOM}, {GET NECKLACE}, {BEAT TOM}: an Indian ghost appears. {SAY HOW}: you land in the manure pile in the stable. Then {GET UP}."
+   ]
+  },
+  {
+   "q": "How do I open the safe? (the keg of gunpowder)",
+   "h": [
+    "You don't open the safe, you blow it up. And the telegraph can send a spark from far away.",
+    "Fill the empty keg with gunpowder. Important: in this version of the game the spark reaches the saloon, not the telegraph office. So the keg must stand in the saloon.",
+    "In the stable, next to the pile of gunpowder, with the empty keg: {WITH GUNPOWDER}, then {GET KEG}. Then {S}, {E}, {E}, {GO SALOON}, {DROP KEG}. The keg waits there until you press the key in the {LINE SHACK} in the mountains."
+   ]
+  },
+  {
+   "q": "What do I do in the hotel?",
+   "h": [
+    "There is a treasure behind the counter, and the room has room service.",
+    "Bring the bell from the saloon and ring it in the room.",
+    "In the saloon: {GET BELL}. In the telegraph office street: {GO HOTEL}, {GO COUNTER}, {GET CASHBOX}, {N}, {E}. In the room: {RING BELL}, and a bed appears. Then {MOVE BED} and {GET TAPE}."
+   ]
+  },
+  {
+   "q": "What do I do with the mirror in the saloon?",
+   "h": [
+    "Something is behind the mirror. Break it, but carefully.",
+    "First cover it with the tape from the hotel.",
+    "{GO SALOON}, {TAPE MIRROR}, {BREAK MIRROR}: a hole opens in the wall. {GO HOLE}, {GET BOARD} (the {*ORIENTAL GO BOARD*}), then {E}."
+   ]
+  },
+  {
+   "q": "A ghostly voice in the jail talks about $200",
+   "h": [
+    "It's a line from a famous board game. What do you do there to collect 200?",
+    "With the game board in hand, pass Go.",
+    "In the store, holding the {*ORIENTAL GO BOARD*}: {PASS GO}. The {* $200 *} treasure appears right in the store. Then {DROP BOARD}."
+   ]
+  },
+  {
+   "q": "A rattlesnake on Boot Hill",
+   "h": [
+    "You have to shoot it, but the golden gun isn't quite a gun.",
+    "The gun from the jail does the job. Then dig.",
+    "In the jail: {GET GUN}. From the starting street: {E}, {E}. There: {SHOOT SNAKE}, {DIG}, {GO GRAVE}, {GET COIN}, {KILL WORM} (bonus points), then {U}. You need the shovel to dig."
+   ]
+  },
+  {
+   "q": "How do I reach the shack in the mountains and blow the safe?",
+   "h": [
+    "From the ridge above the narrow ravine you can jump across. There is a shack with a telegraph on the other side.",
+    "In the shack press the key once the keg is in the saloon. And the floor creaks: there is a cellar under a loose plank.",
+    "From the ridge: {JUMP RAVINE}, {W}, {GO SHACK}, {TAP KEY}: {BOOM!}. Then {GET PLANK}, {GO HOLE}, {GET PELTS}, {U}. Back: {S}, {E}, {JUMP RAVINE}, {N}, then east to the street where the telegraph office stood. In its place is a smoking open safe: {LOOK SAFE}, {GET BAG}."
+   ]
+  },
+  {
+   "q": "I'm still missing a treasure",
+   "h": [
+    "Some things only happen at night.",
+    "At night there is a ghostly square dance in the saloon. Join in.",
+    "Wait for sunset ({SUNSET!}). For us it came at about move 170. In the dark: {GO SALOON}, {DANCE}, and you win the {*SILVER CUP*}. Then {S}, {GO STORE}, {DROP CUP}, {SCORE}."
+   ]
+  }
+ ]
+}
