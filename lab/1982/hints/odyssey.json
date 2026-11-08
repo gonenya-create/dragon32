@@ -1,0 +1,380 @@
+{
+ "note": "Hints for Strange Odyssey in our own words. Every step was played and checked on the Dragon machine (8.11.2026), to the game's top score: all 5 treasures stored in the mother ship, 100 out of 100. Each question has three levels: a small hint, a clearer hint and the full solution.",
+ "where": "Each question has \"at\": words from the top of the screen (where the player is), or an item or message that shows there (DIA-ICE HOUND, LARGE ICE MOUND, AIR IS GETTING STALE). The hint button beside the screen shows the questions whose words are on the screen now.",
+ "at": [
+  [
+   "ONE MAN SCOUTSHIP",
+   "STORAGE HOLD"
+  ],
+  [
+   "ONE MAN SCOUTSHIP",
+   "SMALL AIRLOCK",
+   "CLOSED OUTER DOOR"
+  ],
+  [
+   "LEDGE",
+   "90 METERS"
+  ],
+  [
+   "SMALL PLANETOID",
+   "LARGE CAVERN",
+   "LARGE BOULDER"
+  ],
+  [
+   "AIR IS GETTING STALE",
+   "PRESSURE GAUGE",
+   "HEXAGONAL"
+  ],
+  [
+   "HEXAGONAL",
+   "ROD JUTTING"
+  ],
+  [
+   "ALIEN ART MUSEUM",
+   "ALIEN SIGN"
+  ],
+  [
+   "GOGGLES",
+   "ALIEN SCULPTURE",
+   "ALIEN PAINTING"
+  ],
+  [
+   "JOVIAN MINING COLONY",
+   "STRANGE ALIEN BELT",
+   "CARRYING TOO MUCH"
+  ],
+  [
+   "HEXAGONAL",
+   "GLOWED"
+  ],
+  [
+   "GRASSY PLAIN",
+   "EDGE OF A JUNGLE"
+  ],
+  [
+   "INTERGALATIC ZOO",
+   "DIA-ICE HOUND",
+   "STRANGE JUNGLE"
+  ],
+  [
+   "METHANE SNOW STORM",
+   "LARGE ICE MOUND"
+  ],
+  [
+   "HOLLOW ICE MOUND"
+  ],
+  [
+   "HOLLOW ICE MOUND",
+   "STUNNED DIA-ICE"
+  ],
+  [
+   "HEXAGONAL",
+   "LARGE CAVERN",
+   "SCOUTSHIP",
+   "SMALL AIRLOCK"
+  ],
+  [
+   "MAINTENANCE ACCESS HATCH",
+   "CRAWL WAY",
+   "CRYSTAL",
+   "CONTROL CONSOLE"
+  ],
+  [
+   "MOTHER SHIP",
+   "LEAVE TREASURES",
+   "ONE MAN SCOUTSHIP"
+  ]
+ ],
+ "he": [
+  {
+   "q": "מה בכלל צריך לעשות?",
+   "h": [
+    "אתם תקועים בחללית קטנה על כוכב לכת זר. יש בעולם הזה אוצרות, והם מסומנים בכוכביות.",
+    "חמישה אוצרות מחכים בעולמות אחרים, ואליהם מגיעים דרך מכונה עתיקה במערה. בסוף צריך גם להחזיר את החללית לחללית האם.",
+    "האוצרות: {*RARE ALIEN PAINTING*}, ‏{*ALIEN SCULPTURE*}, ‏{*STRANGE ALIEN BELT*}, ‏{*ANCIENT FLASK SAURIAN BRANDY*} ו-{*RIGILIAN ICE DIAMOND*}. מניחים את כולם במחסן של חללית האם, ליד השלט {LEAVE TREASURES HERE}, וכותבים {SCORE}. התוצאה המלאה היא 100 מתוך 100 עם ההודעה {FANTASTIC! YOU SOLVED IT ALL!}."
+   ]
+  },
+  {
+   "q": "איך יוצאים מהחללית?",
+   "h": [
+    "בחוץ אין אוויר לנשימה. קודם מצטיידים במחסן שלמטה.",
+    "לוקחים את כל הציוד מהמחסן. בתא השליטה יש כפתור אדום שפותח את הדלת, ובתא הלחץ יש עוד כפתור אדום.",
+    "{D}, ‏{GET SUIT}, ‏{GET PHASER}, ‏{GET SHOVEL}, ‏{U}, ‏{PUSH RED}, ‏{GO DOOR}. בתא הלחץ: {WEAR SUIT}, ‏{PUSH RED} (הדלת החיצונית נפתחת), ואז {GO DOOR}."
+   ]
+  },
+  {
+   "q": "האדמה 90 מטר מתחתיי",
+   "h": [
+    "זה נשמע מפחיד, אבל זה כוכב קטן מאוד.",
+    "כוח המשיכה כאן חלש מאוד. אפשר פשוט לרדת.",
+    "{JUMP}: נוחתים בשלום ליד החללית. משם {N} ועוד {N} מגיעים למקום עם מערה."
+   ]
+  },
+  {
+   "q": "במערה יש סלע גדול, ואין יציאה",
+   "h": [
+    "יש לכם נשק. בדקו על מה הוא מכוון.",
+    "את המכשיר אפשר לכוון להרס או להמם. לסלע צריך הרס.",
+    "עדיף לכוון כבר בחללית: {SET PHASER} ואז {TO DESTROY}. במערה: {GO CAVE} ו-{SHOOT BOULDER}. הסלע נעלם, ומאחוריו מופיע וילון אור מהבהב. {GO CURTAIN} מוביל לחדר משושה."
+   ]
+  },
+  {
+   "q": "האוויר בחליפה נגמר",
+   "h": [
+    "בחליפת החלל יש אוויר רק למספר מוגבל של צעדים.",
+    "בודקים את המד, ומורידים את החליפה בכל מקום שאפשר לנשום בו.",
+    "{READ GAUGE} מראה כמה צעדים נשארו ואם האוויר בחוץ טוב לנשימה. בחדר המשושה, בחללית ובג'ונגל אפשר לנשום, אז כותבים שם {REMOVE SUIT}, ולובשים שוב ({WEAR SUIT}) רק לפני שיוצאים. לא מבזבזים צעדים בחוץ: אצלנו בסוף המשחק כבר הופיעה האזהרה {AIR IS GETTING STALE}."
+   ]
+  },
+  {
+   "q": "מה עושה המכונה בחדר המשושה?",
+   "h": [
+    "יש בחדר מוט בולט מהקיר וחתיכת פלסטיק. נסו להזיז את המוט.",
+    "מושכים ודוחפים את המוט, והפלסטיק זוהר מספר פעמים. נוגעים בפלסטיק, והווילון מוביל לעולם אחר לפי המספר.",
+    "כל {PULL ROD} ואחריו {PUSH ROD} מוסיפים אחד למספר. אחר כך {TOUCH PLASTIC} ו-{GO CURTAIN}. אצלנו הזוהר הראשון היה כבר {3 TIMES}, אז עשינו ארבעה סיבובים עד {6 TIMES}. המספרים: 1 המערה (הדרך חזרה), 2 הג'ונגל, 3 סופת השלג, 6 המוזיאון, 7 המושבה. קודם {DROP PHASER} בחדר, ואל המוזיאון לובשים את החליפה."
+   ]
+  },
+  {
+   "q": "הגעתי למוזיאון. מה לוקחים?",
+   "h": [
+    "יש כאן שני דברים עם כוכביות.",
+    "שניהם אוצרות, ושניהם חוזרים איתכם.",
+    "מגיעים עם המספר 6. {GET PAINTING}, ‏{GET SCULPTURE}, וחוזרים ב-{GO CURTAIN} לחדר המשושה. שם {REMOVE SUIT}."
+   ]
+  },
+  {
+   "q": "מה עושים עם המשקפיים ועם הציור?",
+   "h": [
+    "לא הכול חייב לעזור. הסתכלו טוב דווקא על האוצר השני מהמוזיאון.",
+    "המשקפיים רק החשיכו לנו את העולם, ובציור ראינו רק שחור. הפסל מעניין יותר.",
+    "אצלנו לא היה צורך במשקפיים ובציור כדי לנצח (רק לקחנו את הציור כאוצר). {LOOK SCULPTURE}: הפסל לובש חגורה מוזרה. {GET BELT}: עכשיו יש לכם עוד אוצר, וגם כלי חשוב."
+   ]
+  },
+  {
+   "q": "איך מגיעים למושבת הכרייה?",
+   "h": [
+    "זה עולם כבד מאוד. החגורה מהפסל תעזור.",
+    "לובשים את החגורה ומסובבים את האבזם. גם ככה אפשר לשאת שם מעט מאוד.",
+    "{PULL ROD}, ‏{PUSH ROD} (עכשיו {7 TIMES}), ‏{TOUCH PLASTIC}. אז {WEAR BELT}, משאירים בחדר את הציור, את הפסל ואת כלי החפירה ({DROP PAINTING}, ‏{DROP SCULPTURE}, ‏{DROP SHOVEL}), ‏{TWIST BUCKLE}, ‏{WEAR SUIT}, ‏{GO CURTAIN}. במושבה {GET FLASK} וחוזרים; {DROP FLASK} בחדר. עוד סיבוב: {GO CURTAIN}, ‏{GET METAL}, ‏{GO CURTAIN}, ‏{DROP METAL}. בסוף {REMOVE SUIT}, ‏{TWIST BUCKLE}, ‏{DROP BELT}."
+   ]
+  },
+  {
+   "q": "המספר כבר גבוה. איך מגיעים למספר נמוך?",
+   "h": [
+    "המספר רק עולה. צריך לאפס את המכונה.",
+    "נוגעים בפלסטיק כשהמוט בחוץ.",
+    "{PULL ROD}, ‏{TOUCH PLASTIC} (המוט עדיין בחוץ, וזה מאפס), ואז {PUSH ROD}: עכשיו 1. סיבוב נוסף, {PULL ROD} ו-{PUSH ROD}, נותן 2, הג'ונגל. אחר כך {TOUCH PLASTIC} ו-{GO CURTAIN}."
+   ]
+  },
+  {
+   "q": "הגעתי לשולי הג'ונגל. מה כאן?",
+   "h": [
+    "משהו קבור בדיוק איפה שאתם עומדים.",
+    "הביאו איתכם את כלי החפירה.",
+    "לפני היציאה מחדר המשושה: {GET SHOVEL}, ‏{GET PHASER}, וכיוון חדש: {SET PHASER} ואז {TO STUN}. כאן אפשר לנשום, אין צורך בחליפה. {DIG}: מוצאים מכוש קרח עתיק. {GET PICK}, ‏{DROP SHOVEL}."
+   ]
+  },
+  {
+   "q": "יש כלב קרח בגן החיות",
+   "h": [
+    "לא הורגים אותו. הוא יעזור לכם בעולם אחר.",
+    "מהממים אותו ולוקחים אותו איתכם, כל עוד הוא ישן.",
+    "המכשיר צריך להיות על {STUN}. {GO JUNGLE}, ‏{E}, ‏{SHOOT HOUND}, ‏{GET HOUND}. חוזרים: {S}, ‏{W}, ‏{GO CURTAIN}."
+   ]
+  },
+  {
+   "q": "בסופת השלג יש תל קרח חלק",
+   "h": [
+    "כלב הקרח מרגיש כאן בבית. וגם המכוש שמצאתם מתאים לקרח.",
+    "מעירים את הכלב כאן. הוא חופר ונעלם. אחר כך פורצים לתל עם המכוש.",
+    "בחדר המשושה: {PULL ROD}, ‏{PUSH ROD} (3), ‏{TOUCH PLASTIC}, ‏{WEAR SUIT}, ‏{GO CURTAIN}. בסופה: {DROP HOUND}, ‏{WAKE HOUND} (הוא חופר ונעלם), ‏{W} אל התל, ואז {PICK MOUND}: חופרים פנימה, והמכוש נשבר."
+   ]
+  },
+  {
+   "q": "בתוך תל הקרח הכלב הרג אותי",
+   "h": [
+    "הכלב מחכה לכם בפנים, והוא כבר לא ישן.",
+    "צריך לירות בו מיד, עוד לפני כל דבר אחר.",
+    "ברגע שנכנסים לתל: {SHOOT HOUND} (המכשיר עדיין על {STUN}). רק אחר כך {GET DIAMOND}. אצלנו מוות כאן גמר את המשחק מיד, בלי הזדמנות שנייה."
+   ]
+  },
+  {
+   "q": "אני כלוא בתוך תל הקרח",
+   "h": [
+    "הקרח נסגר מאחוריכם. צריך לפתוח אותו בכוח.",
+    "שנו את כיוון הנשק.",
+    "{SET PHASER}, ‏{TO DESTROY}, ‏{SHOOT ICE}: התל נהרס ואתם בחוץ, בסופה. {E} מחזיר אל הווילון, ו-{GO CURTAIN} לחדר המשושה."
+   ]
+  },
+  {
+   "q": "איך מחזירים את האוצרות לחללית?",
+   "h": [
+    "צריך לכוון את המכונה בחזרה למערה שממנה באתם.",
+    "מאפסים את המכונה ועוצרים על 1. אי אפשר לשאת הכול בפעם אחת.",
+    "{DROP PICK}, ‏{DROP PHASER}, ‏{GET FLASK}, ‏{GET BELT}, ‏{GET PAINTING} (היהלום כבר אצלכם). {PULL ROD}, ‏{TOUCH PLASTIC}, ‏{PUSH ROD} (1), ‏{TOUCH PLASTIC}, ‏{GO CURTAIN}. מהמערה: {U}, ‏{W}, ‏{GO SHIP}, ‏{PUSH RED}, ‏{REMOVE SUIT}, ומניחים בתא הלחץ: {DROP FLASK}, ‏{DROP DIAMOND}, ‏{DROP BELT}, ‏{DROP PAINTING}. את הפסל לוקחים בסיבוב הבא."
+   ]
+  },
+  {
+   "q": "איך מטיסים את החללית?",
+   "h": [
+    "בחללית חסר משהו שמספק כוח. חפשו בחדר המשושה משהו שנראה כמו גביש.",
+    "המוט של המכונה הוא גביש כוח. שוברים אותו ושמים אותו בחללית, מאחורי פתח התחזוקה. חתיכת המתכת עוזרת לפתוח את הפתח.",
+    "עושים את זה אחרון, כשכל השאר כבר בחללית. {WEAR SUIT}, ‏{PUSH RED}, ‏{GO DOOR}, ‏{JUMP}, ‏{N}, ‏{N}, ‏{GO CAVE}, ‏{GO CURTAIN}. בחדר המשושה: {GET SCULPTURE}, ‏{GET METAL}, ‏{BREAK ROD}, ‏{GO CURTAIN}. חוזרים: {U}, ‏{W}, ‏{GO SHIP}, ‏{PUSH RED}, ‏{REMOVE SUIT}, ‏{GO DOOR}, ‏{D}, ‏{OPEN HATCH}, ‏{GO HATCH}, ‏{PUT ROD}, ואז {U}, ‏{U} לתא השליטה."
+   ]
+  },
+  {
+   "q": "איך מסיימים את המשחק?",
+   "h": [
+    "בתא השליטה יש כפתור כחול.",
+    "טסים לחללית האם, ושם מניחים את כל חמשת האוצרות. שימו לב: הפתח נשאר אצלכם ביד ותופס מקום.",
+    "{PUSH BLUE} (החללית ממריאה), ‏{DROP HATCH}, ‏{DROP METAL}, ‏{GO DOOR}, ‏{GET FLASK}, ‏{GET DIAMOND}, ‏{GET BELT}, ‏{GET PAINTING}, ‏{WEAR SUIT}, ‏{PUSH RED}, ‏{GO DOOR}. במחסן של חללית האם: {DROP FLASK}, ‏{DROP DIAMOND}, ‏{DROP BELT}, ‏{DROP SCULPTURE}, ‏{DROP PAINTING}, ‏{SCORE}: ‏100 מתוך 100, {FANTASTIC! YOU SOLVED IT ALL!}"
+   ]
+  }
+ ],
+ "en": [
+  {
+   "q": "What am I supposed to do?",
+   "h": [
+    "You are stuck in a small scoutship on an alien planetoid. There are treasures here, marked with stars.",
+    "Five treasures wait in other worlds, reached through an ancient machine in a cave. At the end you also have to fly the scoutship back to the mother ship.",
+    "The treasures: {*RARE ALIEN PAINTING*}, {*ALIEN SCULPTURE*}, {*STRANGE ALIEN BELT*}, {*ANCIENT FLASK SAURIAN BRANDY*} and {*RIGILIAN ICE DIAMOND*}. Drop them all in the mother ship's hold, by the sign {LEAVE TREASURES HERE}, and type {SCORE}. The full score is 100 out of 100 with {FANTASTIC! YOU SOLVED IT ALL!}"
+   ]
+  },
+  {
+   "q": "How do I get out of the ship?",
+   "h": [
+    "There is no air to breathe outside. First get equipped in the hold below.",
+    "Take all the gear from the hold. The control room has a red button that opens the door, and the airlock has another red button.",
+    "{D}, {GET SUIT}, {GET PHASER}, {GET SHOVEL}, {U}, {PUSH RED}, {GO DOOR}. In the airlock: {WEAR SUIT}, {PUSH RED} (the outer door opens), then {GO DOOR}."
+   ]
+  },
+  {
+   "q": "The ground is 90 meters below me",
+   "h": [
+    "It sounds scary, but this is a very small world.",
+    "The gravity here is very weak. You can just go down.",
+    "{JUMP}: you land safely by the ship. From there {N} and {N} again reach a place with a cave."
+   ]
+  },
+  {
+   "q": "There is a big boulder in the cave and no way on",
+   "h": [
+    "You have a weapon. Check what it is set to.",
+    "The phaser can be set to destroy or to stun. The boulder needs destroy.",
+    "Best to set it while still in the ship: {SET PHASER}, then {TO DESTROY}. In the cave: {GO CAVE} and {SHOOT BOULDER}. The boulder is gone and a flickering curtain of light shows behind it. {GO CURTAIN} leads to a hexagonal room."
+   ]
+  },
+  {
+   "q": "My suit's air runs out",
+   "h": [
+    "The space suit only holds air for a limited number of moves.",
+    "Check the gauge, and take the suit off wherever you can breathe.",
+    "{READ GAUGE} shows how many moves are left and whether the air outside is breathable. You can breathe in the hexagonal room, in the ship and in the jungle, so type {REMOVE SUIT} there and only {WEAR SUIT} again just before going out. Don't waste moves outside: in our game the warning {AIR IS GETTING STALE} had already come up near the end."
+   ]
+  },
+  {
+   "q": "What does the machine in the hexagonal room do?",
+   "h": [
+    "There is a rod sticking out of the wall and a piece of plastic. Try moving the rod.",
+    "Pull and push the rod and the plastic glows a number of times. Touch the plastic and the curtain leads to another world, depending on the number.",
+    "Each {PULL ROD} followed by {PUSH ROD} adds one. Then {TOUCH PLASTIC} and {GO CURTAIN}. In our game the first glow already said {3 TIMES}, so it took four rounds to reach {6 TIMES}. The numbers: 1 the cave (the way back), 2 the jungle, 3 the snow storm, 6 the museum, 7 the mining colony. First {DROP PHASER} in the room, and wear the suit for the museum."
+   ]
+  },
+  {
+   "q": "I'm in the museum. What do I take?",
+   "h": [
+    "Two things here have stars.",
+    "Both are treasures and both come back with you.",
+    "Arrive with number 6. {GET PAINTING}, {GET SCULPTURE}, and go back with {GO CURTAIN} to the hexagonal room. There, {REMOVE SUIT}."
+   ]
+  },
+  {
+   "q": "What are the goggles and the painting for?",
+   "h": [
+    "Not everything has to help. Take a good look at the other museum treasure.",
+    "The goggles only made everything dark for us and the painting showed only black. The sculpture is more interesting.",
+    "We didn't need the goggles or the painting to win (we only took the painting as a treasure). {LOOK SCULPTURE}: the sculpture wears a strange belt. {GET BELT}: now you have another treasure, and an important tool."
+   ]
+  },
+  {
+   "q": "How do I get to the mining colony?",
+   "h": [
+    "It is a very heavy world. The belt from the sculpture will help.",
+    "Wear the belt and twist the buckle. Even so you can carry very little there.",
+    "{PULL ROD}, {PUSH ROD} (now {7 TIMES}), {TOUCH PLASTIC}. Then {WEAR BELT}, leave the painting, sculpture and shovel in the room ({DROP PAINTING}, {DROP SCULPTURE}, {DROP SHOVEL}), {TWIST BUCKLE}, {WEAR SUIT}, {GO CURTAIN}. In the colony {GET FLASK} and go back; {DROP FLASK} in the room. One more trip: {GO CURTAIN}, {GET METAL}, {GO CURTAIN}, {DROP METAL}. Then {REMOVE SUIT}, {TWIST BUCKLE}, {DROP BELT}."
+   ]
+  },
+  {
+   "q": "The number is already high. How do I get a low one?",
+   "h": [
+    "The number only goes up. You have to reset the machine.",
+    "Touch the plastic while the rod is out.",
+    "{PULL ROD}, {TOUCH PLASTIC} (the rod is still out, which resets it), then {PUSH ROD}: now it is 1. One more round, {PULL ROD} and {PUSH ROD}, gives 2, the jungle. Then {TOUCH PLASTIC} and {GO CURTAIN}."
+   ]
+  },
+  {
+   "q": "I'm at the edge of the jungle. What's here?",
+   "h": [
+    "Something is buried right where you stand.",
+    "Bring the shovel.",
+    "Before leaving the hexagonal room: {GET SHOVEL}, {GET PHASER}, and a new setting: {SET PHASER}, then {TO STUN}. You can breathe here, no suit needed. {DIG}: you find an ancient ice pick. {GET PICK}, {DROP SHOVEL}."
+   ]
+  },
+  {
+   "q": "There is an ice hound in the zoo",
+   "h": [
+    "Don't kill it. It will help you in another world.",
+    "Stun it and take it with you while it sleeps.",
+    "The phaser must be on {STUN}. {GO JUNGLE}, {E}, {SHOOT HOUND}, {GET HOUND}. Back: {S}, {W}, {GO CURTAIN}."
+   ]
+  },
+  {
+   "q": "There is a smooth ice mound in the snow storm",
+   "h": [
+    "The ice hound feels at home here. And the pick you found is made for ice.",
+    "Wake the hound here. It burrows away. Then break into the mound with the pick.",
+    "In the hexagonal room: {PULL ROD}, {PUSH ROD} (3), {TOUCH PLASTIC}, {WEAR SUIT}, {GO CURTAIN}. In the storm: {DROP HOUND}, {WAKE HOUND} (it burrows off), {W} to the mound, then {PICK MOUND}: you dig your way in and the pick breaks."
+   ]
+  },
+  {
+   "q": "The hound killed me inside the ice mound",
+   "h": [
+    "The hound is waiting for you inside, and it is awake.",
+    "Shoot it at once, before doing anything else.",
+    "As soon as you are in the mound: {SHOOT HOUND} (the phaser is still on {STUN}). Only then {GET DIAMOND}. In our game, dying here ended the game at once, with no second chance."
+   ]
+  },
+  {
+   "q": "I'm trapped inside the ice mound",
+   "h": [
+    "The ice closed behind you. You have to force it open.",
+    "Change the phaser setting.",
+    "{SET PHASER}, {TO DESTROY}, {SHOOT ICE}: the mound is destroyed and you are outside in the storm. {E} takes you back to the curtain, and {GO CURTAIN} to the hexagonal room."
+   ]
+  },
+  {
+   "q": "How do I get the treasures back to the ship?",
+   "h": [
+    "Set the machine back to the cave you came from.",
+    "Reset the machine and stop at 1. You can't carry everything at once.",
+    "{DROP PICK}, {DROP PHASER}, {GET FLASK}, {GET BELT}, {GET PAINTING} (you already have the diamond). {PULL ROD}, {TOUCH PLASTIC}, {PUSH ROD} (1), {TOUCH PLASTIC}, {GO CURTAIN}. From the cave: {U}, {W}, {GO SHIP}, {PUSH RED}, {REMOVE SUIT}, and leave them in the airlock: {DROP FLASK}, {DROP DIAMOND}, {DROP BELT}, {DROP PAINTING}. The sculpture comes on the next trip."
+   ]
+  },
+  {
+   "q": "How do I fly the ship?",
+   "h": [
+    "The ship is missing its power source. Look in the hexagonal room for something like a crystal.",
+    "The machine's rod is a power crystal. Break it off and put it in the ship, behind the maintenance hatch. The piece of metal helps open the hatch.",
+    "Do this last, when everything else is already in the ship. {WEAR SUIT}, {PUSH RED}, {GO DOOR}, {JUMP}, {N}, {N}, {GO CAVE}, {GO CURTAIN}. In the hexagonal room: {GET SCULPTURE}, {GET METAL}, {BREAK ROD}, {GO CURTAIN}. Back: {U}, {W}, {GO SHIP}, {PUSH RED}, {REMOVE SUIT}, {GO DOOR}, {D}, {OPEN HATCH}, {GO HATCH}, {PUT ROD}, then {U}, {U} to the control room."
+   ]
+  },
+  {
+   "q": "How do I finish the game?",
+   "h": [
+    "The control console has a blue button.",
+    "Fly to the mother ship and drop all five treasures there. Note: you are still holding the hatch, and it takes up room.",
+    "{PUSH BLUE} (lift off), {DROP HATCH}, {DROP METAL}, {GO DOOR}, {GET FLASK}, {GET DIAMOND}, {GET BELT}, {GET PAINTING}, {WEAR SUIT}, {PUSH RED}, {GO DOOR}. In the mother ship's hold: {DROP FLASK}, {DROP DIAMOND}, {DROP BELT}, {DROP SCULPTURE}, {DROP PAINTING}, {SCORE}: 100 out of 100, {FANTASTIC! YOU SOLVED IT ALL!}"
+   ]
+  }
+ ]
+}
