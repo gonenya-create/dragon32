@@ -113,7 +113,7 @@
    "q": "הקיר נסגר מאחורי, ויש כפתורים צבעוניים על הקיר",
    "h": [
     "כל כפתור לוקח למקום אחר. נסו את שלושתם.",
-    "אחרי שמושכים כפתור החדר מסתובב. על המכונה שלנו זה לוקח הרבה זמן (עד כשתי דקות), ומה שמקלידים בינתיים הולך לאיבוד. מחכים ל-{WHAT SHALL I DO?}.",
+    "אחרי שמושכים כפתור מופיעה שורה של אותיות {T}, והמסך נראה תקוע. זו תקלה בקלטת המקורית: חסרה בה ההודעה. לוחצים {ENTER} כמה פעמים, עד שמופיע {WHAT SHALL I DO?}. בלי לחיצות זה נמשך כשלוש דקות.",
     "{PULL GREEN}: לחדר קטן עם טרמפולינה, ומדרום לו מטווח הירי. {PULL BLUE}: לחדר עם מכונת מזלות, וממזרח לו הקרוסלה. {PULL YELLOW}: לחדר הקטן במבוך. חוזרים לחדר הכפתורים: מחדר הטרמפולינה {U}, ממכונת המזלות {D}, ומחדר המראות {N} וארבע פעמים {W}."
    ]
   },
@@ -170,7 +170,7 @@
    "h": [
     "קודם צריך לעצור את הקרוסלה. ליד הקרוסלה יש משהו ללחוץ עליו.",
     "אחרי שהקרוסלה עוצרת, עולים על הסוס, מטפסים על העמוד ומסתכלים למעלה. משם קופצים.",
-    "השתקנו קודם את הקליופה (ראו את שאלת הברז). מהחדר של מכונת המזלות ({PULL BLUE}): {E}, ואז {PRESS BLUE} (מחכים שהאנימציה תיגמר). אחר כך {GO MERRY}, ‏{GO HORSE}, ‏{CLIMB POLE}, ‏{LOOK UP}, ‏{JUMP}. מגיעים למסלול הצר ({CATWALK})."
+    "השתקנו קודם את הקליופה (ראו את שאלת הברז). מהחדר של מכונת המזלות ({PULL BLUE}): {E}, ואז {PRESS BLUE} (שוב שורת {T}: לוחצים {ENTER} כמה פעמים). אחר כך {GO MERRY}, ‏{GO HORSE}, ‏{CLIMB POLE}, ‏{LOOK UP}, ‏{JUMP}. מגיעים למסלול הצר ({CATWALK})."
    ]
   },
   {
@@ -243,7 +243,7 @@
    "q": "The wall closed behind me, and there are coloured knobs on the wall",
    "h": [
     "Each knob takes you somewhere else. Try all three.",
-    "After you pull a knob the room spins. On our machine this takes a long time (up to about two minutes), and anything you type meanwhile is lost. Wait for {WHAT SHALL I DO?}.",
+    "After you pull a knob a row of {T} letters appears and the screen looks stuck. This is a fault in the original tape: the message is missing. Press {ENTER} a few times until {WHAT SHALL I DO?} appears. Without key presses it takes about three minutes.",
     "{PULL GREEN}: to a small room with a trampoline, with the shooting gallery to the south. {PULL BLUE}: to a room with a fortune telling machine, with the merry-go-round to the east. {PULL YELLOW}: to the small room in the maze. Back to the knob room: from the trampoline room {U}, from the fortune machine {D}, from the mirror room {N} and {W} four times."
    ]
   },
@@ -300,7 +300,7 @@
    "h": [
     "First you have to stop the ride. There is something next to it you can press.",
     "Once the ride stops, get on the horse, climb the pole and look up. Jump from there.",
-    "We silenced the calliope first (see the valve question). From the fortune machine room ({PULL BLUE}): {E}, then {PRESS BLUE} (wait for the animation to end). Then {GO MERRY}, {GO HORSE}, {CLIMB POLE}, {LOOK UP}, {JUMP}. You reach the {CATWALK}."
+    "We silenced the calliope first (see the valve question). From the fortune machine room ({PULL BLUE}): {E}, then {PRESS BLUE} (the row of {T} again: press {ENTER} a few times). Then {GO MERRY}, {GO HORSE}, {CLIMB POLE}, {LOOK UP}, {JUMP}. You reach the {CATWALK}."
    ]
   },
   {
