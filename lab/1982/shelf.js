@@ -941,11 +941,11 @@
     ninja: {
       he: ['לוחם נינג\'ה בדרך: סלעים מתגלגלים אליו, ובהמשך גם כדורי אש, חיצים ונינג\'ות אחרים. בועטים בסלעים כדי לשבור אותם, וקופצים מעל בורות ומכשולים.',
         'כל שלב הוא חגורה בצבע אחר, מהחגורה הלבנה והלאה, וכל אחד קשה יותר מהקודם. עד שישה שחקנים, בתורות.',
-        'במסך הפתיחה לוחצים מקש. כתוב JOYSTICK CONTROL SET: לוחצים [K] כדי לשחק במקלדת, ואחר כך את מספר השחקנים, [1] עד [6].',
+        'במסך הפתיחה לוחצים מקש. כתוב JOYSTICK CONTROL SET: לוחצים [K] כדי לשחק במקלדת, ואחר כך את מספר השחקנים, [1] עד [6]. בטלפון: [K] הוא הידית למעלה, ואת המספר לוחצים במקלדת המצוירת. בלי המספר המשחק מחכה.',
         'במקלדת: [K] קופצים, [O] בועטים, [N] מתקדמים ו-[M] נסוגים. העצה מהעטיפה: הכי הרבה נקודות מקבלים על בעיטה בסלעים, והתזמון הוא הכול.'],
       en: ['A ninja on the road: rocks roll towards him, and later fireballs, arrows and other ninjas. Kick the rocks to break them, and jump over holes and obstacles.',
         'Each level is a belt of another colour, from the white belt up, each harder than the last. Up to six players, taking turns.',
-        'On the title screen press a key. It says JOYSTICK CONTROL SET: press [K] to play on the keyboard, then the number of players, [1] to [6].',
+        'On the title screen press a key. It says JOYSTICK CONTROL SET: press [K] to play on the keyboard, then the number of players, [1] to [6]. On a phone: [K] is the stick pushed up, and the number is on the drawn keyboard. Without the number the game waits.',
         'On the keyboard: [K] jumps, [O] kicks, [N] advances and [M] retreats. The inlay\'s advice: kicking the rocks scores most, and timing is everything.']
     },
     // נבדק במכונה (7.11): הטעינה, מסך הפתיחה, הדירה, ‏SCORE,‏ SAVE GAME ו-LOAD GAME. העלילה לפי האתר של L. Curtis Boyle, הפקודות כמו בשאר הסדרה
