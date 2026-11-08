@@ -1,0 +1,364 @@
+{
+ "note": "Hints for Sorcerer of Claymorgue Castle in our own words. Every step was played and checked on the Dragon machine (8.11.2026): 13 stars, 100 of 100. Each question has three levels: a small hint, a clearer hint and the full solution.",
+ "where": "Each question has \"at\": words from the top of the screen (where the player is). The hint button beside the screen shows the questions whose words are on the screen now.",
+ "at": [
+  [
+   "FIELD",
+   "HOLLOW TREE",
+   "COURTYARD"
+  ],
+  [
+   "FIELD",
+   "WATER OF A MOAT",
+   "UNDERWATER",
+   "POOL OF DIRTY WATER"
+  ],
+  [
+   "PLAIN ROOM",
+   "DUSTY ROOM",
+   "VACANT ROOM"
+  ],
+  [
+   "DUSTY ROOM"
+  ],
+  [
+   "STOREROOM",
+   "IN A STAIRCASE",
+   "UNDER THE STAIRS"
+  ],
+  [
+   "BALL ROOM"
+  ],
+  [
+   "ENTRYWAY",
+   "FIELD"
+  ],
+  [
+   "KITCHEN",
+   "UNDERWATER",
+   "POOL OF DIRTY WATER"
+  ],
+  [
+   "STREAM OF LAVA",
+   "DAMP CAVERN",
+   "STONE GROTTO",
+   "STONE STAIRCASE"
+  ],
+  [
+   "LARGE CHANDELIER",
+   "LOFT ABOVE BALLROOM",
+   "BALL ROOM"
+  ],
+  [
+   "BALL ROOM",
+   "ON A BOX",
+   "IN A BOX"
+  ],
+  [
+   "DRAWBRIDGE",
+   "COURTYARD"
+  ],
+  [
+   "PLAIN ROOM",
+   "DRAGON'S LAIR",
+   "WIZARD'S WORKSHOP",
+   "DUSTY ROOM"
+  ],
+  [
+   "MAGIC FOUNTAIN",
+   "TOP OF THE FOUNTAIN",
+   "COURTYARD"
+  ],
+  [
+   "DUNGEON CELL",
+   "ANTEROOM"
+  ],
+  [
+   "FOREST OF ENCHANTMENT",
+   "HOLLOW TREE",
+   "COURTYARD",
+   "FIELD"
+  ],
+  [
+   "HOLLOW TREE",
+   "ON A BOX",
+   "IN A BOX"
+  ]
+ ],
+ "he": [
+  {
+   "q": "מה בכלל צריך לעשות?",
+   "h": [
+    "אתם שוליה של קוסם. צריך למצוא 13 כוכבים ({*STAR}) ולשים אותם במקום אחד. השלט במקום הזה אומר את זה במפורש.",
+    "המקום הוא עץ חלול ביער הקסום, ממערב לשדה. אין אליו דלת: נכנסים בכישוף אחד, ומבפנים אין דרך החוצה. לכן נכנסים רק פעם אחת, בסוף, עם כל הכוכבים.",
+    "בינתיים אוספים כוכבים לחצר ({COURTYARD}) ומשאירים אותם שם. בסוף נושאים את כולם ליער, נכנסים לעץ עם {CAST PERMEABILITY}, כותבים {DROP STAR} 13 פעמים, ואז {SCORE}. כל כישוף עובד פעם אחת בלבד, אז לא מבזבזים אף אחד."
+   ]
+  },
+  {
+   "q": "הגשר המתרומם למעלה. איך נכנסים לטירה?",
+   "h": [
+    "לא חייבים את הגשר. יש דרך מתחת למים.",
+    "צוללים בחפיר ושוחים עד שמגיעים לבריכה בתוך הטירה. לפני שצוללים עוצרים את הנשימה, ואחרי שיוצאים נושמים שוב. כל {ARGH!} אומר שהאוויר נגמר.",
+    "בשדה: {GO MOAT}, ‏{HOLD BREATH}, ‏{SWIM DOWN}, ‏{GET TOWEL}, ‏{SWIM DOWN}, ‏{SWIM EAST}. בבריכה: {BREATHE}, ואז {GO UP} למטבח. את הארגז שבמטבח לוקחים לחצר: {GET CRATE}, ‏{GO SOUTH}, ‏{DROP CRATE}."
+   ]
+  },
+  {
+   "q": "בחדר הפשוט אין כמעט יציאות",
+   "h": [
+    "הקירות כאן זזים.",
+    "דוחפים או מושכים קיר, ואומרים לאיזה כיוון. שלושה קירות נפתחים, כל אחד לחדר אחר.",
+    "בחדר הפשוט: {PUSH EAST} (חדר מאובק), ‏{PULL WEST} (חדר ריק, ובו {GET UNRAVEL} ו-{GET METHUSELAH}), ‏{PUSH SOUTH} (מחסן). חוזרים מכל חדר בכיוון ההפוך ({GO WEST}, ‏{GO EAST}, ‏{GO NORTH})."
+   ]
+  },
+  {
+   "q": "דלת האבן בחדר המאובק נעולה",
+   "h": [
+    "אתם קוסמים. בדקו מה אתם מחזיקים.",
+    "אחד הכישופים שיש לכם מההתחלה פותח דלתות. שומרים אותו בשביל הדלת הזאת, כי מאחוריה יש כוכב וכישוף חשוב.",
+    "בחדר המאובק: {CAST SEED}. הדלת נפתחת ונשארת פתוחה. נכנסים אחר כך עם {GO DOOR}."
+   ]
+  },
+  {
+   "q": "חולדות נגועות בכלבת על המדרגות",
+   "h": [
+    "אי אפשר לעבור לידן. אבל אפשר להפוך למשהו שחולדות מפחדות ממנו.",
+    "יש לכם כישוף שהופך אתכם לחיה. החולדות בורחות לחור שלהן, ואז אפשר להיכנס אחריהן.",
+    "במחסן לוקחים את הכוכב שעל הרצפה ({GET STAR}). אחר כך {GO DOWN}, ‏{CAST LYCANTHROPE}, ‏{GO HOLE}, ‏{GET STAR}, ‏{GO HOLE}, ‏{WALK UP}."
+   ]
+  },
+  {
+   "q": "נברשת תלויה ליד התקרה, ואין איך להגיע אליה",
+   "h": [
+    "צריך להוריד אותה. החבל שמחזיק אותה הוא הנקודה החלשה.",
+    "יש כישוף שמפרק קשרים. אחרי שמטילים אותו, החבל נפרם לאט והנברשת נופלת. לא כדאי לעמוד מתחתיה.",
+    "באולם: {CAST UNRAVEL}, ויוצאים מיד ({GO WEST}). אחרי כמה תורות מופיעה ההודעה {CHANDELIER FELL WITH A CRASH}, ואפשר לחזור."
+   ]
+  },
+  {
+   "q": "איך מורידים את הגשר המתרומם מבפנים?",
+   "h": [
+    "חפשו משהו בקיר של המבואה.",
+    "יש שם ידית ישנה. היא נשברת, אבל עושה את העבודה.",
+    "במבואה (מערבית לחצר): {PULL LEVER}, ואז {DROP WOOD}. מעכשיו עוברים בין השדה לטירה ב-{GO DRAWBRIDGE} ו-{GO EAST}."
+   ]
+  },
+  {
+   "q": "יש כוכב בקרקעית החפיר?",
+   "h": [
+    "כן. וגם במטבח יש משהו שלא רואים במבט ראשון.",
+    "במטבח פותחים את הארון ומוצאים כישוף. צוללים דרך הניקוז עד הקרקעית ומסתכלים עליה. הכישוף מהארון מוציא אתכם מהמים בבת אחת.",
+    "במטבח: {OPEN CABINET}. ‏{GO DRAIN}, ‏{HOLD BREATH}, ‏{SWIM DOWN} ארבע פעמים, {LOOK BOTTOM}, ואז {CAST BLISS}: אתם בשדה עם הכוכב. הכישוף גם מגן עליכם מחום לזמן מה, אז ממשיכים מיד לשאלה הבאה."
+   ]
+  },
+  {
+   "q": "נחל של לבה רותחת חוסם את הדרך",
+   "h": [
+    "בלי הגנה נשרפים. ההגנה מגיעה מכישוף שכבר השתמשתם בו.",
+    "כישוף האושר מהארון מגן מחום, אבל רק לזמן מוגבל. מגיעים ללבה זמן קצר אחריו. כדאי לסחוט קודם את המגבת: הלבה תייבש אותה, ובהמשך צריך מגבת יבשה.",
+    "בשדה, מיד אחרי {CAST BLISS}: {WRING TOWEL}. אחר כך {GO DRAWBRIDGE}, ‏{GO EAST}, ‏{GO EAST}, ‏{GO SOUTH}, ‏{PUSH EAST}, ‏{GO DOOR}, ‏{GO DOWN}, ‏{GO STREAM}, ‏{GO SOUTH}. במערה: {GET STAR}, ‏{GET DIZZY}. חוזרים: {GO NORTH} פעמיים, {GO UP} פעמיים, {GO WEST}, ‏{GO NORTH}."
+   ]
+  },
+  {
+   "q": "מה עושים עם הנברשת שנפלה?",
+   "h": [
+    "עולים עליה. ויש עוד משהו למעלה, בעליית הגג.",
+    "על הנברשת יש כוכב. כישוף האור מרים את הנברשת עד עליית הגג. משם קופצים בחזרה, וזה בטוח רק כל עוד כישוף האושר עוד מגן. קחו איתכם את הארגז מהחצר.",
+    "בחצר: {GET CRATE}. באולם: {GO CHANDELIER}, ‏{GET STAR}, ‏{CAST LIGHT}, ‏{GO LOFT}. בעליית הגג: {THROW CRATE}, ‏{GET POTION}, ‏{JUMP}. בלי ההגנה של {CAST BLISS} הקפיצה הורגת."
+   ]
+  },
+  {
+   "q": "הארגז נפל לאולם. יש בו משהו?",
+   "h": [
+    "הוא נסדק כשזרקתם אותו.",
+    "עולים עליו ונכנסים דרך החור. בפנים יש כלי קטן שיעזור לפתוח משהו בהמשך.",
+    "באולם: {GO CRATE}, ‏{GO HOLE}, ‏{GET METAL}, ‏{GO HOLE}, ‏{JUMP}. את חתיכת המתכת משאירים בחצר ({DROP METAL})."
+   ]
+  },
+  {
+   "q": "פחית תקועה למעלה על החומות",
+   "h": [
+    "צריך להפיל אותה. בחצר יש משהו שאפשר לזרוק.",
+    "לבנה לבדה לא מגיעה כל כך גבוה. הכישוף מהמערה שליד הלבה נותן כוח זריקה. גם איתו פוגעים רק בערך בחצי מהפעמים.",
+    "בחצר: {GET BRICK}. על הגשר: {LOOK BATTLEMENTS}, ‏{CAST DIZZY}, ‏{THROW BRICK}, ואז {AT CAN}. אם החטאתם, מביאים עוד לבנה מהחצר וזורקים שוב. הפחית נופלת לחצר. לא פותחים אותה עדיין (ראו את השאלה על העץ)."
+   ]
+  },
+  {
+   "q": "דרקון זקן במאורה מתחת לחדר הפשוט",
+   "h": [
+    "הדרקון אוכל כל מי שהוא רואה. אז שלא יראה אתכם.",
+    "השיקוי מעליית הגג עושה אתכם בלתי נראים לזמן קצר. והאבק בחדר המאובק מדגדג באף.",
+    "בחדר המאובק: {GET DUST}. בחדר הפשוט: {DRINK POTION}, ‏{PUSH DOWN}. במאורה: {THROW DUST}, ‏{GET STAR}, ‏{LOOK DRAGON}, ‏{GO HOLE}. בבית המלאכה: {GET STAR}, ‏{GET FIREFLY}. יוצאים: {GO WEST}, ‏{GO UP}. לא מתעכבים: ההשפעה של השיקוי נגמרת."
+   ]
+  },
+  {
+   "q": "במזרקה כתוב {I FEEL VERY ODD!}, ואחר כך {ARGH!}",
+   "h": [
+    "המזרקה הזאת היא מזרקת נעורים. אם תצעירו יותר מדי, תיעלמו.",
+    "טיפות המים מהמזרקה נדבקות אליכם ומצעירות אתכם. כישוף מתושלח מזקין. {I FEEL VERY ODD!} לבד אומר שאתם צעירים מדי. {ARGH!} ביחד איתו אומר שאתם זקנים מדי. את הטיפות מנגבים במגבת יבשה.",
+    "בחצר: {GO FOUNTAIN}, ‏{GET STAR}, ‏{CAST METHUSELAH}, ‏{GO CENTERPIECE}, ‏{GO SHAFT}. אחרי שיוצאים מהצינוק מחכים בחצר ({LOOK}) עד שמופיע רק {I FEEL VERY ODD!} בלי {ARGH!}, ואז {DRY TOWEL}. את המגבת הרטובה משאירים ({DROP TOWEL})."
+   ]
+  },
+  {
+   "q": "נפלתי לצינוק חשוך. איך יוצאים?",
+   "h": [
+    "גם בחושך אפשר לקחת את מה שמונח על הרצפה. והדלת לא עומדת בפני אש.",
+    "כישוף האש פותח את הדלת. אחרי שהוא פותח דלת, הוא נשאר מוכן לעוד מטרה אחת. שומרים את המטרה הזאת לעץ ביער.",
+    "בצינוק: {GET STAR}, ‏{CAST FIRE}, ‏{AT DOOR}. ‏{GO DOOR}, ‏{GO UP}, ‏{WALK UP}, ‏{GO NORTH}, ‏{GO NORTH}. אתם בחצר. לא כותבים שום פקודה שמתחילה ב-{AT} עד שמגיעים לעץ."
+   ]
+  },
+  {
+   "q": "אני לא יכול לסחוב את כל 13 הכוכבים",
+   "h": [
+    "אפשר לקחת רק עשרה דברים. אבל כוכב שמוצאים בחיפוש או בחפירה נכנס לכיס גם כשהוא מלא.",
+    "מראש מניחים את כישוף החדירות על הרצפה ביער. בסוף מחזיקים עשרה כוכבים ושום דבר אחר. שלושה אחרונים משאירים לסוף הדרך: הפחית, השדה והעץ.",
+    "קודם, ביער: {DROP PERMEABILITY} (לוקחים אותו מהחצר). בסוף, בחצר, כשבידיים רק שני הכוכבים מהמזרקה ומהצינוק: {GET STAR} שמונה פעמים, {OPEN CAN}, ‏{USE METAL}, ‏{LOOK CAN}. ‏{GO WEST}, ‏{GO DRAWBRIDGE}, ‏{GO WEST}, ‏{DIG}, ‏{GO WEST}. ביער: {CAST FIRE}, ‏{AT TREE}, ‏{LOOK ASHES}, ‏{CAST PERMEABILITY}. בתוך העץ חשוך, אבל {DROP STAR} עובד. 13 פעמים, ואז {SCORE}."
+   ]
+  },
+  {
+   "q": "כישוף {YOHO} שלח אותי לארגז, ומשם חזרה לעץ",
+   "h": [
+    "{YOHO} לא מוציא מהעץ. הוא רק מחליף מקום בין המקום שבו אתם עומדים לבין מקום שמור.",
+    "במשחק הזה המקום השמור הוא הארגז. כל יציאה מהארגז מחזירה אתכם למקום שבו הטלתם את הכישוף. מתוך העץ זאת מלכודת שאין ממנה יציאה.",
+    "לא משתמשים ב-{YOHO} בכלל. משאירים אותו בחצר ({DROP YOHO}). אם כבר נכנסתם לעץ בלי כל הכוכבים, אין ברירה אלא להתחיל מחדש."
+   ]
+  }
+ ],
+ "en": [
+  {
+   "q": "What am I supposed to do?",
+   "h": [
+    "You are a sorcerer's apprentice. Find 13 stars ({*STAR}) and put them all in one place. The sign there says so.",
+    "The place is a hollow tree in the enchanted forest, west of the field. It has no door: a spell gets you in, and there is no way out from inside. So you go in only once, at the end, with every star.",
+    "Meanwhile collect the stars in the {COURTYARD} and leave them there. At the end carry them all to the forest, enter the tree with {CAST PERMEABILITY}, type {DROP STAR} 13 times, then {SCORE}. Each spell works only once, so don't waste any."
+   ]
+  },
+  {
+   "q": "The drawbridge is up. How do I get into the castle?",
+   "h": [
+    "You don't need the bridge. There is a way under the water.",
+    "Dive into the moat and swim until you reach a pool inside the castle. Hold your breath before diving and breathe again when you come out. Every {ARGH!} means you are running out of air.",
+    "In the field: {GO MOAT}, {HOLD BREATH}, {SWIM DOWN}, {GET TOWEL}, {SWIM DOWN}, {SWIM EAST}. In the pool: {BREATHE}, then {GO UP} to the kitchen. Take the crate to the courtyard: {GET CRATE}, {GO SOUTH}, {DROP CRATE}."
+   ]
+  },
+  {
+   "q": "The plain room has almost no exits",
+   "h": [
+    "The walls here move.",
+    "Push or pull a wall and say which direction. Three walls open, each to a different room.",
+    "In the plain room: {PUSH EAST} (dusty room), {PULL WEST} (vacant room, with {GET UNRAVEL} and {GET METHUSELAH}), {PUSH SOUTH} (storeroom). Come back from each room the opposite way ({GO WEST}, {GO EAST}, {GO NORTH})."
+   ]
+  },
+  {
+   "q": "The stone door in the dusty room is locked",
+   "h": [
+    "You are a sorcerer. Check what you are carrying.",
+    "One of the spells you start with opens doors. Save it for this door: behind it are a star and an important spell.",
+    "In the dusty room: {CAST SEED}. The door opens and stays open. Go through later with {GO DOOR}."
+   ]
+  },
+  {
+   "q": "Rabid rats on the stairs",
+   "h": [
+    "You can't get past them. But you can turn into something rats fear.",
+    "You have a spell that turns you into an animal. The rats run into their hole, and you can follow.",
+    "In the storeroom take the star from the floor ({GET STAR}). Then {GO DOWN}, {CAST LYCANTHROPE}, {GO HOLE}, {GET STAR}, {GO HOLE}, {WALK UP}."
+   ]
+  },
+  {
+   "q": "A chandelier hangs near the ceiling and I can't reach it",
+   "h": [
+    "You need to bring it down. The rope holding it is the weak point.",
+    "A spell undoes knots. After you cast it the rope slowly unravels and the chandelier falls. Don't stand under it.",
+    "In the ballroom: {CAST UNRAVEL}, and leave at once ({GO WEST}). After a few turns you see {CHANDELIER FELL WITH A CRASH}, and you can go back."
+   ]
+  },
+  {
+   "q": "How do I lower the drawbridge from inside?",
+   "h": [
+    "Look at the wall of the entryway.",
+    "There is an old lever. It breaks, but it does the job.",
+    "In the entryway (west of the courtyard): {PULL LEVER}, then {DROP WOOD}. From now on go between the field and the castle with {GO DRAWBRIDGE} and {GO EAST}."
+   ]
+  },
+  {
+   "q": "Is there a star at the bottom of the moat?",
+   "h": [
+    "Yes. And the kitchen has something you don't see at first glance.",
+    "Open the cabinet in the kitchen: there is a spell. Dive through the drain to the bottom and look at it. The cabinet spell gets you out of the water at once.",
+    "In the kitchen: {OPEN CABINET}. {GO DRAIN}, {HOLD BREATH}, {SWIM DOWN} four times, {LOOK BOTTOM}, then {CAST BLISS}: you are in the field with the star. The spell also protects you from heat for a while, so go straight on to the next question."
+   ]
+  },
+  {
+   "q": "A stream of hot lava blocks the way",
+   "h": [
+    "Without protection you burn. The protection comes from a spell you have already used.",
+    "The Bliss spell from the cabinet protects you from heat, but only for a limited time. Reach the lava soon after casting it. Wring the towel first: the lava will dry it, and later you need a dry towel.",
+    "In the field, right after {CAST BLISS}: {WRING TOWEL}. Then {GO DRAWBRIDGE}, {GO EAST}, {GO EAST}, {GO SOUTH}, {PUSH EAST}, {GO DOOR}, {GO DOWN}, {GO STREAM}, {GO SOUTH}. In the grotto: {GET STAR}, {GET DIZZY}. Back: {GO NORTH} twice, {GO UP} twice, {GO WEST}, {GO NORTH}."
+   ]
+  },
+  {
+   "q": "What do I do with the fallen chandelier?",
+   "h": [
+    "Climb on it. And there is more up in the loft.",
+    "There is a star on the chandelier. The Light spell lifts the chandelier up to the loft. You jump back down, which is safe only while the Bliss spell still protects you. Bring the crate from the courtyard.",
+    "In the courtyard: {GET CRATE}. In the ballroom: {GO CHANDELIER}, {GET STAR}, {CAST LIGHT}, {GO LOFT}. In the loft: {THROW CRATE}, {GET POTION}, {JUMP}. Without the protection of {CAST BLISS} the jump kills you."
+   ]
+  },
+  {
+   "q": "The crate fell into the ballroom. Is there anything in it?",
+   "h": [
+    "It cracked when you threw it.",
+    "Climb on it and go in through the hole. Inside is a small tool that helps you open something later.",
+    "In the ballroom: {GO CRATE}, {GO HOLE}, {GET METAL}, {GO HOLE}, {JUMP}. Leave the piece of metal in the courtyard ({DROP METAL})."
+   ]
+  },
+  {
+   "q": "A tin can is stuck up on the battlements",
+   "h": [
+    "You need to knock it down. The courtyard has something to throw.",
+    "A brick alone doesn't reach that high. The spell from the grotto by the lava gives you a strong arm. Even then you hit only about half the time.",
+    "In the courtyard: {GET BRICK}. On the drawbridge: {LOOK BATTLEMENTS}, {CAST DIZZY}, {THROW BRICK}, then {AT CAN}. If you miss, fetch another brick from the courtyard and throw again. The can falls into the courtyard. Don't open it yet (see the question about the tree)."
+   ]
+  },
+  {
+   "q": "An old dragon in a lair under the plain room",
+   "h": [
+    "The dragon eats anyone it sees. So don't let it see you.",
+    "The potion from the loft makes you invisible for a short time. And the dust in the dusty room tickles the nose.",
+    "In the dusty room: {GET DUST}. In the plain room: {DRINK POTION}, {PUSH DOWN}. In the lair: {THROW DUST}, {GET STAR}, {LOOK DRAGON}, {GO HOLE}. In the workshop: {GET STAR}, {GET FIREFLY}. Out: {GO WEST}, {GO UP}. Don't linger: the potion wears off."
+   ]
+  },
+  {
+   "q": "In the fountain I see {I FEEL VERY ODD!}, and later {ARGH!}",
+   "h": [
+    "This is a fountain of youth. Get too young and you vanish.",
+    "Water droplets from the fountain stick to you and make you younger. The Methuselah spell makes you older. {I FEEL VERY ODD!} alone means you are too young. {ARGH!} with it means you are too old. A dry towel wipes the droplets off.",
+    "In the courtyard: {GO FOUNTAIN}, {GET STAR}, {CAST METHUSELAH}, {GO CENTERPIECE}, {GO SHAFT}. After you leave the dungeon, wait in the courtyard ({LOOK}) until only {I FEEL VERY ODD!} shows, without {ARGH!}, then {DRY TOWEL}. Leave the wet towel ({DROP TOWEL})."
+   ]
+  },
+  {
+   "q": "I fell into a dark dungeon cell. How do I get out?",
+   "h": [
+    "Even in the dark you can pick up what lies on the floor. And the door can't stand fire.",
+    "The Fire spell opens the door. After opening a door it stays ready for one more target. Save that target for the tree in the forest.",
+    "In the cell: {GET STAR}, {CAST FIRE}, {AT DOOR}. {GO DOOR}, {GO UP}, {WALK UP}, {GO NORTH}, {GO NORTH}. You are in the courtyard. Type no command starting with {AT} until you reach the tree."
+   ]
+  },
+  {
+   "q": "I can't carry all 13 stars",
+   "h": [
+    "You can hold only ten things. But a star you find by looking or digging goes into your pocket even when it is full.",
+    "Put the Permeability spell on the forest floor in advance. At the end hold ten stars and nothing else. Leave the last three for the way: the can, the field and the tree.",
+    "First, in the forest: {DROP PERMEABILITY} (take it from the courtyard). At the end, in the courtyard, holding only the two stars from the fountain and the dungeon: {GET STAR} eight times, {OPEN CAN}, {USE METAL}, {LOOK CAN}. {GO WEST}, {GO DRAWBRIDGE}, {GO WEST}, {DIG}, {GO WEST}. In the forest: {CAST FIRE}, {AT TREE}, {LOOK ASHES}, {CAST PERMEABILITY}. Inside the tree it is dark, but {DROP STAR} works. 13 times, then {SCORE}."
+   ]
+  },
+  {
+   "q": "The {YOHO} spell sent me to the box, and from there back to the tree",
+   "h": [
+    "{YOHO} does not get you out of the tree. It only swaps the place you stand in with a stored place.",
+    "In this game the stored place is the box. Every way off the box takes you back to where you cast the spell. From inside the tree that is a trap with no way out.",
+    "Don't use {YOHO} at all. Leave it in the courtyard ({DROP YOHO}). If you already went into the tree without all the stars, you have to start again."
+   ]
+  }
+ ]
+}
