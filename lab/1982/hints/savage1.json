@@ -1,0 +1,378 @@
+{
+ "note": "Hints for Savage Island Part 1 in our own words. Every step was played and checked on the Dragon machine (8.11.2026), to the game's own ending: the password for part 2 (123, with the bandanna). Each question has three levels: a small hint, a clearer hint and the full solution.",
+ "where": "Each question has \"at\": words from the top of the screen (where the player is). The hint button beside the screen shows the questions whose words are on the screen now.",
+ "at": [
+  [
+   "BEACH BY OCEAN",
+   "LARGE PLAIN"
+  ],
+  [
+   "BEACH BY OCEAN"
+  ],
+  [
+   "VOLCANO",
+   "DEEP CAVE"
+  ],
+  [
+   "DEEP CAVE"
+  ],
+  [
+   "RIM OF AN EXTINCT",
+   "VOLCANO",
+   "LAKE",
+   "SECLUDED LEDGE"
+  ],
+  [
+   "BEACH BY OCEAN",
+   "LOT OF TROUBLE"
+  ],
+  [
+   "VOLCANO",
+   "DEEP CAVE",
+   "HOT ROCKY"
+  ],
+  [
+   "SECLUDED LEDGE",
+   "SHALLOW TIDEPOOL",
+   "LARGE PLAIN"
+  ],
+  [
+   "LAKE",
+   "ABOVE THE LAKE BOTTOM"
+  ],
+  [
+   "DEEP CAVE",
+   "MAZE OF CAVES",
+   "TOO DARK"
+  ],
+  [
+   "SECLUDED LEDGE",
+   "VOLCANO",
+   "LARGE PLAIN"
+  ],
+  [
+   "SHALLOW TIDEPOOL",
+   "BEACH BY OCEAN",
+   "TOP OF A PALM TREE"
+  ],
+  [
+   "SECLUDED LEDGE",
+   "LOT OF TROUBLE"
+  ],
+  [
+   "ON A RAFT",
+   "SMALL ATOLL"
+  ],
+  [
+   "ON A RAFT",
+   "SHALLOW TIDEPOOL"
+  ],
+  [
+   "ON A RAFT",
+   "BEACH BY OCEAN",
+   "ANCIENT CAVE"
+  ],
+  [
+   "METAL LINED TUNNEL",
+   "METAL ROOM",
+   "ROCK ROOM",
+   "SMALL METAL ROOM"
+  ],
+  [
+   "METAL ROOM",
+   "METAL LINED TUNNEL"
+  ]
+ ],
+ "he": [
+  {
+   "q": "מה בכלל צריך לעשות?",
+   "h": [
+    "במשחק הזה אין אוצרות. זה החלק הראשון מתוך שניים, וצריך להגיע לסופו.",
+    "בסוף החלק הזה המשחק נותן סיסמה לחלק השני. הדרך ארוכה, יש סופה שמגיעה, וגם לילה.",
+    "המטרה: להשאיר את האי מאחור דרך בסיס של חייזרים. בסוף מופיע שלט עם סיסמה, ואחריו {CONGRATS!}. אם יש לכם את {BANDANNA} (מטפחת הראש של הפיראט) הסיסמה היא {123}. בלעדיה מקבלים סיסמה אחרת, והחלק השני לא ייפתר. רושמים את הסיסמה."
+   ]
+  },
+  {
+   "q": "יש פה רק חול. איפה מתחילים?",
+   "h": [
+    "כדאי להתעניין בחול.",
+    "חופרים בו, אבל בלי את חפירה: אין לכם כלים.",
+    "בחוף: {DIG SAND}, וכשהמשחק שואל איך: {WITH HANDS}. אחר כך {LOOK HOLE}, ובבור יש בקבוק רום: {GET BOTTLE}."
+   ]
+  },
+  {
+   "q": "הדוב אכל אותי",
+   "h": [
+    "הדוב מריח עליכם משהו. מה קורה לאדם שמטפס על הר געש?",
+    "טיפוס להר הגעש מזיע ({HARD WORK}), וגם הדוב עצמו מלחיץ ומזיע. מזיעים לא מסתובבים ליד הדוב. האגם שוטף את הזיעה.",
+    "בכל פעם שנכנסים להר הגעש: מניחים את מה שביד ({DROP BOTTLE}), ‏{GO LAKE} (הזיעה נשטפת), ‏{SWIM EAST} חזרה לחוף, ורק אז לוקחים את הבקבוק ({GET BOTTLE}). במערה עם הדוב לא נשארים יותר מתור או שניים. גם עם כל הזהירות זה מזל: אם הדוב אכל אתכם, מתחילים מחדש."
+   ]
+  },
+  {
+   "q": "מה עושים עם בקבוק הרום?",
+   "h": [
+    "את הרום צריך לשמור, אבל את הבקבוק צריך ריק.",
+    "במערה יש אגן אבן טבעי.",
+    "במערה ({GO CAVE}): {EMPTY BOTTLE}. הרום נשפך לאגן ונשאר שם. את הבקבוק הריק מוציאים ({E}) ומניחים ליד האגם. מאוחר יותר, עם הבקבוק הריק ביד: {GET RUM}."
+   ]
+  },
+  {
+   "q": "איך יוצאים מהר הגעש?",
+   "h": [
+    "למעלה אי אפשר: האפר מחליק. צריך לחפש מוצא אחר מעבר למים.",
+    "שוחים לכיוון שלא כתוב ביציאות. בצד השני יש מדף עם סדק. אבל אם סוחבים משהו באגם, טובעים. רק בול עץ מחזיק אתכם עם חפצים.",
+    "בלי שום דבר ביד: {GO LAKE}, ואז {SWIM WEST} למדף הנסתר. משם {GO CREVICE} לצוק החולי, ו-{JUMP} לחוף. כדי להעביר חפצים באגם צריך להחזיק {PALM LOG}."
+   ]
+  },
+  {
+   "q": "הסופה הרימה אותי לים",
+   "h": [
+    "בסופה כל תור בחוץ מסוכן. משהו כבד ביד עוזר.",
+    "הסופה מפילה עצי דקל. מי שמחזיק בול עץ לא עף. עד שיש לכם בול, מבלים כמה שפחות תורות בחוץ.",
+    "ליד עצי הדקל ({E} ושוב {E} מהצוק): {WAIT} מביא את הסופה. ממשיכים לחכות (למשל {JUMP}) עד שנשמע {CRASH!}, ומיד {GET LOG}. בכל מקום פתוח (גם בהר הגעש, באגם ובצוק) מחזיקים את הבול כל עוד הסופה נמשכת. רק במערה אין רוח."
+   ]
+  },
+  {
+   "q": "איך נפטרים מהדוב?",
+   "h": [
+    "הדוב לא רע. הוא חולה, וחסר לו משהו.",
+    "חסר לו מלח. מלח מקבלים ממי ים שמתאדים על סלע חם. בסוף המערה יש סדק לצוק חם.",
+    "עם בקבוק מי ים: {GO CAVE}, ‏{GO CREVICE} לצוק החם, ‏{EMPTY BOTTLE} (נשארת שלולית). מחכים עם הבול ביד ({GO CLIFF} מעביר תור) עד שמופיע {PILE OF SALT}. אז {GET SALT}, ‏{GO CREVICE} חזרה למערה, וליד הדוב {DROP SALT}. הדוב אוכל, נרגע, ותוך זמן קצר הסופה עוברת ({STORM PASSED}). אל תקפצו מהצוק החם!"
+   ]
+  },
+  {
+   "q": "איך מביאים מי ים להר הגעש?",
+   "h": [
+    "מי ים יש בבריכת הגאות ליד החוף. את הבקבוק צריך קודם להוציא מהר הגעש.",
+    "הבול עובר את האגם, אבל לא את הסדק הצר שבמדף. אז הבול נשאר על המדף, ואתם יוצאים עם הבקבוק בלבד.",
+    "עם הבול: {GET BOTTLE}, ‏{GO LAKE}, ‏{SWIM WEST}. על המדף: {DROP LOG}, ‏{GO CREVICE}, ‏{JUMP}, ‏{E}, ‏{D} (בריכת הגאות), ‏{GET WATER}, ‏{S}, ‏{S}, ‏{GO VOLCANO}. בפנים: {DROP BOTTLE}, ‏{GO LAKE}, ‏{SWIM WEST}, ‏{GET LOG}, ‏{E}, ‏{SWIM EAST}, ‏{GET BOTTLE}. הקטע בלי הבול מסוכן בסופה, אז לא מתעכבים."
+   ]
+  },
+  {
+   "q": "יש משהו בקרקעית האגם?",
+   "h": [
+    "כן, שני דברים. אבל אי אפשר לצלול כשמחזיקים בול.",
+    "משחררים את הבול באמצע האגם, לוקחים אוויר וצוללים. מתחת למים שוחים לצדדים.",
+    "מניחים קודם את כל השאר על המדף. באגם: {DROP LOG}, ‏{HOLD BREATH}, ‏{SWIM DOWN}, ‏{SWIM NORTH}, ‏{GET KNIFE}, ‏{SWIM EAST}, ‏{GET BLOCK}, ‏{SWIM UP}, ‏{GET LOG}, ‏{SWIM WEST}. אם מופיע {ARGH!}, האוויר נגמר: עולים מהר."
+   ]
+  },
+  {
+   "q": "מה יש בפתח החשוך שבמערה?",
+   "h": [
+    "שם מבוך חשוך. במסלול הנכון אפשר ללכת גם בלי אור.",
+    "בחדר השני של המבוך יש ערמה של גללי עטלפים. משהו קטן ונוצץ קבור בה.",
+    "אחרי שהדוב נרגע: {GO OPENING}, ‏{S}, ‏{N}, ‏{DIG GUANO}, ‏{WITH HANDS} ({YUCK!}), ‏{GET WIRE}, ואז {GO OPENING} חזרה למערה. את פיסת החוט שומרים עד הסוף."
+   ]
+  },
+  {
+   "q": "הבול נתקע בתוך הר הגעש",
+   "h": [
+    "אתם לא יכולים לטפס החוצה, אבל הבול כן.",
+    "מנסים לעלות במדרון עם הבול. אתם מחליקים חזרה, אבל הוא נשאר למעלה ומתגלגל החוצה.",
+    "מניחים את כל השאר על המדף. עם הבול בלבד: {E}, ‏{SWIM EAST}, ואז {U}. אתם מחליקים חזרה ({I DROPPED SOMETHING}), והבול מחכה במישור. חוזרים: {GO LAKE}, ‏{SWIM WEST}, אוספים את החפצים, ויוצאים דרך {GO CREVICE} ו-{JUMP}."
+   ]
+  },
+  {
+   "q": "איך בונים רפסודה?",
+   "h": [
+    "צריך שני בולי עץ, משהו שקושר אותם, וכלי חיתוך.",
+    "הבול השני נופל ליד הדקלים כשהסופה עוברת. בשולי הג'ונגל יש גפנים, והסכין חותכת אותם. בונים בבריכת הגאות. וקחו מהדקל גם קוקוסים, תצטרכו אותם.",
+    "בחוף: {CUT VINES}, ‏{GET VINES}. את הבול מהמישור ואת הבול שליד הדקלים מביאים לבריכת הגאות (אחד בכל פעם, שניים כבדים מדי). ליד הדקלים: {GO TREE}, ‏{GET COCONUTS}, ‏{D}. בבריכה, עם הסכין: {BUILD RAFT}."
+   ]
+  },
+  {
+   "q": "מחשיך, או שתקפה אותי חיה בשינה",
+   "h": [
+    "ישנים רק במקום מוגן.",
+    "המקום היחיד לישון בו הוא המדף הנסתר שבהר הגעש. ובלילה הזה גם מגיעה ספינה.",
+    "נכנסים להר הגעש בידיים ריקות ({GO LAKE}, ‏{SWIM WEST}). על המדף: {WAIT} עד {SUNSET}, ואז {SLEEP} ({MORNING!}). אחר כך {WAIT} עד שנשמע {I HEAR CANNON OFFSHORE}: הפיראט הגיע. יוצאים ב-{GO CREVICE} ו-{JUMP}."
+   ]
+  },
+  {
+   "q": "איך מגיעים לפיראט?",
+   "h": [
+    "הפיראט מחכה על אי אלמוגים קטן, אבל רק אחרי ירית התותח. והוא אוהב משקה מסוים.",
+    "הרפסודה קשה להיגוי: חותרים שוב ושוב עד שרואים את האטול. מביאים את בקבוק הרום.",
+    "בבריכת הגאות, עם הרום, הגוש, החוט, הקוקוסים והסכין: {GO RAFT}. חוזרים על {PADDLE} עד שמופיע {ATOLL}, ואז {GO ATOLL}. שם: {GIVE BOTTLE}. הפיראט לוקח את הרום ומשאיר פתק ומטפחת: {GET BANDANNA}, ‏{READ NOTE} (המילה בפתק היא {FREE}). חוזרים ב-{GO RAFT}."
+   ]
+  },
+  {
+   "q": "הרפסודה מתפרקת",
+   "h": [
+    "רפסודה מחזיקה רק כתריסר חתירות. אפשר לבנות אותה מחדש.",
+    "חוזרים לבריכת הגאות, מפרקים את הרפסודה עם הסכין, ומביאים גפנים חדשים.",
+    "חותרים עד שמופיע {TIDEPOOL}, ואז {GO TIDEPOOL}, ‏{CUT VINES} (נשארים שני הבולים), ‏{S}, ‏{CUT VINES}, ‏{GET VINES}, ‏{D}, ‏{BUILD RAFT}, ‏{GO RAFT}. אפשר לסחוב רק שישה דברים, אז את הפתק לא לוקחים."
+   ]
+  },
+  {
+   "q": "יש חוף אחר עם מערה. מה עושים שם?",
+   "h": [
+    "במערה העתיקה יש נטיף מוזר.",
+    "הנטיף תלוי על ציר. צריך להכות בו במשהו כבד ועגול.",
+    "חותרים עד שמופיע {BEACH}, ואז {GO BEACH} ו-{GO CAVE}. במערה: {MOVE STALACTITE}, וכשהמשחק שואל איך: {WITH COCONUTS} (שלמים, לא חתוכים!). נפתח סדק בסלע: {GO CREVICE}."
+   ]
+  },
+  {
+   "q": "מנהרת מתכת. מה עושים כאן?",
+   "h": [
+    "יש כאן שדה כוח, מכונה וחדרי תצוגה. לחדר המכונה צריך אור.",
+    "שדה הכוח מטעין את הגוש הקטן, והוא זוהר. במכונה חסרה פיסת חוט.",
+    "{N}, ‏{W}: {GO FIELD} ושוב {GO FIELD} (עכשיו יש {GLOWING PLASTIC BLOCK}). אחר כך {E}, ‏{E}, ‏{S} לחדר המכונה: {FIX MACHINERY}, וכשהמשחק שואל איך: {WITH WIRE}. אל תלחצו על הכפתור של התיבה עם הדינוזאור!"
+   ]
+  },
+  {
+   "q": "איך מסיימים את החלק הראשון?",
+   "h": [
+    "איש המערות בתיבה מחכה שיעירו אותו. המכונה שתיקנתם עוזרת.",
+    "מעירים אותו, והוא הולך אחריכם ללוח הבקרה. משם צריך לומר את המילה מהפתק.",
+    "מחדר המכונה: {N}, ‏{W}, ‏{S}, ‏{E}, ושם {PUSH BUTTON} ({CASE OPENS. ITS ALIVE!}). חוזרים {W}, ‏{N}, ‏{W} ללוח הבקרה ומחכים (למשל {JUMP}) עד שאיש המערות לוחץ ונשמע {VOCALIZE PASSWORD PLEASE}. אז {SAY FREE}, ושוב מחכים עד {BLINDING FLASH}. לבסוף {GO FIELD}: עם המטפחת אצלכם הסיסמה היא {123}."
+   ]
+  }
+ ],
+ "en": [
+  {
+   "q": "What am I supposed to do?",
+   "h": [
+    "There are no treasures here. This is part one of two, and you have to reach its end.",
+    "At the end of this part the game gives you a password for part two. It is a long way, a storm is coming, and night too.",
+    "The goal is to leave the island behind through an alien base. At the end a sign shows a password, then {CONGRATS!}. If you have the {BANDANNA} (the pirate's headscarf) the password is {123}. Without it you get a different password and part two can't be solved. Write the password down."
+   ]
+  },
+  {
+   "q": "There's only sand here. Where do I start?",
+   "h": [
+    "The sand is worth a closer look.",
+    "Dig in it, but you have no shovel.",
+    "On the beach: {DIG SAND}, and when asked how: {WITH HANDS}. Then {LOOK HOLE}: there is a bottle of rum. {GET BOTTLE}."
+   ]
+  },
+  {
+   "q": "The bear ate me",
+   "h": [
+    "The bear smells something on you. What happens when you climb a volcano?",
+    "Climbing the volcano makes you sweat ({HARD WORK}), and the bear itself makes you nervous and sweaty. Don't stay near the bear while sweaty. The lake washes the sweat off.",
+    "Each time you enter the volcano: put down what you carry ({DROP BOTTLE}), {GO LAKE} (the sweat washes off), {SWIM EAST} back to the shore, and only then {GET BOTTLE}. Never stay more than a turn or two in the cave with the bear. Even so it is partly luck: if the bear eats you, start again."
+   ]
+  },
+  {
+   "q": "What do I do with the bottle of rum?",
+   "h": [
+    "You need to keep the rum, but you need the bottle empty.",
+    "There is a natural stone basin in the cave.",
+    "In the cave ({GO CAVE}): {EMPTY BOTTLE}. The rum goes into the basin and stays there. Take the empty bottle out ({E}) and leave it by the lake. Later, holding the empty bottle: {GET RUM}."
+   ]
+  },
+  {
+   "q": "How do I get out of the volcano?",
+   "h": [
+    "Not up: the ash slides. Look for a way out across the water.",
+    "Swim in a direction that isn't listed. On the other side is a ledge with a crevice. But if you carry anything into the lake you drown. Only a palm log keeps you afloat with things.",
+    "With empty hands: {GO LAKE}, then {SWIM WEST} to the hidden ledge. From there {GO CREVICE} to the sandy cliff and {JUMP} to the beach. To carry things across the lake you must hold a {PALM LOG}."
+   ]
+  },
+  {
+   "q": "The storm lifted me out to sea",
+   "h": [
+    "In the storm every turn outside is dangerous. Something heavy in your hands helps.",
+    "The storm knocks down palm trees. Whoever holds a log is not blown away. Until you have one, spend as few turns outside as you can.",
+    "By the palm trees ({E} and {E} again from the cliff): {WAIT} brings the hurricane. Keep waiting (for example {JUMP}) until you hear {CRASH!}, then {GET LOG} at once. Anywhere open (the volcano, the lake and the cliffs too) keep holding the log while the storm lasts. Only the cave has no wind."
+   ]
+  },
+  {
+   "q": "How do I get rid of the bear?",
+   "h": [
+    "The bear isn't evil. He is sick and is missing something.",
+    "He needs salt. Salt is what is left when seawater dries on hot rock. At the back of the cave a crevice leads to a hot cliff.",
+    "With a bottle of seawater: {GO CAVE}, {GO CREVICE} to the hot cliff, {EMPTY BOTTLE} (a puddle is left). Wait holding the log ({GO CLIFF} passes a turn) until a {PILE OF SALT} appears. Then {GET SALT}, {GO CREVICE} back to the cave, and next to the bear {DROP SALT}. He eats it and calms down, and soon the storm passes ({STORM PASSED}). Don't jump from the hot cliff!"
+   ]
+  },
+  {
+   "q": "How do I bring seawater into the volcano?",
+   "h": [
+    "There is seawater in the tidepool by the beach. First you have to get the bottle out of the volcano.",
+    "The log crosses the lake but not the narrow crevice in the ledge. So the log stays on the ledge and you go out with just the bottle.",
+    "With the log: {GET BOTTLE}, {GO LAKE}, {SWIM WEST}. On the ledge: {DROP LOG}, {GO CREVICE}, {JUMP}, {E}, {D} (the tidepool), {GET WATER}, {S}, {S}, {GO VOLCANO}. Inside: {DROP BOTTLE}, {GO LAKE}, {SWIM WEST}, {GET LOG}, {E}, {SWIM EAST}, {GET BOTTLE}. The part without the log is risky in the storm, so don't linger."
+   ]
+  },
+  {
+   "q": "Is there anything at the bottom of the lake?",
+   "h": [
+    "Yes, two things. You can't dive holding a log.",
+    "Let go of the log in the middle of the lake, take a breath and dive. Underwater, swim sideways.",
+    "First leave everything else on the ledge. In the lake: {DROP LOG}, {HOLD BREATH}, {SWIM DOWN}, {SWIM NORTH}, {GET KNIFE}, {SWIM EAST}, {GET BLOCK}, {SWIM UP}, {GET LOG}, {SWIM WEST}. If you see {ARGH!}, your air is running out: go up fast."
+   ]
+  },
+  {
+   "q": "What is in the dark opening in the cave?",
+   "h": [
+    "A dark maze. On the right path you can walk it even without light.",
+    "In the second room of the maze there is a pile of bat guano. Something small and shiny is buried in it.",
+    "After the bear has calmed down: {GO OPENING}, {S}, {N}, {DIG GUANO}, {WITH HANDS} ({YUCK!}), {GET WIRE}, then {GO OPENING} back to the cave. Keep the piece of wire to the end."
+   ]
+  },
+  {
+   "q": "My log is stuck inside the volcano",
+   "h": [
+    "You can't climb out, but the log can.",
+    "Try to go up the slope holding the log. You slide back down, but the log stays up and rolls out.",
+    "Leave everything else on the ledge. With only the log: {E}, {SWIM EAST}, then {U}. You slide back ({I DROPPED SOMETHING}) and the log waits on the plain. Go back: {GO LAKE}, {SWIM WEST}, pick up your things and leave by {GO CREVICE} and {JUMP}."
+   ]
+  },
+  {
+   "q": "How do I build a raft?",
+   "h": [
+    "You need two logs, something to tie them, and something to cut with.",
+    "The second log falls by the palm trees when the storm passes. There are vines at the edge of the jungle, and the knife cuts them. Build at the tidepool. Take coconuts from the palm tree too, you will need them.",
+    "On the beach: {CUT VINES}, {GET VINES}. Bring the log from the plain and the log by the palm trees to the tidepool (one at a time, two are too heavy). By the palms: {GO TREE}, {GET COCONUTS}, {D}. At the tidepool, with the knife: {BUILD RAFT}."
+   ]
+  },
+  {
+   "q": "It's getting dark, or a wild animal attacked me in my sleep",
+   "h": [
+    "Only sleep somewhere safe.",
+    "The only place to sleep is the hidden ledge in the volcano. And this night a ship arrives.",
+    "Enter the volcano with empty hands ({GO LAKE}, {SWIM WEST}). On the ledge: {WAIT} until {SUNSET}, then {SLEEP} ({MORNING!}). Then {WAIT} until you hear {I HEAR CANNON OFFSHORE}: the pirate is here. Leave by {GO CREVICE} and {JUMP}."
+   ]
+  },
+  {
+   "q": "How do I reach the pirate?",
+   "h": [
+    "The pirate waits on a small atoll, but only after the cannon shot. And he likes a certain drink.",
+    "The raft is hard to steer: paddle again and again until you see the atoll. Bring the bottle of rum.",
+    "At the tidepool, with the rum, the block, the wire, the coconuts and the knife: {GO RAFT}. Repeat {PADDLE} until {ATOLL} shows, then {GO ATOLL}. There: {GIVE BOTTLE}. The pirate takes the rum and leaves a note and a headscarf: {GET BANDANNA}, {READ NOTE} (the word in the note is {FREE}). Go back with {GO RAFT}."
+   ]
+  },
+  {
+   "q": "The raft is coming apart",
+   "h": [
+    "A raft lasts only about a dozen paddles. You can build it again.",
+    "Go back to the tidepool, take the raft apart with the knife, and bring new vines.",
+    "Paddle until {TIDEPOOL} shows, then {GO TIDEPOOL}, {CUT VINES} (the two logs are left), {S}, {CUT VINES}, {GET VINES}, {D}, {BUILD RAFT}, {GO RAFT}. You can only carry six things, so don't take the note."
+   ]
+  },
+  {
+   "q": "There's another beach with a cave. What now?",
+   "h": [
+    "There is a strange stalactite in the ancient cave.",
+    "The stalactite hangs on a hinge. Hit it with something heavy and round.",
+    "Paddle until {BEACH} shows, then {GO BEACH} and {GO CAVE}. In the cave: {MOVE STALACTITE}, and when asked how: {WITH COCONUTS} (whole, not cut!). A crevice opens in the rock: {GO CREVICE}."
+   ]
+  },
+  {
+   "q": "A metal tunnel. What do I do here?",
+   "h": [
+    "There is a force field, a machine and display rooms. The machine room needs light.",
+    "The force field charges the small block and it glows. The machine is missing a piece of wire.",
+    "{N}, {W}: {GO FIELD} and {GO FIELD} again (now you have a {GLOWING PLASTIC BLOCK}). Then {E}, {E}, {S} to the machine room: {FIX MACHINERY}, and when asked how: {WITH WIRE}. Don't press the button on the dinosaur's case!"
+   ]
+  },
+  {
+   "q": "How do I finish part one?",
+   "h": [
+    "The caveman in the case is waiting to be woken. The machine you fixed helps.",
+    "Wake him and he follows you to the control console. There you must say the word from the note.",
+    "From the machine room: {N}, {W}, {S}, {E}, and there {PUSH BUTTON} ({CASE OPENS. ITS ALIVE!}). Go back {W}, {N}, {W} to the console and wait (for example {JUMP}) until the caveman presses it and you hear {VOCALIZE PASSWORD PLEASE}. Then {SAY FREE}, and wait again until the {BLINDING FLASH}. Finally {GO FIELD}: with the headscarf on you, the password is {123}."
+   ]
+  }
+ ]
+}
