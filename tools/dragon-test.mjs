@@ -1791,7 +1791,7 @@ if (part('real machine lab')) {
     });
     const pre = path;
     check(`${path} every game opens its own page beside the machine, at its own address, with the 3 tabs (how to load, how to play, about; + hints in a game we finished), the red button and the credit; "back to the cabinet" returns`,
-      gv.out.length === 68 && gv.out.every(g => g.open && g.url.startsWith(pre) && g.url.length > pre.length + 3 && (g.tabs === 3 || (g.tabs === 4 && ['adventureland', 'pirate', 'voodoo', 'mission'].includes(g.id))) && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go) && gv.after === pre && gv.closed, JSON.stringify(gv.out.filter(g => !(g.open && (g.tabs === 3 || (g.tabs === 4 && ['adventureland', 'pirate', 'voodoo'].includes(g.id))) && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go)).slice(0, 3)));
+      gv.out.length === 68 && gv.out.every(g => g.open && g.url.startsWith(pre) && g.url.length > pre.length + 3 && (g.tabs === 3 || (g.tabs === 4 && ['adventureland', 'pirate', 'voodoo', 'mission', 'count'].includes(g.id))) && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go) && gv.after === pre && gv.closed, JSON.stringify(gv.out.filter(g => !(g.open && (g.tabs === 3 || (g.tabs === 4 && ['adventureland', 'pirate', 'voodoo'].includes(g.id))) && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go)).slice(0, 3)));
     // העטיפה המקורית (30.10): רק במשחק שיש עליו רשות (El Diablero, מארכיון Dragon Data), בלשונית "על המשחק", עם קרדיט וקישור. התמונה נטענת
     const cv = await browser.newPage({ viewport: { width: 1280, height: 900 } });
     await cv.goto(base.replace(/\/$/, '') + path + 'el-diablero/'); await cv.waitForTimeout(1500);

@@ -1,0 +1,334 @@
+{
+ "note": "Hints for The Count in our own words. Every step was played and checked on the Dragon machine (8.11.2026), to the game's own ending: Dracula is destroyed on day 3. Each question has three levels: a small hint, a clearer hint and the full solution.",
+ "where": "Each question has \"at\": words from the top of the screen (where the player is). The game runs over three days, so some questions share rooms (bedroom, kitchen, crypt). The hint button beside the screen shows the questions whose words are on the screen now.",
+ "at": [
+  [
+   "BRASS BED",
+   "BEDROOM"
+  ],
+  [
+   "BRASS BED"
+  ],
+  [
+   "KITCHEN",
+   "DUMB-WAITER",
+   "PANTRY"
+  ],
+  [
+   "DUNGEON",
+   "PIT"
+  ],
+  [
+   "HALL INSIDE THE CASTLE",
+   "OUTSIDE THE CASTLE"
+  ],
+  [
+   "WORKROOM",
+   "LOCKED DOOR"
+  ],
+  [
+   "CLOSET",
+   "SMALL VIAL"
+  ],
+  [
+   "KITCHEN",
+   "HALL INSIDE THE CASTLE",
+   "BEDROOM"
+  ],
+  [
+   "KITCHEN",
+   "SOLAR OVEN"
+  ],
+  [
+   "BRASS BED",
+   "BEDROOM"
+  ],
+  [
+   "BEDROOM",
+   "LEDGE",
+   "FLOWER BOX"
+  ],
+  [
+   "DOORLESS ROOM",
+   "PORTRAIT"
+  ],
+  [
+   "CRYPT",
+   "DARK PASSAGE"
+  ],
+  [
+   "STONE COFFIN",
+   "LARGE COFFIN",
+   "SLIDE BOLT"
+  ],
+  [
+   "CRYPT",
+   "DARK PASSAGE"
+  ],
+  [
+   "LARGE COFFIN",
+   "CRYPT",
+   "CLOSET"
+  ]
+ ],
+ "he": [
+  {
+   "q": "מה בכלל צריך לעשות?",
+   "h": [
+    "במשחק הזה אין אוצרות. אתם אורחים בטירה של מישהו מפורסם מאוד.",
+    "המשחק נמשך כמה ימים. כל לילה מישהו נושך אתכם, ואין לכם הרבה לילות.",
+    "המטרה היא להשמיד את {DRACULA} עד היום השלישי. ביום הראשון מכינים כלים, ביום השני מוצאים את הארון שלו ושוברים את הבריח, וביום השלישי נועצים בו יתד. המשחק נגמר בהודעה {THE TOWNSPEOPLE COME AND CARRY ME OFF CHEERING!}"
+   ]
+  },
+  {
+   "q": "אני שוכב במיטה ולא יודע איך לקום",
+   "h": [
+    "קחו משהו מהמיטה לפני שאתם קמים.",
+    "הסדינים יעזרו לכם הרבה במשחק הזה.",
+    "{GET SHEETS}, ואז {GET UP}. את הסדינים לוקחים מהמיטה כל בוקר מחדש."
+   ]
+  },
+  {
+   "q": "איך מגיעים לקומות אחרות?",
+   "h": [
+    "במטבח יש מעלית קטנה לאוכל.",
+    "נכנסים אליה, מעלים או מורידים אותה, ויוצאים לחדר.",
+    "{GO DUMB-WAITER}, ואז {RAISE DUMB-WAITER} למזווה או {LOWER DUMB-WAITER} לחדר העבודה, ואז {GO ROOM}. במזווה: {GET GARLIC} ו-{GET MATCHES}. מהמזווה לחדר העבודה מורידים פעמיים."
+   ]
+  },
+  {
+   "q": "בור חשוך במרתף",
+   "h": [
+    "אפשר לרדת אליו, אבל צריך חבל ואור.",
+    "הסדינים הם החבל. הגפרורים נותנים אור לרגע.",
+    "מחדר העבודה: {GO DOWN}. ‏{TIE SHEETS}, המשחק שואל למה, וכותבים {TO RINGS}. ‏{CLIMB SHEETS}, ‏{LIGHT MATCH}, ‏{GET TORCH}, ואז {CLIMB SHEETS} ו-{GO UP}."
+   ]
+  },
+  {
+   "q": "הדואר לא מגיע",
+   "h": [
+    "הדוור מגיע מתי שבא לו, ולא כשאתם עומדים בחוץ ומחכים לו.",
+    "מחכים בתוך הטירה. כשנשמע צלצול פעמון, יוצאים החוצה.",
+    "עומדים במסדרון ({HALL}) ומעבירים תורות, למשל {INVENTORY}, עד שמופיע {A BELL RINGS SOMEWHERE}. אז {GO EAST}. ביום הראשון מגיעה גלויה, וביום השני חבילה (היא מגיעה רק לקראת ערב). לא מושכים בעצמכם בפעמון."
+   ]
+  },
+  {
+   "q": "הדלת בחדר העבודה נעולה",
+   "h": [
+    "צריך משהו דק כדי לפרוץ את המנעול.",
+    "לגלויה מצורף פתק עם מהדק.",
+    "בחוץ: {GET POSTCARD} ו-{GET CLIP}. בחדר העבודה: {PICK LOCK}, ‏{OPEN DOOR}, ‏{GO DOOR}."
+   ]
+  },
+  {
+   "q": "מה עושים בארון?",
+   "h": [
+    "יש כאן בקבוקון עם משהו שתצטרכו בכל ערב.",
+    "רוקנים את הבקבוקון. ובלילה גונבים דברים, אז כדאי להחביא כאן את מה שחשוב.",
+    "{EMPTY VIAL} ו-{GET TABLETS} (כדורי ערנות). את היתד שאתם מחזיקים מאז ההתחלה משאירים כאן: {DROP STAKE}. אחר כך {GO WEST}, ‏{CLOSE DOOR}, ‏{LOCK DOOR}. את המהדק שומרים, הוא יפתח את הארון שוב ביום השלישי."
+   ]
+  },
+  {
+   "q": "אני נרדם כשהשמש שוקעת",
+   "h": [
+    "לקראת ערב מופיעה הודעה שאתם עייפים. אל תתעלמו ממנה.",
+    "הכדורים מהבקבוקון שומרים עליכם ערים, אבל רק לזמן קצר.",
+    "כשמופיע {I'M GETTING VERY TIRED}: ‏{EAT TABLET}, ואז {LIGHT TORCH}. לא אוכלים מוקדם מדי, כי הכדור נגמר אחרי זמן קצר. יש רק שלושה."
+   ]
+  },
+  {
+   "q": "התנור חם מדי",
+   "h": [
+    "זה תנור שמש. מתי אין שמש?",
+    "מחכים לשקיעה ומנסים שוב.",
+    "אחרי השקיעה (ערים ועם לפיד דולק): {GO OVEN} (אם עדיין חם, מנסים שוב), ואז {GET FILE}. הכי נוח לקחת את הפצירה ביום השני, ממש לפני שיורדים לקריפטה."
+   ]
+  },
+  {
+   "q": "בבוקר הצוואר שלי נשוך",
+   "h": [
+    "אי אפשר להימנע מזה לגמרי, אבל אפשר להגן על עצמכם בלילה.",
+    "יש ירק שעטלפים לא אוהבים.",
+    "מחזיקים את השום כל הלילה: העטלף מריח אותו ועף. ישנים במיטה: {GO BED}, ‏{UNLIGHT TORCH}, ‏{SLEEP}. בבוקר מגלים שנשדדתם: משאירים על המיטה את מה שתצטרכו ({DROP CLIP})."
+   ]
+  },
+  {
+   "q": "החלון בחדר השינה",
+   "h": [
+    "קושרים את הסדינים למשהו כבד ויורדים בהם.",
+    "את הקצה משליכים מעבר לאדן. למטה יש אדנית.",
+    "{TIE SHEETS}, ‏{TO BED}, ‏{GET END}, ‏{OPEN WINDOW}, ‏{GO WINDOW}, ‏{DROP END}, ‏{CLIMB SHEET}, ואז {GO WINDOW} פעמיים. חזרה: {GO WINDOW}, ‏{CLIMB SHEET} פעמיים, {GO WINDOW}. אף פעם לא מטפסים עם לפיד דולק: הוא שורף את הסדין ונופלים."
+   ]
+  },
+  {
+   "q": "חדר בלי דלתות",
+   "h": [
+    "משהו על הקיר מסתיר משהו.",
+    "מורידים את הדיוקן.",
+    "{REMOVE PORTRAIT} ו-{DROP PORTRAIT}: מאחוריו מעבר חשוך. שם צריך לפיד דולק: {LIGHT TORCH}, ‏{GO PASSAGE}, ‏{GO NORTH}."
+   ]
+  },
+  {
+   "q": "בקריפטה אין כלום חוץ משלט \"אסור לעשן\"",
+   "h": [
+    "אם כתוב שאסור, אולי בדיוק את זה צריך לעשות.",
+    "בחבילה מהדואר יש סיגריות. העשן חושף משהו.",
+    "ביום השני: בחוץ {OPEN PACKAGE} ו-{GET PACK}. בקריפטה מפנים מקום ({DROP TABLET}), ואז {GET CIGARETTE}, ‏{LIGHT CIGARETTE}, ‏{SMOKE CIGARETTE}: מופיע ארון קבורה."
+   ]
+  },
+  {
+   "q": "ארון הקבורה לא נפתח / יש בו בריח",
+   "h": [
+    "ביום הארון נעול מבפנים. באים בלילה, כשהבעלים בחוץ.",
+    "בפנים יש בריח. הכלי מהתנור חזק מספיק.",
+    "ביום השני אחרי השקיעה, עם הפצירה: {OPEN COFFIN}, ‏{GO COFFIN}, ‏{BREAK BOLT}, המשחק שואל במה, וכותבים {WITH FILE}. עכשיו הארון לא יינעל יותר."
+   ]
+  },
+  {
+   "q": "בלילה גנבו לי את הסיגריות",
+   "h": [
+    "החפיסה נעלמת בלילה, אבל אולי לא כל מה שבכיס.",
+    "מוציאים סיגריה אחת מהחפיסה ומחזיקים אותה לחוד.",
+    "אחרי שבירת הבריח: {GO UP}, משאירים את הסיגריה הדולקת בקריפטה ({DROP CIGARETTE}), {GO SOUTH}, ואז {GET CIGARETTE} (סיגריה חדשה מהחפיסה). את החפיסה גונבים, אבל הסיגריה הבודדת נשארת אצלכם ליום השלישי. אחר כך {GO SOUTH}, ‏{GO WINDOW}, ‏{UNLIGHT TORCH}, חוזרים למיטה ({GO BED})."
+   ]
+  },
+  {
+   "q": "איך משמידים את הרוזן?",
+   "h": [
+    "ביום הוא ישן בארון הקבורה. צריך שני כלים: אחד בחדר העבודה, והשני בארון שבו החבאתם דברים.",
+    "יתד ופטיש. השום כבר לא נחוץ.",
+    "ביום השלישי: {DROP GARLIC}, ‏{GET SHEETS}, ‏{GET CLIP}, ‏{GET UP}. בחדר העבודה: {PICK LOCK}, ‏{OPEN DOOR}, ‏{DROP CLIP}, ‏{DROP FILE}, ‏{GET MALLET}, ‏{GO DOOR}, ‏{GET STAKE}. יורדים מהחלון לקריפטה, ואז {LIGHT CIGARETTE}, ‏{SMOKE CIGARETTE}, ‏{OPEN COFFIN}, ‏{GO COFFIN} ו-{KILL DRACULA}. ניצחון!"
+   ]
+  }
+ ],
+ "en": [
+  {
+   "q": "What am I supposed to do?",
+   "h": [
+    "There are no treasures in this game. You are a guest in the castle of someone very famous.",
+    "The game runs over several days. Every night someone bites you, and you don't have many nights.",
+    "The goal is to destroy {DRACULA} by the third day. Day 1: collect tools. Day 2: find his coffin and break its bolt. Day 3: drive a stake into him. The game ends with {THE TOWNSPEOPLE COME AND CARRY ME OFF CHEERING!}"
+   ]
+  },
+  {
+   "q": "I'm lying in bed and can't get up",
+   "h": [
+    "Take something from the bed before you get up.",
+    "The sheets will be very useful in this game.",
+    "{GET SHEETS}, then {GET UP}. Take the sheets from the bed again every morning."
+   ]
+  },
+  {
+   "q": "How do I reach other floors?",
+   "h": [
+    "There is a small food lift in the kitchen.",
+    "Get in, raise or lower it, and step out into the room.",
+    "{GO DUMB-WAITER}, then {RAISE DUMB-WAITER} for the pantry or {LOWER DUMB-WAITER} for the workroom, then {GO ROOM}. In the pantry: {GET GARLIC} and {GET MATCHES}. From the pantry to the workroom, lower it twice."
+   ]
+  },
+  {
+   "q": "A dark pit in the dungeon",
+   "h": [
+    "You can go down, but you need a rope and some light.",
+    "The sheets are the rope. The matches give light for a moment.",
+    "From the workroom: {GO DOWN}. {TIE SHEETS}, the game asks to what, and you type {TO RINGS}. {CLIMB SHEETS}, {LIGHT MATCH}, {GET TORCH}, then {CLIMB SHEETS} and {GO UP}."
+   ]
+  },
+  {
+   "q": "The mail doesn't come",
+   "h": [
+    "The postman comes when he likes, and not while you stand outside waiting for him.",
+    "Wait inside the castle. When you hear a bell, go out.",
+    "Stand in the hall and pass turns, for example {INVENTORY}, until {A BELL RINGS SOMEWHERE} shows. Then {GO EAST}. On day 1 a postcard comes, on day 2 a package (only towards evening). Don't pull the bell yourself."
+   ]
+  },
+  {
+   "q": "The door in the workroom is locked",
+   "h": [
+    "You need something thin to pick the lock.",
+    "A note is clipped to the postcard.",
+    "Outside: {GET POSTCARD} and {GET CLIP}. In the workroom: {PICK LOCK}, {OPEN DOOR}, {GO DOOR}."
+   ]
+  },
+  {
+   "q": "What do I do in the closet?",
+   "h": [
+    "There is a small vial with something you will need every evening.",
+    "Empty the vial. Things get stolen at night, so hide what matters here.",
+    "{EMPTY VIAL} and {GET TABLETS} (stay-awake pills). Leave the stake you've carried since the start here: {DROP STAKE}. Then {GO WEST}, {CLOSE DOOR}, {LOCK DOOR}. Keep the clip; it opens the closet again on day 3."
+   ]
+  },
+  {
+   "q": "I fall asleep when the sun sets",
+   "h": [
+    "Towards evening a message says you are tired. Don't ignore it.",
+    "The pills from the vial keep you awake, but only for a short time.",
+    "When {I'M GETTING VERY TIRED} shows: {EAT TABLET}, then {LIGHT TORCH}. Don't eat too early, the pill wears off quickly. There are only three."
+   ]
+  },
+  {
+   "q": "The oven is too hot",
+   "h": [
+    "It's a solar oven. When is there no sun?",
+    "Wait for sunset and try again.",
+    "After sunset (awake, with the torch lit): {GO OVEN} (if it's still hot, try again), then {GET FILE}. We took the nail file on day 2, just before going down to the crypt."
+   ]
+  },
+  {
+   "q": "In the morning my neck is bitten",
+   "h": [
+    "You can't avoid it completely, but you can protect yourself at night.",
+    "There's a vegetable bats don't like.",
+    "Carry the garlic all night: the bat smells it and flies on. Sleep in the bed: {GO BED}, {UNLIGHT TORCH}, {SLEEP}. In the morning you find you've been robbed, so leave what you need on the bed ({DROP CLIP})."
+   ]
+  },
+  {
+   "q": "The bedroom window",
+   "h": [
+    "Tie the sheets to something heavy and climb down.",
+    "Throw the end over the ledge. There's a flower box below.",
+    "{TIE SHEETS}, {TO BED}, {GET END}, {OPEN WINDOW}, {GO WINDOW}, {DROP END}, {CLIMB SHEET}, then {GO WINDOW} twice. Back up: {GO WINDOW}, {CLIMB SHEET} twice, {GO WINDOW}. Never climb with a lit torch: it burns the sheet and you fall."
+   ]
+  },
+  {
+   "q": "A room without doors",
+   "h": [
+    "Something on the wall hides something.",
+    "Take down the portrait.",
+    "{REMOVE PORTRAIT} and {DROP PORTRAIT}: a dark passage is behind it. You need the lit torch there: {LIGHT TORCH}, {GO PASSAGE}, {GO NORTH}."
+   ]
+  },
+  {
+   "q": "The crypt has nothing but a NO SMOKING sign",
+   "h": [
+    "If it says you mustn't, maybe that's exactly what to do.",
+    "The package from the mail has cigarettes. The smoke reveals something.",
+    "On day 2: outside, {OPEN PACKAGE} and {GET PACK}. In the crypt make room ({DROP TABLET}), then {GET CIGARETTE}, {LIGHT CIGARETTE}, {SMOKE CIGARETTE}: a coffin appears."
+   ]
+  },
+  {
+   "q": "The coffin won't open / there's a bolt inside",
+   "h": [
+    "By day the coffin is locked from inside. Come at night, when its owner is out.",
+    "There's a bolt inside. The tool from the oven is strong enough.",
+    "On day 2 after sunset, with the nail file: {OPEN COFFIN}, {GO COFFIN}, {BREAK BOLT}, the game asks with what, and you type {WITH FILE}. Now the coffin can't be locked again."
+   ]
+  },
+  {
+   "q": "My cigarettes were stolen at night",
+   "h": [
+    "The pack disappears at night, but maybe not everything you carry.",
+    "Take one cigarette out of the pack and keep it separately.",
+    "After breaking the bolt: {GO UP}, leave the lit cigarette in the crypt ({DROP CIGARETTE}), {GO SOUTH}, then {GET CIGARETTE} (a fresh one from the pack). The pack gets stolen, but the single cigarette stays with you for day 3. Then {GO SOUTH}, {GO WINDOW}, {UNLIGHT TORCH}, and back to bed ({GO BED})."
+   ]
+  },
+  {
+   "q": "How do I destroy the Count?",
+   "h": [
+    "By day he sleeps in the coffin. You need two tools from the room with the locked door and its closet.",
+    "A stake and a mallet. You don't need the garlic any more.",
+    "On day 3: {DROP GARLIC}, {GET SHEETS}, {GET CLIP}, {GET UP}. In the workroom: {PICK LOCK}, {OPEN DOOR}, {DROP CLIP}, {DROP FILE}, {GET MALLET}, {GO DOOR}, {GET STAKE}. Climb down from the window to the crypt, then {LIGHT CIGARETTE}, {SMOKE CIGARETTE}, {OPEN COFFIN}, {GO COFFIN} and {KILL DRACULA}. Victory!"
+   ]
+  }
+ ]
+}
