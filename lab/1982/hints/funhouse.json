@@ -1,0 +1,339 @@
+{
+ "note": "Hints for Mystery Fun House in our own words. Every step was played and checked on the Dragon machine (8.11.2026): the secret plans found, the game's own ending. Each question has three levels: a small hint, a clearer hint and the full solution.",
+ "where": "Each question has \"at\": words from the top of the screen (where the player is). The hint button beside the screen shows the questions whose words are on the screen now.",
+ "at": [
+  [
+   "FRONT OF THE FUN HOUSE",
+   "PARKING LOT"
+  ],
+  [
+   "PARKING LOT",
+   "TICKET",
+   "FRONT OF THE FUN HOUSE"
+  ],
+  [
+   "FRONT OF THE FUN HOUSE"
+  ],
+  [
+   "WINDY MAZE",
+   "MAGICAL MIRROR",
+   "SMALL ROOM"
+  ],
+  [
+   "ROOM WITH A LOW",
+   "STRANGE KNOBS"
+  ],
+  [
+   "SHOOTING GALLERY",
+   "MAGICAL MIRROR"
+  ],
+  [
+   "SMALL LANDING",
+   "WINDOWED TANK",
+   "LARGE ROLLING BARREL",
+   "BESIDE A LARGE TANK"
+  ],
+  [
+   "OBSERVATION CHAMBER",
+   "IN A PIT",
+   "VALVE"
+  ],
+  [
+   "IN A PIT",
+   "TRAMPOLINE",
+   "LEDGE OVER A DEEP PIT"
+  ],
+  [
+   "FORTUNE TELLING",
+   "SHOOTING GALLERY"
+  ],
+  [
+   "LARGE ROLLING BARREL",
+   "LEDGE OVER A DEEP PIT"
+  ],
+  [
+   "LARGE ROOM WITH TALL",
+   "MERRY-GO-ROUND",
+   "TOP OF THE RIDE",
+   "CATWALK"
+  ],
+  [
+   "STORE ROOM",
+   "CATWALK"
+  ],
+  [
+   "PARKING LOT",
+   "MAGICAL MIRROR",
+   "MANHOLE"
+  ],
+  [
+   "SEWER SYSTEM",
+   "MANHOLE"
+  ],
+  [
+   "SEWER SYSTEM",
+   "LONG TUNNEL",
+   "HIDDEN LABORATORY"
+  ]
+ ],
+ "he": [
+  {
+   "q": "מה בכלל צריך לעשות?",
+   "h": [
+    "אין כאן אוצרות לאסוף. יש דבר אחד שמחפשים, והוא מוסתר עמוק מתחת לבית השעשועים.",
+    "מכתב שתמצאו בהמשך מסביר הכול: צריך למצוא תוכניות סודיות שהוחבאו בבית. הדרך אליהן עוברת בביוב, מתחת למגרש החניה.",
+    "התוכניות ({MISSING TOP SECRET PLANS}) נמצאות במעבדה נסתרת ({HIDDEN LABORATORY}). כשמגיעים אליה כותבים {GET PLANS}, והמשחק נגמר לבד אחרי הפסקה ארוכה. אין {SCORE} במשחק הזה."
+   ]
+  },
+  {
+   "q": "אין לי כסף לכרטיס",
+   "h": [
+    "השטר של 5 דולר רחוק מדי, אבל בתעלה שבמגרש החניה יש עוד משהו.",
+    "בתחתית התעלה יש מטבע. צריך מקל ארוך עם משהו דביק בקצה. המסטיק שבכיס קשה, אבל אפשר לרכך אותו.",
+    "במגרש החניה: {LOOK TREE}, ‏{GET BRANCH}, ‏{CHEW GUM}. אחר כך {STICK GUM}, וכשהמשחק שואל {ON WHAT?} כותבים {ON BRANCH}. עכשיו {USE STICK} מוציא את המטבע. חוזרים מערבה ({W}) לקופה: {BUY TICKET}, ואז {GIVE DOLLAR}."
+   ]
+  },
+  {
+   "q": "איך נכנסים לבית השעשועים?",
+   "h": [
+    "קראו את השלט שליד הקופה.",
+    "השלט אומר שחובה לנעול נעליים כל הזמן. הנעליים כבר אצלכם, רק לא על הרגליים.",
+    "עם הכרטיס ביד: {WEAR SHOES} ואז {GO HOUSE}. נכנסים לחדר המראות ({MAGICAL MIRROR ROOM})."
+   ]
+  },
+  {
+   "q": "אני הולך לאיבוד במבוך הרוח",
+   "h": [
+    "כל החדרים במבוך נראים אותו דבר. סופרים צעדים.",
+    "מחדר המראות יש מסלול קבוע לחדר עם תקרה נמוכה, ומסלול קבוע חזרה. דרומה מחדר המראות יוצאים החוצה.",
+    "מחדר המראות: {N} ואז ארבע פעמים {W} מביאים לחדר עם תקרה נמוכה ({ROOM WITH A LOW CEILING}). מהחדר הקטן במבוך ({SMALL ROOM} עם יציאות {NORTH WEST}) חוזרים לחדר המראות כך: {N}, ‏{S}, ‏{S}, ‏{E}."
+   ]
+  },
+  {
+   "q": "הקיר נסגר מאחורי, ויש כפתורים צבעוניים על הקיר",
+   "h": [
+    "כל כפתור לוקח למקום אחר. נסו את שלושתם.",
+    "אחרי שמושכים כפתור החדר מסתובב. על המכונה שלנו זה לוקח הרבה זמן (עד כשתי דקות), ומה שמקלידים בינתיים הולך לאיבוד. מחכים ל-{WHAT SHALL I DO?}.",
+    "{PULL GREEN}: לחדר קטן עם טרמפולינה, ומדרום לו מטווח הירי. {PULL BLUE}: לחדר עם מכונת מזלות, וממזרח לו הקרוסלה. {PULL YELLOW}: לחדר הקטן במבוך. חוזרים לחדר הכפתורים: מחדר הטרמפולינה {U}, ממכונת המזלות {D}, ומחדר המראות {N} וארבע פעמים {W}."
+   ]
+  },
+  {
+   "q": "מה עושים עם המשקפיים המוזרים?",
+   "h": [
+    "למראה בחדר המראות יש סוד, אבל לא רואים אותו בעיניים רגילות.",
+    "מרכיבים את המשקפיים ומסתכלים שוב במראה. הידיים מלאות? המקל כבר לא נחוץ.",
+    "במטווח הירי ({PULL GREEN}, ואז {S}): {DROP STICK}, ‏{GET SPECS}. בחדר המראות: {WEAR SPECS}, ‏{LOOK MIRROR}, ‏{OPEN DOOR}, ‏{GO DOOR}. נכנסים לחדר תצפית ({OBSERVATION CHAMBER})."
+   ]
+  },
+  {
+   "q": "יש בת ים ומפתח בתוך המיכל",
+   "h": [
+    "בת הים לא תעזור סתם כך. תביאו לה מתנה שבנות ים אוהבות.",
+    "המתנה נמצאת בחדר החבית המתגלגלת, למעלה במדרגות. יוצאים משם בזחילה. למיכל מגיעים במגלשה.",
+    "מהחדר ליד המיכל: {U}, ‏{U}, ‏{U}, ‏{U}, ‏{E}. בחבית: {DROP WATCH} (כדי לפנות מקום), {GET COMB}, ‏{CRAWL}. אחר כך {S}, ‏{D}, ‏{GO SLIDE}. במיכל: {GIVE COMB}, ‏{GET KEY}, ‏{GO STAIRS}."
+   ]
+  },
+  {
+   "q": "יש ידית בלי ברז, ומתנגנת מוזיקה מוזרה",
+   "h": [
+    "המוזיקה באה מהקליופה שליד הקרוסלה. היא פועלת בקיטור.",
+    "הברז שחסרה לו ידית נמצא בבור שמתחת לסולם, ליד הצינור החם. אבל שימו לב: הסולם נעלם אחרי שיורדים.",
+    "בחדר התצפית: {DROP SPECS}, ‏{GET HANDLE}. מביאים גם את הטרמפולינה (ראו את השאלה הבאה). על המדף מעל הבור: {GO LADDER}. בבור: {DROP HANDLE} (היא נכנסת לברז), ואז {TURN VALVE}. הקליופה משתתקת."
+   ]
+  },
+  {
+   "q": "הסולם נעלם ואני תקוע בבור",
+   "h": [
+    "צריך משהו שיקפיץ אתכם בחזרה למעלה. ראיתם אותו בחדר קטן.",
+    "הטרמפולינה נמצאת בחדר שמגיעים אליו בכפתור הירוק. לוקחים אותה לפני שיורדים לבור.",
+    "בחדר הטרמפולינה: {GET TRAMPOLINE}. משם: {U}, ‏{W}, ‏{U}, ‏{U}, ‏{U}, ‏{U}, ‏{GO LADDER}. בבור, אחרי הברז: {DROP TRAMPOLINE}, ‏{GO TRAMPOLINE}, ‏{JUMP}. חוזרים למדף."
+   ]
+  },
+  {
+   "q": "מה עושים עם השלט של מכונת המזלות?",
+   "h": [
+    "השלט אומר שהמכונה מקולקלת. יש מכונה אחרת בפארק שעדיף שתהיה מקולקלת.",
+    "הרובה במטווח הירי מכוון דרך חלון לחדר אחר. לחדר הזה תגיעו בסוף המשחק.",
+    "ליד מכונת המזלות ({PULL BLUE}): {DROP TICKET} (הכרטיס כבר לא נחוץ), {GET SIGN}, ‏{D}. אחר כך {PULL GREEN}, ‏{S}, ובמטווח: {DROP SIGN}. כך עשינו לפני שעברנו בסוף בחדר יוני החימר ({CLAY PIGEONS}), ושום דבר לא ירה בנו."
+   ]
+  },
+  {
+   "q": "צריך גפרור",
+   "h": [
+    "הגפרור נשאר בחדר החבית המתגלגלת.",
+    "לוקחים אותו אחרי שהטרמפולינה מחזירה אתכם למדף. הוא יידרש ממש בסוף.",
+    "מהמדף מעל הבור: {E}, ‏{GET MATCH}, ‏{CRAWL}."
+   ]
+  },
+  {
+   "q": "הקרוסלה מסתובבת ואי אפשר לטפס על העמוד",
+   "h": [
+    "קודם צריך לעצור את הקרוסלה. ליד הקרוסלה יש משהו ללחוץ עליו.",
+    "אחרי שהקרוסלה עוצרת, עולים על הסוס, מטפסים על העמוד ומסתכלים למעלה. משם קופצים.",
+    "השתקנו קודם את הקליופה (ראו את שאלת הברז). מהחדר של מכונת המזלות ({PULL BLUE}): {E}, ואז {PRESS BLUE} (מחכים שהאנימציה תיגמר). אחר כך {GO MERRY}, ‏{GO HORSE}, ‏{CLIMB POLE}, ‏{LOOK UP}, ‏{JUMP}. מגיעים למסלול הצר ({CATWALK})."
+   ]
+  },
+  {
+   "q": "יש דלת נעולה במחסן",
+   "h": [
+    "המפתח החלוד שקיבלתם מבת הים מתאים.",
+    "מאחורי הדלת יש מדפים. מסתכלים עליהם. במחסן יש גם כלי עבודה שיעזור בחוץ.",
+    "מהמסלול הצר: {E}. במחסן: {UNLOCK DOOR}, ‏{GET WRENCH}, ‏{LOOK SHELVES}, ‏{DROP KEY}, ‏{GET FLASHLIGHT}."
+   ]
+  },
+  {
+   "q": "איך יוצאים מהבית ונכנסים לתעלה?",
+   "h": [
+    "דרך היציאה עוברת בחדר המראות. בחוץ, התעלה שבמגרש החניה מחזיקה עכשיו סוד אחר.",
+    "דרומה מחדר המראות השומר זורק אתכם החוצה, וזה בסדר. את הסורג פותחים במפתח הברגים, אבל רק בורג אחד יוצא. אז מזיזים אותו.",
+    "מהמחסן: {W}, ‏{D}, ‏{D}, ‏{D}, ‏{D}, ‏{S}, ‏{D}, ‏{PULL YELLOW}. מהחדר הקטן במבוך: {N}, ‏{E}, ‏{S}, ‏{E}, ‏{S}, ‏{E}, ‏{E}. במגרש החניה: {OPEN GRATE}, וכשהמשחק שואל {HOW?} כותבים {WITH WRENCH}. אחר כך {SLIDE GRATE}, ‏{DROP WRENCH}, ‏{LIGHT FLASHLIGHT}, ‏{GO MANHOLE}."
+   ]
+  },
+  {
+   "q": "העקב של הנעל משוחרר",
+   "h": [
+    "זה לא סתם. יש משהו בתוך העקב.",
+    "בביוב יש מקום שקט לבדוק את הנעל. קודם סוגרים את הדלת.",
+    "מפתח הביוב: {E}. בביוב: {CLOSE DOOR}, ‏{REMOVE HEEL}. נופלים פתיל ומכתב. {READ LETTER} מסביר הכול, ושימו לב למה שכתוב על המסטיק. אחר כך {DROP HEEL}, ‏{GET FUSE}."
+   ]
+  },
+  {
+   "q": "יש סורג מרותך מעל החור",
+   "h": [
+    "המסטיק שבכיס הוא לא מסטיק רגיל.",
+    "המסטיק הוא חומר נפץ. מחברים אליו את הפתיל, מדביקים אותו לסורג ומדליקים בגפרור.",
+    "בביוב: {CHEW GUM}, ‏{STICK GUM} ואז {ON FUSE}, ‏{STICK GUM} ואז {ON GRATE}, ‏{LIGHT FUSE}. הסורג נשבר. אחר כך {GO HOLE}, ‏{U}, ‏{S}. במעבדה הנסתרת: {GET PLANS}."
+   ]
+  }
+ ],
+ "en": [
+  {
+   "q": "What am I supposed to do?",
+   "h": [
+    "There are no treasures to collect. You are after one thing, hidden deep under the fun house.",
+    "A letter you find later explains it: secret plans are hidden in the house. The way to them goes through the sewer under the parking lot.",
+    "The plans ({MISSING TOP SECRET PLANS}) are in a {HIDDEN LABORATORY}. When you get there type {GET PLANS}; the game ends by itself after a long pause. This game has no {SCORE}."
+   ]
+  },
+  {
+   "q": "I have no money for a ticket",
+   "h": [
+    "The 5 dollar bill is out of reach, but there is something else in the drain in the parking lot.",
+    "There is a coin at the bottom of the drain. You need a long stick with something sticky on the end. The gum in your pocket is hard, but it can be softened.",
+    "In the parking lot: {LOOK TREE}, {GET BRANCH}, {CHEW GUM}. Then {STICK GUM}, and when the game asks {ON WHAT?} type {ON BRANCH}. Now {USE STICK} gets the coin. Go back west ({W}) to the counter: {BUY TICKET}, then {GIVE DOLLAR}."
+   ]
+  },
+  {
+   "q": "How do I get into the fun house?",
+   "h": [
+    "Read the sign by the ticket counter.",
+    "The sign says shoes are required at all times. You already have shoes, just not on your feet.",
+    "With the ticket: {WEAR SHOES}, then {GO HOUSE}. You are in the {MAGICAL MIRROR ROOM}."
+   ]
+  },
+  {
+   "q": "I get lost in the windy maze",
+   "h": [
+    "All the maze rooms look the same. Count your steps.",
+    "There is a fixed path from the mirror room to the room with a low ceiling, and a fixed path back. South of the mirror room is the way out.",
+    "From the mirror room: {N}, then {W} four times, brings you to the {ROOM WITH A LOW CEILING}. From the {SMALL ROOM} in the maze (exits {NORTH WEST}) you get back to the mirror room with {N}, {S}, {S}, {E}."
+   ]
+  },
+  {
+   "q": "The wall closed behind me, and there are coloured knobs on the wall",
+   "h": [
+    "Each knob takes you somewhere else. Try all three.",
+    "After you pull a knob the room spins. On our machine this takes a long time (up to about two minutes), and anything you type meanwhile is lost. Wait for {WHAT SHALL I DO?}.",
+    "{PULL GREEN}: to a small room with a trampoline, with the shooting gallery to the south. {PULL BLUE}: to a room with a fortune telling machine, with the merry-go-round to the east. {PULL YELLOW}: to the small room in the maze. Back to the knob room: from the trampoline room {U}, from the fortune machine {D}, from the mirror room {N} and {W} four times."
+   ]
+  },
+  {
+   "q": "What are the strange spectacles for?",
+   "h": [
+    "The mirror in the mirror room has a secret, but you can't see it with plain eyes.",
+    "Put the spectacles on and look at the mirror again. Hands full? You don't need the stick any more.",
+    "In the shooting gallery ({PULL GREEN}, then {S}): {DROP STICK}, {GET SPECS}. In the mirror room: {WEAR SPECS}, {LOOK MIRROR}, {OPEN DOOR}, {GO DOOR}. You are in the {OBSERVATION CHAMBER}."
+   ]
+  },
+  {
+   "q": "There is a mermaid and a key in the tank",
+   "h": [
+    "The mermaid won't help for nothing. Bring her a present mermaids like.",
+    "The present is in the rolling barrel room, up the stairs. You crawl out of there. You reach the tank by the slide.",
+    "From beside the tank: {U}, {U}, {U}, {U}, {E}. In the barrel: {DROP WATCH} (to make room), {GET COMB}, {CRAWL}. Then {S}, {D}, {GO SLIDE}. In the tank: {GIVE COMB}, {GET KEY}, {GO STAIRS}."
+   ]
+  },
+  {
+   "q": "There is a handle with no valve, and strange music is playing",
+   "h": [
+    "The music comes from the calliope next to the merry-go-round. It runs on steam.",
+    "The valve that lacks a handle is in the pit below the ladder, by the warm pipe. But watch out: the ladder goes away once you climb down.",
+    "In the observation chamber: {DROP SPECS}, {GET HANDLE}. Bring the trampoline too (see the next question). On the ledge over the pit: {GO LADDER}. In the pit: {DROP HANDLE} (it goes onto the valve), then {TURN VALVE}. The calliope goes quiet."
+   ]
+  },
+  {
+   "q": "The ladder went away and I'm stuck in the pit",
+   "h": [
+    "You need something to bounce you back up. You saw it in a small room.",
+    "The trampoline is in the room the green knob takes you to. Take it before you climb down.",
+    "In the trampoline room: {GET TRAMPOLINE}. Then {U}, {W}, {U}, {U}, {U}, {U}, {GO LADDER}. In the pit, after the valve: {DROP TRAMPOLINE}, {GO TRAMPOLINE}, {JUMP}. You are back on the ledge."
+   ]
+  },
+  {
+   "q": "What is the sign on the fortune telling machine for?",
+   "h": [
+    "The sign says the machine is out of order. There is another machine in the park that had better be out of order.",
+    "The gun in the shooting gallery points through a window into another room. You will reach that room at the end of the game.",
+    "At the fortune machine ({PULL BLUE}): {DROP TICKET} (you don't need it any more), {GET SIGN}, {D}. Then {PULL GREEN}, {S}, and in the gallery: {DROP SIGN}. We did this before passing the room with the {CLAY PIGEONS} at the end, and nothing shot at us."
+   ]
+  },
+  {
+   "q": "I need a match",
+   "h": [
+    "The match is still in the rolling barrel room.",
+    "Take it after the trampoline brings you back to the ledge. You need it at the very end.",
+    "From the ledge over the pit: {E}, {GET MATCH}, {CRAWL}."
+   ]
+  },
+  {
+   "q": "The merry-go-round is turning and I can't climb the pole",
+   "h": [
+    "First you have to stop the ride. There is something next to it you can press.",
+    "Once the ride stops, get on the horse, climb the pole and look up. Jump from there.",
+    "We silenced the calliope first (see the valve question). From the fortune machine room ({PULL BLUE}): {E}, then {PRESS BLUE} (wait for the animation to end). Then {GO MERRY}, {GO HORSE}, {CLIMB POLE}, {LOOK UP}, {JUMP}. You reach the {CATWALK}."
+   ]
+  },
+  {
+   "q": "There is a locked door in the store room",
+   "h": [
+    "The rusty key you got from the mermaid fits.",
+    "There are shelves behind the door. Look at them. The store room also has a tool that helps outside.",
+    "From the catwalk: {E}. In the store room: {UNLOCK DOOR}, {GET WRENCH}, {LOOK SHELVES}, {DROP KEY}, {GET FLASHLIGHT}."
+   ]
+  },
+  {
+   "q": "How do I get out of the house and into the drain?",
+   "h": [
+    "The way out goes through the mirror room. Outside, the drain in the parking lot now hides something else.",
+    "South of the mirror room the bouncer throws you out, and that's fine. Open the grating with the wrench, but only one bolt comes off. So move it.",
+    "From the store room: {W}, {D}, {D}, {D}, {D}, {S}, {D}, {PULL YELLOW}. From the small room in the maze: {N}, {E}, {S}, {E}, {S}, {E}, {E}. In the parking lot: {OPEN GRATE}, and when the game asks {HOW?} type {WITH WRENCH}. Then {SLIDE GRATE}, {DROP WRENCH}, {LIGHT FLASHLIGHT}, {GO MANHOLE}."
+   ]
+  },
+  {
+   "q": "My shoe heel is loose",
+   "h": [
+    "That's not just a detail. There is something inside the heel.",
+    "The sewer is a quiet place to check the shoe. Close the door first.",
+    "From the manhole: {E}. In the sewer: {CLOSE DOOR}, {REMOVE HEEL}. A fuse and a letter fall out. {READ LETTER} explains everything; note what it says about the gum. Then {DROP HEEL}, {GET FUSE}."
+   ]
+  },
+  {
+   "q": "There is a grate welded over the hole",
+   "h": [
+    "The gum in your pocket is not ordinary gum.",
+    "The gum is an explosive. Put the fuse in it, stick it to the grate and light it with the match.",
+    "In the sewer: {CHEW GUM}, {STICK GUM} then {ON FUSE}, {STICK GUM} then {ON GRATE}, {LIGHT FUSE}. The grate breaks. Then {GO HOLE}, {U}, {S}. In the hidden laboratory: {GET PLANS}."
+   ]
+  }
+ ]
+}
