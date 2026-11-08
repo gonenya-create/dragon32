@@ -1,0 +1,282 @@
+{
+ "note": "Hints for Secret Mission in our own words. Every step was played and checked on the Dragon machine (8.11.2026), to the game's own ending: the bomb is defused and the reactor is saved. Each question has three levels: a small hint, a clearer hint and the full solution.",
+ "where": "Each question has \"at\": words from the top of the screen (where the player is), or an item that shows there (DEAD SABOTEUR, PLATE GLASS). The hint button beside the screen shows the questions whose words are on the screen now.",
+ "at": [
+  ["BRIEFING ROOM"],
+  ["LONG SLOPING GREY", "MAINTENANCE ROOM 1"],
+  ["GREY ROOM", "GREY CHAIR"],
+  ["WHITE ROOM", "BLUE ROOM", "YELLOW ROOM", "AUTHORIZATION"],
+  ["DULL THUD", "TWISTING", "LONG SLOPING GREY"],
+  ["DEAD SABOTEUR"],
+  ["WHITE ROOM", "CLOSED WHITE DOOR"],
+  ["VISITORS", "PLATE GLASS"],
+  ["VISITORS", "EMPTY WINDOW", "LEDGE"],
+  ["VISITORS", "BOMB IS NOW ARMED"],
+  ["GREY CHAIR", "KEYHOLES", "GREY ROOM"],
+  ["MAINTENANCE ROOM 2", "YARN MOP", "YELLOW CORRIDOR"],
+  ["GREY CHAIR", "KEYHOLES", "BLUE ROOM"],
+  ["STORAGE ROOM", "HEAVY WATER", "ANTI-RADIATION"],
+  ["BLUE ANTEROOM", "CONTROL ROOM"],
+  ["REACTOR CORE", "TIME BOMB", "BREAK ROOM"]
+ ],
+ "he": [
+  {
+   "q": "מה בכלל צריך לעשות?",
+   "h": [
+    "במשחק הזה אין אוצרות. בחדר התדריך יש מכשיר שמחכה לכם.",
+    "מפעילים את הרשמקול ומקשיבים להוראות.",
+    "{PLAY TAPE}: המשימה היא להציל את הכור הגרעיני מפצצת זמן של חבלן. אחר כך {GET RECORDER} (הוא עוד יעזור). כשמצליחים, המשחק נגמר בהודעה {COMPLETED AN IMPOSSIBLE MISSION}."
+   ]
+  },
+  {
+   "q": "יש דלי ריק בחדר התחזוקה. צריך אותו?",
+   "h": [
+    "כן. בסוף המשחק תצטרכו לשאת בו משהו.",
+    "לוקחים אותו עכשיו ושומרים עליו עד הסוף.",
+    "מהמסדרון האפור הולכים מערבה ({W}) לחדר התחזוקה הראשון, {GET PAIL}, וחוזרים ב-{E}."
+   ]
+  },
+  {
+   "q": "מה עושה הכיסא בחדר האפור?",
+   "h": [
+    "יושבים עליו. מולו יש מצלמה.",
+    "הכפתור הלבן מצלם. הכפתורים האחרים קובעים איזה תג יהיה על התמונה.",
+    "בחדר האפור (דרומית למסדרון): {SIT CHAIR}, ‏{PRESS RED}, ‏{PRESS WHITE}, ואז {STAND UP} ו-{GET PICTURE}. מקבלים תמונה שלכם עם החותמת {VISITOR}."
+   ]
+  },
+  {
+   "q": "הדלתות עם המצלמה מבקשות אישור",
+   "h": [
+    "המצלמה רוצה לראות תמונה עם החותמת הנכונה.",
+    "כל דלת צבעונית צריכה תג אחר: לבנה למבקר, צהובה לתחזוקה, כחולה לאבטחה.",
+    "עומדים מול הדלת עם התמונה המתאימה ביד וכותבים {SHOW PICTURE}. את התמונות מכינים בכיסא שבחדר האפור. לבנה: {VISITOR}. צהובה: {MAINTENANCE}. כחולה: {SECURITY}."
+   ]
+  },
+  {
+   "q": "איפה החבלן?",
+   "h": [
+    "הסתובבו קצת במסדרונות ותקשיבו.",
+    "אחרי זמן מה נשמעת חבטה. החבלן חולה לב, ועכשיו הוא מת באחד החדרים הצבעוניים.",
+    "ממשיכים לזוז עד שמופיעה ההודעה {DULL THUD}. אז מחפשים בחדרים הצבעוניים: הצהוב ({D} ואז {N} מהמסדרון האפור), הכחול ({N} פעמיים) והלבן ({U} ואז {N}). אצלנו הוא שכב בחדר הצהוב. המקום יכול להשתנות."
+   ]
+  },
+  {
+   "q": "מצאתי את החבלן מת",
+   "h": [
+    "אולי יש לו משהו בכיסים.",
+    "מחפשים עליו. מה שנופל עוזר בהמשך, וגם הוא עצמו.",
+    "{FRISK SABOTEUR}: נופלים ממנו כמה דברים. {GET PICTURE} (תמונה שלו עם החותמת {WINDOW MAINTENANCE}), ואז {GET SABOTEUR}: לוקחים גם אותו. נושאים אותו לחדר הלבן."
+   ]
+  },
+  {
+   "q": "איך עוברים את הדלת הלבנה?",
+   "h": [
+    "צריך להראות למצלמה מי אתם.",
+    "תמונת המבקר מהכיסא מתאימה בדיוק.",
+    "מהמסדרון האפור: {U}, ‏{N}. בחדר הלבן: {SHOW PICTURE} עם תמונת {VISITOR}. הדלת נפתחת לחדר המבקרים. שם {DROP SABOTEUR}."
+   ]
+  },
+  {
+   "q": "חלון זכוכית בחדר המבקרים",
+   "h": [
+    "צריך לעבור דרכו. משהו כבד יעזור.",
+    "שוברים את החלון בעזרת חפץ שהבאתם מחדר התדריך.",
+    "{BREAK WINDOW}, והמשחק שואל במה. כותבים {WITH RECORDER}. הרשמקול עף דרך הזכוכית לחדר הבקרה."
+   ]
+  },
+  {
+   "q": "מצלמה מעל החלון השבור",
+   "h": [
+    "המצלמה צריכה לחשוב שאתם מנקה החלונות.",
+    "לחבלן היה תג מתאים.",
+    "{SHOW PICTURE} עם התמונה של החבלן: המצלמה נכבית. {GO WINDOW} אל המדף, {GET KEY} (מפתח צהוב), ושוב {GO WINDOW} פנימה."
+   ]
+  },
+  {
+   "q": "גלאי הפצצה מהבהב בצהוב",
+   "h": [
+    "השעון התחיל לתקתק. לא מבזבזים צעדים.",
+    "יוצאים מחדר המבקרים בכפתור, וממהרים לכיסא.",
+    "{DROP PICTURE} (אפשר להשאיר תמונה מיותרת), ואז {PRESS WHITE}: הדלת נפתחת. {S}, ‏{D}, ‏{S} חזרה לחדר האפור."
+   ]
+  },
+  {
+   "q": "מה עושים עם המפתח הצהוב?",
+   "h": [
+    "מתחת לכפתורים בכיסא יש חורי מנעול.",
+    "פותחים את הכפתור הצהוב ומצלמים שוב.",
+    "{SIT CHAIR}, ‏{UNLOCK YELLOW}, ‏{PRESS YELLOW}, ‏{PRESS WHITE}, ‏{STAND UP}, ‏{GET PICTURE}: תמונה עם {MAINTENANCE}. אחר כך {N}, ‏{D}, ‏{N} ו-{SHOW PICTURE} בדלת הצהובה."
+   ]
+  },
+  {
+   "q": "מה יש בחדר התחזוקה השני?",
+   "h": [
+    "המגב הישן מסתיר משהו בין החוטים.",
+    "מנערים אותו. וקחו גם את הכלי שליד.",
+    "{W}, ‏{GET MOP}, ‏{SHAKE MOP} (נופל מפתח כחול), ‏{DROP MOP}, ‏{GET KEY}, ‏{GET CUTTERS}. יוצאים: {E}, ‏{PRESS YELLOW}, ואז {S}, ‏{U}, ‏{S} לחדר האפור."
+   ]
+  },
+  {
+   "q": "איך עוברים את הדלת הכחולה?",
+   "h": [
+    "המפתח הכחול מתאים לכיסא.",
+    "פותחים את הכפתור הכחול ומצלמים תמונת אבטחה.",
+    "{SIT CHAIR}, ‏{UNLOCK BLUE}, ‏{PRESS BLUE}, ‏{PRESS RED}, ‏{PRESS WHITE}, ‏{STAND UP}. משאירים את המפתחות ({DROP KEY} פעמיים), ‏{GET PICTURE} (תמונה עם {SECURITY}). אחר כך {N} שלוש פעמים ו-{SHOW PICTURE}."
+   ]
+  },
+  {
+   "q": "מה לוקחים מחדר המחסן?",
+   "h": [
+    "ליד הכור יש קרינה. ובסוף תצטרכו מים.",
+    "לובשים את החליפה וממלאים את הדלי.",
+    "מהחדר הכחול הקדמי {W}. שם {GET SUIT}, ‏{WEAR SUIT}, ואז {GET WATER}: הדלי מתמלא במים כבדים."
+   ]
+  },
+  {
+   "q": "דלת חדר הבקרה לא זזה",
+   "h": [
+    "דחיפה עדינה לא מספיקה.",
+    "דוחפים שוב, הפעם בכוח.",
+    "בחדר הכחול הקדמי: {PUSH DOOR}, ואז {PUSH HARD}: הדלת נפתחת קצת. {GO DOOR} לחדר הבקרה."
+   ]
+  },
+  {
+   "q": "איך מנטרלים את הפצצה?",
+   "h": [
+    "קודם מכינים את המים במקום שבו מותר לשתות. רק אז ניגשים לפצצה.",
+    "בחדר ההפסקה משאירים את הדלי. בליבת הכור חותכים את החוט, לוקחים את הפצצה ורצים.",
+    "מחדר הבקרה {E} לחדר ההפסקה, ‏{DROP PAIL}, ‏{W}, ‏{D}. בליבה: {CUT WIRE} ואז {GET BOMB}. מיד {U}, ‏{E}, ‏{GET PAIL}, ‏{POUR WATER}: המים מנטרלים את הפצצה, והמשחק נגמר בניצחון."
+   ]
+  }
+ ],
+ "en": [
+  {
+   "q": "What am I supposed to do?",
+   "h": [
+    "There are no treasures in this game. Something in the briefing room is waiting for you.",
+    "Play the tape recorder and listen to your orders.",
+    "{PLAY TAPE}: your mission is to save the nuclear reactor from a saboteur's time bomb. Then {GET RECORDER} (you will need it). When you succeed, the game ends with {COMPLETED AN IMPOSSIBLE MISSION}."
+   ]
+  },
+  {
+   "q": "There's an empty pail in the maintenance room. Do I need it?",
+   "h": [
+    "Yes. At the end you will need to carry something in it.",
+    "Take it now and keep it to the end.",
+    "From the grey corridor go west ({W}) to maintenance room 1, {GET PAIL}, and go back {E}."
+   ]
+  },
+  {
+   "q": "What does the chair in the grey room do?",
+   "h": [
+    "Sit in it. A camera points at it.",
+    "The white button takes a photo. The other buttons decide the stamp on it.",
+    "In the grey room (south of the corridor): {SIT CHAIR}, {PRESS RED}, {PRESS WHITE}, then {STAND UP} and {GET PICTURE}. You get a picture of yourself stamped {VISITOR}."
+   ]
+  },
+  {
+   "q": "The doors with cameras ask for authorization",
+   "h": [
+    "The camera wants to see a picture with the right stamp.",
+    "Each colored door needs a different stamp: white for a visitor, yellow for maintenance, blue for security.",
+    "Stand at the door with the right picture and type {SHOW PICTURE}. You make the pictures in the chair in the grey room. White: {VISITOR}. Yellow: {MAINTENANCE}. Blue: {SECURITY}."
+   ]
+  },
+  {
+   "q": "Where is the saboteur?",
+   "h": [
+    "Walk around the hallways for a while and listen.",
+    "After a while you hear a thud. The saboteur had a bad heart, and now he lies dead in one of the colored rooms.",
+    "Keep moving until you see {DULL THUD}. Then search the colored rooms: yellow ({D} then {N} from the grey corridor), blue ({N} twice) and white ({U} then {N}). In our game he lay in the yellow room. The place can change."
+   ]
+  },
+  {
+   "q": "I found the saboteur dead",
+   "h": [
+    "Maybe he has something in his pockets.",
+    "Search him. What falls out helps later, and so does he.",
+    "{FRISK SABOTEUR}: several things fall out. {GET PICTURE} (his picture stamped {WINDOW MAINTENANCE}), then {GET SABOTEUR}: take him too. Carry him to the white room."
+   ]
+  },
+  {
+   "q": "How do I get through the white door?",
+   "h": [
+    "Show the camera who you are.",
+    "The visitor picture from the chair is just right.",
+    "From the grey corridor: {U}, {N}. In the white room: {SHOW PICTURE} with the {VISITOR} picture. The door opens to the visitors room. There, {DROP SABOTEUR}."
+   ]
+  },
+  {
+   "q": "A glass window in the visitors room",
+   "h": [
+    "You need to get through it. Something heavy will help.",
+    "Break the window with a thing you brought from the briefing room.",
+    "{BREAK WINDOW}, and the game asks with what. Type {WITH RECORDER}. The recorder flies through the glass into the control room."
+   ]
+  },
+  {
+   "q": "A camera above the broken window",
+   "h": [
+    "The camera must think you are the window cleaner.",
+    "The saboteur had the right stamp.",
+    "{SHOW PICTURE} with the saboteur's picture: the camera shuts down. {GO WINDOW} to the ledge, {GET KEY} (a yellow key), and {GO WINDOW} again to come back in."
+   ]
+  },
+  {
+   "q": "The bomb detector is flashing yellow",
+   "h": [
+    "The clock is ticking now. Don't waste moves.",
+    "Leave the visitors room with a button and hurry to the chair.",
+    "{DROP PICTURE} (you can leave a spare picture), then {PRESS WHITE}: the door opens. {S}, {D}, {S} back to the grey room."
+   ]
+  },
+  {
+   "q": "What is the yellow key for?",
+   "h": [
+    "There are keyholes under the chair's buttons.",
+    "Unlock the yellow button and take another photo.",
+    "{SIT CHAIR}, {UNLOCK YELLOW}, {PRESS YELLOW}, {PRESS WHITE}, {STAND UP}, {GET PICTURE}: a picture stamped {MAINTENANCE}. Then {N}, {D}, {N} and {SHOW PICTURE} at the yellow door."
+   ]
+  },
+  {
+   "q": "What's in maintenance room 2?",
+   "h": [
+    "The old mop hides something in its yarn.",
+    "Shake it. And take the tool next to it.",
+    "{W}, {GET MOP}, {SHAKE MOP} (a blue key falls), {DROP MOP}, {GET KEY}, {GET CUTTERS}. To leave: {E}, {PRESS YELLOW}, then {S}, {U}, {S} to the grey room."
+   ]
+  },
+  {
+   "q": "How do I get through the blue door?",
+   "h": [
+    "The blue key fits the chair.",
+    "Unlock the blue button and take a security picture.",
+    "{SIT CHAIR}, {UNLOCK BLUE}, {PRESS BLUE}, {PRESS RED}, {PRESS WHITE}, {STAND UP}. Leave the keys ({DROP KEY} twice), {GET PICTURE} (stamped {SECURITY}). Then {N} three times and {SHOW PICTURE}."
+   ]
+  },
+  {
+   "q": "What do I take from the storage room?",
+   "h": [
+    "There is radiation near the reactor. And at the end you will need water.",
+    "Put on the suit and fill the pail.",
+    "From the blue anteroom go {W}. There: {GET SUIT}, {WEAR SUIT}, then {GET WATER}: the pail fills with heavy water."
+   ]
+  },
+  {
+   "q": "The control room door won't budge",
+   "h": [
+    "A gentle push is not enough.",
+    "Push again, this time hard.",
+    "In the blue anteroom: {PUSH DOOR}, then {PUSH HARD}: the door opens a little. {GO DOOR} into the control room."
+   ]
+  },
+  {
+   "q": "How do I defuse the bomb?",
+   "h": [
+    "First get the water ready where drinks are allowed. Only then go to the bomb.",
+    "Leave the pail in the break room. In the reactor core cut the wire, take the bomb and run.",
+    "From the control room go {E} to the break room, {DROP PAIL}, {W}, {D}. In the core: {CUT WIRE}, then {GET BOMB}. At once {U}, {E}, {GET PAIL}, {POUR WATER}: the water defuses the bomb, and the game ends in victory."
+   ]
+  }
+ ]
+}
