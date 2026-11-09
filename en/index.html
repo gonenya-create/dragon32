@@ -37,7 +37,7 @@
 (() => { let pick = null; try { pick = localStorage.getItem('d32-lang'); } catch { /* no storage */ } if (pick === 'he') location.replace('/' + location.hash); })();
 </script>
 <script>
-// הדף נפתח בבחירה בין המכונה לאפליקציה; האפליקציה (מסך מלא במחשב, מסך אפליקציה בטלפון) נפתחת רק אחרי בחירה.
+// הדף נפתח במסך בחירה כהה: מכונת ה-Dragon או האפליקציה (גונן, 9.11). האפליקציה נפתחת רק אחרי בחירה.
 // מסתירים את הדף עד שהמחשב מוכן, כדי שלא יהבהב. אם משהו נתקע, אחרי 3 שניות הדף מופיע בכל מקרה
 document.documentElement.classList.add('d32-booting');
 setTimeout(() => document.documentElement.classList.remove('d32-booting'), 3000);
@@ -63,7 +63,7 @@ setTimeout(() => document.documentElement.classList.remove('d32-booting'), 3000)
 </nav>
 </header>
 
-<div class="guide-bar"><button type="button" class="guide-back"><span aria-hidden="true">🖥</span> To the app</button></div>
+<div class="guide-bar"><button type="button" class="guide-back"><span aria-hidden="true">🖥</span> Back to the computer</button></div>
 
 <main id="main" style="display: flex; flex-direction: column; gap: 48px;">
 
@@ -71,27 +71,8 @@ setTimeout(() => document.documentElement.classList.remove('d32-booting'), 3000)
 <div class="hero-main">
 <p class="hero-kicker">Home computer · 1982</p>
 <h1 id="room-title">The Dragon 32, in your browser</h1>
-<p class="choose-lead">There are two computers here. Pick one:</p>
-<div class="choose" role="group" aria-label="Choose a computer">
-<a class="choose-card choose-machine" href="/en/lab/1982/">
-<span class="choose-icon" aria-hidden="true">🧪</span>
-<span class="choose-name">The Dragon machine</span>
-<span class="choose-what">The computer itself, as in 1982</span>
-<span class="choose-list"><span>The Dragon 32's chips, running a BASIC that behaves like the original</span><span>62 original games from the time, with their authors' permission</span><span>Hints, step by step, for the adventures</span></span>
-<span class="choose-who">Remember the Dragon? This is for you</span>
-<span class="choose-go">To the Dragon machine →</span>
-</a>
-<button type="button" class="choose-card choose-app">
-<span class="choose-icon" aria-hidden="true">🖥</span>
-<span class="choose-name">The app</span>
-<span class="choose-what">The easy way to learn and write programs</span>
-<span class="choose-list"><span>Ready-made commands: pick one and press "Try it now"</span><span>A helper you can ask</span><span>Games we made ourselves, and you can install it on a phone</span></span>
-<span class="choose-who">Want to learn to program? This is for you</span>
-<span class="choose-go">To the app →</span>
-</button>
-</div>
 <p class="hero-lead">The Dragon 32 came out of Wales in 1982: 32 kilobytes of memory, a keyboard that plugged into the family TV, and a cassette recorder instead of a disk drive. Here it is rebuilt in your browser, in the style of the time. Plug in a cartridge and play, load a program from cassette, or type your own BASIC. Everything here was written from scratch; there is no original Dragon code or ROM.</p>
-<p class="room-full-link">This is the guide to the app. The app opens with "To the app". You can also install it: on a phone, "Add to Home Screen"; on a computer, the install icon in the address bar.</p>
+<p class="room-full-link">This is the guide. The computer itself opens with "Back to the computer". You can also install it as an app: on a phone, "Add to Home Screen"; on a computer, the install icon in the address bar.</p>
 <noscript><p class="d32-help">The computer needs JavaScript to work.</p></noscript>
 </div>
 </section>

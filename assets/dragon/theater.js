@@ -24,6 +24,20 @@ const FROM_KEY = { Escape: 'BREAK', Enter: 'ENTER', ArrowUp: 'UP', ArrowDown: 'D
 const labText = () => '<span aria-hidden="true">🧪</span> <strong>' + tr('מכונת ה-<bdi dir="ltr">Dragon</bdi>', 'The <bdi dir="ltr">Dragon</bdi> machine') + '</strong>: '
   + tr('הכי קרוב למחשב המקורי. בבנייה: 62 משחקים מקוריים מהתקופה, של <bdi dir="ltr">Ken Kalish</bdi>, <bdi dir="ltr">Scott Adams</bdi>, <bdi dir="ltr">Mike Hughey</bdi> ועוד, כבר רצים עליה בלי שינוי בקוד שלהם, באישור המחברים. עוד לא השווינו אותה מול <bdi dir="ltr">Dragon</bdi> אמיתי. כאן באפליקציה לומדים וכותבים <bdi dir="ltr">BASIC</bdi> בנוחות.',
     'as close to the original computer as we can get. Being built: 62 original games from the period, by Ken Kalish, Scott Adams, Mike Hughey and others, already run on it without any change to their code, with their authors’ permission. It has not yet been compared with a real <bdi dir="ltr">Dragon</bdi>. Here in the app you learn and write <bdi dir="ltr">BASIC</bdi> the easy way.');
+// הדפים "יומן המסע" ו"ההיסטוריה של ה-Dragon": שורת קישורים שרואים בטלפון (במסך הפתיחה ובלשונית "מדף")
+export const pagesRow = () => {
+  const row = document.createElement('nav');
+  row.className = 'd32-pages';
+  row.setAttribute('aria-label', tr('עוד באתר', 'More on the site'));
+  row.innerHTML = '<a href="' + (EN ? '/en/lessons/' : '/lessons/') + '"><span aria-hidden="true">🎓</span> ' + tr('לומדים בייסיק', 'Learn BASIC') + '</a>'
+    + '<a href="' + (EN ? '/en/story/' : '/story/') + '"><span aria-hidden="true">📜</span> ' + tr('יומן המסע', 'The journey') + '</a>'
+    + '<a href="' + (EN ? '/en/magazine/' : '/magazine/') + '"><span aria-hidden="true">📰</span> ' + tr('מה קראו בעלי <bdi dir="ltr">Dragon</bdi>', 'What Dragon Owners Were Reading') + '</a>'
+    + '<a href="' + (EN ? '/en/guides/' : '/guides/') + '"><span aria-hidden="true">💾</span> ' + tr('תוכנות של אז', 'Software of the Day') + '</a>'
+    + '<a href="' + (EN ? '/en/adverts/' : '/adverts/') + '"><span aria-hidden="true">📺</span> ' + tr('הפרסומות', 'The adverts') + '</a>'
+    + '<a href="' + (EN ? '/en/posters/' : '/posters/') + '"><span aria-hidden="true">🖼️</span> ' + tr('פוסטרים', 'Posters') + '</a>'
+    + '<a href="' + (EN ? '/en/dragon-history/' : '/dragon-history/') + '"><span aria-hidden="true">🐉</span> ' + tr('ההיסטוריה של ה-<bdi dir="ltr">Dragon</bdi>', 'The history of the <bdi dir="ltr">Dragon</bdi>') + '</a>';
+  return row;
+};
 export function createTheater({ root, input, machine, sound, powerOn }) {
   const tv = root.querySelector('.d32-tv');
 
@@ -157,20 +171,6 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   showTab(tab, false);
   // מה עובר לכל לשונית בזמן המסך המלא
   panes.commands.appendChild(createCommands({ root, machine, powerOn, input }));
-  // הדפים "יומן המסע" ו"ההיסטוריה של ה-Dragon": שורת קישורים שרואים בטלפון (במסך הפתיחה ובלשונית "מדף")
-  const pagesRow = () => {
-    const row = document.createElement('nav');
-    row.className = 'd32-pages';
-    row.setAttribute('aria-label', tr('עוד באתר', 'More on the site'));
-    row.innerHTML = '<a href="' + (EN ? '/en/lessons/' : '/lessons/') + '"><span aria-hidden="true">🎓</span> ' + tr('לומדים בייסיק', 'Learn BASIC') + '</a>'
-      + '<a href="' + (EN ? '/en/story/' : '/story/') + '"><span aria-hidden="true">📜</span> ' + tr('יומן המסע', 'The journey') + '</a>'
-      + '<a href="' + (EN ? '/en/magazine/' : '/magazine/') + '"><span aria-hidden="true">📰</span> ' + tr('מה קראו בעלי <bdi dir="ltr">Dragon</bdi>', 'What Dragon Owners Were Reading') + '</a>'
-      + '<a href="' + (EN ? '/en/guides/' : '/guides/') + '"><span aria-hidden="true">💾</span> ' + tr('תוכנות של אז', 'Software of the Day') + '</a>'
-      + '<a href="' + (EN ? '/en/adverts/' : '/adverts/') + '"><span aria-hidden="true">📺</span> ' + tr('הפרסומות', 'The adverts') + '</a>'
-      + '<a href="' + (EN ? '/en/posters/' : '/posters/') + '"><span aria-hidden="true">🖼️</span> ' + tr('פוסטרים', 'Posters') + '</a>'
-      + '<a href="' + (EN ? '/en/dragon-history/' : '/dragon-history/') + '"><span aria-hidden="true">🐉</span> ' + tr('ההיסטוריה של ה-<bdi dir="ltr">Dragon</bdi>', 'The history of the <bdi dir="ltr">Dragon</bdi>') + '</a>';
-    return row;
-  };
   // בטלפון הפס העליון צר: הקישור למכונת ה-Dragon בראש לשונית "מדף"
   const labLink = document.createElement('a');
   labLink.className = 'd32-lab d32-lab-shelf';

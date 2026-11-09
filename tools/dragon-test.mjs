@@ -1324,13 +1324,17 @@ if (part('home choice')) {
     await p.waitForTimeout(600);
     const open = () => p.evaluate(() => document.documentElement.classList.contains('d32-theater-on'));
     check(name + ': the app does not open by itself', !(await open()));
-    const vis = await p.evaluate(() => [...document.querySelectorAll('.choose-card')].map(c => { const r = c.getBoundingClientRect(); return r.top < innerHeight && r.height > 0; }));
+    const vis = await p.evaluate(() => [...document.querySelectorAll('.d32-choose-card')].map(c => { const r = c.getBoundingClientRect(); return r.top < innerHeight && r.height > 0; }));
     check(name + ': both choices are on the first screen', vis.length === 2 && vis.every(Boolean), JSON.stringify(vis));
-    check(name + ': the floating app button is hidden before a choice', !(await p.locator('.guide-back').isVisible()));
-    check(name + ': the machine card links to the machine', (await p.locator('.choose-machine').getAttribute('href')) === lab);
-    await p.locator('.choose-app').click();
+    check(name + ': the dark choice screen covers the page', await p.locator('.d32-choose').isVisible());
+    check(name + ': the machine card links to the machine', (await p.locator('.d32-choose-machine').getAttribute('href')) === lab);
+    await p.locator('.d32-choose-app').click();
     await p.waitForTimeout(500);
-    check(name + ': "the app" opens the app', await open());
+    check(name + ': "the app" opens the app', await open() && !(await p.locator('.d32-choose').count()));
+    await p.goto(base.replace(/\/$/, '') + path);
+    await p.waitForSelector('.d32-choose');
+    await p.locator('.d32-choose-guide').click();
+    check(name + ': "guide" closes the choice and shows the guide page', !(await p.locator('.d32-choose').count()) && !(await open()) && await p.locator('.hero h1').isVisible());
     await ctx.close();
   }
   for (const f of ['lab/1982/index.html', 'en/lab/1982/index.html', 'guides/index.html', 'en/guides/index.html']) {

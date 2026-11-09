@@ -43,7 +43,7 @@
 })();
 </script>
 <script>
-// הדף נפתח בבחירה בין המכונה לאפליקציה; האפליקציה (מסך מלא במחשב, מסך אפליקציה בטלפון) נפתחת רק אחרי בחירה.
+// הדף נפתח במסך בחירה כהה: מכונת ה-Dragon או האפליקציה (גונן, 9.11). האפליקציה נפתחת רק אחרי בחירה.
 // מסתירים את הדף עד שהמחשב מוכן, כדי שלא יהבהב. אם משהו נתקע, אחרי 3 שניות הדף מופיע בכל מקרה
 document.documentElement.classList.add('d32-booting');
 setTimeout(() => document.documentElement.classList.remove('d32-booting'), 3000);
@@ -69,7 +69,7 @@ setTimeout(() => document.documentElement.classList.remove('d32-booting'), 3000)
 </nav>
 </header>
 
-<div class="guide-bar"><button type="button" class="guide-back"><span aria-hidden="true">🖥</span> לאפליקציה</button></div>
+<div class="guide-bar"><button type="button" class="guide-back"><span aria-hidden="true">🖥</span> חזרה למחשב</button></div>
 
 <main id="main" style="display: flex; flex-direction: column; gap: 48px;">
 
@@ -77,27 +77,8 @@ setTimeout(() => document.documentElement.classList.remove('d32-booting'), 3000)
 <div class="hero-main">
 <p class="hero-kicker">מחשב ביתי · 1982</p>
 <h1 id="room-title"><bdi>Dragon 32</bdi>, בדפדפן</h1>
-<p class="choose-lead">יש כאן שני מחשבים. בוחרים אחד:</p>
-<div class="choose" role="group" aria-label="בחירת מחשב">
-<a class="choose-card choose-machine" href="/lab/1982/">
-<span class="choose-icon" aria-hidden="true">🧪</span>
-<span class="choose-name">מכונת ה-<bdi>Dragon</bdi></span>
-<span class="choose-what">המחשב עצמו, כמו ב-1982</span>
-<span class="choose-list"><span>השבבים של ה-<bdi>Dragon 32</bdi>, ועליהם <bdi>BASIC</bdi> שמתנהג כמו המקורי</span><span>62 משחקים מקוריים מהתקופה, באישור המחברים</span><span>רמזים בשלבים להרפתקאות שנתקעים בהן</span></span>
-<span class="choose-who">זוכרים את ה-<bdi>Dragon</bdi>? זה בשבילכם</span>
-<span class="choose-go">למכונת ה-<bdi>Dragon</bdi> ←</span>
-</a>
-<button type="button" class="choose-card choose-app">
-<span class="choose-icon" aria-hidden="true">🖥</span>
-<span class="choose-name">האפליקציה</span>
-<span class="choose-what">הדרך הנוחה ללמוד ולתכנת</span>
-<span class="choose-list"><span>פקודות מוכנות: בוחרים ולוחצים "לנסות עכשיו"</span><span>עוזר שעונה בעברית</span><span>משחקים שבנינו בעצמנו, ואפשר להתקין בטלפון</span></span>
-<span class="choose-who">רוצים ללמוד לתכנת? זה בשבילכם</span>
-<span class="choose-go">לאפליקציה ←</span>
-</button>
-</div>
 <p class="hero-lead"><bdi>Dragon 32</bdi> יצא בוויילס <span class="nobr">ב-1982</span>: <bdi>32</bdi> קילובייט זיכרון, מקלדת שמתחברת לטלוויזיה, וקלטת קסטה במקום כונן. כאן הוא נבנה מחדש בדפדפן, בסגנון של אז: מכניסים מחסנית ומשחקים, טוענים משחקים מהקלטת, או כותבים BASIC בעצמכם. כל מה שכאן כתבנו מאפס; אין כאן קוד או ROM מקוריים של <bdi>Dragon</bdi>.</p>
-<p class="room-full-link">זה המדריך לאפליקציה. האפליקציה נפתחת בכפתור "לאפליקציה". אפשר גם להתקין אותה: בטלפון "הוספה למסך הבית", ובמחשב סמל ההתקנה בשורת הכתובת.</p>
+<p class="room-full-link">זה המדריך. המחשב עצמו נפתח בכפתור "חזרה למחשב". אפשר גם להתקין אותו כאפליקציה: בטלפון "הוספה למסך הבית", ובמחשב סמל ההתקנה בשורת הכתובת.</p>
 <noscript><p class="d32-help">המחשב צריך JavaScript כדי לעבוד.</p></noscript>
 </div>
 </section>
