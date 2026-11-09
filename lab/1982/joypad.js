@@ -38,6 +38,8 @@
     maurice: { dir: ARROWS, fire: 'alt', label: ['גז', 'GAS'] },
     starman: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
     wizlair: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
+    crusader: { dir: ARROWS, fire: 'alt', label: ['קפיצה', 'JUMP'] },
+    droids: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
     chameleon: { dir: ARROWS, fire: 'alt', label: ['צבע', 'COLOUR'] },
     downland: { dir: ARROWS, fire: 'alt', label: ['קפיצה', 'JUMP'] },
     king: { dir: ARROWS, fire: 'alt', label: ['קפיצה', 'JUMP'] },
@@ -46,6 +48,7 @@
     nerble: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
     // משחקי פעולה במקלדת: הלוח שולח את המקשים מתיבת "איך משחקים"
     bonka: { dir: ARROWS, fire: 'space', label: ['רווח', 'SPACE'] },
+    mchess: { dir: ARROWS, fire: 'enter', label: ['ENTER', 'ENTER'] },   // Chess: חיצים לסמן ו-ENTER לבחירה. שאר המקשים ([L], ‏[P], ‏[D]...) במקלדת המצוירת
     ninja: { dir: { up: 'K', down: 'K', left: 'M', right: 'N' }, fire: 'O', label: ['בעיטה', 'KICK'] },   // [K] קפיצה, [N] קדימה, [M] אחורה, [O] בעיטה
     sas: { dir: ARROWS, fire: 'G', label: ['רימון', 'GRENADE'] },   // [F] (טיל) נשאר במקלדת
     mine: { dir: ARROWS, fire: 'space', label: ['רווח', 'SPACE'] }   // קלטת שלי בשפת מכונה (shelf.js). עם המתג דלוק, הכפתור שולח את כפתור הג'ויסטיק

@@ -169,6 +169,17 @@
       ['John Morrison · J. Morrison (Micros), 1983', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']],
     ['maurice', 'Maurice Minor', 'Maurice Minor', 'a',
       ['John Morrison · J. Morrison (Micros), 1983', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']],
+    // עוד ארבעה מ-J. Morrison (Micros), 1983, באותו מכתב (גונן, 8.11: "תכניס את כולם"). הקלטות מ-World of Dragon כמו שהן, וכולן מתחילות לבד אחרי CLOADM.
+    // Chess במקלדת (ההוראות מהדף המקורי שבא עם הקלטת). ב-Droids שני קבצים: D1 לג'ויסטיק ו-D2 למקלדת; CLOADM טוען את הראשון.
+    // River of Fire: על מסך הפתיחה By STUART SAMPSON, והחברה הוציאה אותה. Crusader ו-Droids בג'ויסטיק הימני
+    ['mchess', 'Chess', 'Chess', 'a',
+      ['John Morrison · J. Morrison (Micros), 1983', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']],
+    ['crusader', 'Crusader', 'Crusader', 'a',
+      ['John Morrison · J. Morrison (Micros), 1983', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']],
+    ['droids', 'Droids', 'Droids', 'a',
+      ['John Morrison · J. Morrison (Micros), 1983', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']],
+    ['riverfire', 'River of Fire', 'River of Fire', 'a',
+      ['Stuart Sampson · J. Morrison (Micros), 1983', 'https://web.archive.org/web/20040604130844/http://ds.dial.pipex.com/town/estate/dh69/clear/rights.html', null, null, 'hughey']],
     // Shenanigans,‏ Sea Search ו-Trekboer של Bob Withers ו-Stephen O'Dea (Mark Data Products, 1983–84; ל-Dragon מ-Dragon Data ומ-Microdeal):
     // אותו מכתב של Withers בארכיון CLEAR, שמונה את שלושתם (גונן, 7.11: "מאשר את שלושתם"). הקלטות כמו שהן. Sea Search יצא ב-Dragon בשמו
     // הראשון, Sea Quest (כך כתוב במסך הפתיחה, ובקרדיטים Stephen ו-Kathy O'Dea, ‏Bob ו-Dollie Withers); השם הוחלף בגלל משחק של Activision.
@@ -216,7 +227,7 @@
       ['Owen Stenseth · freeware, 1987', '/lab/1982/tapes/brickout-license.txt', 'https://github.com/digitalbytes/super-brickout', null, 'mit']]
   ];
   // משחקים שצריכים ג'ויסטיק: כשהקלטת נטענת, החיצים במקלדת הופכים לג'ויסטיק הימני ו-Alt (Option במק) לכפתור שלו
-  const JOY = new Set(['teatime', 'vultures', 'maurice', 'starman', 'wizlair', 'chameleon', 'downland', 'king', 'buzzard', 'cavehunter', 'nerble', 'ranger', 'devil', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian', 'alcatraz', 'cricket', 'digit', 'snaker']);
+  const JOY = new Set(['teatime', 'vultures', 'maurice', 'crusader', 'droids', 'starman', 'wizlair', 'chameleon', 'downland', 'king', 'buzzard', 'cavehunter', 'nerble', 'ranger', 'devil', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian', 'alcatraz', 'cricket', 'digit', 'snaker']);
   // ב-Cricket החובט משתמש בג'ויסטיק השמאלי והמגיש בימני (המדריך של Peaksoft): החיצים מזיזים את שניהם יחד.
   // ב-Snaker הימני מכוון (JOYSTK(0)) והשמאלי קובע מהירות (JOYSTK(3)): למעלה מהר, למטה לאט
   const BOTH = new Set(['cricket', 'snaker']);
@@ -767,6 +778,54 @@
         'A little Morris Minor has wandered onto a Grand Prix track. The button is the accelerator: hold it to drive. The up and down arrows move the car between lanes, past the racing cars.',
         'At the top is the damage meter (100% when the car is whole), and at the bottom the time and the miles. Every crash damages the car. At the end there is a hall of fame.']
     },
+    // ההוראות מהדף המקורי של J. Morrison (Micros). הלוח והמסעים נבדקו במכונה (8.11). במקלדת, ובטלפון חיצים ו-ENTER
+    mchess: {
+      he: ['הטעינה לוקחת כדקה וחצי, והמשחק מתחיל לבד. מופיע הלוח, ולמעלה מימין כתוב L1: הרמה הראשונה, הכי קלה. אתם משחקים ראשונים.',
+        'כדי להזיז כלי: מביאים את הסמן בחיצים אל הכלי ולוחצים [ENTER]. המשבצת מהבהבת (אם לא, לוחצים [ENTER] שוב). אחר כך מביאים את הסמן למשבצת שרוצים ולוחצים [ENTER] עוד פעם. אם המסע חוקי, הכלי זז, והמחשב עונה.',
+        'לוחצים על המקשים לאט: לוחצים, משחררים, ורק אז המקש הבא. כך המשחק המקורי בנוי. הצרחה: מזיזים את המלך שתי משבצות, כמו כל מסע. גם הכאה דרך הילוכו (en passant) עובדת.',
+        'מקשים נוספים: [L] משנה את הרמה (מחזיקים אותו עד שהיא מתחלפת). [P] נותן למחשב לשחק ראשון. [D] המחשב משחק נגד עצמו, ו-[BREAK] עוצר אותו. [R] נכנעים ומתחילים משחק חדש. [BREAK] מחזיר את המסע שלכם אחורה, רק לפני שהמחשב ענה (במק: [Esc]).',
+        'לוח משלכם: [C] מנקה את הלוח. מביאים את הסמן למשבצת ולוחצים [E] שוב ושוב, עד שמופיע הכלי שרוצים.'],
+      en: ['Loading takes about a minute and a half, and the game starts by itself. The board appears, with L1 at the top right: level one, the easiest. You move first.',
+        'To move a piece: bring the cursor to it with the arrows and press [ENTER]. The square flashes (if not, press [ENTER] again). Then bring the cursor to the square you want and press [ENTER] once more. If the move is legal, the piece moves, and the computer replies.',
+        'Press the keys slowly: press, let go, and only then the next key. That is how the original game was built. To castle, move the king two squares, like any move. Capturing en passant works too.',
+        'More keys: [L] changes the level (hold it until the level changes). [P] makes the computer play first. [D] makes the computer play itself, and [BREAK] stops it. [R] resigns and starts a new game. [BREAK] takes back your move, only before the computer has replied (on a Mac: [Esc]).',
+        'Your own board: [C] clears the board. Bring the cursor to a square and press [E] again and again until the piece you want appears.']
+    },
+    // נבדק במכונה (8.11): הטעינה, מסך הפתיחה והשלב הראשון. הסיפור מהעטיפה. ג'ויסטיק ימני
+    crusader: {
+      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור.',
+        'הטעינה לוקחת כדקה, והמשחק מתחיל לבד. במסך הפתיחה כתוב AN ARCADE ADVENTURE ו-PRESS FIRE TO START: לוחצים על הכפתור.',
+        'אביר יוצא לחפש את הגביע הקדוש, בשבעה שלבים שהולכים ונעשים קשים. מטפסים על חומות העיר עד לקודש הפנימי, מתנדנדים מעל בורות, חוצים אגמים מכושפים, ונזהרים מעקרבים ומגמדים.',
+        'מזיזים את האביר בחיצים, ובכפתור קופצים. למטה מוצגים הניקוד והשיא.'],
+      en: ['In this game the arrow keys are a joystick and [Space] is its button (or [Alt], [Option] on a Mac). On a phone there is a stick and a button under the screen.',
+        'Loading takes about a minute, and the game starts by itself. The title screen says AN ARCADE ADVENTURE and PRESS FIRE TO START: press the button.',
+        'A knight sets out to find the Holy Grail, in seven stages that get harder and harder. Scale the city walls to reach the inner sanctum, swing across pits, cross enchanted lakes, and watch out for scorpions and dwarfs.',
+        'Move the knight with the arrows, and jump with the button. The bottom of the screen shows the score and the high score.']
+    },
+    // נבדק במכונה (8.11): הטעינה, ההסבר והמשחק. בקלטת גם גרסה למקלדת (D2), אבל CLOADM טוען את גרסת הג'ויסטיק (D1). ג'ויסטיק ימני
+    droids: {
+      he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
+        'הטעינה מתחילה לבד. מופיע הסבר (YOUR MISSION), ובסופו GOOD LUCK (PRESS FIRE): לוחצים על הכפתור כדי להתחיל.',
+        'הדרואידים מנסים להוציא את מגיני העופרת שמתחת לפצצות Trioxtron. כשכל שלוש הפצצות נופלות, כדור הארץ נהרס. אתם בתחתית המסך: זזים בחיצים ויורים בכפתור.',
+        'אחרי שפוגעים בכמה מהם, השאר יורים בחזרה, וצריך להתחמק גם מהמגינים שהם מפילים. למעלה, משמאל לימין: הניקוד, השלב, החיים והשיא. מתחילים עם שלושה חיים, ועל כל מסך שמנקים מקבלים עוד אחד.'],
+      en: ['In this game the arrow keys are a joystick and [Space] is its button (or [Alt], [Option] on a Mac). On a phone there is a stick and a fire button under the screen.',
+        'Loading starts by itself. An explanation appears (YOUR MISSION), ending with GOOD LUCK (PRESS FIRE): press the button to start.',
+        'The droids are trying to remove the lead shields under the Trioxtron bombs. When all three bombs have dropped, the Earth is destroyed. You are at the bottom of the screen: move with the arrows and fire with the button.',
+        'Once you have hit some of them, the rest shoot back, and you must also dodge the shields they drop. Along the top, left to right: score, level, lives and high score. You start with three lives, and earn one more for each screen you clear.']
+    },
+    // נבדק במכונה (8.11): הטעינה, מסך הפתיחה והמסך המפוצל. ההוראות מהדף המקורי של המשחק. שמירה והמשך לא נבדקו אצלנו
+    riverfire: {
+      he: ['הטעינה לוקחת כשלוש דקות, והמשחק מתחיל לבד. במסך הפתיחה לוחצים מקש. המסך מתחלק: למעלה תמונה של המקום, מתחת הטקסט, ולמטה NEXT?: שם כותבים פקודה באנגלית ולוחצים [ENTER].',
+        'מרפאה משתמשת במים של אי געשי רדום, ואסון מתקרב. אפשר לעצור אותו?',
+        'אות אחת מספיקה ל-{N}, ‏{E}, ‏{S} ו-{W} (צפונה, מזרחה, דרומה, מערבה), ל-{L} (להסתכל שוב) ול-{I} (מה אתם נושאים). אפשר לקצר כל מילה, אם שמים נקודה בסופה.',
+        'במבוכים זזים בחיצים כש-[SHIFT] לחוץ: [SHIFT] עם חץ ימינה או שמאלה מסובב אתכם, ו-[SHIFT] עם חץ למעלה מתקדם, בלי [ENTER].',
+        'שמירה: יוצאים מהמבוך, כותבים {SAVE} ושם של עד 8 אותיות, ולוחצים [ENTER]. כדי להמשיך, טוענים את River of Fire כרגיל ובוחרים ב-PREVIOUS GAME.'],
+      en: ['Loading takes about three minutes, and the game starts by itself. On the title screen press a key. The screen splits: a picture of the place at the top, the text below it, and NEXT? at the bottom: type a command there and press [ENTER].',
+        'A clinic uses the waters of a dormant volcanic island, and disaster looms. Can you stop it?',
+        'One letter is enough for N, E, S and W (north, east, south, west), for L (look again) and for I (inventory). You can shorten any word, as long as it ends with a full stop.',
+        'In the mazes, move with the arrows while holding [SHIFT]: [SHIFT] with the left or right arrow turns you, and [SHIFT] with the up arrow goes forward, without [ENTER].',
+        'Saving: leave the maze, type SAVE and a name of up to 8 letters, and press [ENTER]. To carry on, load River of Fire as usual and choose PREVIOUS GAME.']
+    },
     // נבדק במכונה (7.11): הטעינה, התמונה, הקרדיטים, טבלת השיאים והטיסה מעל הנוף. ג'ויסטיק
     starman: {
       he: ['במשחק הזה החיצים הם ג\'ויסטיק, ו-[רווח] הוא הכפתור שלו (אפשר גם [Alt], במק [Option]). בטלפון יש מתחת למסך ידית וכפתור אש.',
@@ -1261,6 +1320,10 @@
     bonka: ['המשחק מתחיל לבד. לוחצים מקש, ועונים על השם, המהירות ומספר המפלצות.', 'The game starts by itself. Press a key, and answer the name, the speed and the number of meanies.'],
     vultures: ['המשחק מתחיל לבד. בוחרים מהירות בחיצים ולוחצים על הכפתור.', 'The game starts by itself. Choose a speed with the arrows and press the button.'],
     maurice: ['המשחק מתחיל לבד. לוחצים מקש, כותבים שם, ובוחרים רמה מ-[1] עד [6].', 'The game starts by itself. Press a key, type a name, and choose a level from [1] to [6].'],
+    mchess: ['המשחק מתחיל לבד. מזיזים כלי בחיצים וב-[ENTER], ולוחצים לאט.', 'The game starts by itself. Move a piece with the arrows and [ENTER], and press slowly.'],
+    crusader: ['המשחק מתחיל לבד. לוחצים על הכפתור כדי להתחיל.', 'The game starts by itself. Press the button to start.'],
+    droids: ['המשחק מתחיל לבד. אחרי ההסבר לוחצים על הכפתור.', 'The game starts by itself. After the explanation press the button.'],
+    riverfire: ['המשחק מתחיל לבד. לוחצים מקש, וב-NEXT? כותבים פקודה ו-[ENTER].', 'The game starts by itself. Press a key, and at NEXT? type a command and [ENTER].'],
     starman: ['המשחק מתחיל לבד. ב-Press fire to continue ובטבלת השיאים לוחצים על הכפתור.', 'The game starts by itself. At Press fire to continue and at the high-score table press the button.'],
     sword: ['המשחק מתחיל לבד, ומופיע המבוך עם התפריט.', 'The game starts by itself, and the maze appears with the menu.'],
     wizlair: ['המשחק מתחיל לבד. [I] להוראות, ואחר כך הכפתור, וגם בטבלת השיאים.', 'The game starts by itself. [I] for instructions, then the button, and again at the high-score table.'],
@@ -1325,6 +1388,10 @@
     bonka: ['חופרים בורות בקומות ונותנים מכה למפלצות שנופלות לתוכם. במקלדת.', 'Dig holes on the floors and bonk the meanies that fall in. Keyboard.'],
     vultures: ['משחק יריות נגד להקה של נשרים שצוללים ומפילים דברים. בג\'ויסטיק.', 'A shooter against a flock of diving, bombing vultures. Joystick.'],
     maurice: ['Morris Minor קטנה במרוץ גרנד פרי: עוקפים, נזהרים מהתנגשויות. בג\'ויסטיק.', 'A little Morris Minor in a Grand Prix: overtake and avoid crashes. Joystick.'],
+    mchess: ['שחמט נגד המחשב, עם רמות קושי. במקלדת.', 'Chess against the computer, with skill levels. Keyboard.'],
+    crusader: ['אביר מחפש את הגביע הקדוש: חומות, בורות, אגמים ועקרבים, בשבעה שלבים. בג\'ויסטיק.', 'A knight seeks the Holy Grail: walls, pits, lakes and scorpions, in seven stages. Joystick.'],
+    droids: ['עוצרים את הדרואידים לפני שישחררו את הפצצות ויהרסו את כדור הארץ. בג\'ויסטיק.', 'Stop the droids before they release the bombs and destroy the Earth. Joystick.'],
+    riverfire: ['הרפתקה עם תמונות: מרפאה על אי געשי רדום, ואסון מתקרב. בפקודות באנגלית.', 'An adventure with pictures: a clinic on a dormant volcanic island, and disaster looms. English commands.'],
     starman: ['החוקר Starman Jones טס בחללית מעל נוף של כוכב, ושומר על הדלק. בג\'ויסטיק.', 'Explorer Starman Jones flies over a planet\'s landscape, watching his fuel. Joystick.'],
     sword: ['הרפתקה במבוך של 225 מקומות: נלחמים, סוחרים ומנסים לצאת בחיים. במקלדת.', 'An adventure in a maze of 225 places: fight, trade and try to get out alive. Keyboard.'],
     wizlair: ['אוספים במבוך את החפצים שהשדים גנבו ומחזירים אותם למקדש. בג\'ויסטיק.', 'Collect the artifacts the demons stole from the maze and return them to your sanctuary. Joystick.'],

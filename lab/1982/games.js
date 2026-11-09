@@ -76,8 +76,8 @@ window.D32_GAMES = {
       "en": "John Morrison's games",
       "years": "1983",
       "note": [
-        "John Morrison הקים את J. Morrison (Micros), וכתב לה משחקים ל-Dragon. ב-1996 כתב בנו, Robert Morrison, שאין להם התנגדות שיפיצו את התוכנות שלהם. כאן ברשותם.",
-        "John Morrison founded J. Morrison (Micros) and wrote Dragon games for it. In 1996 his son, Robert Morrison, wrote that they have no objection to their software being distributed. Here with their permission."
+        "John Morrison הקים את J. Morrison (Micros), כתב לה משחקים ל-Dragon והוציא גם משחקים של אחרים. ב-1996 כתב בנו, Robert Morrison, שאין להם התנגדות שיפיצו את התוכנות שלהם. כאן ברשותם.",
+        "John Morrison founded J. Morrison (Micros), wrote Dragon games for it and published others' too. In 1996 his son, Robert Morrison, wrote that they have no objection to their software being distributed. Here with their permission."
       ]
     },
     {
@@ -2091,6 +2091,134 @@ window.D32_GAMES = {
         24,
         16,
         192
+      ]
+    },
+    "mchess": {
+      "slug": "chess",
+      "drawer": "morrison",
+      "year": "1983",
+      "tag": [
+        "שחמט",
+        "chess"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כדקה וחצי",
+        "about a minute and a half"
+      ],
+      "about": {
+        "he": [
+          "John Morrison כתב אותו ל-Dragon. מתחילים ברמה הראשונה, הכי קלה, ואפשר לעלות ברמות, לתת למחשב לשחק נגד עצמו ולסדר לוח משלכם.",
+          "ב-1996 כתב בנו שאין להם התנגדות שיפיצו את התוכנות שלהם."
+        ],
+        "en": [
+          "John Morrison wrote it for the Dragon. You start on level one, the easiest, and can move up the levels, let the computer play itself, or set up your own board.",
+          "In 1996 his son wrote that they have no objection to their software being distributed."
+        ]
+      },
+      "icon": [
+        52,
+        116,
+        32
+      ]
+    },
+    "crusader": {
+      "slug": "crusader",
+      "drawer": "morrison",
+      "year": "1983",
+      "tag": [
+        "הרפתקת ארקייד",
+        "arcade adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כדקה",
+        "about a minute"
+      ],
+      "about": {
+        "he": [
+          "John Morrison כתב אותו ל-Dragon בשפת מכונה. Home Computing Weekly ו-Personal Computer News כתבו עליו ביקורת ב-1983.",
+          "ב-1996 כתב בנו שאין להם התנגדות שיפיצו את התוכנות שלהם."
+        ],
+        "en": [
+          "John Morrison wrote it for the Dragon in machine code. Home Computing Weekly and Personal Computer News reviewed it in 1983.",
+          "In 1996 his son wrote that they have no objection to their software being distributed."
+        ]
+      },
+      "icon": [
+        148,
+        34,
+        40
+      ]
+    },
+    "droids": {
+      "slug": "droids",
+      "drawer": "morrison",
+      "year": "1983",
+      "tag": [
+        "יריות",
+        "shooter"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "פחות מדקה",
+        "under a minute"
+      ],
+      "about": {
+        "he": [
+          "John Morrison כתב אותו ל-Dragon בשפת מכונה. על הקלטת יש שתי גרסאות, לג'ויסטיק ולמקלדת, וכאן נטענת גרסת הג'ויסטיק.",
+          "ב-1996 כתב בנו שאין להם התנגדות שיפיצו את התוכנות שלהם."
+        ],
+        "en": [
+          "John Morrison wrote it for the Dragon in machine code. The tape holds two versions, for joystick and for keyboard, and the joystick one loads here.",
+          "In 1996 his son wrote that they have no objection to their software being distributed."
+        ]
+      },
+      "icon": [
+        104,
+        24,
+        48
+      ]
+    },
+    "riverfire": {
+      "slug": "river-of-fire",
+      "drawer": "morrison",
+      "year": "1983",
+      "tag": [
+        "הרפתקה",
+        "adventure"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כשלוש דקות",
+        "about three minutes"
+      ],
+      "about": {
+        "he": [
+          "Stuart Sampson כתב אותה, ו-J. Morrison (Micros) הוציאה אותה: הרפתקה עם תמונות ל-Dragon. על מסך הפתיחה: By STUART SAMPSON.",
+          "ב-1996 כתב Robert Morrison, בשם החברה, שאין להם התנגדות שיפיצו את התוכנות שלהם."
+        ],
+        "en": [
+          "Stuart Sampson wrote it, and J. Morrison (Micros) published it: a graphics adventure for the Dragon. The title screen says By STUART SAMPSON.",
+          "In 1996 Robert Morrison wrote, for the company, that they have no objection to their software being distributed."
+        ]
+      },
+      "icon": [
+        40,
+        20,
+        72
       ]
     },
     "shenan": {
