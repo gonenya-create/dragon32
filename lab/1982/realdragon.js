@@ -9,7 +9,7 @@
     if (!now) return;
     now.audio.pause(); clearInterval(now.timer);
     try { now.lock?.release(); } catch (e) {}
-    now.li.classList.remove('playing'); now.li.querySelector('.p').textContent = '▶';
+    now.li.classList.remove('playing'); now.li.querySelector('.p').textContent = EN ? '▶ Play' : '▶ השמעה';
     now = null;
   }
   document.addEventListener('click', async e => {
@@ -41,7 +41,7 @@
     };
     now = { li, audio, lock, timer: setInterval(tick, 500) };
     audio.addEventListener('ended', () => { stop(); li.classList.add('playing'); txt.textContent = EN ? 'Finished. On the Dragon: wait for the game, or type what is shown next to it.' : 'הסתיים. ב-Dragon: המשחק מתחיל, או מקלידים מה שכתוב ליד המשחק.'; bar.style.width = '100%'; });
-    li.classList.add('playing'); b.textContent = '■'; tick();
+    li.classList.add('playing'); b.textContent = EN ? '■ Stop' : '■ עצירה'; tick();
     try { await audio.play(); } catch (e) { stop(); }
   });
 })();

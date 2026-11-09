@@ -29,10 +29,10 @@ function list(he) {
     for (const [id, g] of rows) {
       const k = kinds.get(id), cmd = k === 'm' ? 'CLOADM → EXEC' : k ? 'CLOADM' : 'CLOAD → RUN';
       const name = L(names.get(id)) || id, file = (names.get(id)[1] || id).replace(/[^A-Za-z0-9 !'-]/g, '').trim() || id;
-      const btns = `<button type="button" class="p">▶</button>` + (ONLY.has(id)
+      const btns = `<button type="button" class="p">▶ ${he ? 'השמעה' : 'Play'}</button>` + (ONLY.has(id)
         ? `<span class="only">${he ? 'השמעה בלבד' : 'play only'}</span>`
         : `<button type="button" class="w">⬇ ${he ? 'צליל' : 'sound'}</button><a class="c" href="/lab/1982/tapes/${id}.cas" download="${esc(file)}.cas">⬇ ${he ? 'קלטת' : 'tape'}</a>`);
-      out += `  <li id="${id}" data-id="${id}" data-file="${esc(file)}"><span class="rn"><bdi>${esc(name)}</bdi></span><span class="rm"><code dir="ltr">${cmd}</code>${L(g.load) ? ' · ' + esc(L(g.load)) : ''}</span><span class="rb">${btns}</span><span class="bar"><i></i><span></span></span></li>\n`;
+      out += `  <li id="${id}" data-id="${id}" data-file="${esc(file)}"><span class="rn"><bdi>${esc(name)}</bdi></span><span class="rm">${he ? 'ב-<bdi dir="ltr">Dragon</bdi> מקלידים:' : 'On the Dragon, type:'} <code dir="ltr">${cmd}</code>${L(g.load) ? '<br>' + (he ? 'טעינה: ' : 'Loading: ') + esc(L(g.load)) : ''}</span><span class="rb">${btns}</span><span class="bar"><i></i><span></span></span></li>\n`;
       n++;
     }
     out += '</ul>\n';
