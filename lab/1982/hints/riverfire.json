@@ -1,0 +1,300 @@
+{
+ "note": "Hints for River of Fire (Stuart Sampson, J. Morrison (Micros) 1983) in our own words. Every step was played and checked on the Dragon machine (9.11.2026), to the winning message. Each question has three levels: a small hint, a clearer hint and the full solution.",
+ "where": "This game draws its text under the picture on the graphics screen, so the hint button cannot read the room; each question's \"at\" holds short pieces of the room text exactly as printed (mixed case).",
+ "at": [
+  [
+   "plant room of"
+  ],
+  [
+   "the kitchen. A door"
+  ],
+  [
+   "clinic garden",
+   "in a ravine"
+  ],
+  [
+   "amongst mud pools"
+  ],
+  [
+   "amongst mud pools"
+  ],
+  [
+   "amongst mud pools"
+  ],
+  [
+   "faced by dry bush"
+  ],
+  [
+   "amongst dry bush scrub"
+  ],
+  [
+   "old lava flow"
+  ],
+  [
+   "mess hut"
+  ],
+  [
+   "mess hut",
+   "the laboratory"
+  ],
+  [
+   "aboard the boat",
+   "east landing"
+  ],
+  [
+   "aboard the boat",
+   "bearing to steer"
+  ],
+  [
+   "all come aboard"
+  ],
+  [
+   "tremor shakes",
+   "safety valve"
+  ]
+ ],
+ "he": [
+  {
+   "q": "מה צריך לעשות במשחק?",
+   "h": [
+    "אתם במרפאה על אי עם הר געש, והוא מתחיל להתעורר. הצוות מחכה על המזח הדרומי, אבל הסירה שלהם הפליגה. צריך למצוא סירה אחרת ולהציל את כולם.",
+    "הסירה נמצאת אצל הגאולוגים, בצד השני של האי. הדרך לשם מערבה מהגן, דרך בריכות הבוץ, השיחים היבשים וזרם הלבה הישן. השעון רץ בזמן אמת, אז לא מתעכבים: יש בערך חצי שעה עד ההתפרצות.",
+    "לפני שיוצאים אוספים במרפאה: {STARTING HANDLE} בחדר המכונות, {SURGICAL GOWN} ו-{SYRINGE} במחלקה, {SURGICAL MASK} בחדר הניתוח, ו-{CARRIER BAG}, {SUGAR}, {CLEAVER} ו-{MATCHES} במטבח. בתוך המרפאה הולכים עם {GO} ושם המקום ({GO WARD}, {GO KITCHEN}), ובחוץ באות אחת: {N}, {E}, {S}, {W}."
+   ]
+  },
+  {
+   "q": "אי אפשר לסחוב את כל הדברים. מה עושים?",
+   "h": [
+    "אפשר לשאת ביד רק ארבעה דברים. מה שלובשים לא נחשב, וגם לא מה שבתוך השקית.",
+    "לובשים את החלוק ואת המסכה ({WEAR}), ושמים דברים קטנים בשקית עם {BAG}. בשקית נכנסים רק שני דברים, ודבר כבד קורע אותה.",
+    "{WEAR GOWN}, {WEAR MASK}, ואחרי {GET BAG} ו-{GET SUGAR}: {BAG SUGAR} ו-{BAG SYRINGE}. ביד נשארים הידית, השקית, סכין הקצבים ({CLEAVER}) והגפרורים. לא שמים את הידית בשקית: היא קורעת אותה. מוציאים משהו מהשקית עם {REMOVE}."
+   ]
+  },
+  {
+   "q": "לאן הולכים מהגן?",
+   "h": [
+    "לא כל דרך מהגן בטוחה. אחת מהן מובילה למקום שאי אפשר לעבור.",
+    "צפונה, בערוץ, האפר רך ומחליקים בו. את הדרך לסירה מתחילים מערבה.",
+    "מהגן הולכים {W} לבריכות הבוץ. לא ממשיכים {N} בערוץ: שם מחליקים ומתים."
+   ]
+  },
+  {
+   "q": "אני מת מהאדים בבריכות הבוץ. מה עושים?",
+   "h": [
+    "משהו מהמרפאה מגן על הנשימה.",
+    "המסכה של חדר הניתוח.",
+    "לפני שנכנסים: {WEAR MASK}. עם המסכה האדים לא מזיקים."
+   ]
+  },
+  {
+   "q": "איך זזים בין בריכות הבוץ?",
+   "h": [
+    "כאן לא כותבים כיוונים. זזים במקשים, בלי {ENTER}.",
+    "מחזיקים את {SHIFT} ולוחצים על חץ: חץ ימינה או שמאלה מסובב אתכם, וחץ למעלה מתקדם צעד. צעד לא נכון מפיל לבוץ הרותח.",
+    "בכל צעד מחזיקים {SHIFT}. מהכניסה מהגן: {↑ ↑ → ↑ ← ↑ ↑ ↑ ↑ ← ↑ → ↑ →}. עכשיו אתם ליד הנחל (ראו את השאלה הבאה)."
+   ]
+  },
+  {
+   "q": "נחל חוצה את בריכות הבוץ. איך עוברים?",
+   "h": [
+    "אין גשר. צריך לעבור אותו בדרך אחרת, ורק במקום אחד.",
+    "קופצים מעליו, במקום שבו הוא צר. קפיצה במקום אחר מפילה לבוץ.",
+    "אחרי הצעדים מהשאלה הקודמת כותבים {JUMP}. ואז, עם {SHIFT}: {↑ → ↑ ← ↑ ↑ ← ↑ ↑ ↑ ← ↑ ↑ ↑ ← ↑ → ↑ ↑ → ↑ ↑}. אתם מגיעים מול השיחים היבשים."
+   ]
+  },
+  {
+   "q": "השיחים היבשים חוסמים את הדרך. מה עושים?",
+   "h": [
+    "צריך לפתוח בהם שביל. משהו מהמטבח חותך.",
+    "חותכים עם סכין הקצבים. עם המסכה על הפנים זה לא הולך, ובשביל להוריד אותה צריך יד פנויה.",
+    "{DROP MATCHES}, {REMOVE MASK}, {HACK SCRUB} (הידית של הסכין נשברת, אבל השביל פתוח), {WEAR MASK}, {GET MATCHES}, ואז {N}. לא מדליקים אש כאן: אין מכאן מוצא."
+   ]
+  },
+  {
+   "q": "האש מקיפה אותי כשאני ממשיך. מה עושים?",
+   "h": [
+    "אי אפשר לעבור דרך השיחים כמו שהם. צריך להיפטר מהם.",
+    "שורפים אותם מבפנים, מחכים רגע, ועוברים באפר. העשן חזק, אז המסכה חייבת להיות על הפנים.",
+    "עם המסכה על הפנים: {LIGHT SCRUB}, אחר כך {L}, ואז {N}. אתם עוברים באפר ומגיעים לזרם הלבה הישן."
+   ]
+  },
+  {
+   "q": "יש סדקים בזרם הלבה הישן. איך עוברים?",
+   "h": [
+    "זה עוד מבוך, והפעם יש בו שישה כיוונים. זזים כמו בבריכות הבוץ.",
+    "מחזיקים {SHIFT} עם החצים. צעד לתוך סדק הורג, אז הולכים בדיוק בדרך.",
+    "מהכניסה, עם {SHIFT}: {↑ ← ← ↑ ↑ → → ↑ ↑ → → ↑ ← ↑ ← ↑ ↑ ↑ ↑ ↑ → → ↑ → ↑ ← ↑ ← ← ↑ ↑ ← ↑}. אתם יוצאים לחצי האי ליד המחנה של הגאולוגים."
+   ]
+  },
+  {
+   "q": "האיש בצריף חולה מאוד. איך עוזרים לו?",
+   "h": [
+    "קראו את הפתק שלו, והסתכלו על הבקבוקונים הריקים. הוא חולה סוכרת.",
+    "האינסולין לא יעזור לו עכשיו: הוא צריך סוכר. מזריקים לו סוכר מומס, ורק מישהו שנראה כמו רופא.",
+    "בצריף: {DROP MATCHES}, {DROP CLEAVER} (כדי לפנות ידיים), {REMOVE SYRINGE}, {REMOVE SUGAR}, {DISSOLVE SUGAR}, ועם החלוק עליכם {INJECT SUGAR}. הוא מתאושש מיד."
+   ]
+  },
+  {
+   "q": "איפה המפתחות?",
+   "h": [
+    "מי שגר כאן יודע. קודם צריך שיוכל לדבר.",
+    "אחרי שהוא מתאושש שואלים אותו. המפתחות במעבדה, במגירה מתחת לזו שכתוב עליה מפתחות.",
+    "{ASK JACK}, {DROP SYRINGE}, {GO LABORATORY}, {OPEN DRAWER}, {GET KEYS}."
+   ]
+  },
+  {
+   "q": "איך יוצאים לים?",
+   "h": [
+    "צריך להגיע לסירה, להתניע אותה ולהתיר אותה. בלי מפה לא רואים לאן מפליגים.",
+    "הסירה בנחיתה המזרחית. המפה במגירה בסירה, והמפתחות פותחים אותה. את המנוע מתניעים עם הידית מהמרפאה.",
+    "{GO HUT}, {GO PENINSULA}, {E}, {BOARD BOAT}, {OPEN DRAWER}, {DROP SUGAR}, {GET CHART}, {START BOAT}, {READ CHART} (המפה עולה על המסך), {UNTIE BOAT}."
+   ]
+  },
+  {
+   "q": "איזה כיוון לכתוב?",
+   "h": [
+    "כותבים כיוון במעלות, בשלוש ספרות. הסירה זזה על המפה בזמן אמת, ואפשר לכתוב כיוון חדש בכל רגע.",
+    "זרם דרומי מושך אתכם. {180} הוא דרומה, {000} צפונה. כדי לנסוע מזרחה בקו ישר כותבים {060}, ומערבה {300}: הזרם מתקן את השאר. כל נגיעה בחוף אדום טובעת את הסירה.",
+    "בכל פעם מקלידים את הכיוון ולוחצים {ENTER} כשהסירה מגיעה למקום: {090} (דרום-מזרח) עד שהיא מתרחקת מהחוף; {180} דרומה לאורך החוף המזרחי של האי; {270} (דרום-מערב) בין האי לאיים הקטנים; {300} מערבה קצת; {180} דרומה במעבר הצר; {270} שוב; {300} מערבה עד מתחת למזח; ו-{000} צפונה עד שנוגעים במזח הדרומי (ליד {S.Jetty})."
+   ]
+  },
+  {
+   "q": "כולם עלו לסירה. מה עכשיו?",
+   "h": [
+    "הסירה עומדת שוב ליד המזח. צריך לצאת לדרך פעם אחרונה.",
+    "מתירים את הסירה שוב, ומפליגים רק עד המזח הקרוב.",
+    "{UNTIE BOAT}, ואז {000}. המשחק מסתיים ב-{YOU HAVE ALL REACHED SAFETY}."
+   ]
+  },
+  {
+   "q": "האי מתפרץ באמצע הדרך. מה עושים?",
+   "h": [
+    "הזמן רץ גם כשלא כותבים כלום.",
+    "יש בערך חצי שעה מההתחלה. לא מבזבזים זמן על מקומות שלא צריך.",
+    "הולכים ישר בדרך מהשאלות הקודמות. במשחק שלנו כל הדרך לקחה בערך 20 דקות."
+   ]
+  }
+ ],
+ "en": [
+  {
+   "q": "What is the goal?",
+   "h": [
+    "You are at a clinic on a volcanic island, and the volcano is waking up. The staff wait at the south jetty, but their boat has gone. Find another boat and get everyone away.",
+    "The geologists have a boat on the other side of the island. The way there is west from the garden, through the mud pools, the dry bush scrub and the old lava flow. The clock runs in real time, so don't dawdle: you have about half an hour before the eruption.",
+    "Collect before you leave: {STARTING HANDLE} in the plant room, {SURGICAL GOWN} and {SYRINGE} in the ward, {SURGICAL MASK} in the surgery, and {CARRIER BAG}, {SUGAR}, {CLEAVER} and {MATCHES} in the kitchen. Indoors you move with {GO} and the place ({GO WARD}, {GO KITCHEN}); outdoors with one letter: {N}, {E}, {S}, {W}."
+   ]
+  },
+  {
+   "q": "I can't carry everything. What do I do?",
+   "h": [
+    "You can hold only four things. Things you wear don't count, and neither do things in the bag.",
+    "Wear the gown and the mask ({WEAR}), and put small things in the bag with {BAG}. The bag holds only two things, and something heavy tears it.",
+    "{WEAR GOWN}, {WEAR MASK}, and after {GET BAG} and {GET SUGAR}: {BAG SUGAR} and {BAG SYRINGE}. In your hands stay the handle, the bag, the {CLEAVER} and the matches. Don't bag the handle: it bursts the bag. Take something out of the bag with {REMOVE}."
+   ]
+  },
+  {
+   "q": "Which way from the garden?",
+   "h": [
+    "Not every way from the garden is safe. One of them leads somewhere you can't pass.",
+    "North, in the ravine, the ash is loose and you slip. The way to the boat starts west.",
+    "From the garden go {W} to the mud pools. Don't go on {N} in the ravine: you slip to your death there."
+   ]
+  },
+  {
+   "q": "The fumes in the mud pools kill me. What do I do?",
+   "h": [
+    "Something from the clinic protects your breathing.",
+    "The mask from the surgery.",
+    "Before you go in: {WEAR MASK}. With the mask on the fumes do no harm."
+   ]
+  },
+  {
+   "q": "How do I move in the mud pools?",
+   "h": [
+    "Here you don't type directions. You move with keys, without {ENTER}.",
+    "Hold {SHIFT} and press an arrow: left or right turns you, up takes a step forward. A wrong step drops you into boiling mud.",
+    "Hold {SHIFT} for every step. From the entrance at the garden: {↑ ↑ → ↑ ← ↑ ↑ ↑ ↑ ← ↑ → ↑ →}. Now you are at the stream (see the next question)."
+   ]
+  },
+  {
+   "q": "A stream cuts the mud pools in two. How do I cross?",
+   "h": [
+    "There is no bridge. You cross it another way, and in one place only.",
+    "Jump over it where it is narrow. Jumping anywhere else drops you into the mud.",
+    "After the steps of the last question type {JUMP}. Then, with {SHIFT}: {↑ → ↑ ← ↑ ↑ ← ↑ ↑ ↑ ← ↑ ↑ ↑ ← ↑ → ↑ ↑ → ↑ ↑}. You come out facing the dry bush scrub."
+   ]
+  },
+  {
+   "q": "The dry bush scrub blocks the way. What do I do?",
+   "h": [
+    "You need to open a path. Something from the kitchen cuts.",
+    "Cut with the cleaver. You can't do it with the mask on, and to take it off you need a free hand.",
+    "{DROP MATCHES}, {REMOVE MASK}, {HACK SCRUB} (the cleaver's handle breaks, but the path is open), {WEAR MASK}, {GET MATCHES}, then {N}. Don't light a fire here: there is no way out."
+   ]
+  },
+  {
+   "q": "Fire surrounds me when I go on. What do I do?",
+   "h": [
+    "You can't get through the scrub as it is. You have to get rid of it.",
+    "Burn it from inside, wait a moment and walk through the ash. The smoke is thick, so the mask must be on.",
+    "With the mask on: {LIGHT SCRUB}, then {L}, then {N}. You walk through the ash to the old lava flow."
+   ]
+  },
+  {
+   "q": "The old lava flow has cracks. How do I cross?",
+   "h": [
+    "It is another maze, this time with six directions. Move as in the mud pools.",
+    "Hold {SHIFT} with the arrows. A step into a crack kills, so follow the way exactly.",
+    "From the entrance, with {SHIFT}: {↑ ← ← ↑ ↑ → → ↑ ↑ → → ↑ ← ↑ ← ↑ ↑ ↑ ↑ ↑ → → ↑ → ↑ ← ↑ ← ← ↑ ↑ ← ↑}. You come out on the peninsula by the geologists' camp."
+   ]
+  },
+  {
+   "q": "The man in the hut is very ill. How do I help him?",
+   "h": [
+    "Read his note and look at the empty ampoules. He is diabetic.",
+    "Insulin won't help him now: he needs sugar. Inject dissolved sugar, and only someone who looks like a doctor can.",
+    "In the hut: {DROP MATCHES}, {DROP CLEAVER} (to free your hands), {REMOVE SYRINGE}, {REMOVE SUGAR}, {DISSOLVE SUGAR}, and wearing the gown {INJECT SUGAR}. He recovers at once."
+   ]
+  },
+  {
+   "q": "Where are the keys?",
+   "h": [
+    "The man who lives here knows. First he must be able to talk.",
+    "Once he has recovered, ask him. The keys are in the lab, in the drawer under the one marked keys.",
+    "{ASK JACK}, {DROP SYRINGE}, {GO LABORATORY}, {OPEN DRAWER}, {GET KEYS}."
+   ]
+  },
+  {
+   "q": "How do I get out to sea?",
+   "h": [
+    "Get to the boat, start it and untie it. Without the chart you can't see where you sail.",
+    "The boat is at the east landing. The chart is in the drawer on the boat, and the keys open it. Start the engine with the handle from the clinic.",
+    "{GO HUT}, {GO PENINSULA}, {E}, {BOARD BOAT}, {OPEN DRAWER}, {DROP SUGAR}, {GET CHART}, {START BOAT}, {READ CHART} (the chart shows on the screen), {UNTIE BOAT}."
+   ]
+  },
+  {
+   "q": "Which bearing do I type?",
+   "h": [
+    "Type a bearing in degrees, with three digits. The boat moves on the chart in real time, and you can type a new bearing at any moment.",
+    "A current pulls you south. {180} is south, {000} north. To go straight east type {060}, and west {300}: the current does the rest. Touching a red shore wrecks the boat.",
+    "Each time type the bearing and press {ENTER} when the boat gets there: {090} (south-east) until it is off the shore; {180} south along the east coast of the island; {270} (south-west) between the island and the small islands; {300} a little west; {180} south through the narrow gap; {270} again; {300} west until you are below the jetty; and {000} north until you touch the south jetty (by {S.Jetty})."
+   ]
+  },
+  {
+   "q": "Everyone is aboard. What now?",
+   "h": [
+    "The boat lies at the jetty again. Set off one last time.",
+    "Untie the boat again and sail just to the nearby jetty.",
+    "{UNTIE BOAT}, then {000}. The game ends with {YOU HAVE ALL REACHED SAFETY}."
+   ]
+  },
+  {
+   "q": "The island erupts before I finish. What do I do?",
+   "h": [
+    "Time runs even when you type nothing.",
+    "You have about half an hour from the start. Don't waste time on places you don't need.",
+    "Follow the way in the questions above. In our game the whole way took about 20 minutes."
+   ]
+  }
+ ]
+}
