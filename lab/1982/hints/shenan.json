@@ -1,0 +1,375 @@
+{
+ "note": "Hints for Shenanigans in our own words. Every step was played and checked on the Dragon machine (8.11.2026), to the game's own ending: the pot of gold at the end of the rainbow (Congratulations! This Adventure is over.). Each question has three levels: a small hint, a clearer hint and the full solution.",
+ "where": "Each question has at: a short piece of the room description as the game prints it. In this game ALL text (room, messages) is drawn on the graphics screen under the picture, in upper and lower case; the text screen holds nothing readable, so the site cannot match these pieces by reading the text screen. Many squares share one description (residential street, wooded area, river shore), so some questions also use an item in the room (the landlord, muggers, garbage cans, a large snake, unicorn horn).",
+ "at": [
+  [
+   "small efficiency"
+  ],
+  [
+   "small efficiency"
+  ],
+  [
+   "small efficiency",
+   "empty wallet"
+  ],
+  [
+   "fire escape",
+   "advertising"
+  ],
+  [
+   "old staircase",
+   "the landlord"
+  ],
+  [
+   "vestibule",
+   "mail boxes",
+   "dimly lit hallway"
+  ],
+  [
+   "group of muggers",
+   "really look mean"
+  ],
+  [
+   "garbage cans",
+   "residential"
+  ],
+  [
+   "small pub",
+   "O'Malley",
+   "barkeep"
+  ],
+  [
+   "subway station",
+   "subway turnstile",
+   "small pub"
+  ],
+  [
+   "rustic country",
+   "old cabin"
+  ],
+  [
+   "steep cliff",
+   "unicorn horn",
+   "rambling river"
+  ],
+  [
+   "clover field",
+   "young woman"
+  ],
+  [
+   "narrow ledge",
+   "large snake"
+  ],
+  [
+   "base of a steep",
+   "12 foot pole",
+   "narrow ledge"
+  ],
+  [
+   "damp cave",
+   "Twisty passages",
+   "trap door"
+  ],
+  [
+   "deep ravine",
+   "large cavern"
+  ],
+  [
+   "rainbow",
+   "meadow",
+   "crystal bridge"
+  ]
+ ],
+ "he": [
+  {
+   "q": "מה צריך לעשות, ואיך מדברים עם המשחק?",
+   "h": [
+    "המטרה: סיר הזהב שבקצה הקשת. הדרך מתחילה בדירה שלכם, אבל קודם צריך להתלבש ולצאת מהבית.",
+    "כותבים פועל ושם עצם. {LOOK} לבד מתאר את המקום, ו-{LOOK} עם חפץ בודק אותו. אין פקודה ללבוש: פשוט מרימים את הבגדים.",
+    "פקודות שעבדו לנו: {LOOK BED}, ‏{OPEN WINDOW}, ‏{GET SHOES}. הולכים עם {GO NORTH}, ‏{GO DOWN}, או {GO} ושם של מקום שרואים, כמו {GO DOOR}. כשהמשחק שואל שאלה (למשל {Which one?}) עונים במילה אחת."
+   ]
+  },
+  {
+   "q": "הדירה כמעט ריקה. איפה הבגדים והנעליים?",
+   "h": [
+    "חפשו במקומות שבהם אנשים זורקים דברים: מתחת לרהיטים, בתוך המגירות ועל הקולב.",
+    "מסתכלים מתחת למיטה, בודקים את השידה פעמיים ואת הקולב פעם אחת.",
+    "{LOOK UNDER}, ולשאלה {Under what?} עונים {BED}: יש שם נעליים. {LOOK DRESSER} פעמיים: ארנק ופנס. {LOOK VALET}: ג'ינס וחולצה. אחרי כל מציאה כותבים {LOOK} כדי לראות מה התגלה."
+   ]
+  },
+  {
+   "q": "יש לי ארנק. מה לוקחים איתי?",
+   "h": [
+    "בתוך הארנק יש משהו שתצטרכו מיד כשתצאו מהדלת.",
+    "פותחים את הארנק ולוקחים את הכסף. אחר כך מתלבשים ולוקחים גם את הפנס.",
+    "{GET WALLET}, ‏{OPEN WALLET}, ‏{DROP WALLET}, ‏{GET CURRENCY} (‏102 דולר). אחר כך {GET CLOTHES}, ‏{GET SHOES}, ‏{GET FLASHLIGHT}. יוצאים עם {OPEN DOOR} ו-{GO DOOR}."
+   ]
+  },
+  {
+   "q": "מה יש מחוץ לחלון?",
+   "h": [
+    "החלון בדירה נפתח, ומאחוריו יש שלט גדול. כדאי לזכור מה כתוב בו.",
+    "בודקים את שלט הפרסומת. שם אחד בולט בו. השם הזה יעזור לכם הרבה יותר מאוחר, מול תהום.",
+    "{OPEN WINDOW}, ‏{GO WINDOW}, ‏{LOOK BILLBOARD}: שם אחד בולט בכותרת, והשאר דהוי. השם הוא {SEAN}. חוזרים לדירה עם {GO WINDOW}. החלון במסדרון לא נפתח, אל תתעכבו עליו."
+   ]
+  },
+  {
+   "q": "בעל הבית חוסם לי את הדרך",
+   "h": [
+    "תדברו איתו. הוא לא מרוצה מכם.",
+    "הוא רוצה את שכר הדירה, ויש לכם כסף מהארנק.",
+    "{TALK LANDLORD}: שכר הדירה באיחור. {PAY LANDLORD}: הוא מודה והולך, ואפשר לרדת ({GO DOWN}). נשארים לכם שני דולר, ואל תבזבזו אותם."
+   ]
+  },
+  {
+   "q": "איזו תיבת דואר שלי?",
+   "h": [
+    "המספר של התיבה הוא המספר של הדירה שלכם.",
+    "מסתכלים על הדלת שלכם במסדרון.",
+    "במסדרון: {LOOK DOOR} (‏{It's room 203}). למטה: {OPEN BOX}, ולשאלה {Which one?} עונים {203}. אחר כך {GET PACKAGE}, ‏{OPEN PACKAGE}: בפנים יש אולר."
+   ]
+  },
+  {
+   "q": "חבורת שודדים ברחוב",
+   "h": [
+    "השוטר לא יעזור לכם. תצטרכו להפחיד אותם בעצמכם.",
+    "החבילה מתיבת הדואר נתנה לכם משהו חד.",
+    "מהבית: {GO NORTH}, ‏{GO EAST}, ‏{GO EAST}. מול השודדים כותבים {OPEN KNIFE}: הם בורחים."
+   ]
+  },
+  {
+   "q": "לאן הולכים ברחוב?",
+   "h": [
+    "בקצה הרחוב, מאחורי השודדים, יש פחי אשפה. לפעמים יש באשפה דברים טובים.",
+    "מחטטים באשפה ומוצאים משהו נוצץ.",
+    "אחרי השודדים: {GO EAST}, ‏{LOOK GARBAGE}, ‏{GET TOKEN} (אסימון זהב). הוא ישמש אתכם ברכבת התחתית."
+   ]
+  },
+  {
+   "q": "מה עושים בפאב?",
+   "h": [
+    "השלט בכניסה דורש חולצה ונעליים. בפנים, השלט על הבר מציע שלוש בירות. בחרו את זו שמתאימה להרפתקה אירית.",
+    "מזמינים מהמוזג את הבירה בעלת השם האירי, ושותים אותה.",
+    "מהאשפה: {GO WEST}, ‏{GO WEST}, ‏{GO SOUTH}, ‏{GO SOUTH}, ‏{GO EAST}. בפנים: {READ SIGN}, ‏{TALK BARKEEP}, ‏{ORDER BEER}, ולשאלה {Which one?} עונים {O'SHAUNASEE}. אחר כך {GET BEER} ו-{DRINK BEER}. זה עולה את שני הדולרים שנשארו."
+   ]
+  },
+  {
+   "q": "איך מגיעים לרכבת התחתית?",
+   "h": [
+    "אחרי הבירה הנכונה, הרחוב שליד הפאב נראה אחרת. בדקו שוב את היציאות.",
+    "יוצאים מהפאב: עכשיו יש יציאה לדרום. משם מערבה עד התחנה. את האסימון כבר יש לכם.",
+    "{GO WEST}, ‏{GO SOUTH}, ‏{GO WEST}, ‏{GO WEST}, ‏{GO TURNSTILE}. האסימון זוהר, ואתם מגיעים ליער יפה."
+   ]
+  },
+  {
+   "q": "מה יש בבקתה?",
+   "h": [
+    "קראו את השלט שעל הקיר. זה שיר שמבטיח מתנה.",
+    "השיר אומר לנגן מנגינה כשצריך עזרה. תמצאו ביער משהו שאפשר לנגן בו. את מה שלא צריך עכשיו משאירים כאן.",
+    "מהשער: {GO WEST}, ‏{GO WEST}, ‏{GO CABIN}, ‏{READ SIGN}. משאירים בבקתה את מה שלא צריך עכשיו: {DROP KNIFE}, ‏{DROP FLASHLIGHT}, ‏{DROP TOKEN}. יוצאים עם {GO NORTH}."
+   ]
+  },
+  {
+   "q": "אי אפשר לרדת מהצוק",
+   "h": [
+    "המשחק אומר שצריך חבל. זכרו את השיר בבקתה.",
+    "ביער יש קרן של חד־קרן. נגנו בה.",
+    "מהבקתה: {GO WEST}, ‏{GO SOUTH}, ‏{GO SOUTH}, ‏{GO EAST}, ‏{GO EAST}. ‏{GET HORN}, ‏{BLOW HORN}: גמד אירי מופיע, קורץ ונעלם, ומשאיר חבל. {GET ROPE}. עם החבל אפשר לרדת מהצוק."
+   ]
+  },
+  {
+   "q": "יש אישה צעירה בשדה התלתן",
+   "h": [
+    "חשבו על שיר ישן על התגלגלות בתלתן.",
+    "הפועל הוא {ROLL}.",
+    "מהקרן: {GO EAST}, ‏{GO SOUTH}, ‏{GO WEST}, ‏{GO SOUTH}, ‏{GO EAST}, ‏{GO SOUTH}. ‏{ROLL WOMAN}: מתחתיה יש תלתן נוצץ. {GET SHAMROCK}."
+   ]
+  },
+  {
+   "q": "נחש גדול שומר על פתח המערה",
+   "h": [
+    "באירלנד מספרים שהקדוש שלה גירש את כל הנחשים. יש לכם סמל אירי.",
+    "משאירים את התלתן ליד הנחש.",
+    "חוזרים לצוק: {GO WEST}, ‏{GO NORTH}, ‏{GO EAST}, ‏{GO NORTH}, ‏{GO NORTH}, ‏{GO NORTH}, ‏{GO WEST}, ‏{GO WEST}, ‏{GO WEST}, ‏{GO SOUTH}, ‏{GO SOUTH}, ‏{GO SOUTH}, ‏{GO EAST}, ‏{GO DOWN}. על המדף: {DROP SHAMROCK}. התלתן עולה באש והנחש נעלם."
+   ]
+  },
+  {
+   "q": "מה עושים עם המוט, ולמה צריך את הפנס?",
+   "h": [
+    "מתחת למדף יש מוט ארוך. תצטרכו אותו בסוף ממש. המערה חשוכה, והפנס נשאר בבקתה.",
+    "לוקחים את המוט, מביאים אותו לבקתה, ושם מחליפים אותו בפנס. בתוך המערה יש דרך קצרה חזרה לבקתה.",
+    "{GO DOWN}, ‏{GET POLE}. חוזרים לבקתה: {GO WEST}, ‏{GO UP}, ‏{GO NORTH}, ‏{GO NORTH}, ‏{GO NORTH}, ‏{GO EAST}, ‏{GO CABIN}. ‏{GET FLASHLIGHT}, ‏{DROP POLE}. בחזרה למדף: {GO NORTH}, ‏{GO WEST}, ‏{GO SOUTH}, ‏{GO SOUTH}, ‏{GO SOUTH}, ‏{GO EAST}, ‏{GO DOWN}. את המוט אוספים אחר כך דרך דלת הסתרים (שאלה הבאה)."
+   ]
+  },
+  {
+   "q": "הלכתי לאיבוד במערה",
+   "h": [
+    "כל המעברים נראים אותו דבר. נסו דרך קצרה, וכתבו לעצמכם כל צעד.",
+    "ארבעה צעדים בלבד מובילים לחדר עם דלת בתקרה. הדלת עולה לבקתה.",
+    "{LIGHT FLASHLIGHT}, ‏{GO CAVE}, ‏{GO SOUTH}, ‏{GO EAST}, ‏{GO DOWN}, ‏{GO EAST}: דלת מופיעה בתקרה. {OPEN DOOR}, ‏{GO DOOR} (אתם בבקתה), ‏{GET POLE}, ‏{GO DOOR} (חזרה למערה)."
+   ]
+  },
+  {
+   "q": "תהום עמוקה, ואין גשר",
+   "h": [
+    "זוכרים את השלט שראיתם מהחלון בדירה?",
+    "השם שבלט בשלט הוא מילת קסם. אפשר גם לנגן שוב בקרן.",
+    "מחדר הדלת: {GO SOUTH}. ‏{BLOW HORN} (הגמד מופיע וקורץ), ואז כותבים {SEAN}: נשמע {POOF}, וגשר בדולח נמתח מעל התהום."
+   ]
+  },
+  {
+   "q": "איך מגיעים לקצה הקשת?",
+   "h": [
+    "הקשת חלקה וגבוהה. כדאי שיהיו עליכם נעליים, וגם משהו לשמור איתו על שיווי משקל.",
+    "עוברים את הגשר, עולים על הקשת עם הנעליים והמוט, ויורדים בצד השני.",
+    "{GO BRIDGE}, ‏{GO RAINBOW} (ראש הקשת), ‏{GO WEST}: סיר זהב גדול, {Congratulations!} וההרפתקה נגמרת. עברנו כשהנעליים עלינו והמוט בידיים."
+   ]
+  }
+ ],
+ "en": [
+  {
+   "q": "What do I do, and how do I talk to the game?",
+   "h": [
+    "The goal is the pot of gold at the end of the rainbow. It starts in your own flat, but first you must get dressed and get out.",
+    "Type a verb and a noun. {LOOK} alone describes the place; {LOOK} plus a thing examines it. There is no verb to wear things: just pick up the clothes.",
+    "Commands that worked for us: {LOOK BED}, {OPEN WINDOW}, {GET SHOES}. Move with {GO NORTH}, {GO DOWN}, or {GO} plus a place you see, like {GO DOOR}. When the game asks a question (like {Which one?}) answer with one word."
+   ]
+  },
+  {
+   "q": "The flat is nearly empty. Where are my clothes and shoes?",
+   "h": [
+    "Search where people leave things: under furniture, in drawers, on the clothes stand.",
+    "Look under the bed, check the dresser twice and the valet once.",
+    "{LOOK UNDER}, and to {Under what?} answer {BED}: shoes. {LOOK DRESSER} twice: a wallet and a flashlight. {LOOK VALET}: jeans and a shirt. After each find type {LOOK} to see what turned up."
+   ]
+  },
+  {
+   "q": "I have a wallet. What should I take along?",
+   "h": [
+    "Inside the wallet is something you will need as soon as you leave.",
+    "Open the wallet and take the money. Then get dressed and take the flashlight too.",
+    "{GET WALLET}, {OPEN WALLET}, {DROP WALLET}, {GET CURRENCY} ($102). Then {GET CLOTHES}, {GET SHOES}, {GET FLASHLIGHT}. Leave with {OPEN DOOR} and {GO DOOR}."
+   ]
+  },
+  {
+   "q": "What is outside the window?",
+   "h": [
+    "The window in the flat opens, and behind it is a big billboard. Remember what it says.",
+    "Look at the billboard. One name stands out. That name helps you much later, at a ravine.",
+    "{OPEN WINDOW}, {GO WINDOW}, {LOOK BILLBOARD}: one name stands out in the title, the rest is faded. The name is {SEAN}. Go back in with {GO WINDOW}. The hallway window won't open, don't waste time on it."
+   ]
+  },
+  {
+   "q": "The landlord blocks my way",
+   "h": [
+    "Talk to him. He is not happy with you.",
+    "He wants the rent, and you have the money from the wallet.",
+    "{TALK LANDLORD}: the rent is overdue. {PAY LANDLORD}: he thanks you and leaves, and you can go down ({GO DOWN}). You keep two dollars; don't waste them."
+   ]
+  },
+  {
+   "q": "Which mail box is mine?",
+   "h": [
+    "Your box has the same number as your flat.",
+    "Look at your own door in the hallway.",
+    "In the hallway: {LOOK DOOR} ({It's room 203}). Downstairs: {OPEN BOX}, and to {Which one?} answer {203}. Then {GET PACKAGE}, {OPEN PACKAGE}: a pocket knife inside."
+   ]
+  },
+  {
+   "q": "A gang of muggers on the street",
+   "h": [
+    "The police officer won't help. You must scare them off yourself.",
+    "The package from the mail box gave you something sharp.",
+    "From the house: {GO NORTH}, {GO EAST}, {GO EAST}. Facing the muggers type {OPEN KNIFE}: they run away."
+   ]
+  },
+  {
+   "q": "Where do I go on the street?",
+   "h": [
+    "At the end of the street, past the muggers, are garbage cans. Trash can hide good things.",
+    "Search the garbage and find something shiny.",
+    "Past the muggers: {GO EAST}, {LOOK GARBAGE}, {GET TOKEN} (a gold token). You will use it at the subway."
+   ]
+  },
+  {
+   "q": "What do I do in the pub?",
+   "h": [
+    "The sign outside wants a shirt and shoes. Inside, the sign on the bar offers three beers. Pick the one that suits an Irish adventure.",
+    "Order the beer with the Irish name from the barkeep and drink it.",
+    "From the garbage: {GO WEST}, {GO WEST}, {GO SOUTH}, {GO SOUTH}, {GO EAST}. Inside: {READ SIGN}, {TALK BARKEEP}, {ORDER BEER}, and to {Which one?} answer {O'SHAUNASEE}. Then {GET BEER} and {DRINK BEER}. It costs your last two dollars."
+   ]
+  },
+  {
+   "q": "How do I reach the subway?",
+   "h": [
+    "After the right beer, the street by the pub looks different. Check the exits again.",
+    "Leave the pub: now there is a way south. Then go west to the station. You already have the token.",
+    "{GO WEST}, {GO SOUTH}, {GO WEST}, {GO WEST}, {GO TURNSTILE}. The token glows and you arrive in a lovely wood."
+   ]
+  },
+  {
+   "q": "What is in the cabin?",
+   "h": [
+    "Read the sign on the wall. It is a poem that promises a gift.",
+    "The poem says to play a tune when you need help. Somewhere in the wood is something you can play. Leave what you don't need now here.",
+    "From the gate: {GO WEST}, {GO WEST}, {GO CABIN}, {READ SIGN}. Leave what you don't need yet: {DROP KNIFE}, {DROP FLASHLIGHT}, {DROP TOKEN}. Go out with {GO NORTH}."
+   ]
+  },
+  {
+   "q": "I can't get down the cliff",
+   "h": [
+    "The game says you need a rope. Remember the poem in the cabin.",
+    "There is a unicorn horn in the wood. Play it.",
+    "From the cabin: {GO WEST}, {GO SOUTH}, {GO SOUTH}, {GO EAST}, {GO EAST}. {GET HORN}, {BLOW HORN}: a leprechaun appears, winks and vanishes, leaving a rope. {GET ROPE}. With the rope you can climb down the cliff."
+   ]
+  },
+  {
+   "q": "There is a young woman in the clover field",
+   "h": [
+    "Think of an old song about rolling in the clover.",
+    "The verb is {ROLL}.",
+    "From the horn: {GO EAST}, {GO SOUTH}, {GO WEST}, {GO SOUTH}, {GO EAST}, {GO SOUTH}. {ROLL WOMAN}: a glittering shamrock was under her. {GET SHAMROCK}."
+   ]
+  },
+  {
+   "q": "A big snake guards the cave mouth",
+   "h": [
+    "In Ireland they say its saint drove out all the snakes. You carry an Irish symbol.",
+    "Leave the shamrock by the snake.",
+    "Back to the cliff: {GO WEST}, {GO NORTH}, {GO EAST}, {GO NORTH}, {GO NORTH}, {GO NORTH}, {GO WEST}, {GO WEST}, {GO WEST}, {GO SOUTH}, {GO SOUTH}, {GO SOUTH}, {GO EAST}, {GO DOWN}. On the ledge: {DROP SHAMROCK}. It bursts into flames and the snake vanishes."
+   ]
+  },
+  {
+   "q": "What about the pole, and why do I need the flashlight?",
+   "h": [
+    "Below the ledge lies a long pole. You need it at the very end. The cave is dark, and the flashlight is in the cabin.",
+    "Take the pole to the cabin and swap it for the flashlight there. Inside the cave is a short way back to the cabin.",
+    "{GO DOWN}, {GET POLE}. Back to the cabin: {GO WEST}, {GO UP}, {GO NORTH}, {GO NORTH}, {GO NORTH}, {GO EAST}, {GO CABIN}. {GET FLASHLIGHT}, {DROP POLE}. Back to the ledge: {GO NORTH}, {GO WEST}, {GO SOUTH}, {GO SOUTH}, {GO SOUTH}, {GO EAST}, {GO DOWN}. You collect the pole later through the trap door (next question)."
+   ]
+  },
+  {
+   "q": "I'm lost in the cave",
+   "h": [
+    "All the passages look alike. Try a short way and write down each step.",
+    "Just four steps lead to a room with a door in the ceiling. The door goes up into the cabin.",
+    "{LIGHT FLASHLIGHT}, {GO CAVE}, {GO SOUTH}, {GO EAST}, {GO DOWN}, {GO EAST}: a trap door appears in the ceiling. {OPEN DOOR}, {GO DOOR} (you are in the cabin), {GET POLE}, {GO DOOR} (back in the cave)."
+   ]
+  },
+  {
+   "q": "A deep ravine and no bridge",
+   "h": [
+    "Remember the billboard you saw from the flat window?",
+    "The name that stood out on it is a magic word. You can also play the horn again.",
+    "From the trap-door room: {GO SOUTH}. {BLOW HORN} (the leprechaun appears and winks), then type {SEAN}: {POOF}, and a crystal bridge spans the ravine."
+   ]
+  },
+  {
+   "q": "How do I reach the end of the rainbow?",
+   "h": [
+    "The rainbow is high and slippery. Wear your shoes, and carry something to keep your balance.",
+    "Cross the bridge, climb the rainbow with the shoes and the pole, and come down the other side.",
+    "{GO BRIDGE}, {GO RAINBOW} (the top of the arch), {GO WEST}: a large pot of gold, {Congratulations!} and the adventure is over. We crossed wearing the shoes and holding the pole."
+   ]
+  }
+ ]
+}
