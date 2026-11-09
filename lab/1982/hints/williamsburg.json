@@ -1,0 +1,309 @@
+{
+ "note": "Hints for Williamsburg Adventure in our own words. Every step was played and checked on the Dragon machine (9.11.2026), to the winning message. Each question has three levels: a small hint, a clearer hint and the full solution.",
+ "where": "Each question has \"at\": short pieces of the room name as printed after LOCATION: at the top of the screen (or of what is listed under YOU SEE:). The hint button shows the questions whose words are on the screen now.",
+ "at": [
+  [
+   "DUKE-OF-GLOUCESTER",
+   "DUKE-OF GLOUCESTER"
+  ],
+  [
+   "DUKE-OF-GLOUCESTER",
+   "GIFT SHOP",
+   "MUSIC TEACHER'S"
+  ],
+  [
+   "KING'S ARMS"
+  ],
+  [
+   "SCRIBNER'S",
+   "PLACARD"
+  ],
+  [
+   "COLLEGE OF",
+   "WILLIAM AND MARY"
+  ],
+  [
+   "MUSIC TEACHER'S"
+  ],
+  [
+   "GIFT SHOP",
+   "SILVER CROSSES"
+  ],
+  [
+   "BRUTON",
+   "EERIE ORGAN"
+  ],
+  [
+   "CEMETERY",
+   "GRAVESTONE"
+  ],
+  [
+   "IN THE CHURCH",
+   "ORGANIST"
+  ],
+  [
+   "GOVERNOR'S",
+   "MAIN GATE",
+   "PALACE GREEN"
+  ],
+  [
+   "MAIN HALL",
+   "QUEEN ANNE"
+  ],
+  [
+   "SMALL BEDROOM"
+  ],
+  [
+   "IN THE MAZE",
+   "SECRET PASSAGE"
+  ],
+  [
+   "GOLDEN HORSESHOE",
+   "IN THE MAZE"
+  ]
+ ],
+ "he": [
+  {
+   "q": "מה בכלל צריך לעשות?",
+   "h": [
+    "מחפשים את {*GOLDEN HORSESHOE*} ומביאים אותה הביתה. בכל מקום אפשר לכתוב {HELP}: המשחק נותן רמז קטן למקום שבו אתם עומדים.",
+    "המשחק מבין רק את שלוש האותיות הראשונות של כל מילה. כדאי לבחון כל דבר עם {LOOK} ושם החפץ. {LOOK} לבד מצייר שוב את המקום. מה יש לכם ביד: {INVENTORY}.",
+    "הפרסה מוסתרת במבוך שמתחת לארמון המושל. הדרך אליה: כסף קטן בטברנה, מפה בחנות הספרים, תעודת סטודנט בקולג', ספר תווים בחנות המוזיקה, צלב בחנות המתנות, מפתחות מהנגן בכנסייה, ואז הארמון."
+   ]
+  },
+  {
+   "q": "המשחק כותב {YOU CAN'T CARRY ANY MORE !}",
+   "h": [
+    "אפשר להחזיק רק שלושה חפצים בבת אחת.",
+    "משאירים חפץ שכבר עשה את שלו. התעודה צריכה רק כדי להיכנס לחנות המוזיקה, והתותח רק עד חנות המתנות.",
+    "בתוך חנות המוזיקה: {DROP ID}. בחנות המתנות: {DROP CANNON}. במבוך, לפני שלוקחים את הפרסה: {DROP KEYS}."
+   ]
+  },
+  {
+   "q": "מה עושים בטברנה? אחרי הארוחה אין יציאה, או שהטבח הורג אותי",
+   "h": [
+    "השלט על הטברנה מבטיח אוכל טוב. ברחוב נכנסים אליה עם {GO TAVERN}. מי שאוכל, צריך גם לשלם.",
+    "מתיישבים לאכול. אחר כך משלמים למלצר: יש לכם שטר של חמישים דולר, והעודף שתקבלו יועיל בהמשך. כדי לצאת צריך קודם לקום.",
+    "{GO TAVERN}, ‏{SIT DOWN}, ‏{PAY WAITER} (מקבלים {QUARTER}), ‏{EAT DINNER}, ‏{GET UP}, ‏{N}. מי שיוצא בלי לשלם נהרג מהסכין של הטבח."
+   ]
+  },
+  {
+   "q": "מה קונים ברבע דולר? ואיפה חנות הספרים?",
+   "h": [
+    "המלצר אמר בדיוק מה אפשר לקנות ברבע דולר, ואיפה.",
+    "חנות הספרים נמצאת ברחוב הראשי, בצד המערבי, ליד הקולג'. היא מופיעה שם תחת {YOU SEE}. נכנסים אליה בשם שלה.",
+    "מהטברנה: {N}, ואז {W} חמש פעמים. שם: {GO SCRIBNER'S}, ‏{BUY MAP}, ‏{LOOK MAP}. המפה מראה את הדרך במבוך. חוזרים לרחוב עם {S}."
+   ]
+  },
+  {
+   "q": "הסטודנט בקולג' לא שם לב אליי",
+   "h": [
+    "{HELP} כאן אומר לבחון דברים. מה עוד עומד בחצר?",
+    "התותח טעון, ואפשר לקחת אותו. הסטודנט שקוע בלימודים עד שמשהו רועש מפריע לו.",
+    "{GET CANNON}, ‏{SHOOT STUDENT}. הוא בורח לשיעור ומפיל משהו: {GET ID}. את התותח שומרים, הוא עוד יעזור."
+   ]
+  },
+  {
+   "q": "איך נכנסים לחנות של המורה למוזיקה?",
+   "h": [
+    "כתבו {HELP} ליד החנות.",
+    "סטודנטים נכנסים חינם. צריך משהו שמוכיח שאתם סטודנטים.",
+    "עם {STUDENT ID} ביד, ברחוב שבו כתוב {MUSIC TEACHER'S SHOP}: {GO SHOP}. בפנים: {DROP ID}, ‏{GET BOOK}, ‏{N}."
+   ]
+  },
+  {
+   "q": "השוטרים יורים בי כשאני לוקח צלב בחנות המתנות",
+   "h": [
+    "{HELP} כאן אומר: לא יתפסו אתכם אם לא יראו אתכם. מי רואה אתכם בחנות?",
+    "שניים צופים בכם: המצלמה והגברת שמשגיחה על החנות. צריך לטפל בשניהם, והתותח עדיין אצלכם.",
+    "מחנות המוזיקה: {E}, ‏{N}, ‏{N}, ‏{GO SHOP}. בפנים: {BREAK CAMERA}, ‏{SHOOT LADY}, ‏{DROP CANNON}, ‏{GET CROSS}. בלי זה: {YOU WERE CAUGHT IN THE ACT}, ומתים."
+   ]
+  },
+  {
+   "q": "שומעים נגינה בכנסייה, אבל אין דלת",
+   "h": [
+    "בחנו את המוזיקה. ובדקו מה יש ממערב לכנסייה.",
+    "ממערב יש בית קברות. הדרך לכנסייה עוברת מתחת לאדמה.",
+    "{W} לבית הקברות. משם, אחרי שהקבר נפתח (השאלה הבאה): {GO GRAVE} ואז {E} אל הכנסייה."
+   ]
+  },
+  {
+   "q": "רוח רפאים הורגת אותי ליד המצבה",
+   "h": [
+    "{HELP} כאן מזהיר מפני רוחות רעות. מה מגן מפני רוחות?",
+    "קראו את המצבה: היא רומזת שמזיזים אותה. אבל עושים את זה רק עם צלב ביד.",
+    "עם הצלב ביד: {LOOK STONE}, ‏{MOVE STONE}. הרוח נהדפת ונפתח קבר עם מדרגות: {GO GRAVE}, ‏{E}. בלי צלב: {APPEARS AND KILLS YOU}."
+   ]
+  },
+  {
+   "q": "מה רוצה נגן העוגב בכנסייה?",
+   "h": [
+    "{HELP} כאן אומר שברכה ידידותית עושה פלאים.",
+    "אמרו לו שלום, והוא יספר מה חסר לו. יש לכם את זה ביד.",
+    "{SAY HELLO}, ואז {GIVE BOOK}. בתמורה מקבלים {SET OF KEYS}."
+   ]
+  },
+  {
+   "q": "השער של ארמון המושל נעול",
+   "h": [
+    "בחנו את השער.",
+    "יש בו חור מנעול. המפתחות מהנגן מתאימים.",
+    "מהכנסייה: {W}, ‏{S}, ‏{E}, ‏{S}, ‏{E}, ‏{N}, ‏{N}. ליד השער: {OPEN GATE}, ‏{GO GATE}."
+   ]
+  },
+  {
+   "q": "האולם הראשי סגור מכל הצדדים",
+   "h": [
+    "זכרו מה היה כתוב על המצבה בבית הקברות.",
+    "על המלכה אן כתוב שהזיזו אותה כי היא מסתירה משהו. באולם עומד כיסא שלה.",
+    "{PUSH CHAIR}. הקיר המזרחי נעלם: {E}."
+   ]
+  },
+  {
+   "q": "חדר השינה הקטן הוא מבוי סתום",
+   "h": [
+    "כתבו {HELP} בחדר.",
+    "אתם עייפים מאוד, ויש כאן מיטה. לכו אליה.",
+    "{GO BED}. המיטה קורסת ונפתח מעבר סודי צפונה: {N}, ואז עוד {N} אל המבוך."
+   ]
+  },
+  {
+   "q": "אני מסתובב במבוך ולא מגיע לשום מקום",
+   "h": [
+    "במבוך כל המקומות נראים אותו דבר. הדרך כתובה על המפה מחנות הספרים.",
+    "מתחילים לספור רק כשכבר עומדים בתוך המבוך: הצעד מהמעבר הסודי אל המבוך לא נכלל. סופרים בזהירות, אחד עשר צעדים.",
+    "בתוך המבוך: {N}, ‏{E}, ‏{N}, ‏{W}, ‏{S}, ‏{S}, ‏{S}, ‏{W}, ‏{N}, ‏{N}, ‏{E}. אחרי הצעד האחרון מופיעים הפרסה ושביל."
+   ]
+  },
+  {
+   "q": "מצאתי את הפרסה. איך מביאים אותה הביתה?",
+   "h": [
+    "לא זזים מכאן לשום כיוון: כל מה שנשאר לעשות קורה במקום הזה.",
+    "צריך יד פנויה כדי לקחת את הפרסה. ואז יוצאים בשביל.",
+    "{DROP KEYS}, ‏{GET HORSESHOE}, ‏{GO PATH}. אוטובוס לוקח אתכם הביתה: {CONGRATULATIONS!!!!} ‏{YOU HAVE SOLVED THIS ADVENTURE!!}"
+   ]
+  }
+ ],
+ "en": [
+  {
+   "q": "What am I supposed to do?",
+   "h": [
+    "Find the {*GOLDEN HORSESHOE*} and bring it home. Type {HELP} anywhere: the game gives a small hint for the place you are in.",
+    "The game reads only the first three letters of each word. {LOOK} at everything by name; {LOOK} alone redraws the place; {INVENTORY} shows what you carry.",
+    "The horseshoe is in a maze under the Governor's Palace. The way there: small change at the tavern, a map at the book store, a student ID at the college, a music book at the music shop, a cross at the gift shop, keys from the organist in the church, then the palace."
+   ]
+  },
+  {
+   "q": "It says {YOU CAN'T CARRY ANY MORE !}",
+   "h": [
+    "You can hold only three things at a time.",
+    "Leave behind what has done its job. The ID is only for getting into the music shop; the cannon is only needed up to the gift shop.",
+    "Inside the music shop: {DROP ID}. In the gift shop: {DROP CANNON}. In the maze, before taking the horseshoe: {DROP KEYS}."
+   ]
+  },
+  {
+   "q": "What do I do in the tavern? After dinner there is no way out, or the chef kills me",
+   "h": [
+    "The tavern sign promises good food. From the street, {GO TAVERN}. Whoever eats must pay.",
+    "Sit down to eat, then pay the waiter: you have a fifty dollar bill, and the change helps later. To leave you must stand up first.",
+    "{GO TAVERN}, {SIT DOWN}, {PAY WAITER} (you get a {QUARTER}), {EAT DINNER}, {GET UP}, {N}. Leaving without paying gets you killed by the chef's knife."
+   ]
+  },
+  {
+   "q": "What can I buy with a quarter? Where is the book store?",
+   "h": [
+    "The waiter told you exactly what a quarter buys, and where.",
+    "The book store is on the main street, at the west end, next to the college. It shows under {YOU SEE}. Enter it by its name.",
+    "From the tavern: {N}, then {W} five times. There: {GO SCRIBNER'S}, {BUY MAP}, {LOOK MAP}. The map shows the way through the maze. Back to the street with {S}."
+   ]
+  },
+  {
+   "q": "The student at the college ignores me",
+   "h": [
+    "{HELP} here says to examine things. What else stands in the yard?",
+    "The cannon is loaded and you can carry it. The student keeps studying until something loud disturbs him.",
+    "{GET CANNON}, {SHOOT STUDENT}. He runs off to class and drops something: {GET ID}. Keep the cannon, you will need it again."
+   ]
+  },
+  {
+   "q": "How do I get into the music teacher's shop?",
+   "h": [
+    "Type {HELP} next to the shop.",
+    "Students get in free. You need something that proves you are a student.",
+    "With the {STUDENT ID} in hand, on the street that shows {MUSIC TEACHER'S SHOP}: {GO SHOP}. Inside: {DROP ID}, {GET BOOK}, {N}."
+   ]
+  },
+  {
+   "q": "The police shoot me when I take a cross in the gift shop",
+   "h": [
+    "{HELP} here says they can't get you if they don't see you. Who is watching you in the shop?",
+    "Two things watch you: the camera and the lady minding the store. Deal with both; you still have the cannon.",
+    "From the music shop: {E}, {N}, {N}, {GO SHOP}. Inside: {BREAK CAMERA}, {SHOOT LADY}, {DROP CANNON}, {GET CROSS}. Otherwise: {YOU WERE CAUGHT IN THE ACT}, and you die."
+   ]
+  },
+  {
+   "q": "I hear organ music from the church, but there is no door",
+   "h": [
+    "Look at the music. And see what lies west of the church.",
+    "West is a cemetery. The way into the church goes under the ground.",
+    "{W} to the cemetery. From there, once the grave is open (next question): {GO GRAVE}, then {E} into the church."
+   ]
+  },
+  {
+   "q": "A ghost kills me at the gravestone",
+   "h": [
+    "{HELP} here warns of evil spirits. What protects you from spirits?",
+    "Read the gravestone: it hints that it can be moved. Only do it with a cross in hand.",
+    "With the cross in hand: {LOOK STONE}, {MOVE STONE}. The ghost is held off and an open grave with stairs appears: {GO GRAVE}, {E}. Without a cross: {APPEARS AND KILLS YOU}."
+   ]
+  },
+  {
+   "q": "What does the organist want?",
+   "h": [
+    "{HELP} here says a friendly greeting works wonders.",
+    "Say hello and he tells you what he is missing. You are carrying it.",
+    "{SAY HELLO}, then {GIVE BOOK}. In return you get a {SET OF KEYS}."
+   ]
+  },
+  {
+   "q": "The gate of the Governor's Palace is locked",
+   "h": [
+    "Look at the gate.",
+    "It has a keyhole. The organist's keys fit.",
+    "From the church: {W}, {S}, {E}, {S}, {E}, {N}, {N}. At the gate: {OPEN GATE}, {GO GATE}."
+   ]
+  },
+  {
+   "q": "The main hall is closed on all sides",
+   "h": [
+    "Remember what the gravestone in the cemetery said.",
+    "It said Queen Anne was moved for hiding something. There is a Queen Anne chair in the hall.",
+    "{PUSH CHAIR}. The east wall vanishes: {E}."
+   ]
+  },
+  {
+   "q": "The small bedroom is a dead end",
+   "h": [
+    "Type {HELP} in the room.",
+    "You are very tired, and there is a bed. Go to it.",
+    "{GO BED}. The bed collapses and opens a secret passage north: {N}, then {N} again into the maze."
+   ]
+  },
+  {
+   "q": "I wander in the maze and get nowhere",
+   "h": [
+    "Every place in the maze looks the same. The way is written on the map from the book store.",
+    "Start counting only once you stand inside the maze: the step from the secret passage into it does not count. Count carefully, eleven steps.",
+    "Inside the maze: {N}, {E}, {N}, {W}, {S}, {S}, {S}, {W}, {N}, {N}, {E}. After the last step the horseshoe and a path appear."
+   ]
+  },
+  {
+   "q": "I found the horseshoe. How do I bring it home?",
+   "h": [
+    "Don't walk in any direction now: everything left to do happens right here.",
+    "You need a free hand to take the horseshoe. Then leave by the path.",
+    "{DROP KEYS}, {GET HORSESHOE}, {GO PATH}. A bus takes you home: {CONGRATULATIONS!!!!} {YOU HAVE SOLVED THIS ADVENTURE!!}"
+   ]
+  }
+ ]
+}
