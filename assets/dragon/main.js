@@ -665,10 +665,9 @@ function mount(root) {
       else if (!theater.phone) theater.enterPhone();
     };
     root.d32.toComputer = toComputer;
-    // הדף הראשי נפתח בבחירה בין המכונה לאפליקציה (גונן, 9.11). האפליקציה נפתחת לבד רק כשכבר בחרו בה:
-    // קישור עם תוכנית (#p=), קישור ישיר לאפליקציה (#app), או אפליקציה מותקנת
-    let chosen = sharedTaken || /(^#|[#&])(p=|app\b)/.test(location.hash)
-      || matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+    // הדף הראשי נפתח בבחירה בין המכונה לאפליקציה (גונן, 9.11), גם מהסמל במסך הבית. האפליקציה נפתחת לבד רק כשכבר
+    // בחרו בה: קישור עם תוכנית (#p=) או קישור ישיר לאפליקציה (#app)
+    let chosen = sharedTaken || /(^#|[#&])(p=|app\b)/.test(location.hash);
     const choose = () => { chosen = true; closeChoice(); toComputer(); };
     document.querySelector('.guide-back')?.addEventListener('click', choose);
     // מסך הבחירה: כהה, באותו סגנון של מסך הפתיחה של האפליקציה. "מדריך" סוגר אותו ומשאיר את דף המדריך

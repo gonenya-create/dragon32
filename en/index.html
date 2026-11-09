@@ -40,8 +40,8 @@
 // הדף נפתח במסך בחירה כהה: מכונת ה-Dragon או האפליקציה (גונן, 9.11). האפליקציה נפתחת רק אחרי בחירה.
 // מסתירים את הדף עד שהמחשב מוכן, כדי שלא יהבהב. אם משהו נתקע, אחרי 3 שניות הדף מופיע בכל מקרה
 document.documentElement.classList.add('d32-booting');
-// מי שכבר בחר באפליקציה (#app, קישור עם תוכנית, אפליקציה מותקנת) לא רואה את מסך הבחירה, אפילו לא לרגע
-if (/(^#|[#&])(p=|app\b)/.test(location.hash) || matchMedia('(display-mode: standalone)').matches || navigator.standalone === true) document.documentElement.classList.add('d32-skip-choose');
+// מי שכבר בחר באפליקציה (#app, קישור עם תוכנית) לא רואה את מסך הבחירה, אפילו לא לרגע. הסמל במסך הבית פותח את מסך הבחירה (גונן, 9.11)
+if (/(^#|[#&])(p=|app\b)/.test(location.hash)) document.documentElement.classList.add('d32-skip-choose');
 setTimeout(() => document.documentElement.classList.remove('d32-booting'), 3000);
 </script>
 </head>
