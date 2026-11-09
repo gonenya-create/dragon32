@@ -29,9 +29,10 @@ function list(he) {
     out += `<h3>${esc(he ? d.he : d.en)} <span class="cnt">${rows.length}</span></h3>\n<ul class="real-list">\n`;
     for (const [id, g] of rows) {
       if (kinds.get(id) === 'c' || NO.has(id)) {
-        const why = kinds.get(id) === 'c' ? (he ? 'מחסנית: היא לא עוברת בכבל קלטות.' : 'A cartridge: it can\'t go through a cassette lead.')
-          : (he ? 'צריך מפתח חומרה שהיה בקופסה המקורית.' : 'It needs a hardware key that came in the original box.');
-        out += `  <li id="${id}" class="off"><span class="rn"><bdi>${esc(L(names.get(id)) || id)}</bdi></span><span class="rm">${why}</span></li>\n`;
+        const why = kinds.get(id) === 'c' ? (he ? 'זו מחסנית, לא קלטת, אז היא לא עוברת בכבל.' : 'It\'s a cartridge, not a tape, so it can\'t go through the lead.')
+          : (he ? 'הוא צריך חלק קטן שהיה בקופסה המקורית.' : 'It needs a small part that came in the original box.');
+        const go = `<a href="${pre}${g.slug}/">${he ? 'אפשר לשחק בו כאן, במכונה שלנו ←' : 'Play it here, on our machine →'}</a>`;
+        out += `  <li id="${id}" class="off"><span class="rn"><bdi>${esc(L(names.get(id)) || id)}</bdi></span><span class="rm">${why}<br>${go}</span></li>\n`;
         continue;
       }
       const k = kinds.get(id), cmd = k === 'm' ? 'CLOADM → EXEC' : k ? 'CLOADM' : 'CLOAD → RUN';
