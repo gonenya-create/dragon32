@@ -46,11 +46,24 @@
 // הדף נפתח במסך בחירה כהה: מכונת ה-Dragon או האפליקציה (גונן, 9.11). האפליקציה נפתחת רק אחרי בחירה.
 // מסתירים את הדף עד שהמחשב מוכן, כדי שלא יהבהב. אם משהו נתקע, אחרי 3 שניות הדף מופיע בכל מקרה
 document.documentElement.classList.add('d32-booting');
+// מי שכבר בחר באפליקציה (#app, קישור עם תוכנית, אפליקציה מותקנת) לא רואה את מסך הבחירה, אפילו לא לרגע
+if (/(^#|[#&])(p=|app\b)/.test(location.hash) || matchMedia('(display-mode: standalone)').matches || navigator.standalone === true) document.documentElement.classList.add('d32-skip-choose');
 setTimeout(() => document.documentElement.classList.remove('d32-booting'), 3000);
 </script>
 </head>
 <body>
 <a class="skip-link" href="#main">דילוג לתוכן</a>
+<!-- מסך הבחירה בכניסה (גונן, 9.11): בתוך הדף עצמו, כדי שגם מנועי חיפוש יראו אותו. main.js מסתיר אותו כשכבר בחרו באפליקציה -->
+<div class="d32-choose" dir="rtl" role="dialog" aria-modal="true" aria-label="בחירת מחשב"><div class="d32-choose-in">
+<div class="d32-choose-bar"><b dir="ltr">Dragon 1982</b><span class="d32-choose-btns"><button type="button" class="d32-choose-guide"><span aria-hidden="true">📖</span> מדריך</button><a href="/en/" data-lang="en" lang="en" hreflang="en">English</a></span></div>
+<p class="d32-hello-title">ברוכים הבאים ל-1982</p>
+<p class="d32-hello-text">זה <bdi dir="ltr">Dragon 32</bdi>, המחשב הביתי שיצא בוויילס. יש כאן שני מחשבים, בוחרים אחד:</p>
+<div class="d32-choose-cards">
+<a class="d32-choose-card d32-choose-machine" href="/lab/1982/"><span class="d32-choose-name"><span aria-hidden="true">🧪</span> מכונת ה-<bdi dir="ltr">Dragon</bdi></span><span class="d32-choose-what">המחשב עצמו, כמו ב-1982. 62 משחקים מקוריים מהתקופה, ורמזים להרפתקאות.</span></a>
+<button type="button" class="d32-choose-card d32-choose-app"><span class="d32-choose-name"><span aria-hidden="true">🖥</span> האפליקציה</span><span class="d32-choose-what">הדרך הנוחה ללמוד ולתכנת. פקודות מוכנות, עוזר בעברית ומשחקים שבנינו.</span></button>
+</div>
+<nav class="d32-pages" aria-label="עוד באתר"><a href="/lessons/"><span aria-hidden="true">🎓</span> לומדים בייסיק</a><a href="/story/"><span aria-hidden="true">📜</span> יומן המסע</a><a href="/magazine/"><span aria-hidden="true">📰</span> מה קראו בעלי <bdi dir="ltr">Dragon</bdi></a><a href="/guides/"><span aria-hidden="true">💾</span> תוכנות של אז</a><a href="/adverts/"><span aria-hidden="true">📺</span> הפרסומות</a><a href="/posters/"><span aria-hidden="true">🖼️</span> פוסטרים</a><a href="/dragon-history/"><span aria-hidden="true">🐉</span> ההיסטוריה של ה-<bdi dir="ltr">Dragon</bdi></a></nav>
+</div></div>
 <div class="page">
 
 <header class="site-header">

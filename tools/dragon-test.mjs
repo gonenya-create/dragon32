@@ -1341,6 +1341,11 @@ if (part('home choice')) {
     const html = await readFile(new URL('../' + f, import.meta.url), 'utf8');
     check(f + ': its link to the app opens the app directly (#app)', /href="\/(en\/)?#app"/.test(html));
   }
+  // מסך הבחירה נמצא בתוך ה-HTML עצמו (לא רק אחרי JavaScript), כדי שמנועי חיפוש יראו אותו (המנהל העליון, 9.11)
+  for (const [f, lab] of [['index.html', '/lab/1982/'], ['en/index.html', '/en/lab/1982/']]) {
+    const html = await readFile(new URL('../' + f, import.meta.url), 'utf8');
+    check(f + ': the choice screen and both choices are in the page HTML, canonical set, no noindex', html.includes('class="d32-choose"') && html.includes('href="' + lab + '"') && html.includes('d32-choose-app') && /<link rel="canonical" href="https:\/\/dragon1982\.com\/(en\/)?">/.test(html) && !/noindex/i.test(html));
+  }
   // דפי התוכן מובילים לדף הבית (מסך הבחירה), לא למחשב אחד מהשניים
   for (const f of ['story/index.html', 'guides/index.html', 'en/guides/index.html', 'magazine/index.html', 'adverts/index.html', 'lessons/index.html']) {
     const html = await readFile(new URL('../' + f, import.meta.url), 'utf8');

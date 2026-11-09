@@ -815,3 +815,4 @@ html.d32-choosing, html.d32-choosing body { overflow: hidden; }
   .d32-choose-what { font-size: 17px; }
   .d32-choose-card { padding: 22px 20px; }
 }
+html.d32-skip-choose .d32-choose { display: none; }

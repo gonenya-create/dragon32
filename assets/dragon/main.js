@@ -5,7 +5,7 @@ import { createSound } from './sound.js';
 import { createGfx } from './gfx.js';
 import { createCartRunner } from './cart.js';
 import { loadTable, loadWorld, worldTables } from './hof.js';
-import { createTheater, pagesRow } from './theater.js';
+import { createTheater } from './theater.js';
 import { createHelper } from './helper.js';
 import { createAI } from './ai.js';
 import { tr, EN } from './lang.js';
@@ -679,30 +679,11 @@ function mount(root) {
       document.documentElement.classList.remove('d32-choosing');
       document.querySelector('.page')?.removeAttribute('inert');
     }
-    if (!chosen) {
-      pick = document.createElement('div');
-      pick.className = 'd32-choose';
-      pick.dir = tr('rtl', 'ltr');
-      pick.setAttribute('role', 'dialog');
-      pick.setAttribute('aria-modal', 'true');
-      pick.setAttribute('aria-label', tr('בחירת מחשב', 'Choose a computer'));
-      pick.innerHTML = '<div class="d32-choose-in">'
-        + '<div class="d32-choose-bar"><b dir="ltr">Dragon 1982</b><span class="d32-choose-btns">'
-        + '<button type="button" class="d32-choose-guide"><span aria-hidden="true">📖</span> ' + tr('מדריך', 'Guide') + '</button>'
-        + (EN ? '<a href="/" data-lang="he" lang="he" hreflang="he">עברית</a>' : '<a href="/en/" data-lang="en" lang="en" hreflang="en">English</a>')
-        + '</span></div>'
-        + '<p class="d32-hello-title">' + tr('ברוכים הבאים ל-1982', 'Welcome to 1982') + '</p>'
-        + '<p class="d32-hello-text">' + tr('זה <bdi dir="ltr">Dragon 32</bdi>, המחשב הביתי שיצא בוויילס. יש כאן שני מחשבים, בוחרים אחד:', 'This is the <bdi dir="ltr">Dragon 32</bdi>, the home computer from Wales. There are two computers here. Pick one:') + '</p>'
-        + '<div class="d32-choose-cards">'
-        + '<a class="d32-choose-card d32-choose-machine" href="' + (EN ? '/en/lab/1982/' : '/lab/1982/') + '"><span class="d32-choose-name"><span aria-hidden="true">🧪</span> ' + tr('מכונת ה-<bdi dir="ltr">Dragon</bdi>', 'The <bdi dir="ltr">Dragon</bdi> machine') + '</span>'
-        + '<span class="d32-choose-what">' + tr('המחשב עצמו, כמו ב-1982. 62 משחקים מקוריים מהתקופה, ורמזים להרפתקאות.', 'The computer itself, as in 1982. 62 original games from the time, and hints for the adventures.') + '</span></a>'
-        + '<button type="button" class="d32-choose-card d32-choose-app"><span class="d32-choose-name"><span aria-hidden="true">🖥</span> ' + tr('האפליקציה', 'The app') + '</span>'
-        + '<span class="d32-choose-what">' + tr('הדרך הנוחה ללמוד ולתכנת. פקודות מוכנות, עוזר בעברית ומשחקים שבנינו.', 'The easy way to learn and program. Ready-made commands, a helper and games we made.') + '</span></button>'
-        + '</div></div>';
-      pick.firstChild.appendChild(pagesRow());
+    pick = document.querySelector('.d32-choose');
+    if (pick && chosen) closeChoice();
+    else if (pick) {
       pick.querySelector('.d32-choose-app').addEventListener('click', choose);
       pick.querySelector('.d32-choose-guide').addEventListener('click', closeChoice);
-      document.body.appendChild(pick);
       document.documentElement.classList.add('d32-choosing');
       document.querySelector('.page')?.setAttribute('inert', '');
     }
