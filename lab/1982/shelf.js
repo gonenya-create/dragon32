@@ -227,10 +227,12 @@
       ['Owen Stenseth · freeware, 1987', '/lab/1982/tapes/brickout-license.txt', 'https://github.com/digitalbytes/super-brickout', null, 'mit']]
   ];
   // משחקים שצריכים ג'ויסטיק: כשהקלטת נטענת, החיצים במקלדת הופכים לג'ויסטיק הימני ו-Alt (Option במק) לכפתור שלו
-  const JOY = new Set(['teatime', 'vultures', 'maurice', 'crusader', 'droids', 'starman', 'wizlair', 'chameleon', 'downland', 'king', 'buzzard', 'cavehunter', 'nerble', 'ranger', 'devil', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian', 'alcatraz', 'cricket', 'digit', 'snaker']);
+  const JOY = new Set(['teatime', 'vultures', 'maurice', 'crusader', 'droids', 'starman', 'wizlair', 'chameleon', 'downland', 'king', 'buzzard', 'cavehunter', 'nerble', 'ranger', 'devil', 'dungeon', 'athletyx', 'cuthbert', 'grabber', 'draconian', 'alcatraz', 'cricket', 'digit', 'snaker', 'ninja']);
   // ב-Cricket החובט משתמש בג'ויסטיק השמאלי והמגיש בימני (המדריך של Peaksoft): החיצים מזיזים את שניהם יחד.
   // ב-Snaker הימני מכוון (JOYSTK(0)) והשמאלי קובע מהירות (JOYSTK(3)): למעלה מהר, למטה לאט
-  const BOTH = new Set(['cricket', 'snaker']);
+  // ב-Ninja Warrior (גונן, 9.11: באייפון לא קופץ ולא בועט): בלי [K] המשחק נשאר במצב ג'ויסטיק וקורא את הג'ויסטיק השמאלי
+  // (למעלה קפיצה, כפתור בעיטה, ימינה ושמאלה הליכה), אז בשני השקעים. [K] עדיין עובר למקלדת
+  const BOTH = new Set(['cricket', 'snaker', 'ninja']);
   function setJoy(on, both) {
     paddle = false; padDir = 0;
     try { Module.ccall('wasm_set_joystick_by_name', null, ['number', 'string'], [0, on ? 'kjoy0' : '']); } catch (e) {}
@@ -1000,12 +1002,14 @@
     ninja: {
       he: ['לוחם נינג\'ה בדרך: סלעים מתגלגלים אליו, ובהמשך גם כדורי אש, חיצים ונינג\'ות אחרים. בועטים בסלעים כדי לשבור אותם, וקופצים מעל בורות ומכשולים.',
         'כל שלב הוא חגורה בצבע אחר, מהחגורה הלבנה והלאה, וכל אחד קשה יותר מהקודם. עד שישה שחקנים, בתורות.',
-        'במסך הפתיחה לוחצים מקש. כתוב JOYSTICK CONTROL SET: לוחצים [K] כדי לשחק במקלדת, ואחר כך את מספר השחקנים, [1] עד [6]. בטלפון: [K] הוא הידית למעלה, ואת המספר לוחצים במקלדת המצוירת. בלי המספר המשחק מחכה.',
-        'במקלדת: [K] קופצים, [O] בועטים, [N] מתקדמים ו-[M] נסוגים. העצה מהעטיפה: הכי הרבה נקודות מקבלים על בעיטה בסלעים, והתזמון הוא הכול.'],
+        'במסך הפתיחה לוחצים מקש. כתוב JOYSTICK CONTROL SET: לוחצים את מספר השחקנים, [1] עד [6], ומשחקים בג\'ויסטיק. מי שרוצה מקלדת לוחץ קודם [K]. בלי המספר המשחק מחכה, ואם לא קרה כלום לוחצים עליו שוב.',
+        'בג\'ויסטיק: למעלה קופצים, הכפתור בועט, ימינה מתקדמים ושמאלה נסוגים. במחשב החיצים הם הג\'ויסטיק, ו-Alt או רווח הכפתור. בטלפון: הידית והכפתור שבלוח, ואת המספר לוחצים במקלדת המצוירת.',
+        'במקלדת (אחרי [K]): [K] קופצים, [O] בועטים, [N] מתקדמים ו-[M] נסוגים. העצה מהעטיפה: הכי הרבה נקודות מקבלים על בעיטה בסלעים, והתזמון הוא הכול.'],
       en: ['A ninja on the road: rocks roll towards him, and later fireballs, arrows and other ninjas. Kick the rocks to break them, and jump over holes and obstacles.',
         'Each level is a belt of another colour, from the white belt up, each harder than the last. Up to six players, taking turns.',
-        'On the title screen press a key. It says JOYSTICK CONTROL SET: press [K] to play on the keyboard, then the number of players, [1] to [6]. On a phone: [K] is the stick pushed up, and the number is on the drawn keyboard. Without the number the game waits.',
-        'On the keyboard: [K] jumps, [O] kicks, [N] advances and [M] retreats. The inlay\'s advice: kicking the rocks scores most, and timing is everything.']
+        'On the title screen press a key. It says JOYSTICK CONTROL SET: press the number of players, [1] to [6], and play with the joystick. For the keyboard, press [K] first. Without the number the game waits; if nothing happens, press it again.',
+        'Joystick: up jumps, the button kicks, right advances and left retreats. On a computer the arrows are the joystick and Alt or Space the button. On a phone: the pad\'s stick and button, and the number is on the drawn keyboard.',
+        'Keyboard (after [K]): [K] jumps, [O] kicks, [N] advances and [M] retreats. The inlay\'s advice: kicking the rocks scores most, and timing is everything.']
     },
     // נבדק במכונה (7.11): הטעינה, מסך הפתיחה, הדירה, ‏SCORE,‏ SAVE GAME ו-LOAD GAME. העלילה לפי האתר של L. Curtis Boyle, הפקודות כמו בשאר הסדרה
     shenan: {
@@ -1336,7 +1340,7 @@
     cricket: ['מופיע מסך הפתיחה של Cricket, והמשחק ממשיך לטעון ולהתכונן עוד כמה דקות. אחר כך עונים על השאלות במקלדת.', 'The Cricket title screen appears, and the game goes on loading and preparing for a few minutes. Then answer the questions on the keyboard.'],
     tangle: ['כשמופיע OK מקלידים {EXEC}. אחרי מסך הפתיחה לוחצים [1] למשחק חדש.', 'When OK appears type {EXEC}. After the title screen press [1] for a new game.'],
     chameleon: ['הטעינה מתחילה לבד. ל-SELECT 1 OR 2 PLAYERS לוחצים [1], ול-SELECT LEVEL מספר מ-[1] עד [4].', 'The game starts by itself. At SELECT 1 OR 2 PLAYERS press [1], and at SELECT LEVEL a number from [1] to [4].'],
-    ninja: ['כשמופיע OK מקלידים {EXEC}. במסך הפתיחה לוחצים מקש, אחר כך [K] (מקלדת) ו-[1] לשחקן אחד.', 'When OK appears type {EXEC}. On the title screen press a key, then [K] (keyboard) and [1] for one player.'],
+    ninja: ['כשמופיע OK מקלידים {EXEC}. במסך הפתיחה לוחצים מקש, ואחר כך [1] לשחקן אחד (ג\'ויסטיק), או [K] ואז [1] למקלדת.', 'When OK appears type {EXEC}. On the title screen press a key, then [1] for one player (joystick), or [K] then [1] for the keyboard.'],
     shenan: ['כשמופיע OK מקלידים {EXEC}. במסך הפתיחה של Mark Data Products לוחצים מקש.', 'When OK appears type {EXEC}. On the Mark Data Products title screen press a key.'],
     seasearch: ['כשמופיע OK מקלידים {EXEC}. מסך הפתיחה מצטייר לאט: מחכים לו, לוחצים מקש ואחר כך [ENTER].', 'When OK appears type {EXEC}. The title screen draws slowly: wait for it, press a key, then [ENTER].'],
     trekboer: ['המשחק מתחיל לבד בסוף הטעינה. במסך הפתיחה לוחצים מקש.', 'The game starts by itself when loading ends. On the title screen press a key.'],
@@ -1404,7 +1408,7 @@
     cricket: ['משחק קריקט של 40 אוברים: מגישים, חובטים ורצים. נגד המחשב או בשניים. בג\'ויסטיק.', 'A 40-over cricket match: bowl, bat and run. Against the computer or for two. Joystick.'],
     tangle: ['הרפתקה ביער עם חמש דמויות: עוצרים את Schark לפני שהוא כורת את היער. בחיצים ובפקודות.', 'A woodland adventure with five characters: stop Schark before he cuts down the woods. Arrows and typed commands.'],
     chameleon: ['חללית שמחליפה צבע תופסת פצצות של חומר ושל אנטי-חומר לפני שהן נוחתות. בג\'ויסטיק.', 'A colour-changing ship catches bombs of matter and anti-matter before they land. Joystick.'],
-    ninja: ['לוחם נינג\'ה בועט בסלעים וקופץ מעל בורות, כדורי אש וחיצים, חגורה אחרי חגורה. במקלדת.', 'A ninja kicks rocks and jumps holes, fireballs and arrows, belt after belt. Keyboard.'],
+    ninja: ['לוחם נינג\'ה בועט בסלעים וקופץ מעל בורות, כדורי אש וחיצים, חגורה אחרי חגורה. ג\'ויסטיק או מקלדת.', 'A ninja kicks rocks and jumps holes, fireballs and arrows, belt after belt. Joystick or keyboard.'],
     shenan: ['הרפתקה מצחיקה עם תמונות: מחפשים את סיר הזהב שבקצה הקשת. בפקודות באנגלית.', 'A funny adventure with pictures: find the pot of gold at the end of the rainbow. English commands.'],
     seasearch: ['הרפתקה עם תמונות ליד הים ומתחתיו: אוצרים, מפלים וכרישים. בפקודות באנגלית.', 'An adventure with pictures by and under the sea: treasures, waterfalls and sharks. English commands.'],
     trekboer: ['הרפתקה עם תמונות בחלל: מחפשים תרופה לווירוס שמאיים על כדור הארץ. בפקודות באנגלית.', 'An adventure with pictures in space: find a cure for a virus that threatens Earth. English commands.'],

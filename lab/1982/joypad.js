@@ -49,7 +49,7 @@
     // משחקי פעולה במקלדת: הלוח שולח את המקשים מתיבת "איך משחקים"
     bonka: { dir: ARROWS, fire: 'space', label: ['רווח', 'SPACE'] },
     mchess: { dir: ARROWS, fire: 'enter', label: ['ENTER', 'ENTER'] },   // Chess: חיצים לסמן ו-ENTER לבחירה. שאר המקשים ([L], ‏[P], ‏[D]...) במקלדת המצוירת
-    ninja: { dir: { up: 'K', down: 'K', left: 'M', right: 'N' }, fire: 'O', label: ['בעיטה', 'KICK'] },   // [K] קפיצה, [N] קדימה, [M] אחורה, [O] בעיטה
+    ninja: { dir: ARROWS, fire: 'alt', label: ['בעיטה', 'KICK'] },   // מצב ג'ויסטיק של המשחק (בלי [K]): למעלה קפיצה, כפתור בעיטה (גונן, 9.11)
     sas: { dir: ARROWS, fire: 'G', label: ['רימון', 'GRENADE'] },   // [F] (טיל) נשאר במקלדת
     mine: { dir: ARROWS, fire: 'space', label: ['רווח', 'SPACE'] }   // קלטת שלי בשפת מכונה (shelf.js). עם המתג דלוק, הכפתור שולח את כפתור הג'ויסטיק
   };
