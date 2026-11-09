@@ -1080,7 +1080,7 @@ if (part('full computer /dragon/app/ (theater, coder, AI)')) {
   check('on a computer, all four pages (lessons, journey, magazine, history) are visible under the helper', (await Promise.all(['/lessons/', '/story/', '/magazine/', '/dragon-history/'].map(h => p.locator(`.d32-pages-side a[href="${h}"]`).isVisible()))).every(Boolean));
   check('toolbox has 3 tabs on a computer; the tapes are in the shelf tab', (await p.locator('.d32-tab:visible').count()) === 3 && (await p.locator('.d32-pane[data-pane="shelf"] .d32-tape').count()) >= 6);
   await p.locator('.d32-tab[data-tab="shelf"]').click(); await openDrawers(p);
-  check('on a computer too, the shelf tab says how the Dragon machine differs from the app', await p.locator('.d32-pane[data-pane="shelf"] .d32-lab-shelf').isVisible() && /הכי קרוב למחשב המקורי/.test(await p.locator('.d32-pane[data-pane="shelf"] .d32-lab-shelf').textContent()));
+  check('on a computer too, the shelf tab says how the Dragon machine differs from the app', await p.locator('.d32-pane[data-pane="shelf"] .d32-lab-shelf').isVisible() && /למכונת ה-Dragon/.test(await p.locator('.d32-pane[data-pane="shelf"] .d32-lab-shelf').textContent()));
   await p.locator('.d32-tab[data-tab="program"]').click();
   const tvBefore = await p.locator('.d32-tv').evaluate(e => e.getBoundingClientRect().width);
   await p.locator('.d32-theater-kbd').click();
@@ -1337,9 +1337,14 @@ if (part('home choice')) {
     check(name + ': "guide" closes the choice and shows the guide page', !(await p.locator('.d32-choose').count()) && !(await open()) && await p.locator('.hero h1').isVisible());
     await ctx.close();
   }
-  for (const f of ['lab/1982/index.html', 'en/lab/1982/index.html', 'guides/index.html', 'en/guides/index.html']) {
+  for (const f of ['lab/1982/index.html', 'en/lab/1982/index.html', 'lab/1982/the-count/index.html']) {
     const html = await readFile(new URL('../' + f, import.meta.url), 'utf8');
-    check(f + ': its link back to the app opens the app directly (#app)', /href="\/(en\/)?#app"/.test(html));
+    check(f + ': its link to the app opens the app directly (#app)', /href="\/(en\/)?#app"/.test(html));
+  }
+  // דפי התוכן מובילים לדף הבית (מסך הבחירה), לא למחשב אחד מהשניים
+  for (const f of ['story/index.html', 'guides/index.html', 'en/guides/index.html', 'magazine/index.html', 'adverts/index.html', 'lessons/index.html']) {
+    const html = await readFile(new URL('../' + f, import.meta.url), 'utf8');
+    check(f + ': "home" goes to the choice screen, no "back to the computer" left', /href="\/(en\/)?">← (לדף הבית|Home)</.test(html) && !/חזרה למחשב|Back to the computer/.test(html));
   }
 }
 
@@ -1765,8 +1770,8 @@ if (part('real machine lab')) {
     await p.waitForTimeout(3500);
     check(`${path} loads with the drawn keyboard`, r.status() === 200 && (await p.locator('.kbd .k').count()) > 50 && errs.length === 0, errs.join(' | '));
     check(`${path} has the tape shelf (72 tapes: 7 BASIC, Dragon Eggs, Blockdown, DragonTet, Escape, Invaders Revenge, El Diablero, Phantom Slayer, Danger Ranger, Cuthbert in the Jungle, Devil Assault, Starship Chameleon, Dungeon Raid, Athletyx, Alcatraz II, Grabber, Draconian, Hang It!, Death's Head Hole, Champions!, Lionheart, SAS, Ninja Warrior, Tim Love's Cricket, Tea Time, Williamsburg Adventure, Bonka, Vultures, Maurice Minor, Chess, Crusader, Droids, River of Fire, Starman Jones, The Sword and the Sorcerer, The Wizard's Lair, Shenanigans, Sea Search, Trekboer, The Vortex Factor, The King, Downland, Buzzard Bait, Nerble Force, Black Sanctum, Calixto Island, Cave Hunter, Star Spores, Tanglewood, Dig-It, Dungeons of Daggorath, Snaker, Brickout, Adventureland, Pirate Adventure, Secret Mission, Voodoo Castle, The Count, and Scott Adams' adventures 6–13)`, (await p.locator('#tapes .tape.row').count()) === 72);
-    check(`${path} everything starts closed: the cabinet drawers, "first try", "what works", "how to edit a line" and the mic box\'s "how does it work?", with no memory of what was opened last time`, await p.evaluate(() =>
-      [...document.querySelectorAll('#tapes details.drawer, .info details, details.how')].every(d => !d.open) && document.querySelectorAll('.info > details').length === 3 && document.querySelectorAll('.info .realtape details.rt-how').length === 1
+    check(`${path} everything starts closed: the cabinet drawers, "what is this machine?", "first try", "what works", "how to edit a line" and the mic box\'s "how does it work?", with no memory of what was opened last time`, await p.evaluate(() =>
+      [...document.querySelectorAll('#tapes details.drawer, .info details, details.how')].every(d => !d.open) && document.querySelectorAll('.info > details').length === 4 && document.querySelectorAll('.info .realtape details.rt-how').length === 1
       && /PRINT 2\+3/.test(document.querySelector('.info details.try')?.textContent || '') && ![...document.querySelectorAll('.info > p.note')].some(e => /PRINT 2\+3/.test(e.textContent))
       && localStorage.getItem('d32-lab-drawers') === null));
     check(`${path} "type it in" drawer: 7 magazine pages (1983–85); a page opens beside the machine (scan from archive.org, credit) and closes`, await p.evaluate(async () => {
@@ -1874,7 +1879,7 @@ if (part('real machine lab')) {
       /SELECT LEVEL/.test(steps.at(-1) || '') && /(אדום|red button)/.test(hint[0]) && hint[1], JSON.stringify([steps.at(-1), hint]));
     await direct.close();
     const b = await p.request.get(base.replace(/\/$/, '') + path + 'building/');
-    check(`${path} links to "what we are building now", which loads`, b.status() === 200 && (await p.locator('main > p.note a[href="./building/"]').count()) === 1);
+    check(`${path} links to "what we are building now", which loads`, b.status() === 200 && (await p.locator('#about a[href="./building/"]').count()) === 1);
     await p.click('#full-open');
     await p.waitForTimeout(300);
     check(`${path} full screen: only the computer and keyboard, nothing to scroll`, await p.evaluate(() =>

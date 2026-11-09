@@ -172,10 +172,10 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
   <button type="button" id="full-open">📺 מסך מלא</button>
   <a href="https://github.com/gonenya-create/dragon32" class="gh">קוד פתוח ב-<span dir="ltr">GitHub</span></a>
   <a href="/en/lab/1982/star-spores/" lang="en" hreflang="en" data-lang="en">English</a>
-  <a href="/#app">← חזרה לאפליקציה</a>
+  <a href="/#app">🖥 לאפליקציה</a>
 </header>
 <main>
-  <p class="note"><strong>שני מחשבים:</strong> כאן, במכונה, הכי קרוב למחשב המקורי. ללמוד ולכתוב BASIC בנוחות, עם משחקים ועוזר: <a href="/#app">באפליקציה</a>.<br>זו <strong>מכונת ה-Dragon</strong>: השבבים של ה-Dragon 32 (המעבד 6809, הזיכרון והמסך), עם <strong>BASIC שכתבנו בעצמנו</strong>, בלי ה-ROM המקורי. <strong>היא עוד בבנייה:</strong> ה-BASIC מתנהג כמו המקורי בכל מה שבדקנו, והשגרות שתוכנות בשפת מכונה מ-1982 קראו להן יושבות עכשיו באותן כתובות כמו במקור. משחקים מקוריים מאותה תקופה, של Ken Kalish, ‏Scott Adams, ‏Mike Hughey, ‏Tim Love, ‏Harry Whitehouse, ‏Ian Murray-Watson, ‏Rolf Michelsen, ‏Douglas J. Morgan, ‏Gary Ritchie ו-Owen Stenseth, כבר רצים עליה בלי שום שינוי בתוכנה שלהם. עוד לא השווינו אותה מול Dragon אמיתי. <a href="/lab/1982/building/">מה אנחנו בונים עכשיו</a>. לוחצים על המסך ומקלידים, או משתמשים במקלדת שלמטה.</p>
+  <p class="note">המחשב עצמו, כמו ב-1982. לוחצים על המסך ומקלידים, או בוחרים משחק מהארון. <a href="#about">מה זו המכונה?</a></p>
   <div class="machine">
   <div class="tv"><canvas id="canvas" tabindex="0" oncontextmenu="event.preventDefault()" aria-label="מסך המחשב"></canvas></div>
   <div class="kbd" id="kbd" aria-label="מקלדת Dragon 32"></div>
@@ -204,6 +204,9 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
     </div>
   </section>
   <div class="info">
+  <details class="note" id="about"><summary><strong>מה זו המכונה?</strong></summary>
+    <p>זו <strong>מכונת ה-Dragon</strong>: השבבים של ה-Dragon 32 (המעבד 6809, הזיכרון והמסך), עם <strong>BASIC שכתבנו בעצמנו</strong>, בלי ה-ROM המקורי. <strong>היא עוד בבנייה:</strong> ה-BASIC מתנהג כמו המקורי בכל מה שבדקנו, והשגרות שתוכנות בשפת מכונה מ-1982 קראו להן יושבות עכשיו באותן כתובות כמו במקור. משחקים מקוריים מאותה תקופה, של Ken Kalish, ‏Scott Adams, ‏Mike Hughey, ‏Tim Love, ‏Harry Whitehouse, ‏Ian Murray-Watson, ‏Rolf Michelsen, ‏Douglas J. Morgan, ‏Gary Ritchie ו-Owen Stenseth, כבר רצים עליה בלי שום שינוי בתוכנה שלהם. עוד לא השווינו אותה מול Dragon אמיתי. <a href="/lab/1982/building/">מה אנחנו בונים עכשיו</a>.</p>
+  </details>
   <details class="note try"><summary><strong>ניסיון ראשון: מקלידים בעצמנו</strong></summary>
     <p>בלי קלטת, המכונה מחכה לכם. מקלידים <code dir="ltr">PRINT 2+3</code> ו-<code dir="ltr">ENTER</code>, והיא עונה 5. או תוכנית קטנה: <code dir="ltr">10 FOR I=1 TO 10:PRINT I*I:NEXT</code>, ואחריה <code dir="ltr">RUN</code>. עצירה: <code dir="ltr">BREAK</code>.</p>
   </details>

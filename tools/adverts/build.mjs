@@ -35,7 +35,7 @@ const T = {
     translation: '📄 התרגום המלא של הפרסומת', original: 'במקור',
     credit: { scan: 'סריקה: <bdi>Dan</bdi> מ-<bdi>Retro Collective</bdi>, דרך <bdi>Dragon Data Archive</bdi>', archive: 'מתוך העותק של <bdi>Dragon Data Archive</bdi>', ia: 'מתוך <bdi>Dragon Data Archive</bdi> (המקור שם: <bdi>Internet Archive</bdi>)' },
     more: 'עוד מהתקופה:', mag: ['/magazine/', 'מה קראו בעלי <bdi>Dragon</bdi>'], typein: ['/lab/1982/', 'הקלד בעצמך (במכונה)'],
-    nav: [['/story/', 'יומן המסע'], ['/#app', '← חזרה למחשב']], navLabel: 'ניווט', pager: 'פרסומות קודמות והבאות',
+    nav: [['/story/', 'יומן המסע'], ['/', '← לדף הבית']], navLabel: 'ניווט', pager: 'פרסומות קודמות והבאות',
     img: n => `עמוד ${n} של הפרסומת`, page: 'הפרסומות של Dragon Data — Dragon 1982',
     desc: 'פרסומות, חוברות ומחירונים מקוריים של Dragon Data מתחילת שנות ה-80, עם תקציר ותרגום מלא לעברית.'
   },
@@ -50,7 +50,7 @@ const T = {
     tryIt: 'Try the computer from the ad →', tryHref: '/en/lab/1982/', source: 'Original in the archive →',
     credit: { scan: 'Scan: Dan at the Retro Collective, via the Dragon Data Archive', archive: "From the Dragon Data Archive's own copy", ia: 'From the Dragon Data Archive (source there: Internet Archive)' },
     more: 'More from the time:', mag: ['/en/magazine/', 'What Dragon Owners Were Reading'], typein: ['/en/lab/1982/', 'Type it in (on the machine)'],
-    nav: [['/en/story/', 'The journey'], ['/en/#app', '← Back to the computer']], navLabel: 'Navigation', pager: 'Previous and next adverts',
+    nav: [['/en/story/', 'The journey'], ['/en/', '← Home']], navLabel: 'Navigation', pager: 'Previous and next adverts',
     img: n => `Page ${n} of the advert`, page: 'Dragon Data adverts — Dragon 1982',
     desc: 'Original Dragon Data adverts, brochures and price lists from the early 1980s.'
   }

@@ -2659,3 +2659,9 @@ body.game-open .shelf > :not(.game-view) { display: none; }
     else textTape('PROGRAM', text);
   }
 })();
+
+// "מה זו המכונה?" בראש הדף: פותח את ההסבר המלא שמקופל למטה (גונן, 9.11)
+document.querySelectorAll('a[href="#about"]').forEach(a => a.addEventListener('click', () => {
+  const d = document.getElementById('about');
+  if (d) d.open = true;
+}));

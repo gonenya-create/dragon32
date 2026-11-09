@@ -20,10 +20,9 @@ const SEND = { BREAK: 'Escape', ENTER: 'Enter', UP: 'ArrowUp', DOWN: 'ArrowDown'
 // מקש במקלדת האמיתית → המקש המצויר שנדלק
 const FROM_KEY = { Escape: 'BREAK', Enter: 'ENTER', ArrowUp: 'UP', ArrowDown: 'DOWN', ArrowLeft: 'LEFT', Backspace: 'LEFT', ArrowRight: 'RIGHT', ' ': 'SPACE', Shift: 'SHIFT', Home: 'CLEAR' };
 
-// הכניסה למכונת ה-Dragon: ההבדל בין שני המחשבים כבר בקישור (דוח "אינסטינקט", 23.10)
-const labText = () => '<span aria-hidden="true">🧪</span> <strong>' + tr('מכונת ה-<bdi dir="ltr">Dragon</bdi>', 'The <bdi dir="ltr">Dragon</bdi> machine') + '</strong>: '
-  + tr('הכי קרוב למחשב המקורי. בבנייה: 62 משחקים מקוריים מהתקופה, של <bdi dir="ltr">Ken Kalish</bdi>, <bdi dir="ltr">Scott Adams</bdi>, <bdi dir="ltr">Mike Hughey</bdi> ועוד, כבר רצים עליה בלי שינוי בקוד שלהם, באישור המחברים. עוד לא השווינו אותה מול <bdi dir="ltr">Dragon</bdi> אמיתי. כאן באפליקציה לומדים וכותבים <bdi dir="ltr">BASIC</bdi> בנוחות.',
-    'as close to the original computer as we can get. Being built: 62 original games from the period, by Ken Kalish, Scott Adams, Mike Hughey and others, already run on it without any change to their code, with their authors’ permission. It has not yet been compared with a real <bdi dir="ltr">Dragon</bdi>. Here in the app you learn and write <bdi dir="ltr">BASIC</bdi> the easy way.');
+// הכניסה למכונת ה-Dragon: שורה אחת. ההבדל בין שני המחשבים כבר הוסבר במסך הבחירה בכניסה לאתר (גונן, 9.11)
+const labText = () => '<span aria-hidden="true">🧪</span> <strong>' + tr('למכונת ה-<bdi dir="ltr">Dragon</bdi>', 'To the <bdi dir="ltr">Dragon</bdi> machine') + '</strong>'
+  + tr(': המחשב עצמו, כמו ב-1982', ': the computer itself, as in 1982');
 // הדפים "יומן המסע" ו"ההיסטוריה של ה-Dragon": שורת קישורים שרואים בטלפון (במסך הפתיחה ובלשונית "מדף")
 export const pagesRow = () => {
   const row = document.createElement('nav');
@@ -547,8 +546,9 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   // מסך הפתיחה בטלפון: כמה מילים מעל המחשב הכבוי, כדי שלא יהיה רק מסך שחור (גונן, 17.10)
   const hello = document.createElement('div');
   hello.className = 'd32-hello';
-  hello.innerHTML = '<p class="d32-hello-title">' + tr('ברוכים הבאים ל-1982', 'Welcome to 1982') + '</p>'
-    + '<p class="d32-hello-text">' + tr('זה <bdi dir="ltr">Dragon 32</bdi>, המחשב הביתי שיצא בוויילס. משחקים במחסניות ובקלטות, כותבים <bdi dir="ltr">BASIC</bdi>, ושואלים את העוזר.', 'This is the <bdi dir="ltr">Dragon 32</bdi>, the home computer from Wales. Play cartridges and tapes, write <bdi dir="ltr">BASIC</bdi>, and ask the helper.') + '</p>'
+  // אחרי מסך הבחירה: כותרת קצרה בלבד, בלי לחזור על ההסבר (גונן, 9.11)
+  hello.innerHTML = '<p class="d32-hello-title"><span aria-hidden="true">🖥</span> ' + tr('האפליקציה', 'The app') + '</p>'
+    + '<p class="d32-hello-text">' + tr('משחקים במחסניות ובקלטות, כותבים <bdi dir="ltr">BASIC</bdi>, ושואלים את העוזר.', 'Play cartridges and tapes, write <bdi dir="ltr">BASIC</bdi>, and ask the helper.') + '</p>'
     + '<p class="d32-hello-go">' + tr('לוחצים על המתג, ומתחילים ↓', 'Press the switch to start ↓') + '</p>';
   tv.before(hello);
   // ובטלפון, מתחת למחשב הכבוי: הדרך למכונת ה-Dragon (גונן, 21.10)
