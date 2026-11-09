@@ -1362,10 +1362,10 @@ if (part('real dragon sound')) {
   const root = base.replace(/\/$/, '');
   for (const [path, n] of [['/lab/1982/real-dragon/', 'he'], ['/en/lab/1982/real-dragon/', 'en']]) {
     await p.goto(root + path); await p.waitForTimeout(800);
-    const r = await p.evaluate(() => ({ rows: document.querySelectorAll('.real-list li').length, machine: !!document.querySelector('canvas'),
+    const r = await p.evaluate(() => ({ rows: document.querySelectorAll('.real-list li:not(.off)').length, off: [...document.querySelectorAll('.real-list li.off')].map(x => x.id).sort().join(), machine: !!document.querySelector('canvas'),
       count: [...document.querySelectorAll('#count .rb > *')].map(x => x.className), hang: [...document.querySelectorAll('#hangit .rb > *')].map(x => x.className),
-      dagg: !!document.getElementById('daggorath'), buzz: !!document.getElementById('buzzard'), cas: document.querySelector('#count a.c')?.getAttribute('href') }));
-    check(n + ': the downloads page has 69 games and no machine on it', r.rows === 69 && !r.machine, JSON.stringify(r));
+      dagg: !!document.querySelector('#daggorath button'), buzz: !!document.querySelector('#buzzard button'), cas: document.querySelector('#count a.c')?.getAttribute('href') }));
+    check(n + ': the downloads page has 69 games to load, the 3 others greyed out with a reason, and no machine on it', r.rows === 69 && r.off === 'buzzard,cavehunter,daggorath' && !r.machine, JSON.stringify(r));
     check(n + ': The Count has play, sound and tape; Hang It! play only; no cartridges or Buzzard Bait', r.count.join() === 'p,w,c' && r.hang.join() === 'p,only' && !r.dagg && !r.buzz && r.cas === '/lab/1982/tapes/count.cas', JSON.stringify(r));
   }
   const w = await p.evaluate(async () => { const x = await (async () => window.D32Wav.casWav(new Uint8Array(await (await fetch('/lab/1982/tapes/snaker.cas')).arrayBuffer())))(); return [String.fromCharCode(...x.slice(0, 4)), String.fromCharCode(...x.slice(8, 12)), x.length]; });

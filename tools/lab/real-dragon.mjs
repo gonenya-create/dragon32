@@ -23,10 +23,17 @@ function list(he) {
   const pre = he ? '/lab/1982/' : '/en/lab/1982/';
   let out = '', n = 0;
   for (const d of cat.drawers) {
-    const rows = Object.entries(cat.games).filter(([id, g]) => g.drawer === d.key && kinds.has(id) && kinds.get(id) !== 'c' && !NO.has(id));
+    // כל משחקי המגירה, כמו בארון. מחסניות ו-Buzzard Bait בכרטיס אפור עם הסבר, בלי כפתורים (גונן, 9.11)
+    const rows = Object.entries(cat.games).filter(([id, g]) => g.drawer === d.key && kinds.has(id));
     if (!rows.length) continue;
-    out += `<h3>${esc(he ? d.he : d.en)}</h3>\n<ul class="real-list">\n`;
+    out += `<h3>${esc(he ? d.he : d.en)} <span class="cnt">${rows.length}</span></h3>\n<ul class="real-list">\n`;
     for (const [id, g] of rows) {
+      if (kinds.get(id) === 'c' || NO.has(id)) {
+        const why = kinds.get(id) === 'c' ? (he ? 'מחסנית: היא לא עוברת בכבל קלטות.' : 'A cartridge: it can\'t go through a cassette lead.')
+          : (he ? 'צריך מפתח חומרה שהיה בקופסה המקורית.' : 'It needs a hardware key that came in the original box.');
+        out += `  <li id="${id}" class="off"><span class="rn"><bdi>${esc(L(names.get(id)) || id)}</bdi></span><span class="rm">${why}</span></li>\n`;
+        continue;
+      }
       const k = kinds.get(id), cmd = k === 'm' ? 'CLOADM → EXEC' : k ? 'CLOADM' : 'CLOAD → RUN';
       const name = L(names.get(id)) || id, file = (names.get(id)[1] || id).replace(/[^A-Za-z0-9 !'-]/g, '').trim() || id;
       const btns = `<button type="button" class="p">▶ ${he ? 'השמעה' : 'Play'}</button>` + (ONLY.has(id)
@@ -43,7 +50,7 @@ let stale = 0;
 for (const [file, he] of [['lab/1982/real-dragon/index.html', true], ['en/lab/1982/real-dragon/index.html', false]]) {
   const path = join(root, file), html = await readFile(path, 'utf8');
   const [body, n] = list(he);
-  const next = html.replace(/<!-- real-list -->[\s\S]*?<!-- \/real-list -->/, `<!-- real-list -->\n<p class="muted">${he ? n + ' משחקים.' : n + ' games.'}</p>\n${body}<!-- /real-list -->`);
+  const next = html.replace(/<!-- real-list -->[\s\S]*?<!-- \/real-list -->/, `<!-- real-list -->\n<p class="muted">${he ? n + ' משחקים אפשר לטעון ל-<bdi dir="ltr">Dragon</bdi> אמיתי, מתוך כל המשחקים במדף.' : n + ' of the shelf\'s games can be loaded into a real <bdi>Dragon</bdi>.'}</p>\n${body}<!-- /real-list -->`);
   if (next === html) continue;
   if (process.argv.includes('--check')) { console.log('out of date: ' + file); stale++; }
   else await writeFile(path, next);
