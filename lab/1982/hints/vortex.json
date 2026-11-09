@@ -1,0 +1,351 @@
+{
+ "note": "Hints for The Vortex Factor in our own words. Every step was played and checked on the Dragon machine (9.11.2026): nine treasures, 100 of 100. Each question has three levels: a small hint, a clearer hint and the full solution.",
+ "where": "This game draws its text on the picture screen, so the hint button cannot read the room and shows all the questions. Each question still has \"at\": words exactly as printed in the room text.",
+ "at": [
+  [
+   "large hallway",
+   "curator's",
+   "main office"
+  ],
+  [
+   "large hallway",
+   "main office"
+  ],
+  [
+   "very small room"
+  ],
+  [
+   "wax museum",
+   "curator's"
+  ],
+  [
+   "strange exhibit",
+   "time machine"
+  ],
+  [
+   "time machine",
+   "science exhibit",
+   "curator's"
+  ],
+  [
+   "time machine"
+  ],
+  [
+   "time machine",
+   "can't carry"
+  ],
+  [
+   "main office",
+   "safe"
+  ],
+  [
+   "mining exhibit",
+   "large device"
+  ],
+  [
+   "sandy shore",
+   "space expo"
+  ],
+  [
+   "sandy shore",
+   "mutant"
+  ],
+  [
+   "dank dungeon",
+   "slams shut"
+  ],
+  [
+   "twisty passageway",
+   "distant voice"
+  ],
+  [
+   "stone corridor",
+   "jewel room"
+  ],
+  [
+   "pitch black",
+   "dusty stone",
+   "twisty passageway"
+  ],
+  [
+   "burial chamber",
+   "dusty stone"
+  ]
+ ],
+ "he": [
+  {
+   "q": "מה בכלל צריך לעשות?",
+   "h": [
+    "יש במוזיאון ובזמנים אחרים תשעה אוצרות. צריך להביא את כולם למקום אחד ולהשאיר אותם שם.",
+    "המקום הוא חדר העבודה של האוצר. מגיעים אליו דרך הדלת הנעולה בקצה הדרומי של המסדרון. השלט שם אומר להניח שם את האוצרות.",
+    "בחדר העבודה ({curator's workroom}) מניחים כל אוצר ב-{DROP}, למשל {DROP BRACELET}. האוצרות: {platinum bracelet}, ‏{large diamond}, ‏{large sapphire}, ‏{gold nugget}, ‏{jewel encrusted scepter}, ‏{jade buddha}, ‏{ruby necklace}, ‏{large emerald}, ‏{sliver cup}. כשהאחרון מונח, המשחק מסתיים בניצחון."
+   ]
+  },
+  {
+   "q": "הדלת במסדרון נעולה. איך פותחים אותה?",
+   "h": [
+    "צריך מפתח. הוא נמצא קרוב.",
+    "בדקו היטב את השולחן במשרד הראשי, ממזרח לתחילת המסדרון.",
+    "במשרד: {OPEN DRAWER}, ואז {LOOK DRAWER} פעמיים (מחסנית צהובה, ואז מפתח). {GET YELLOW}, ‏{GET KEY}. בקצה הדרומי של המסדרון: {UNLOCK DOOR}, ‏{OPEN DOOR}, ‏{GO DOOR}."
+   ]
+  },
+  {
+   "q": "חדר קטן מאוד עם כפתור, ואין לאן ללכת. מה עושים?",
+   "h": [
+    "זאת מעלית.",
+    "מעלית לא זזה כשהדלת פתוחה.",
+    "{CLOSE DOOR}, ‏{PUSH BUTTON}, ‏{OPEN DOOR}, ‏{GO DOOR}: מגיעים לחדר העבודה של האוצר. חוזרים באותה דרך: {GO DOOR}, ‏{CLOSE DOOR}, ‏{PUSH BUTTON}, ‏{OPEN DOOR}, ‏{GO DOOR}."
+   ]
+  },
+  {
+   "q": "מוזיאון השעווה וחדר העבודה: יש שם יותר ממה שרואים",
+   "h": [
+    "תסתכלו טוב על הפסלים ועל השולחן.",
+    "אחת הדמויות עונדת משהו יקר. ופסל הציפור עשוי שעווה: הוא עוד יועיל.",
+    "במוזיאון השעווה: {LOOK MAE} (צמיד, {platinum bracelet}), ‏{GET BRACELET}, ומאוחר יותר {GET BIRD}. בחדר העבודה: {LOOK WORKBENCH} פעמיים (שק ומסור), {GET SACK}, ‏{GET HACKSAW}, ואז {LOOK SACK} פעמיים (כריך, ואז ליים)."
+   ]
+  },
+  {
+   "q": "מה זה הגליל הגדול?",
+   "h": [
+    "השלט ליד מזכיר סופר שכתב על מסע בזמן.",
+    "נכנסים לתוכו. בפנים יש חריץ, כפתור, מד וסוללה.",
+    "{GO TIME} נכנס למכונת הזמן, ‏{GO OUT} יוצא. {LOOK GAUGE} מראה איפה ומתי אתם. בהתחלה כתוב שם {Vortex Factor unresolved}: הסוללה ריקה, וצריך קודם למלא אותה."
+   ]
+  },
+  {
+   "q": "{Vortex Factor unresolved}: איך מפעילים את המכונה?",
+   "h": [
+    "במחברת שעל הדלפק בתערוכת המדע יש רשימות של מדען. פותחים אותה וקוראים את שני העמודים.",
+    "חומצה טריקרבוקסילית היא חומצת לימון. מיץ ליים בסוללה. צריך גם משהו לאסוף בו את המיץ.",
+    "בתערוכת המדע: {LOOK COUNTER}, ‏{GET NOTEBOOK}, ‏{OPEN NOTEBOOK}, ‏{READ NOTEBOOK}, ‏{TURN PAGE}, ‏{READ NOTEBOOK}. עוד {LOOK COUNTER} מגלה בקבוקון: {GET VIAL}. עם המסור והליים: {CUT LIME}, ‏{SQUEEZE LIME} (המיץ נכנס לבקבוקון). במכונת הזמן: {POUR JUICE}. הסוללה מתמלאת אחרי כמה תורות: בודקים ב-{LOOK GAUGE} עד שמופיע {Detroit, June 2063}."
+   ]
+  },
+  {
+   "q": "לאן נוסעים? מה עושים עם המחסניות?",
+   "h": [
+    "כל מחסנית בצבע אחר היא זמן ומקום אחר.",
+    "מכניסים מחסנית לחריץ ולוחצים על הכפתור. בלי המחסנית האדומה לא חוזרים הביתה.",
+    "{INSERT YELLOW} ואז {PUSH BUTTON}. צהובה: דטרויט 1967 (המוזיאון בעבר). אדומה: הבית, 2063. ורודה: סן פרנסיסקו 2305. כחולה: לונדון 1200. לבנה: קהיר 3188 לפני הספירה. כדי להחליף מוציאים את המחסנית מהחריץ ב-{GET YELLOW}, למשל, ומכניסים אחרת. תמיד לוקחים איתכם את האדומה."
+   ]
+  },
+  {
+   "q": "המשחק כותב {I can't carry anymore}. מה עושים?",
+   "h": [
+    "אפשר להחזיק רק חמישה דברים, וגם החליפה נחשבת.",
+    "מכונת הזמן היא מחסן טוב: מה שמונח על הרצפה שלה נוסע איתכם לכל זמן.",
+    "המחסנית שבחריץ לא נחשבת. משאירים במכונה מה שלא צריך עכשיו, וכשהידיים מלאות: מניחים לרגע אוצר ({DROP GOLD}), לוקחים מחסנית, מכניסים, ומרימים אותו שוב."
+   ]
+  },
+  {
+   "q": "כספת מאחורי לוח השנה. מה הצירוף?",
+   "h": [
+    "את המספרים לא תמצאו ב-2063.",
+    "נסעו עם המחסנית הצהובה ל-1967. גם שם יש משרד ושולחן. מישהו נולד בתאריך חשוב.",
+    "ב-1967, במשרד: {OPEN DRAWER}, ‏{LOOK DRAWER}, ‏{GET DOCUMENT}, ‏{READ DOCUMENT}: נולד ב-29 בנובמבר 1942. בחזרה ב-2063, במשרד: {TURN DIAL} ואז {11}, ‏{TURN DIAL} ואז {29}, ‏{TURN DIAL} ואז {42}. אחר כך {LOOK SAFE} ו-{GET BLUE}."
+   ]
+  },
+  {
+   "q": "המכונה בתערוכת הכרייה וגוש הפחם: מה עושים איתם?",
+   "h": [
+    "הכפתור מכניס לחץ למכונה. פחם תחת לחץ, לאורך הרבה זמן, הופך למשהו יקר.",
+    "יש לכם מכונת זמן. שימו את הפחם בלחץ בעבר, ואספו את התוצאה בעתיד.",
+    "לוקחים את הפחם ({GET COAL}) ונוסעים ל-1967. שם, בתערוכת הכרייה: {GO DEVICE}, ‏{DROP COAL}, ‏{GO OUT}, ‏{PUSH BUTTON} (השלט: {PRESSURIZED}). חוזרים ל-2063 עם האדומה. בתערוכת הכרייה: {PUSH BUTTON} ({ALL CLEAR}), ‏{GO DEVICE}, ‏{GET DIAMOND}. לתוך המכונה נכנסים רק כשהשלט אומר {ALL CLEAR}."
+   ]
+  },
+  {
+   "q": "בסן פרנסיסקו לא טוב לי, ואחר כך מתים. למה?",
+   "h": [
+    "משהו רע קרה לחוף הזה בעתיד.",
+    "יש קרינה. צריך הגנה, והיא מוצגת במוזיאון.",
+    "בתערוכת החלל (מהמסדרון הראשון: דרום, דרום, מערב): {GET SUIT}, ‏{WEAR SUIT}, לפני שנוסעים עם המחסנית הוורודה. אחרי החזרה הביתה: {REMOVE SUIT}, ‏{DROP SUIT}."
+   ]
+  },
+  {
+   "q": "יש יצור מוטנטי על החוף. מה עושים?",
+   "h": [
+    "הוא נראה רעב מאוד. ואל תתעכבו לידו.",
+    "מה אכיל לקחתם מחדר העבודה?",
+    "מביאים את הכריך מהשק. מהמכונה: {GO OUT}, ‏{GO SOUTH}, ומיד {GIVE SANDWICH}. הוא בורח ומשאיר לכם מחסנית לבנה. אל תישארו לידו יותר מהדרוש."
+   ]
+  },
+  {
+   "q": "הדלת נטרקה ואני כלוא בצינוק. איך יוצאים?",
+   "h": [
+    "הדלת לא תיפתח. חפשו יציאה אחרת.",
+    "יש חלון עם סורגים. ומה שהשאיר השלד עוד יועיל.",
+    "באים עם המסור. {LOOK SKELETON} שלוש פעמים (כפית, חוט, טבעת), ‏{GET STRING}, ‏{GET RING}. ‏{SAW WINDOW}, ואז {GO WINDOW}."
+   ]
+  },
+  {
+   "q": "המעברים המפותלים: מה יש בהם?",
+   "h": [
+    "יש בהם שני אוצרות. ומה שמשאירים שם על הרצפה, נעלם.",
+    "הדרך מהחלון חזרה למסדרון היא דרום, מערב, צפון, מזרח.",
+    "מהחלון: {GET SAPPHIRE}, ‏{GO SOUTH}, ‏{GO WEST}, ‏{GET GOLD}, ‏{GO NORTH}, ‏{GO EAST} (מסדרון האבן). כשקול אומר {Who left ...}, החפץ שהשארתם הועבר לחדר התכשיטים."
+   ]
+  },
+  {
+   "q": "לפידים, מסדרון אבן וחדר התכשיטים: מה עושים שם?",
+   "h": [
+    "אחד הלפידים לא מחובר חזק כמו האחרים.",
+    "הלפיד במסדרון שליד מכונת הזמן: {LOOK TORCH} עונה רק {Fastened to the wall}. אפשר לסובב אותו. בחדר התכשיטים יש תיבה נעולה: צריך משהו דק.",
+    "במסדרון שליד מכונת הזמן: {TURN TORCH} (נפתח חור בקיר), ואז {GO HOLE}. עם סיכת השיער (מהדלפק בתערוכת המדע של 1967): {PICK LOCK}, ‏{LOOK CHEST}, ‏{GET SCEPTER}, ‏{GET BUDDHA}. חוזרים ב-{GO HOLE}."
+   ]
+  },
+  {
+   "q": "בקהיר חושך מוחלט. איך מאירים?",
+   "h": [
+    "צריך אור, ואין חשמל ב-3188 לפני הספירה.",
+    "לפידים יש רק בלונדון. שעווה וחוט עושים נר.",
+    "בלונדון, ליד לפידים, עם פסל הציפור והחוט: {MELT BIRD} ומיד {MAKE CANDLE}. ליד לפיד: {LIGHT CANDLE}, ונוסעים לקהיר עם המחסנית הלבנה כשהנר דולק. הנר לא נדלק בלי לפיד, והוא דולק רק כ-35 תורות: מדליקים אותו רק לפני היציאה מלונדון, והולכים ישר לחדר הקבורה."
+   ]
+  },
+  {
+   "q": "חדר הקבורה והסרקופג: מה עושים?",
+   "h": [
+    "תפתחו. מי שבפנים רוצה משהו שמצאתם בצינוק.",
+    "לפני שנותנים לו, תסתכלו עליו היטב. אחרי שהוא הולך נשארים מעבר סודי וידית.",
+    "{OPEN SARCOPHAGUS}, ‏{LOOK MUMMY} (שרשרת, {ruby necklace}), ‏{GIVE RING}, ‏{GET RUBY}. ‏{GO SECRET}, ‏{GET EMERALD}, ‏{GO SECRET}. ‏{PULL LEVER} פותח בור ברצפה: {GO HOLE}, ‏{GET CUP}, ‏{GO HOLE}. משם {GO SOUTH} ו-{GO TIME}."
+   ]
+  }
+ ],
+ "en": [
+  {
+   "q": "What am I supposed to do?",
+   "h": [
+    "There are nine treasures in the museum and in other times. Bring them all to one place and leave them there.",
+    "The place is the curator's workroom. You reach it through the locked door at the south end of the hallway. Its sign says to stack the treasures there.",
+    "In the {curator's workroom} put down each treasure with {DROP}, for example {DROP BRACELET}. The treasures: {platinum bracelet}, {large diamond}, {large sapphire}, {gold nugget}, {jewel encrusted scepter}, {jade buddha}, {ruby necklace}, {large emerald}, {sliver cup}. When the last one is down, you win."
+   ]
+  },
+  {
+   "q": "The door in the hallway is locked. How do I open it?",
+   "h": [
+    "You need a key. It is close by.",
+    "Search the desk in the main office, east of the start of the hallway.",
+    "In the office: {OPEN DRAWER}, then {LOOK DRAWER} twice (a yellow cartridge, then a key). {GET YELLOW}, {GET KEY}. At the south end of the hallway: {UNLOCK DOOR}, {OPEN DOOR}, {GO DOOR}."
+   ]
+  },
+  {
+   "q": "A very small room with a button, and no way on. What now?",
+   "h": [
+    "It's a lift.",
+    "A lift doesn't move while its door is open.",
+    "{CLOSE DOOR}, {PUSH BUTTON}, {OPEN DOOR}, {GO DOOR}: you are in the curator's workroom. Back the same way: {GO DOOR}, {CLOSE DOOR}, {PUSH BUTTON}, {OPEN DOOR}, {GO DOOR}."
+   ]
+  },
+  {
+   "q": "The wax museum and the workroom: there is more than you see",
+   "h": [
+    "Look closely at the statues and at the bench.",
+    "One of the ladies wears something valuable. And the bird statue is made of wax: it will be useful.",
+    "In the wax museum: {LOOK MAE} (the {platinum bracelet}), {GET BRACELET}, and later {GET BIRD}. In the workroom: {LOOK WORKBENCH} twice (a sack and a hacksaw), {GET SACK}, {GET HACKSAW}, then {LOOK SACK} twice (a sandwich, then a lime)."
+   ]
+  },
+  {
+   "q": "What is the large cylinder?",
+   "h": [
+    "The sign beside it points to a writer who wrote about time travel.",
+    "Go inside. There is a slot, a button, a gauge and a battery.",
+    "{GO TIME} takes you into the time machine, {GO OUT} takes you out. {LOOK GAUGE} shows where and when you are. At first it says {Vortex Factor unresolved}: the battery is empty and has to be filled first."
+   ]
+  },
+  {
+   "q": "Vortex Factor unresolved: how do I start the machine?",
+   "h": [
+    "The notebook on the counter in the science exhibit holds a scientist's notes. Open it and read both pages.",
+    "A tricarboxylic acid is citric acid. Lime juice in the battery. You also need something to catch the juice in.",
+    "In the science exhibit: {LOOK COUNTER}, {GET NOTEBOOK}, {OPEN NOTEBOOK}, {READ NOTEBOOK}, {TURN PAGE}, {READ NOTEBOOK}. Another {LOOK COUNTER} finds a vial: {GET VIAL}. With the hacksaw and the lime: {CUT LIME}, {SQUEEZE LIME} (the juice goes into the vial). In the time machine: {POUR JUICE}. The battery fills up after a few moves: check with {LOOK GAUGE} until it says {Detroit, June 2063}."
+   ]
+  },
+  {
+   "q": "Where can I go? What are the cartridges for?",
+   "h": [
+    "Each colour of cartridge is another time and place.",
+    "Put a cartridge in the slot and press the button. Without the red cartridge you can't come home.",
+    "{INSERT YELLOW}, then {PUSH BUTTON}. Yellow: Detroit 1967 (the museum in the past). Red: home, 2063. Pink: San Francisco 2305. Blue: London 1200. White: Cairo 3188 BC. To change, take the cartridge out of the slot ({GET YELLOW}, for example) and insert another. Always take the red one with you."
+   ]
+  },
+  {
+   "q": "It says {I can't carry anymore}. What now?",
+   "h": [
+    "You can hold only five things, and the suit counts too.",
+    "The time machine is a good store room: whatever lies on its floor travels with you to every time.",
+    "The cartridge in the slot doesn't count. Leave in the machine whatever you don't need now. When your hands are full: put a treasure down for a moment ({DROP GOLD}), take a cartridge, insert it, and pick the treasure up again."
+   ]
+  },
+  {
+   "q": "A safe behind the calendar. What is the combination?",
+   "h": [
+    "You won't find the numbers in 2063.",
+    "Go to 1967 with the yellow cartridge. There is an office with a desk there too. Somebody was born on an important date.",
+    "In 1967, in the office: {OPEN DRAWER}, {LOOK DRAWER}, {GET DOCUMENT}, {READ DOCUMENT}: born November 29th, 1942. Back in 2063, in the office: {TURN DIAL}, then {11}; {TURN DIAL}, then {29}; {TURN DIAL}, then {42}. Then {LOOK SAFE} and {GET BLUE}."
+   ]
+  },
+  {
+   "q": "The machine in the mining exhibit and the lump of coal: what are they for?",
+   "h": [
+    "The button puts the machine under pressure. Coal under pressure for a very long time turns into something precious.",
+    "You have a time machine. Press the coal in the past and collect the result in the future.",
+    "Take the coal ({GET COAL}) to 1967. There, in the mining exhibit: {GO DEVICE}, {DROP COAL}, {GO OUT}, {PUSH BUTTON} (the sign says {PRESSURIZED}). Go back to 2063 with the red one. In the mining exhibit: {PUSH BUTTON} ({ALL CLEAR}), {GO DEVICE}, {GET DIAMOND}. You can only get into the machine when the sign says {ALL CLEAR}."
+   ]
+  },
+  {
+   "q": "In San Francisco I feel bad, and then I die. Why?",
+   "h": [
+    "Something bad happened to that coast in the future.",
+    "There is radiation. You need protection, and it is on show in the museum.",
+    "In the space expo (from the first hallway: south, south, west): {GET SUIT}, {WEAR SUIT}, before you go with the pink cartridge. Back home: {REMOVE SUIT}, {DROP SUIT}."
+   ]
+  },
+  {
+   "q": "There is a mutant on the shore. What do I do?",
+   "h": [
+    "He looks very hungry. And don't hang around him.",
+    "What did you take from the workroom that can be eaten?",
+    "Bring the sandwich from the sack. From the machine: {GO OUT}, {GO SOUTH}, and at once {GIVE SANDWICH}. He runs off and leaves you a white cartridge. Don't stay next to him longer than you must."
+   ]
+  },
+  {
+   "q": "The door slammed and I'm locked in the dungeon. How do I get out?",
+   "h": [
+    "The door won't open. Look for another way out.",
+    "There is a barred window. And what the skeleton left behind will be useful.",
+    "Come with the hacksaw. {LOOK SKELETON} three times (a spoon, a string, a ring), {GET STRING}, {GET RING}. {SAW WINDOW}, then {GO WINDOW}."
+   ]
+  },
+  {
+   "q": "The twisty passageways: what is in them?",
+   "h": [
+    "There are two treasures in them. And what you leave on the floor there disappears.",
+    "From the window back to the corridor the way is south, west, north, east.",
+    "From the window: {GET SAPPHIRE}, {GO SOUTH}, {GO WEST}, {GET GOLD}, {GO NORTH}, {GO EAST} (the stone corridor). When a voice says {Who left ...}, the thing you left was moved to the jewel room."
+   ]
+  },
+  {
+   "q": "Torches, a stone corridor and the jewel room: what do I do there?",
+   "h": [
+    "One of the torches isn't fixed as firmly as the others.",
+    "The torch in the corridor by the time machine: {LOOK TORCH} says only {Fastened to the wall}. You can turn it. In the jewel room there is a locked chest: you need something thin.",
+    "In the corridor by the time machine: {TURN TORCH} (a hole opens in the wall), then {GO HOLE}. With the hair pin (from the counter in the 1967 science exhibit): {PICK LOCK}, {LOOK CHEST}, {GET SCEPTER}, {GET BUDDHA}. Back with {GO HOLE}."
+   ]
+  },
+  {
+   "q": "In Cairo it's pitch black. How do I get light?",
+   "h": [
+    "You need light, and there is no electricity in 3188 BC.",
+    "There are torches only in London. Wax and string make a candle.",
+    "In London, by torches, with the bird statue and the string: {MELT BIRD} and at once {MAKE CANDLE}. By a torch: {LIGHT CANDLE}, and go to Cairo with the white cartridge while it burns. The candle can't be lit without a torch, and it lasts only about 35 moves: light it just before you leave London, and go straight to the burial chamber."
+   ]
+  },
+  {
+   "q": "The burial chamber and the sarcophagus: what do I do?",
+   "h": [
+    "Open it. Whoever is inside wants something you found in the dungeon.",
+    "Before you give it, look at him closely. After he leaves there is a secret passage and a lever.",
+    "{OPEN SARCOPHAGUS}, {LOOK MUMMY} (the {ruby necklace}), {GIVE RING}, {GET RUBY}. {GO SECRET}, {GET EMERALD}, {GO SECRET}. {PULL LEVER} opens a hole in the floor: {GO HOLE}, {GET CUP}, {GO HOLE}. Then {GO SOUTH} and {GO TIME}."
+   ]
+  }
+ ]
+}

@@ -1,0 +1,387 @@
+{
+ "note": "Hints for El Diablero (Kenneth Kalish, Computerware / Dragon Data 1982) in our own words. Every step was played and checked on the Dragon machine (9.11.2026), to the winning message. Each question has three levels: a small hint, a clearer hint and the full solution.",
+ "where": "This game has no fixed place header: the room description scrolls with the text. Each question's \"at\" holds short pieces of room descriptions (or of the I SEE: list) exactly as printed on one screen line; the hint button shows the questions whose words are on the screen now.",
+ "at": [
+  [
+   "SMALL POOL OF",
+   "CACTUS ALL"
+  ],
+  [
+   "POOL OF BLUISH"
+  ],
+  [
+   "FRESH GRAVE"
+  ],
+  [
+   "OUTSIDE A SMALL, WOODEN",
+   "IN A SMALL SHACK",
+   "SMALL STORAGE ROOM"
+  ],
+  [
+   "A KEY",
+   "PILE OF THICK BRUSH",
+   "ON MY BELLY IN THE TUNNEL"
+  ],
+  [
+   "SMALL POOL OF",
+   "FIERCE LOOKING MAN"
+  ],
+  [
+   "YELLOW STONE WALLS",
+   "EVERYWHERE AND NOWHERE"
+  ],
+  [
+   "A BLIGHTED CACTUS",
+   "DESERT BEETLES"
+  ],
+  [
+   "AT THE NEST",
+   "NARROW LEDGE",
+   "EAGLE'S NEST"
+  ],
+  [
+   "FRESH GRAVE",
+   "TEACHER'S VOICE",
+   "SPIRIT-HELPER",
+   "A LIZARD"
+  ],
+  [
+   "VERY RICH HERE",
+   "SOME SEEDS",
+   "A BUSH"
+  ],
+  [
+   "UPPER EDGE OF A",
+   "ENTRANCE OF THE",
+   "CARVED OUT",
+   "AN IRON RING",
+   "NEAR AN OPEN"
+  ],
+  [
+   "YAWNING CHASM",
+   "PLATFORM OVERLOOKING",
+   "A COPPER BELL",
+   "WINGED BEAST"
+  ],
+  [
+   "NEAR A SMALL POND",
+   "IN A POND",
+   "UNDERWATER",
+   "A GRANITE BLOCK"
+  ],
+  [
+   "EDGE OF ANOTHER",
+   "SMALLER THAN THE FIRST",
+   "A TALL PILLAR",
+   "UNDERGROUND PATH"
+  ],
+  [
+   "MASSIVE GOLDEN DOOR",
+   "INSIDE A LARGE ROOM",
+   "ROWS AND ROWS"
+  ],
+  [
+   "GOLDEN BRIDGE",
+   "A GOLD STATUE",
+   "HOLLOWED-OUT",
+   "YAWNING CHASM"
+  ],
+  [
+   "LARGE CHAMBER",
+   "CHAMBER WITH GREEN",
+   "HUMAN-LOOKING"
+  ]
+ ],
+ "he": [
+  {
+   "q": "מה בכלל צריך לעשות?",
+   "h": [
+    "אתם שוליה של מכשף. המורה שלכם נעלם, ומשהו מוזר קורה במדבר. מחפשים לאן מובילים הסימנים, ובודקים כל דבר.",
+    "המשחק מבין את ארבע האותיות הראשונות של כל מילה. הולכים במילים מלאות: {GO NORTH}, {GO EAST}. מה יש ביד: {INV}. מילים חשובות במיוחד: {GAZE} (להתבונן כמו מכשף), {DREAM}, {AWAKE}, {SAY}, {REMEMBER}. לא נוגעים בנחש: {TAKE SNAKE} הורג.",
+    "הדרך בקצרה: מתבוננים במים כדי לעבור בין המקומות, מוצאים בבקתה מפתח ואבן כחולה, מנצחים את האיש עם המצ'טה, לומדים לחלום, מכינים את \"תרופת הנקמה\" על הקבר, מגדלים ענף קסום, ונכנסים למערה של {EL DIABLERO}."
+   ]
+  },
+  {
+   "q": "המדבר נראה אותו דבר לכל כיוון. איך יוצאים ממנו?",
+   "h": [
+    "יש שתי בריכות קטנות במדבר. שתייה לא עוזרת.",
+    "מכשף לא שותה את המים. הוא מתבונן בהם.",
+    "בבריכה הכחלחלה בפינה הצפונית־מזרחית כותבים {GAZE WATER}. ערפל מסתחרר מעביר אתכם למדבר אחר, עם קבר ובקתה. באותה בריכה שם, {GAZE WATER} מחזיר אתכם."
+   ]
+  },
+  {
+   "q": "מצאתי קבר טרי. של מי הוא?",
+   "h": [
+    "קוראים את המצבה.",
+    "{READ TOMBSTONE}. זה השם של המורה שלכם. כדאי לזכור אותו.",
+    "על המצבה כתוב {UXMAL}. מה עושים עם הקבר כתוב על מחצלת בבקתה (ראו את השאלה על הבקתה). בינתיים ממשיכים: {GO SOUTH}, {GO SOUTH}, {GO WEST} מגיעים לבקתה."
+   ]
+  },
+  {
+   "q": "הבקתה: איך נכנסים, ומה יש בה?",
+   "h": [
+    "נכנסים דרך הפתח. בחדר הפנימי יש קערה, זרעים ומחצלת.",
+    "את הקערה שוברים ולא לוקחים. במחצלת מסתכלים טוב על החוטים. את הזרעים משאירים בינתיים: הם יידרשו רק אחר כך.",
+    "{GO DOORWAY}, ואז {GO WEST} לחדר האחסון. {BREAK BOWL} מגלה מפתח: {TAKE KEY}. אחר כך {LOOK MAT} ו־{LOOK THREADS}: החוטים מסבירים את \"תרופת הנקמה\": שמים על הקבר חיפושיות מדבר ונוצת נשר, ואומרים את שם המת. יוצאים: {GO EAST}, {GO DOORWAY}."
+   ]
+  },
+  {
+   "q": "יש לי מפתח. איפה המנעול?",
+   "h": [
+    "משהו מוסתר במדבר ליד הבקתה.",
+    "שתי משבצות מזרחה לפתח הבקתה יש ערמת שיחים עבותים. מה יש מתחתיה?",
+    "מהפתח: {GO EAST}, {GO EAST}, {TAKE BRUSH}, ונגלית מנהרה. {GO TUNNEL}, {GO EAST}, {OPEN BOX}. לוקחים {TAKE PEBBLE} ו־{TAKE PAPER}, וקוראים {READ PAPER}: לאבן יש כוח נגד האויב. את הנייר, המפתח והשיחים אפשר להשאיר שם ({DROP PAPER}, {DROP KEY}, {DROP BRUSH}). יוצאים: {GO WEST}, {GO UP}."
+   ]
+  },
+  {
+   "q": "איש ענק עם מצ'טה הורג אותי. מה עושים?",
+   "h": [
+    "הוא מחכה מעבר לבריכה הצהובה, במקום ההתחלה. צריך משהו שקיבלתם בקופסה.",
+    "הנייר אמר להשתמש באבן נגד האויב. משתמשים בה מיד, ברגע שהוא מופיע.",
+    "חוזרים למדבר הראשון ({GAZE WATER} בבריכה הכחלחלה), הולכים לבריכה הצהובה ושם {GAZE WATER}. במעבר הלח כותבים {GO SOUTH}, ומיד כשהאיש מופיע: {THROW PEBBLE}. הוא נעלם בהבזק, ונשארת המצ'טה שלו: {TAKE MACHETE}."
+   ]
+  },
+  {
+   "q": "אני תקוע במעבר הלח. איך יוצאים? ומה זה לחלום?",
+   "h": [
+    "מכשף יכול להגיע למקום בלי ללכת אליו.",
+    "{DREAM} ושם של מקום מעביר אתכם לשם. {AWAKE} לבד מחזיר אתכם למקום שבו נרדמתם. {AWAKE} ושם של מקום מעיר אתכם במקום ההוא. מקומות שעובדים: {ROCK}, {WELL}, {NEST}, {MOUNTAIN}, {SPIRIT}, {CANYON}.",
+    "מהמעבר: {DREAM ROCK} ואז {AWAKE ROCK}, ואתם ערים על הסלע הנעים במדבר הראשון. כאן {REMEMBER} מזכיר לכם מה למדתם פה. חשוב: כשאתם עדיין בחלום, {DREAM} נוסף לא עובד. כדי לעבור למקום חדש כותבים {AWAKE} עם שם המקום."
+   ]
+  },
+  {
+   "q": "איפה מוצאים חיפושיות מדבר?",
+   "h": [
+    "הן גרות בקקטוס החולה במדבר הראשון. בידיים אי אפשר.",
+    "צריך את המצ'טה.",
+    "מהסלע הנעים: {GO NORTH} שלוש פעמים, {GO EAST} חמש פעמים, {GO NORTH}. ליד הקקטוס: {CUT CACTUS}, ואז {TAKE BEETLES}. את המצ'טה אפשר להשאיר: {DROP MACHETE}."
+   ]
+  },
+  {
+   "q": "איך משיגים נוצת נשר?",
+   "h": [
+    "הנוצה בקן שעל ההר, והנשרית שומרת עליו. לטפס זה מסוכן.",
+    "לא מטפסים. חולמים.",
+    "{DREAM NEST}, {TAKE FEATHER}, ואז {AWAKE WELL}: אתם ערים ליד הבאר במדבר השני, קרוב לקבר."
+   ]
+  },
+  {
+   "q": "עשיתי את תרופת הנקמה, והמורה אומר שהוא לא מת. מה עכשיו?",
+   "h": [
+    "זה בסדר: זה החלק הבא בסיפור. המורה אמר לכם את מי לחפש ומה להגיד לו.",
+    "\"רוח העזר\" היא הלטאה, שיושבת ליד סלע בפינה הצפונית־מערבית של המדבר הראשון. אומרים לה {REVEAL}.",
+    "מהבאר: {GO EAST} ארבע פעמים עד הקבר. {DROP BEETLES}, {DROP FEATHER}, {SAY UXMAL}. אחר כך (אחרי שיש לכם ענף, ראו את השאלה הבאה): {AWAKE SPIRIT} מביא אתכם ללטאה, ושם {SAY REVEAL}. קול קטן אומר שרק ענף קסום שהכנתם בעצמכם יכול להשמיד את {EL DIABLERO}, ושצריך לזרוק אותו."
+   ]
+  },
+  {
+   "q": "ענף קסום \"שהכנתם בעצמכם\"? מאיפה?",
+   "h": [
+    "זוכרים את הזרעים בבקתה? צריך אדמה טובה.",
+    "על ההר יש מקום שבו האדמה עשירה במיוחד. שותלים שם.",
+    "מהקבר: {GO SOUTH}, {GO SOUTH}, {GO WEST}, {GO DOORWAY}, {GO WEST}, {TAKE SEEDS}, {GO EAST}, {GO DOORWAY}. אז {DREAM MOUNTAIN}, {GO EAST}, {GO NORTH}, {GO NORTH}, {GO EAST}. שם {PLANT SEEDS}: שיח קסום צומח מיד. {TAKE TWIG}. השיח אומר שקודם צריך לטבול את הענף בשמן ש{EL DIABLERO} מכין מפרחי קקטוס."
+   ]
+  },
+  {
+   "q": "איך נכנסים למערה, ומה עושים בה?",
+   "h": [
+    "למערה אי אפשר לחלום ישר: הכוח של {EL DIABLERO} עוצר אתכם. אבל אפשר לחלום \"לשום מקום\".",
+    "{DREAM} לבד מביא אתכם למקום של אור וצבע. משם {AWAKE CAVE}. בפנים יש טבעת ברזל ברצפה, שלא זזה מיד.",
+    "{DREAM}, ואז {AWAKE CAVE}: אתם בפתח המערה. {GO NORTH}, {TURN RING} (נשמעת נקישה), {PULL RING}: כל הלוח מתרומם. {GO DOWN} במדרגות. שימו לב: מהמערה אין דרך חזרה, אז קחו איתכם את הענף."
+   ]
+  },
+  {
+   "q": "איך יורדים לתחתית התהום?",
+   "h": [
+    "העמודים על הרציף \"משרתים\" מישהו. צריך לקרוא לו.",
+    "יש פעמון נחושת ליד החדר שממנו נשמעת נהמה. מצלצלים בו ליד העמודים.",
+    "מתחתית המדרגות: {GO EAST}, {TAKE BELL}, {GO WEST}, {GO WEST}. על הרציף: {RING BELL}. יצור מכונף ומכוער עולה מהתהום. {GO BEAST}: הוא מוריד אתכם לתחתית ועף. לחדר עם הנהמה עוד לא נכנסים!"
+   ]
+  },
+  {
+   "q": "הבריכה: איך שוחים, ולאן?",
+   "h": [
+    "במים לא כותבים {GO}, רק {SWIM}. למטה ולמעלה זה {SWIM DOWN} ו־{SWIM UP}, ולצדדים {SWIM EAST} ו־{SWIM WEST}. יוצאים מהמים ב־{SWIM SHORE}.",
+    "מתחת למים יש כמה בריכות, והמעבר ביניהן מזרחה. אחת מהן מלאה אוויר מורעל: לא עולים בה. בבריכה הבטוחה השנייה יש על החוף גוש גרניט כבד, ובעזרתו אפשר לצלול עמוק יותר.",
+    "מהתחתית: {GO NORTH}, {GO POND}, {SWIM DOWN}, {SWIM EAST}, {SWIM DOWN}, {SWIM EAST}, {SWIM UP}, {SWIM UP}, {SWIM SHORE}. {TAKE BLOCK}, {GO POND}, ושלוש פעמים {SWIM DOWN} (בפעם השלישית הגוש מוריד אתכם עמוק יותר). {SWIM EAST}, ואז {DROP BLOCK}, כי עם הגוש אי אפשר לעלות. {SWIM UP} שלוש פעמים, {SWIM SHORE}."
+   ]
+  },
+  {
+   "q": "תהום קטנה עם עמוד גבוה. איך עוברים?",
+   "h": [
+    "העמוד גבוה יותר משני העמודים האחרים. אולי הוא מספיק ארוך.",
+    "מפילים אותו.",
+    "מהשביל התת־קרקעי: {GO NORTH}, {PUSH PILLAR}: הוא נופל ונהיה גשר. {GO PILLAR}, ואז {GO WEST}, {GO WEST} עד הדלת המוזהבת."
+   ]
+  },
+  {
+   "q": "הדלת המוזהבת והשור הצהוב: מה עושים?",
+   "h": [
+    "הדלת לא באמת שם. בפנים מחכה לכם שוב הלטאה. ושימו לב: אם תשברו את השור בצד הלא נכון של הדלת, תיתקעו בפנים.",
+    "בחדר הפסלים כולם נראים אותו דבר, אבל מכשף מתבונן. את הפסלון הצהוב לוקחים החוצה, ורק אז שוברים.",
+    "{GO DOORWAY}: עוברים דרכה. {SAY REVEAL}: הלטאה אומרת שאחרי ששוברים את השור הצהוב, מה שלא היה אמיתי נעשה אמיתי. {GO WEST}, {GAZE STATUES}, {TAKE FIGURINE}, {GO EAST}, {GO DOORWAY}, ורק בחוץ: {BREAK FIGURINE}."
+   ]
+  },
+  {
+   "q": "איפה השמן לענף?",
+   "h": [
+    "השמן מוסתר מתחת לפסל הזהב, ליד התהום הגדולה. עד ששוברים את השור, הגשר והפסל לא אמיתיים: על הגשר נופלים.",
+    "אחרי שהשור נשבר עוברים בגשר המוזהב ודוחפים את הפסל.",
+    "מהדלת: {GO WEST} שש פעמים, {GO BRIDGE}, {GO SOUTH}, {GO EAST}. {PUSH STATUE}: הפסל נופל לתהום, ונשאר שקע מלא שמן. {DIP TWIG}: הענף סופג כוח מהשמן."
+   ]
+  },
+  {
+   "q": "זאב הערבות בחדר הירוק: מה עושים?",
+   "h": [
+    "נכנסים רק עם ענף טבול בשמן. בלי זה הוא הורג אתכם.",
+    "עושים מה שהקול הקטן אמר. אחר כך זאב הערבות עצמו אומר מה לעשות, ועונים לו מיד, בפקודה הבאה.",
+    "מהשקע: {GO EAST} שלוש פעמים, {GO CHAMBER}, {THROW TWIG}, ומיד {SAY UXMAL}. זאב הערבות הופך... למורה שלכם, והמשימה הושלמה."
+   ]
+  }
+ ],
+ "en": [
+  {
+   "q": "What am I supposed to do?",
+   "h": [
+    "You are a sorcerer's apprentice. Your teacher is gone and something strange is going on in the desert. Follow the trail and examine everything.",
+    "The game reads the first four letters of each word. Move with full words: {GO NORTH}, {GO EAST}. {INV} shows what you carry. Key words: {GAZE} (a sorcerer's way of looking), {DREAM}, {AWAKE}, {SAY}, {REMEMBER}. Leave the snake alone: {TAKE SNAKE} kills you.",
+    "The way in short: gaze into water to travel, find a key and a blue stone at the shack, beat the man with the machete, learn to dream, make the \"revenge medicine\" at the grave, grow a magic twig, and enter {EL DIABLERO}'s cave."
+   ]
+  },
+  {
+   "q": "The desert looks the same everywhere. How do I get out?",
+   "h": [
+    "There are two small pools in the desert. Drinking doesn't help.",
+    "A sorcerer doesn't drink the water. He looks into it.",
+    "At the bluish pool in the north-east corner type {GAZE WATER}. A whirling mist takes you to another desert, with a grave and a shack. {GAZE WATER} at the same pool there brings you back."
+   ]
+  },
+  {
+   "q": "I found a fresh grave. Whose is it?",
+   "h": [
+    "Read the tombstone.",
+    "{READ TOMBSTONE}. That is your teacher's name. Remember it.",
+    "It says {UXMAL}. What to do at the grave is written on a mat in the shack (see the question about the shack). For now go on: {GO SOUTH}, {GO SOUTH}, {GO WEST} brings you to the shack."
+   ]
+  },
+  {
+   "q": "The shack: how do I get in, and what is there?",
+   "h": [
+    "Go in through the doorway. The inner room has a bowl, seeds and a mat.",
+    "Break the bowl, don't take it. Look closely at the threads of the mat. Leave the seeds for now: you need them only later.",
+    "{GO DOORWAY}, then {GO WEST} into the storage room. {BREAK BOWL} shows a key: {TAKE KEY}. Then {LOOK MAT} and {LOOK THREADS}: they describe the \"revenge medicine\": put desert beetles and an eagle feather on the grave, then say the dead man's name. Leave with {GO EAST}, {GO DOORWAY}."
+   ]
+  },
+  {
+   "q": "I have a key. Where is the lock?",
+   "h": [
+    "Something is hidden in the desert near the shack.",
+    "Two steps east of the shack door there is a pile of thick brush. What is under it?",
+    "From the door: {GO EAST}, {GO EAST}, {TAKE BRUSH}, and a tunnel appears. {GO TUNNEL}, {GO EAST}, {OPEN BOX}. {TAKE PEBBLE} and {TAKE PAPER}, then {READ PAPER}: the stone has power against your enemy. Leave the paper, key and brush there ({DROP PAPER}, {DROP KEY}, {DROP BRUSH}). Out: {GO WEST}, {GO UP}."
+   ]
+  },
+  {
+   "q": "A huge man with a machete kills me. What do I do?",
+   "h": [
+    "He waits beyond the yellow pool, where you started. You need something from the box.",
+    "The paper said to use the stone against your enemy. Use it at once, the moment he appears.",
+    "Go back to the first desert ({GAZE WATER} at the bluish pool), walk to the yellow pool and {GAZE WATER} there. In the damp passage {GO SOUTH}, and as soon as the man appears: {THROW PEBBLE}. He vanishes in a flash and leaves his machete: {TAKE MACHETE}."
+   ]
+  },
+  {
+   "q": "I'm stuck in the damp passage. How do I get out? What is dreaming?",
+   "h": [
+    "A sorcerer can reach a place without walking there.",
+    "{DREAM} plus a place takes you there. {AWAKE} alone takes you back to where you fell asleep. {AWAKE} plus a place wakes you up in that place. Places that work: {ROCK}, {WELL}, {NEST}, {MOUNTAIN}, {SPIRIT}, {CANYON}.",
+    "From the passage: {DREAM ROCK} and then {AWAKE ROCK}, and you are awake on the pleasant rock in the first desert. Here {REMEMBER} recalls what you learned here. Note: while you are still dreaming, another {DREAM} does nothing. To jump to a new place use {AWAKE} plus the place."
+   ]
+  },
+  {
+   "q": "Where do I find desert beetles?",
+   "h": [
+    "They live in the blighted cactus in the first desert. Not with bare hands.",
+    "You need the machete.",
+    "From the pleasant rock: {GO NORTH} three times, {GO EAST} five times, {GO NORTH}. At the cactus: {CUT CACTUS}, then {TAKE BEETLES}. You can leave the machete: {DROP MACHETE}."
+   ]
+  },
+  {
+   "q": "How do I get an eagle feather?",
+   "h": [
+    "The feather is in the nest on the mountain, and the mother eagle guards it. Climbing is dangerous.",
+    "Don't climb. Dream.",
+    "{DREAM NEST}, {TAKE FEATHER}, then {AWAKE WELL}: you wake up by the well in the second desert, near the grave."
+   ]
+  },
+  {
+   "q": "I made the revenge medicine and my teacher says he isn't dead. What now?",
+   "h": [
+    "That's fine: it's the next part of the story. Your teacher told you whom to find and what to say.",
+    "The \"spirit-helper\" is the lizard, by a rock in the north-west corner of the first desert. Say {REVEAL} to it.",
+    "From the well: {GO EAST} four times to the grave. {DROP BEETLES}, {DROP FEATHER}, {SAY UXMAL}. Later (once you have the twig, see the next question): {AWAKE SPIRIT} takes you to the lizard; there {SAY REVEAL}. A tiny voice says only a magic twig of your own making can destroy {EL DIABLERO}, by throwing it."
+   ]
+  },
+  {
+   "q": "A magic twig \"of your own making\"? Where from?",
+   "h": [
+    "Remember the seeds in the shack? You need good soil.",
+    "On the mountain there is a spot where the earth is very rich. Plant them there.",
+    "From the grave: {GO SOUTH}, {GO SOUTH}, {GO WEST}, {GO DOORWAY}, {GO WEST}, {TAKE SEEDS}, {GO EAST}, {GO DOORWAY}. Then {DREAM MOUNTAIN}, {GO EAST}, {GO NORTH}, {GO NORTH}, {GO EAST}. There {PLANT SEEDS}: a magic bush grows at once. {TAKE TWIG}. The bush says the twig must first be dipped in the oil {EL DIABLERO} makes from cactus blossoms."
+   ]
+  },
+  {
+   "q": "How do I get into the cave, and what do I do there?",
+   "h": [
+    "You can't dream straight into the cave: {EL DIABLERO}'s power stops you. But you can dream \"nowhere\".",
+    "{DREAM} alone takes you to a place of light and colour. From there {AWAKE CAVE}. Inside, an iron ring in the floor won't move at first.",
+    "{DREAM}, then {AWAKE CAVE}: you are at the cave entrance. {GO NORTH}, {TURN RING} (it clicks), {PULL RING}: the whole slab swings up. {GO DOWN} the steps. Note: there is no way back from the cave, so bring the twig."
+   ]
+  },
+  {
+   "q": "How do I get down to the bottom of the chasm?",
+   "h": [
+    "The columns on the platform \"serve\" someone. Call him.",
+    "There is a copper bell next to the room with the growling. Ring it by the columns.",
+    "From the foot of the steps: {GO EAST}, {TAKE BELL}, {GO WEST}, {GO WEST}. On the platform: {RING BELL}. A hideous winged beast rises from the depths. {GO BEAST}: he drops you at the bottom and flies away. Don't go into the growling room yet!"
+   ]
+  },
+  {
+   "q": "The pond: how do I swim, and where to?",
+   "h": [
+    "In the water don't type {GO}, only {SWIM}. Down and up are {SWIM DOWN} and {SWIM UP}; sideways {SWIM EAST} and {SWIM WEST}. Leave the water with {SWIM SHORE}.",
+    "Under the water several ponds are linked, going east. One of them is full of poisonous air: don't surface there. On the shore of the second safe pond lies a heavy granite block; with it you can dive deeper.",
+    "From the bottom: {GO NORTH}, {GO POND}, {SWIM DOWN}, {SWIM EAST}, {SWIM DOWN}, {SWIM EAST}, {SWIM UP}, {SWIM UP}, {SWIM SHORE}. {TAKE BLOCK}, {GO POND}, then {SWIM DOWN} three times (the third time the block takes you deeper). {SWIM EAST}, then {DROP BLOCK}, because you can't rise with it. {SWIM UP} three times, {SWIM SHORE}."
+   ]
+  },
+  {
+   "q": "A small chasm with a tall pillar. How do I cross?",
+   "h": [
+    "The pillar is taller than the other two columns. Maybe it is long enough.",
+    "Knock it over.",
+    "From the underground path: {GO NORTH}, {PUSH PILLAR}: it falls and makes a bridge. {GO PILLAR}, then {GO WEST}, {GO WEST} to the golden door."
+   ]
+  },
+  {
+   "q": "The golden door and the yellow bull: what do I do?",
+   "h": [
+    "The door isn't really there. Inside, the lizard waits for you again. Careful: if you break the bull on the wrong side of the door, you are trapped inside.",
+    "In the statue room they all look alike, but a sorcerer gazes. Take the yellow figurine outside, and only then break it.",
+    "{GO DOORWAY}: you pass through it. {SAY REVEAL}: the lizard says that once you break the yellow bull, what was unreal becomes real. {GO WEST}, {GAZE STATUES}, {TAKE FIGURINE}, {GO EAST}, {GO DOORWAY}, and only outside: {BREAK FIGURINE}."
+   ]
+  },
+  {
+   "q": "Where is the oil for the twig?",
+   "h": [
+    "The oil is hidden under the gold statue by the great chasm. Until the bull is broken, the bridge and the statue are not real: you fall off the bridge.",
+    "Once the bull is broken, cross the golden bridge and push the statue.",
+    "From the door: {GO WEST} six times, {GO BRIDGE}, {GO SOUTH}, {GO EAST}. {PUSH STATUE}: it falls into the chasm and leaves a hollow full of oil. {DIP TWIG}: the twig absorbs power from the oil."
+   ]
+  },
+  {
+   "q": "The coyote in the green chamber: what do I do?",
+   "h": [
+    "Go in only with the twig dipped in the oil. Without it he kills you.",
+    "Do what the tiny voice said. Then the coyote himself tells you what to do; answer at once, with your very next command.",
+    "From the hollow: {GO EAST} three times, {GO CHAMBER}, {THROW TWIG}, and at once {SAY UXMAL}. The coyote turns into... your teacher, and your task is complete."
+   ]
+  }
+ ]
+}
