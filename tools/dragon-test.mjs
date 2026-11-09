@@ -1353,6 +1353,28 @@ if (part('home choice')) {
   }
 }
 
+// ל-Dragon אמיתי (גונן, 9.11): לשונית בכל דף של קלטת, השמעה, והורדה רק כשהרשות מאפשרת. הצליל נוצר בדפדפן מקובץ הקלטת
+if (part('real dragon sound')) {
+  console.log('real dragon sound');
+  const p = await browser.newPage({ viewport: { width: 1300, height: 900 } });
+  p.on('pageerror', e => pageErrors.push(e.message));
+  const root = base.replace(/\/$/, '');
+  const tab = async (path) => { await p.goto(root + path); await p.waitForTimeout(2500); return p.evaluate(() => ({ sel: document.querySelector('.gv-tabs [aria-selected="true"]')?.dataset.tab || '', real: !!document.querySelector('.gv-tabs [data-tab="real"]'), play: !!document.querySelector('.real-play'), down: !!document.querySelector('.real-down') })); };
+  const c = await tab('/lab/1982/the-count/#real');
+  check('#real opens the "for a real Dragon" tab, with play and download (Scott Adams)', c.sel === 'real' && c.play && c.down, JSON.stringify(c));
+  const h = await tab('/lab/1982/hang-it/#real');
+  check('Peaksoft (Hang It!): play only, no download', h.sel === 'real' && h.play && !h.down, JSON.stringify(h));
+  const d = await tab('/lab/1982/dungeons-of-daggorath/');
+  check('a cartridge has no "for a real Dragon" tab', !d.real, JSON.stringify(d));
+  const w = await p.evaluate(async () => { const cas = new Uint8Array(await (await fetch('/lab/1982/tapes/snaker.cas')).arrayBuffer()); const x = window.d32CasWav(cas); return [String.fromCharCode(...x.slice(0, 4)), String.fromCharCode(...x.slice(8, 12)), x.length]; });
+  check('a shelf tape becomes a WAV sound in the browser', w[0] === 'RIFF' && w[1] === 'WAVE' && w[2] > 1000000, JSON.stringify(w));
+  for (const f of ['lab/1982/real-dragon/index.html', 'en/lab/1982/real-dragon/index.html']) {
+    const html = await readFile(new URL('../' + f, import.meta.url), 'utf8');
+    check(f + ': lists 69 games, each linking to its #real tab', (html.match(/<li><a href="[^"]*\/#real">/g) || []).length === 69);
+  }
+  await p.close();
+}
+
 // הגרסה האנגלית (/en/): דפדפן באנגלית מגיע אליה לבד, אין בה עברית גלויה, והבחירה בשפה נשמרת
 if (part('english')) {
   console.log('english');
@@ -1835,7 +1857,7 @@ if (part('real machine lab')) {
     });
     const pre = path;
     check(`${path} every game opens its own page beside the machine, at its own address, with the 3 tabs (how to load, how to play, about; + hints in a game we finished), the red button and the credit; "back to the cabinet" returns`,
-      gv.out.length === 72 && gv.out.every(g => g.open && g.url.startsWith(pre) && g.url.length > pre.length + 3 && (g.tabs === 3 || (g.tabs === 4 && ['adventureland', 'pirate', 'voodoo', 'mission', 'count', 'odyssey', 'pyramid', 'funhouse', 'ghost', 'golden', 'savage1', 'savage2', 'claymorgue', 'calixto', 'sanctum', 'shenan', 'seasearch', 'trekboer', 'williamsburg', 'vortex', 'diablero', 'sword', 'riverfire'].includes(g.id))) && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go) && gv.after === pre && gv.closed, JSON.stringify(gv.out.filter(g => !(g.open && (g.tabs === 3 || (g.tabs === 4 && ['adventureland', 'pirate', 'voodoo'].includes(g.id))) && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go)).slice(0, 3)));
+      gv.out.length === 72 && gv.out.every(g => g.open && g.url.startsWith(pre) && g.url.length > pre.length + 3 && g.tabs === 3 + (['adventureland', 'pirate', 'voodoo', 'mission', 'count', 'odyssey', 'pyramid', 'funhouse', 'ghost', 'golden', 'savage1', 'savage2', 'claymorgue', 'calixto', 'sanctum', 'shenan', 'seasearch', 'trekboer', 'williamsburg', 'vortex', 'diablero', 'sword', 'riverfire'].includes(g.id) ? 1 : 0) + (['daggorath', 'cavehunter', 'buzzard'].includes(g.id) ? 0 : 1) && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go) && gv.after === pre && gv.closed, JSON.stringify(gv.out.filter(g => !(g.open && true && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go)).slice(0, 3)));
     // העטיפה המקורית (30.10): רק במשחק שיש עליו רשות (El Diablero, מארכיון Dragon Data), בלשונית "על המשחק", עם קרדיט וקישור. התמונה נטענת
     const cv = await browser.newPage({ viewport: { width: 1280, height: 900 } });
     await cv.goto(base.replace(/\/$/, '') + path + 'el-diablero/'); await cv.waitForTimeout(1500);

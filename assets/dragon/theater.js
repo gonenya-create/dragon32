@@ -34,7 +34,8 @@ export const pagesRow = () => {
     + '<a href="' + (EN ? '/en/guides/' : '/guides/') + '"><span aria-hidden="true">💾</span> ' + tr('תוכנות של אז', 'Software of the Day') + '</a>'
     + '<a href="' + (EN ? '/en/adverts/' : '/adverts/') + '"><span aria-hidden="true">📺</span> ' + tr('הפרסומות', 'The adverts') + '</a>'
     + '<a href="' + (EN ? '/en/posters/' : '/posters/') + '"><span aria-hidden="true">🖼️</span> ' + tr('פוסטרים', 'Posters') + '</a>'
-    + '<a href="' + (EN ? '/en/dragon-history/' : '/dragon-history/') + '"><span aria-hidden="true">🐉</span> ' + tr('ההיסטוריה של ה-<bdi dir="ltr">Dragon</bdi>', 'The history of the <bdi dir="ltr">Dragon</bdi>') + '</a>';
+    + '<a href="' + (EN ? '/en/dragon-history/' : '/dragon-history/') + '"><span aria-hidden="true">🐉</span> ' + tr('ההיסטוריה של ה-<bdi dir="ltr">Dragon</bdi>', 'The history of the <bdi dir="ltr">Dragon</bdi>') + '</a>'
+    + '<a href="' + (EN ? '/en/lab/1982/real-dragon/' : '/lab/1982/real-dragon/') + '"><span aria-hidden="true">🔊</span> ' + tr('ל-<bdi dir="ltr">Dragon</bdi> אמיתי', 'For a real <bdi dir="ltr">Dragon</bdi>') + '</a>';
   return row;
 };
 export function createTheater({ root, input, machine, sound, powerOn }) {
