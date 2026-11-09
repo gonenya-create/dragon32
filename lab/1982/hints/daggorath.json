@@ -1,0 +1,231 @@
+{
+ "note": "Survival tips for Dungeons of Daggorath in our own words. Every tip was played and checked on the Dragon machine (9.11.2026), on levels 1 and 2. Each question has three levels: a small hint, a clearer hint and the full method.",
+ "where": "This game draws all its text on the picture screen, so the hint button cannot read where you are and shows all the questions for this game. Each question still has \"at\": words exactly as the game prints them where that problem shows up.",
+ "at": [
+  ["EMPTY", "PINE TORCH"],
+  ["EMPTY", "WOODEN SWORD"],
+  ["???"],
+  ["IN THIS ROOM", "BACKPACK"],
+  ["EMPTY", "WOODEN SWORD"],
+  ["WOODEN SWORD", "!CREATURE!"],
+  ["WOODEN SWORD", "EMPTY"],
+  ["WOODEN SWORD", "!CREATURE!"],
+  ["!CREATURE!", "YET ANOTHER DOES NOT RETURN..."],
+  ["YET ANOTHER DOES NOT RETURN...", "PREPARE!"],
+  ["IN THIS ROOM", "!CREATURE!", "???"],
+  ["WOODEN SWORD", "EMPTY"],
+  ["PREPARE!", "WOODEN SWORD"]
+ ],
+ "he": [
+  {
+   "q": "הכול חשוך, אני לא רואה כלום.",
+   "h": [
+    "אתם מתחילים בחושך. משהו בתרמיל שלכם יכול לעזור.",
+    "בתרמיל יש לפיד ({PINE TORCH}). מוציאים אותו ליד ריקה ומדליקים אותו.",
+    "כותבים {PULL RIGHT TORCH} ואז {USE RIGHT} (בקיצור: {P R T} ואז {U R}). הלפיד נדלק ועובר לתרמיל, והיד חוזרת להיות {EMPTY}. מיד רואים את המסדרון."
+   ]
+  },
+  {
+   "q": "בשתי הידיים כתוב {EMPTY}. במה נלחמים?",
+   "h": [
+    "יש לכם נשק, אבל הוא עדיין בתרמיל.",
+    "בתרמיל יש חרב עץ ({WOODEN SWORD}). מוציאים אותה ליד שמאל, כי יד ימין צריכה להיות פנויה להדלקת הלפיד.",
+    "כותבים {PULL LEFT SWORD}, או בקיצור {P L SW}. בשורה למטה, משמאל, יופיע {WOODEN SWORD}. אצלנו כל משחק התחיל ככה: {P R T}, ‏{U R}, ‏{P L SW}."
+   ]
+  },
+  {
+   "q": "המשחק עונה לי {???}.",
+   "h": [
+    "המשחק לא הבין את הפקודה, או שאי אפשר לעשות אותה עכשיו. שום דבר לא קרה.",
+    "אפשר לקצר כל מילה, אבל רק אם הקיצור לא מתאים לשתי מילים. גם פקודה נכונה נכשלת אם משהו מפריע.",
+    "אצלנו {P L W} קיבל {???}, ו-{P L SW} עבד. גם {G L SW} קיבל {???} כשיצור היה איתנו בחדר, ועבד אחרי שהרגנו אותו. בודקים את הכתיב, מאריכים את הקיצור ומנסים שוב."
+   ]
+  },
+  {
+   "q": "איך יודעים מה יש לי ומה יש על הרצפה?",
+   "h": [
+    "יש פקודה שמחליפה את התמונה ברשימה.",
+    "{EXAMINE} מראה למעלה מה יש בחדר ({IN THIS ROOM}), ולמטה מה יש בתרמיל ({BACKPACK}). {LOOK} מחזיר את תמונת המסדרון.",
+    "כותבים {EXAMINE}. לפיד דולק מסומן ברשימה ברקע לבן. אם יש יצור בחדר, כתוב שם {!CREATURE!}. כדי לחזור לתמונה כותבים {LOOK}."
+   ]
+  },
+  {
+   "q": "איך הולכים ומסתובבים?",
+   "h": [
+    "זזים תא אחד בכל פקודה, תמיד לפי הכיוון שאליו אתם מסתכלים.",
+    "{MOVE} הולך קדימה, {MOVE BACK} אחורה. {TURN LEFT}, {TURN RIGHT} ו-{TURN AROUND} מסובבים אתכם במקום.",
+    "בקיצור: {M}, ‏{M B}, ‏{T L}, ‏{T R}, ‏{T A}. מול קיר לא זזים. אפשר לכתוב כמה פקודות ברצף, והמשחק מבצע אותן לפי הסדר. ריצה ארוכה מעייפת את הלב."
+   ]
+  },
+  {
+   "q": "איך נלחמים?",
+   "h": [
+    "תוקפים ביד שמחזיקה את החרב, כשהיצור מגיע אליכם.",
+    "חכו שהיצור ייכנס לתא שלכם, ואז תקפו שוב ושוב. אחרי כל יצור שהורגים אתם מתחזקים.",
+    "כותבים {ATTACK LEFT} (בקיצור {A L}) כמה פעמים. אצלנו עכביש מת ממכה או שתיים, ונחש משתיים עד ארבע. נחש אחד הרגנו אפילו ביד ריקה, אבל זה לקח שמונה מכות. מתחילים בעכבישים ובנחשים."
+   ]
+  },
+  {
+   "q": "הלב שלי דופק מהר מאוד.",
+   "h": [
+    "הלב באמצע השורה התחתונה מראה כמה אתם עייפים. ככל שהוא דופק מהר יותר, אתם בסכנה גדולה יותר.",
+    "ריצה, הרבה תקיפות ובעיקר מכות מיצורים מאיצים אותו. מנוחה מאטה אותו.",
+    "פשוט לא מקלידים כלום כמה שניות. אצלנו הלב חזר לקצב רגוע בתוך כ-20 שניות של מנוחה. נחים לפני כל קרב, ולא רצים בלי סיבה."
+   ]
+  },
+  {
+   "q": "התעלפתי ומתתי מול יצור קטן.",
+   "h": [
+    "הבעיה לא הייתה היצור, אלא הלב.",
+    "כשהלב דופק מהר מדי, אתם מתעלפים. היצור ממשיך להכות, וזה נגמר במוות.",
+    "אצלנו נחש הרג אותנו כשנכנסנו לקרב עם לב מהיר אחרי ריצה. כשנחנו קודם וחיכינו שהנחש יבוא אלינו, ניצחנו אותו בקלות. אל תרדפו אחרי יצורים: עמדו, נוחו ותנו להם להגיע."
+   ]
+  },
+  {
+   "q": "יצור הרג אותי במכה אחת.",
+   "h": [
+    "לא כל יצור מתאים לכם בהתחלה.",
+    "כבר בקומה הראשונה יש יצורים גדולים וחזקים. הם צריכים הרבה מכות, ויכולים להרוג במכה אחת.",
+    "אצלנו יצור גדול הרג אותנו בקומה הראשונה, וענק עם גרזן בקומה השנייה, כל אחד במכה אחת. כשהם מתקרבים, מתרחקים מהם, ונלחמים קודם בעכבישים ובנחשים כדי להתחזק. אל תשאירו את הנשק על הרצפה כשיש יצורים בסביבה."
+   ]
+  },
+  {
+   "q": "כתוב {YET ANOTHER DOES NOT RETURN...}.",
+   "h": [
+    "מתתם. המשחק מתחיל מחדש מעצמו.",
+    "אחרי {PREPARE!} חוזרים להתחלה, בחושך, והחרב והלפיד שוב בתרמיל.",
+    "כותבים שוב {P R T}, ‏{U R}, ‏{P L SW}. המבוך של הקומה הראשונה זהה בכל משחק, ותמיד מתחילים באותו מקום. רק היצורים מתחילים במקומות אחרים."
+   ]
+  },
+  {
+   "q": "מה עושים עם חפצים שמוצאים?",
+   "h": [
+    "יצורים אוספים חפצים, ומשאירים אותם על הרצפה כשהם מתים.",
+    "{EXAMINE} מראה מה יש על הרצפה. מרימים ליד ריקה. אי אפשר להרים כשיש יצור בחדר.",
+    "אצלנו נחש שהרגנו השאיר {WOODEN SWORD}. כתבנו {EXAMINE}, ראינו את החרב תחת {IN THIS ROOM}, וכתבנו {GET LEFT SWORD} (בקיצור {G L SW}). {DROP LEFT} מניח את מה שביד שמאל על הרצפה. זהירות: נחש לקח את החרב שהנחנו."
+   ]
+  },
+  {
+   "q": "איך יורדים לקומה הבאה?",
+   "h": [
+    "מחפשים בור ברצפה.",
+    "כשעומדים על בור, הוא מצויר כפתח ברצפה בתחתית התמונה. אז כותבים {CLIMB DOWN}.",
+    "בור קרוב להתחלה: מנקודת ההתחלה כותבים {T A}, ‏{M}, ‏{T R}, ‏{M}, ‏{T L}, ‏{M} {M} {M}, ‏{T L}, ואז {M} שבע פעמים. כשהבור בתחתית התמונה כותבים {C D}. מופיע {PREPARE!}, ואתם בקומה השנייה."
+   ]
+  },
+  {
+   "q": "ירדתי, ועכשיו הכול לבן.",
+   "h": [
+    "זה בסדר. כך נראית הקומה השנייה.",
+    "בקומה השנייה הצבעים הפוכים: רקע לבן וקווים שחורים. מעליכם רואים את הבור שממנו ירדתם.",
+    "בקומה השנייה יש עדיין עכבישים ונחשים, אבל גם יצורים חזקים בהרבה. אצלנו ענק עם גרזן הרג אותנו שם במכה אחת. כדאי לרדת רק אחרי שהתחזקתם בקומה הראשונה, ולנוח מיד אחרי הירידה."
+   ]
+  }
+ ],
+ "en": [
+  {
+   "q": "It's all dark, I can't see anything.",
+   "h": [
+    "You start in the dark. Something in your backpack can help.",
+    "There is a torch ({PINE TORCH}) in your backpack. Take it into an empty hand and light it.",
+    "Type {PULL RIGHT TORCH} then {USE RIGHT} (short: {P R T} then {U R}). The torch lights and goes on your backpack, and the hand shows {EMPTY} again. You see the corridor at once."
+   ]
+  },
+  {
+   "q": "Both hands say {EMPTY}. What do I fight with?",
+   "h": [
+    "You do have a weapon, but it is still in your backpack.",
+    "There is a {WOODEN SWORD} in the backpack. Take it into your left hand, so the right hand stays free for the torch.",
+    "Type {PULL LEFT SWORD}, or short {P L SW}. The bottom line shows {WOODEN SWORD} on the left. We started every game like this: {P R T}, {U R}, {P L SW}."
+   ]
+  },
+  {
+   "q": "The game answers {???}.",
+   "h": [
+    "The game did not understand the command, or it can't be done right now. Nothing happened.",
+    "Every word can be shortened, but only if the short form can't match two words. A correct command also fails if something is in the way.",
+    "For us {P L W} got {???} and {P L SW} worked. {G L SW} also got {???} while a creature was in the room, and worked after we killed it. Check the spelling, make the short form longer and try again."
+   ]
+  },
+  {
+   "q": "How do I see what I have and what is on the floor?",
+   "h": [
+    "One command swaps the picture for a list.",
+    "{EXAMINE} shows what is in the room ({IN THIS ROOM}) at the top and what is in your {BACKPACK} below. {LOOK} brings back the corridor.",
+    "Type {EXAMINE}. A lit torch is marked on a white background. If a creature is in the room, it says {!CREATURE!}. To get the picture back, type {LOOK}."
+   ]
+  },
+  {
+   "q": "How do I walk and turn?",
+   "h": [
+    "Each command moves you one cell, always in the direction you are facing.",
+    "{MOVE} goes forward, {MOVE BACK} goes back. {TURN LEFT}, {TURN RIGHT} and {TURN AROUND} turn you on the spot.",
+    "Short: {M}, {M B}, {T L}, {T R}, {T A}. You can't move into a wall. You can type several commands in a row; the game carries them out in order. Long runs tire your heart."
+   ]
+  },
+  {
+   "q": "How do I fight?",
+   "h": [
+    "Attack with the hand that holds the sword, when the creature reaches you.",
+    "Wait for the creature to enter your cell, then attack again and again. Each creature you kill makes you stronger.",
+    "Type {ATTACK LEFT} (short {A L}) several times. For us a spider died in one or two blows and a viper in two to four. We even killed a viper bare-handed, but it took eight blows. Start with spiders and vipers."
+   ]
+  },
+  {
+   "q": "My heart is pounding.",
+   "h": [
+    "The heart in the middle of the bottom line shows how tired you are. The faster it beats, the more danger you are in.",
+    "Running, lots of attacks and above all blows from creatures speed it up. Rest slows it down.",
+    "Just type nothing for a few seconds. For us the heart was back to a calm beat after about 20 seconds of rest. Rest before every fight, and don't run for no reason."
+   ]
+  },
+  {
+   "q": "I fainted and died against a small creature.",
+   "h": [
+    "The problem was not the creature but your heart.",
+    "When the heart beats too fast, you faint. The creature keeps hitting you, and that ends in death.",
+    "A viper killed us when we went into a fight with a fast heart after running. When we rested first and let the viper come to us, we beat it easily. Don't chase creatures: stand, rest and let them come."
+   ]
+  },
+  {
+   "q": "A creature killed me with one blow.",
+   "h": [
+    "Not every creature is a match for you at the start.",
+    "Level one already has big, strong creatures. They take many blows and can kill you with one.",
+    "A big creature killed us on level one, and a giant with an axe on level two, each with one blow. When they come near, walk away, and fight spiders and vipers first to grow stronger. Don't leave your weapon on the floor with creatures around."
+   ]
+  },
+  {
+   "q": "It says {YET ANOTHER DOES NOT RETURN...}.",
+   "h": [
+    "You died. The game starts again by itself.",
+    "After {PREPARE!} you are back at the start, in the dark, with the sword and torch in the backpack again.",
+    "Type {P R T}, {U R}, {P L SW} again. The level one maze is the same in every game and you always start in the same place. Only the creatures start somewhere else."
+   ]
+  },
+  {
+   "q": "What do I do with things I find?",
+   "h": [
+    "Creatures collect things and leave them on the floor when they die.",
+    "{EXAMINE} shows what is on the floor. Pick it up into an empty hand. You can't pick up while a creature is in the room.",
+    "A viper we killed left a {WOODEN SWORD}. We typed {EXAMINE}, saw the sword under {IN THIS ROOM}, and typed {GET LEFT SWORD} (short {G L SW}). {DROP LEFT} puts what your left hand holds on the floor. Careful: a viper took the sword we put down."
+   ]
+  },
+  {
+   "q": "How do I get down to the next level?",
+   "h": [
+    "Look for a hole in the floor.",
+    "When you stand on a hole, it is drawn as an opening in the floor at the bottom of the picture. Then type {CLIMB DOWN}.",
+    "A hole near the start: from the starting point type {T A}, {M}, {T R}, {M}, {T L}, {M} {M} {M}, {T L}, then {M} seven times. With the hole at the bottom of the picture, type {C D}. {PREPARE!} appears and you are on level two."
+   ]
+  },
+  {
+   "q": "I went down and now everything is white.",
+   "h": [
+    "That's fine. This is how level two looks.",
+    "On level two the colours are reversed: white background, black lines. Above you is the hole you came down.",
+    "Level two still has spiders and vipers, but also far stronger creatures. A giant with an axe killed us there with one blow. Go down only after you have grown stronger on level one, and rest right after you arrive."
+   ]
+  }
+ ]
+}
