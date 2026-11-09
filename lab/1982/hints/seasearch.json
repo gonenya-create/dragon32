@@ -1,0 +1,348 @@
+{
+ "note": "Hints for Sea Search (Mark Data Products, 1983; the tape calls itself Sea Quest) in our own words. Every step was played on the Dragon machine (9.11.2026) to the game's own ending. Each question has three levels: a small hint, a clearer hint and the full solution.",
+ "where": "Each question has at: a short piece of the text as the game prints it. In this game ALL text is drawn on the graphics screen under the picture, in upper and lower case; the text screen holds nothing readable. Many places share one description (sandy beach, grassy meadow, on a boat, underwater), so most questions use an item in the room instead (large clam, sharks, lovely mermaid, pirate).",
+ "at": [
+  [
+   "sandy beach",
+   "CoCo-nut falls"
+  ],
+  [
+   "sandy beach",
+   "water falls"
+  ],
+  [
+   "stumble over something",
+   "large cavern"
+  ],
+  [
+   "beach house",
+   "grassy meadow"
+  ],
+  [
+   "sandy beach",
+   "grassy meadow"
+  ],
+  [
+   "SCUBA shop",
+   "treading water",
+   "underwater"
+  ],
+  [
+   "grassy meadow",
+   "metal detector"
+  ],
+  [
+   "lovely mermaid"
+  ],
+  [
+   "on a boat",
+   "treading water"
+  ],
+  [
+   "large clam"
+  ],
+  [
+   "large boulder",
+   "small cave"
+  ],
+  [
+   "pirate",
+   "small island"
+  ],
+  [
+   "weather balloon",
+   "sandy beach"
+  ],
+  [
+   "trap door",
+   "top of a"
+  ],
+  [
+   "sharks"
+  ],
+  [
+   "an anchor",
+   "stuck in"
+  ],
+  [
+   "small cave",
+   "note"
+  ]
+ ],
+ "he": [
+  {
+   "q": "מה המטרה, ואיך מדברים עם המשחק?",
+   "h": [
+    "המטרה: למצוא חמישה אוצרות ולהביא אותם למקום אחד. השלט שליד המפל רק מקדם אתכם בברכה; השלט החשוב נמצא במקום סגור על החוף.",
+    "כותבים פועל ושם עצם. הולכים עם {GO NORTH}, ‏{GO EAST} וכו' (לא אות אחת), או {GO} ושם של משהו שרואים, למשל {GO FALLS}. {INVENTORY} מראה מה אתם סוחבים. אפשר לסחוב רק חמישה דברים. כשמופיע {- (MORE) -} לוחצים {ENTER}.",
+    "האוצרות: {bars of silver}, ‏{diamond ring}, ‏{giant pearl}, ‏{ruby statue} ו-{anchor} (העוגן). מביאים אותם למערה הקטנה שמאחורי הסלע, ושם כותבים {SCORE}. כשהמשחק שואל שאלה (למשל {With what (one word)?}) עונים במילה אחת."
+   ]
+  },
+  {
+   "q": "החוף נמשך והמראה תמיד דומה. לאן עוד אפשר ללכת?",
+   "h": [
+    "הכיוונים הרשומים הם רק מזרח ומערב, אבל יש דברים שאפשר להיכנס אליהם.",
+    "נסו {GO} עם שם של דבר שמופיע ברשימת {You see}: המפל, המזח, הסירה.",
+    "{GO FALLS} ליד השלט נכנס למערה שמאחורי המפל: שם מוטלים {bars of silver} ({GET SILVER}). ‏{GO DOCK} ואז {GO BOAT} עולים לסירה. החוף קצר: שבעה מקטעים, מהמפל במערב ועד הקצה במזרח."
+   ]
+  },
+  {
+   "q": "במערה הגדולה כתוב שנתקלתי במשהו, אבל לא רואים כלום.",
+   "h": [
+    "משהו מונח שם על הרצפה, גם אם הוא לא מופיע ברשימה. חשבו מה הכי שימושי במשחק על אוצרות קבורים.",
+    "פשוט מרימים את זה בשם, בלי לראות אותו קודם.",
+    "במערה הראשונה מדרום למפל כותבים {GET SHOVEL}. את האת צריך הרבה: גם לחפור ({DIG}) וגם לפתוח משהו מתחת למים."
+   ]
+  },
+  {
+   "q": "הגעתי לבית החוף, והדלת לא זזה. איך נכנסים?",
+   "h": [
+    "הסתכלו בציור של הבית: יש בו עוד משהו חוץ מהדלת.",
+    "אם הדלת לא נפתחת, יש עוד פתח בקיר.",
+    "מהמערה הגדולה הדרומית {GO HOLE} מעלה לאחו עם הבית. ‏{BREAK WINDOW} ואז {GO WINDOW}. בפנים {LOOK TABLE} מגלה {credit card}: ‏{GET CARD}. יוצאים שוב עם {GO WINDOW}."
+   ]
+  },
+  {
+   "q": "איפה השדה וחנות הצלילה? מהחוף אין דרך דרומה.",
+   "h": [
+    "הסתכלו טוב בציור של כל מקטע חוף, ולא רק בטקסט.",
+    "באחד המקטעים המזרחיים יש מדרגות בפינת הציור. המילה במשחק היא {STAIRS}.",
+    "במקטע השישי (אחד לפני הקצה המזרחי) כותבים {GO STAIRS}: עולים לשדה, שבנוי כמו לוח משבצות. ‏{metal detector} מונח בפינה הצפון-מזרחית ({GO EAST}, ‏{GO EAST}, ‏{GO SOUTH}). חנות הצלילה ({small SCUBA shop}) בצד המערבי של השורה התחתונה. ‏{GO NORTH} מהפינה הצפון-מערבית מחזיר לחוף."
+   ]
+  },
+  {
+   "q": "המוכר לא נותן לקחת את המכלים, וטבעתי מתחת למים.",
+   "h": [
+    "בלי אוויר אפשר לשרוד מתחת למים רק רגע. בחנות מקבלים כרטיסי אשראי.",
+    "מגיעים לחנות כשהכרטיס מהבית אצלכם. צריך גם לקנות את המכלים וגם למלא אותם; כרטיס בידיים מספיק, לא צריך לתת אותו.",
+    "עם {credit card} ביד: ‏{GET TANKS} ואז {FILL TANKS}. ‏{LOOK GAUGE} מראה כמה צעדי אוויר נשארו: 20 במכל מלא. זה לא מספיק לכל הצלילות, אז שומרים את הכרטיס וחוזרים למלא שוב."
+   ]
+  },
+  {
+   "q": "יש לי גלאי מתכות. איך משתמשים בו?",
+   "h": [
+    "לגלאי יש כפתור על הידית ({LOOK DETECTOR}).",
+    "לוחצים על הכפתור בכל מקום. כשהוא מזמזם חזק, חופרים שם עם האת.",
+    "{PRESS BUTTON} ואז {DIG}. בשדה, בריבוע המערבי של השורה האמצעית, יצא לנו {diamond ring} ‏({GET RING}). ‏{Click...} אומר שאין שם מתכת."
+   ]
+  },
+  {
+   "q": "מצאתי בת ים מתחת למים. מה היא רוצה?",
+   "h": [
+    "בת ים יפה אוהבת להסתכל על עצמה.",
+    "צריך מראה. היא קבורה בחוף, במקום שהגלאי מזמזם.",
+    "בקצה המזרחי של החוף: {PRESS BUTTON}, ‏{DIG}, ‏{GET MIRROR}. בת הים יושבת בקרקעית מתחת לנקודה הצפונית של הים: מהמזח {GO NORTH} פעמיים בסירה, ‏{GO OCEAN}, ‏{GO DOWN} פעמיים. ‏{GIVE MIRROR}: היא שמה לכם {key} ביד."
+   ]
+  },
+  {
+   "q": "הים גדול. איפה צוללים?",
+   "h": [
+    "הסירה זזה רק בכמה נקודות. רק בחלק מהן יש משהו בקרקעית.",
+    "מהמזח הסירה מגיעה לצומת. ממנה: צפונה, מזרחה (ואז צפונה עד האי), ומערבה. {GO OCEAN} קופץ למים ו-{GO DOWN} יורד.",
+    "צפונה מהצומת: בת הים (שתי ירידות). מזרחה ואז צפונה פעם אחת: צדפה ענקית (שתי ירידות). עוד צפונה: האי הקטן ({GO ISLAND}). מערבה מהצומת: הכרישים והעוגן (ארבע ירידות). חוזרים לסירה עם {GO UP} ואז {GO BOAT}."
+   ]
+  },
+  {
+   "q": "הצדפה הגדולה לא נפתחת. איך פותחים אותה?",
+   "h": [
+    "צריך כלי כדי לפתוח אותה, והמשחק ישאל במה.",
+    "כשכותבים {OPEN CLAM} המשחק שואל {With what (one word)?}. עונים בשם של כלי שאתם סוחבים.",
+    "סוחבים את האת. {OPEN CLAM}, ולשאלה עונים {SHOVEL}: מסתבר שזו צדפת פנינה. ‏{GET PEARL}."
+   ]
+  },
+  {
+   "q": "מה עושים עם הסלע הגדול על החוף?",
+   "h": [
+    "סלע גדול על החוף מסתיר לפעמים משהו.",
+    "מזיזים אותו. מאחוריו יש מערה קטנה עם שלט.",
+    "{MOVE BOULDER}, ‏{GO CAVE}. השלט ({READ SIGN}) אומר להביא לכאן את האוצרות ולכתוב {SCORE}. עם האת, ‏{DIG SAND} במערה מגלה {keg of rum}: ‏{GET KEG}."
+   ]
+  },
+  {
+   "q": "הפיראט באי לא נותן לעבור. מה עושים?",
+   "h": [
+    "הוא לא מעוניין באוצרות ולא בכרטיס. מה פיראט באמת אוהב?",
+    "רום. החבית מסתתרת במערה של האוצרות.",
+    "מביאים את {keg of rum} לאי ({GO ISLAND}) וכותבים {GIVE KEG}. הפיראט מודה ונותן לכם את החול שלו, והוא נעלם."
+   ]
+  },
+  {
+   "q": "מה יש באי אחרי שהפיראט הלך?",
+   "h": [
+    "הפיראט הבטיח לכם את החול. בחול חופרים.",
+    "בחלק הדרומי של האי חופרים עם האת. שם מונח גם בלון.",
+    "{GO SOUTH} מהחוף שבו עוגנת הסירה, ‏{DIG}: יוצא {ruby statue} ‏({GET RUBY}). קחו גם את {deflated weather balloon} ‏({GET BALLOON}); ‏{LOOK BALLOON} מסביר על החבל ועל {PULL CORD}. כדי לפנות מקום השארנו באי את האת ואת הכרטיס (אחרי המילוי השני)."
+   ]
+  },
+  {
+   "q": "הדלת בתקרה, בראש הסולם, נעולה. איך פותחים אותה?",
+   "h": [
+    "צריך מפתח. מישהו מתחת למים ייתן לכם אותו תמורת מתנה.",
+    "את המפתח מקבלים מבת הים. אחר כך פותחים את הנעילה ואת הדלת.",
+    "בבית: {GO LADDER}, ‏{UNLOCK DOOR}, ‏{OPEN DOOR}, ‏{GO DOOR}. בעליית הגג יש {small bottle} עם נוזל צלול. השארנו שם את המפתח ({DROP KEY}) ולקחנו את הבקבוק ({GET BOTTLE}). לא פותחים אותו לפני הזמן: התוכן יאבד."
+   ]
+  },
+  {
+   "q": "יש כרישים בדרך למטה. מה עושים?",
+   "h": [
+    "אם ממשיכים לרדת לידם, הם תוקפים. צריך להבריח אותם.",
+    "הנוזל מהבקבוק בעליית הגג הוא דוחה כרישים.",
+    "יורדים במקום המערבי עם הבקבוק המלא. כשרואים {sharks} כותבים {OPEN BOTTLE}: המים נעשים עכורים והכרישים בורחים. רק אז ממשיכים {GO DOWN}."
+   ]
+  },
+  {
+   "q": "העוגן תקוע בחול בקרקעית. איך מוציאים אותו?",
+   "h": [
+    "משהו שממלאים באוויר יכול להרים דבר כבד.",
+    "קושרים את הבלון לעוגן ומנפחים אותו. אחר כך צריך לתפוס את העוגן מהר.",
+    "בקרקעית: {TIE ROPE}, ולשאלה {To what (one word)?} עונים {ANCHOR}. אחר כך {PULL CORD}: הבלון והעוגן עולים. עולים {GO UP} ארבע פעמים, ‏{GO BOAT}, ומיד {GET ANCHOR}, לפני שמזיזים את הסירה: הבלון עף, והעוגן נשאר אצלכם. אם מפליגים קודם, הבלון בורח והעוגן שוקע בחזרה."
+   ]
+  },
+  {
+   "q": "השארתי אוצר במערה, והוא נעלם. במקומו יש פתק.",
+   "h": [
+    "קראו את הפתק. מישהו מסתובב ליד המערה כשהיא פתוחה.",
+    "הפיראט גונב מה שמונח במערה, כשאתם לא בפנים. מה שנגנב לא חוזר. לכן לא משאירים שם אוצרות לאורך המשחק.",
+    "אספנו את האוצרות על החוף שמול המערה ({DROP SILVER}, ‏{DROP RING}, ‏{DROP PEARL}), ובסוף הנחנו את הכלים ({DROP TANKS}, ‏{DROP BOTTLE}), לקחנו את כל החמישה, ‏{GO CAVE}, והנחנו את כולם: {DROP RUBY}, ‏{DROP ANCHOR}, ‏{DROP SILVER}, ‏{DROP RING}, ‏{DROP PEARL}. אחרי החמישי המשחק נגמר: {Congratulations, you did it.} ו-{100 of 100 points scored}."
+   ]
+  }
+ ],
+ "en": [
+  {
+   "q": "What is the goal, and how do I talk to the game?",
+   "h": [
+    "Find five treasures and bring them to one place. The sign at the falls only welcomes you; the important sign is in a hidden spot on the beach.",
+    "Type a verb and a noun. Move with {GO NORTH}, {GO EAST} and so on (not one letter), or {GO} plus something you see, like {GO FALLS}. {INVENTORY} shows what you carry. You can carry only five things. When {- (MORE) -} shows, press {ENTER}.",
+    "The treasures: {bars of silver}, {diamond ring}, {giant pearl}, {ruby statue} and the {anchor}. Bring them to the small cave behind the boulder and type {SCORE} there. When the game asks a question (like {With what (one word)?}) answer with one word."
+   ]
+  },
+  {
+   "q": "The beach goes on and looks the same. Where else can I go?",
+   "h": [
+    "The listed directions are only East and West, but some things can be entered.",
+    "Try {GO} with the name of something in the {You see} list: the falls, the dock, the boat.",
+    "{GO FALLS} at the sign leads into a cave behind the waterfall, with {bars of silver} ({GET SILVER}). {GO DOCK} and then {GO BOAT} take you aboard. The beach is short: seven parts, from the falls in the west to the far east end."
+   ]
+  },
+  {
+   "q": "In the large cavern I stumbled over something, but nothing is listed.",
+   "h": [
+    "Something lies on the floor even though it is not in the list. Think what is most useful in a game about buried treasure.",
+    "Just pick it up by name without seeing it first.",
+    "In the first large cavern south of the falls type {GET SHOVEL}. The shovel is needed a lot: for {DIG} and to open something under water."
+   ]
+  },
+  {
+   "q": "I reached the beach house and the door won't budge. How do I get in?",
+   "h": [
+    "Look at the picture of the house: there is more to it than the door.",
+    "If the door won't open, there is another opening in the wall.",
+    "From the southern large cavern {GO HOLE} brings you up to the meadow with the house. {BREAK WINDOW}, then {GO WINDOW}. Inside, {LOOK TABLE} turns up a {credit card}: {GET CARD}. Leave again with {GO WINDOW}."
+   ]
+  },
+  {
+   "q": "Where are the field and the dive shop? There is no way south from the beach.",
+   "h": [
+    "Look carefully at the picture of each beach part, not only at the text.",
+    "One of the eastern parts has stairs in the corner of the picture. The game's word is {STAIRS}.",
+    "On the sixth beach part (one before the far east end) type {GO STAIRS}: you come up into a field, a grid of meadow. The {metal detector} lies in the north-east corner ({GO EAST}, {GO EAST}, {GO SOUTH}). The {small SCUBA shop} is at the west end of the bottom row. {GO NORTH} from the north-west corner leads back to the beach."
+   ]
+  },
+  {
+   "q": "The clerk won't let me take the tanks, and I drowned under water.",
+   "h": [
+    "Without air you last only a moment under water. The shop takes credit cards.",
+    "Come to the shop with the card from the house. You must both buy the tanks and fill them; carrying the card is enough, you don't hand it over.",
+    "With the {credit card} in hand: {GET TANKS}, then {FILL TANKS}. {LOOK GAUGE} shows how many moves of air are left: 20 when full. That is not enough for every dive, so keep the card and come back to refill."
+   ]
+  },
+  {
+   "q": "I have a metal detector. How do I use it?",
+   "h": [
+    "The detector has a button on its handle ({LOOK DETECTOR}).",
+    "Press the button anywhere. When it buzzes loudly, dig there with the shovel.",
+    "{PRESS BUTTON}, then {DIG}. In the field, in the west square of the middle row, we dug up a {diamond ring} ({GET RING}). {Click...} means there is no metal there."
+   ]
+  },
+  {
+   "q": "I found a mermaid under water. What does she want?",
+   "h": [
+    "A lovely mermaid likes to look at herself.",
+    "You need a mirror. It is buried on the beach where the detector buzzes.",
+    "At the far east end of the beach: {PRESS BUTTON}, {DIG}, {GET MIRROR}. The mermaid sits on the bottom below the northern spot of the sea: from the dock {GO NORTH} twice by boat, {GO OCEAN}, {GO DOWN} twice. {GIVE MIRROR}: she puts a {key} in your hand."
+   ]
+  },
+  {
+   "q": "The sea is big. Where do I dive?",
+   "h": [
+    "The boat moves between a few spots only. Only some have something on the bottom.",
+    "From the dock the boat reaches a crossing. From there: north, east (then north up to the island), and west. {GO OCEAN} jumps in and {GO DOWN} goes down.",
+    "North of the crossing: the mermaid (two dives down). East, then north once: a giant clam (two down). Further north: the small island ({GO ISLAND}). West of the crossing: the sharks and the anchor (four down). Back up with {GO UP}, then {GO BOAT}."
+   ]
+  },
+  {
+   "q": "The large clam won't open. How do I open it?",
+   "h": [
+    "You need a tool to open it, and the game will ask which.",
+    "When you type {OPEN CLAM} the game asks {With what (one word)?}. Answer with a tool you are carrying.",
+    "Carry the shovel. {OPEN CLAM}, and answer {SHOVEL}: it turns out to be an oyster. {GET PEARL}."
+   ]
+  },
+  {
+   "q": "What do I do with the large boulder on the beach?",
+   "h": [
+    "A big boulder on a beach sometimes hides something.",
+    "Move it. Behind it is a small cave with a sign.",
+    "{MOVE BOULDER}, {GO CAVE}. The sign ({READ SIGN}) says to bring the treasures here and type {SCORE}. With the shovel, {DIG SAND} in the cave turns up a {keg of rum}: {GET KEG}."
+   ]
+  },
+  {
+   "q": "The pirate on the island won't let me pass. What do I do?",
+   "h": [
+    "He doesn't want treasure or the card. What does a pirate really like?",
+    "Rum. The keg is hidden in the treasure cave.",
+    "Bring the {keg of rum} to the island ({GO ISLAND}) and type {GIVE KEG}. The pirate thanks you, gives you his sand and goes away."
+   ]
+  },
+  {
+   "q": "What is on the island once the pirate is gone?",
+   "h": [
+    "The pirate gave you his sand. Sand is for digging.",
+    "Dig with the shovel in the southern part of the island. A balloon lies there too.",
+    "{GO SOUTH} from the beach where the boat lands, {DIG}: a {ruby statue} ({GET RUBY}). Also take the {deflated weather balloon} ({GET BALLOON}); {LOOK BALLOON} tells about the rope and {PULL CORD}. To free hands we left the shovel and the card there (after the second refill)."
+   ]
+  },
+  {
+   "q": "The trap door at the top of the ladder is locked. How do I open it?",
+   "h": [
+    "You need a key. Someone under water will give it to you for a gift.",
+    "The mermaid gives you the key. Then unlock the door and open it.",
+    "In the house: {GO LADDER}, {UNLOCK DOOR}, {OPEN DOOR}, {GO DOOR}. The attic holds a {small bottle} of clear liquid. We left the key there ({DROP KEY}) and took the bottle ({GET BOTTLE}). Don't open it too early: the contents would be lost."
+   ]
+  },
+  {
+   "q": "There are sharks on the way down. What do I do?",
+   "h": [
+    "If you go on down past them, they attack. You must drive them off.",
+    "The liquid in the attic bottle is shark repellent.",
+    "Dive at the western spot with the full bottle. When you see {sharks} type {OPEN BOTTLE}: the water turns murky and the sharks swim away. Only then {GO DOWN} again."
+   ]
+  },
+  {
+   "q": "The anchor is stuck in the sand on the bottom. How do I get it out?",
+   "h": [
+    "Something you fill with air can lift something heavy.",
+    "Tie the balloon to the anchor and inflate it. Then grab the anchor quickly.",
+    "On the bottom: {TIE ROPE}, and to {To what (one word)?} answer {ANCHOR}. Then {PULL CORD}: balloon and anchor rise. Go {GO UP} four times, {GO BOAT}, and at once {GET ANCHOR}, before you move the boat: the balloon floats off and you keep the anchor. If you sail first, the balloon flies off and the anchor sinks back."
+   ]
+  },
+  {
+   "q": "I left a treasure in the cave and it vanished. There is a note instead.",
+   "h": [
+    "Read the note. Someone prowls around the cave while it is open.",
+    "The pirate steals what lies in the cave while you are not inside. What he takes never comes back. So don't leave treasures there during the game.",
+    "We gathered the treasures on the beach in front of the cave ({DROP SILVER}, {DROP RING}, {DROP PEARL}), and at the end put down our gear ({DROP TANKS}, {DROP BOTTLE}), took all five, {GO CAVE}, and dropped them all: {DROP RUBY}, {DROP ANCHOR}, {DROP SILVER}, {DROP RING}, {DROP PEARL}. After the fifth the game ends: {Congratulations, you did it.} and {100 of 100 points scored}."
+   ]
+  }
+ ]
+}

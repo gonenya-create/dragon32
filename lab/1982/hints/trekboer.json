@@ -1,0 +1,336 @@
+{
+ "note": "Hints for Trekboer (Mark Data Products, 1984) in our own words. Every step was played and checked on the Dragon machine (9.11.2026), to the game's own ending in Boer Control (Congratulations, you did it! This Adventure is over.). Each question has three levels: a small hint, a clearer hint and the full solution.",
+ "where": "Each question has at: a short piece of the room description as the game prints it. In this game ALL text is drawn on the graphics screen under the picture, in upper and lower case; the text screen holds nothing readable, so the site cannot match these pieces by reading the text screen. Many squares share one description (desert, frozen and garden planet, underground complex), so some questions also use an item in the room (cenotaph, deep chasm, large spider, dangling rope).",
+ "at": [
+  [
+   "control room",
+   "communication room"
+  ],
+  [
+   "communication room",
+   "dusty storage room"
+  ],
+  [
+   "teleporter room",
+   "communication room",
+   "control room"
+  ],
+  [
+   "teleporter room"
+  ],
+  [
+   "desert planet",
+   "wrecked starship",
+   "environmental"
+  ],
+  [
+   "environmental",
+   "small access panel",
+   "pool of liquid"
+  ],
+  [
+   "teleporter room",
+   "pool of liquid"
+  ],
+  [
+   "communication room"
+  ],
+  [
+   "frozen planet",
+   "cenotaph"
+  ],
+  [
+   "cenotaph",
+   "Alton"
+  ],
+  [
+   "cenotaph",
+   "environmental",
+   "pile of ice"
+  ],
+  [
+   "garden planet",
+   "deep chasm"
+  ],
+  [
+   "force field",
+   "underground complex",
+   "strange chamber"
+  ],
+  [
+   "large spider",
+   "unconscious spider",
+   "underground complex"
+  ],
+  [
+   "underground complex",
+   "bottom of a chasm",
+   "dangling rope"
+  ],
+  [
+   "cultivation room",
+   "teleporter room",
+   "Boer Control"
+  ]
+ ],
+ "he": [
+  {
+   "q": "מה המטרה, ואיך מדברים עם המשחק?",
+   "h": [
+    "אתם על החללית {TREKBOER}. מגפה משתוללת בבית, ויש לה תרופה אחת. ההודעות שמגיעות לחללית יגידו לכם מה לחפש.",
+    "כותבים פועל ושם עצם. {LOOK} עם חפץ בודק אותו, {GO} עם שם של מקום שרואים נכנס אליו. לכפתורים קוראים לפי הצבע שלהם. כשמופיע {MORE} למטה, לוחצים {ENTER} לפני הפקודה הבאה, אחרת היא נבלעת.",
+    "המטרה: להביא את צמח ה-{Xendos} ל-{Boer Control}. פקודות שעבדו לנו: {GO WEST}, ‏{GET MANUAL}, ‏{PUSH BLUE}, ‏{GO WINDOW}. אפשר לסחוב חמישה דברים בלבד, וחליפה שלובשים נחשבת אחד מהם."
+   ]
+  },
+  {
+   "q": "ארון האחסון נעול. איפה המפתח?",
+   "h": [
+    "משהו בחדר התקשורת מסתיר את המפתח בין הדפים.",
+    "לוקחים את המדריך ופותחים אותו. אחר כך מחפשים בארון כמה פעמים.",
+    "בחדר התקשורת: {GET MANUAL}, ‏{OPEN MANUAL}, ‏{GET KEY}, ‏{DROP MANUAL}. צפונה ({GO NORTH}) לחדר האחסון: {UNLOCK CABINET}, ואז {LOOK CABINET} שלוש פעמים: חליפת חלל, שמיכה וכרית. {GET EVERYTHING}, ‏{DROP KEY}, ‏{WEAR SUIT}."
+   ]
+  },
+  {
+   "q": "לאן טסים? איך מפעילים את החללית?",
+   "h": [
+    "המדריך מסביר איך מפעילים את החללית. חסרים רק המספרים, ותוך זמן קצר תגיע הודעה.",
+    "כשמופיע {MESSAGE ALERT}, הולכים לחדר התקשורת וקוראים את ההודעה. יש בה קואורדינטות של חללית שנעלמה.",
+    "בחדר הטלפורט משאירים את הכרית ואת השמיכה ({DROP PILLOW}, ‏{DROP BLANKET}) ומסתובבים קצת בחללית ({LOOK ROBOT}): אחרי כמה פקודות מגיעה הודעה. בחדר התקשורת: {GET MESSAGE}, ‏{READ MESSAGE}: הקואורדינטות הן {8350}. בחדר הבקרה: {SET 8350}, ‏{PUSH RED}."
+   ]
+  },
+  {
+   "q": "הגענו לכוכב. איך יורדים מהחללית?",
+   "h": [
+    "חדר הטלפורט נמצא מזרחית לחדר הבקרה. יש בו כפתור אחד.",
+    "לוחצים על הכפתור הכחול: מופיע חלון טלפורט. נכנסים בו.",
+    "{GO EAST} לחדר הטלפורט, {PUSH BLUE}, ‏{GO WINDOW}. בכל כוכב חוזרים באותה דרך: {GO WINDOW} בחלון שעל הקרקע. בדרך החוצה לובשים את החליפה."
+   ]
+  },
+  {
+   "q": "מצאתי חללית הרוסה במדבר. מה עושים בה?",
+   "h": [
+    "זו החללית שנעלמה. יש לה פתח חירום, ובפנים היא בנויה כמו החללית שלכם.",
+    "נכנסים בפתח, לוקחים את האת, יורדים למטה. הרובוט שם כבוי, אבל יש בו משהו שימושי. גם בחדר הבקרה שלה יש משהו לקרוא.",
+    "מהחלון: {GO SOUTH}, ‏{GO EAST}, ‏{GO HATCH}, ‏{GET SHOVEL}, ‏{GO DOWN}. ‏{GO WEST}: ‏{GET CARTRIDGE} מהרובוט. ‏{GO EAST}: מחליפים את האת במפה ({DROP SHOVEL}, ‏{GET MAP}, ‏{OPEN MAP}, ‏{READ MAP}): {Earth 1042}, ‏{Breon 3816}, ‏{Alton ????}. אחר כך {DROP MAP}, ‏{GET SHOVEL}, ויוצאים: {GO LADDER}, ‏{GO HATCH}."
+   ]
+  },
+  {
+   "q": "לוח הגישה בחדר הסביבה של החללית שלנו נעול. איך פותחים אותו?",
+   "h": [
+    "תסתכלו על לוח הגישה בחללית ההרוסה: משהו המיס את המנעול שלו.",
+    "השלד ליד הבריכה במדבר רמז: הנוזל שם הוא חומצה. ממלאים בו את כוס המעבדה.",
+    "מהחללית ההרוסה {GO NORTH} לבריכה, {FILL BEAKER}. חוזרים: {GO SOUTH}, ‏{GO WEST}, ‏{GO NORTH}, ‏{GO WINDOW}. בחללית: {GO WEST}, ‏{GO LADDER}, ‏{POUR LIQUID}. הלוח נפתח, ובתוכו כפתור לבן."
+   ]
+  },
+  {
+   "q": "איפה שומרים חומצה לשימוש מאוחר יותר?",
+   "h": [
+    "תצטרכו חומצה פעם נוספת, הרבה יותר מאוחר. כוס זכוכית לא אוהבת ליפול על רצפה קשה.",
+    "ממלאים שוב את הכוס בבריכה ומניחים אותה בחדר הטלפורט, במקום שבו השארתם משהו רך.",
+    "{GO DOWN}, ‏{GO EAST}, ‏{PUSH BLUE}, ‏{GO WINDOW}, ‏{GO SOUTH}, ‏{GO EAST}, ‏{GO NORTH}, ‏{FILL BEAKER}. חוזרים ({GO SOUTH}, ‏{GO WEST}, ‏{GO NORTH}, ‏{GO WINDOW}) ו-{DROP BEAKER} בחדר הטלפורט: הכוס נוחתת על הכרית."
+   ]
+  },
+  {
+   "q": "הרובוט בחללית שלנו כבוי. איך מפעילים אותו?",
+   "h": [
+    "על הרובוט יש חריץ ריק עם תווית. מה מצאתם ברובוט של החללית ההרוסה?",
+    "מכניסים את המחסנית ולוחצים על הכפתור שבחדר. אחר כך מחפשים במה שנפתח.",
+    "בחדר התקשורת: {INSERT CARTRIDGE}, ‏{PUSH BLUE}: נפתחת מגירה. {LOOK DRAWER} פעמיים: כמוסה צהובה וחבל. {GET CAPSULE}, ‏{GET ROPE}."
+   ]
+  },
+  {
+   "q": "הגענו לכוכב הקפוא. הכול נראה אותו דבר. לאן הולכים?",
+   "h": [
+    "לכו לפי מספר המפה של {Breon}. השמיכה תשמש אתכם כאן, והאת גם. הדרכים בכוכב לא חוזרות לאותו מקום.",
+    "מהחלון הולכים צפונה, מזרחה ואז מערבה, ומגיעים לאנדרטה. קראו מה כתוב עליה.",
+    "בחללית: {GO EAST}, ‏{SET 3816}, ‏{PUSH RED}, ‏{GO EAST}. משאירים את הכמוסה ואת החבל ({DROP CAPSULE}, ‏{DROP ROPE}) ולוקחים את השמיכה ({GET BLANKET}). ‏{PUSH BLUE}, ‏{GO WINDOW}, ‏{GO NORTH}, ‏{GO EAST}, ‏{GO WEST}: האנדרטה."
+   ]
+  },
+  {
+   "q": "המפה לא נותנת קואורדינטות ל-{Alton}.",
+   "h": [
+    "האנדרטה בכוכב הקפוא כתובה בספרות רומיות.",
+    "קוראים את האנדרטה ומתרגמים: {M} הוא אלף, {C} מאה, {X} עשר. על האנדרטה עצמה כדאי גם לטפס.",
+    "{LOOK CENOTAPH}: ‏{MMMMMMMCXII}, כלומר {7112}. ‏{CLIMB CENOTAPH}, ‏{GET AMULET}, ‏{GO DOWN}. את הקמע שומרים עד הסוף."
+   ]
+  },
+  {
+   "q": "החדר מדרום לחדר הטלפורט חשוך. מה עושים עם המים?",
+   "h": [
+    "בחדר הסביבה יש חבית ריקה עם צינורות. היא מחכה למים, והכוכב הקפוא מלא בהם.",
+    "חופרים ליד האנדרטה, אוספים את הקרח בשמיכה ומביאים אותו מהר לחבית: הוא נמס בדרך. אחר כך הכפתור הלבן.",
+    "ליד האנדרטה: {DIG}, ולשאלה {With what} עונים {SHOVEL}. ‏{GET ICE} (הקרח נכנס לשמיכה). ‏{GO NORTH}, ‏{GO WINDOW}, ‏{GO WEST}, ‏{GO LADDER}, ‏{DROP BLANKET}: הקרח נופל לחבית. ‏{REMOVE SUIT}, ‏{DROP SUIT}, ‏{DROP MESSAGE}, ‏{PUSH WHITE}. מאז החדר שמדרום לחדר הטלפורט מואר: זה חדר הגידול."
+   ]
+  },
+  {
+   "q": "כוכב הגן: איך עוברים את התהום?",
+   "h": [
+    "טסים ל-{7112} עם הכמוסה, החבל וכוס החומצה. שוב, הדרכים כאן לא חוזרות לאותו מקום.",
+    "מהחלון דרומה ואז צפונה: גשר קטן מעל התהום. מזרחה ממנו קושרים את החבל לעץ, לדרך חזרה. ליד הגשר משאירים את האת.",
+    "{GO DOWN}, ‏{SET 7112}, ‏{PUSH RED}, ‏{GO EAST}, ‏{GET CAPSULE}, ‏{GET ROPE}, ‏{GET BEAKER}, ‏{PUSH BLUE}, ‏{GO WINDOW}. ‏{GO SOUTH}, ‏{GO NORTH}, ‏{GO EAST}, ‏{TIE ROPE}. ‏{GO WEST}, ‏{DROP SHOVEL}, ‏{CROSS BRIDGE}, ‏{GO NORTH}. הגשר מתפורר מאחוריכם, אז לא מתעכבים עליו."
+   ]
+  },
+  {
+   "q": "יש שדה כוח. ואיפה התרופה?",
+   "h": [
+    "הקמע מהאנדרטה מאפשר לעבור.",
+    "נכנסים בשדה הכוח, ממשיכים דרומה ונכנסים בפתח: שם גדל הצמח.",
+    "{GO FIELD}, ‏{GO SOUTH}, ‏{GO DOORWAY}, ‏{GET PLANT} (זה צמח {Xendos}). יוצאים עם {GO DOORWAY}."
+   ]
+  },
+  {
+   "q": "עכביש ענק חוסם את הדרך מערבה. מה עושים?",
+   "h": [
+    "הכמוסה מהמגירה שימושית כאן. עכביש רעב לא בודק מה הוא אוכל.",
+    "נותנים לו את הכמוסה ומחכים קצת. כשהוא מעולף, לוקחים אותו לחדר עם הצמח ולוחצים על הכפתור האדום שליד הפתח.",
+    "{GO NORTH}, ‏{GO WEST}, ‏{GIVE CAPSULE}. מסתובבים קצת: {GO EAST}, ‏{GO SOUTH}, ‏{GO NORTH}, ‏{GO WEST}: העכביש מעולף. {GET SPIDER}, ‏{GO EAST}, ‏{GO SOUTH}, ‏{GO DOORWAY}, ‏{DROP SPIDER}, ‏{GO DOORWAY}, ‏{PUSH RED}."
+   ]
+  },
+  {
+   "q": "הגשר התמוטט. איך חוזרים לחלון?",
+   "h": [
+    "החומצה בכוס עוד לא סיימה את תפקידה. ואל תשכחו מה קשרתם לעץ.",
+    "בדרום-מערב המתחם יש סורג. ממיסים אותו, יורדים לתחתית התהום, חוצים את הלבה על האבנים ועולים בחבל.",
+    "{GO NORTH}, ‏{GO WEST}, ‏{GO WEST}, ‏{GO SOUTH}, ‏{GO SOUTH}, ‏{POUR LIQUID}, ‏{GO GRATE}, ‏{GO STONES}, ‏{GO EAST}, ‏{GO ROPE}. לחלון: {GO WEST}, ‏{GO SOUTH}, ‏{GO NORTH}, ‏{GO EAST}, ‏{GO WINDOW}."
+   ]
+  },
+  {
+   "q": "יש לי את הצמח. איך מסיימים?",
+   "h": [
+    "צמח אחד לא יספיק לעולם שלם. בחללית יש חדר שבנוי בדיוק בשביל צמחים.",
+    "מניחים את הצמח בחדר הגידול, טסים הביתה לפי המפה, ואוספים אותו בדרך לטלפורט.",
+    "{GO SOUTH} לחדר הגידול, {DROP PLANT}. ‏{GO NORTH} (לחדר הבקרה), {SET 1042}, ‏{PUSH RED}, ‏{GO EAST}, ‏{DROP BEAKER}, ‏{GO SOUTH}, ‏{GET PLANT}, ‏{GO NORTH}, ‏{GO EAST}, ‏{PUSH BLUE}, ‏{GO WINDOW}: {Boer Control}, ‏{Congratulations, you did it!}"
+   ]
+  }
+ ],
+ "en": [
+  {
+   "q": "What is the goal, and how do I talk to the game?",
+   "h": [
+    "You are on the starship {TREKBOER}. A plague rages at home, and there is one cure. The messages the ship receives tell you what to look for.",
+    "Type a verb and a noun. {LOOK} plus a thing examines it, {GO} plus a place you see enters it. Buttons are named by colour. When {MORE} shows at the bottom, press {ENTER} before your next command, or it gets swallowed.",
+    "The goal: bring the {Xendos} plant to {Boer Control}. Commands that worked for us: {GO WEST}, {GET MANUAL}, {PUSH BLUE}, {GO WINDOW}. You can carry only five things, and a suit you wear counts as one."
+   ]
+  },
+  {
+   "q": "The storage cabinet is locked. Where is the key?",
+   "h": [
+    "Something in the communication room hides the key between its pages.",
+    "Take the manual and open it. Then search the cabinet several times.",
+    "In the communication room: {GET MANUAL}, {OPEN MANUAL}, {GET KEY}, {DROP MANUAL}. North ({GO NORTH}) to the storage room: {UNLOCK CABINET}, then {LOOK CABINET} three times: a space suit, a blanket and a pillow. {GET EVERYTHING}, {DROP KEY}, {WEAR SUIT}."
+   ]
+  },
+  {
+   "q": "Where do I fly? How do I work the ship?",
+   "h": [
+    "The manual explains the controls. Only the numbers are missing, and a message arrives soon.",
+    "When {MESSAGE ALERT} shows, go to the communication room and read the message. It has the coordinates of a lost ship.",
+    "In the teleporter room leave the pillow and the blanket ({DROP PILLOW}, {DROP BLANKET}) and look around the ship a little ({LOOK ROBOT}): after a few commands a message arrives. In the communication room: {GET MESSAGE}, {READ MESSAGE}: the coordinates are {8350}. In the control room: {SET 8350}, {PUSH RED}."
+   ]
+  },
+  {
+   "q": "We reached a planet. How do I get off the ship?",
+   "h": [
+    "The teleporter room is east of the control room. It has one button.",
+    "Press the blue button: a teleport window appears. Step through it.",
+    "{GO EAST} to the teleporter room, {PUSH BLUE}, {GO WINDOW}. On every planet you come back the same way: {GO WINDOW} at the window on the ground. Wear the suit on the way out."
+   ]
+  },
+  {
+   "q": "I found a wrecked ship in the desert. What do I do there?",
+   "h": [
+    "It is the lost ship. It has an emergency hatch, and inside it is built like yours.",
+    "Go in through the hatch, take the shovel, go down. The robot there is dead, but it holds something useful. There is also something to read in its control room.",
+    "From the window: {GO SOUTH}, {GO EAST}, {GO HATCH}, {GET SHOVEL}, {GO DOWN}. {GO WEST}: {GET CARTRIDGE} from the robot. {GO EAST}: swap the shovel for the map ({DROP SHOVEL}, {GET MAP}, {OPEN MAP}, {READ MAP}): {Earth 1042}, {Breon 3816}, {Alton ????}. Then {DROP MAP}, {GET SHOVEL}, and out: {GO LADDER}, {GO HATCH}."
+   ]
+  },
+  {
+   "q": "The access panel in our own environmental room is locked. How do I open it?",
+   "h": [
+    "Look at the access panel in the wrecked ship: something dissolved its lock.",
+    "The skeleton by the pool in the desert is a clue: that liquid is acid. Fill the beaker with it.",
+    "From the wreck {GO NORTH} to the pool, {FILL BEAKER}. Back: {GO SOUTH}, {GO WEST}, {GO NORTH}, {GO WINDOW}. In the ship: {GO WEST}, {GO LADDER}, {POUR LIQUID}. The panel opens, with a white button inside."
+   ]
+  },
+  {
+   "q": "Where can I keep acid for later?",
+   "h": [
+    "You will need acid once more, much later. A glass beaker does not like a hard floor.",
+    "Fill the beaker at the pool again and leave it in the teleporter room, where you left something soft.",
+    "{GO DOWN}, {GO EAST}, {PUSH BLUE}, {GO WINDOW}, {GO SOUTH}, {GO EAST}, {GO NORTH}, {FILL BEAKER}. Back ({GO SOUTH}, {GO WEST}, {GO NORTH}, {GO WINDOW}) and {DROP BEAKER} in the teleporter room: it lands on the pillow."
+   ]
+  },
+  {
+   "q": "The robot on our ship is switched off. How do I start it?",
+   "h": [
+    "The robot has an empty slot with a label. What did you find in the wrecked ship's robot?",
+    "Insert the cartridge and press the button in the room. Then search what opens.",
+    "In the communication room: {INSERT CARTRIDGE}, {PUSH BLUE}: a drawer opens. {LOOK DRAWER} twice: a yellow capsule and a rope. {GET CAPSULE}, {GET ROPE}."
+   ]
+  },
+  {
+   "q": "We reached the frozen planet. Everything looks the same. Where do I go?",
+   "h": [
+    "Use the map's number for {Breon}. The blanket is useful here, and so is the shovel. Paths here don't lead back to where you were.",
+    "From the window go north, east and then west to reach the cenotaph. Read what it says.",
+    "On the ship: {GO EAST}, {SET 3816}, {PUSH RED}, {GO EAST}. Leave the capsule and rope ({DROP CAPSULE}, {DROP ROPE}) and take the blanket ({GET BLANKET}). {PUSH BLUE}, {GO WINDOW}, {GO NORTH}, {GO EAST}, {GO WEST}: the cenotaph."
+   ]
+  },
+  {
+   "q": "The map has no coordinates for {Alton}.",
+   "h": [
+    "The cenotaph on the frozen planet is written in the numerals of ancient Rome.",
+    "Read the cenotaph and translate: {M} is a thousand, {C} a hundred, {X} ten. It's worth climbing the cenotaph too.",
+    "{LOOK CENOTAPH}: {MMMMMMMCXII}, which is {7112}. {CLIMB CENOTAPH}, {GET AMULET}, {GO DOWN}. Keep the amulet to the end."
+   ]
+  },
+  {
+   "q": "The room south of the teleporter is dark. What about water?",
+   "h": [
+    "The environmental room has an empty barrel with pipes. It is waiting for water, and the frozen planet is full of it.",
+    "Dig by the cenotaph, carry the ice in the blanket and bring it to the barrel fast: it melts on the way. Then the white button.",
+    "By the cenotaph: {DIG}, and to {With what} answer {SHOVEL}. {GET ICE} (it goes into the blanket). {GO NORTH}, {GO WINDOW}, {GO WEST}, {GO LADDER}, {DROP BLANKET}: the ice falls into the barrel. {REMOVE SUIT}, {DROP SUIT}, {DROP MESSAGE}, {PUSH WHITE}. From then on the room south of the teleporter is lit: the cultivation room."
+   ]
+  },
+  {
+   "q": "The garden planet: how do I cross the chasm?",
+   "h": [
+    "Fly to {7112} with the capsule, the rope and the beaker of acid. Again, paths here don't lead back.",
+    "From the window go south, then north: a small bridge over the chasm. East of it, tie the rope to a tree for the way back. Leave the shovel by the bridge.",
+    "{GO DOWN}, {SET 7112}, {PUSH RED}, {GO EAST}, {GET CAPSULE}, {GET ROPE}, {GET BEAKER}, {PUSH BLUE}, {GO WINDOW}. {GO SOUTH}, {GO NORTH}, {GO EAST}, {TIE ROPE}. {GO WEST}, {DROP SHOVEL}, {CROSS BRIDGE}, {GO NORTH}. The bridge crumbles behind you, so don't linger on it."
+   ]
+  },
+  {
+   "q": "There is a force field. And where is the cure?",
+   "h": [
+    "The amulet from the cenotaph lets you through.",
+    "Go into the force field, carry on south and through the doorway: the plant grows there.",
+    "{GO FIELD}, {GO SOUTH}, {GO DOORWAY}, {GET PLANT} (it's a {Xendos} plant). Out with {GO DOORWAY}."
+   ]
+  },
+  {
+   "q": "A huge spider blocks the way west. What do I do?",
+   "h": [
+    "The capsule from the drawer comes in handy here. A hungry spider doesn't check what it eats.",
+    "Give it the capsule and wait a little. When it's out cold, carry it to the plant's room and press the red button by the doorway.",
+    "{GO NORTH}, {GO WEST}, {GIVE CAPSULE}. Walk around a bit: {GO EAST}, {GO SOUTH}, {GO NORTH}, {GO WEST}: the spider is unconscious. {GET SPIDER}, {GO EAST}, {GO SOUTH}, {GO DOORWAY}, {DROP SPIDER}, {GO DOORWAY}, {PUSH RED}."
+   ]
+  },
+  {
+   "q": "The bridge is gone. How do I get back to the window?",
+   "h": [
+    "The acid in the beaker isn't done yet. And remember what you tied to the tree.",
+    "In the south-west of the complex there is a grate. Dissolve it, go down to the bottom of the chasm, cross the lava on the stones and climb the rope.",
+    "{GO NORTH}, {GO WEST}, {GO WEST}, {GO SOUTH}, {GO SOUTH}, {POUR LIQUID}, {GO GRATE}, {GO STONES}, {GO EAST}, {GO ROPE}. To the window: {GO WEST}, {GO SOUTH}, {GO NORTH}, {GO EAST}, {GO WINDOW}."
+   ]
+  },
+  {
+   "q": "I have the plant. How do I finish?",
+   "h": [
+    "One plant won't do for a whole world. The ship has a room built just for plants.",
+    "Put the plant in the cultivation room, fly home using the map, and pick it up on the way to the teleporter.",
+    "{GO SOUTH} to the cultivation room, {DROP PLANT}. {GO NORTH} (to the control room), {SET 1042}, {PUSH RED}, {GO EAST}, {DROP BEAKER}, {GO SOUTH}, {GET PLANT}, {GO NORTH}, {GO EAST}, {PUSH BLUE}, {GO WINDOW}: {Boer Control}, {Congratulations, you did it!}"
+   ]
+  }
+ ]
+}
