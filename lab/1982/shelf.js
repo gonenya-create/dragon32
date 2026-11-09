@@ -1698,70 +1698,8 @@
       T2('[BREAK] עוצר. {LIST} מראה את כל הקוד, ו-{RUN} מריץ שוב.', '[BREAK] stops it. {LIST} shows the whole program, and {RUN} runs it again.'),
       T2('אפשר לשנות שורה: מקלידים אותה מחדש עם אותו מספר, ומריצים.', 'You can change a line: type it again with the same number, and run it.')];
   }
-  const REAL_NO = new Set(['buzzard']);
-  const REAL_PLAY_ONLY = new Set(['hangit', 'dhh', 'champs', 'lionht', 'sas', 'cricket', 'spores']);
-  let realAudio = null;
-  async function realWav(id) {
-    const cas = new Uint8Array(await (await fetch('/lab/1982/tapes/' + id + '.cas')).arrayBuffer());
-    return casWav(cas);
-  }
-  function realPane(pane, id, kind, name, m) {
-    const intro = document.createElement('p');
-    intro.textContent = T2('יש לכם Dragon 32 או 64 אמיתי? טוענים אליו את המשחק מהטלפון או מהמחשב, דרך כבל הקלטות, בדיוק כמו מקלטת.',
-      'Have a real Dragon 32 or 64? Load the game into it from your phone or computer, through the cassette lead, just like from a tape.');
-    const ol = document.createElement('ol');
-    const li = html => { const x = document.createElement('li'); x.innerHTML = html; ol.appendChild(x); };
-    li(T2('מחברים את התקע של כבל הקלטות שמסומן <bdi dir="ltr">EAR</bdi> ליציאת האוזניות. עוצמה מלאה. <a href="/lab/1982/real-dragon/">איך מחברים</a>',
-      'Plug the cassette lead\'s <bdi dir="ltr">EAR</bdi> plug into the headphone socket. Volume all the way up. <a href="/en/lab/1982/real-dragon/">How to connect</a>'));
-    const cmd = kind ? 'CLOADM' : 'CLOAD';
-    li(T2('מקלידים ב-<bdi dir="ltr">Dragon</bdi> ‏<code dir="ltr">' + cmd + '</code> ולוחצים <bdi dir="ltr">ENTER</bdi>.', 'On the Dragon, type <code>' + cmd + '</code> and press <bdi>ENTER</bdi>.'));
-    li(T2('לוחצים כאן "▶ השמעה" ומחכים' + (m.load && m.load[0] ? ': ' + m.load[0] : '') + '. על המסך מופיע S, ואחר כך F ושם הקלטת.',
-      'Press "▶ Play" here and wait' + (m.load && m.load[1] ? ': ' + m.load[1] : '') + '. The screen shows S, then F and the tape\'s name.'));
-    li(kind === 'm' ? T2('כשמופיע <bdi dir="ltr">OK</bdi>, מקלידים <code dir="ltr">EXEC</code> ו-<bdi dir="ltr">ENTER</bdi>.', 'When <bdi>OK</bdi> appears, type <code>EXEC</code> and <bdi>ENTER</bdi>.')
-      : kind ? T2('כשהטעינה נגמרת, המשחק מתחיל לבד.', 'When loading ends, the game starts by itself.')
-      : T2('כשמופיע <bdi dir="ltr">OK</bdi>, מקלידים <code dir="ltr">RUN</code> ו-<bdi dir="ltr">ENTER</bdi>.', 'When <bdi>OK</bdi> appears, type <code>RUN</code> and <bdi>ENTER</bdi>.'));
-    const row = document.createElement('p');
-    row.className = 'real-row';
-    const play = document.createElement('button');
-    play.type = 'button';
-    play.className = 'real-play';
-    const idle = T2('▶ השמעה', '▶ Play');
-    play.textContent = idle;
-    const state = document.createElement('span');
-    state.className = 'real-state';
-    state.setAttribute('role', 'status');
-    play.addEventListener('click', async () => {
-      if (realAudio && !realAudio.paused) { realAudio.pause(); realAudio = null; play.textContent = idle; state.textContent = ''; return; }
-      play.disabled = true;
-      try {
-        const url = URL.createObjectURL(new Blob([await realWav(id)], { type: 'audio/wav' }));
-        realAudio = new Audio(url);
-        realAudio.volume = 1;
-        realAudio.addEventListener('ended', () => { play.textContent = idle; state.textContent = T2('הסתיים.', 'Finished.'); realAudio = null; });
-        await realAudio.play();
-        play.textContent = T2('■ עצירה', '■ Stop');
-        state.textContent = T2('מנגן… לא לסגור את הדף עד הסוף.', 'Playing… keep this page open until the end.');
-      } catch { state.textContent = T2('ההשמעה לא התחילה. נסו שוב.', 'Playback did not start. Try again.'); }
-      play.disabled = false;
-    });
-    row.append(play);
-    if (!REAL_PLAY_ONLY.has(id)) {
-      const down = document.createElement('button');
-      down.type = 'button';
-      down.className = 'real-down';
-      down.textContent = T2('⬇ הורדת הצליל (wav)', '⬇ Download the sound (wav)');
-      down.addEventListener('click', async () => saveFile(await realWav(id), (name.replace(/[^A-Za-z0-9 !'-]/g, '').trim() || id) + '.wav', 'audio/wav'));
-      row.append(down);
-    }
-    row.append(state);
-    pane.append(intro, ol, row);
-    if (REAL_PLAY_ONLY.has(id)) {
-      const note = document.createElement('p');
-      note.className = 'real-note';
-      note.textContent = T2('את המשחק הזה אפשר רק להשמיע מכאן: הרשות של המחבר היא לאתר הזה.', 'This game can only be played from here: the author\'s permission is for this site.');
-      pane.append(note);
-    }
-  }
+  // ל-Dragon אמיתי (גונן, 9.11): "מי שנכנס לדף המשחק נכנס בשביל לשחק". ההורדות בדף נפרד, בלי מכונה; כאן רק שורה עם קישור
+  const REAL_NO = new Set(['buzzard', 'daggorath', 'cavehunter']);
   function openGame(id, push) {
     const t = TAPES.find(x => x[0] === id), m = meta(id);
     if (!t) return;
@@ -1806,6 +1744,13 @@
       out.textContent = T2('⏏ הוצא את המחסנית', '⏏ Take the cartridge out');
       out.addEventListener('click', () => window.d32EjectCart());
       info.append(out);
+    }
+    if (!REAL_NO.has(id)) {
+      const real = document.createElement('a');
+      real.className = 'gv-real';
+      real.href = (EN ? '/en' : '') + '/lab/1982/real-dragon/#' + id;
+      real.textContent = T2('🔊 יש לכם Dragon אמיתי? הורדה', '🔊 Have a real Dragon? Download');
+      info.appendChild(real);
     }
     if (status) info.appendChild(status);
     const media = document.createElement('figure');
@@ -1886,7 +1831,6 @@
     });
     // ל-Dragon אמיתי (גונן, 9.11): משמיעים את הקלטת מהטלפון או מהמחשב לתוך כבל הקלטות. לא למחסניות, ולא ל-Buzzard Bait
     // (הוא צריך מפתח חומרה). הורדה רק כשהרשות של המחבר היא הפצה חופשית; ל-Peaksoft ול-Star Spores הרשות היא לאתר, אז רק השמעה
-    if (kind !== 'c' && !REAL_NO.has(id)) { mk(T2('ל-Dragon אמיתי', 'For a real Dragon'), pane => realPane(pane, id, kind, name, m)); tabs.lastChild.dataset.tab = 'real'; }
     const paneBox = document.createElement('div');
     paneBox.className = 'gv-panes';
     paneBox.append(...panes);
@@ -1894,8 +1838,7 @@
     body.className = 'gv-body';
     body.append(head, media, info, tabs, paneBox);
     view.append(back, body, creditLine(id, credit));
-    // קישור עם #real (מדף "טוענים ל-Dragon אמיתי") פותח ישר את הלשונית ל-Dragon אמיתי
-    (location.hash === '#real' && tabs.querySelector('[data-tab="real"]') || tabs.firstChild).click();
+    tabs.firstChild.click();
     view.hidden = false;
     document.body.classList.add('game-open');
     requestAnimationFrame(fitView);
@@ -1966,10 +1909,7 @@
 .gv-tags > span:not(.yr) { font-size: 12px; color: #b9a98f; border: 1px solid #4a3a2a; border-radius: 999px; padding: 0 8px; }
 .gv-go { display: block; width: 100%; border: 0; border-radius: 12px; background: #e0503c; color: #fff; font: inherit; font-weight: 800; font-size: 18px; padding: 12px; box-shadow: 0 4px 0 #6d160b; cursor: pointer; }
 .gv-go:active { transform: translateY(2px); box-shadow: 0 2px 0 #6d160b; }
-.real-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-.real-row button { border: 1.5px solid var(--accent, #f2c94c); border-radius: 10px; background: transparent; color: inherit; font: inherit; font-weight: 700; padding: 8px 14px; cursor: pointer; }
-.real-row .real-play { background: var(--accent, #f2c94c); color: #1a1511; }
-.real-state, .real-note { font-size: 14px; opacity: 0.85; }
+.gv-real { display: block; margin-top: 10px; font-size: 14px; color: var(--accent, #f2c94c); }
 .gv-eject { display: none; width: 100%; margin-top: 8px; border: 1.5px solid #5a4430; border-radius: 12px; background: #1b1511; color: #f4efe4; font: inherit; font-weight: 700; font-size: 16px; padding: 10px; cursor: pointer; }
 body.cart-in .gv-eject { display: block; }
 .gv-go.nudge { animation: gv-nudge 0.5s ease-in-out 3; }
@@ -2311,49 +2251,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
     }
     return segWav(segs);
   }
-  // קלטת מהמדף (קובץ .cas) לצליל ל-Dragon אמיתי (גונן, 9.11): אותם בתים בדיוק. אחרי בלוק השם (15 בתים) של קובץ עם הפסקות,
-  // חצי שנייה שקט כמו רשמקול שעוצר ומתניע, ושאר הקלטת ברצף, כמו שהיא (גם טוענים מיוחדים ונתונים לא רגילים עוברים בלי שינוי)
-  function casWav(cas, noGap) {
-    const segs = [['quiet', 0.5]];
-    if (noGap) return segWav(segs.concat([['bytes', cas]]));
-    let from = 0, i = 0;
-    while (i < cas.length - 4) {
-      if (cas[i] === 0x55 && cas[i + 1] === 0x3C) {
-        const type = cas[i + 2], len = cas[i + 3], end = i + 4 + len + 1;
-        if (end > cas.length) break;
-        // השקט רק בקובץ שהכותרת שלו מסמנת הפסקות (gap): בקובץ רציף ה-ROM לא מצפה לשקט, ושקט שם מקלקל את הטעינה (The Count, 9.11)
-        if (type === 0 && len === 15 && cas[i + 4 + 10]) { segs.push(['bytes', cas.subarray(from, end)], ['quiet', 0.5]); from = end; }
-        i = end;
-      } else i++;
-    }
-    segs.push(['bytes', cas.subarray(from)]);
-    return segWav(segs);
-  }
-  window.d32CasWav = casWav;
-  function segWav(segs) {
-    const RATE = 44100, CPU = 894886, AMP = 86;
-    segs = segs.concat([['quiet', 0.1]]);
-    const out = [];
-    let t = 0;
-    const quiet = sec => { const end = Math.round((t + sec) * RATE); while (out.length < end) out.push(128); t += sec; };
-    const bit = one => {
-      const len = (one ? 435 : 813) / CPU, from = Math.round(t * RATE), to = Math.round((t + len) * RATE);
-      for (let s = from; s < to; s++) out.push(Math.round(128 + AMP * Math.sin(2 * Math.PI * ((s / RATE - t) / len))));
-      t += len;
-    };
-    for (const [kind, v] of segs) {
-      if (kind === 'quiet') quiet(v);
-      else for (const byte of v) for (let i = 0; i < 8; i++) bit((byte >> i) & 1);
-    }
-    const head = new DataView(new ArrayBuffer(44)), txt = (o, str) => { for (let i = 0; i < 4; i++) head.setUint8(o + i, str.charCodeAt(i)); };
-    txt(0, 'RIFF'); head.setUint32(4, 36 + out.length, true); txt(8, 'WAVE'); txt(12, 'fmt ');
-    head.setUint32(16, 16, true); head.setUint16(20, 1, true); head.setUint16(22, 1, true);
-    head.setUint32(24, RATE, true); head.setUint32(28, RATE, true); head.setUint16(32, 1, true); head.setUint16(34, 8, true);
-    txt(36, 'data'); head.setUint32(40, out.length, true);
-    const wav = new Uint8Array(44 + out.length);
-    wav.set(new Uint8Array(head.buffer), 0); wav.set(out, 44);
-    return wav;
-  }
+  const segWav = segs => window.D32Wav.segWav(segs), casWav = cas => window.D32Wav.casWav(cas);
   window.d32TapeWav = tapeWav;
   function saveFile(bytes, name, type) {
     const a = document.createElement('a');

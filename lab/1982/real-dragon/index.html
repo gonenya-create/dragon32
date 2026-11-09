@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dragon 1982 — טוענים ל-Dragon אמיתי</title>
+<title>Dragon 1982 — הורדות ל-Dragon אמיתי</title>
 <meta name="description" content="איך משמיעים קלטת מהמדף של dragon1982.com מהטלפון או מהמחשב, דרך כבל הקלטות, לתוך Dragon 32 או 64 אמיתי.">
 <link rel="alternate" hreflang="he" href="https://dragon1982.com/lab/1982/real-dragon/">
 <link rel="alternate" hreflang="en" href="https://dragon1982.com/en/lab/1982/real-dragon/">
@@ -29,170 +29,181 @@ a { color: var(--accent); }
 code { font-family: 'Courier New', monospace; }
 a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .bm{border-collapse:collapse;margin:10px 0 6px;font-size:15px;width:100%}.bm th,.bm td{border-bottom:1px solid rgba(128,128,128,.35);padding:5px 8px;text-align:start}.bm td[dir=ltr]{font-variant-numeric:tabular-nums}
-h3 { font-size: 16px; margin: 18px 0 4px; color: var(--muted); }
-.real-list { list-style: none; padding: 0; }
-.real-list li { margin: 3px 0; font-size: 15px; }
-.real-list code { font-size: 13px; color: var(--muted); }
+
+.ways { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin: 12px 0; }
+.way { border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 14px; background: #1a1511; }
+.way b { display: block; font-size: 17px; color: var(--accent); margin-bottom: 4px; }
+.way p { margin: 0; font-size: 15px; color: var(--muted); }
+.way .who { margin-top: 6px; color: var(--ink); }
+.steps li { margin: 6px 0; }
+.dev { display: inline-block; font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 999px; background: #3a2a10; color: var(--accent); }
+.real-list { list-style: none; padding: 0; margin: 4px 0 10px; }
+.real-list li { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 8px 0; border-bottom: 1px solid #2a221b; }
+.real-list li:target { background: #2a2010; outline: 2px solid var(--accent); border-radius: 8px; }
+.rn { font-weight: 700; min-width: 11em; }
+.rm { font-size: 14px; color: var(--muted); flex: 1 1 auto; }
+.rm code { color: var(--ink); }
+.rb { display: flex; gap: 6px; }
+.rb button, .rb a { font: inherit; font-size: 14px; font-weight: 700; padding: 6px 10px; border-radius: 8px; border: 1.5px solid var(--accent); background: transparent; color: var(--ink); cursor: pointer; text-decoration: none; white-space: nowrap; }
+.rb .p { background: var(--accent); color: #1a1511; min-width: 4.5em; }
+.rb .only { font-size: 13px; color: var(--muted); align-self: center; }
+.bar { flex: 1 1 100%; height: 0; overflow: hidden; }
+li.playing .bar { height: auto; font-size: 13px; color: var(--muted); }
+.bar i { display: block; height: 6px; border-radius: 3px; background: var(--accent); width: 0; margin: 4px 0 2px; }
+h3 { font-size: 16px; margin: 22px 0 2px; color: var(--muted); }
 </style>
 <body>
 <header>
   <b dir="ltr">Dragon 1982</b><span class="tag">מכונת ה-Dragon</span>
   <a href="/en/lab/1982/real-dragon/" lang="en" hreflang="en" data-lang="en">English</a>
-  <a href="/lab/1982/">← למכונת ה-Dragon</a>
+  <a href="/">← לדף הבית</a>
 </header>
 <main>
-<h1>טוענים ל-<bdi>Dragon</bdi> אמיתי</h1>
-<p>את רוב הקלטות שבארון המכונה אפשר להשמיע מהטלפון או מהמחשב ישר לתוך <bdi>Dragon 32</bdi> או <bdi>64</bdi> אמיתי, כמו מרשמקול. בכל דף משחק יש לשונית "ל-<bdi>Dragon</bdi> אמיתי".</p>
+<h1>הורדות ל-<bdi>Dragon</bdi> אמיתי</h1>
+<p>יש לכם <bdi>Dragon 32</bdi> או <bdi>64</bdi> בבית? כאן לוקחים אליו את משחקי המדף שלנו, באישור המחברים. שלוש דרכים, לפי מה שיש לכם:</p>
+<div class="ways">
+  <div class="way"><b>▶ השמעה</b><p>הטלפון או המחשב מנגן את הקלטת ישר לתוך כבל הקלטות של ה-<bdi>Dragon</bdi>. לא צריך להוריד כלום.</p><p class="who">למי שיש כבל קלטות.</p></div>
+  <div class="way"><b>⬇ קובץ צליל</b><p>אותו צליל, כקובץ <bdi>wav</bdi> אצלכם: משמיעים מכל נגן, גם בלי אינטרנט, או מקליטים על קלטת אמיתית.</p><p class="who">למי שרוצה את המשחק אצלו, או קלטת אמיתית.</p></div>
+  <div class="way"><b>⬇ קובץ קלטת</b><p>הקובץ עצמו (<bdi>cas</bdi>). אי אפשר להשמיע אותו: הוא לכרטיס זיכרון ל-<bdi>Dragon</bdi> (כמו <bdi>DragonMMC</bdi>) או לאמולטור (כמו <bdi>XRoar</bdi>).</p><p class="who">למי שיש כרטיס זיכרון או אמולטור.</p></div>
+</div>
 
-<h2>מה צריך</h2>
-<ul>
-  <li><bdi>Dragon 32</bdi> או <bdi>64</bdi>, מחובר לטלוויזיה או למסך.</li>
-  <li>כבל הקלטות של ה-<bdi>Dragon</bdi>: בצד אחד תקע עגול עם חמישה פינים (<bdi>DIN</bdi>), ובצד השני שלושה תקעים קטנים. על אחד מהם כתוב <bdi>EAR</bdi>.</li>
-  <li>טלפון או מחשב עם יציאת אוזניות. ברוב הטלפונים היום אין שקע כזה, אז צריך מתאם קטן מ-<bdi>USB-C</bdi> או מ-<bdi>Lightning</bdi> לאוזניות (3.5 מ"מ).</li>
-</ul>
-
-<h2>איך מחברים</h2>
-<ol>
-  <li>התקע העגול נכנס לשקע <bdi>CASSETTE</bdi> בגב ה-<bdi>Dragon</bdi>.</li>
-  <li>התקע <bdi>EAR</bdi> נכנס ליציאת האוזניות (או למתאם). את שני האחרים, <bdi>MIC</bdi> ו-<bdi>REMOTE</bdi>, משאירים בחוץ.</li>
-  <li>מעלים את העוצמה עד הסוף. בטלפון מפעילים "נא לא להפריע", כדי שצליל של הודעה לא ייכנס באמצע הקלטת.</li>
+<h2>איך משמיעים</h2>
+<p>שני מכשירים, לכל אחד תפקיד:</p>
+<ol class="steps">
+  <li>מחברים: התקע העגול של כבל הקלטות לשקע <bdi>CASSETTE</bdi> בגב ה-<bdi>Dragon</bdi>, והתקע <bdi>EAR</bdi> ליציאת האוזניות של הטלפון או המחשב (בטלפון בלי שקע: מתאם ל-3.5 מ"מ). עוצמה מלאה, ו"נא לא להפריע".</li>
+  <li><span class="dev">ב-Dragon שלכם</span> מקלידים את הפקודה שכתובה ליד המשחק, בדרך כלל <code dir="ltr">CLOADM</code>, ולוחצים <bdi>ENTER</bdi>. ה-<bdi>Dragon</bdi> מחפש: מופיע <bdi>S</bdi>.</li>
+  <li><span class="dev">כאן, בטלפון או במחשב</span> לוחצים ▶ ליד המשחק. אחרי כמה שניות מופיע ב-<bdi>Dragon</bdi> <bdi>F</bdi> ושם המשחק. מחכים עד הסוף בלי לגעת.</li>
+  <li>רוב המשחקים מתחילים לבד. אם כתוב ליד המשחק <code dir="ltr">EXEC</code> או <code dir="ltr">RUN</code>, מקלידים אותו ב-<bdi>Dragon</bdi> כשמופיע <bdi>OK</bdi>.</li>
 </ol>
 
-<h2>טוענים</h2>
-<ol>
-  <li>פותחים את דף המשחק במכונה, ובוחרים בלשונית "ל-<bdi>Dragon</bdi> אמיתי".</li>
-  <li>מקלידים ב-<bdi>Dragon</bdi> את מה שכתוב שם: <code dir="ltr">CLOADM</code> למשחקים בשפת מכונה, <code dir="ltr">CLOAD</code> לתוכניות <bdi>BASIC</bdi>. ולוחצים <bdi>ENTER</bdi>.</li>
-  <li>לוחצים "▶ השמעה". על המסך מופיע <bdi>S</bdi> כשה-<bdi>Dragon</bdi> מחפש, ו-<bdi>F</bdi> עם שם הקלטת כשהוא מוצא אותה.</li>
-  <li>מחכים עד הסוף, בלי לגעת בטלפון ובלי לסגור את הדף.</li>
-</ol>
-
-<h2>לא נטען?</h2>
-<ul>
-  <li><code dir="ltr">?IO ERROR</code>, או שה-<bdi>Dragon</bdi> ממשיך לחפש: מורידים קצת את העוצמה ומנסים שוב.</li>
-  <li>בודקים שהתקע שמחובר הוא <bdi>EAR</bdi>, ולא <bdi>MIC</bdi>.</li>
-  <li>במחשב: מכבים "שיפור צליל" או אקולייזר. אפשר גם לנסות ממחשב במקום טלפון, או הפוך.</li>
-  <li>במשחקים ארוכים: מכבים את נעילת המסך האוטומטית בטלפון.</li>
-</ul>
-
-<h2>מה אי אפשר</h2>
-<ul>
-  <li>מחסניות לא עוברות בכבל הקלטות.</li>
-  <li><bdi>Buzzard Bait</bdi> צריך מפתח חומרה שהיה בקופסה המקורית, אז הוא לא כאן.</li>
-  <li>כמה משחקים אפשר רק להשמיע מהאתר, בלי להוריד: הרשות של המחברים שלהם היא לאתר הזה.</li>
-</ul>
-<h2>כל המשחקים</h2>
-<p>לוחצים על משחק, והדף שלו נפתח ישר בלשונית "ל-<bdi>Dragon</bdi> אמיתי".</p>
+<h2>המשחקים</h2>
 <!-- real-list -->
 <p class="muted">69 משחקים.</p>
 <h3>האגדות</h3>
 <ul class="real-list">
-  <li><a href="/lab/1982/downland/#real"><bdi>Downland</bdi></a> <code dir="ltr">CLOADM</code> · כשלוש דקות</li>
-  <li><a href="/lab/1982/the-king/#real"><bdi>The King</bdi></a> <code dir="ltr">CLOADM</code> · כשלוש דקות</li>
+  <li id="downland" data-id="downland" data-file="Downland"><span class="rn"><bdi>Downland</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כשלוש דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/downland.cas" download="Downland.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="king" data-id="king" data-file="The King"><span class="rn"><bdi>The King</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כשלוש דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/king.cas" download="The King.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
 </ul>
 <h3>ההרפתקאות של Scott Adams</h3>
 <ul class="real-list">
-  <li><a href="/lab/1982/adventureland/#real"><bdi>Adventureland</bdi></a> <code dir="ltr">CLOADM</code> · קצת פחות משתי דקות</li>
-  <li><a href="/lab/1982/pirate-adventure/#real"><bdi>Pirate Adventure</bdi></a> <code dir="ltr">CLOADM</code> · קצת פחות משתי דקות</li>
-  <li><a href="/lab/1982/secret-mission/#real"><bdi>Secret Mission</bdi></a> <code dir="ltr">CLOADM</code> · כשתי דקות</li>
-  <li><a href="/lab/1982/voodoo-castle/#real"><bdi>Voodoo Castle</bdi></a> <code dir="ltr">CLOADM</code> · קצת פחות משתי דקות</li>
-  <li><a href="/lab/1982/the-count/#real"><bdi>The Count</bdi></a> <code dir="ltr">CLOADM</code> · קצת פחות משתי דקות</li>
-  <li><a href="/lab/1982/strange-odyssey/#real"><bdi>Strange Odyssey</bdi></a> <code dir="ltr">CLOADM</code> · קצת פחות משתי דקות</li>
-  <li><a href="/lab/1982/mystery-fun-house/#real"><bdi>Mystery Fun House</bdi></a> <code dir="ltr">CLOADM</code> · קצת פחות משתי דקות</li>
-  <li><a href="/lab/1982/pyramid-of-doom/#real"><bdi>Pyramid of Doom</bdi></a> <code dir="ltr">CLOADM, EXEC</code> · קצת פחות משתי דקות</li>
-  <li><a href="/lab/1982/ghost-town/#real"><bdi>Ghost Town</bdi></a> <code dir="ltr">CLOADM</code> · קצת פחות משתי דקות</li>
-  <li><a href="/lab/1982/savage-island-1/#real"><bdi>Savage Island Part 1</bdi></a> <code dir="ltr">CLOADM</code> · קצת פחות משתי דקות</li>
-  <li><a href="/lab/1982/savage-island-2/#real"><bdi>Savage Island Part 2</bdi></a> <code dir="ltr">CLOADM</code> · קצת פחות משתי דקות</li>
-  <li><a href="/lab/1982/golden-voyage/#real"><bdi>The Golden Voyage</bdi></a> <code dir="ltr">CLOADM</code> · קצת פחות משתי דקות</li>
-  <li><a href="/lab/1982/sorcerer-of-claymorgue-castle/#real"><bdi>Sorcerer of Claymorgue Castle</bdi></a> <code dir="ltr">CLOADM</code> · קצת פחות משתי דקות</li>
+  <li id="adventureland" data-id="adventureland" data-file="Adventureland"><span class="rn"><bdi>Adventureland</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · קצת פחות משתי דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/adventureland.cas" download="Adventureland.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="pirate" data-id="pirate" data-file="Pirate Adventure"><span class="rn"><bdi>Pirate Adventure</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · קצת פחות משתי דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/pirate.cas" download="Pirate Adventure.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="mission" data-id="mission" data-file="Secret Mission"><span class="rn"><bdi>Secret Mission</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כשתי דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/mission.cas" download="Secret Mission.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="voodoo" data-id="voodoo" data-file="Voodoo Castle"><span class="rn"><bdi>Voodoo Castle</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · קצת פחות משתי דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/voodoo.cas" download="Voodoo Castle.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="count" data-id="count" data-file="The Count"><span class="rn"><bdi>The Count</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · קצת פחות משתי דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/count.cas" download="The Count.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="odyssey" data-id="odyssey" data-file="Strange Odyssey"><span class="rn"><bdi>Strange Odyssey</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · קצת פחות משתי דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/odyssey.cas" download="Strange Odyssey.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="funhouse" data-id="funhouse" data-file="Mystery Fun House"><span class="rn"><bdi>Mystery Fun House</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · קצת פחות משתי דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/funhouse.cas" download="Mystery Fun House.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="pyramid" data-id="pyramid" data-file="Pyramid of Doom"><span class="rn"><bdi>Pyramid of Doom</bdi></span><span class="rm"><code dir="ltr">CLOADM → EXEC</code> · קצת פחות משתי דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/pyramid.cas" download="Pyramid of Doom.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="ghost" data-id="ghost" data-file="Ghost Town"><span class="rn"><bdi>Ghost Town</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · קצת פחות משתי דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/ghost.cas" download="Ghost Town.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="savage1" data-id="savage1" data-file="Savage Island Part 1"><span class="rn"><bdi>Savage Island Part 1</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · קצת פחות משתי דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/savage1.cas" download="Savage Island Part 1.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="savage2" data-id="savage2" data-file="Savage Island Part 2"><span class="rn"><bdi>Savage Island Part 2</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · קצת פחות משתי דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/savage2.cas" download="Savage Island Part 2.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="golden" data-id="golden" data-file="The Golden Voyage"><span class="rn"><bdi>The Golden Voyage</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · קצת פחות משתי דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/golden.cas" download="The Golden Voyage.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="claymorgue" data-id="claymorgue" data-file="Sorcerer of Claymorgue Castle"><span class="rn"><bdi>Sorcerer of Claymorgue Castle</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · קצת פחות משתי דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/claymorgue.cas" download="Sorcerer of Claymorgue Castle.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
 </ul>
 <h3>המשחקים של Ron Krebs</h3>
 <ul class="real-list">
-  <li><a href="/lab/1982/black-sanctum/#real"><bdi>Black Sanctum</bdi></a> <code dir="ltr">CLOADM, EXEC</code> · כדקה וחצי</li>
-  <li><a href="/lab/1982/calixto-island/#real"><bdi>Calixto Island</bdi></a> <code dir="ltr">CLOADM, EXEC</code> · כדקה וחצי</li>
+  <li id="sanctum" data-id="sanctum" data-file="Black Sanctum"><span class="rn"><bdi>Black Sanctum</bdi></span><span class="rm"><code dir="ltr">CLOADM → EXEC</code> · כדקה וחצי</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/sanctum.cas" download="Black Sanctum.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="calixto" data-id="calixto" data-file="Calixto Island"><span class="rn"><bdi>Calixto Island</bdi></span><span class="rm"><code dir="ltr">CLOADM → EXEC</code> · כדקה וחצי</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/calixto.cas" download="Calixto Island.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
 </ul>
 <h3>המשחקים של Ken Kalish</h3>
 <ul class="real-list">
-  <li><a href="/lab/1982/escape/#real"><bdi>Escape</bdi></a> <code dir="ltr">CLOADM, EXEC</code> · כחצי דקה</li>
-  <li><a href="/lab/1982/invaders-revenge/#real"><bdi>Invaders Revenge</bdi></a> <code dir="ltr">CLOADM, EXEC</code> · כדקה</li>
-  <li><a href="/lab/1982/el-diablero/#real"><bdi>El Diablero</bdi></a> <code dir="ltr">CLOADM, EXEC</code> · כשתי דקות</li>
-  <li><a href="/lab/1982/phantom-slayer/#real"><bdi>Phantom Slayer</bdi></a> <code dir="ltr">CLOADM, EXEC</code> · כדקה וחצי</li>
-  <li><a href="/lab/1982/danger-ranger/#real"><bdi>Danger Ranger</bdi></a> <code dir="ltr">CLOADM</code> · כשלוש דקות</li>
-  <li><a href="/lab/1982/cuthbert-in-the-jungle/#real"><bdi>Cuthbert in the Jungle</bdi></a> <code dir="ltr">CLOADM</code> · כשתי דקות</li>
-  <li><a href="/lab/1982/devil-assault/#real"><bdi>Devil Assault</bdi></a> <code dir="ltr">CLOADM</code> · כשתי דקות וחצי</li>
-  <li><a href="/lab/1982/dungeon-raid/#real"><bdi>Dungeon Raid</bdi></a> <code dir="ltr">CLOADM</code> · כארבע דקות</li>
-  <li><a href="/lab/1982/athletyx/#real"><bdi>Athletyx</bdi></a> <code dir="ltr">CLOADM</code> · כשתי דקות</li>
-  <li><a href="/lab/1982/starship-chameleon/#real"><bdi>Starship Chameleon</bdi></a> <code dir="ltr">CLOADM</code> · כשתי דקות</li>
+  <li id="escape" data-id="escape" data-file="Escape"><span class="rn"><bdi>Escape</bdi></span><span class="rm"><code dir="ltr">CLOADM → EXEC</code> · כחצי דקה</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/escape.cas" download="Escape.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="invrev" data-id="invrev" data-file="Invaders Revenge"><span class="rn"><bdi>Invaders Revenge</bdi></span><span class="rm"><code dir="ltr">CLOADM → EXEC</code> · כדקה</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/invrev.cas" download="Invaders Revenge.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="diablero" data-id="diablero" data-file="El Diablero"><span class="rn"><bdi>El Diablero</bdi></span><span class="rm"><code dir="ltr">CLOADM → EXEC</code> · כשתי דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/diablero.cas" download="El Diablero.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="phantom" data-id="phantom" data-file="Phantom Slayer"><span class="rn"><bdi>Phantom Slayer</bdi></span><span class="rm"><code dir="ltr">CLOADM → EXEC</code> · כדקה וחצי</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/phantom.cas" download="Phantom Slayer.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="ranger" data-id="ranger" data-file="Danger Ranger"><span class="rn"><bdi>Danger Ranger</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כשלוש דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/ranger.cas" download="Danger Ranger.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="cuthbert" data-id="cuthbert" data-file="Cuthbert in the Jungle"><span class="rn"><bdi>Cuthbert in the Jungle</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כשתי דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/cuthbert.cas" download="Cuthbert in the Jungle.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="devil" data-id="devil" data-file="Devil Assault"><span class="rn"><bdi>Devil Assault</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כשתי דקות וחצי</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/devil.cas" download="Devil Assault.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="dungeon" data-id="dungeon" data-file="Dungeon Raid"><span class="rn"><bdi>Dungeon Raid</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כארבע דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/dungeon.cas" download="Dungeon Raid.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="athletyx" data-id="athletyx" data-file="Athletyx"><span class="rn"><bdi>Athletyx</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כשתי דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/athletyx.cas" download="Athletyx.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="chameleon" data-id="chameleon" data-file="Starship Chameleon"><span class="rn"><bdi>Starship Chameleon</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כשתי דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/chameleon.cas" download="Starship Chameleon.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
 </ul>
 <h3>המשחקים של Mike Hughey</h3>
 <ul class="real-list">
-  <li><a href="/lab/1982/grabber/#real"><bdi>Grabber</bdi></a> <code dir="ltr">CLOADM</code> · כשלוש וחצי דקות</li>
-  <li><a href="/lab/1982/draconian/#real"><bdi>Draconian</bdi></a> <code dir="ltr">CLOADM</code> · כשלוש וחצי דקות</li>
-  <li><a href="/lab/1982/alcatraz-ii/#real"><bdi>Alcatraz II</bdi></a> <code dir="ltr">CLOADM</code> · כדקה</li>
-  <li><a href="/lab/1982/williamsburg-adventure/#real"><bdi>Williamsburg Adventure</bdi></a> <code dir="ltr">CLOADM</code> · כדקה</li>
+  <li id="grabber" data-id="grabber" data-file="Grabber"><span class="rn"><bdi>Grabber</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כשלוש וחצי דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/grabber.cas" download="Grabber.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="draconian" data-id="draconian" data-file="Draconian"><span class="rn"><bdi>Draconian</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כשלוש וחצי דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/draconian.cas" download="Draconian.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="alcatraz" data-id="alcatraz" data-file="Alcatraz II"><span class="rn"><bdi>Alcatraz II</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כדקה</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/alcatraz.cas" download="Alcatraz II.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="williamsburg" data-id="williamsburg" data-file="Williamsburg Adventure"><span class="rn"><bdi>Williamsburg Adventure</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כדקה</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/williamsburg.cas" download="Williamsburg Adventure.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
 </ul>
 <h3>המשחקים של Harry Whitehouse</h3>
 <ul class="real-list">
-  <li><a href="/lab/1982/champions/#real"><bdi>Champions!</bdi></a> <code dir="ltr">CLOADM</code> · כשתי דקות · השמעה בלבד</li>
-  <li><a href="/lab/1982/lionheart/#real"><bdi>Lionheart</bdi></a> <code dir="ltr">CLOADM</code> · כדקה · השמעה בלבד</li>
-  <li><a href="/lab/1982/sas/#real"><bdi>SAS</bdi></a> <code dir="ltr">CLOADM</code> · כדקה וחצי · השמעה בלבד</li>
-  <li><a href="/lab/1982/hang-it/#real"><bdi>Hang It!</bdi></a> <code dir="ltr">CLOADM</code> · כדקה וחצי · השמעה בלבד</li>
-  <li><a href="/lab/1982/deaths-head-hole/#real"><bdi>Death's Head Hole</bdi></a> <code dir="ltr">CLOADM</code> · כשתי דקות · השמעה בלבד</li>
+  <li id="champs" data-id="champs" data-file="Champions!"><span class="rn"><bdi>Champions!</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כשתי דקות</span><span class="rb"><button type="button" class="p">▶</button><span class="only">השמעה בלבד</span></span><span class="bar"><i></i><span></span></span></li>
+  <li id="lionht" data-id="lionht" data-file="Lionheart"><span class="rn"><bdi>Lionheart</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כדקה</span><span class="rb"><button type="button" class="p">▶</button><span class="only">השמעה בלבד</span></span><span class="bar"><i></i><span></span></span></li>
+  <li id="sas" data-id="sas" data-file="SAS"><span class="rn"><bdi>SAS</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כדקה וחצי</span><span class="rb"><button type="button" class="p">▶</button><span class="only">השמעה בלבד</span></span><span class="bar"><i></i><span></span></span></li>
+  <li id="hangit" data-id="hangit" data-file="Hang It!"><span class="rn"><bdi>Hang It!</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כדקה וחצי</span><span class="rb"><button type="button" class="p">▶</button><span class="only">השמעה בלבד</span></span><span class="bar"><i></i><span></span></span></li>
+  <li id="dhh" data-id="dhh" data-file="Death's Head Hole"><span class="rn"><bdi>Death's Head Hole</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כשתי דקות</span><span class="rb"><button type="button" class="p">▶</button><span class="only">השמעה בלבד</span></span><span class="bar"><i></i><span></span></span></li>
 </ul>
 <h3>המשחקים של John Morrison</h3>
 <ul class="real-list">
-  <li><a href="/lab/1982/bonka/#real"><bdi>Bonka</bdi></a> <code dir="ltr">CLOADM</code> · פחות מדקה</li>
-  <li><a href="/lab/1982/vultures/#real"><bdi>Vultures</bdi></a> <code dir="ltr">CLOADM</code> · פחות מדקה</li>
-  <li><a href="/lab/1982/maurice-minor/#real"><bdi>Maurice Minor</bdi></a> <code dir="ltr">CLOADM</code> · כדקה</li>
-  <li><a href="/lab/1982/chess/#real"><bdi>Chess</bdi></a> <code dir="ltr">CLOADM</code> · כדקה וחצי</li>
-  <li><a href="/lab/1982/crusader/#real"><bdi>Crusader</bdi></a> <code dir="ltr">CLOADM</code> · כדקה</li>
-  <li><a href="/lab/1982/droids/#real"><bdi>Droids</bdi></a> <code dir="ltr">CLOADM</code> · פחות מדקה</li>
-  <li><a href="/lab/1982/river-of-fire/#real"><bdi>River of Fire</bdi></a> <code dir="ltr">CLOADM</code> · כשלוש דקות</li>
+  <li id="bonka" data-id="bonka" data-file="Bonka"><span class="rn"><bdi>Bonka</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · פחות מדקה</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/bonka.cas" download="Bonka.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="vultures" data-id="vultures" data-file="Vultures"><span class="rn"><bdi>Vultures</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · פחות מדקה</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/vultures.cas" download="Vultures.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="maurice" data-id="maurice" data-file="Maurice Minor"><span class="rn"><bdi>Maurice Minor</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כדקה</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/maurice.cas" download="Maurice Minor.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="mchess" data-id="mchess" data-file="Chess"><span class="rn"><bdi>Chess</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כדקה וחצי</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/mchess.cas" download="Chess.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="crusader" data-id="crusader" data-file="Crusader"><span class="rn"><bdi>Crusader</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כדקה</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/crusader.cas" download="Crusader.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="droids" data-id="droids" data-file="Droids"><span class="rn"><bdi>Droids</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · פחות מדקה</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/droids.cas" download="Droids.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="riverfire" data-id="riverfire" data-file="River of Fire"><span class="rn"><bdi>River of Fire</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כשלוש דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/riverfire.cas" download="River of Fire.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
 </ul>
 <h3>ההרפתקאות של Bob Withers</h3>
 <ul class="real-list">
-  <li><a href="/lab/1982/shenanigans/#real"><bdi>Shenanigans</bdi></a> <code dir="ltr">CLOADM, EXEC</code> · כשלוש דקות</li>
-  <li><a href="/lab/1982/sea-search/#real"><bdi>Sea Search</bdi></a> <code dir="ltr">CLOADM, EXEC</code> · כשלוש דקות</li>
-  <li><a href="/lab/1982/trekboer/#real"><bdi>Trekboer</bdi></a> <code dir="ltr">CLOADM</code> · כארבע דקות</li>
-  <li><a href="/lab/1982/the-vortex-factor/#real"><bdi>The Vortex Factor</bdi></a> <code dir="ltr">CLOADM</code> · כארבע דקות</li>
+  <li id="shenan" data-id="shenan" data-file="Shenanigans"><span class="rn"><bdi>Shenanigans</bdi></span><span class="rm"><code dir="ltr">CLOADM → EXEC</code> · כשלוש דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/shenan.cas" download="Shenanigans.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="seasearch" data-id="seasearch" data-file="Sea Search"><span class="rn"><bdi>Sea Search</bdi></span><span class="rm"><code dir="ltr">CLOADM → EXEC</code> · כשלוש דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/seasearch.cas" download="Sea Search.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="trekboer" data-id="trekboer" data-file="Trekboer"><span class="rn"><bdi>Trekboer</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כארבע דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/trekboer.cas" download="Trekboer.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="vortex" data-id="vortex" data-file="The Vortex Factor"><span class="rn"><bdi>The Vortex Factor</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כארבע דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/vortex.cas" download="The Vortex Factor.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
 </ul>
 <h3>המשחקים של Paul Garner</h3>
 <ul class="real-list">
-  <li><a href="/lab/1982/starman-jones/#real"><bdi>Starman Jones</bdi></a> <code dir="ltr">CLOADM</code> · כשלוש וחצי דקות</li>
-  <li><a href="/lab/1982/the-sword-and-the-sorcerer/#real"><bdi>The Sword and the Sorcerer</bdi></a> <code dir="ltr">CLOADM</code> · כשלוש דקות</li>
-  <li><a href="/lab/1982/the-wizards-lair/#real"><bdi>The Wizard's Lair</bdi></a> <code dir="ltr">CLOADM</code> · כשלוש וחצי דקות</li>
+  <li id="starman" data-id="starman" data-file="Starman Jones"><span class="rn"><bdi>Starman Jones</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כשלוש וחצי דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/starman.cas" download="Starman Jones.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="sword" data-id="sword" data-file="The Sword and the Sorcerer"><span class="rn"><bdi>The Sword and the Sorcerer</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כשלוש דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/sword.cas" download="The Sword and the Sorcerer.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="wizlair" data-id="wizlair" data-file="The Wizard's Lair"><span class="rn"><bdi>The Wizard's Lair</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כשלוש וחצי דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/wizlair.cas" download="The Wizard's Lair.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
 </ul>
 <h3>עוד משחקים מאותה תקופה</h3>
 <ul class="real-list">
-  <li><a href="/lab/1982/tim-loves-cricket/#real"><bdi>Tim Love's Cricket</bdi></a> <code dir="ltr">CLOADM</code> · כשלוש דקות, ועוד כמה דקות הכנה · השמעה בלבד</li>
-  <li><a href="/lab/1982/tea-time/#real"><bdi>Tea Time</bdi></a> <code dir="ltr">CLOADM</code> · כשתי דקות</li>
-  <li><a href="/lab/1982/star-spores/#real"><bdi>Star Spores</bdi></a> <code dir="ltr">CLOADM</code> · כשלוש דקות · השמעה בלבד</li>
-  <li><a href="/lab/1982/tanglewood/#real"><bdi>Tanglewood</bdi></a> <code dir="ltr">CLOADM, EXEC</code> · כשתי דקות וחצי</li>
-  <li><a href="/lab/1982/ninja-warrior/#real"><bdi>Ninja Warrior</bdi></a> <code dir="ltr">CLOADM, EXEC</code> · כדקה</li>
-  <li><a href="/lab/1982/dig-it/#real"><bdi>Dig-It</bdi></a> <code dir="ltr">CLOADM, EXEC</code> · כשתי דקות</li>
-  <li><a href="/lab/1982/nerble-force/#real"><bdi>Nerble Force</bdi></a> <code dir="ltr">CLOADM</code> · כשתי דקות</li>
+  <li id="cricket" data-id="cricket" data-file="Tim Love's Cricket"><span class="rn"><bdi>Tim Love's Cricket</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כשלוש דקות, ועוד כמה דקות הכנה</span><span class="rb"><button type="button" class="p">▶</button><span class="only">השמעה בלבד</span></span><span class="bar"><i></i><span></span></span></li>
+  <li id="teatime" data-id="teatime" data-file="Tea Time"><span class="rn"><bdi>Tea Time</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כשתי דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/teatime.cas" download="Tea Time.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="spores" data-id="spores" data-file="Star Spores"><span class="rn"><bdi>Star Spores</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כשלוש דקות</span><span class="rb"><button type="button" class="p">▶</button><span class="only">השמעה בלבד</span></span><span class="bar"><i></i><span></span></span></li>
+  <li id="tangle" data-id="tangle" data-file="Tanglewood"><span class="rn"><bdi>Tanglewood</bdi></span><span class="rm"><code dir="ltr">CLOADM → EXEC</code> · כשתי דקות וחצי</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/tangle.cas" download="Tanglewood.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="ninja" data-id="ninja" data-file="Ninja Warrior"><span class="rn"><bdi>Ninja Warrior</bdi></span><span class="rm"><code dir="ltr">CLOADM → EXEC</code> · כדקה</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/ninja.cas" download="Ninja Warrior.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="digit" data-id="digit" data-file="Dig-It"><span class="rn"><bdi>Dig-It</bdi></span><span class="rm"><code dir="ltr">CLOADM → EXEC</code> · כשתי דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/digit.cas" download="Dig-It.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="nerble" data-id="nerble" data-file="Nerble Force"><span class="rn"><bdi>Nerble Force</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כשתי דקות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/nerble.cas" download="Nerble Force.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
 </ul>
 <h3>משחקים של ה-CoCo שרצו על ה-Dragon</h3>
 <ul class="real-list">
-  <li><a href="/lab/1982/snaker/#real"><bdi>Snaker</bdi></a> <code dir="ltr">CLOADM</code> · פחות מדקה</li>
-  <li><a href="/lab/1982/brickout/#real"><bdi>Brickout</bdi></a> <code dir="ltr">CLOADM, EXEC</code> · פחות מדקה</li>
+  <li id="snaker" data-id="snaker" data-file="Snaker"><span class="rn"><bdi>Snaker</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · פחות מדקה</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/snaker.cas" download="Snaker.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="brickout" data-id="brickout" data-file="Brickout"><span class="rn"><bdi>Brickout</bdi></span><span class="rm"><code dir="ltr">CLOADM → EXEC</code> · פחות מדקה</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/brickout.cas" download="Brickout.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
 </ul>
 <h3>משחקים חדשים מהקהילה</h3>
 <ul class="real-list">
-  <li><a href="/lab/1982/blockdown/#real"><bdi>Blockdown</bdi></a> <code dir="ltr">CLOADM</code> · כדקה</li>
-  <li><a href="/lab/1982/dragontet/#real"><bdi>DragonTet</bdi></a> <code dir="ltr">CLOADM, EXEC</code> · כדקה וחצי</li>
+  <li id="blockdown" data-id="blockdown" data-file="Blockdown"><span class="rn"><bdi>Blockdown</bdi></span><span class="rm"><code dir="ltr">CLOADM</code> · כדקה</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/blockdown.cas" download="Blockdown.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="dragontet" data-id="dragontet" data-file="DragonTet"><span class="rn"><bdi>DragonTet</bdi></span><span class="rm"><code dir="ltr">CLOADM → EXEC</code> · כדקה וחצי</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/dragontet.cas" download="DragonTet.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
 </ul>
 <h3>מתוצרת Dragon 1982</h3>
 <ul class="real-list">
-  <li><a href="/lab/1982/dragon-eggs/#real"><bdi>ביצי הדרקון</bdi></a> <code dir="ltr">CLOADM, EXEC</code> · כחצי דקה</li>
-  <li><a href="/lab/1982/guess-the-number/#real"><bdi>נחש את המספר</bdi></a> <code dir="ltr">CLOAD, RUN</code> · שניות</li>
-  <li><a href="/lab/1982/moon-lander/#real"><bdi>נחיתה על הירח</bdi></a> <code dir="ltr">CLOAD, RUN</code> · שניות</li>
-  <li><a href="/lab/1982/maths-quiz/#real"><bdi>חידון חשבון</bdi></a> <code dir="ltr">CLOAD, RUN</code> · שניות</li>
-  <li><a href="/lab/1982/rock-paper-scissors/#real"><bdi>אבן, נייר, מספריים</bdi></a> <code dir="ltr">CLOAD, RUN</code> · שניות</li>
-  <li><a href="/lab/1982/dragon-cave/#real"><bdi>מערת הדרקון</bdi></a> <code dir="ltr">CLOAD, RUN</code> · שניות</li>
-  <li><a href="/lab/1982/screen-drawing/#real"><bdi>ציור על המסך</bdi></a> <code dir="ltr">CLOAD, RUN</code> · שניות</li>
-  <li><a href="/lab/1982/horse-race/#real"><bdi>מרוץ סוסים</bdi></a> <code dir="ltr">CLOAD, RUN</code> · שניות</li>
+  <li id="eggs" data-id="eggs" data-file="Dragon Eggs"><span class="rn"><bdi>ביצי הדרקון</bdi></span><span class="rm"><code dir="ltr">CLOADM → EXEC</code> · כחצי דקה</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/eggs.cas" download="Dragon Eggs.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="guess" data-id="guess" data-file="Guess the number"><span class="rn"><bdi>נחש את המספר</bdi></span><span class="rm"><code dir="ltr">CLOAD → RUN</code> · שניות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/guess.cas" download="Guess the number.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="lander" data-id="lander" data-file="Moon lander"><span class="rn"><bdi>נחיתה על הירח</bdi></span><span class="rm"><code dir="ltr">CLOAD → RUN</code> · שניות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/lander.cas" download="Moon lander.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="quiz" data-id="quiz" data-file="Maths quiz"><span class="rn"><bdi>חידון חשבון</bdi></span><span class="rm"><code dir="ltr">CLOAD → RUN</code> · שניות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/quiz.cas" download="Maths quiz.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="rps" data-id="rps" data-file="Rock paper scissors"><span class="rn"><bdi>אבן, נייר, מספריים</bdi></span><span class="rm"><code dir="ltr">CLOAD → RUN</code> · שניות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/rps.cas" download="Rock paper scissors.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="cave" data-id="cave" data-file="Dragon cave"><span class="rn"><bdi>מערת הדרקון</bdi></span><span class="rm"><code dir="ltr">CLOAD → RUN</code> · שניות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/cave.cas" download="Dragon cave.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="draw" data-id="draw" data-file="Screen drawing"><span class="rn"><bdi>ציור על המסך</bdi></span><span class="rm"><code dir="ltr">CLOAD → RUN</code> · שניות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/draw.cas" download="Screen drawing.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
+  <li id="derby" data-id="derby" data-file="Horse race"><span class="rn"><bdi>מרוץ סוסים</bdi></span><span class="rm"><code dir="ltr">CLOAD → RUN</code> · שניות</span><span class="rb"><button type="button" class="p">▶</button><button type="button" class="w">⬇ צליל</button><a class="c" href="/lab/1982/tapes/derby.cas" download="Horse race.cas">⬇ קלטת</a></span><span class="bar"><i></i><span></span></span></li>
 </ul>
 <!-- /real-list -->
+
+<h2>לא נטען?</h2>
+<ul>
+  <li><code dir="ltr">?IO ERROR</code>, או שה-<bdi>Dragon</bdi> ממשיך לחפש: מורידים קצת את העוצמה ומתחילים שוב: <code dir="ltr">CLOADM</code>, ואז ▶.</li>
+  <li>בודקים שהתקע שמחובר הוא <bdi>EAR</bdi>, ולא <bdi>MIC</bdi>.</li>
+  <li>במחשב: מכבים "שיפור צליל" או אקולייזר. או מנסים ממחשב במקום טלפון, או הפוך.</li>
+</ul>
+
+<h2>מה אין כאן</h2>
+<ul>
+  <li>מחסניות (<bdi>Dungeons of Daggorath</bdi>, <bdi>Cave Hunter</bdi>): הן לא עוברות בכבל קלטות.</li>
+  <li><bdi>Buzzard Bait</bdi>: צריך מפתח חומרה שהיה בקופסה המקורית.</li>
+  <li>כמה משחקים אפשר רק להשמיע, בלי להוריד: הרשות של המחברים שלהם היא לאתר הזה.</li>
+</ul>
 </main>
+<script src="/lab/1982/tapewav.js"></script>
+<script src="/lab/1982/realdragon.js"></script>
 </body>
 </html>

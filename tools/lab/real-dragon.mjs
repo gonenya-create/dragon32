@@ -14,7 +14,9 @@ const rowsT = [...block.matchAll(/^\s*\['(\w+)', '((?:[^'\\]|\\.)*)', '((?:[^'\\
 const kinds = new Map(rowsT.map(m => [m[1], m[4] ? m[4].replace(/'/g, '') : null]));
 const names = new Map(rowsT.map(m => [m[1], [m[2], m[3]].map(x => x.replace(/\\'/g, "'"))]));
 const set = name => new Set([...(shelf.match(new RegExp('const ' + name + ' = new Set\\(\\[([^\\]]*)\\]')) || ['', ''])[1].matchAll(/'(\w+)'/g)].map(m => m[1]));
-const NO = set('REAL_NO'), ONLY = set('REAL_PLAY_ONLY');
+const NO = set('REAL_NO');
+// רק השמעה, בלי הורדה: הרשות של Peaksoft (Harry Whitehouse, ‏Tim Love) ושל Star Spores (‏David Shadoff) היא למדף באתר (permissions-log, 9.11)
+const ONLY = new Set(['hangit', 'dhh', 'champs', 'lionht', 'sas', 'cricket', 'spores']);
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
 function list(he) {
   const L = a => (Array.isArray(a) ? a[he ? 0 : 1] : a) || '';
@@ -25,9 +27,12 @@ function list(he) {
     if (!rows.length) continue;
     out += `<h3>${esc(he ? d.he : d.en)}</h3>\n<ul class="real-list">\n`;
     for (const [id, g] of rows) {
-      const k = kinds.get(id), cmd = k === 'm' ? 'CLOADM, EXEC' : k ? 'CLOADM' : 'CLOAD, RUN';
-      const name = L(names.get(id)) || id;
-      out += `  <li><a href="${pre}${g.slug}/#real"><bdi>${esc(name)}</bdi></a> <code dir="ltr">${cmd}</code>${L(g.load) ? ' · ' + esc(L(g.load)) : ''}${ONLY.has(id) ? (he ? ' · השמעה בלבד' : ' · play only') : ''}</li>\n`;
+      const k = kinds.get(id), cmd = k === 'm' ? 'CLOADM → EXEC' : k ? 'CLOADM' : 'CLOAD → RUN';
+      const name = L(names.get(id)) || id, file = (names.get(id)[1] || id).replace(/[^A-Za-z0-9 !'-]/g, '').trim() || id;
+      const btns = `<button type="button" class="p">▶</button>` + (ONLY.has(id)
+        ? `<span class="only">${he ? 'השמעה בלבד' : 'play only'}</span>`
+        : `<button type="button" class="w">⬇ ${he ? 'צליל' : 'sound'}</button><a class="c" href="/lab/1982/tapes/${id}.cas" download="${esc(file)}.cas">⬇ ${he ? 'קלטת' : 'tape'}</a>`);
+      out += `  <li id="${id}" data-id="${id}" data-file="${esc(file)}"><span class="rn"><bdi>${esc(name)}</bdi></span><span class="rm"><code dir="ltr">${cmd}</code>${L(g.load) ? ' · ' + esc(L(g.load)) : ''}</span><span class="rb">${btns}</span><span class="bar"><i></i><span></span></span></li>\n`;
       n++;
     }
     out += '</ul>\n';
