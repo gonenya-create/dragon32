@@ -665,8 +665,16 @@ function mount(root) {
       else if (!theater.phone) theater.enterPhone();
     };
     root.d32.toComputer = toComputer;
+    // הדף הראשי נפתח בבחירה בין המכונה לאפליקציה (גונן, 9.11). האפליקציה נפתחת לבד רק כשכבר בחרו בה:
+    // קישור עם תוכנית (#p=), קישור ישיר לאפליקציה (#app), או אפליקציה מותקנת
+    let chosen = sharedTaken || /(^#|[#&])(p=|app\b)/.test(location.hash)
+      || matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+    const mark = () => document.documentElement.classList.toggle('d32-chosen', chosen);
+    mark();
+    const choose = () => { chosen = true; mark(); toComputer(); };
+    document.querySelectorAll('.choose-app, .guide-back').forEach(b => b.addEventListener('click', choose));
     const auto = () => {
-      if (theater.left) return;
+      if (!chosen || theater.left) return;
       if (desk.matches && theater.phone) theater.exitPhone(true);   // החלון התרחב: עוברים למסך המלא
       toComputer();
     };
@@ -674,7 +682,6 @@ function mount(root) {
     document.documentElement.classList.remove('d32-booting');
     desk.addEventListener('change', auto);
     addEventListener('pageshow', e => { if (e.persisted) auto(); });
-    document.querySelector('.guide-back')?.addEventListener('click', toComputer);
     // הדבקה כשהמחשב פתוח (⌘V / Ctrl+V), גם בלי ללחוץ קודם על המסך: הקוד נכנס למחשב
     document.addEventListener('paste', e => {
       if (!theater.active && !theater.phone) return;

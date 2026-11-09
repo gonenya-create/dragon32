@@ -29,7 +29,7 @@ function serve() {
 let base = process.argv[2];
 let server = null;
 if (!base) { server = await serve(); base = 'http://localhost:' + server.address().port; }
-const PAGE = base.replace(/\/$/, '') + '/';   // האפליקציה היא דף אחד: המחשב המלא
+const PAGE = base.replace(/\/$/, '') + '/#app';   // האפליקציה (#app: ישר אליה, בלי מסך הבחירה)
 
 const browser = await chromium.launch({ channel: 'chrome', args: ['--lang=he-IL', '--autoplay-policy=no-user-gesture-required', '--use-fake-ui-for-media-stream'] });
 // אם בדיקה קורסת באמצע: סוגרים את הדפדפן לפני היציאה, כדי שלא יישאר Chrome נסתר ברקע
@@ -314,7 +314,7 @@ if (part('room /dragon/')) {
   });
   const p = await ctx.newPage();
   p.on('pageerror', e => pageErrors.push(e.message));
-  await p.goto(base.replace(/\/$/, '') + '/');
+  await p.goto(base.replace(/\/$/, '') + '/#app');
   await p.waitForSelector('#dragon-room.is-ready');
   await p.waitForTimeout(300);   // בטלפון האפליקציה נפתחת במסך הלשוניות, והמחשב למעלה
   check('room starts switched off', await p.locator('#dragon-room').evaluate(e => e.classList.contains('is-off')) && await p.locator('.d32-power').isVisible());
@@ -439,7 +439,7 @@ if (part('magazine type-in')) {
   const ctx = await browser.newContext({ viewport: { width: 390, height: 900 }, reducedMotion: 'reduce' });
   const p = await ctx.newPage();
   p.on('pageerror', e => pageErrors.push(e.message));
-  await p.goto(base.replace(/\/$/, '') + '/');
+  await p.goto(base.replace(/\/$/, '') + '/#app');
   await p.waitForSelector('#dragon-room.is-ready');
   // המדריך: יוצאים מהמחשב, ומשם "הקלד במחשב" חוזר אליו ומקליד
   await p.waitForTimeout(300);
@@ -700,7 +700,7 @@ if (part('GO TO and the "מה קרה?" helper')) {
   console.log('GO TO and the "מה קרה?" helper');
   const p = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   p.on('pageerror', e => pageErrors.push(e.message));
-  await p.goto(base.replace(/\/$/, '') + '/');
+  await p.goto(base.replace(/\/$/, '') + '/#app');
   await p.waitForSelector('#dragon-room.is-ready');
   await toTab(p);
   await ensureOn(p);
@@ -747,7 +747,7 @@ if (part('cartridge DRAGON CASTLE (full computer)')) {
   console.log('cartridge DRAGON CASTLE (full computer)');
   const p = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   p.on('pageerror', e => pageErrors.push(e.message));
-  await p.goto(base.replace(/\/$/, '') + '/');
+  await p.goto(base.replace(/\/$/, '') + '/#app');
   await p.waitForSelector('#dragon-room.is-ready');
   // במסך המלא המדף נמצא בלשונית "קלטות ומחסניות" של ארגז הכלים
   await p.locator('.d32-tab[data-tab="shelf"]').click();
@@ -785,7 +785,7 @@ if (part('cartridge DRAGON DEEP (full computer)')) {
   console.log('cartridge DRAGON DEEP (full computer)');
   const p = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   p.on('pageerror', e => pageErrors.push(e.message));
-  await p.goto(base.replace(/\/$/, '') + '/');
+  await p.goto(base.replace(/\/$/, '') + '/#app');
   await p.waitForSelector('#dragon-room.is-ready');
   await p.locator('.d32-tab[data-tab="shelf"]').click();
   await p.evaluate(() => [...document.querySelectorAll('.d32-cart')].find(e => /DEEP/.test(e.textContent)).click());
@@ -1071,7 +1071,7 @@ if (part('full computer /dragon/app/ (theater, coder, AI)')) {
   console.log('full computer /dragon/app/ (theater, coder, AI)');
   const p = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   p.on('pageerror', e => pageErrors.push(e.message));
-  await p.goto(base.replace(/\/$/, '') + '/');
+  await p.goto(base.replace(/\/$/, '') + '/#app');
   await p.waitForSelector('#dragon-room.is-ready');
   const room = p.locator('#dragon-room');
   await p.waitForTimeout(1400);
@@ -1223,7 +1223,7 @@ if (part('full computer /dragon/app/ (theater, coder, AI)')) {
   // החלון נפתח קטן ומקבל את גודלו רק אחרי הטעינה (כמו פתיחה מאייקון): נכנסים לבד למסך המלא
   const late = await browser.newPage({ viewport: { width: 800, height: 900 } });
   late.on('pageerror', e => pageErrors.push(e.message));
-  await late.goto(base.replace(/\/$/, '') + '/');
+  await late.goto(base.replace(/\/$/, '') + '/#app');
   await late.waitForSelector('#dragon-room.is-ready');
   const lateWas = await late.locator('#dragon-room').evaluate(e => e.classList.contains('is-theater'));
   await late.setViewportSize({ width: 1440, height: 900 });
@@ -1231,7 +1231,7 @@ if (part('full computer /dragon/app/ (theater, coder, AI)')) {
   check('window that grows after loading enters full screen by itself', !lateWas && await late.locator('#dragon-room').evaluate(e => e.classList.contains('is-theater')));
   await late.close();
   const ph = await browser.newPage({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
-  await ph.goto(base.replace(/\/$/, '') + '/');
+  await ph.goto(base.replace(/\/$/, '') + '/#app');
   await ph.waitForSelector('#dragon-room.is-ready');
   await ph.waitForTimeout(400);
   const ph1 = await ph.evaluate(() => ({ phone: document.querySelector('#dragon-room').classList.contains('is-phone'), sw: document.documentElement.scrollWidth }));
@@ -1268,7 +1268,7 @@ if (part('all command cards')) {
   console.log('all command cards');
   const p = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   p.on('pageerror', e => pageErrors.push(e.message));
-  await p.goto(base.replace(/\/$/, '') + '/');
+  await p.goto(base.replace(/\/$/, '') + '/#app');
   await p.waitForSelector('#dragon-room.is-ready');
   await p.waitForFunction(() => /OK\s*$/.test(document.querySelector('#dragon-room .d32-out').textContent), null, { timeout: 5000 });
   await p.locator('.d32-welcome-x').click().catch(() => {});
@@ -1309,16 +1309,46 @@ if (part('all command cards')) {
   await p.close();
 }
 
+// הדף הראשי נפתח בבחירה בין המכונה לאפליקציה; האפליקציה נפתחת רק אחרי בחירה (גונן, 9.11)
+if (part('home choice')) {
+  console.log('home choice');
+  for (const [name, opt, path, lab] of [
+    ['desktop he', { viewport: { width: 1440, height: 900 }, locale: 'he-IL' }, '/', '/lab/1982/'],
+    ['phone he', { viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, locale: 'he-IL' }, '/', '/lab/1982/'],
+    ['desktop en', { viewport: { width: 1440, height: 900 }, locale: 'en-GB' }, '/en/', '/en/lab/1982/']]) {
+    const ctx = await browser.newContext(opt);
+    const p = await ctx.newPage();
+    p.on('pageerror', e => pageErrors.push(e.message));
+    await p.goto(base.replace(/\/$/, '') + path);
+    await p.waitForSelector('#dragon-room.is-ready', { state: 'attached' });
+    await p.waitForTimeout(600);
+    const open = () => p.evaluate(() => document.documentElement.classList.contains('d32-theater-on'));
+    check(name + ': the app does not open by itself', !(await open()));
+    const vis = await p.evaluate(() => [...document.querySelectorAll('.choose-card')].map(c => { const r = c.getBoundingClientRect(); return r.top < innerHeight && r.height > 0; }));
+    check(name + ': both choices are on the first screen', vis.length === 2 && vis.every(Boolean), JSON.stringify(vis));
+    check(name + ': the floating app button is hidden before a choice', !(await p.locator('.guide-back').isVisible()));
+    check(name + ': the machine card links to the machine', (await p.locator('.choose-machine').getAttribute('href')) === lab);
+    await p.locator('.choose-app').click();
+    await p.waitForTimeout(500);
+    check(name + ': "the app" opens the app', await open());
+    await ctx.close();
+  }
+  for (const f of ['lab/1982/index.html', 'en/lab/1982/index.html', 'guides/index.html', 'en/guides/index.html']) {
+    const html = await readFile(new URL('../' + f, import.meta.url), 'utf8');
+    check(f + ': its link back to the app opens the app directly (#app)', /href="\/(en\/)?#app"/.test(html));
+  }
+}
+
 // הגרסה האנגלית (/en/): דפדפן באנגלית מגיע אליה לבד, אין בה עברית גלויה, והבחירה בשפה נשמרת
 if (part('english')) {
   console.log('english');
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, locale: 'en-GB' });
   const p = await ctx.newPage();
   p.on('pageerror', e => pageErrors.push(e.message));
-  await p.goto(base.replace(/\/$/, '') + '/');
+  await p.goto(base.replace(/\/$/, '') + '/#app');
   await p.waitForSelector('#dragon-room.is-ready');
   await p.waitForTimeout(500);
-  check('an English browser lands on /en/ (lang=en, ltr)', /\/en\/$/.test(p.url()) && await p.evaluate(() => document.documentElement.lang === 'en' && document.documentElement.dir === 'ltr'), p.url());
+  check('an English browser lands on /en/ (lang=en, ltr)', /\/en\/(#app)?$/.test(p.url()) && await p.evaluate(() => document.documentElement.lang === 'en' && document.documentElement.dir === 'ltr'), p.url());
   const hebrew = () => p.evaluate(() => { const out = []; const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT); let n; while ((n = w.nextNode())) { const el = n.parentElement; if (!el || el.closest('[lang="he"], script, style') || !el.getClientRects().length) continue; if (/[\u0590-\u05FF]/.test(n.textContent)) out.push(n.textContent.trim().slice(0, 50)); } return out; });
   const seen = [];
   for (const t of ['program', 'commands', 'shelf']) { await p.locator(`.d32-tab[data-tab="${t}"]`).click(); await p.waitForTimeout(150); seen.push(...await hebrew()); }
@@ -1335,11 +1365,11 @@ if (part('english')) {
   const g = await hebrew();
   check('the English guide shows no Hebrew (except the "עברית" link)', g.length === 0, g.join(' | '));
   await p.locator('.site-nav [data-lang="he"]').click();
-  await p.waitForURL(/\/$/);
-  await p.waitForSelector('#dragon-room.is-ready');
-  check('"עברית" goes to the Hebrew app and is remembered', await p.evaluate(() => document.documentElement.lang === 'he' && localStorage.getItem('d32-lang') === 'he'));
-  await p.goto(base.replace(/\/$/, '') + '/en/');
-  await p.waitForURL(/\/$/);
+  await p.waitForURL(/\/(#app)?$/);
+  await p.waitForSelector('#dragon-room.is-ready', { state: 'attached' });
+  check('"עברית" goes to the Hebrew home page and is remembered', await p.evaluate(() => document.documentElement.lang === 'he' && localStorage.getItem('d32-lang') === 'he'));
+  await p.goto(base.replace(/\/$/, '') + '/en/#app');
+  await p.waitForURL(/\/(#app)?$/);
   check('a remembered Hebrew choice wins over /en/ too', await p.evaluate(() => document.documentElement.lang === 'he'));
   await ctx.close();
 }
@@ -1350,7 +1380,7 @@ if (part('cartridge JUNGLE KING')) {
   console.log('\ncartridge JUNGLE KING');
   const p = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   p.on('pageerror', e => pageErrors.push(e.message));
-  await p.goto(base.replace(/\/$/, '') + '/');
+  await p.goto(base.replace(/\/$/, '') + '/#app');
   await p.evaluate(() => { localStorage.removeItem('d32-king-save'); localStorage.removeItem('d32-king-diff'); });
   await p.reload(); await p.waitForSelector('#dragon-room.is-ready');
   await p.locator('.d32-tab[data-tab="shelf"]').click();
