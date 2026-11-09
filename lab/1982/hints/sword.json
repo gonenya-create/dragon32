@@ -1,0 +1,280 @@
+{
+ "note": "Hints for The Sword and the Sorcerer in our own words. Every step was played and checked on the Dragon machine (9.11.2026): all three key pieces and the escape. Each question has three levels: a small hint, a clearer hint and the full solution.",
+ "where": "This game draws its text on the picture screen, so the hint button cannot read the room and shows all the questions. Each question still has \"at\": words exactly as printed on the screen. Moves are arrow keys ({↑} {↓} {←} {→}), not typed words.",
+ "at": [
+  [
+   "YOUR STRENGTH IS",
+   "THE KEY",
+   "OPTIONS"
+  ],
+  [
+   "YOU SEE",
+   "NOTHING"
+  ],
+  [
+   "YOUR STRENGTH IS"
+  ],
+  [
+   "A MINOTAUR",
+   "A LION",
+   "A GIANT SPIDER",
+   "A GIANT SNAKE",
+   "A CYCLOPS",
+   "A GARGOYLE"
+  ],
+  [
+   "A GENIE",
+   "A UNICORN",
+   "OFFERS"
+  ],
+  [
+   "CHANGE WEAPON",
+   "A SKELETON",
+   "A PHANTOM",
+   "A DEMON"
+  ],
+  [
+   "A MEDUSA",
+   "MEDUSAS GAZE"
+  ],
+  [
+   "SOME FOOD",
+   "BAG OF GOLD",
+   "MAGIC POTION"
+  ],
+  [
+   "YOU SEE",
+   "NOTHING"
+  ],
+  [
+   "A GENIE",
+   "PIECE OF THE KEY"
+  ],
+  [
+   "A GIANT CATERPILLAR",
+   "PIECE OF THE KEY"
+  ],
+  [
+   "A SKELETON",
+   "A DEMON",
+   "PIECE OF THE KEY"
+  ],
+  [
+   "THE KEY",
+   "A PHANTOM",
+   "CONGRATULATIONS"
+  ]
+ ],
+ "he": [
+  {
+   "q": "מה בכלל צריך לעשות?",
+   "h": [
+    "אתם במבוך גדול, ויש רק יציאה אחת. היא נפתחת רק למי שמביא איתו משהו שמפוזר במבוך.",
+    "צריך לאסוף שלושה חלקים של מפתח. כל חלק שמוצאים מופיע במסגרת {THE KEY} שמימין. עם שלושתם הולכים ליציאה.",
+    "המבוך הוא 15 על 15 חדרים. שלושת החלקים ({PIECE OF THE KEY}) נמצאים בחדרים ששומרת עליהם מפלצת: הורגים או מסלקים אותה ואז לוחצים {8} ({TAKE}). כשיש שלושה, הולכים לחדר היציאה בשורה העליונה ולוחצים שם {↑}. אז מופיע {CONGRATULATIONS ON YOUR MIRACULOUS ESCAPE}."
+   ]
+  },
+  {
+   "q": "איך זזים? המקשים לא עושים מה שציפיתי.",
+   "h": [
+    "הזזה היא בחצים בלבד, ולא בפקודות. ותמיד ביחס לכיוון שאליו אתם מסתכלים בתמונה.",
+    "בתמונה רואים את החדר: דלת משמאל, דלת מקדימה, דלת מימין. החץ למעלה הולך קדימה, החץ ימינה פונה ימינה והולך בדלת שמימין, החץ שמאלה לדלת שמשמאל, והחץ למטה חוזר אחורה.",
+    "{↑} = קדימה, {→} = לדלת הימנית, {←} = לדלת השמאלית, {↓} = אחורה. אחרי צעד התמונה מצוירת מחדש מהכיוון החדש. דלת קיימת רק אם היא מצוירת. בתחילת המשחק התמונה עוד לא נכונה: היא מתעדכנת רק אחרי הלחיצה הראשונה על חץ."
+   ]
+  },
+  {
+   "q": "הכוח שלי יורד כל הזמן. מה עושים?",
+   "h": [
+    "כל לחיצה על חץ עולה בכוח, גם אם נתקלים בקיר. כשהכוח מגיע לאפס, המשחק נגמר.",
+    "יש אוכל ושיקוי קסם. בתחילת המשחק יש לכם שתי מנות אוכל ושיקוי אחד, ועוד אפשר למצוא או לקנות בדרך. אוכל עוזר הכי הרבה כשהכוח נמוך.",
+    "בחדר בלי מפלצת: {6} ({EAT OR DRINK}), ואז {1} לאוכל או {2} לשיקוי. אוכל מוסיף 42 כשהכוח מתחת ל-50 (ופחות כשהכוח גבוה יותר), שיקוי ממלא עד 100. אצלנו: אכלנו כשהכוח ירד אל מתחת ל-50, ושתינו שיקוי רק כשהיה ממש נמוך. לא לוחצים על חצים סתם ולא נכנסים לקירות."
+   ]
+  },
+  {
+   "q": "מפלצת בחדר, ואני לא יכול לזוז. מה עושים?",
+   "h": [
+    "כל עוד המפלצת בחדר, החצים לא עובדים. צריך לבחור באחת האפשרויות מהרשימה שמימין.",
+    "אפשר להילחם ({1}), לברוח אחורה ({5}), ולפעמים לסחור ({2}) או לשחד ({3}). רוב המפלצות לא מוכנות לסחור, וניסיון כזה רק גורם להן לתקוף.",
+    "ברוב המקרים פשוט לוחצים {1} ({ATTACK}) שוב ושוב עד {KILLING THE MONSTER}. עם החרב ({MAGIC SWORD}) והמגן ({ROMAN SHIELD}) שיש לכם מההתחלה זה לקח לנו כמעט תמיד שתי מכות, ועלה בערך 10 עד 15 נקודות כוח. בריחה ({5}) עולה 5 נקודות ומחזירה אתכם לחדר הקודם, והמפלצת נשארת. אחרי שמפלצת מתה, אחרת מופיעה במקום אחר במבוך."
+   ]
+  },
+  {
+   "q": "שד ({GENIE}) או חד-קרן ({UNICORN}) חוסמים את הדרך. צריך להילחם בהם?",
+   "h": [
+    "לא. הם מוכנים לסחור.",
+    "לחצו {2} ({TRADE}). השד מציע שיקוי קסם, החד-קרן אוכל, תמורת זהב. גם אם מסרבים, הם עוזבים את החדר.",
+    "{2} ואז {Y} קונה (אם יש מספיק זהב ומקום), {N} מסרב, ובשני המקרים היצור עוזב ({LEAVES THE ROOM}) בלי לפגוע בכם. אצלנו: קנינו אוכל מהחד-קרן הראשון ({Y}), ושאר הפעמים ענינו {N} כדי לפנות את הדרך בחינם. המחיר עולה ככל שיש לכם יותר זהב."
+   ]
+  },
+  {
+   "q": "החרב כמעט לא פוגעת בשלד ({SKELETON}) או ברוח ({PHANTOM}). מה עושים?",
+   "h": [
+    "לכל מפלצת יש נשק שעובד עליה טוב יותר. כדאי לאסוף עוד כלי נשק בדרך.",
+    "האלה הקדושה ({HOLY MACE}) חזקה מאוד נגד שלד, רוח ושד ({DEMON}). גם להגנה יש חשיבות: הטבעת ({POWER RING}) כמעט מבטלת את מכות הרוח, והקמע ({PENTACLE CHARM}) את מכות השד. מחליפים נשק לפני שנכנסים לחדר של המפלצת: החלפה מולה נותנת לה מכה חופשית.",
+    "מרימים אלה ב-{8}. בחדר בלי מפלצת: {4} ({CHANGE WEAPON}), ואז {1} לנשק תקיפה או {2} לנשק הגנה, ואז המספר שליד הנשק ברשימה. אצלנו: בחדר שלפני השלד ולפני הרוח בחרנו אלה לתקיפה, ולפני הרוח גם טבעת להגנה, ולפני השד קמע להגנה. אחרי הקרב חוזרים לחרב ולמגן באותה הדרך."
+   ]
+  },
+  {
+   "q": "נכנסתי לחדר עם מדוזה ({MEDUSA}) והפכתי לאבן. איך מנצחים אותה?",
+   "h": [
+    "נגד המדוזה שום נשק רגיל לא עוזר. צריך משהו שמחזיר לה את המבט.",
+    "צריך מראה ({MIRROR}), והיא חייבת להיות נשק התקיפה. אל תחליפו נשק בחדר של המדוזה ואל תתקפו בלי מראה: היא תתקוף בחזרה ואתם הופכים לאבן.",
+    "הרימו מראה ({8}), ובחדר הקודם: {4}, {1}, ואז המספר של {MIRROR}. נכנסים ולוחצים {1}: {THE MEDUSAS GAZE IS REFLECTED IN THE MIRROR} והיא מתה במכה אחת. אם נכנסתם בלי מראה, לחצו {5} ({RUN}) כדי לברוח אחורה. אצלנו המראה הייתה בחדר שממש ליד המדוזה."
+   ]
+  },
+  {
+   "q": "איפה מוצאים אוכל וזהב?",
+   "h": [
+    "דברים מונחים בחדרים. כשמרימים משהו, דבר חדש מופיע במקום אחר.",
+    "כשבתמונה ובשורה {YOU SEE} מופיע חפץ, לוחצים {8} ({TAKE}). שק זהב ({BAG OF GOLD}) מוסיף זהב, ואיתו קונים אוכל ושיקויים מחד-קרן ומשד.",
+    "{8} מרים. אפשר לשאת שמונה חפצים, כולל החרב והמגן. אצלנו: שק זהב הוסיף 249 מטבעות. בזהב קנינו אוכל משני חדי-קרן. {7} ({INVENTORY}) מראה מה אתם נושאים וכמה זהב יש. לא כדאי להרים כל כלי נשק: מקום חשוב לאוכל."
+   ]
+  },
+  {
+   "q": "המבוך ענק. איך מתמצאים בו?",
+   "h": [
+    "חדשות טובות: במכונה שלנו המבוך ומה שבתוכו זהים בכל טעינה חדשה של הקלטת.",
+    "מתחילים תמיד באותו מקום: בפינה הימנית העליונה של המבוך, כשהפנים לצפון. שלושת חלקי המפתח והיציאה תמיד באותם חדרים, וגם רוב המפלצות והחפצים מתחילים באותם מקומות.",
+    "סופרים שורות מלמעלה ועמודות משמאל, מ-1 עד 15. ההתחלה: שורה 1, עמודה 15. היציאה: שורה 1, עמודה 8. חלקי המפתח: שורה 5 עמודה 4, שורה 7 עמודה 7, שורה 14 עמודה 14. כדאי לצייר מפה על נייר: כל חדר מראה אילו דלתות יש בו."
+   ]
+  },
+  {
+   "q": "איפה החלק הראשון של המפתח?",
+   "h": [
+    "הוא במערב המבוך, לא רחוק מהשורות העליונות. מי ששומר עליו לא מסוכן בכלל.",
+    "שורה 5, עמודה 4. שד ({GENIE}) שומר עליו: {2} ואז {N} והוא הולך, ואז {8}. בדרך לשם עוברים ליד מדוזה, אז כדאי לקחת קודם את המראה שלידה.",
+    "מההתחלה: {←} {←} {↑} (מינוטאור: {1} {1}), {→} (חד-קרן: {2} {Y}), {←} {←} ({8} אלה), {↓} {↑} (נחש: {1} {1}), {↑} (חד-קרן: {2} {N}), {↑} {→} {←} (אריה: {1} {1}), {↑} (עכביש: {1} {1}, אוכל {6} {1}, {8} מראה, {4} {1} ומספר המראה), {↑} (מדוזה: {1}, ואז {8} קמע), {←} {→} {↑} {→} {←} {↑} (שד: {2} {N}, {8} זהב), {←} {→} {←} {←} {↑} (שד שני: {2} {N}), {8}."
+   ]
+  },
+  {
+   "q": "איפה החלק השני של המפתח?",
+   "h": [
+    "הוא קרוב לאמצע המבוך.",
+    "שורה 7, עמודה 7. זחל ענק ({GIANT CATERPILLAR}) שומר עליו, והחרב מטפלת בו בשתי מכות.",
+    "מהחלק הראשון: {↓} {↑} {→} {→} {←} {→} {↑} {→} {←} {↑} {↑}, כאן {4} {1} {1} (חזרה לחרב), {→} (ענק חד-עין: {1}), {↑} {↑} (עכביש: {1} {1}, אוכל {6} {1}), {→} (זחל: {1} {1}), {8}."
+   ]
+  },
+  {
+   "q": "איפה החלק השלישי של המפתח?",
+   "h": [
+    "הוא רחוק, בפינה הדרומית-מזרחית של המבוך. כדאי להגיע אליו עם הרבה כוח ועם אוכל.",
+    "שורה 14, עמודה 14. שלד ({SKELETON}) שומר עליו: באים עם אלה כנשק תקיפה. בדרך פגשנו גם שד ({DEMON}), ונגדו בחרנו קמע להגנה.",
+    "מהחלק השני: {↓} {↑} {→} ({1} {1}), {→} {←} {←} ({1} {1}, אוכל {6} {1}), {→} {↑} (חד-קרן: {2} {Y}), {←} (חד-קרן: {2} {N}), {→} {↑} ({1} {1}), {←} {→} ({1} {1}, אוכל {6} {1}), {←} ({1} {1}), {↑}, כאן {4} {1} ומספר האלה, {4} {2} ומספר הקמע, {→} (שד: {1} {1}), {4} {1} {1} ו-{4} {2} {2} (חרב ומגן), {←} (זחל: {1} {1}), {4} {1} ומספר האלה, {←} (שלד: {1} {1}), {8}."
+   ]
+  },
+  {
+   "q": "יש לי שלושה חלקים. איפה היציאה?",
+   "h": [
+    "היציאה בשורה העליונה של המבוך, באמצע.",
+    "שורה 1, עמודה 8. זה חדר ללא מוצא: נכנסים אליו רק מהחדר שמתחתיו. אצלנו חיכתה בחדר שמתחת רוח ({PHANTOM}), אז הבאנו אלה וטבעת. בחדר היציאה לוחצים {↑}.",
+    "מהחלק השלישי: {↓} {→} {→} {←} {↑} {→} {←} {→} {↑} {←} {→} {↑} {←} {→} {→} {←}, שיקוי {6} {2}, {←} {→} {↑} ({8} אוכל, {4} {1} {1}), {↑} ({1} {1}), {←} ({8} טבעת), {→} {→} {↑} {←}, כאן {4} {1} ומספר האלה ו-{4} {2} ומספר הטבעת, {←} (רוח: {1} {1}), {→} ואז {↑}. על המסך: {CONGRATULATIONS ON YOUR MIRACULOUS ESCAPE}."
+   ]
+  }
+ ],
+ "en": [
+  {
+   "q": "What am I supposed to do?",
+   "h": [
+    "You are in a big maze with only one way out. It opens only for someone who brings something that lies scattered in the maze.",
+    "Collect three pieces of a key. Each piece you find shows in the {THE KEY} frame on the right. With all three, go to the exit.",
+    "The maze is 15 by 15 rooms. The three pieces ({PIECE OF THE KEY}) lie in rooms guarded by a monster: kill it or send it away, then press {8} ({TAKE}). With three pieces, go to the exit room in the top row and press {↑} there. The screen then says {CONGRATULATIONS ON YOUR MIRACULOUS ESCAPE}."
+   ]
+  },
+  {
+   "q": "How do I move? The keys don't do what I expected.",
+   "h": [
+    "You move with the arrow keys only, no typed commands. Always relative to the way you face in the picture.",
+    "The picture shows the room: a door on the left, ahead and on the right. Up goes ahead, right turns and goes through the right-hand door, left through the left-hand one, and down goes back.",
+    "{↑} = ahead, {→} = right-hand door, {←} = left-hand door, {↓} = back. After a step the picture is drawn again from the new direction. A door exists only if it is drawn. At the very start the picture is not real yet: it updates after the first arrow key."
+   ]
+  },
+  {
+   "q": "My strength keeps dropping. What can I do?",
+   "h": [
+    "Every arrow key costs strength, even when you bump into a wall. At zero the game is over.",
+    "There is food and magic potion. You start with two portions of food and one potion, and you can find or buy more on the way. Food helps most when your strength is low.",
+    "In a room without a monster: {6} ({EAT OR DRINK}), then {1} for food or {2} for a potion. Food adds 42 when strength is under 50 (less when it is higher); a potion fills it to 100. In our game we ate when strength fell under 50 and drank a potion only when it was very low. Don't press arrows for nothing and don't walk into walls."
+   ]
+  },
+  {
+   "q": "A monster is in the room and I can't move. What do I do?",
+   "h": [
+    "While a monster is in the room the arrows do nothing. Pick one of the options in the list on the right.",
+    "You can fight ({1}), run back ({5}), and sometimes trade ({2}) or bribe ({3}). Most monsters won't trade, and trying only makes them attack.",
+    "Mostly just press {1} ({ATTACK}) again and again until {KILLING THE MONSTER}. With the {MAGIC SWORD} and {ROMAN SHIELD} you start with, it nearly always took us two blows and about 10 to 15 strength. Running ({5}) costs 5 and takes you back to the previous room; the monster stays. When a monster dies, another one appears somewhere else in the maze."
+   ]
+  },
+  {
+   "q": "A {GENIE} or a {UNICORN} blocks the way. Do I have to fight it?",
+   "h": [
+    "No. They are willing to trade.",
+    "Press {2} ({TRADE}). The genie offers a magic potion, the unicorn food, for gold. Even if you say no, they leave the room.",
+    "{2} then {Y} buys (if you have enough gold and room), {N} refuses, and either way the creature {LEAVES THE ROOM} without hurting you. In our game we bought food from the first unicorn ({Y}) and otherwise answered {N} to clear the way for free. The price grows with the gold you carry."
+   ]
+  },
+  {
+   "q": "My sword hardly hurts the {SKELETON} or the {PHANTOM}. What do I do?",
+   "h": [
+    "Each monster has a weapon that works better on it. Collect more weapons on the way.",
+    "The {HOLY MACE} is very strong against skeleton, phantom and {DEMON}. Defence matters too: the {POWER RING} nearly cancels the phantom's blows, the {PENTACLE CHARM} the demon's. Change weapons before you enter the monster's room: changing in front of it gives it a free blow.",
+    "Pick up a mace with {8}. In a room without a monster: {4} ({CHANGE WEAPON}), then {1} for the attack weapon or {2} for the defence weapon, then the number next to the weapon in the list. In our game, in the room before the skeleton and before the phantom we chose the mace for attack, before the phantom also the ring for defence, and before the demon the charm for defence. After the fight go back to sword and shield the same way."
+   ]
+  },
+  {
+   "q": "I walked into a {MEDUSA} and turned to stone. How do I beat her?",
+   "h": [
+    "No ordinary weapon helps against the medusa. You need something that turns her gaze back on her.",
+    "You need a {MIRROR}, and it must be your attack weapon. Don't change weapons in her room and don't attack without a mirror: she strikes back and you turn to stone.",
+    "Pick up a mirror ({8}), and in the room before: {4}, {1}, then the number of the {MIRROR}. Walk in and press {1}: {THE MEDUSAS GAZE IS REFLECTED IN THE MIRROR} and she dies in one blow. If you walked in without a mirror, press {5} ({RUN}) to get back out. In our game the mirror lay in the room right next to the medusa."
+   ]
+  },
+  {
+   "q": "Where do I find food and gold?",
+   "h": [
+    "Things lie in the rooms. When you pick something up, a new thing appears somewhere else.",
+    "When an object shows in the picture and under {YOU SEE}, press {8} ({TAKE}). A {BAG OF GOLD} adds gold, and with gold you buy food and potions from unicorns and genies.",
+    "{8} picks it up. You can carry eight things, sword and shield included. In our game a bag of gold added 249 pieces. With the gold we bought food from two unicorns. {7} ({INVENTORY}) shows what you carry and how much gold you have. Don't pick up every weapon: room matters for food."
+   ]
+  },
+  {
+   "q": "The maze is huge. How do I find my way?",
+   "h": [
+    "Good news: on our machine the maze and everything in it is the same on every fresh load of the tape.",
+    "You always start in the same place: the top right corner of the maze, facing north. The three key pieces and the exit are always in the same rooms, and most monsters and objects start in the same places too.",
+    "Count rows from the top and columns from the left, 1 to 15. Start: row 1, column 15. Exit: row 1, column 8. Key pieces: row 5 column 4, row 7 column 7, row 14 column 14. Drawing a map on paper helps: each room shows which doors it has."
+   ]
+  },
+  {
+   "q": "Where is the first piece of the key?",
+   "h": [
+    "It is in the west of the maze, not far from the top rows. Its guard is not dangerous at all.",
+    "Row 5, column 4. A {GENIE} guards it: {2} then {N} and it leaves, then {8}. On the way you pass a medusa, so take the mirror next to her first.",
+    "From the start: {←} {←} {↑} (minotaur: {1} {1}), {→} (unicorn: {2} {Y}), {←} {←} ({8} mace), {↓} {↑} (snake: {1} {1}), {↑} (unicorn: {2} {N}), {↑} {→} {←} (lion: {1} {1}), {↑} (spider: {1} {1}, eat {6} {1}, {8} mirror, {4} {1} and the mirror's number), {↑} (medusa: {1}, then {8} charm), {←} {→} {↑} {→} {←} {↑} (genie: {2} {N}, {8} gold), {←} {→} {←} {←} {↑} (second genie: {2} {N}), {8}."
+   ]
+  },
+  {
+   "q": "Where is the second piece of the key?",
+   "h": [
+    "It is near the middle of the maze.",
+    "Row 7, column 7. A {GIANT CATERPILLAR} guards it, and the sword deals with it in two blows.",
+    "From the first piece: {↓} {↑} {→} {→} {←} {→} {↑} {→} {←} {↑} {↑}, here {4} {1} {1} (back to the sword), {→} (cyclops: {1}), {↑} {↑} (spider: {1} {1}, eat {6} {1}), {→} (caterpillar: {1} {1}), {8}."
+   ]
+  },
+  {
+   "q": "Where is the third piece of the key?",
+   "h": [
+    "It is far away, in the south-east corner of the maze. Arrive with plenty of strength and some food.",
+    "Row 14, column 14. A {SKELETON} guards it: come with the mace as your attack weapon. On the way we also met a {DEMON}, and against it we chose the charm for defence.",
+    "From the second piece: {↓} {↑} {→} ({1} {1}), {→} {←} {←} ({1} {1}, eat {6} {1}), {→} {↑} (unicorn: {2} {Y}), {←} (unicorn: {2} {N}), {→} {↑} ({1} {1}), {←} {→} ({1} {1}, eat {6} {1}), {←} ({1} {1}), {↑}, here {4} {1} and the mace's number, {4} {2} and the charm's number, {→} (demon: {1} {1}), {4} {1} {1} and {4} {2} {2} (sword and shield), {←} (caterpillar: {1} {1}), {4} {1} and the mace's number, {←} (skeleton: {1} {1}), {8}."
+   ]
+  },
+  {
+   "q": "I have all three pieces. Where is the exit?",
+   "h": [
+    "The exit is in the top row of the maze, in the middle.",
+    "Row 1, column 8. It is a dead end: you can only enter it from the room below. In our game a {PHANTOM} waited in the room below, so we came with the mace and the ring. In the exit room press {↑}.",
+    "From the third piece: {↓} {→} {→} {←} {↑} {→} {←} {→} {↑} {←} {→} {↑} {←} {→} {→} {←}, potion {6} {2}, {←} {→} {↑} ({8} food, {4} {1} {1}), {↑} ({1} {1}), {←} ({8} ring), {→} {→} {↑} {←}, here {4} {1} and the mace's number and {4} {2} and the ring's number, {←} (phantom: {1} {1}), {→} then {↑}. The screen says {CONGRATULATIONS ON YOUR MIRACULOUS ESCAPE}."
+   ]
+  }
+ ]
+}
