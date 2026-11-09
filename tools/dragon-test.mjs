@@ -1922,6 +1922,8 @@ if (part('real machine lab')) {
       await m.evaluate(() => d32Type('NEW\n5 IF 1 THEN PRINT USING "##.#";3.14159 ELSE 7\n7 PRINT "NO"\nRENUM\nEDIT 20\nX;'));
       await m.click('.k[data-k="SHIFT"] >> nth=0');
       await m.dispatchEvent('.k[data-k="↑"]', 'pointerdown');
+      await m.waitForTimeout(120);
+      await m.dispatchEvent('.k[data-k="↑"]', 'pointerup');   // מקש מצויר לחוץ עד שהאצבע עוזבת (9.11)
       await m.waitForTimeout(300);
       await m.evaluate(() => d32Type('Q\nLIST\nRUN\n'));
       await m.waitForTimeout(2500);

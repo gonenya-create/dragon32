@@ -289,8 +289,11 @@ function press(label, alt, hold = 70) {
   }
   if (needShift) fire('keydown', 'Shift', 'ShiftLeft');
   fire('keydown', key, code);
-  setTimeout(() => { fire('keyup', key, code); if (needShift) fire('keyup', 'Shift', 'ShiftLeft'); }, hold);
+  let up = false;
+  const release = () => { if (up) return; up = true; fire('keyup', key, code); if (needShift) fire('keyup', 'Shift', 'ShiftLeft'); };
+  if (hold) setTimeout(release, hold);
   if (shift && (label.length === 1 || label === '↑')) { shift = false; kbd.querySelectorAll('[data-k="SHIFT"]').forEach(b => b.classList.remove('on')); }
+  return release;
 }
 // מקליד מחרוזת מקש אחרי מקש (לכפתורי הקלטות). \n = ENTER
 window.d32Type = async function (text) {
@@ -313,9 +316,19 @@ for (const row of ROWS) {
     b.innerHTML = (alt ? '<small>' + alt.replace('<', '&lt;').replace('>', '&gt;') + '</small>' : '') + '<span></span>';
     b.querySelector('span').textContent = label === ' ' ? '' : label;
     b.setAttribute('aria-label', label === ' ' ? 'רווח' : label);
-    b.addEventListener('pointerdown', e => { e.preventDefault(); b.classList.add('down'); press(label, alt); canvas.focus({ preventScroll: true }); });
-    b.addEventListener('pointerup', () => b.classList.remove('down'));
-    b.addEventListener('pointerleave', () => b.classList.remove('down'));
+    // המקש לחוץ כל עוד האצבע עליו, כמו מקש אמיתי (לפחות 70 אלפיות). לחיצה קבועה של 70 אלפיות התפספסה במשחקים שבודקים את
+    // המקלדת רק בחלק מהזמן: במסך הפתיחה של Ninja Warrior המשחק מחליף צבעים רוב הזמן (9.11)
+    let release = null, t0 = 0;
+    const lift = () => {
+      b.classList.remove('down');
+      if (!release) return;
+      const r = release; release = null;
+      setTimeout(r, Math.max(0, 70 - (Date.now() - t0)));
+    };
+    b.addEventListener('pointerdown', e => { e.preventDefault(); lift(); t0 = Date.now(); release = press(label, alt, 0) || null; b.classList.add('down'); canvas.focus({ preventScroll: true }); });
+    b.addEventListener('pointerup', lift);
+    b.addEventListener('pointerleave', lift);
+    b.addEventListener('pointercancel', lift);
     r.appendChild(b);
   }
   kbd.appendChild(r);
