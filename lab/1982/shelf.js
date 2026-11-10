@@ -241,6 +241,27 @@
   }
   // גם רווח יורה במשחקי ג'ויסטיק (גונן, 27.10): במק, לחיצה כפולה על Option פותחת לפעמים תוכנה אחרת (למשל החלון המהיר של Claude).
   // כשהג'ויסטיק מהמקלדת פעיל, רווח לא מגיע למחשב כרווח: הוא נשלח ככפתור הג'ויסטיק (Alt), בדיוק כמו בלוח המשחק בטלפון
+  // מקש שנשאר לחוץ במכונה (10.11, גונן ב-Telewriter): במחשב נייד של Mac, ‏fn וחץ שמאלה הם Home, שהוא CLEAR של ה-Dragon.
+  // כשעוזבים את fn לפני החץ, הדפדפן שולח את העזיבה כחץ שמאלה ולא כ-Home, ו-CLEAR נשאר לחוץ במכונה. כאן: עזיבה של חץ משחררת
+  // גם את Home/End/PageUp/PageDown שעוד לחוצים, ויציאה מהחלון (blur, לשונית אחרת) משחררת כל מקש שעוד לחוץ
+  const held = new Map();
+  const FN = { ArrowLeft: 'Home', ArrowRight: 'End', ArrowUp: 'PageUp', ArrowDown: 'PageDown' };
+  const release = code => {
+    const key = held.get(code);
+    held.delete(code);
+    const canvas = document.getElementById('canvas');
+    if (canvas) canvas.dispatchEvent(new KeyboardEvent('keyup', { key, code, bubbles: true, cancelable: true }));
+  };
+  window.addEventListener('keydown', e => { if (e.isTrusted) held.set(e.code, e.key); }, true);
+  window.addEventListener('keyup', e => {
+    if (!e.isTrusted) return;
+    held.delete(e.code);
+    const fn = FN[e.code];
+    if (fn && held.has(fn)) setTimeout(() => release(fn), 0);
+  }, true);
+  const releaseAll = () => { for (const code of [...held.keys()]) release(code); };
+  window.addEventListener('blur', releaseAll);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) releaseAll(); });
   window.addEventListener('keydown', e => spaceFire(e, 'keydown'), true);
   window.addEventListener('keyup', e => spaceFire(e, 'keyup'), true);
   function spaceFire(e, type) {
