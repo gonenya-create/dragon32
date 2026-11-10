@@ -158,6 +158,14 @@
     // הטוען נכנס לנקודות החיבור של BASIC ($017F) ומתחיל לבד. המפתח החומרתי: dongle() למעלה
     ['buzzard', 'Buzzard Bait', 'Buzzard Bait', 'a',
       ['Rob Lech & Troy Dahlman (The Rugby Circle) · Tom Mix Software / Microdeal, 1983–84', 'https://www.lcurtisboyle.com/nitros9/approvals/the_rugby_circle.txt', null, null, 'love']],
+    // Manic Miner ו-Jet Set Willy של Roy Coates (המשחקים המקוריים ל-ZX Spectrum: Matthew Smith), ‏Software Projects, 1984 ו-1985.
+    // הרשות של Roy במייל, 10.11.2026 ("go ahead - no objections from me!"); מי מחזיק היום בזכויות של Software Projects לא ידוע,
+    // ויורד מיד אם בעל זכויות מבקש. הקלטות המקוריות מ-TOSEC (בלי סימון), כמו שהן, עם הטוען המקורי. מתחילות לבד אחרי CLOADM.
+    // שתיהן מבקשות קוד מכרטיס שהיה בקופסה: הכפתור "🔑 הקוד" (codeButton למטה) מראה אותו. גונן אישר, 10.11
+    ['manic', 'Manic Miner', 'Manic Miner', 'a',
+      ['Roy Coates (original game: Matthew Smith) · Software Projects, 1984', 'https://archive.worldofdragon.org/index.php?title=Manic_Miner', null, null, 'love']],
+    ['jsw', 'Jet Set Willy', 'Jet Set Willy', 'a',
+      ['Roy Coates (original game: Matthew Smith) · Software Projects, 1985', 'https://archive.worldofdragon.org/index.php?title=Jet_Set_Willy', null, null, 'love']],
     ['nerble', 'Nerble Force', 'Nerble Force', 'a',
       ['David Crandall · Computerware / Microdeal, 1983–85', 'https://www.lcurtisboyle.com/nitros9/approvals/approvals.html', null, null, 'love']],
     // שלושת המשחקים של John Morrison (J. Morrison Micros, 1983): המכתב של בנו Robert Morrison בארכיון CLEAR (11.5.1996:
@@ -366,6 +374,7 @@
     dongle(DONGLE.has(id));
     if (window.d32Pad) window.d32Pad(mineIn && mc ? 'mine' : id);
     hintButton(id);
+    codeButton(id);
   }
   // איך משחקים (גונן, 25.10: "לא בטוח שהמשתמשים יבינו איך משחקים"): תיבה נפתחת מתחת לכל משחק בשפת מכונה.
   // [מקש] נהיה מקש מצויר. המקשים לפי התיעוד של המחבר, ונבדקו במכונה. במק: BREAK הוא Esc, ו-CLEAR הוא Home (fn+←).
@@ -461,6 +470,117 @@
     }
     hintUI.btn.hidden = false;
     hintPop(false);
+  }
+  // כפתור "🔑 הקוד" (גונן, 10.11): Manic Miner ו-Jet Set Willy מבקשים קוד מכרטיס שהיה בקופסה, ובלעדיו אי אפשר לשחק.
+  // הכפתור קורא מהמסך איזו משבצת המשחק מבקש עכשיו, ומראה רק את ארבע הספרות שלה; השחקן מקליד אותן בעצמו, כמו עם הכרטיס ביד.
+  // המשחק לא משתנה, ולא מראים את הכרטיס. הקודים לקוחים מהמשחק עצמו: ב-Manic Miner הטבלה שהוא בודק מולה (18 שורות A–R,
+  // ‏20 עמודות, נקראה מהזיכרון שלו ב-$0600, 10.11); ב-Jet Set Willy אין טבלה, והוא מחשב את הקוד מהשורה, העמודה והעמוד
+  // (השגרה שלו ב-$0977, כאן באותם צעדים). שניהם נבדקו במכונה
+  const MM_CODES = '12112444311412324441234142324222423324244224313244213233142322123132211432423112' +
+    '12131413414321222411144443442322343123233142112443243241424433131311233324242434' +
+    '14133334133314314433144244233131112443143132123442231222243222211324411131443423' +
+    '21344232422222333423214123113244333321322413331423341121331443131322443131443443' +
+    '24131431223114111224132333441121421113422122241133334111413434343313114144131412' +
+    '44321131112111311321244144424441132121441423331142322241331121133432234424112122' +
+    '44114134221343334441311444312414442241123122331133113312332432422142312343422132' +
+    '23323443314241224141421434134324341412421224234434111431233421433432234342123143' +
+    '24111343214422321413214443341324422111332444113412422332132142442111421412244123' +
+    '42313222213431241411222432231212212423334144432413241314223134241431222341231241' +
+    '33214343333232312213431234332131323334242231414141314123223334311211243313412144' +
+    '32344413414111111242411333341144111312412221334414132421232232232311434312431343' +
+    '12422243141441314311312211133321431314334412222214342244411113112212344312231141' +
+    '22133343433413134211122213342424414313343434124121113144442113113332432333344211' +
+    '23231331331434331143414241333141144414343314144134432414144234142142434324321334' +
+    '42231243123244341443131211222443244341221124342123342443343444244434441143422234' +
+    '13231232343344432133213412434341433124432214442322122422322312243423322222111341' +
+    '14434443142422122411241441341144342423111341133432411332343213431311112143442334';
+  // Jet Set Willy: שורה B–Q (1–16), עמודה 2–10 (במשחק 1–9), עמוד 1–3 (במשחק 0–2)
+  function jswCode(row, col, page) {
+    const ror = (a, c) => [(a >> 1) | (c << 7), a & 1];
+    let a = col ^ 0x72, c, s = a + ((page << 1) & 255);
+    a = s & 255; c = s >> 8;
+    [a, c] = ror(a, c); a ^= col;
+    [a, c] = ror(a, c); [a, c] = ror(a, c); a ^= col;
+    [a, c] = ror(a, c); a ^= row;
+    [a, c] = ror(a, c); [a, c] = ror(a, c);
+    let b = (row << 1) & 255;
+    a = (a + row + b) & 255;
+    b = ((page << 1) + b) & 255;
+    a ^= b;
+    return [6, 4, 2, 0].map(k => ((a >> k) & 3) + 1).join('');
+  }
+  const CODE = {
+    manic: {
+      find(t) {
+        const m = t.match(/LOCATION\s*([A-R])\s*(\d{1,2})/);
+        if (!m || +m[2] < 1 || +m[2] > 20) return null;
+        const r = m[1].charCodeAt(0) - 65, i = r * 80 + (m[2] - 1) * 4;
+        return [m[1] + m[2], MM_CODES.slice(i, i + 4)];
+      },
+      colours: ['1 אדום, 2 ירוק, 3 כחול, 4 שחור', '1 red, 2 green, 3 blue, 4 black']
+    },
+    jsw: {
+      find(t) {
+        const m = t.match(/LOCATION\s*([B-Q])\s*(\d{1,2})\s*ON\s*PAGE\s*NUMBER\s*([1-3])/);
+        if (!m || +m[2] < 2 || +m[2] > 10) return null;
+        return [m[1] + ' ' + m[2] + ', ' + T2('עמוד ', 'page ') + m[3], jswCode(m[1].charCodeAt(0) - 65, m[2] - 1, m[3] - 1)];
+      },
+      colours: ['1 ירוק, 2 צהוב, 3 כחול, 4 אדום', '1 green, 2 yellow, 3 blue, 4 red']
+    }
+  };
+  let codeId = null, codeUI = null, codeTimer = 0;
+  function codeFill() {
+    if (!codeUI || codeUI.pop.hidden || !codeId) return;
+    // המשחקים כותבים באותיות הפוכות (קודים 0–31 על המסך): מחזירים אותן לאותיות רגילות
+    const rows = (window.d32Screen?.() || []).map(r => r.replace(/[\x00-\x1f]/g, c => String.fromCharCode(c.charCodeAt(0) + 64)));
+    // השורה יכולה להישבר באמצע (32 תווים בשורה): מחפשים גם בשורות מחוברות בלי רווח
+    const hit = CODE[codeId].find(rows.join(' ').replace(/\s+/g, ' ')) || CODE[codeId].find(rows.join(''));
+    if (hit) {
+      codeUI.title.textContent = T2('המשחק מבקש את הקוד במשבצת ', 'The game asks for the code at ') + hit[0] + ':';
+      codeUI.num.textContent = hit[1];
+      codeUI.num.hidden = false;
+      codeUI.note.textContent = T2('מקלידים את ארבע הספרות ולוחצים [ENTER]. בכרטיס המקורי כל ספרה היא צבע: ', 'Type the four digits and press [ENTER]. On the original card each digit is a colour: ') + CODE[codeId].colours[EN ? 1 : 0] + '.';
+    } else {
+      codeUI.title.textContent = T2('המשחק לא מבקש קוד עכשיו.', 'The game is not asking for a code right now.');
+      codeUI.num.hidden = true;
+      codeUI.note.textContent = T2('כשמופיע ENTER CODE AT LOCATION, לוחצים כאן שוב (או משאירים פתוח), והקוד יופיע.', 'When ENTER CODE AT LOCATION appears, press here again (or leave this open), and the code will appear.');
+    }
+  }
+  function codePop(open) {
+    if (!codeUI) return;
+    codeUI.pop.hidden = !open;
+    codeUI.btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    clearInterval(codeTimer); codeTimer = 0;
+    if (open) { codeFill(); codeTimer = setInterval(codeFill, 1000); }
+  }
+  function codeButton(id) {
+    codeId = CODE[id] ? id : null;
+    if (!codeId) { if (codeUI) { codePop(false); codeUI.btn.hidden = true; } return; }
+    if (!codeUI) {
+      const kbd = document.getElementById('kbd');
+      if (!kbd) return;
+      const btn = document.createElement('button');
+      btn.type = 'button'; btn.className = 'hint-btn code-btn';
+      btn.textContent = T2('🔑 הקוד', '🔑 The code');
+      const pop = document.createElement('div');
+      pop.className = 'hint-pop code-pop'; pop.hidden = true;
+      pop.setAttribute('role', 'dialog');
+      const head = document.createElement('div'); head.className = 'hint-pop-head';
+      const title = document.createElement('b');
+      const x = document.createElement('button'); x.type = 'button'; x.className = 'hint-pop-x'; x.textContent = '✕';
+      x.setAttribute('aria-label', T2('סגירה', 'Close'));
+      head.append(title, x);
+      const num = document.createElement('div'); num.className = 'code-num'; num.dir = 'ltr';
+      const note = document.createElement('p'); note.className = 'code-note';
+      pop.append(head, num, note);
+      kbd.parentNode.insertBefore(btn, kbd);
+      kbd.parentNode.insertBefore(pop, kbd);
+      btn.addEventListener('click', () => codePop(pop.hidden));
+      x.addEventListener('click', () => codePop(false));
+      codeUI = { btn, pop, title, num, note };
+    }
+    codeUI.btn.hidden = false;
+    codePop(false);
   }
   const HOWTO = {
     // Cave Hunter נבדק במכונה (3.11): המחסנית המקורית, מסכי הפתיחה, המבוך, הג'ויסטיק מכניס את הצייד למבוך, היצורים והזהב.
@@ -684,6 +804,35 @@
         'The game asks a few questions, and after each one it ignores the keys for a few seconds. Wait a moment, then answer: [N] normal speed ([S] slow), [N] no instructions, [1] one player, [N] no practice game.',
         'The aim: climb the ramps and ladders and rescue the maiden. [←] [→] walk, [↑] [↓] climb, and the button jumps over the barrels.',
         'Player 1 uses the right joystick, and player 2 the left.']
+    },
+    // נבדקו במכונה (10.11): הקלטות המקוריות נטענות מהמדף ומתחילות לבד, הקוד מהכפתור עובר, ומשחקים בחיצים ורווח. במקלדת
+    manic: {
+      he: ['הטעינה לוקחת כשלוש וחצי דקות, והמשחק מתחיל לבד.',
+        'המשחק מבקש קוד מהכרטיס שהיה בקופסה: {ENTER CODE AT LOCATION} ומשבצת, למשל {B10}. לוחצים על "🔑 הקוד" ליד המסך, מקלידים את ארבע הספרות שהוא מראה, ולוחצים [ENTER].',
+        'טעות אחת: המשחק נותן משבצת אחרת. שתי טעויות: צריך לטעון את המשחק מחדש.',
+        'במסך הפתיחה מחכים שהמוזיקה תיגמר, ולוחצים [ENTER]. אם לא קרה כלום, לוחצים שוב.',
+        '[←] [→] הולכים, [רווח] או [SHIFT] קופצים. [P] עוצר, [C] ממשיך. [Q] מכבה את המוזיקה, [S] מדליק אותה.',
+        'המטרה: לאסוף את כל המפתחות המהבהבים במערה, ואז להיכנס לשער. אל תיפלו מגובה רב, ושימו לב לאוויר שבתחתית המסך.'],
+      en: ['Loading takes about three and a half minutes, and the game starts by itself.',
+        'The game asks for a code from the card that came in the box: ENTER CODE AT LOCATION and a square, for example B10. Press "🔑 The code" next to the screen, type the four digits it shows, and press [ENTER].',
+        'One mistake: the game asks for another square. Two mistakes: you load the game again.',
+        'On the title screen wait for the music to end, then press [ENTER]. If nothing happens, press it again.',
+        '[←] [→] walk, [Space] or [SHIFT] jump. [P] pauses, [C] continues. [Q] turns the music off, [S] turns it on.',
+        'The aim: collect all the flashing keys in the cavern, then go through the gate. Don\'t fall from high up, and watch the air at the bottom of the screen.']
+    },
+    jsw: {
+      he: ['הטעינה לוקחת כשלוש דקות, והמשחק מתחיל לבד.',
+        'על {PRESS ANY KEY TO START} לוחצים מקש. המשחק מבקש קוד: משבצת ועמוד, למשל {L 8 ON PAGE NUMBER 3}. לוחצים על "🔑 הקוד", מקלידים את ארבע הספרות ולוחצים [ENTER].',
+        'טעות אחת: המשחק חוזר ל-{PRESS ANY KEY} ונותן משבצת אחרת. שתי טעויות: צריך לטעון את המשחק מחדש.',
+        'אחרי הקוד יש פתיחה צבעונית וטקסט גולל של כדקה. כשמופיע {PRESS SPACE OR FIRE TO START} לוחצים [רווח].',
+        '[←] [→] הולכים, [רווח] או [SHIFT] קופצים.',
+        'המטרה: לעבור בין החדרים בבית ולאסוף את כל החפצים המהבהבים.'],
+      en: ['Loading takes about three minutes, and the game starts by itself.',
+        'At PRESS ANY KEY TO START press a key. The game asks for a code: a square and a page, for example L 8 ON PAGE NUMBER 3. Press "🔑 The code", type the four digits and press [ENTER].',
+        'One mistake: the game goes back to PRESS ANY KEY and asks for another square. Two mistakes: you load the game again.',
+        'After the code there is a colourful opening and about a minute of scrolling text. When PRESS SPACE OR FIRE TO START appears, press [Space].',
+        '[←] [→] walk, [Space] or [SHIFT] jump.',
+        'The aim: go from room to room in the house and collect all the flashing objects.']
     },
     // נבדק במכונה (30.10): הטעינה בשלבים, הצבע, מסך הפתיחה, טבלת השיאים, K ו-1, תנועה בחיצים לשני הצדדים, ומצב ג'ויסטיק
     spores: {
@@ -1377,6 +1526,8 @@
     ranger: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וב-SELECT LEVEL בוחרים שלב.', 'When loading ends pick a colour: [1], [2] or [3]. On the title screen press [Space], and at SELECT LEVEL pick a level.'],
     cuthbert: ['אחרי הטעינה מופיע LICENSED BY MICRODEAL ונשאר כחמש עד שבע דקות. זה לא תקוע: כך המשחק בנוי. כשמופיע הג\'ונגל, לוחצים [רווח].', 'After loading, LICENSED BY MICRODEAL appears and stays for about five to seven minutes. It is not stuck: the game is built that way. When the jungle appears, press [Space].'],
     dungeon: ['בסוף הטעינה בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וב-SELECT LEVEL בוחרים רמה, [1] עד [3].', 'At the end of loading pick a colour: [1], [2] or [3]. On the title screen press [Space], and at SELECT LEVEL pick a level, [1] to [3].'],
+    manic: ['המשחק מתחיל לבד ומבקש קוד: לוחצים על "🔑 הקוד", מקלידים את ארבע הספרות ו-[ENTER]. במסך הפתיחה, כשהמוזיקה נגמרת, לוחצים [ENTER].', 'The game starts by itself and asks for a code: press "🔑 The code", type the four digits and [ENTER]. On the title screen, when the music ends, press [ENTER].'],
+    jsw: ['המשחק מתחיל לבד. לוחצים מקש, והוא מבקש קוד: לוחצים על "🔑 הקוד", מקלידים את ארבע הספרות ו-[ENTER]. על PRESS SPACE OR FIRE TO START לוחצים [רווח].', 'The game starts by itself. Press a key, and it asks for a code: press "🔑 The code", type the four digits and [ENTER]. At PRESS SPACE OR FIRE TO START press [Space].'],
     athletyx: ['במסך LICENSED BY MICRODEAL ובמסך הפתיחה לוחצים [רווח]. כשמופיע SELECT PLAYERS לוחצים [1] (או [2] לשני שחקנים), והריצה מתחילה.', 'On the LICENSED BY MICRODEAL screen and the title screen press [Space]. When SELECT PLAYERS appears press [1] (or [2] for two players), and the race begins.'],
     adventureland: ADVQ, pirate: ADVQ, mission: ADVQ, voodoo: ADVQ,
     count: ['כשהטעינה נגמרת המשחק שואל שתי שאלות: לוחצים [ENTER], ואחר כך [N] ו-[ENTER].', 'When loading ends the game asks two questions: press [ENTER], then [N] and [ENTER].'],
@@ -1402,6 +1553,8 @@
     phantom: ['מבוך תלת-ממדי: צדים רוחות רפאים לפני שהן תופסות אתכם. לשחקן אחד.', '3D maze: hunt the phantoms before they catch you. 1 player.'],
     cuthbert: ['רצים בג\'ונגל, קופצים מעל בורות ובולי עץ ויורדים בסולמות למנהרה, נגד השעון. בג\'ויסטיק.', 'Run through the jungle, jump pits and logs and climb down ladders to the tunnel, against the clock. Joystick.'],
     athletyx: ['תחרות אתלטיקה: ריצה ועוד מקצועות, נגד השעון. בג\'ויסטיק. נכתב רק ל-Dragon.', 'An athletics contest: a sprint and more events, against the clock. Joystick. Written only for the Dragon.'],
+    manic: ['הכורה Willy במכרה נטוש: אוספים את המפתחות המהבהבים בכל מערה לפני שהאוויר נגמר. במקלדת.', 'Miner Willy in an abandoned mine: collect the flashing keys in each cavern before the air runs out. Keyboard.'],
+    jsw: ['ההמשך של Manic Miner: Willy אוסף את כל החפצים בבית הענק שלו, חדר אחרי חדר, לפני שהולך לישון. במקלדת.', 'The sequel to Manic Miner: Willy collects every object in his huge house, room by room, before he can go to bed. Keyboard.'],
     downland: ['יורדים במערות בחבלים ובסולמות, אוספים אוצרות ומפתחות, ונזהרים מהטיפות שנופלות מהתקרה. בג\'ויסטיק.', 'Climb down through the caves on ropes and ladders, collect treasure and keys, and keep clear of the drops falling from the ceiling. Joystick.'],
     nerble: ['טסים בחללית מעל הרים ויורים באויבים. המכ"ם למטה מראה את כל העולם. בג\'ויסטיק.', 'Fly a ship over the hills and shoot the enemies. The radar below shows the whole world. Joystick.'],
     king: ['קופצים מעל חביות ומטפסים על רמפות וסולמות, כדי להציל את הנערה מהקוף הענק. בג\'ויסטיק, לאחד או לשניים.', 'Jump the barrels and climb the ramps and ladders to rescue the maiden from the giant ape. Joystick, 1 or 2 players.'],
@@ -1858,7 +2011,7 @@
         .catch(() => { intro.textContent = T2('הרמזים לא נטענו. נסו שוב.', 'The hints did not load. Try again.'); });
     });
     // ל-Dragon אמיתי (גונן, 9.11): משמיעים את הקלטת מהטלפון או מהמחשב לתוך כבל הקלטות. לא למחסניות, ולא ל-Buzzard Bait
-    // (הוא צריך מפתח חומרה). הורדה רק כשהרשות של המחבר היא הפצה חופשית; ל-Peaksoft ול-Star Spores הרשות היא לאתר, אז רק השמעה
+    // (הוא צריך מפתח חומרה). רשות של מחבר מכסה גם הורדה (גונן, 10.11)
     const paneBox = document.createElement('div');
     paneBox.className = 'gv-panes';
     paneBox.append(...panes);
@@ -1974,6 +2127,9 @@ body.cart-in .gv-eject { display: block; }
 .hint-btn[hidden], .hint-pop[hidden] { display: none; }
 .hint-btn[aria-expanded="true"] { background: #2a2119; color: var(--accent, #f2d23a); }
 .hint-pop { margin-top: 8px; padding: 10px 12px; border: 1.5px solid #5a4430; border-radius: 12px; background: #15110e; color: #f4efe4; max-height: 50vh; overflow-y: auto; font-size: 15px; line-height: 1.6; }
+.code-num { margin: 6px 0 4px; font: 700 34px/1.2 ui-monospace, Menlo, monospace; letter-spacing: 6px; text-align: center; color: #ffd27a; }
+.code-num[hidden] { display: none; }
+.code-note { margin: 4px 0 0; font-size: 14px; color: #c9bfae; }
 .hint-pop-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
 .hint-pop-x { flex: none; width: 34px; height: 34px; border: 1px solid #4d4238; border-radius: 50%; background: #1b1511; color: #b9a98f; font: 700 16px/1 sans-serif; cursor: pointer; }
 .hint-pop-all { display: block; margin: 8px 0 2px; padding: 6px 0; border: 0; background: none; color: var(--accent, #f2d23a); font: inherit; font-size: 14px; text-decoration: underline; cursor: pointer; }

@@ -7,7 +7,7 @@ window.D32_GAMES = {
       "key": "legends",
       "he": "האגדות",
       "en": "Legends",
-      "years": "1983–84",
+      "years": "1983–85",
       "note": [
         "המשחקים שכולם זוכרים מהתקופה. בראש המגירה The King: הקוף, החביות והסולמות שבעלי Dragon שיחקו בהם בלי סוף, כאן באישור המחבר, Chris Latham.",
         "The games everyone remembers from the time. At the top, The King: the ape, the barrels and the ladders that Dragon owners played for hours, here with the permission of its author, Chris Latham."
@@ -2802,6 +2802,70 @@ window.D32_GAMES = {
       "icon": [
         28,
         0,
+        64
+      ]
+    },
+    "manic": {
+      "slug": "manic-miner",
+      "drawer": "legends",
+      "year": "1984",
+      "tag": [
+        "פלטפורמות",
+        "platform"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כשלוש וחצי דקות",
+        "about three and a half minutes"
+      ],
+      "about": {
+        "he": [
+          "Matthew Smith כתב אותו ל-ZX Spectrum ב-1983, והוא היה אחד המשחקים הכי מפורסמים של התקופה. ל-Dragon העביר אותו Roy Coates, ו-Software Projects הוציאה אותו ב-1984. כאן ברשותו.",
+          "הכורה Willy יורד למכרה נטוש. בכל מערה אוספים את כל המפתחות המהבהבים, ואז נכנסים לשער. האוויר הולך ונגמר, והרובוטים לא נחים."
+        ],
+        "en": [
+          "Matthew Smith wrote it for the ZX Spectrum in 1983, and it became one of the best-known games of the time. Roy Coates brought it to the Dragon, and Software Projects published it in 1984. Here with his permission.",
+          "Miner Willy goes down an abandoned mine. In each cavern, collect all the flashing keys, then go through the gate. The air runs out, and the robots never rest."
+        ]
+      },
+      "icon": [
+        98,
+        32,
+        64
+      ]
+    },
+    "jsw": {
+      "slug": "jet-set-willy",
+      "drawer": "legends",
+      "year": "1985",
+      "tag": [
+        "פלטפורמות",
+        "platform"
+      ],
+      "players": [
+        "שחקן אחד",
+        "1 player"
+      ],
+      "load": [
+        "כשלוש דקות",
+        "about three minutes"
+      ],
+      "about": {
+        "he": [
+          "ההמשך של Manic Miner. Willy התעשר וקנה בית ענק, ואחרי מסיבה גדולה עוזרת הבית Maria לא נותנת לו ללכת לישון עד שיאסוף את כל הכוסות בבית.",
+          "Matthew Smith כתב אותו ל-ZX Spectrum. ל-Dragon העביר אותו Roy Coates, ו-Software Projects הוציאה אותו ב-1985. כאן ברשותו."
+        ],
+        "en": [
+          "The sequel to Manic Miner. Willy has struck it rich and bought a huge house, and after a big party Maria the housekeeper won't let him go to bed until he collects every glass in the house.",
+          "Matthew Smith wrote it for the ZX Spectrum. Roy Coates brought it to the Dragon, and Software Projects published it in 1985. Here with his permission."
+        ]
+      },
+      "icon": [
+        100,
+        60,
         64
       ]
     },

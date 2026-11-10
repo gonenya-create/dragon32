@@ -48,6 +48,8 @@
     nerble: { dir: ARROWS, fire: 'alt', label: ['אש', 'FIRE'] },
     // משחקי פעולה במקלדת: הלוח שולח את המקשים מתיבת "איך משחקים"
     bonka: { dir: ARROWS, fire: 'space', label: ['רווח', 'SPACE'] },
+    manic: { dir: ARROWS, fire: 'space', label: ['קפיצה', 'JUMP'] },   // הקוד מוקלד במקלדת המצוירת
+    jsw: { dir: ARROWS, fire: 'space', label: ['קפיצה', 'JUMP'] },
     mchess: { dir: ARROWS, fire: 'enter', label: ['ENTER', 'ENTER'] },   // Chess: חיצים לסמן ו-ENTER לבחירה. שאר המקשים ([L], ‏[P], ‏[D]...) במקלדת המצוירת
     ninja: { dir: ARROWS, fire: 'alt', label: ['בעיטה', 'KICK'] },   // מצב ג'ויסטיק של המשחק (בלי [K]): למעלה קפיצה, כפתור בעיטה (גונן, 9.11)
     sas: { dir: ARROWS, fire: 'G', label: ['רימון', 'GRENADE'] },   // [F] (טיל) נשאר במקלדת
