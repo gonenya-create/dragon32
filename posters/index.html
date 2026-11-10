@@ -19,6 +19,8 @@
 .poster img{width:100%;height:auto;display:block;box-shadow:0 12px 30px rgba(0,0,0,.35);border:1px solid rgba(0,0,0,.15)}
 .poster h2{margin:0 0 8px;font:900 28px/1.2 'Rubik',sans-serif}
 .poster .dl{display:inline-block;margin:12px 0;padding:10px 18px;background:var(--red);color:var(--paper);font:700 17px 'Rubik',sans-serif;text-decoration:none;border-radius:6px}
+.poster .dl.share{background:var(--blue)}
+.poster .dl{margin-inline-end:8px}
 .poster .dl:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
 .poster .small{font-size:15px;color:var(--soft)}
 @media (max-width:640px){.poster{grid-template-columns:1fr}.poster img{max-width:320px}}
@@ -51,6 +53,7 @@ dialog.big button{position:fixed;top:12px;inset-inline-end:12px;font:700 18px 'R
     <h2>74 משחקים על המדף</h2>
     <p>כל המשחקים שעל המדף של המכונה, בשורות על מדפי עץ, כמו בחנות של פעם. לכל משחק רגע מתוך המשחק כפי שהוא רץ במכונה שלנו, ולהרפתקאות עטיפת הקלטת המקורית.</p>
     <a class="dl" href="/assets/poster/dragon1982-shelf-a3-he.pdf" download>הורדה להדפסה (‏<bdi>PDF</bdi>, ‏<bdi>A3</bdi>)</a>
+    <a class="dl share" href="/assets/poster/dragon1982-shelf-he-big.jpg" download="dragon1982-shelf.jpg" data-name="dragon1982-shelf.jpg">📲 שיתוף או שמירה כתמונה</a>
     <p class="small">כל המשחקים באישור מחבריהם, ושמונה מהם שלנו. עטיפות הקלטות נסרקו בארכיון <a href="https://archive.worldofdragon.org/">World of Dragon</a>. הרשימה המלאה והקרדיטים: <a href="/lab/1982/games/">רשימת המשחקים</a>.</p>
   </div>
 </li>
@@ -60,6 +63,7 @@ dialog.big button{position:fixed;top:12px;inset-inline-end:12px;font:700 18px 'R
     <h2>1982 חוזר לחיים</h2>
     <p>מסך ה-<bdi>BASIC</bdi> של המכונה שלנו באמצע, ומסביבו משחקים מהמדף, בפיקסלים של אז. בעיצוב של שער מגזין מ-1983.</p>
     <a class="dl" href="/assets/poster/dragon1982-poster-a3.pdf" download>הורדה להדפסה (‏<bdi>PDF</bdi>, ‏<bdi>A3</bdi>)</a>
+    <a class="dl share" href="/assets/poster/dragon1982-poster-big.jpg" download="dragon1982-poster.jpg" data-name="dragon1982-poster.jpg">📲 שיתוף או שמירה כתמונה</a>
     <p class="small">המשחקים בפוסטר מופיעים באישור מחבריהם: <bdi dir="ltr">Ken Kalish · Scott Adams · Mike Hughey · Ciaran Anscomb · Salva Kantero</bdi>. מסך ה-<bdi>BASIC</bdi> הוא שלנו.</p>
   </div>
 </li>
@@ -77,6 +81,19 @@ dialog.big button{position:fixed;top:12px;inset-inline-end:12px;font:700 18px 'R
   document.getElementById('big-close').addEventListener('click', close);
   im.addEventListener('click', close);
   d.addEventListener('click', e => { if (e.target === d) close(); });
+
+  // שיתוף כתמונה (גונן, 10.11: באייפון ה-PDF נתקע בתצוגה, ואי אפשר לשלוח לוואטסאפ): בטלפון נפתחת חלונית השיתוף עם קובץ JPG,
+  // ובמחשב (או כשאין שיתוף קבצים) הקישור פשוט מוריד את התמונה
+  document.querySelectorAll('.poster .share').forEach(a => a.addEventListener('click', async e => {
+    if (!navigator.canShare) return;
+    e.preventDefault();
+    try {
+      const blob = await (await fetch(a.href)).blob();
+      const file = new File([blob], a.dataset.name, { type: 'image/jpeg' });
+      if (navigator.canShare({ files: [file] })) await navigator.share({ files: [file], title: 'Dragon 1982' });
+      else location.href = a.href;
+    } catch (err) { if (err && err.name !== 'AbortError') location.href = a.href; }
+  }));
 })();
 </script>
 </body>

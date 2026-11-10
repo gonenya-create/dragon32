@@ -19,6 +19,8 @@
 .poster img{width:100%;height:auto;display:block;box-shadow:0 12px 30px rgba(0,0,0,.35);border:1px solid rgba(0,0,0,.15)}
 .poster h2{margin:0 0 8px;font:900 28px/1.2 'Rubik',sans-serif}
 .poster .dl{display:inline-block;margin:12px 0;padding:10px 18px;background:var(--red);color:var(--paper);font:700 17px 'Rubik',sans-serif;text-decoration:none;border-radius:6px}
+.poster .dl.share{background:var(--blue)}
+.poster .dl{margin-inline-end:8px}
 .poster .dl:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
 .poster .small{font-size:15px;color:var(--soft)}
 @media (max-width:640px){.poster{grid-template-columns:1fr}.poster img{max-width:320px}}
@@ -51,6 +53,7 @@ dialog.big button{position:fixed;top:12px;inset-inline-end:12px;font:700 18px 'R
     <h2>74 Games on the Shelf</h2>
     <p>Every game on the machine's shelf, in rows on wooden shelves like an old shop. Each one shows a moment from the game as it runs on our machine, and the adventures show their original tape covers.</p>
     <a class="dl" href="/assets/poster/dragon1982-shelf-a3-en.pdf" download>Download to print (PDF, A3)</a>
+    <a class="dl share" href="/assets/poster/dragon1982-shelf-en-big.jpg" download="dragon1982-shelf.jpg" data-name="dragon1982-shelf.jpg">📲 Share or save as a picture</a>
     <p class="small">Every game appears with its author's permission; eight are our own. Tape covers scanned by the <a href="https://archive.worldofdragon.org/">World of Dragon</a> archive. Full list and credits: <a href="/en/lab/1982/games/">the games list</a>.</p>
   </div>
 </li>
@@ -60,6 +63,7 @@ dialog.big button{position:fixed;top:12px;inset-inline-end:12px;font:700 18px 'R
     <h2>1982 Comes Back to Life</h2>
     <p>Our machine’s BASIC screen in the middle, surrounded by games from the shelf in their original pixels, styled like a 1983 magazine cover. The text on the poster is in Hebrew.</p>
     <a class="dl" href="/assets/poster/dragon1982-poster-a3.pdf" download>Download to print (PDF, A3)</a>
+    <a class="dl share" href="/assets/poster/dragon1982-poster-big.jpg" download="dragon1982-poster.jpg" data-name="dragon1982-poster.jpg">📲 Share or save as a picture</a>
     <p class="small">The games on the poster appear with their authors’ permission: Ken Kalish, Scott Adams, Mike Hughey, Ciaran Anscomb and Salva Kantero. The BASIC screen is our own.</p>
   </div>
 </li>
@@ -77,6 +81,19 @@ dialog.big button{position:fixed;top:12px;inset-inline-end:12px;font:700 18px 'R
   document.getElementById('big-close').addEventListener('click', close);
   im.addEventListener('click', close);
   d.addEventListener('click', e => { if (e.target === d) close(); });
+
+  // שיתוף כתמונה (גונן, 10.11: באייפון ה-PDF נתקע בתצוגה, ואי אפשר לשלוח לוואטסאפ): בטלפון נפתחת חלונית השיתוף עם קובץ JPG,
+  // ובמחשב (או כשאין שיתוף קבצים) הקישור פשוט מוריד את התמונה
+  document.querySelectorAll('.poster .share').forEach(a => a.addEventListener('click', async e => {
+    if (!navigator.canShare) return;
+    e.preventDefault();
+    try {
+      const blob = await (await fetch(a.href)).blob();
+      const file = new File([blob], a.dataset.name, { type: 'image/jpeg' });
+      if (navigator.canShare({ files: [file] })) await navigator.share({ files: [file], title: 'Dragon 1982' });
+      else location.href = a.href;
+    } catch (err) { if (err && err.name !== 'AbortError') location.href = a.href; }
+  }));
 })();
 </script>
 </body>
