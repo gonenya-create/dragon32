@@ -2472,7 +2472,10 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       if (!f) return;
       const bytes = new Uint8Array(await f.arrayBuffer());
       let found = parseCas(bytes);
-      const gapped = gapTape(bytes, found.reduce((a, t) => a + t.b.length, 0));
+      // טקסט של DREAM (כותרת קצרה, רק שם): קלטת שנשמרה ב-DREAM ונטענת שוב, גם מקובץ (10.11)
+      const dream = !found.length && parseCas(bytes, true);
+      if (dream && dream.length) found = dream;
+      const gapped = !(dream && dream.length) && gapTape(bytes, found.reduce((a, t) => a + t.b.length, 0));
       if (gapped) found = [gapped];
       if (!found.length) { const raw = rawTape(bytes); if (raw) found = [raw]; }
       if (found.length) { addTapes(found); if (mineDrawer) mineDrawer.open = true; status.textContent = (EN ? 'Added to my tapes: ' : 'נוסף לקלטות שלי: ') + found.map(t => t.n).join(', '); }
