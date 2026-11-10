@@ -1363,10 +1363,10 @@ if (part('real dragon sound')) {
   for (const [path, n] of [['/lab/1982/real-dragon/', 'he'], ['/en/lab/1982/real-dragon/', 'en']]) {
     await p.goto(root + path); await p.waitForTimeout(800);
     const r = await p.evaluate(() => ({ rows: document.querySelectorAll('.real-list li:not(.off)').length, off: [...document.querySelectorAll('.real-list li.off')].map(x => x.id).sort().join(), machine: !!document.querySelector('canvas'),
-      count: [...document.querySelectorAll('#count .rb > *')].map(x => x.className), hang: [...document.querySelectorAll('#hangit .rb > *')].map(x => x.className),
+      count: [...document.querySelectorAll('#count .rb > *')].map(x => x.className), hang: [...document.querySelectorAll('#spores .rb > *')].map(x => x.className),
       dagg: !!document.querySelector('#daggorath button'), buzz: !!document.querySelector('#buzzard button'), cas: document.querySelector('#count a.c')?.getAttribute('href') }));
     check(n + ': the downloads page has 69 games to load, the 3 others greyed out with a reason, and no machine on it', r.rows === 69 && r.off === 'buzzard,cavehunter,daggorath' && !r.machine, JSON.stringify(r));
-    check(n + ': The Count has play, sound and tape; Hang It! play only; no cartridges or Buzzard Bait', r.count.join() === 'p,w,c' && r.hang.join() === 'p,only' && !r.dagg && !r.buzz && r.cas === '/lab/1982/tapes/count.cas', JSON.stringify(r));
+    check(n + ': The Count has play, sound and tape; Star Spores play only; no cartridges or Buzzard Bait', r.count.join() === 'p,w,c' && r.hang.join() === 'p,only' && !r.dagg && !r.buzz && r.cas === '/lab/1982/tapes/count.cas', JSON.stringify(r));
   }
   const w = await p.evaluate(async () => { const x = await (async () => window.D32Wav.casWav(new Uint8Array(await (await fetch('/lab/1982/tapes/snaker.cas')).arrayBuffer())))(); return [String.fromCharCode(...x.slice(0, 4)), String.fromCharCode(...x.slice(8, 12)), x.length]; });
   check('a shelf tape becomes a WAV sound in the browser', w[0] === 'RIFF' && w[1] === 'WAVE' && w[2] > 1000000, JSON.stringify(w));
