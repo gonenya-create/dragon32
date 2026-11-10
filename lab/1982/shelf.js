@@ -1077,11 +1077,11 @@
     dhh: {
       he: ['שלושה חוקרי מערות אבדו עמוק ב-Death\'s Head Hole, ליד הכפר Priddy שבסומרסט. אתם וחבריכם בצוות ההצלה יורדים להציל את שלושתם, לפני שהגשם מציף את המעברים.',
         'רוב הזמן משחקים בארבעה מקשים: [N] [S] [E] [W] לצפון, דרום, מזרח ומערב. על המסך כתוב לאן אפשר ללכת. כיוון שלא כתוב הוא אזור לא נחקר: מסוכן, ומעייף יותר.',
-        '[L] מקשיבים: שומעים אם יש חוקר אבוד בקרבת מקום. [F] אוכלים מנת מזון. [P] הניקוד, רק בכניסה ובחלק הראשון של המערה. [G] מוותרים.',
+        '[L] מקשיבים: שומעים אם יש חוקר אבוד בקרבת מקום. [F] אוכלים מנת מזון. [C] מצייר מפה של המערה (ברמת NOVICE גם החוקרים האבודים מופיעים בה), אבל עולה 350 כוח. [P] הניקוד, רק במשבצת הכניסה. [G] מוותרים.',
         'שמרו על הכוח (FITNESS) ועל הפנסים (LIGHTS): הם יורדים כל הזמן. בעזרת סולם יורדים בירידה תלולה, בעזרת חבל מטפסים, בעזרת אֵת פותחים מעבר סתום, וציוד הצלילה מעביר מעבר מוצף. לתהום לא נכנסים אף פעם.'],
       en: ['Three cavers are lost deep in Death\'s Head Hole, near the village of Priddy in Somerset. You and your rescue team go down to save all three, before the rain floods the passages.',
         'Most of the time you play with four keys: [N] [S] [E] [W] for north, south, east and west. The screen tells you which ways are open. A way it doesn\'t name is unexplored: dangerous, and more tiring.',
-        '[L] listens for a lost caver nearby. [F] eats a food pack. [P] gives the score, only at the entrance and in the first part of the cave. [G] gives up.',
+        '[L] listens for a lost caver nearby. [F] eats a food pack. [C] draws a map of the cave (in NOVICE the lost cavers show on it too), but costs 350 fitness. [P] gives the score, only on the entrance square. [G] gives up.',
         'Watch your FITNESS and your LIGHTS: they run down all the time. A ladder gets you down a pitch, a rope up a climb, a shovel through a choked passage, and the sub-aqua set through a sump. Never step into a chasm.']
     },
     // נבדק במכונה (29.10): CLOAD, ‏RUN, שם הקבוצה, ההקדמה, מסך הקבוצה והתפריט. ההוראות לפי העטיפה המקורית של Peaksoft
