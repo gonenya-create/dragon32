@@ -43,10 +43,10 @@
 <h2>התקציב (<bdi>BUDGET</bdi>)</h2>
 <table class="keys"><tr><th scope="row"><kbd dir="ltr">S</kbd></th><td>הקמה, בפעם הראשונה בלבד: שמות ל-20 הסעיפים (עד 10 תווים), ואחר כך סכומי תקציב</td></tr><tr><th scope="row"><kbd dir="ltr">D</kbd></th><td>רשימת הסעיפים, ושינוי שם של סעיף</td></tr><tr><th scope="row"><kbd dir="ltr">B</kbd></th><td>סכום מתוכנן: חודש, שבוע, מספר סעיף וסכום. סכום חדש מחליף את הישן</td></tr><tr><th scope="row"><kbd dir="ltr">A</kbd></th><td>סכום שהוצא בפועל. סכום חדש מתווסף לקודם</td></tr><tr><th scope="row"><kbd dir="ltr">I</kbd></th><td>הכנסה של שבוע</td></tr><tr><th scope="row"><kbd dir="ltr">W</kbd></th><td>סיכום של שבוע אחד</td></tr><tr><th scope="row"><kbd dir="ltr">M</kbd></th><td>סיכום של חודש</td></tr><tr><th scope="row"><kbd dir="ltr">P</kbd></th><td>סיכום מחודש עד חודש</td></tr><tr><th scope="row"><kbd dir="ltr">E</kbd></th><td>סיום ושמירה</td></tr></table>
 <p>בסיכום יש לכל סעיף שלושה מספרים: מה תוכנן, מה הוצא, ומה נשאר (<bdi>FLOAT</bdi>). אחרי שני מסכים של סעיפים מגיעים הסכומים הכוללים: כמה תוכנן, כמה הוצא, כמה נכנס, ומה ההפרש בין ההכנסה לתקציב ולהוצאות.</p>
-<p>בכל הרצה, הבחירה הראשונה בתפריט קוראת קודם את שני קובצי הנתונים מהקלטת: <bdi>IDATA</bdi> (שמות הסעיפים), ואחריו <bdi>BDATA</bdi> (כל הסכומים). <bdi>BDATA</bdi> גדול, ושמירה או קריאה שלו לוקחות כמה דקות.</p>
+<p>בכל הרצה, בפעם הראשונה שבוחרים בתפריט פעולה על הנתונים (כמו <bdi>A</bdi> או <bdi>W</bdi>), התוכנה קוראת קודם את שני קובצי הנתונים מהקלטת: <bdi>IDATA</bdi> (שמות הסעיפים), ואחריו <bdi>BDATA</bdi> (כל הסכומים). זה קורה גם מיד אחרי ההקמה. <bdi>BDATA</bdi> גדול: שמירה שלו לוקחת כדקה וחצי, וקריאה של כל קובץ עד כשתי דקות.</p>
 <h2>שלוש מלכודות</h2>
 <ul>
-<li><b>יוצאים רק עם <bdi>E</bdi>.</b> השמירה לקלטת קורית ביציאה. מי שמכבה את המחשב לפני כן מאבד את כל מה שהקליד.</li>
+<li><b>יוצאים רק עם <bdi>E</bdi>.</b> השמירה לקלטת קורית בהקמה וביציאה. מי שמכבה את המחשב לפני <bdi>E</bdi> מאבד את כל מה שהקליד מאז השמירה האחרונה.</li>
 <li><b>הכנסה לבד לא נשמרת.</b> <bdi>E</bdi> שומר את הסכומים רק אם בהרצה הזו הוזן גם תקציב (<bdi>B</bdi>) או הוצאה (<bdi>A</bdi>). אם הזנתם רק הכנסות, הוסיפו אחר כך סכום אחד ב-<bdi>B</bdi> או ב-<bdi>A</bdi>, ורק אז צאו.</li>
 <li><b>לא ממהרים.</b> בזמן שהתוכנה מחכה רגע בין מסכים, מקש שנלחץ הולך לאיבוד. מחכים לסימן השאלה.</li>
 </ul>
@@ -58,6 +58,20 @@
 <p><b>אם התוכנה נעצרת.</b> בעותק שנמצא היום בארכיונים, שתי שורות בתוכנית הזו פגומות. בכל אחת מהן תו אחד השתנה בהעתקה. אם מופיע <bdi dir="ltr">?TM ERROR IN 340</bdi> או <bdi dir="ltr">?SN ERROR IN 490</bdi>, מקלידים מחדש את שתי השורות, ושומרים את התוכנית בעותק משלכם:</p>
 <pre class="listing" dir="ltr">340 IF M$="E" THEN 1480
 490 IF EOF(-1) THEN 600</pre>
+<h2>שיעור ראשון: תקציב של חודש אחד</h2>
+<p>החודש הוא ינואר (חודש 1), ויש ארבעה סעיפים: <bdi>FOOD</bdi>, <bdi>RENT</bdi>, <bdi>CAR</bdi> ו-<bdi>FUN</bdi>. שימו לב: התקציב הוא לכל שבוע בנפרד. מחכים תמיד לסימן השאלה לפני שמקלידים.</p>
+<ol>
+<li><kbd dir="ltr">CLOAD</kbd>, ‏<kbd dir="ltr">RUN</kbd>, ובתפריט <kbd>S</kbd> ו-<kbd>ENTER</kbd>.</li>
+<li>לשאלה <bdi dir="ltr">INPUT DESCRIPTION FOR CODE 1</bdi> עונים <bdi>FOOD</bdi> ו-<kbd>ENTER</kbd>, ואחר כך <bdi>RENT</bdi>, <bdi>CAR</bdi> ו-<bdi>FUN</bdi>. לסעיפים 5 עד 20 לוחצים <kbd>ENTER</kbd> בלי כלום, 16 פעמים.</li>
+<li>אחרי סעיף 20 התוכנה שומרת את השמות: מכינים את קלטת הנתונים ב-<bdi>RECORD</bdi> ו-<bdi>PLAY</bdi>, ולוחצים <kbd>ENTER</kbd>. אחרי <bdi dir="ltr">ITEM CODE DESCRIPTION FILE SAVED</bdi> לוחצים <kbd>ENTER</kbd>, רואים את טבלת הסעיפים, ועוד <kbd>ENTER</kbd>.</li>
+<li>על <bdi dir="ltr">DO YOU WISH TO ENTER ANY BUDGET VALUES?</bdi> עונים <kbd>Y</kbd>. אחר כך חודש 1, שבוע 1, סעיף 1, וסכום 3000. על <bdi dir="ltr">ANY MORE ITEMS FOR THIS WEEK?</bdi> עונים <kbd>Y</kbd>, וממשיכים: סעיף 2 עם 4000, סעיף 3 עם 800, סעיף 4 עם 500. אחרי האחרון עונים <kbd>N</kbd> שלוש פעמים.</li>
+<li>התוכנה שומרת את הסכומים: שוב <bdi>RECORD</bdi> ו-<bdi>PLAY</bdi>, ‏<kbd>ENTER</kbd>, ומחכים כדקה וחצי ל-<bdi dir="ltr">BUDGET VALUES FILE SAVED</bdi>. <kbd>ENTER</kbd> מחזיר לתפריט.</li>
+<li>הוצאות: <kbd>A</kbd> ו-<kbd>ENTER</kbd>. קודם התוכנה קוראת את שני הקבצים: מחזירים את קלטת הנתונים לתחילתה, לוחצים <bdi>PLAY</bdi>, ‏<kbd>ENTER</kbd> לכל קובץ, ומחכים. אחר כך: חודש 1, שבוע 1, סעיף 1, הוצאה 650. על עוד הוצאות בסעיף עונים <kbd>N</kbd>, ועל עוד בשבוע <kbd>Y</kbd>: סעיף 3, הוצאה 250. ‏<kbd>N</kbd>, ‏<kbd>N</kbd>, ועל עוד בחודש <kbd>Y</kbd>: שבוע 2, סעיף 1, הוצאה 700. אחר כך <kbd>N</kbd> עד שחוזרים לתפריט.</li>
+<li>הכנסה: <kbd>I</kbd> ו-<kbd>ENTER</kbd>, חודש 1, שבוע 1, הכנסה 12000, ו-<kbd>N</kbd>.</li>
+<li>סיכום שבוע: <kbd>W</kbd> ו-<kbd>ENTER</kbd>, חודש 1, שבוע 1. בטבלה מופיעים מספרי הסעיפים: בסעיף 1 תוכנן 3000, הוצא 650, ונשאר 2350. שני <kbd>ENTER</kbd> מביאים לסכומים: תקציב 8300, הוצאות 900, הכנסה 12000. <kbd>ENTER</kbd>, ו-<kbd>N</kbd>.</li>
+<li>סיכום חודש: <kbd>M</kbd> ו-<kbd>ENTER</kbd>, חודש 1. בסעיף 1 הוצא עכשיו 1350, שני השבועות יחד.</li>
+<li>יציאה: <kbd>E</kbd> ו-<kbd>ENTER</kbd>. מופיע <bdi dir="ltr">RESAVE BUDGET DATA FILE</bdi>: מכינים את הרשמקול להקלטה, ‏<kbd>ENTER</kbd>, ומחכים ל-<bdi dir="ltr">BUDGET VALUES FILE SAVED</bdi>. אחרי <kbd>ENTER</kbd> מופיע <bdi>OK</bdi>. בפעם הבאה: <bdi>CLOAD</bdi>, ‏<bdi>RUN</bdi> ו-<bdi>W</bdi>, והסיכום מראה את מה שהקלדתם.</li>
+</ol>
 <p class="note">המדריך כתוב במילים שלנו, לבעלי <bdi>Dragon</bdi> שיש להם את התוכנה המקורית. אנחנו לא מעלים את התוכנה עצמה ולא את המדריך המקורי. בדקנו כל צעד על מכונה עם אותו מעבד ואותו מסך.</p>
 </div>
 <p class="more"><a href="/guides/">כל המדריכים</a> · <a href="/magazine/">מה קראו בעלי <bdi>Dragon</bdi></a> · <a href="/dragon-history/">ההיסטוריה של ה-<bdi>Dragon</bdi></a></p>

@@ -38,7 +38,7 @@
 <table class="keys"><tr><th scope="row"><kbd dir="ltr">R</kbd></th><td>מצב ריצה: המסך לצב, ושלוש שורות לפקודות בתחתית</td></tr><tr><th scope="row"><kbd dir="ltr">E</kbd></th><td>העורך: כאן כותבים פרוצדורות</td></tr><tr><th scope="row"><kbd dir="ltr">S, T, ENTER</kbd></th><td>שמירה של כל הפרוצדורות לקלטת</td></tr><tr><th scope="row"><kbd dir="ltr">L, T, ENTER</kbd></th><td>טעינה מקלטת</td></tr><tr><th scope="row"><kbd dir="ltr">P</kbd></th><td>הדפסה במדפסת</td></tr><tr><th scope="row"><kbd dir="ltr">BREAK</kbd></th><td>מכל מצב: חזרה ל-LOGO:</td></tr></table>
 <h2>הצעדים הראשונים</h2>
 <p>לוחצים <kbd>R</kbd>, ומקלידים פקודה אחת בכל שורה, עם רווח לפני המספר, ו-<kbd>ENTER</kbd>. <bdi dir="ltr">FD 40</bdi> מזיז את הצב 40 צעדים קדימה, ו-<bdi dir="ltr">RT 90</bdi> מסובב אותו ימינה ברבע סיבוב.</p>
-<table class="keys"><tr><th scope="row"><kbd dir="ltr">FD / BK</kbd></th><td>קדימה / אחורה</td></tr><tr><th scope="row"><kbd dir="ltr">RT / LT</kbd></th><td>סיבוב ימינה / שמאלה, במעלות</td></tr><tr><th scope="row"><kbd dir="ltr">PU / PD</kbd></th><td>מרימים את העט / מורידים אותו</td></tr><tr><th scope="row"><kbd dir="ltr">HOME</kbd></th><td>חזרה למרכז, עם הפנים למעלה</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR</kbd></th><td>מנקה את המסך</td></tr><tr><th scope="row"><kbd dir="ltr">HT / ST</kbd></th><td>מסתירים את הצב / מראים אותו</td></tr><tr><th scope="row"><kbd dir="ltr">PC 0–3</kbd></th><td>צבע העט</td></tr><tr><th scope="row"><kbd dir="ltr">BG 0–3</kbd></th><td>צבע הרקע</td></tr></table>
+<table class="keys"><tr><th scope="row"><kbd dir="ltr">FD / BK</kbd></th><td>קדימה / אחורה</td></tr><tr><th scope="row"><kbd dir="ltr">RT / LT</kbd></th><td>סיבוב ימינה / שמאלה, במעלות</td></tr><tr><th scope="row"><kbd dir="ltr">PU / PD</kbd></th><td>מרימים את העט / מורידים אותו</td></tr><tr><th scope="row"><kbd dir="ltr">HOME</kbd></th><td>חזרה למרכז, עם הפנים למעלה</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR</kbd></th><td>מנקה את המסך. מקלידים את המילה, לא המקש</td></tr><tr><th scope="row"><kbd dir="ltr">HT / ST</kbd></th><td>מסתירים את הצב / מראים אותו</td></tr><tr><th scope="row"><kbd dir="ltr">PC 0–3</kbd></th><td>צבע העט</td></tr><tr><th scope="row"><kbd dir="ltr">BG 0–3</kbd></th><td>צבע הרקע</td></tr></table>
 <h2>פרוצדורה ראשונה</h2>
 <p>הפרוצדורה היא מילה חדשה שמלמדים את הצב. לוחצים <kbd>BREAK</kbd>, אחר כך <kbd>E</kbd>, ומקלידים:</p>
 <pre class="listing" dir="ltr">TO SQUARE
@@ -57,6 +57,39 @@ END</pre>
 <li><b>עיגול.</b> <bdi dir="ltr">REPEAT 36 (FD 6 RT 10)</bdi> בתוך פרוצדורה נותן עיגול יפה.</li>
 <li><b>לא נוגעים בשורות התחתונות.</b> צב שנכנס לשלוש שורות הפקודות נמרח כשהטקסט זז.</li>
 </ul>
+<h2>שיעור ראשון: ריבוע, ואחר כך בית</h2>
+<p><b>ריבוע, פקודה אחרי פקודה.</b></p>
+<ol>
+<li>ב-<bdi dir="ltr">LOGO:</bdi> לוחצים <kbd>R</kbd>. המסך מתנקה, והצב עומד באמצע עם הפנים למעלה.</li>
+<li>מקלידים <kbd dir="ltr">FD 40</kbd> ו-<kbd>ENTER</kbd>: הצב מצייר קו למעלה. אחר כך <kbd dir="ltr">RT 90</kbd> ו-<kbd>ENTER</kbd>: הצב פונה ימינה.</li>
+<li>חוזרים על שתי הפקודות עוד שלוש פעמים, כל אחת בשורה משלה. יש ריבוע, והצב חזר למקום שבו התחיל.</li>
+</ol>
+<p><b>בית, עם פרוצדורות.</b> <bdi>REPEAT</bdi> עובד רק בתוך פרוצדורה, ולכן את הבית כותבים בעורך.</p>
+<ol start="4">
+<li><kbd>BREAK</kbd> מחזיר ל-<bdi dir="ltr">LOGO:</bdi>, ו-<kbd>E</kbd> פותח את העורך. מקלידים את השורות האלה, כל אחת ואחריה <kbd>ENTER</kbd>:</li>
+</ol>
+<pre class="listing" dir="ltr">TO SQUARE
+REPEAT 4 (FD 30 RT 90)
+END
+TO ROOF
+RT 30
+FD 30
+RT 120
+FD 30
+LT 150
+END
+TO HOUSE
+SQUARE
+FD 30
+ROOF
+END</pre>
+<ol start="5">
+<li>מה זה עושה: <bdi>SQUARE</bdi> מצייר את הקירות. <bdi dir="ltr">FD 30</bdi> מעלה את הצב לפינה השמאלית העליונה. <bdi>ROOF</bdi> מצייר גג משולש, ובסוף מסובב את הצב בחזרה, עם הפנים למעלה.</li>
+<li>יוצאים מהעורך ב-<kbd>BREAK</kbd>. אין פקודת יציאה מיוחדת: מה שהוקלד נשמר כפרוצדורות. לוחצים <kbd>R</kbd>, מקלידים <kbd dir="ltr">CLEAR</kbd> ו-<kbd>ENTER</kbd>, ואז <kbd dir="ltr">HOUSE</kbd> ו-<kbd>ENTER</kbd>. הצב מצייר בית: ריבוע, ועליו גג.</li>
+<li>בית שני: בסוף <bdi>HOUSE</bdi> הצב עומד בפינה הימנית העליונה של הקירות. מקלידים, כל פקודה ואחריה <kbd>ENTER</kbd>: <bdi dir="ltr">PU</bdi>, <bdi dir="ltr">BK 30</bdi>, <bdi dir="ltr">RT 90</bdi>, <bdi dir="ltr">FD 20</bdi>, <bdi dir="ltr">LT 90</bdi>, <bdi dir="ltr">PD</bdi>, ושוב <bdi>HOUSE</bdi>. עכשיו יש שני בתים זה ליד זה. <bdi>HT</bdi> מסתיר את הצב.</li>
+<li>שמירה: מכניסים קלטת ולוחצים ברשמקול <bdi>RECORD</bdi> ו-<bdi>PLAY</bdi>. אחר כך <kbd>BREAK</kbd>, ואז <kbd>S</kbd> (מופיע <bdi dir="ltr">SAVE:</bdi>), <kbd>T</kbd> ו-<kbd>ENTER</kbd>. כשחוזר <bdi dir="ltr">LOGO:</bdi>, הפרוצדורות בקלטת.</li>
+<li>בפעם הבאה: מחזירים את הקלטת ולוחצים <bdi>PLAY</bdi>. ב-<bdi dir="ltr">LOGO:</bdi> לוחצים <kbd>L</kbd>, <kbd>T</kbd> ו-<kbd>ENTER</kbd>. כשחוזר <bdi dir="ltr">LOGO:</bdi>, לוחצים <kbd>R</kbd>, והפרוצדורות שוב שם.</li>
+</ol>
 <p class="note">המדריך כתוב במילים שלנו, לבעלי <bdi>Dragon</bdi> שיש להם את התוכנה המקורית. אנחנו לא מעלים את התוכנה עצמה ולא את המדריך המקורי. בדקנו כל צעד על מכונה עם אותו מעבד ואותו מסך.</p>
 </div>
 <p class="more"><a href="/guides/">כל המדריכים</a> · <a href="/magazine/">מה קראו בעלי <bdi>Dragon</bdi></a> · <a href="/dragon-history/">ההיסטוריה של ה-<bdi>Dragon</bdi></a></p>

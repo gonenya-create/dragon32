@@ -36,7 +36,7 @@
 <h2>למה שפת מכונה</h2>
 <p>ב-<bdi>BASIC</bdi> קל לכתוב, אבל הוא איטי. שפת מכונה היא פקודות ישירות למעבד 6809, מהירה פי עשרות אבל קשה יותר. <bdi>DREAM</bdi> עושה שלושה דברים: עורך שבו כותבים את התוכנית, מתרגם (אסמבלר) שהופך אותה לקוד שהמעבד מבין, והרצה מיידית.</p>
 <h2>הפעלה מקלטת</h2>
-<p>קודם שומרים מקום בזיכרון: <kbd dir="ltr">CLEAR 200,12000</kbd> ו-<kbd>ENTER</kbd>. אחר כך <kbd dir="ltr">CLOADM</kbd>, וכשמופיע <bdi>OK</bdi>, מקלידים <kbd dir="ltr">EXEC</kbd>. כשהתוכנה שואלת <bdi dir="ltr">OLD TEXT?</bdi>, לוחצים <bdi>N</bdi>, והמסך מתרוקן.</p>
+<p>קודם שומרים מקום בזיכרון: <kbd dir="ltr">CLEAR 200,12000</kbd> ו-<kbd>ENTER</kbd>. אחר כך <kbd dir="ltr">CLOADM</kbd>, וכשמופיע <bdi>OK</bdi>, מקלידים <kbd dir="ltr">EXEC</kbd>. כשהתוכנה שואלת <bdi dir="ltr">OLD TEXT ?</bdi>, לוחצים <bdi>N</bdi>, והמסך מתרוקן. כאן <bdi>CLEAR</bdi> היא מילה שמקלידים באותיות, לא המקש. בלי <bdi dir="ltr">CLEAR 200,12000</bdi> לפני <bdi>CLOADM</bdi>, העורך כותב <bdi>FULL</bdi> כבר בשורה הראשונה, וצריך להתחיל מחדש.</p>
 <h2>תוכנית ראשונה</h2>
 <p>התוכנית הזאת ממלאת את המסך באות <bdi>A</bdi> ומחכה למקש. מקלידים כל שורה ואחריה <bdi>ENTER</bdi>. שורה שמתחילה ברווח חייבת להתחיל ברווח: מילה בתחילת שורה היא שם של שורה (כמו <bdi>LOOP</bdi>), והפקודה באה אחרי רווח.</p>
 <pre dir="ltr" class="listing">@ LDX #$0400
@@ -51,9 +51,19 @@ KEY LDX $A000
 <h2>מה כל שורה עושה</h2>
 <p><bdi>LDX #$0400</bdi> מצביע על תחילת המסך בזיכרון, וה-<bdi>@</bdi> מסמן שכאן התוכנית מתחילה. <bdi>LDA #'A</bdi> לוקח את האות. <bdi>STA ,X+</bdi> שם אותה על המסך ומתקדם מקום אחד. <bdi>CMPX #$0600</bdi> ו-<bdi>BLO LOOP</bdi> חוזרים עד סוף המסך. שלוש השורות שאחר כך בודקות אם נלחץ מקש, ו-<bdi>RTS</bdi> חוזר לעורך.</p>
 <h2>לתרגם ולהריץ</h2>
-<table class="keys"><tr><th scope="row"><kbd dir="ltr">BREAK, A, ENTER</kbd></th><td>מתרגם: ליד כל שורה מופיע הקוד שלה</td></tr><tr><th scope="row"><kbd dir="ltr">BREAK, X, ENTER</kbd></th><td>מריץ: המסך מתמלא באותיות A</td></tr><tr><th scope="row"><kbd dir="ltr">מקש כלשהו</kbd></th><td>חזרה לעורך</td></tr><tr><th scope="row"><kbd dir="ltr">BREAK, Q, ENTER</kbd></th><td>מהמתרגם חזרה לעורך, לתיקון שגיאות</td></tr><tr><th scope="row"><kbd dir="ltr">BREAK, T, ENTER</kbd></th><td>מחזיר מצב טקסט אחרי תוכנית גרפית</td></tr></table>
-<h2>ניסוי ראשון</h2>
-<p>מחליפים את <bdi>'A</bdi> באות אחרת, למשל <bdi>'*</bdi>, ומריצים שוב. זה הרגע שבו מרגישים כמה שפת מכונה מהירה: המסך מתמלא בבת אחת.</p>
+<p>כל פקודה מתחילה ב-<kbd>BREAK</kbd>, אחריו אות, ואחריה <kbd>ENTER</kbd>.</p>
+<table class="keys"><tr><th scope="row"><kbd dir="ltr">BREAK, A, ENTER</kbd></th><td>מתרגם: ליד כל שורה מופיע הקוד שלה</td></tr><tr><th scope="row"><kbd dir="ltr">BREAK, X, ENTER</kbd></th><td>מריץ: המסך מתמלא באותיות A</td></tr><tr><th scope="row"><kbd dir="ltr">מקש כלשהו</kbd></th><td>חזרה לעורך</td></tr><tr><th scope="row"><kbd dir="ltr">BREAK, Q, ENTER</kbd></th><td>מהמתרגם: חזרה לעורך, לתיקון שגיאות. מהעורך: יציאה ל-BASIC</td></tr><tr><th scope="row"><kbd dir="ltr">BREAK, T, ENTER</kbd></th><td>מחזיר מצב טקסט אחרי תוכנית גרפית</td></tr><tr><th scope="row"><kbd dir="ltr">BREAK, H, ENTER</kbd></th><td>קפיצה לתחילת הטקסט</td></tr><tr><th scope="row"><kbd dir="ltr">BREAK, V, ENTER</kbd></th><td>מחזיר שורה שקלקלתם, כל עוד לא לחצתם עליה ENTER</td></tr><tr><th scope="row"><kbd dir="ltr">BREAK, BREAK</kbd></th><td>ביטול פקודה שהתחלתם</td></tr></table>
+<h2>שיעור ראשון: מאותיות לכוכביות, ושמירה לקלטת</h2>
+<ol>
+<li>מקלידים את התוכנית שלמעלה ומתרגמים: <kbd>BREAK</kbd>, <kbd>A</kbd>, <kbd>ENTER</kbd>. בשורה האחרונה כתוב <bdi dir="ltr">0000 ERRS</bdi>, כלומר אפס שגיאות.</li>
+<li>מריצים: <kbd>BREAK</kbd>, <kbd>X</kbd>, <kbd>ENTER</kbd>. המסך מתמלא באותיות <bdi>A</bdi> בבת אחת. מקש כלשהו מחזיר לעורך.</li>
+<li><kbd>BREAK</kbd>, <kbd>H</kbd>, <kbd>ENTER</kbd>: הסמן עובר לתחילת הטקסט. לוחצים פעם אחת <kbd>↓</kbd>, ואז <kbd>→</kbd> עד שהסמן עומד על ה-<bdi>A</bdi> שאחרי הגרש.</li>
+<li>מקלידים <kbd>*</kbd>. הכוכבית נכתבת במקום ה-<bdi>A</bdi>, בלי למחוק קודם. <kbd>ENTER</kbd> שומר את השורה.</li>
+<li>מתרגמים ומריצים שוב. עכשיו המסך מתמלא בכוכביות בהירות על רקע כהה: ככה ה-<bdi>Dragon</bdi> מציג סימנים שנכתבים ישר לזיכרון המסך. מקש מחזיר לעורך.</li>
+<li>שמירה: <kbd>BREAK</kbd>, <kbd>H</kbd>, <kbd>ENTER</kbd>. מכניסים קלטת ולוחצים ברשמקול <bdi>RECORD</bdi> ו-<bdi>PLAY</bdi>. אחר כך <kbd>BREAK</kbd>, מקלידים <kbd dir="ltr">S FIRST</kbd> (רווח אחד בין <bdi>S</bdi> לשם) ו-<kbd>ENTER</kbd>.</li>
+<li>בפעם הבאה: <bdi>EXEC</bdi>, ו-<bdi>N</bdi> על <bdi dir="ltr">OLD TEXT ?</bdi>. מחזירים את הקלטת ולוחצים <bdi>PLAY</bdi>. אחר כך <kbd>BREAK</kbd>, מקלידים <kbd dir="ltr">L FIRST</kbd> ו-<kbd>ENTER</kbd>, והתוכנית חוזרת.</li>
+</ol>
+<p>אם המתרגם מראה שגיאות, בודקים קודם את הרווחים: שורה בלי שם מתחילה ברווח, ושם כמו <bdi>LOOP</bdi> צמוד לתחילת השורה. יצאתם ל-<bdi>BASIC</bdi>? <bdi>EXEC</bdi>, ועל <bdi dir="ltr">OLD TEXT ?</bdi> עונים <bdi>Y</bdi>, והטקסט חוזר. <bdi>N</bdi> מוחק אותו.</p>
 <p class="note">המדריך כתוב במילים שלנו, לבעלי <bdi>Dragon</bdi> שיש להם את התוכנה המקורית. אנחנו לא מעלים את התוכנה עצמה ולא את המדריך המקורי. בדקנו כל צעד על מכונה עם אותו מעבד ואותו מסך.</p>
 </div>
 <p class="more"><a href="/guides/">כל המדריכים</a> · <a href="/magazine/">מה קראו בעלי <bdi>Dragon</bdi></a> · <a href="/dragon-history/">ההיסטוריה של ה-<bdi>Dragon</bdi></a></p>

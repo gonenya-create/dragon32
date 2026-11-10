@@ -38,7 +38,7 @@
 <table class="keys"><tr><th scope="row"><kbd dir="ltr">R</kbd></th><td>Run mode: the screen for the turtle, and three lines for commands at the bottom</td></tr><tr><th scope="row"><kbd dir="ltr">E</kbd></th><td>The editor: this is where you write procedures</td></tr><tr><th scope="row"><kbd dir="ltr">S, T, ENTER</kbd></th><td>Save all procedures to tape</td></tr><tr><th scope="row"><kbd dir="ltr">L, T, ENTER</kbd></th><td>Load from tape</td></tr><tr><th scope="row"><kbd dir="ltr">P</kbd></th><td>Print on a printer</td></tr><tr><th scope="row"><kbd dir="ltr">BREAK</kbd></th><td>From any mode: back to LOGO:</td></tr></table>
 <h2>First steps</h2>
 <p>Press <kbd>R</kbd> and type one command per line, with a space before the number, then <kbd>ENTER</kbd>. <bdi dir="ltr">FD 40</bdi> moves the turtle 40 steps forward, and <bdi dir="ltr">RT 90</bdi> turns it right a quarter turn.</p>
-<table class="keys"><tr><th scope="row"><kbd dir="ltr">FD / BK</kbd></th><td>Forward / back</td></tr><tr><th scope="row"><kbd dir="ltr">RT / LT</kbd></th><td>Turn right / left, in degrees</td></tr><tr><th scope="row"><kbd dir="ltr">PU / PD</kbd></th><td>Pen up / pen down</td></tr><tr><th scope="row"><kbd dir="ltr">HOME</kbd></th><td>Back to the middle, facing up</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR</kbd></th><td>Clears the screen</td></tr><tr><th scope="row"><kbd dir="ltr">HT / ST</kbd></th><td>Hide / show the turtle</td></tr><tr><th scope="row"><kbd dir="ltr">PC 0–3</kbd></th><td>Pen colour</td></tr><tr><th scope="row"><kbd dir="ltr">BG 0–3</kbd></th><td>Background colour</td></tr></table>
+<table class="keys"><tr><th scope="row"><kbd dir="ltr">FD / BK</kbd></th><td>Forward / back</td></tr><tr><th scope="row"><kbd dir="ltr">RT / LT</kbd></th><td>Turn right / left, in degrees</td></tr><tr><th scope="row"><kbd dir="ltr">PU / PD</kbd></th><td>Pen up / pen down</td></tr><tr><th scope="row"><kbd dir="ltr">HOME</kbd></th><td>Back to the middle, facing up</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR</kbd></th><td>Clears the screen. Type the word, not the key</td></tr><tr><th scope="row"><kbd dir="ltr">HT / ST</kbd></th><td>Hide / show the turtle</td></tr><tr><th scope="row"><kbd dir="ltr">PC 0–3</kbd></th><td>Pen colour</td></tr><tr><th scope="row"><kbd dir="ltr">BG 0–3</kbd></th><td>Background colour</td></tr></table>
 <h2>A first procedure</h2>
 <p>A procedure is a new word you teach the turtle. Press <kbd>BREAK</kbd>, then <kbd>E</kbd>, and type:</p>
 <pre class="listing" dir="ltr">TO SQUARE
@@ -57,6 +57,39 @@ END</pre>
 <li><b>A circle.</b> <bdi dir="ltr">REPEAT 36 (FD 6 RT 10)</bdi> inside a procedure gives a good circle.</li>
 <li><b>Keep out of the bottom lines.</b> A turtle that wanders into the three command lines gets smeared when the text scrolls.</li>
 </ul>
+<h2>First lesson: a square, then a house</h2>
+<p><b>A square, one command at a time.</b></p>
+<ol>
+<li>At <bdi dir="ltr">LOGO:</bdi> press <kbd>R</kbd>. The screen clears, and the turtle stands in the middle, facing up.</li>
+<li>Type <kbd dir="ltr">FD 40</kbd> and <kbd>ENTER</kbd>: the turtle draws a line upwards. Then <kbd dir="ltr">RT 90</kbd> and <kbd>ENTER</kbd>: the turtle turns right.</li>
+<li>Repeat the two commands three more times, each on its own line. There is your square, and the turtle is back where it started.</li>
+</ol>
+<p><b>A house, with procedures.</b> <bdi>REPEAT</bdi> works only inside a procedure, so the house is written in the editor.</p>
+<ol start="4">
+<li><kbd>BREAK</kbd> takes you back to <bdi dir="ltr">LOGO:</bdi>, and <kbd>E</kbd> opens the editor. Type these lines, each followed by <kbd>ENTER</kbd>:</li>
+</ol>
+<pre class="listing" dir="ltr">TO SQUARE
+REPEAT 4 (FD 30 RT 90)
+END
+TO ROOF
+RT 30
+FD 30
+RT 120
+FD 30
+LT 150
+END
+TO HOUSE
+SQUARE
+FD 30
+ROOF
+END</pre>
+<ol start="5">
+<li>What it does: <bdi>SQUARE</bdi> draws the walls. <bdi dir="ltr">FD 30</bdi> takes the turtle up to the top left corner. <bdi>ROOF</bdi> draws a triangle for the roof, and at the end turns the turtle back to face up.</li>
+<li>Leave the editor with <kbd>BREAK</kbd>. There is no special exit command: what you typed is kept as procedures. Press <kbd>R</kbd>, type <kbd dir="ltr">CLEAR</kbd> and <kbd>ENTER</kbd>, then <kbd dir="ltr">HOUSE</kbd> and <kbd>ENTER</kbd>. The turtle draws a house: a square with a roof on top.</li>
+<li>A second house: at the end of <bdi>HOUSE</bdi> the turtle stands at the top right corner of the walls. Type, each followed by <kbd>ENTER</kbd>: <bdi dir="ltr">PU</bdi>, <bdi dir="ltr">BK 30</bdi>, <bdi dir="ltr">RT 90</bdi>, <bdi dir="ltr">FD 20</bdi>, <bdi dir="ltr">LT 90</bdi>, <bdi dir="ltr">PD</bdi>, and <bdi>HOUSE</bdi> again. Now there are two houses side by side. <bdi>HT</bdi> hides the turtle.</li>
+<li>Saving: put a tape in and press RECORD and PLAY on the recorder. Then <kbd>BREAK</kbd>, and <kbd>S</kbd> (<bdi dir="ltr">SAVE:</bdi> appears), <kbd>T</kbd> and <kbd>ENTER</kbd>. When <bdi dir="ltr">LOGO:</bdi> comes back, your procedures are on tape.</li>
+<li>Next time: wind the tape back and press PLAY. At <bdi dir="ltr">LOGO:</bdi> press <kbd>L</kbd>, <kbd>T</kbd> and <kbd>ENTER</kbd>. When <bdi dir="ltr">LOGO:</bdi> comes back, press <kbd>R</kbd>: your procedures are there again.</li>
+</ol>
 <p class="note">This guide is in our own words, for Dragon owners who have the original program. We do not host the program or its original manual. We tried every step on an emulated machine with the same chips.</p>
 </div>
 <p class="more"><a href="/en/guides/">All guides</a> · <a href="/en/magazine/">What Dragon Owners Were Reading</a> · <a href="/en/dragon-history/">The history of the Dragon</a></p>

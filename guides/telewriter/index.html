@@ -38,11 +38,11 @@
 <h2>הפעלה</h2>
 <p>מקלידים <kbd dir="ltr">CLOADM</kbd> ו-<kbd>ENTER</kbd>. כשמופיע <bdi>OK</bdi>, מקלידים <kbd dir="ltr">EXEC</kbd> ו-<kbd>ENTER</kbd>. במסך זכויות היוצרים לוחצים שוב <kbd>ENTER</kbd>, ומגיעים לתפריט הראשי.</p>
 <h2>המקש החשוב: <bdi>CLEAR</bdi></h2>
-<p>כל פקודות העורך הן <bdi>CLEAR</bdi> ועוד אות: מחזיקים את <kbd>CLEAR</kbd> ולוחצים על האות. באמולטור על מחשב רגיל, <bdi>CLEAR</bdi> הוא בדרך כלל המקש <kbd dir="ltr">Home</kbd>.</p>
+<p>כל פקודות העורך הן <bdi>CLEAR</bdi> ועוד אות: <b>קודם</b> לוחצים על <kbd>CLEAR</kbd> ומחזיקים אותו, ורק אז לוחצים על האות. אם לוחצים את שניהם באותו רגע, האות פשוט נכתבת בטקסט. באמולטור על מחשב רגיל, <bdi>CLEAR</bdi> הוא בדרך כלל המקש <kbd dir="ltr">Home</kbd>.</p>
 <h2>התפריט הראשי</h2>
 <p>לוחצים אות אחת, בלי <bdi>ENTER</bdi>:</p>
 <table class="keys"><tr><th scope="row"><kbd dir="ltr">C</kbd></th><td>דף חדש</td></tr><tr><th scope="row"><kbd dir="ltr">E</kbd></th><td>חזרה לעורך, לטקסט שכבר כתבת</td></tr><tr><th scope="row"><kbd dir="ltr">S</kbd></th><td>שמירה לקלטת (שם עד 8 תווים)</td></tr><tr><th scope="row"><kbd dir="ltr">R</kbd></th><td>טעינת טקסט מקלטת</td></tr><tr><th scope="row"><kbd dir="ltr">A</kbd></th><td>הוספת טקסט מקלטת לסוף הטקסט</td></tr><tr><th scope="row"><kbd dir="ltr">V</kbd></th><td>בדיקה שהשמירה בקלטת תקינה</td></tr><tr><th scope="row"><kbd dir="ltr">W</kbd></th><td>ספירת מילים ושורות</td></tr></table>
-<p>בשורה <bdi>SPACE</bdi> רואים כמה תווים נשארו, בערך 18,000, שהם כ-9 עמודים. כשהתוכנה שואלת <bdi dir="ltr">SURE??..</bdi>, רק <bdi>Y</bdi> גדולה ואחריה <bdi>ENTER</bdi> ממשיכה. <bdi>y</bdi> קטנה מחזירה לתפריט.</p>
+<p>בשורה <bdi>SPACE</bdi> רואים כמה תווים נשארו, בערך 18,000, שהם כ-9 עמודים. כשהתוכנה שואלת <bdi dir="ltr">SURE???..</bdi>, רק <bdi>Y</bdi> גדולה ואחריה <bdi>ENTER</bdi> ממשיכה. <bdi>y</bdi> קטנה מחזירה לתפריט.</p>
 <h2>בעורך</h2>
 <p>אין מצב דריסה: כל מקש נכנס במקום הסמן.</p>
 <table class="keys"><tr><th scope="row"><kbd dir="ltr">BREAK</kbd></th><td>מוחק את התו שמתחת לסמן. בעורך זה מקש המחיקה!</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR + @</kbd></th><td>מוחק את התו שלפני הסמן</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR + K</kbd></th><td>מוחק מהסמן עד סוף השורה</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR + ↑ / ↓</kbd></th><td>תחילת / סוף הטקסט</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR + → / ←</kbd></th><td>סוף / תחילת השורה</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR + A</kbd></th><td>מסדר את הפסקאות מחדש</td></tr><tr><th scope="row"><kbd dir="ltr">SHIFT + 0</kbd></th><td>אותיות קטנות או גדולות</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR + M</kbd></th><td>חזרה לתפריט (הטקסט נשמר בזיכרון)</td></tr></table>
@@ -51,8 +51,26 @@
 <p>כדי להזיז קטע, מעתיקים אותו ואז מוחקים את המקור.</p>
 <h2>מלכודות</h2>
 <p>אם הטקסט נעלם פתאום, כנראה נלחץ <bdi>CLEAR + S</bdi>, מצב מהיר שמסתיר את סוף הטקסט. <bdi>CLEAR + U</bdi> מחזיר אותו. שורה שלא צריכה להתחבר לקודמת, כמו פריט ברשימה, מתחילים ברווח או משאירים לפניה שורה ריקה. בלי מדפסת מחוברת לא לוחצים על הדפסה, כי התוכנה עלולה להיתקע. כדאי לשמור לפני כל הדפסה.</p>
-<h2>חמש דקות ראשונות</h2>
-<p>בתפריט לוחצים <bdi>C</bdi>, ומגיעים למסך לבן, שהוא העורך. לוחצים <bdi>SHIFT + 0</bdi> ומקלידים משפט. שמים את הסמן על אות ומוחקים אותה ב-<bdi>BREAK</bdi>. אחר כך <bdi>CLEAR + M</bdi>, ובתפריט <bdi>W</bdi>: כמה מילים כתבת? ולסיום <bdi>E</bdi>, חזרה לטקסט.</p>
+<h2>שיעור ראשון: מכתב קצר, תיקון ושמירה</h2>
+<p>נכתוב מכתב קצר. בשורה השנייה יש טעות מכוונת, <bdi>tepe</bdi> במקום <bdi>tape</bdi>, כדי שנתקן אותה:</p>
+<pre class="listing" dir="ltr">Dear Peter,
+
+Thank you for the tepe. The game loads well on my Dragon.
+
+ See you soon,
+ Gonen</pre>
+<ol>
+<li>בתפריט לוחצים <kbd>C</kbd>. אם כבר יש טקסט, התוכנה שואלת <bdi dir="ltr">SURE???..</bdi>, ועונים <kbd>Y</kbd> גדולה ו-<kbd>ENTER</kbd>. המסך הלבן הוא העורך.</li>
+<li>לוחצים <kbd dir="ltr">SHIFT + 0</kbd>. הסמן מהבהב לאט: מעכשיו האותיות קטנות, ו-<bdi>SHIFT</bdi> עם אות נותן אות גדולה.</li>
+<li>מקלידים לאט את המכתב. אחרי <bdi>Dear Peter,</bdi> ואחרי המשפט לוחצים <kbd>ENTER</kbd> פעמיים. שורה ארוכה עוברת לבד לשורה הבאה. את שתי השורות האחרונות מתחילים ברווח, כדי שלא יתחברו לשורה שלפניהן, ואחרי כל אחת <kbd>ENTER</kbd>.</li>
+<li>התיקון: מחזיקים <kbd>CLEAR</kbd> ולוחצים <kbd>↑</kbd>, והסמן קופץ לתחילת הטקסט. לוחצים פעמיים <kbd>↓</kbd>, ואז <kbd>→</kbd> עד שהסמן עומד על ה-<bdi>e</bdi> הראשונה של <bdi>tepe</bdi>.</li>
+<li>לוחצים <kbd>BREAK</kbd>, וה-<bdi>e</bdi> נמחקת. מקלידים <bdi>a</bdi>, ועכשיו כתוב <bdi>tape</bdi>.</li>
+<li><kbd dir="ltr">CLEAR + A</kbd> מסדר את הפסקאות, ו-<kbd dir="ltr">CLEAR + M</kbd> מחזיר לתפריט.</li>
+<li>בתפריט לוחצים <kbd>W</kbd>: ‏18 מילים ו-6 שורות. <kbd>E</kbd> מחזיר לטקסט, ו-<kbd dir="ltr">CLEAR + M</kbd> שוב לתפריט.</li>
+<li>שמירה: מכניסים קלטת ריקה ולוחצים ברשמקול <bdi>RECORD</bdi> ו-<bdi>PLAY</bdi> ביחד. בתפריט לוחצים <kbd>S</kbd>, מקלידים <bdi>LETTER1</bdi> ולוחצים <kbd>ENTER</kbd>. אחרי כמה שניות התפריט חוזר.</li>
+<li>בדיקה: לוחצים <kbd>C</kbd>, ‏<kbd>Y</kbd> גדולה ו-<kbd>ENTER</kbd>, והטקסט נמחק מהזיכרון. <kbd dir="ltr">CLEAR + M</kbd> חוזר לתפריט. מחזירים את הקלטת לתחילת המכתב ולוחצים <bdi>PLAY</bdi>. בתפריט <kbd>R</kbd> (אם מופיעה שוב <bdi dir="ltr">SURE???..</bdi>, ‏<kbd>Y</kbd> גדולה ו-<kbd>ENTER</kbd>), מקלידים <bdi>LETTER1</bdi> ו-<kbd>ENTER</kbd>. כשהעורך נפתח, <kbd dir="ltr">CLEAR + ↑</kbd>, והמכתב חזר. בתפריט כתוב עכשיו <bdi dir="ltr">FILE: LETTER1</bdi>.</li>
+</ol>
+<p>אם התוכנה מחפשת בקלטת, והאות <bdi>S</bdi> מהבהבת בפינה בלי סוף, מחזיקים <kbd>BREAK</kbd> שנייה או שתיים, וחוזרים לתפריט.</p>
 <p class="note">המדריך כתוב במילים שלנו, לבעלי <bdi>Dragon</bdi> שיש להם את התוכנה המקורית. אנחנו לא מעלים את התוכנה עצמה ולא את המדריך המקורי. בדקנו כל צעד על מכונה עם אותו מעבד ואותו מסך.</p>
 </div>
 <p class="more"><a href="/guides/">כל המדריכים</a> · <a href="/magazine/">מה קראו בעלי <bdi>Dragon</bdi></a> · <a href="/dragon-history/">ההיסטוריה של ה-<bdi>Dragon</bdi></a></p>

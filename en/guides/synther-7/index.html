@@ -36,15 +36,31 @@
 <h2>Loading</h2>
 <p>Type <kbd>CLOADM</kbd> and <kbd>ENTER</kbd>. After about a minute the program starts by itself and shows a drawing of a piano keyboard. Turn the sound up.</p>
 <h2>The note keys</h2>
-<p>The white keys are the row <bdi>↑ Q W E R T Y U I O P @ ← CLEAR</bdi>. The black keys are the row above: <bdi>1 2 4 5 6 8 9 : - BREAK</bdi>. U is middle C; ↑ is the same C an octave lower, and CLEAR an octave higher.</p>
+<p>The white keys are the row <bdi>↑ Q W E R T Y U I O P @ ← → CLEAR</bdi>. The black keys are the row above: <bdi>1 2 4 5 6 8 9 : - BREAK</bdi>. From left to right, <bdi>↑ Q W E R T Y</bdi> are the low C, D, E, F, G, A, B, and <bdi>U I O P @ ← →</bdi> are the same notes in the middle octave. U is middle C, and CLEAR is high C. The B just before it is the right arrow, →.</p>
 <h2>Pick an instrument</h2>
-<table class="keys"><tr><th scope="row"><kbd dir="ltr">G</kbd></th><td>Gamba</td></tr><tr><th scope="row"><kbd dir="ltr">H</kbd></th><td>Hogfife</td></tr><tr><th scope="row"><kbd dir="ltr">J</kbd></th><td>Ninni</td></tr><tr><th scope="row"><kbd dir="ltr">K</kbd></th><td>Krumphorn</td></tr><tr><th scope="row"><kbd dir="ltr">L</kbd></th><td>Lute, the standard sound</td></tr></table>
-<p>Each of them also resets the sound to something familiar. If the sound goes strange, press L.</p>
+<table class="keys"><tr><th scope="row"><kbd dir="ltr">G</kbd></th><td>Gamba</td></tr><tr><th scope="row"><kbd dir="ltr">H</kbd></th><td>Hogfife</td></tr><tr><th scope="row"><kbd dir="ltr">J</kbd></th><td>Ninni</td></tr><tr><th scope="row"><kbd dir="ltr">K</kbd></th><td>Krumphorn. It sounds an octave lower</td></tr><tr><th scope="row"><kbd dir="ltr">L</kbd></th><td>Lute, the standard sound</td></tr></table>
+<p>If the sound goes strange, press <kbd>/</kbd> and then <kbd>L</kbd>: a full reset, back to the standard lute. L on its own brings back the lute, but after the horn the keyboard stays an octave too high.</p>
 <h2>Shape the sound</h2>
-<p>The coloured bars at the bottom left show the settings.</p>
-<table class="keys"><tr><th scope="row"><kbd dir="ltr">A / Z</kbd></th><td>Attack: harder / softer start</td></tr><tr><th scope="row"><kbd dir="ltr">S / X</kbd></th><td>Sustain: longer / shorter</td></tr><tr><th scope="row"><kbd dir="ltr">D / C</kbd></th><td>Decay: slow (organ-like) / fast</td></tr><tr><th scope="row"><kbd dir="ltr">F</kbd></th><td>Felt damping, 6 steps</td></tr><tr><th scope="row"><kbd dir="ltr">B / N</kbd></th><td>"Boing" at the start of the note: more / less</td></tr><tr><th scope="row"><kbd dir="ltr">M</kbd></th><td>Louder</td></tr><tr><th scope="row"><kbd dir="ltr">ENTER / ↓</kbd></th><td>Whole keyboard higher / lower</td></tr><tr><th scope="row"><kbd dir="ltr">< / ></kbd></th><td>While a note plays: bend it</td></tr><tr><th scope="row"><kbd dir="ltr">Space</kbd></th><td>While a note plays: vibrato</td></tr><tr><th scope="row"><kbd dir="ltr">;</kbd></th><td>Stops a note that keeps sounding</td></tr></table>
-<h2>Something to try first</h2>
-<p>Press U a few times and hear the lute. Press K, then U again: now it is a horn. Press D a few times and play Q W E R T: it sounds like an organ. Finally play a note and hold &gt;: the sound bends like a space film.</p>
+<p>The coloured bars at the bottom left show the settings. Under each bar is a number from 0 to 9, and after 9 it wraps round to 0, so press slowly and watch the number.</p>
+<table class="keys"><tr><th scope="row"><kbd dir="ltr">A / Z</kbd></th><td>Attack: harder / softer start</td></tr><tr><th scope="row"><kbd dir="ltr">S / X</kbd></th><td>Sustain: longer / shorter</td></tr><tr><th scope="row"><kbd dir="ltr">D / C</kbd></th><td>Decay: slow (at 9 it sounds like an organ) / fast</td></tr><tr><th scope="row"><kbd dir="ltr">F</kbd></th><td>Felt damping, 6 steps round</td></tr><tr><th scope="row"><kbd dir="ltr">V</kbd></th><td>Vibrato depth</td></tr><tr><th scope="row"><kbd dir="ltr">B / N</kbd></th><td>"Boing" at the start of the note: more / less (5 = none)</td></tr><tr><th scope="row"><kbd dir="ltr">M</kbd></th><td>Louder</td></tr><tr><th scope="row"><kbd dir="ltr">ENTER / ↓</kbd></th><td>Whole keyboard higher / lower (the number in the RANGE box)</td></tr><tr><th scope="row"><kbd dir="ltr">< / ></kbd></th><td>While a note plays: bend it</td></tr><tr><th scope="row"><kbd dir="ltr">Space</kbd></th><td>While a note plays: the note holds and swells for as long as you hold Space</td></tr><tr><th scope="row"><kbd dir="ltr">;</kbd></th><td>Stops a note that keeps sounding</td></tr><tr><th scope="row"><kbd dir="ltr">/, L</kbd></th><td>Full reset</td></tr></table>
+<h2>First lesson: a tune, a horn and an organ</h2>
+<p>The tune is the start of "Mary Had a Little Lamb", around middle C: U is C, I is D, O is E, @ is G.</p>
+<ol>
+<li>Press <kbd>L</kbd>, then press <kbd>U</kbd> a few times. That is middle C, on the lute.</li>
+<li>Play slowly, one key after another, line by line:</li>
+</ol>
+<pre class="listing" dir="ltr">O I U I O O O
+I I I
+O @ @
+O I U I O O O
+O I I O I U</pre>
+<ol start="3">
+<li>Press <kbd>K</kbd> and play it again. Now it is a horn, one octave lower.</li>
+<li>Press <kbd>D</kbd> slowly, a few times, until the number under its bar shows 9. Play again: every note holds like an organ and does not die away. <kbd>;</kbd> stops it.</li>
+<li>Play a note and hold <kbd>&gt;</kbd>. The sound rises like a space film, and when you let go it glides back.</li>
+<li>Finally press <kbd>/</kbd> and then <kbd>L</kbd> to get back to the standard sound.</li>
+</ol>
+<p>You can also play the same tune in the low octave: W is E, Q is D, ↑ is C, R is G. In an emulator on an ordinary computer, CLEAR is usually <kbd>Home</kbd> and BREAK is <kbd>Esc</kbd>.</p>
 <p class="note">This guide is in our own words, for Dragon owners who have the original program. We do not host the program or its original manual. We tried every step on an emulated machine with the same chips.</p>
 </div>
 <p class="more"><a href="/en/guides/">All guides</a> · <a href="/en/magazine/">What Dragon Owners Were Reading</a> · <a href="/en/dragon-history/">The history of the Dragon</a></p>

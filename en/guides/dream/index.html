@@ -36,7 +36,7 @@
 <h2>Why machine code</h2>
 <p>BASIC is easy to write but slow. Machine code is direct orders to the 6809 processor: dozens of times faster, but harder. DREAM does three things: an editor to write the program, an assembler that turns it into code the processor understands, and running it straight away.</p>
 <h2>Loading from tape</h2>
-<p>First reserve some memory: <kbd>CLEAR 200,12000</kbd> and <kbd>ENTER</kbd>. Then <kbd>CLOADM</kbd>, and when OK appears, type <kbd>EXEC</kbd>. When it asks <bdi>OLD TEXT?</bdi>, press N and the screen clears.</p>
+<p>First reserve some memory: <kbd>CLEAR 200,12000</kbd> and <kbd>ENTER</kbd>. Then <kbd>CLOADM</kbd>, and when OK appears, type <kbd>EXEC</kbd>. When it asks <bdi>OLD TEXT ?</bdi>, press N and the screen clears. Here CLEAR is a word you type, not the key. Without <bdi>CLEAR 200,12000</bdi> before CLOADM, the editor says FULL on the very first line, and you have to start again.</p>
 <h2>A first program</h2>
 <p>This program fills the screen with the letter A and waits for a key. Type each line followed by ENTER. A line that starts with a space must start with a space: a word at the start of a line is a label (like LOOP), and the instruction comes after a space.</p>
 <pre class="listing">@ LDX #$0400
@@ -51,9 +51,19 @@ KEY LDX $A000
 <h2>What each line does</h2>
 <p><bdi>LDX #$0400</bdi> points at the start of screen memory, and the @ marks where the program starts. <bdi>LDA #'A</bdi> takes the letter. <bdi>STA ,X+</bdi> puts it on the screen and moves one place on. <bdi>CMPX #$0600</bdi> and <bdi>BLO LOOP</bdi> go round until the end of the screen. The next three lines check for a key press, and RTS returns to the editor.</p>
 <h2>Assemble and run</h2>
-<table class="keys"><tr><th scope="row"><kbd dir="ltr">BREAK, A, ENTER</kbd></th><td>Assemble: the code appears beside each line</td></tr><tr><th scope="row"><kbd dir="ltr">BREAK, X, ENTER</kbd></th><td>Run: the screen fills with A</td></tr><tr><th scope="row"><kbd dir="ltr">Any key</kbd></th><td>Back to the editor</td></tr><tr><th scope="row"><kbd dir="ltr">BREAK, Q, ENTER</kbd></th><td>From the assembler back to the editor, to fix errors</td></tr><tr><th scope="row"><kbd dir="ltr">BREAK, T, ENTER</kbd></th><td>Back to text mode after a graphics program</td></tr></table>
-<h2>A first experiment</h2>
-<p>Change <bdi>'A</bdi> to another character, say <bdi>'*</bdi>, and run it again. This is the moment you feel how fast machine code is: the screen fills in an instant.</p>
+<p>Every command starts with <kbd>BREAK</kbd>, then a letter, then <kbd>ENTER</kbd>.</p>
+<table class="keys"><tr><th scope="row"><kbd dir="ltr">BREAK, A, ENTER</kbd></th><td>Assemble: the code appears beside each line</td></tr><tr><th scope="row"><kbd dir="ltr">BREAK, X, ENTER</kbd></th><td>Run: the screen fills with A</td></tr><tr><th scope="row"><kbd dir="ltr">Any key</kbd></th><td>Back to the editor</td></tr><tr><th scope="row"><kbd dir="ltr">BREAK, Q, ENTER</kbd></th><td>From the assembler: back to the editor, to fix errors. From the editor: out to BASIC</td></tr><tr><th scope="row"><kbd dir="ltr">BREAK, T, ENTER</kbd></th><td>Back to text mode after a graphics program</td></tr><tr><th scope="row"><kbd dir="ltr">BREAK, H, ENTER</kbd></th><td>Jump to the top of the text</td></tr><tr><th scope="row"><kbd dir="ltr">BREAK, V, ENTER</kbd></th><td>Restores a line you spoiled, as long as you have not pressed ENTER on it</td></tr><tr><th scope="row"><kbd dir="ltr">BREAK, BREAK</kbd></th><td>Cancels a command you started</td></tr></table>
+<h2>First lesson: from letters to stars, and a save to tape</h2>
+<ol>
+<li>Type the program above and assemble it: <kbd>BREAK</kbd>, <kbd>A</kbd>, <kbd>ENTER</kbd>. The last line says <bdi>0000 ERRS</bdi>: no errors.</li>
+<li>Run it: <kbd>BREAK</kbd>, <kbd>X</kbd>, <kbd>ENTER</kbd>. The screen fills with A in an instant. Any key takes you back to the editor.</li>
+<li><kbd>BREAK</kbd>, <kbd>H</kbd>, <kbd>ENTER</kbd>: the cursor goes to the top of the text. Press <kbd>↓</kbd> once, then <kbd>→</kbd> until the cursor sits on the A after the apostrophe.</li>
+<li>Type <kbd>*</kbd>. The star is written over the A, with no need to delete first. <kbd>ENTER</kbd> keeps the line.</li>
+<li>Assemble and run again. Now the screen fills with bright stars on a dark background: this is how the Dragon shows characters written straight into screen memory. A key takes you back to the editor.</li>
+<li>Saving: <kbd>BREAK</kbd>, <kbd>H</kbd>, <kbd>ENTER</kbd>. Put a tape in and press RECORD and PLAY on the recorder. Then <kbd>BREAK</kbd>, type <kbd>S FIRST</kbd> (one space between S and the name) and <kbd>ENTER</kbd>.</li>
+<li>Next time: EXEC, and N to <bdi>OLD TEXT ?</bdi>. Wind the tape back and press PLAY. Then <kbd>BREAK</kbd>, type <kbd>L FIRST</kbd> and <kbd>ENTER</kbd>, and the program is back.</li>
+</ol>
+<p>If the assembler shows errors, check the spaces first: a line with no label starts with a space, and a label like LOOP sits right at the start of the line. Dropped out to BASIC? Type EXEC and answer Y to <bdi>OLD TEXT ?</bdi> to get your text back. N wipes it.</p>
 <p class="note">This guide is in our own words, for Dragon owners who have the original program. We do not host the program or its original manual. We tried every step on an emulated machine with the same chips.</p>
 </div>
 <p class="more"><a href="/en/guides/">All guides</a> · <a href="/en/magazine/">What Dragon Owners Were Reading</a> · <a href="/en/dragon-history/">The history of the Dragon</a></p>

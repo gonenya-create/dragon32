@@ -43,10 +43,10 @@
 <h2>The budget (<bdi>BUDGET</bdi>)</h2>
 <table class="keys"><tr><th scope="row"><kbd dir="ltr">S</kbd></th><td>First time only: names for the 20 items (up to 10 characters), then budget amounts</td></tr><tr><th scope="row"><kbd dir="ltr">D</kbd></th><td>The list of items, and renaming an item</td></tr><tr><th scope="row"><kbd dir="ltr">B</kbd></th><td>A planned amount: month, week, item number and amount. A new amount replaces the old one</td></tr><tr><th scope="row"><kbd dir="ltr">A</kbd></th><td>An amount actually spent. A new amount is added to the old one</td></tr><tr><th scope="row"><kbd dir="ltr">I</kbd></th><td>A week's income</td></tr><tr><th scope="row"><kbd dir="ltr">W</kbd></th><td>Summary of one week</td></tr><tr><th scope="row"><kbd dir="ltr">M</kbd></th><td>Summary of a month</td></tr><tr><th scope="row"><kbd dir="ltr">P</kbd></th><td>Summary from one month to another</td></tr><tr><th scope="row"><kbd dir="ltr">E</kbd></th><td>End and save</td></tr></table>
 <p>In a summary each item has three numbers: what was planned, what was spent, and what is left (<bdi>FLOAT</bdi>). After two screens of items come the totals: planned, spent, income, and the difference between income and the budget and the spending.</p>
-<p>Each time you run it, the first menu choice reads the two data files from tape: <bdi>IDATA</bdi> (the item names), then <bdi>BDATA</bdi> (all the amounts). <bdi>BDATA</bdi> is big, and saving or reading it takes a few minutes.</p>
+<p>Each time you run it, the first menu choice that works on the data (such as <bdi>A</bdi> or <bdi>W</bdi>) first reads the two data files from tape: <bdi>IDATA</bdi> (the item names), then <bdi>BDATA</bdi> (all the amounts). This happens even right after setting up. <bdi>BDATA</bdi> is big: saving it takes about a minute and a half, and reading each file up to about two minutes.</p>
 <h2>Three traps</h2>
 <ul>
-<li><b>Leave only with <bdi>E</bdi>.</b> Saving to tape happens on the way out. Switch off before that and everything you typed is gone.</li>
+<li><b>Leave only with <bdi>E</bdi>.</b> Saving to tape happens at setup and on the way out. Switch off before <bdi>E</bdi> and everything you typed since the last save is gone.</li>
 <li><b>Income on its own is not saved.</b> <bdi>E</bdi> saves the amounts only if this run also took a budget (<bdi>B</bdi>) or spending (<bdi>A</bdi>) amount. If you only entered income, add one amount with <bdi>B</bdi> or <bdi>A</bdi> before you leave.</li>
 <li><b>Don't rush.</b> While the program pauses between screens, a key you press is lost. Wait for the question mark.</li>
 </ul>
@@ -58,6 +58,20 @@
 <p><b>If the program stops.</b> In the copy found in the archives today, two lines of this program are damaged: one character in each changed when it was copied. If you see <bdi dir="ltr">?TM ERROR IN 340</bdi> or <bdi dir="ltr">?SN ERROR IN 490</bdi>, retype these two lines and save the program as your own copy:</p>
 <pre class="listing" dir="ltr">340 IF M$="E" THEN 1480
 490 IF EOF(-1) THEN 600</pre>
+<h2>First lesson: a budget for one month</h2>
+<p>The month is January (month 1), and there are four items: <bdi>FOOD</bdi>, <bdi>RENT</bdi>, <bdi>CAR</bdi> and <bdi>FUN</bdi>. Note that the budget is set for each week separately. Always wait for the question mark before you type.</p>
+<ol>
+<li><kbd dir="ltr">CLOAD</kbd>, <kbd dir="ltr">RUN</kbd>, and in the menu <kbd>S</kbd> and <kbd>ENTER</kbd>.</li>
+<li>To <bdi dir="ltr">INPUT DESCRIPTION FOR CODE 1</bdi> answer <bdi>FOOD</bdi> and <kbd>ENTER</kbd>, then <bdi>RENT</bdi>, <bdi>CAR</bdi> and <bdi>FUN</bdi>. For items 5 to 20 press <kbd>ENTER</kbd> with nothing, 16 times.</li>
+<li>After item 20 the program saves the names: set the data tape to RECORD and PLAY, and press <kbd>ENTER</kbd>. After <bdi dir="ltr">ITEM CODE DESCRIPTION FILE SAVED</bdi> press <kbd>ENTER</kbd>, look at the table of items, and <kbd>ENTER</kbd> again.</li>
+<li>To <bdi dir="ltr">DO YOU WISH TO ENTER ANY BUDGET VALUES?</bdi> answer <kbd>Y</kbd>. Then month 1, week 1, item 1, and the amount 3000. To <bdi dir="ltr">ANY MORE ITEMS FOR THIS WEEK?</bdi> answer <kbd>Y</kbd> and carry on: item 2 with 4000, item 3 with 800, item 4 with 500. After the last one answer <kbd>N</kbd> three times.</li>
+<li>The program saves the amounts: RECORD and PLAY again, <kbd>ENTER</kbd>, and wait about a minute and a half for <bdi dir="ltr">BUDGET VALUES FILE SAVED</bdi>. <kbd>ENTER</kbd> takes you back to the menu.</li>
+<li>Spending: <kbd>A</kbd> and <kbd>ENTER</kbd>. First the program reads both files: wind the data tape back to the start, press PLAY, <kbd>ENTER</kbd> for each file, and wait. Then: month 1, week 1, item 1, spent 650. To more for this item answer <kbd>N</kbd>, and to more this week <kbd>Y</kbd>: item 3, spent 250. <kbd>N</kbd>, <kbd>N</kbd>, and to more this month <kbd>Y</kbd>: week 2, item 1, spent 700. Then <kbd>N</kbd> until you are back at the menu.</li>
+<li>Income: <kbd>I</kbd> and <kbd>ENTER</kbd>, month 1, week 1, income 12000, and <kbd>N</kbd>.</li>
+<li>Weekly summary: <kbd>W</kbd> and <kbd>ENTER</kbd>, month 1, week 1. The table shows the item numbers: item 1 planned 3000, spent 650, left 2350. Two <kbd>ENTER</kbd>s bring the totals: budget 8300, spending 900, income 12000. <kbd>ENTER</kbd>, and <kbd>N</kbd>.</li>
+<li>Monthly summary: <kbd>M</kbd> and <kbd>ENTER</kbd>, month 1. Item 1 now shows 1350 spent, both weeks together.</li>
+<li>Leaving: <kbd>E</kbd> and <kbd>ENTER</kbd>. <bdi dir="ltr">RESAVE BUDGET DATA FILE</bdi> appears: set the recorder to record, <kbd>ENTER</kbd>, and wait for <bdi dir="ltr">BUDGET VALUES FILE SAVED</bdi>. After <kbd>ENTER</kbd> you see <bdi>OK</bdi>. Next time: CLOAD, RUN and W, and the summary shows what you typed.</li>
+</ol>
 <p class="note">This guide is in our own words, for Dragon owners who have the original program. We do not host the program or its original manual. We tried every step on an emulated machine with the same chips.</p>
 </div>
 <p class="more"><a href="/en/guides/">All guides</a> · <a href="/en/magazine/">What Dragon Owners Were Reading</a> · <a href="/en/dragon-history/">The history of the Dragon</a></p>

@@ -38,11 +38,11 @@
 <h2>Loading</h2>
 <p>Type <kbd>CLOADM</kbd> and <kbd>ENTER</kbd>. When OK appears, type <kbd>EXEC</kbd> and <kbd>ENTER</kbd>. At the copyright screen press <kbd>ENTER</kbd> again to reach the main menu.</p>
 <h2>The key that matters: CLEAR</h2>
-<p>Every editor command is CLEAR plus a letter: hold <kbd>CLEAR</kbd> and press the letter. In an emulator on an ordinary computer, CLEAR is usually the <kbd>Home</kbd> key.</p>
+<p>Every editor command is CLEAR plus a letter: press and hold <kbd>CLEAR</kbd> <b>first</b>, and only then press the letter. If you press both at the same moment, the letter is simply typed into the text. In an emulator on an ordinary computer, CLEAR is usually the <kbd>Home</kbd> key.</p>
 <h2>The main menu</h2>
 <p>Press one letter, no ENTER:</p>
 <table class="keys"><tr><th scope="row"><kbd dir="ltr">C</kbd></th><td>New text</td></tr><tr><th scope="row"><kbd dir="ltr">E</kbd></th><td>Back to the editor and your text</td></tr><tr><th scope="row"><kbd dir="ltr">S</kbd></th><td>Save to tape (name up to 8 characters)</td></tr><tr><th scope="row"><kbd dir="ltr">R</kbd></th><td>Load a text from tape</td></tr><tr><th scope="row"><kbd dir="ltr">A</kbd></th><td>Add a text from tape to the end</td></tr><tr><th scope="row"><kbd dir="ltr">V</kbd></th><td>Check that a save on tape is good</td></tr><tr><th scope="row"><kbd dir="ltr">W</kbd></th><td>Count words and lines</td></tr></table>
-<p>SPACE shows how many characters are left, about 18,000, or some 9 pages. When it asks <bdi>SURE??..</bdi>, only a capital Y followed by ENTER goes ahead; a small y sends you back to the menu.</p>
+<p>SPACE shows how many characters are left, about 18,000, or some 9 pages. When it asks <bdi>SURE???..</bdi>, only a capital Y followed by ENTER goes ahead; a small y sends you back to the menu.</p>
 <h2>In the editor</h2>
 <p>There is no overwrite mode: every key is inserted at the cursor.</p>
 <table class="keys"><tr><th scope="row"><kbd dir="ltr">BREAK</kbd></th><td>Deletes the character under the cursor. In the editor this is the delete key!</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR + @</kbd></th><td>Deletes the character before the cursor</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR + K</kbd></th><td>Deletes from the cursor to the end of the line</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR + ↑ / ↓</kbd></th><td>Top / bottom of the text</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR + → / ←</kbd></th><td>End / start of the line</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR + A</kbd></th><td>Re-flows the paragraphs</td></tr><tr><th scope="row"><kbd dir="ltr">SHIFT + 0</kbd></th><td>Lower case or capitals</td></tr><tr><th scope="row"><kbd dir="ltr">CLEAR + M</kbd></th><td>Back to the menu (the text stays in memory)</td></tr></table>
@@ -51,8 +51,26 @@
 <p>To move a block, copy it and then delete the original.</p>
 <h2>Traps</h2>
 <p>If your text suddenly vanishes, you probably pressed CLEAR + S, a fast mode that hides the end of the text; CLEAR + U brings it back. A line that should not join the one before it, like a list item, should start with a space or have a blank line before it. With no printer connected, do not print: the program may hang. Save before every print.</p>
-<h2>The first five minutes</h2>
-<p>In the menu press C: the white screen is the editor. Press SHIFT + 0 and type a sentence. Put the cursor on a letter and delete it with BREAK. Then CLEAR + M, and in the menu W: how many words did you write? Finally E takes you back to your text.</p>
+<h2>First lesson: a short letter, a fix and a save</h2>
+<p>We will write a short letter. The second line has a deliberate mistake, <bdi>tepe</bdi> instead of <bdi>tape</bdi>, so that we can fix it:</p>
+<pre class="listing" dir="ltr">Dear Peter,
+
+Thank you for the tepe. The game loads well on my Dragon.
+
+ See you soon,
+ Gonen</pre>
+<ol>
+<li>In the menu press <kbd>C</kbd>. If there is text already, it asks <bdi>SURE???..</bdi>: answer with a capital <kbd>Y</kbd> and <kbd>ENTER</kbd>. The white screen is the editor.</li>
+<li>Press <kbd>SHIFT + 0</kbd>. The cursor blinks slowly: from now on letters are small, and SHIFT with a letter gives a capital.</li>
+<li>Type the letter slowly. After <bdi>Dear Peter,</bdi> and after the sentence, press <kbd>ENTER</kbd> twice. A long line wraps to the next one by itself. Start the last two lines with a space, so they do not join the line before, and press <kbd>ENTER</kbd> after each.</li>
+<li>The fix: hold <kbd>CLEAR</kbd> and press <kbd>↑</kbd>; the cursor jumps to the top of the text. Press <kbd>↓</kbd> twice, then <kbd>→</kbd> until the cursor sits on the first <bdi>e</bdi> of <bdi>tepe</bdi>.</li>
+<li>Press <kbd>BREAK</kbd> and the <bdi>e</bdi> is deleted. Type <bdi>a</bdi>: now it says <bdi>tape</bdi>.</li>
+<li><kbd>CLEAR + A</kbd> re-flows the paragraphs, and <kbd>CLEAR + M</kbd> takes you back to the menu.</li>
+<li>In the menu press <kbd>W</kbd>: 18 words and 6 lines. <kbd>E</kbd> takes you back to the text, and <kbd>CLEAR + M</kbd> to the menu again.</li>
+<li>Saving: put a blank tape in and press RECORD and PLAY together on the recorder. In the menu press <kbd>S</kbd>, type <bdi>LETTER1</bdi> and press <kbd>ENTER</kbd>. After a few seconds the menu comes back.</li>
+<li>Checking: press <kbd>C</kbd>, a capital <kbd>Y</kbd> and <kbd>ENTER</kbd>, and the text is wiped from memory. <kbd>CLEAR + M</kbd> goes back to the menu. Wind the tape back to the start of the letter and press PLAY. In the menu press <kbd>R</kbd> (if <bdi>SURE???..</bdi> appears again, a capital <kbd>Y</kbd> and <kbd>ENTER</kbd>), type <bdi>LETTER1</bdi> and <kbd>ENTER</kbd>. When the editor opens, <kbd>CLEAR + ↑</kbd>: your letter is back. The menu now shows <bdi>FILE: LETTER1</bdi>.</li>
+</ol>
+<p>If the program is searching the tape and an <bdi>S</bdi> keeps blinking in the corner, hold <kbd>BREAK</kbd> for a second or two to get back to the menu.</p>
 <p class="note">This guide is in our own words, for Dragon owners who have the original program. We do not host the program or its original manual. We tried every step on an emulated machine with the same chips.</p>
 </div>
 <p class="more"><a href="/en/guides/">All guides</a> · <a href="/en/magazine/">What Dragon Owners Were Reading</a> · <a href="/en/dragon-history/">The history of the Dragon</a></p>
