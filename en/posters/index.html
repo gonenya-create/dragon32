@@ -22,6 +22,12 @@
 .poster .dl:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
 .poster .small{font-size:15px;color:var(--soft)}
 @media (max-width:640px){.poster{grid-template-columns:1fr}.poster img{max-width:320px}}
+.poster .view{display:block;padding:0;border:0;background:none;cursor:zoom-in;width:100%}
+.poster .view:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+dialog.big{padding:0;border:0;background:rgba(0,0,0,.92);max-width:none;max-height:none;width:100vw;height:100vh;margin:0}
+dialog.big::backdrop{background:rgba(0,0,0,.92)}
+dialog.big img{display:block;margin:0 auto;max-width:100vw;max-height:100vh;width:auto;height:auto;object-fit:contain;cursor:zoom-out}
+dialog.big button{position:fixed;top:12px;inset-inline-end:12px;font:700 18px 'Rubik',sans-serif;padding:8px 14px;border-radius:6px;border:0;background:var(--paper);color:#111;cursor:pointer}
 </style>
 </head>
 <body>
@@ -40,7 +46,7 @@
 <p class="standfirst">Dragon 1982 posters, free to download and print at home or at a print shop.</p>
 <ul class="posters">
 <li class="poster">
-  <a href="/assets/poster/dragon1982-shelf-a3-en.pdf" download><img src="/assets/poster/dragon1982-shelf-en.jpg" width="700" height="990" alt="The poster 72 games on the shelf: 72 game tiles on wooden shelves, each with its name" loading="lazy"></a>
+  <button type="button" class="view" data-big="/assets/poster/dragon1982-shelf-en-big.jpg" title="Click to see it big" aria-label="Click to see it big"><img src="/assets/poster/dragon1982-shelf-en.jpg" width="700" height="990" alt="The poster 72 games on the shelf: 72 game tiles on wooden shelves, each with its name" loading="lazy"></button>
   <div>
     <h2>72 Games on the Shelf</h2>
     <p>Every game on the machine's shelf, in rows on wooden shelves like an old shop. Each one shows a moment from the game as it runs on our machine, and the adventures show their original tape covers.</p>
@@ -49,7 +55,7 @@
   </div>
 </li>
 <li class="poster">
-  <a href="/assets/poster/dragon1982-poster-a3.pdf" download><img src="/assets/poster/dragon1982-poster.jpg" width="700" height="990" alt="The poster 1982 comes back to life: the machine’s green BASIC screen, surrounded by screenshots of games from the shelf" loading="lazy"></a>
+  <button type="button" class="view" data-big="/assets/poster/dragon1982-poster-big.jpg" title="Click to see it big" aria-label="Click to see it big"><img src="/assets/poster/dragon1982-poster.jpg" width="700" height="990" alt="The poster 1982 comes back to life: the machine’s green BASIC screen, surrounded by screenshots of games from the shelf" loading="lazy"></button>
   <div>
     <h2>1982 Comes Back to Life</h2>
     <p>Our machine’s BASIC screen in the middle, surrounded by games from the shelf in their original pixels, styled like a 1983 magazine cover. The text on the poster is in Hebrew.</p>
@@ -60,5 +66,18 @@
 </ul>
 </div>
 </main>
+<dialog class="big" id="big"><button type="button" id="big-close">✕ Close</button><img alt=""></dialog>
+<script>
+(function () {
+  const d = document.getElementById('big'), im = d.querySelector('img');
+  document.querySelectorAll('.poster .view').forEach(b => b.addEventListener('click', () => {
+    im.src = b.dataset.big; im.alt = b.querySelector('img').alt; d.showModal();
+  }));
+  const close = () => d.close();
+  document.getElementById('big-close').addEventListener('click', close);
+  im.addEventListener('click', close);
+  d.addEventListener('click', e => { if (e.target === d) close(); });
+})();
+</script>
 </body>
 </html>

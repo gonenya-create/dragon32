@@ -22,6 +22,12 @@
 .poster .dl:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
 .poster .small{font-size:15px;color:var(--soft)}
 @media (max-width:640px){.poster{grid-template-columns:1fr}.poster img{max-width:320px}}
+.poster .view{display:block;padding:0;border:0;background:none;cursor:zoom-in;width:100%}
+.poster .view:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+dialog.big{padding:0;border:0;background:rgba(0,0,0,.92);max-width:none;max-height:none;width:100vw;height:100vh;margin:0}
+dialog.big::backdrop{background:rgba(0,0,0,.92)}
+dialog.big img{display:block;margin:0 auto;max-width:100vw;max-height:100vh;width:auto;height:auto;object-fit:contain;cursor:zoom-out}
+dialog.big button{position:fixed;top:12px;inset-inline-end:12px;font:700 18px 'Rubik',sans-serif;padding:8px 14px;border-radius:6px;border:0;background:var(--paper);color:#111;cursor:pointer}
 </style>
 </head>
 <body>
@@ -40,7 +46,7 @@
 <p class="standfirst">פוסטרים של <bdi>Dragon 1982</bdi>, להורדה חופשית ולהדפסה בבית או בחנות דפוס.</p>
 <ul class="posters">
 <li class="poster">
-  <a href="/assets/poster/dragon1982-shelf-a3-he.pdf" download><img src="/assets/poster/dragon1982-shelf-he.jpg" width="700" height="990" alt="הפוסטר 72 משחקים על המדף: 72 משבצות של משחקים על מדפי עץ, כל אחת עם שם המשחק" loading="lazy"></a>
+  <button type="button" class="view" data-big="/assets/poster/dragon1982-shelf-he-big.jpg" title="לחצו כדי לראות בגדול" aria-label="לחצו כדי לראות בגדול"><img src="/assets/poster/dragon1982-shelf-he.jpg" width="700" height="990" alt="הפוסטר 72 משחקים על המדף: 72 משבצות של משחקים על מדפי עץ, כל אחת עם שם המשחק" loading="lazy"></button>
   <div>
     <h2>72 משחקים על המדף</h2>
     <p>כל המשחקים שעל המדף של המכונה, בשורות על מדפי עץ, כמו בחנות של פעם. לכל משחק רגע מתוך המשחק כפי שהוא רץ במכונה שלנו, ולהרפתקאות עטיפת הקלטת המקורית.</p>
@@ -49,7 +55,7 @@
   </div>
 </li>
 <li class="poster">
-  <a href="/assets/poster/dragon1982-poster-a3.pdf" download><img src="/assets/poster/dragon1982-poster.jpg" width="700" height="990" alt="הפוסטר 1982 חוזר לחיים: מסך ה-BASIC הירוק של המכונה, ומסביבו צילומי מסך של משחקים מהמדף" loading="lazy"></a>
+  <button type="button" class="view" data-big="/assets/poster/dragon1982-poster-big.jpg" title="לחצו כדי לראות בגדול" aria-label="לחצו כדי לראות בגדול"><img src="/assets/poster/dragon1982-poster.jpg" width="700" height="990" alt="הפוסטר 1982 חוזר לחיים: מסך ה-BASIC הירוק של המכונה, ומסביבו צילומי מסך של משחקים מהמדף" loading="lazy"></button>
   <div>
     <h2>1982 חוזר לחיים</h2>
     <p>מסך ה-<bdi>BASIC</bdi> של המכונה שלנו באמצע, ומסביבו משחקים מהמדף, בפיקסלים של אז. בעיצוב של שער מגזין מ-1983.</p>
@@ -60,5 +66,18 @@
 </ul>
 </div>
 </main>
+<dialog class="big" id="big"><button type="button" id="big-close">✕ סגירה</button><img alt=""></dialog>
+<script>
+(function () {
+  const d = document.getElementById('big'), im = d.querySelector('img');
+  document.querySelectorAll('.poster .view').forEach(b => b.addEventListener('click', () => {
+    im.src = b.dataset.big; im.alt = b.querySelector('img').alt; d.showModal();
+  }));
+  const close = () => d.close();
+  document.getElementById('big-close').addEventListener('click', close);
+  im.addEventListener('click', close);
+  d.addEventListener('click', e => { if (e.target === d) close(); });
+})();
+</script>
 </body>
 </html>
