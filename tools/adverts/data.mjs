@@ -308,6 +308,60 @@ export const ADVERTS = [
     }
   },
   {
+    // השנה: ברשימת הפרסומות של הארכיון (dragondata.co.uk/adverts/) כתוב PCW, ‏June 83. בדף עצמו: אמצע הפרסומת אבד בסריקה, בגלל שדרה קשיחה של המגזין
+    id: 'our-chess-program',
+    kind: 'ad',
+    year: { he: 'יוני 1983', en: 'June 1983' },
+    archive: 'http://dragondata.co.uk/adverts/our-chess-program/our-chess.html',
+    source: 'archive',
+    images: ['our-chess-program.jpg', 'our-chess-program-2.jpg', 'our-chess-program-3.jpg'],
+    original: 'Our chess program has plenty of mates.',
+    he: {
+      title: '"לתוכנת השחמט שלנו יש הרבה חברים"',
+      summary: 'פרסומת על שני עמודים מהמגזין Personal Computer World, יוני 1983. משחק מילים: mates באנגלית הם גם חברים וגם המט של השחמט. על לוח שחמט ענק עומדות קופסאות התוכנות של Dragon, ובחזית הקופסה של תוכנת השחמט, ש"חיבר אותה רב-אמן אמיתי". אמצע הפרסומת אבד בסריקה, כמו שהארכיון מציין, בגלל שדרה קשיחה של המגזין: כמה קופסאות באמצע חתוכות.',
+      facts: [
+        ['תוכנת השחמט', '"חיבר אותה רב-אמן אמיתי", עם 9 רמות קושי'],
+        ['משחקי ארקייד', 'Meteoroids, ‏Astroblast ו-Cosmic Invaders'],
+        ['הרפתקאות', 'Calixto Island, ‏Madness and the Minotaur ו-Quest'],
+        ['עוד תוכנות', 'Personal Finance לכסף של המשפחה, ו-Typing Tutor ללימוד הקלדה'],
+        ['הזיכרון', '32K RAM, "מחשב רציני"']
+      ],
+      translation: [
+        '**לתוכנת השחמט שלנו יש הרבה חברים.**',
+        'כשאתם משחקים שחמט עם מחשב המשפחה Dragon 32, אתם מתמודדים עם אתגר אמיתי.',
+        'כי את תוכנת השחמט של Dragon חיבר רב-אמן אמיתי.',
+        'אבל זה לא אומר שצריך להיות בוריס ספאסקי כדי ליהנות ממשחק.',
+        'Dragon Chess מציעה 9 רמות קושי שונות.',
+        'אז בין שאתם רק מתחילים ובין שאתם אלופים, אתם יכולים להיות בטוחים שנמצא לכם יריב ראוי.',
+        '**מחשב המשפחה הראשון.**',
+        'בזמן שה-Dragon מלמד אתכם לשחק שחמט טוב יותר, אתם לומדים גם משהו אחר. אתם מתרגלים לטכנולוגיה החדשה של המחשבים, טכנולוגיה שנעשית חשובה יותר ויותר בחיים של כולנו.',
+        'ה-Dragon 32 הוא מחשב המשפחה הראשון. קל להשתמש בו. קל ללמוד אותו, בזכות המדריך הפשוט והיפה שלו. וברגע שמתחילים, מאוד קשה להפסיק.',
+        'תופתעו כמה מהר אתם והילדים שלכם תתפסו את העניין.',
+        'ובימינו, כמעט אי אפשר לתת להם חוויה יקרה יותר מזו.',
+        '**תוכנה שמתאימה לו.**',
+        'הזיכרון של ה-Dragon, ‏32K RAM, אומר שזה מחשב רציני. אבל יש בו גם הרבה כיף.',
+        'מבחר שלם של משחקים, עם משחקי ארקייד אהובים כמו Meteoroids, ‏Astroblast ו-Cosmic Invaders.',
+        'ומשחקי הרפתקאות מסובכים ומסתוריים כמו Calixto Island, ‏Madness and the Minotaur ו-Quest.',
+        'ומבחר התוכנות החדש שלנו לא נגמר כאן. יש את תוכנת Personal Finance, שעוזרת לסדר את הכסף של המשפחה. ותוכנות לימוד כמו Typing Tutor, שמשתמשת במקלדת של ה-Dragon עצמו כדי ללמד אתכם להקליד.',
+        'ובכל חודש אנחנו מוסיפים עוד ועוד תוכנות חדשות למבחר.',
+        'בפעם הבאה שבא לכם משחק שחמט, תתיידדו עם Dragon.',
+        'הוא יכול להכיר לכם הרבה חברים חדשים.',
+        'DRAGON 32: מחשב המשפחה הראשון.'
+      ]
+    },
+    en: {
+      title: 'Our chess program has plenty of mates',
+      context: 'A two-page Dragon Data advert from Personal Computer World, June 1983: the Dragon software boxes stand on a giant chessboard, with the Chess box in front. As the archive notes, the middle of the spread was lost in the scan because of the magazine\'s stiff spine, so a few boxes in the middle are cut off.',
+      facts: [
+        ['Chess', '"Put together by a genuine Grand Master", 9 levels of difficulty'],
+        ['Arcade games', 'Meteoroids, Astroblast and Cosmic Invaders'],
+        ['Adventures', 'Calixto Island, Madness and the Minotaur, and Quest'],
+        ['More software', 'Personal Finance and Typing Tutor'],
+        ['The pitch', '"Next time you feel like a game of chess, make friends with a Dragon."']
+      ]
+    }
+  },
+  {
     // השנה: הארכיון כותב שהעותק מ-Computer and Video Games, יולי 1983, ובתחתית העמוד "COMPUTER & VIDEO GAMES 111"
     id: 'ask-your-expert',
     kind: 'ad',
