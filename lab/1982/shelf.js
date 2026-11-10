@@ -2106,7 +2106,8 @@ body.game-open .shelf > :not(.game-view) { display: none; }
   async function play(bytes, path, title, button, run, auto, mc) {
     if (busy) return;
     if (typeof Module === 'undefined' || !window.d32Ready) { status.textContent = EN ? 'The computer is still starting. Try again in a moment.' : 'המחשב עוד נדלק. נסו שוב בעוד רגע.'; return; }
-    if (cartIn) await ejectCart();
+    // קלטת שרק נכנסת לרשמקול (לחיצה ב"הקלטות שלי") לא מוציאה את המחסנית, כמו במחשב אמיתי (גונן, 10.11: Logo ו-L,T)
+    if (cartIn && auto) await ejectCart();
     busy = true;
     findRam();
     const id = (/^\/tape-(.+)\.cas$/.exec(path) || [])[1] || null;
