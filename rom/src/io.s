@@ -125,7 +125,8 @@ KEYMAP		fcc	"01234567"
 		fcc	"PQRSTUVW"
 		fcb	'X,'Y,'Z,$5e,$0a,$08,$09,$20
 		fcb	13,12,3,0,0,0,0,0
-SHIFTED		fcc	"0!\"#$%&'"		; SHIFT על 0-7
+SHIFTED		fcb	0			; SHIFT+0: אין תו, הנעילה מתהפכת (למטה)
+		fcc	"!\"#$%&'"		; SHIFT על 1-7
 		fcc	"()*+<=>?"			; SHIFT על השורה השנייה
 
 ; keyindex: סריקה מלאה. מחזיר ב-A את התו של מקש שנלחץ עכשיו (לא היה לחוץ בסריקה הקודמת), או 0.
@@ -201,7 +202,10 @@ ki_next		puls	a		; המסכה של העמודה הבאה
 		bra	ki_out
 1		leax	SHIFTED-KEYMAP,x	; b < 16
 		lda	b,x
-		bra	ki_out
+		bne	ki_out
+; SHIFT+0: הנעילה ($0149, ALLOCK) מתהפכת, ואין מקש (A=0, Z=1), כמו במקור (קורא 13: ‏COM, ולא מוחזר הקוד $12).
+; אחרי זה אות בלי SHIFT יוצאת קטנה, והמסך מראה אותה הפוכה. מקש שמוחזק לא מתהפך שוב (הטבלה של המקשים הלחוצים)
+		com	$0149
 ki_none		clra
 ki_out		tsta			; Z לפי התו
 		puls	b,x,pc

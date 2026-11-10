@@ -86,7 +86,7 @@ FFC0                  SAM             equ     $ffc0
 8000 7EBDE2                           jmp     hw_init         ; $8000 אתחול חומרה (חוזר דרך Y)
 8003 7E831B                           jmp     swinit          ; $8003 אתחול תוכנה
 8006 7EBBE5                           jmp     $bbe5           ; $8006 מקלדת (כמו במקור: דרך $BBE5)
-8009 7EBF8F                           jmp     blink           ; $8009 הבהוב הסמן
+8009 7EBF92                           jmp     blink           ; $8009 הבהוב הסמן
 800C 7EBE40                           jmp     putcr           ; $800C פלט למסך (כמו במקור: דרך $BCAB, בלי מצב טקסט; קורא 10.6)
 800F 7EBBAA                           jmp     prtout          ; $800F פלט למדפסת
 8012 7E9DD7                           jmp     joyrd           ; $8012 ג'ויסטיקים
@@ -1015,7 +1015,7 @@ FFC0                  SAM             equ     $ffc0
 8804 3414             gl_ent          pshs    b,x
 8806 8E02DD           gl_new          ldx     #LINBUF
 8809 BD016A           gl_key          jsr     HK_CIN          ; 5: לפני כל מקש, כמו במקור (קורא 7.11: Bonka ו-Vultures נכנסים כאן, ב-$016A)
-880C 17376F                           lbsr    getkey          ; הסמן מהבהב בתוך getkey (קורא)
+880C 173772                           lbsr    getkey          ; הסמן מהבהב בתוך getkey (קורא)
 880F 810D                             cmpa    #13
 8811 2731                             beq     gl_done
 8813 8108                             cmpa    #8
@@ -1099,7 +1099,7 @@ FFC0                  SAM             equ     $ffc0
 88C0 0C               initab          fcb     12              ; קריאת התו ל-RAM ($9F-$AA)
 88C1 8E8E009F                         fdb     chrtpl,chrget
 88C5 0D                               fcb     13              ; הסמן, הקלטת, המקלדת והמדפסת: ל-$8F-$9B (קורא: קלטת 0.3, מדפסת 1.5, 7.1)
-88C6 BFAA008F                         fdb     tdefs,CBLCNT
+88C6 BFAD008F                         fdb     tdefs,CBLCNT
 88CA 1E                               fcb     30              ; $010C-$0129: הפסיקות, TIMER, זרע ה-RND, מתאר הפקודות (קורא: מדפסת 3.2)
 88CB 88D5010C                         fdb     lowtab,$010c
 88CF 09                               fcb     9               ; $0148-$0150: שורה חדשה אוטומטית, נעילה, ורצף סוף השורה למדפסת (קורא 1.5)
@@ -3982,10 +3982,10 @@ A22B                  fone            equ     expcon+36               ; 1: המ�
 9D38 0F68                             clr     CURLIN
 9D3A 16F175                           lbra    srchq2
 9D3D                                  fill    $ff,$9d3d-*     ;@isl
-9D3D 7EBFB7                           jmp     irq     ;@isl
+9D3D 7EBFBA                           jmp     irq     ;@isl
 9D40 9B3EBC1FFD       nz0999          fcb     $9b,$3e,$bc,$1f,$fd     ; 99999999.9499 (mit: NZ0999). 4.11: עבר לכאן מלפני $991B, כדי לפנות מקום ל-$978E
 9D45 FF                               fill    $ff,$9d46-*     ;@isl
-9D46 7EBFBF                           jmp     irqtk   ;@isl
+9D46 7EBFC2                           jmp     irqtk   ;@isl
 9D49                  isl_9d3d_e      ;@isl
 9D49 16F782           4               lbra    putnew
                       
@@ -4251,7 +4251,7 @@ A22B                  fone            equ     expcon+36               ; 1: המ�
 9F39 10261CDA                         lbne    tchin
 9F3D BD016A                           jsr     HK_CIN
 9F40 0F70                             clr     EOFFLG
-9F42 162039                           lbra    getkey
+9F42 16203C                           lbra    getkey
 9F45 8DF0             x_getdev        bsr     x_inch
 9F47 0D70                             tst     EOFFLG
 9F49 1026E9EE                         lbne    err_io
@@ -5066,7 +5066,7 @@ A599 17E211                           lbsr    prnum
 A59C 8620                             lda     #$20
 A59E 16189D                           lbra    putc
                       ; ed_get: מקש לעורך. BREAK לא נחשב; SHIFT+↑ ($5F) = בריחה ($1B). רק $20-$7E, ENTER, בריחה, ←
-A5A1 1719DA           ed_get          lbsr    getkey
+A5A1 1719DD           ed_get          lbsr    getkey
 A5A4 815F                             cmpa    #$5f
 A5A6 2603                             bne     1F
 A5A8 861B                             lda     #$1b
@@ -7321,7 +7321,7 @@ B52F C602                             ldb     #2              ; X שם; : מחר
 B531 17FB11                           lbsr    dxstr
 B534 20CD                             bra     ploop_t         ; (3.11: דרך הקפיצה הקרובה, בשביל $B505)
 B536 FFFF                             fill    $ff,$b538-*     ;@isl
-B538 7EBF7E                           jmp     getkey  ;@isl
+B538 7EBF81                           jmp     getkey  ;@isl
 B53B 814E             7               cmpa    #'N             ; N לפני תו: מדלגים
 B53D 2603                             bne     8F
 B53F 17FB3D                           lbsr    dgetf
@@ -8252,7 +8252,7 @@ BBAE 2738                             beq     2F
 BBB0 8120                             cmpa    #$20
 BBB2 2004                             bra     isl_bbb5_e      ;@isl
 BBB4 FF                               fill    $ff,$bbb5-*     ;@isl
-BBB5 7EBF8F                           jmp     blink   ;@isl
+BBB5 7EBF92                           jmp     blink   ;@isl
 BBB8                  isl_bbb5_e      ;@isl
 BBB8 2502                             blo     1F
 BBBA 0C9C                             inc     LPTPOS
@@ -8675,7 +8675,8 @@ BEB9 48494A4B4C4D4E4F                 fcc     "HIJKLMNO"
 BEC1 5051525354555657                 fcc     "PQRSTUVW"
 BEC9 58595A5E0A080920                 fcb     'X,'Y,'Z,$5e,$0a,$08,$09,$20
 BED1 0D0C030000000000                 fcb     13,12,3,0,0,0,0,0
-BED9 3021222324252627 SHIFTED         fcc     "0!\"#$%&'"             ; SHIFT על 0-7
+BED9 00               SHIFTED         fcb     0                       ; SHIFT+0: אין תו, הנעילה מתהפכת (למטה)
+BEDA 21222324252627                   fcc     "!\"#$%&'"              ; SHIFT על 1-7
 BEE1 28292A2B3C3D3E3F                 fcc     "()*+<=>?"                      ; SHIFT על השורה השנייה
                       
                       ; keyindex: סריקה מלאה. מחזיר ב-A את התו של מקש שנלחץ עכשיו (לא היה לחוץ בסריקה הקודמת), או 0.
@@ -8691,13 +8692,13 @@ BEF0 B7FF02                           sta     PIA0+2
 BEF3 B6FF00                           lda     PIA0
 BEF6 8A80                             ora     #$80
 BEF8 4C                               inca                    ; $FF (אין כפתור) → 0, וכך A כבר 0 לשורה הבאה
-BEF9 266E                             bne     ki_none
+BEF9 2671                             bne     ki_none
                                                               ; כל העמודות למטה, קריאה אחת. בלי שינוי מהפעם הקודמת: יוצאים מהר (קורא 2.10)
 BEFB B7FF02                           sta     PIA0+2          ; כתיבה בלי קריאה: CLR קורא קודם את $FF02, והקריאה מוחקת את דגל פסיקת השדה (Phantom Slayer קפא). אותם 7 מחזורים
 BEFE B6FF00                           lda     PIA0
 BF01 8A80                             ora     #$80            ; כמו במקור: מה שנקרא, וביט 7 דולק
 BF03 A11F                             cmpa    -1,x            ; KALL
-BF05 2762                             beq     ki_none
+BF05 2765                             beq     ki_none
 BF07 A71F                             sta     -1,x
 BF09 6FE2                             clr     ,-s             ; KFOUND, במחסנית: 0 = אין; אחרת האינדקס בטבלה + 1
                       ; (1.11: המשתנים הזמניים עברו מ-$03F2-$03F5 למחסנית. הטוען של Donkey King (Microdeal) שומר שם נתונים,
@@ -8734,71 +8735,74 @@ BF40 5C                               incb
 BF41 C108                             cmpb    #8
 BF43 25C9                             blo     ki_col
 BF45 E6E0                             ldb     ,s+             ; KFOUND
-BF47 2720                             beq     ki_none
+BF47 2723                             beq     ki_none
 BF49 5A                               decb
 BF4A A607                             lda     7,x             ; SHIFT לחוץ? (KPREV+7, שורה 6) → C = 0 כשהוא לחוץ (לחוץ = 0 בטבלה)
 BF4C 48                               lsla
 BF4D 48                               lsla
 BF4E 8EBEA1                           ldx     #KEYMAP         ; (LD לא משנה את C)
 BF51 A685                             lda     b,x             ; התו
-BF53 2714                             beq     ki_none
-BF55 2516                             bcs     ki_low          ; בלי SHIFT
+BF53 2717                             beq     ki_none
+BF55 2519                             bcs     ki_low          ; בלי SHIFT
 BF57 C110                             cmpb    #16
 BF59 2507                             blo     1F
 BF5B 815E                             cmpa    #$5e            ; SHIFT+↑ = $5F (ב-EDIT: יציאה ממצב הוספה)
-BF5D 260B                             bne     ki_out
+BF5D 260E                             bne     ki_out
 BF5F 4C                               inca
-BF60 2008                             bra     ki_out
+BF60 200B                             bra     ki_out
 BF62 308838           1               leax    SHIFTED-KEYMAP,x        ; b < 16
 BF65 A685                             lda     b,x
-BF67 2001                             bra     ki_out
-BF69 4F               ki_none         clra
-BF6A 4D               ki_out          tsta                    ; Z לפי התו
-BF6B 3594                             puls    b,x,pc
+BF67 2604                             bne     ki_out
+                      ; SHIFT+0: הנעילה ($0149, ALLOCK) מתהפכת, ואין מקש (A=0, Z=1), כמו במקור (קורא 13: ‏COM, ולא מוחזר הקוד $12).
+                      ; אחרי זה אות בלי SHIFT יוצאת קטנה, והמסך מראה אותה הפוכה. מקש שמוחזק לא מתהפך שוב (הטבלה של המקשים הלחוצים)
+BF69 730149                           com     $0149
+BF6C 4F               ki_none         clra
+BF6D 4D               ki_out          tsta                    ; Z לפי התו
+BF6E 3594                             puls    b,x,pc
                       ; אות בלי SHIFT כשהנעילה ($0149, ALLOCK) כבויה = 0: אות קטנה, כמו במקור (מפרט המסך 3א). בהדלקה $FF: אותיות גדולות.
                       ; ‏Donkey King (Microdeal) כותב 0 ל-$0149 ומחכה ל-'y' או 'n' קטנות (1.11)
-BF6D 8141             ki_low          cmpa    #'A
-BF6F 25F9                             blo     ki_out
-BF71 815A                             cmpa    #'Z
-BF73 22F5                             bhi     ki_out
-BF75 7D0149                           tst     $0149
-BF78 26F0                             bne     ki_out
-BF7A 8A20                             ora     #$20
-BF7C 20EC                             bra     ki_out
+BF70 8141             ki_low          cmpa    #'A
+BF72 25F9                             blo     ki_out
+BF74 815A                             cmpa    #'Z
+BF76 22F5                             bhi     ki_out
+BF78 7D0149                           tst     $0149
+BF7B 26F0                             bne     ki_out
+BF7D 8A20                             ora     #$20
+BF7F 20EC                             bra     ki_out
                       
                       ; getkey: מחכה למקש, ומחזיר את התו ב-A. כמו במקור: הבהוב (עם השהיה), ואז סריקה דרך $BBE5, ושוב.
                       ; מקש: $60 בתא הסמן, ורק אז הוא חוזר (קורא 2.5, 8.1)
-BF7E 3414             getkey          pshs    b,x
-BF80 8D0D             gk_loop         bsr     blink
-BF82 BDBBE5                           jsr     $bbe5           ; סריקת המקלדת, דרך הכניסה הקבועה (כמו במקור)
-BF85 27F9             gk_r            beq     gk_loop
-BF87 9E88             gk_got          ldx     CURSOR
-BF89 C660                             ldb     #$60
-BF8B E784                             stb     ,x
-BF8D 3594                             puls    b,x,pc
+BF81 3414             getkey          pshs    b,x
+BF83 8D0D             gk_loop         bsr     blink
+BF85 BDBBE5                           jsr     $bbe5           ; סריקת המקלדת, דרך הכניסה הקבועה (כמו במקור)
+BF88 27F9             gk_r            beq     gk_loop
+BF8A 9E88             gk_got          ldx     CURSOR
+BF8C C660                             ldb     #$60
+BF8E E784                             stb     ,x
+BF90 3594                             puls    b,x,pc
                       ; blink (קורא): CBLCNT יורד; ב-0: ביט $40 בתא הסמן מתהפך, והמונה חוזר ל-50. אחר כך השהיה: 1118 סיבובים של 8 מחזורים
                       ; @nofill: לולאות מתוזמנות, לפי מחזורים. tools/islands.py לא מכניס כאן גושים
-BF8F 3412             blink           pshs    a,x
-BF91 0A8F                             dec     CBLCNT
-BF93 260C                             bne     1F
-BF95 9E88                             ldx     CURSOR
-BF97 A684                             lda     ,x
-BF99 8840                             eora    #$40
-BF9B A784                             sta     ,x
-BF9D 8632                             lda     #50
-BF9F 978F                             sta     CBLCNT
-BFA1 8E045E           1               ldx     #$045e
-BFA4 301F             2               leax    -1,x
-BFA6 26FC                             bne     2B
-BFA8 3592                             puls    a,x,pc
+BF92 3412             blink           pshs    a,x
+BF94 0A8F                             dec     CBLCNT
+BF96 260C                             bne     1F
+BF98 9E88                             ldx     CURSOR
+BF9A A684                             lda     ,x
+BF9C 8840                             eora    #$40
+BF9E A784                             sta     ,x
+BFA0 8632                             lda     #50
+BFA2 978F                             sta     CBLCNT
+BFA4 8E045E           1               ldx     #$045e
+BFA7 301F             2               leax    -1,x
+BFA9 26FC                             bne     2B
+BFAB 3592                             puls    a,x,pc
                       ; @endnofill
                       
                       ; ---- בסוף ה-ROM (31.10): מה שהועבר לכאן כדי לפנות מקום לכניסות $B748, $B87E ו-$BBC8 ----
                       ; הערכים של הקלטת בהדלקה (מועתקים ל-$8F): הבהוב הסמן, מבוא 128 (Dragon 32, גונן 20.10: לבדוק במחשב אמיתי),
                       ; ספים $12/$0A/$12, השהיית מנוע $DA5C
-BFAA 320080120A12DA5C tdefs           fcb     50,$00,$80,$12,$0a,$12,$da,$5c
-BFB2 045E                             fdb     $045e           ; $97: השהיית המקלדת (קורא: מדפסת 7.1)
-BFB4 107484                           fcb     16,116,132      ; $99-$9B המדפסת: רוחב שדה הפסיק, שדה הפסיק האחרון, רוחב השורה (קורא 1.5)
+BFAD 320080120A12DA5C tdefs           fcb     50,$00,$80,$12,$0a,$12,$da,$5c
+BFB5 045E                             fdb     $045e           ; $97: השהיית המקלדת (קורא: מדפסת 7.1)
+BFB7 107484                           fcb     16,116,132      ; $99-$9B המדפסת: רוחב שדה הפסיק, שדה הפסיק האחרון, רוחב השורה (קורא 1.5)
                       
                       ; srchq ($B87E): החיפוש הרגיל (search), כשהשורה הנוכחית אינה "פקודה ישירה": בלי ניקוי, בלי S/F ובלי השם.
                       ; בלוקים עד כותרת, ואם יש שם בפקודה, עד שהשם מתאים. השורה הנוכחית חוזרת בסוף
@@ -8807,34 +8811,34 @@ BFB4 107484                           fcb     16,116,132      ; $99-$9B המדפ
                       ; (dlyx עבר ב-3.11 לרווח שלפני $BAD4, ב-mitfile.s, כדי לפנות מקום בסוף ה-ROM לפסיקה)
                       
                       ; פסיקת השדה (קורא: צליל 4, 9.5): רק כשהדגל ב-$FF03 דולק. TIMER, ואחריו התו של PLAY, ורק אם אין תו: SOUND
-BFB7 B6FF03           irq             lda     PIA0+3
-BFBA 2A32                             bpl     9F
-BFBC B6FF02                           lda     PIA0+2
-BFBF BE0112           irqtk           ldx     TICKS           ; ($9D46: כניסה אחרי האישור)
-BFC2 3001                             leax    1,x
-BFC4 BF0112                           stx     TICKS
+BFBA B6FF03           irq             lda     PIA0+3
+BFBD 2A32                             bpl     9F
+BFBF B6FF02                           lda     PIA0+2
+BFC2 BE0112           irqtk           ldx     TICKS           ; ($9D46: כניסה אחרי האישור)
+BFC5 3001                             leax    1,x
+BFC7 BF0112                           stx     TICKS
                       ; (3.11, קורא 3.11 סעיף 12: כמו במקור, בלי תלות ב-DP של התוכנית שנקטעה. ‏Cave Hunter רץ עם DP=$04 ומחכה ש-$008D יירד)
-BFC7 FC00E3                           ldd     >PLYTMR
-BFCA 2718                             beq     5F
-BFCC B300D5                           subd    >PSTEP
-BFCF 2304                             bls     6F
-BFD1 FD00E3                           std     >PLYTMR
-BFD4 3B                               rti
+BFCA FC00E3                           ldd     >PLYTMR
+BFCD 2718                             beq     5F
+BFCF B300D5                           subd    >PSTEP
+BFD2 2304                             bls     6F
+BFD4 FD00E3                           std     >PLYTMR
+BFD7 3B                               rti
                       ; התו נגמר (קורא 9.1): חוזרים ישר למי שקרא לתו. U השמור במסגרת מצביע על כתובת החזרה; ה-CC מהמסגרת,
                       ; בלי ביט 7, כך ש-RTI מחזיר רק CC ו-PC (והפסיקות פתוחות)
-BFD5 4F               6               clra
-BFD6 5F                               clrb
-BFD7 FD00E3                           std     >PLYTMR
-BFDA A6E4                             lda     ,s
-BFDC 847F                             anda    #$7f
-BFDE 10EE68                           lds     8,s
-BFE1 3402                             pshs    a
-BFE3 3B                               rti
-BFE4 BE008D           5               ldx     >SNDTMR
-BFE7 2705                             beq     9F
-BFE9 301F                             leax    -1,x
-BFEB BF008D                           stx     >SNDTMR
-BFEE 3B               9               rti
+BFD8 4F               6               clra
+BFD9 5F                               clrb
+BFDA FD00E3                           std     >PLYTMR
+BFDD A6E4                             lda     ,s
+BFDF 847F                             anda    #$7f
+BFE1 10EE68                           lds     8,s
+BFE4 3402                             pshs    a
+BFE6 3B                               rti
+BFE7 BE008D           5               ldx     >SNDTMR
+BFEA 2705                             beq     9F
+BFEC 301F                             leax    -1,x
+BFEE BF008D                           stx     >SNDTMR
+BFF1 3B               9               rti
                       
 BFF2                                  org     $bff2
 BFF2 01000103010F010C                 fdb     $0100,$0103,$010f,$010c,$0106,$0109,$b3b4       ; SWI3 SWI2 FIRQ IRQ SWI NMI דרך ה-RAM (קורא 3.1)
