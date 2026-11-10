@@ -306,8 +306,11 @@
   })();
   // כל קלטת שנכנסת לרשמקול: ג'ויסטיק מהמקלדת רק למשחקי ג'ויסטיק, ולוח המשחק לטלפון (joypad.js) רק למשחקים שיש להם מקשים שם
   // קלטת שלי (id = null): ג'ויסטיק מהמקלדת לפי המתג במגירה "הקלטות שלי" (גונן, 31.10: "אני לא יכול לשחק")
-  let mineIn = false, myJoy = false;
-  try { myJoy = localStorage.getItem('d32-myjoy') === '1'; } catch (e) {}
+  // המתג נזכר לכל קלטת בנפרד (גונן, 10.11, Logo: המתג נשאר דלוק ממשחק קודם, ואז הרווח במק היה כפתור אש ולא רווח).
+  // קלטת BASIC, או מחסנית מקובץ, מתחילות תמיד כשהוא כבוי
+  let mineIn = false, myJoy = false, joyName = '', showJoy = () => {};
+  let joyTapes = new Set();
+  try { joyTapes = new Set(JSON.parse(localStorage.getItem('d32-myjoy-tapes')) || []); } catch (e) {}
   // mc: קלטת שלי בשפת מכונה. בטלפון מקבלת את לוח המשחק (חיצים ורווח), כי מקש במקלדת המצוירת אי אפשר להחזיק
   // (גונן, 1.11, על Donkey King באייפון). המתג קובע אם החיצים הם מקשים או הג'ויסטיק
   // המפתח החומרתי (dongle) של Buzzard Bait (3.11): במקור תקע קטן בשקע הג'ויסטיק השמאלי, ובלעדיו המשחק כותב
@@ -334,8 +337,9 @@
       try { Module.ccall('wasm_set_joystick_by_name', null, ['number', 'string'], [1, 'kjoy0']); } catch (e) {}
     }, 1000);
   }
-  function gameKeys(id, mc) {
+  function gameKeys(id, mc, name) {
     mineIn = id === null;
+    if (mineIn) { joyName = mc && name ? name : ''; myJoy = !!joyName && joyTapes.has(joyName); showJoy(); }
     setJoy(JOY.has(id) || (mineIn && myJoy), BOTH.has(id));
     setPaddle(PADDLE.has(id));
     dongle(DONGLE.has(id));
@@ -2275,8 +2279,13 @@ body.game-open .shelf > :not(.game-view) { display: none; }
     if (busy || !window.d32Ready) return;
     const list = myTapes();
     if (!list.length) return;
+    // הסדר על הקלטת (10.11, Family Budget: ?IO ERROR IN 2700 אחרי חצי שעה של חיפוש): קודם קובצי נתונים שתוכנית שמרה (סוג 1),
+    // בסדר שבו נשמרו, אחר כך תוכניות, ובסוף קלטות ששמרנו "כמו שהן" (f.r). ה-ROM מחפש קובץ בדילוג על כל קובץ אחר, בלוק אחרי בלוק,
+    // ועל הבלוקים בפורמט של קלטת מוגנת הוא לא יכול לדלג. בתוך כל קבוצה הסדר נשמר, אז זוגות כמו TELE ו-DEMO נשארים צמודים
+    const rank = f => f.b[0][9] === 1 ? 0 : f.r ? 2 : 1;
+    const order = list.map((f, i) => [rank(f), i, f]).sort((x, y) => x[0] - y[0] || x[1] - y[1]).map(x => x[2]);
     try {
-      FS.writeFile('/mytapes.cas', tapeBytes(list));
+      FS.writeFile('/mytapes.cas', tapeBytes(order));
       inTape = null;
       Module.ccall('wasm_load_file', null, ['string', 'number', 'number'], ['/mytapes.cas', 2, 0]);
     } catch (e) {}
@@ -2323,7 +2332,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       b.querySelector('.how').textContent = how;
       b.setAttribute('aria-label', f.n + (kind === 2 ? (EN ? ', machine code: CLOADM' : ', שפת מכונה: CLOADM')
         : kind === 0 ? (EN ? ', BASIC program: CLOAD' : ', תוכנית BASIC: CLOAD') : (EN ? ', data file' : ', קובץ נתונים')));
-      b.addEventListener('click', () => { gameKeys(null, kind === 2); play(tapeBytes([f]), '/mine.cas', f.n, b, false, false, kind === 2 ? 'mine' : false); });
+      b.addEventListener('click', () => { gameKeys(null, kind === 2, f.n); play(tapeBytes([f]), '/mine.cas', f.n, b, false, false, kind === 2 ? 'mine' : false); });
       const down = document.createElement('button');
       down.type = 'button';
       down.className = 'mini';
@@ -2369,16 +2378,19 @@ body.game-open .shelf > :not(.game-view) { display: none; }
     joyBtn.type = 'button';
     joyBtn.className = 'mini upload';
     joyBtn.id = 'mine-joy';
-    const showJoy = () => {
+    showJoy = () => {
       joyBtn.setAttribute('aria-pressed', myJoy ? 'true' : 'false');
       joyBtn.textContent = '🕹 ' + (EN ? 'Arrows as joystick: ' + (myJoy ? 'on' : 'off') : 'ג\'ויסטיק מהמקלדת: ' + (myJoy ? 'דלוק' : 'כבוי'));
     };
-    joyBtn.title = EN ? 'For my tapes: the arrows move the right joystick, Alt or Space is its button'
-      : 'לקלטות שלי: החיצים מזיזים את הג\'ויסטיק הימני, ו-Alt או רווח הם הכפתור שלו';
+    joyBtn.title = EN ? 'For the machine-code tape in the recorder: the arrows move the right joystick, Alt or Space is its button. Remembered for each tape; then Space is not a space'
+      : 'לקלטת שפת המכונה שברשמקול: החיצים מזיזים את הג\'ויסטיק הימני, ו-Alt או רווח הם הכפתור שלו. נזכר לכל קלטת בנפרד. כשהוא דלוק, רווח הוא לא רווח';
     showJoy();
     joyBtn.addEventListener('click', () => {
       myJoy = !myJoy;
-      try { localStorage.setItem('d32-myjoy', myJoy ? '1' : '0'); } catch (e) {}
+      if (joyName) {
+        if (myJoy) joyTapes.add(joyName); else joyTapes.delete(joyName);
+        try { localStorage.setItem('d32-myjoy-tapes', JSON.stringify([...joyTapes])); } catch (e) {}
+      }
       showJoy();
       if (mineIn) setJoy(myJoy, false);
     });
@@ -2410,12 +2422,14 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       busy = true;
       try {
         if (cartIn) await ejectCart();
+        mineIn = false; joyName = ''; myJoy = false; setJoy(false); showJoy();
         FS.writeFile('/cart-mine.ccc', bytes);
         Module.ccall('wasm_load_file', null, ['string', 'number', 'number'], ['/cart-mine.ccc', 0, 0]);
         cartIn = 'mine'; inTape = null; ram = -1;
         document.querySelectorAll('.tape').forEach(t => t.classList.remove('in'));
         document.body.classList.add('cart-in');
         const name = f.name.replace(/\.[^.]*$/, '');
+        cartName = (name.toUpperCase().match(/[A-Z0-9]+/) || ['NONAME'])[0];
         status.textContent = EN ? 'The cartridge "' + name + '" is in the slot. The computer restarts, and the cartridge starts by itself.'
           : 'המחסנית "' + name + '" בחריץ. המחשב נדלק מחדש, והמחסנית מתחילה לבד.';
         document.getElementById('canvas')?.focus({ preventScroll: true });
@@ -2586,15 +2600,43 @@ body.game-open .shelf > :not(.game-view) { display: none; }
     micBtn.addEventListener('click', () => { if (rec) micStop(); else micStart(); });
   }
   // שמירה: כל שנייה בודקים אם CSAVE הקליט תוכנית שלמה חדשה ל-/out.cas
-  let outSize = 0, outDone = 0;
+  // שמירה בלי כותרת (גונן, 10.11: Logo): יש תוכנות ששומרות רק בלוקים של נתונים ובלוק סוף, בלי כותרת עם שם.
+  // parseCas לא רואה בזה קובץ, אז מוצאים כל רצף כזה בנפרד ושומרים את הבתים שלו כמו שהם (r), בשם של המחסנית שבחריץ.
+  // הסוג בכותרת שאנחנו שומרים בשביל הרשימה הוא 1 (נתונים), ולכן הוא נכנס לתחילת הקלטת של "הקלטות שלי"
+  function headless(bytes) {
+    const out = [];
+    let start = -1, named = false;
+    for (let i = 0; i + 4 < bytes.length; i++) {
+      if (bytes[i] !== 0x55 || bytes[i + 1] !== 0x3c) continue;
+      const type = bytes[i + 2], len = bytes[i + 3];
+      if (i + 5 + len > bytes.length) break;
+      let sum = type + len;
+      for (let k = 0; k < len; k++) sum += bytes[i + 4 + k];
+      if ((sum & 255) !== bytes[i + 4 + len]) continue;
+      if (type === 0) named = true;
+      else if (type === 1 && !named && start < 0) start = Math.max(0, i - 128);
+      else if (type === 255) { if (start >= 0) out.push(bytes.subarray(start, i + 5 + len)); start = -1; named = false; }
+      i += 4 + len;
+    }
+    return out;
+  }
+  let outSize = 0, outDone = 0, outRaw = 0, cartName = '';
   setInterval(() => {
     if (!window.d32Ready) return;
     let bytes;
     try { if (FS.stat('/out.cas').size === outSize) return; bytes = FS.readFile('/out.cas'); } catch (e) { return; }
     outSize = bytes.length;
+    const raws = headless(bytes);
+    const freshRaw = raws.slice(outRaw).map(r => {
+      const n = (cartName || 'NONAME').slice(0, 8);
+      let bin = '';
+      for (let k = 0; k < r.length; k += 8192) bin += String.fromCharCode(...r.subarray(k, k + 8192));
+      return { n, b: [[0, ...Array.from(n.padEnd(8), c => c.charCodeAt(0)), 1, 0, 0, 0, 0, 0, 0]], r: btoa(bin) };
+    });
+    outRaw = raws.length;
     const files = parseCas(bytes);
-    if (files.length <= outDone) return;
-    const fresh = files.slice(outDone);
+    if (files.length <= outDone && !freshRaw.length) return;
+    const fresh = files.slice(outDone).concat(freshRaw);
     outDone = files.length;
     addTapes(fresh);
     status.textContent = (EN ? 'Saved to my tapes: ' : 'נשמר בקלטות שלי: ') + fresh.map(t => t.n).join(', ');
@@ -2606,6 +2648,13 @@ body.game-open .shelf > :not(.game-view) { display: none; }
     if (busy || ram < 0 || !window.d32Ready) return;
     const rows = screenRows();
     const at = cloadRow(rows);
+    // תוכנית שקראה מהקלטת ונכשלה (?IO ERROR IN): מריצים אחורה, כדי שבניסיון הבא הקריאה תתחיל מתחילת הקלטת
+    const io = rows.findIndex(r => /^\?IO ERROR IN /.test(r));
+    if (at < 0 && io >= 0) {
+      const sig = 'io' + io + rows.join('|');
+      if (sig !== lastDone && HEAPU8[ram + 0x182] === 0x39) { lastDone = sig; insertLibrary(); }
+      return;
+    }
     if (at < 0) return;
     const end = rows.findIndex((r, i) => i > at && (r === 'OK' || /ERROR/.test(r)));
     if (end < 0) return;
