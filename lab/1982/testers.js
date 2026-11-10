@@ -1,5 +1,5 @@
 // בודקים מהקהילה (גונן, 10.11): בכל דף משחק כפתור "🐞 בדקתם? ספרו לנו אם עבד", שפותח טופס קצר (<dialog>),
-// ושורה "נבדק על ידי" בלשונית "על המשחק". הדיווח נשלח ל-/api/report; השמות מגיעים מ-/api/report?credits=1
+// ושורה "נבדק על ידי" מתחת לכפתור, בראש דף המשחק. הדיווח נשלח ל-/api/report; השמות מגיעים מ-/api/report?credits=1
 // (רק מי שביקש שהשם יופיע, ורק אחרי שגונן אישר). shelf.js קורא ל-d32Testers.button ול-d32Testers.credits בכל דף משחק.
 (function () {
   const EN = document.documentElement.lang === 'en';

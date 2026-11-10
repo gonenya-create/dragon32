@@ -1396,9 +1396,9 @@ if (part('testers')) {
   await p.goto(root + '/lab/1982/the-count/');
   await p.waitForSelector('.tst-open');
   check('he game page: the "🐞 בדקתם? ספרו לנו אם עבד" button sits right after the real-Dragon link', await p.evaluate(() => { const b = document.querySelector('.tst-open'); return b.textContent === '🐞 בדקתם? ספרו לנו אם עבד' && b.previousElementSibling?.classList.contains('gv-real'); }));
-  await p.locator('.gv-tabs button', { hasText: 'על המשחק' }).click();
+  await p.waitForSelector('.tst-credits:not([hidden])');
   const cr = await p.evaluate(() => { const c = document.querySelector('.tst-credits'); return c && !c.hidden && c.getClientRects().length ? { t: c.textContent, href: c.querySelector('a')?.getAttribute('href') } : null; });
-  check('"נבדק על ידי" in the About tab: the 3 newest approved names, then "ועוד 2 ←" to the game on the thank-you page', cr && cr.t === 'נבדק על ידי: Ann, Ben, Cy ועוד 2 ←' && cr.href === '/lab/1982/testers/#the-count', JSON.stringify(cr));
+  check('"נבדק על ידי" under the report button at the top: the 3 newest approved names, then "ועוד 2 ←" to the game on the thank-you page', cr && cr.t === 'נבדק על ידי: Ann, Ben, Cy ועוד 2 ←' && cr.href === '/lab/1982/testers/#the-count', JSON.stringify(cr));
   await p.click('.tst-open');
   const d = await p.evaluate(() => { const g = document.querySelector('dialog.tst-dlg'), r = g.getBoundingClientRect(); return { open: g.open, game: g.querySelector('.tst-gname').textContent, dev: g.querySelector('#tst-device').value, l: r.left, r: r.right, labels: [...g.querySelectorAll('input:not([type=radio]):not([type=checkbox]), textarea')].every(i => i.labels && i.labels.length) }; });
   check('the form opens as a dialog with the game fixed, device and browser filled in, every field labelled, and fits a 375 px phone with 16 px gutters', d.open && d.game === 'The Count' && /Chrome/.test(d.dev) && d.l >= 15.5 && d.r <= 359.5 && d.labels, JSON.stringify(d));
@@ -1425,7 +1425,7 @@ if (part('testers')) {
   const en = await p.evaluate(() => { const g = document.querySelector('dialog.tst-dlg'); return { b: document.querySelector('.tst-open').textContent, heb: /[֐-׿]/.test(g.innerText), t: g.querySelector('h2').textContent }; });
   check('en game page: "🐞 Tried it? Tell us if it worked", and the form has no Hebrew', en.b === '🐞 Tried it? Tell us if it worked' && !en.heb && /Tried it/.test(en.t), JSON.stringify(en));
   await p.keyboard.press('Escape');
-  await p.locator('.gv-tabs button', { hasText: 'About' }).click();
+  await p.waitForSelector('.tst-credits:not([hidden])');
   check('en: "Tested by:" with one name and a thank-you link', (await p.locator('.tst-credits').textContent()) === 'Tested by: Zed · Thank you! 🐞');
   // דף התודה
   await p.goto(root + '/lab/1982/testers/#the-count'); await p.waitForSelector('#tst-list li');

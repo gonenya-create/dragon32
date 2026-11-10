@@ -1778,7 +1778,7 @@
       info.appendChild(real);
     }
     // בודקים מהקהילה (גונן, 10.11): טופס "בדקתם? ספרו לנו אם עבד" (testers.js)
-    if (window.d32Testers && m.slug) info.appendChild(window.d32Testers.button(m.slug, name));
+    if (window.d32Testers && m.slug) { info.appendChild(window.d32Testers.button(m.slug, name)); info.appendChild(window.d32Testers.credits(m.slug)); }   // "נבדק על ידי" מתחת לכפתור, בראש הדף (גונן, 10.11)
     if (status) info.appendChild(status);
     const media = document.createElement('figure');
     media.className = 'gv-media';
@@ -1846,7 +1846,6 @@
     mk(T2('על המשחק', 'About'), pane => {
       for (const s of (m.about ? m.about[EN ? 'en' : 'he'] : [])) { const p = document.createElement('p'); p.textContent = s; pane.appendChild(p); }
       // "נבדק על ידי": רק שמות שגונן אישר, ונסתר כשאין
-      if (window.d32Testers && m.slug) pane.appendChild(window.d32Testers.credits(m.slug));
     });
     // רמזים (גונן, 7.11: "יפה"): במשחקים שעברנו עד הסוף במכונה. כל שאלה נפתחת לשלוש מדרגות, וכל מדרגה רק בלחיצה,
     // כדי שאף אחד לא יראה פתרון בטעות. התוכן ב-/lab/1982/hints/<id>.json
