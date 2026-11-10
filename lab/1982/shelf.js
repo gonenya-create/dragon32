@@ -2161,7 +2161,8 @@ body.game-open .shelf > :not(.game-view) { display: none; }
   function myTapes() { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { return []; } }
   function keep(list) { try { localStorage.setItem(KEY, JSON.stringify(list.slice(-MAX))); return true; } catch (e) { return false; } }
   // קובץ CAS → תוכניות שלמות: [{ n: שם, b: [[סוג, ...נתונים], ...] }]. מדלגים על רעש ועל סיכום שגוי
-  function parseCas(bytes) {
+  // short: גם כותרת קצרה, רק שם של 8 תווים (10.11, ‏DREAM שומר כך את הטקסט). רק בשמירות של המכונה, לא בקלטות שמעלים
+  function parseCas(bytes, short) {
     const files = [];
     let cur = null;
     for (let i = 0; i + 4 < bytes.length; i++) {
@@ -2172,11 +2173,11 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       let sum = type + len;
       for (const b of data) sum += b;
       if ((sum & 255) !== bytes[i + 4 + len]) continue;
-      const name = String.fromCharCode(...data.slice(0, 8)).trim();
+      const name = String.fromCharCode(...data.slice(0, 8)).replace(/[ `]+$/, "").trim();   // DREAM ממלא את השם ב-` ולא ברווחים
       // כותרת בלי שם אחרי קובץ = החלק השני של אותה קלטת (Donkey King של Microdeal: הטוען, ואחריו המשחק בלי שם).
       // נשמרים יחד, כדי שהטעינה תביא את שניהם (גונן, 1.11: "לא נטען כבר מלא זמן")
       if (type === 0 && len >= 15 && !name && !cur && files.length) { cur = files.pop(); cur.b.push([0, ...data]); }
-      else if (type === 0 && len >= 15) cur = { n: name, b: [[0, ...data]] };
+      else if (type === 0 && (len >= 15 || (short && len >= 8))) cur = { n: name, b: [[0, ...data]] };
       else if (cur && type === 1) cur.b.push([1, ...data]);
       else if (cur && type === 255) { cur.b.push([255]); files.push(cur); cur = null; }
       i += 4 + len;
@@ -2249,7 +2250,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
     const leader = new Array(128).fill(0x55);
     let out = [];
     for (const f of files) if (f.r) out = out.concat(rawBytes(f)); else for (const part of parts(f)) {
-      const gap = part[0][11];
+      const gap = part[0].length < 16 ? 1 : part[0][11];   // כותרת קצרה (DREAM): מבוא לפני כל בלוק
       out = out.concat(leader, block(0, part[0].slice(1)));
       if (!gap) out = out.concat(leader);
       for (const b of part.slice(1)) out = out.concat(gap ? leader : [], block(b[0], b.slice(1)));
@@ -2270,7 +2271,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
     const leader = new Array(128).fill(0x55), segs = [];
     if (f.r) segs.push(['quiet', 0.5], ['bytes', rawBytes(f)]);
     else for (const part of parts(f)) {
-      const gap = part[0][11];
+      const gap = part[0].length < 16 ? 1 : part[0][11];   // כותרת קצרה (DREAM): מבוא לפני כל בלוק
       segs.push(['quiet', 0.5], ['bytes', leader.concat(block(0, part[0].slice(1)))]);
       if (!gap) segs.push(['quiet', 0.5], ['bytes', leader.concat(...part.slice(1).map(b => block(b[0], b.slice(1))))]);
       else for (const b of part.slice(1)) segs.push(['quiet', 0.5], ['bytes', leader.concat(block(b[0], b.slice(1)))]);
@@ -2658,7 +2659,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       return { n, b: [[0, ...Array.from(n.padEnd(8), c => c.charCodeAt(0)), 1, 0, 0, 0, 0, 0, 0]], r: btoa(bin) };
     });
     outRaw = raws.length;
-    const files = parseCas(bytes);
+    const files = parseCas(bytes, true);
     if (files.length <= outDone && !freshRaw.length) return;
     const fresh = files.slice(outDone).concat(freshRaw);
     outDone = files.length;
