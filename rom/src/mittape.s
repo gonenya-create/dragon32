@@ -202,6 +202,7 @@ tblkwr		orcc	#$50
 		decb
 		bne	1B
 2		sta	CSUM
+		clr	POLLS		; (10.11: כדי ש-ldd BLKRES למטה ייתן Z רק לפי $81; כאן הזמן לא נמדד, לפני ה-$55 הראשון)
 		ldx	BLKADR
 		lda	#$55
 		jsr	twslot
@@ -211,10 +212,11 @@ tblkwr		orcc	#$50
 		lda	BLKTYP
 		brn	*
 		jsr	twslot
-		lda	BLKLEN
-		brn	*
+		ldd	BLKLEN		; A = האורך (B לא חשוב). ‏ldd ו-nop: אותם 7 מחזורים כמו lda ו-brn, בית אחד פחות (10.11)
+		nop
 		jsr	twslot
-		ldb	>BLKRES		; 5 מחזורים
+		ldd	BLKRES		; 5 מחזורים, ו-Z לפי $81 ($82 אפס). ‏(10.11: ישיר, יחסית ל-DP כמו כל השאר. היה ldb >BLKRES, שקרא את
+				; $0081 תמיד: DREAM שומר עם DP משלו, ושם הבלוקים יצאו בלי נתונים)
 		beq	4F
 3		lda	,x+
 		jsr	twslot
@@ -260,7 +262,8 @@ tblkrd		orcc	#$50
 		lda	SCREEN
 		eora	#$40
 		sta	SCREEN
-1		clra
+tbhunt
+1		clra			; ‏(tbhunt: מכאן $B944 נכנס, אחרי שה-X שלו נשמר ב-$7E)
 2		bsr	trbit
 		rora
 		cmpa	#$3c
@@ -313,9 +316,9 @@ twlo		bsr	tpoll		; מחכים כל עוד נמוך
 
 ; ---------- סנכרון (קורא 1.7) ----------
 ; tsync: פסיקות חסומות, מנוע, ואז מכונת ארבעה מצבים על חצאי הגל, עד ±96. U ו-Y נשמרים
-tsync		orcc	#$50
-		lbsr	tmoton
-		clr	SYNCNT
+; (10.11: ההתחלה — פסיקות חסומות, מנוע דרך $BDCF, ‏SYNCNT = 0 — יושבת עכשיו ב-$BDE7 עצמה (io.s), כמו במקור, ו-$BDED קופצת
+; ל-ts2. ‏$8021 קופצת ל-$BDE7, כך ש-[$8022]+6 הוא ts2: ‏DREAM כותב $5F ל-$83 ונכנס כך, בלי לאפס את המונה (קורא 13)
+tsync		equ	$bde7
 ts2		bsr	twhi		; עלייה
 		bsr	twlo
 tsA		bsr	thh		; A: חצי גבוה

@@ -23,14 +23,8 @@ HLOAD		equ	$01e7		; 2 בתים: כתובת הטעינה
 
 ; ---------- עזרים ----------
 ; getfne: השם, ואחריו סוף הפקודה. nochr: סוף הפקודה, אחרת ?SN
-; rblk: קריאת בלוק שלמה לחוצץ: סנכרון (מנוע + השהיה), בלוק, מנוע כבוי. התוצאה ב-B, עם הדגלים
-rblk		ldx	#TBUF
-		stx	BLKADR
-		jsr	tsync
-		jsr	tblkrd
-		lbsr	motoff
-		ldb	BLKRES
-		rts
+; (10.11: הסדר כאן מכוון: wrhdr עד wblk ו-drct נגמרים בדיוק לפני הגוש של $B93E, בלי קפיצה מעליו;
+;  ‏rblk ו-search אחריו, בטווח bsr של drct ושל $B93E)
 ; wrhdr: הכותרת. A = סוג הקובץ, B = הדגלים (ASCII ופערים שווים בכל סוגי השמירה). קובץ פתוח: ?AO.
 ; רק השם, הסוג והדגלים נכתבים; בתי הביצוע והטעינה נשארים כמו שהם (CSAVEM כותב אותם לפני)
 wrhdr		stb	HASCII
@@ -39,14 +33,6 @@ wrhdx		tst	FSTATE		; ‏csavx נכנס כאן, כשהדגלים כבר במקו�
 		lbne	err_ao
 		sta	HTYPE
 		ldx	#FNAME
-		bra	isl_b93e_e	;@isl
-; evstr: ביטוי שחייב להיות מחרוזת (לא מחרוזת: ?TM), ומשחררים אותה: A = האורך, X = התווים. 6.11: ארבעה מקומות
-; קוראים לכאן במקום שתי קריאות, וכך התפנו 6 בתים לכתובות של Picture Maker
-evstr		lbsr	frmevl
-		lbra	frestr
-		fill	$ff,$b93e-*	;@isl
-		jmp	tblkrd	;@isl
-isl_b93e_e	;@isl
 		ldu	#TBUF
 		ldb	#8
 		lbsr	cpy
@@ -59,33 +45,27 @@ wblk		jsr	tleader
 		jsr	tblkwr
 		lbra	motoff
 
-; wdata: X = ההתחלה, D = הסוף (לא כולל). בלוקים של 255 (האחרון קצר) ברצף, בלי מבוא ביניהם; אחריהם סוף
-; קובץ, ומנוע כבוי. לפני כן: מבוא (tleader)
-wdata		pshs	d
-1		ldd	,s
-		pshs	x
-		subd	,s++		; כמה נשארו
-		beq	3F
-		tsta			; יותר מ-255 (3.11: בבדיקה של A, 4 בתים פחות)
-		beq	2F
-		ldb	#255
-2		stb	BLKLEN
-		lda	#1
-		sta	BLKTYP
-		stx	BLKADR
-		jsr	tblkwr		; X מתקדם
-		bra	1B
-3		lda	#$ff
-		sta	BLKTYP
-		clr	BLKLEN
-		jsr	tblkwr
-		leas	2,s
-		lbra	motoff
-
 ; drct: Z=1 בפקודה ישירה (מספר השורה $FFxx)
 drct		lda	CURLIN
 		inca
 		rts
+		fill	$ff,$b93e-*	;@isl
+; ‏$B93E קריאת בלוק ($A006). ‏$B944 (קורא 13): קריאת בלוק ל-X, כשהפסיקות כבר חסומות והסנכרון נעשה; DREAM קורא כך
+; (X נשמר ב-$7E, ומשם כמו $B93E אחרי ההבהוב. במקור $7E לא נוגעים בו: הבדל קטן, ‏DREAM לא קורא אותו)
+isl_b93e	jmp	tblkrd	;@isl
+isl_b941	jmp	tbhunt	;@isl
+		stx	<BLKADR	;@isl
+		bra	isl_b941	;@isl
+
+; rblk: קריאת בלוק שלמה לחוצץ: סנכרון (מנוע + השהיה), בלוק, מנוע כבוי. התוצאה ב-B, עם הדגלים
+rblk		ldx	#TBUF
+		stx	BLKADR
+		jsr	tsync
+		bsr	isl_b93e	; ‏$B93E: קריאת הבלוק (2 בתים במקום jsr)
+		lbsr	motoff
+		ldb	BLKRES
+		rts
+
 
 ; search (3.2): קובץ פתוח: ?AO. בפקודה ישירה: מסך נקי, S בפינה, והסמן ב-$0402. קוראים בלוקים עד כותרת
 ; (שגיאה או בלוק אחר: שוב, בשקט). בפקודה ישירה מציגים את השם. מתאים (או בלי שם): F בפינה. אחרת מדלגים על
@@ -95,10 +75,9 @@ search		tst	FSTATE
 srch2		bsr	drct
 		bne	1F
 		lbsr	cls
-		lda	#$53		; S
-		sta	SCREEN
-		ldx	#SCREEN+2
-		stx	CURSOR
+		lda	#$53		; S בתא הראשון (המסך נקי, הסמן בהתחלה), והסמן עוד תא ימינה: ב-$0402
+		lbsr	putc
+		inc	CURSOR+1
 1		lbsr	rblk
 		bne	1B
 		lda	BLKTYP
@@ -118,6 +97,11 @@ srch2		bsr	drct
 		ldb	#8
 5		lda	,x+
 		cmpa	,u+
+		bra	isl_b999_e	;@isl
+		fill	$ff,$b999-*	;@isl
+; ‏$B999 כתיבת בלוק ($A008, קורא 13): בלי מנוע ובלי מבוא. ‏DREAM שומר כך: ‏$801B ואז $B999
+		jmp	tblkwr	;@isl
+isl_b999_e	;@isl
 		bne	6F
 		decb
 		bne	5B
@@ -129,6 +113,33 @@ srch2		bsr	drct
 6		bsr	skipfl
 		bra	srch2
 
+
+; wdata: X = ההתחלה, D = הסוף (לא כולל). בלוקים של 255 (האחרון קצר) ברצף, בלי מבוא ביניהם; אחריהם סוף
+; קובץ, ומנוע כבוי. לפני כן: מבוא (tleader)
+wdata		pshs	d
+1		ldd	,s
+		pshs	x
+		subd	,s++		; כמה נשארו
+		beq	3F
+		tsta			; יותר מ-255 (3.11: בבדיקה של A, 4 בתים פחות)
+		beq	2F
+		ldb	#255
+2		lda	#1		; סוג 1, והאורך מ-B (10.11: ‏std אחד, 2 בתים פחות)
+		std	BLKTYP
+		stx	BLKADR
+		jsr	tblkwr		; X מתקדם
+		bra	1B
+3		ldd	#$ff00		; סוף: סוג $FF, אורך 0
+		std	BLKTYP
+		jsr	tblkwr
+		leas	2,s
+		lbra	motoff
+
+; evstr: ביטוי שחייב להיות מחרוזת (לא מחרוזת: ?TM), ומשחררים אותה: A = האורך, X = התווים. 6.11: ארבעה מקומות
+; קוראים לכאן במקום שתי קריאות, וכך התפנו 6 בתים לכתובות של Picture Maker
+evstr		lbsr	frmevl
+		lbra	frestr
+
 ; skipfl (3.7): מדלגים על הקובץ שהכותרת שלו בחוצץ. עם פערים: כל בלוק עם מנוע משלו. רציף: סנכרון פעם אחת.
 ; סוג 0 או $81-$FE, או שגיאת קריאה: ?IO. $FF: הסוף. המנוע כבוי בסוף
 skipfl		ldb	HGAP		; החוצץ יידרס: הדגל נשמר במחסנית
@@ -139,9 +150,7 @@ skipfl		ldb	HGAP		; החוצץ יידרס: הדגל נשמר במחסנית
 		beq	2F
 		lbsr	rblk
 		bra	3F
-2		ldx	#TBUF
-		stx	BLKADR
-		jsr	tblkrd
+2		jsr	tblkrd		; ‏$7E כבר החוצץ (search קרא דרך rblk; 10.11: 5 בתים פחות)
 3		bsr	chkblk
 		inca			; $FF: הסוף
 		beq	4F
@@ -216,11 +225,7 @@ isl_ba6b_e	;@isl
 		fill	$ff,$ba77-*	;@isl
 		ldb	#$60	;@isl
 		ldx	#$0400	;@isl
-		stx	CURSOR	;@isl
-isl_ba7e	stb	,x+	;@isl
-		cmpx	#$0600	;@isl
-		blo	isl_ba7e	;@isl
-		rts	;@isl
+		jmp	clrxd	;@isl
 isl_ba77_e	;@isl
 		bsr	cadr
 		cmpd	,s		; סוף לפני התחלה: ?FC, לפני כתובת הביצוע
@@ -687,6 +692,8 @@ clm_gap		ldd	HTYPE		; הכותרת תידרס בחוצץ: הסוג וה-ASCII נ
 trawb		lbsr	tchin
 		bne	eio2
 		rts
+eio2		lbra	err_io
+; noserv: המדפסת (בהמשך) וכניסות התקשורת שאין ב-Dragon 32 (10.11: עבר לכאן מ-io.s, לרווח שלפני $BDDC)
+noserv		rts
 		fill	$ff,$bddc-*	;@isl
 		jmp	motoff	;@isl
-eio2		lbra	err_io

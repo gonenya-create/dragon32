@@ -4,12 +4,15 @@
 hw_init
 		; PIA0: A = שורות המקלדת (קלט), B = עמודות (פלט)
 		ldx	#PIA0
-		bra	isl_bde7_e	;@isl
-		fill	$ff,$bde7-*	;@isl
-		jmp	tsync	;@isl
-isl_bde7_e	;@isl
 		ldb	#$34		; CR: גישה לנתונים; CA2/CB2 פלט נמוך — בוררי הצליל, הצליל והמנוע כבויים (קורא: צליל 0.3)
 		clra
+		bra	isl_bde7_e	;@isl
+		fill	$ff,$bde7-*	;@isl
+		orcc	#$50	;@isl
+		bsr	$bdcf	;@isl
+		clr	<SYNCNT	;@isl
+		lbra	ts2	;@isl
+isl_bde7_e	;@isl
 		bsr	piaddr		; DDRA: הכול קלט
 		lda	#$ff
 		bsr	piaddr2		; DDRB: הכול פלט
@@ -44,17 +47,17 @@ txtmode		pshs	a,x
 		cmpx	#SAM
 		bne	1B
 		puls	a,x,pc
-; noserv: המדפסת (בהמשך) וכניסות התקשורת שאין ב-Dragon 32
-noserv		rts
+; (noserv עבר ל-10.11 לסוף mitfile.s, לפני $BDDC)
 ; ---------- מסך ----------
 cls		ldx	#SCREEN
-; clrto: הסמן ב-X, ומשם עד סוף המסך רווחים (גם scroll). clrxd: אותו דבר עם התא שב-D (CLS n)
-clrto		ldd	#$6060		; רווח (ירוק)
+; clrto: הסמן ב-X, ומשם עד סוף המסך רווחים (גם scroll). clrxd: אותו דבר עם התא שב-B (CLS n, ו-$BA7C).
+; בית אחרי בית, כמו במקור (10.11: כך גם X אי-זוגי עוצר ב-$0600, ו-$BA77 נכנס לכאן)
+clrto		ldb	#$60		; רווח (ירוק)
 clrxd		stx	CURSOR
-1		std	,x++
+1		stb	,x+
 		cmpx	#SCREND
 		blo	1B
-		rts
+puts_e		rts
 
 ; putc: התו ב-A למסך במקום הסמן (קורא: docs/DRAGON-SPEC-SCREEN.md, סעיף 3)
 ; קודם חוזרים למצב טקסט (SAMALP). $20-$3F → $60-$7F; $40-$5F ו-$80-$FF כמו שהם; $60-$7F → $00-$1F (הפוך).
@@ -69,12 +72,12 @@ putcr		pshs	a,b,x
 		beq	pc_bs
 		cmpa	#$20
 		blo	putc_done
+		tsta			; $80-$FF: כמו שהם (10.11: בית אחד פחות מ-cmpa #$80)
+		bmi	2F
 		cmpa	#$40
 		blo	1F
 		cmpa	#$60
 		blo	2F
-		cmpa	#$80
-		bhs	2F
 		adda	#$60		; $60-$7F: יחד עם ה-$40 שאחריו, פחות $60
 1		adda	#$40
 2		sta	,x+
@@ -107,11 +110,10 @@ putc_done	puls	a,b,x,pc
 ; puts ($99E6): מחרוזת ב-X שמסתיימת ב-0, להתקן שב-DEVNUM. כמו במקור (קורא 10.5): X נעצר על ה-0, ‏A = 0 ו-Z = 1.
 ; (במקור יש גם תקרה של 249 תווים ו-B סופר; אצלנו B לא משתנה, ואין תקרה)
 puts		lda	,x
-		beq	1F
+		beq	puts_e		; (10.11: ה-rts המשותף של clrxd)
 		lbsr	chrout
 		leax	1,x
 		bra	puts
-1		rts
 
 
 ; ---------- מקלדת ----------

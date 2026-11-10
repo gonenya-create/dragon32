@@ -311,14 +311,11 @@ clmx		pshs	x
 		jmp	x_clsb
 
 ; @island $BA77
-; ‏$BA77 מסך נקי. ‏$BA79 המסך כולו בתו שב-B. ‏$BA7C מ-X עד הסוף. הסמן בהתחלה, X=$0600 (קורא 8.10)
+; ‏$BA77 מסך נקי. ‏$BA79 המסך כולו בתו שב-B. ‏$BA7C מ-X עד הסוף. הסמן בהתחלה, X=$0600 (קורא 8.10).
+; מ-10.11 הלולאה היא clrxd (io.s), בית אחרי בית כמו במקור, וכך גם CLS
 		ldb	#$60
 		ldx	#$0400
-		stx	CURSOR
-isl_ba7e	stb	,x+
-		cmpx	#$0600
-		blo	isl_ba7e
-		rts
+		jmp	clrxd
 
 ; @island $9772
 ; RND כפונקציה: הארגומנט ב-FAC, התוצאה ב-FAC (קורא 2.x). Phantom Slayer קורא לה ישר
@@ -334,16 +331,28 @@ isl_ba7e	stb	,x+
 		lbra	opnin
 
 ; @island $B93E
-; קריאת בלוק מהקלטת, כמו $A006 (Dungeon Raid קורא לה ישר)
-		jmp	tblkrd
+; קריאת בלוק מהקלטת, כמו $A006 (Dungeon Raid קורא לה ישר). ‏$B944 (קורא 13, 10.11): קריאת בלוק ל-X, בלי הבהוב,
+; כשהפסיקות חסומות והסנכרון נעשה (DREAM טוען כך). מוצב ביד ב-mitfile.s, אחרי drct, בלי קפיצה מעליו
+isl_b93e	jmp	tblkrd
+isl_b941	jmp	tbhunt
+		stx	<BLKADR
+		bra	isl_b941
+
+; @island $B999
+; כתיבת בלוק, כמו $A008: בלי מנוע ובלי מבוא (קורא 13). ‏DREAM שומר כך ($801B ואז $B999). מוצב ביד ב-search (mitfile.s)
+		jmp	tblkwr
 
 ; @island $BDDC
 ; מנוע הקלטת כבוי, כמו $8018 (Dungeon Raid ו-Phantom Slayer)
 		jmp	motoff
 
 ; @island $BDE7
-; מנוע דולק וסנכרון קריאה, כמו $8021 / $A004 (Dungeon Raid)
-		jmp	tsync
+; מנוע דולק וסנכרון קריאה, כמו $8021 / $A004 (Dungeon Raid). מ-10.11 כמו במקור (קורא 13): פסיקות חסומות, מנוע דרך $BDCF,
+; ‏$83 = 0, ו-$BDED היא ההמתנה לעלייה הראשונה (ts2). ‏$8021 קופצת לכאן, ו-DREAM נכנס ל-[$8022]+6 עם $83 משלו. מוצב ביד ב-io.s
+		orcc	#$50
+		bsr	$bdcf
+		clr	<SYNCNT
+		lbra	ts2
 
 ; @island $BAA0
 ; ‏SOUND מאוגרים: B = המשך, הטון כבר ב-$8C (קורא 2.7). מ-3.11 הצליל כולו בכתובות של המקור (mitfile.s): ‏$BAA0 ‏sound2,
