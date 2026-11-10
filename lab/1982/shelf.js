@@ -2155,7 +2155,8 @@ body.game-open .shelf > :not(.game-view) { display: none; }
   }
 
   // ---- הקלטות שלי: CSAVE מקליט לקובץ /out.cas (XRoar כותב אותו), ומכאן כל תוכנית נשמרת בדפדפן ----
-  const KEY = 'd32-lab-tapes', MAX = 20;
+  // עד 40 קלטות (10.11: ב-20, כל שמירה של Family Budget דחפה החוצה את הקלטת הוותיקה, בלי הודעה). מה שיוצא נאמר בשורת המצב
+  const KEY = 'd32-lab-tapes', MAX = 40;
   const mineBox = document.getElementById('mytapes');
   function myTapes() { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { return []; } }
   function keep(list) { try { localStorage.setItem(KEY, JSON.stringify(list.slice(-MAX))); return true; } catch (e) { return false; } }
@@ -2291,7 +2292,9 @@ body.game-open .shelf > :not(.game-view) { display: none; }
   function addTapes(files) {
     const names = new Set(files.map(f => f.n));
     const list = myTapes().filter(t => !names.has(t.n)).concat(files);
+    const out = list.slice(0, Math.max(0, list.length - MAX)).map(t => t.n);
     if (!keep(list)) status.textContent = EN ? 'No room left to keep the tape in this browser.' : 'אין מקום לשמור את הקלטת בדפדפן הזה.';
+    else if (out.length) setTimeout(() => { status.textContent = (EN ? 'My tapes holds ' + MAX + ' tapes. Taken out, the oldest: ' : 'ב"הקלטות שלי" יש מקום ל-' + MAX + ' קלטות. יצאו הוותיקות: ') + out.join(', '); }, 1200);
     renderMine();
     insertLibrary();
   }
