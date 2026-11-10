@@ -826,13 +826,15 @@
         'טעות אחת: המשחק חוזר ל-{PRESS ANY KEY} ונותן משבצת אחרת. שתי טעויות: צריך לטעון את המשחק מחדש.',
         'אחרי הקוד יש פתיחה צבעונית וטקסט גולל של כדקה. כשמופיע {PRESS SPACE OR FIRE TO START} לוחצים [רווח].',
         '[←] [→] הולכים, [רווח] או [SHIFT] קופצים.',
-        'המטרה: לעבור בין החדרים בבית ולאסוף את כל החפצים המהבהבים.'],
+        'המטרה: לעבור בין החדרים בבית ולאסוף את כל החפצים המהבהבים.',
+        'אחרי פסילה Willy חוזר למקום שבו נכנס לחדר, והחדר מתחיל מחדש. זזים מיד: אם שומר עובר שם, או שנכנסתם לחדר בנפילה, Willy נפסל שוב ושוב והחיים נגמרים בזה אחר זה. כך גם במשחק המקורי.'],
       en: ['Loading takes about three minutes, and the game starts by itself.',
         'At PRESS ANY KEY TO START press a key. The game asks for a code: a square and a page, for example L 8 ON PAGE NUMBER 3. Press "🔑 The code", type the four digits and press [ENTER].',
         'One mistake: the game goes back to PRESS ANY KEY and asks for another square. Two mistakes: you load the game again.',
         'After the code there is a colourful opening and about a minute of scrolling text. When PRESS SPACE OR FIRE TO START appears, press [Space].',
         '[←] [→] walk, [Space] or [SHIFT] jump.',
-        'The aim: go from room to room in the house and collect all the flashing objects.']
+        'The aim: go from room to room in the house and collect all the flashing objects.',
+        'After losing a life, Willy goes back to where he entered the room, and the room starts again. Move at once: if a guardian walks there, or you entered the room by falling, he loses one life after another until the game ends. The original game does this too.']
     },
     // נבדק במכונה (30.10): הטעינה בשלבים, הצבע, מסך הפתיחה, טבלת השיאים, K ו-1, תנועה בחיצים לשני הצדדים, ומצב ג'ויסטיק
     spores: {
@@ -1526,7 +1528,7 @@
     ranger: ['כשהטעינה נגמרת בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וב-SELECT LEVEL בוחרים שלב.', 'When loading ends pick a colour: [1], [2] or [3]. On the title screen press [Space], and at SELECT LEVEL pick a level.'],
     cuthbert: ['אחרי הטעינה מופיע LICENSED BY MICRODEAL ונשאר כחמש עד שבע דקות. זה לא תקוע: כך המשחק בנוי. כשמופיע הג\'ונגל, לוחצים [רווח].', 'After loading, LICENSED BY MICRODEAL appears and stays for about five to seven minutes. It is not stuck: the game is built that way. When the jungle appears, press [Space].'],
     dungeon: ['בסוף הטעינה בוחרים צבע: [1], [2] או [3]. במסך הפתיחה לוחצים [רווח], וב-SELECT LEVEL בוחרים רמה, [1] עד [3].', 'At the end of loading pick a colour: [1], [2] or [3]. On the title screen press [Space], and at SELECT LEVEL pick a level, [1] to [3].'],
-    manic: ['המשחק מתחיל לבד ומבקש קוד: לוחצים על "🔑 הקוד", מקלידים את ארבע הספרות ו-[ENTER]. במסך הפתיחה, כשהמוזיקה נגמרת, לוחצים [ENTER].', 'The game starts by itself and asks for a code: press "🔑 The code", type the four digits and [ENTER]. On the title screen, when the music ends, press [ENTER].'],
+    manic: ['המשחק מתחיל לבד ומבקש קוד: לוחצים על "🔑 הקוד", מקלידים את ארבע הספרות ו-[ENTER]. במסך הפתיחה, כשהמוזיקה נגמרת, לוחצים [ENTER] ומחזיקים רגע (בטלפון נגיעה קצרה לפעמים לא נקלטת).', 'The game starts by itself and asks for a code: press "🔑 The code", type the four digits and [ENTER]. On the title screen, when the music ends, press and hold [ENTER] for a moment (on a phone a quick tap is sometimes missed).'],
     jsw: ['המשחק מתחיל לבד. לוחצים מקש, והוא מבקש קוד: לוחצים על "🔑 הקוד", מקלידים את ארבע הספרות ו-[ENTER]. על PRESS SPACE OR FIRE TO START לוחצים [רווח].', 'The game starts by itself. Press a key, and it asks for a code: press "🔑 The code", type the four digits and [ENTER]. At PRESS SPACE OR FIRE TO START press [Space].'],
     athletyx: ['במסך LICENSED BY MICRODEAL ובמסך הפתיחה לוחצים [רווח]. כשמופיע SELECT PLAYERS לוחצים [1] (או [2] לשני שחקנים), והריצה מתחילה.', 'On the LICENSED BY MICRODEAL screen and the title screen press [Space]. When SELECT PLAYERS appears press [1] (or [2] for two players), and the race begins.'],
     adventureland: ADVQ, pirate: ADVQ, mission: ADVQ, voodoo: ADVQ,
