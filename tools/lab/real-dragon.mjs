@@ -16,7 +16,7 @@ const names = new Map(rowsT.map(m => [m[1], [m[2], m[3]].map(x => x.replace(/\\'
 const set = name => new Set([...(shelf.match(new RegExp('const ' + name + ' = new Set\\(\\[([^\\]]*)\\]')) || ['', ''])[1].matchAll(/'(\w+)'/g)].map(m => m[1]));
 const NO = set('REAL_NO');
 // רק השמעה, בלי הורדה: הרשות של Peaksoft (Harry Whitehouse, ‏Tim Love) ושל Star Spores (‏David Shadoff) היא למדף באתר (permissions-log, 9.11)
-const ONLY = new Set(['hangit', 'dhh', 'champs', 'lionht', 'sas', 'cricket', 'spores']);
+const ONLY = new Set(['hangit', 'dhh', 'champs', 'lionht', 'sas', 'spores']);
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
 function list(he) {
   const L = a => (Array.isArray(a) ? a[he ? 0 : 1] : a) || '';
