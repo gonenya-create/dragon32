@@ -1375,6 +1375,86 @@ if (part('real dragon sound')) {
   await p.close();
 }
 
+// בודקים מהקהילה (גונן, 10.11): כפתור "בדקתם?" בכל דף משחק, טופס, "נבדק על ידי", דף התודה ודף הקריאה הפרטי.
+// ה-API מדומה כאן (route): הבדיקה לא צריכה מאגר נתונים
+if (part('testers')) {
+  console.log('testers');
+  const root = base.replace(/\/$/, '');
+  const ctx = await browser.newContext({ viewport: { width: 375, height: 800 } });
+  const posts = [], patches = []; let postStatus = 200;
+  const credits = { 'the-count': ['Ann', 'Ben', 'Cy', 'Dee', 'Eve'], 'downland': ['Zed'] };
+  await ctx.route('**/api/report**', route => {
+    const r = route.request(), m = r.method();
+    if (m === 'POST') { posts.push(JSON.parse(r.postData() || '{}')); return route.fulfill({ status: postStatus, contentType: 'application/json', body: postStatus === 200 ? '{"ok":true}' : '{"error":"fail"}' }); }
+    if (m === 'PATCH') { const b = JSON.parse(r.postData() || '{}'); patches.push([r.headers()['x-reports-key'], b]); return route.fulfill({ contentType: 'application/json', body: JSON.stringify({ id: b.id, approved: b.approved }) }); }
+    if (r.headers()['x-reports-key']) return route.fulfill({ status: r.headers()['x-reports-key'] === 'k1' ? 200 : 401, contentType: 'application/json', body: JSON.stringify({ reports: [
+      { id: 2, game: 'the-count', device: 'iPhone · Safari', result: 'no', note: 'stuck', name: 'Ann', show_name: true, contact: 'a@b.c', created: '2026-11-10T10:00:00Z', approved: false },
+      { id: 1, game: 'downland', device: 'Mac · Chrome', result: 'ok', note: '', name: '', show_name: false, contact: '', created: '2026-11-09T10:00:00Z', approved: false }] }) });
+    return route.fulfill({ contentType: 'application/json', body: JSON.stringify(credits) });
+  });
+  const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(String(e)));
+  await p.goto(root + '/lab/1982/the-count/');
+  await p.waitForSelector('.tst-open');
+  check('he game page: the "🐞 בדקתם? ספרו לנו אם עבד" button sits right after the real-Dragon link', await p.evaluate(() => { const b = document.querySelector('.tst-open'); return b.textContent === '🐞 בדקתם? ספרו לנו אם עבד' && b.previousElementSibling?.classList.contains('gv-real'); }));
+  await p.locator('.gv-tabs button', { hasText: 'על המשחק' }).click();
+  const cr = await p.evaluate(() => { const c = document.querySelector('.tst-credits'); return c && !c.hidden && c.getClientRects().length ? { t: c.textContent, href: c.querySelector('a')?.getAttribute('href') } : null; });
+  check('"נבדק על ידי" in the About tab: the 3 newest approved names, then "ועוד 2 ←" to the game on the thank-you page', cr && cr.t === 'נבדק על ידי: Ann, Ben, Cy ועוד 2 ←' && cr.href === '/lab/1982/testers/#the-count', JSON.stringify(cr));
+  await p.click('.tst-open');
+  const d = await p.evaluate(() => { const g = document.querySelector('dialog.tst-dlg'), r = g.getBoundingClientRect(); return { open: g.open, game: g.querySelector('.tst-gname').textContent, dev: g.querySelector('#tst-device').value, l: r.left, r: r.right, labels: [...g.querySelectorAll('input:not([type=radio]):not([type=checkbox]), textarea')].every(i => i.labels && i.labels.length) }; });
+  check('the form opens as a dialog with the game fixed, device and browser filled in, every field labelled, and fits a 375 px phone with 16 px gutters', d.open && d.game === 'The Count' && /Chrome/.test(d.dev) && d.l >= 15.5 && d.r <= 359.5 && d.labels, JSON.stringify(d));
+  await p.click('.tst-send');
+  check('the result is required: sending without one shows a simple message and sends nothing', /בחרו אחת משלוש/.test(await p.locator('.tst-err').textContent()) && posts.length === 0);
+  await p.locator('.tst-res label', { hasText: 'עבד חלקית' }).click();
+  await p.fill('#tst-note', 'x'.repeat(1200));
+  await p.check('#tst-show');
+  await p.click('.tst-send');
+  check('"show my name" without a name asks for the name, and sends nothing', /השם שלכם/.test(await p.locator('.tst-err').textContent()) && posts.length === 0);
+  await p.fill('#tst-name', 'Gonen Y');
+  await p.fill('#tst-contact', 'me@example.com');
+  postStatus = 500; await p.click('.tst-send'); await p.waitForTimeout(300);
+  check('a server error shows a simple message and keeps the form', /לא נשלח/.test(await p.locator('.tst-err').textContent()) && await p.locator('.tst-step').isVisible());
+  postStatus = 200; posts.length = 0; await p.click('.tst-send');
+  await p.waitForSelector('.tst-done:not([hidden])');
+  const sent = posts[0] || {};
+  check('Send posts the report (game slug, result, note cut to 1000, name, show_name, contact) and says thank you', sent.game === 'the-count' && sent.result === 'partly' && sent.note.length === 1000 && sent.name === 'Gonen Y' && sent.show_name === true && sent.contact === 'me@example.com' && /תודה רבה/.test(await p.locator('.tst-thanks').textContent()), JSON.stringify(sent).slice(0, 200));
+  await p.click('.tst-close');
+  check('the dialog closes', !(await p.evaluate(() => document.querySelector('dialog.tst-dlg').open)));
+  // אנגלית
+  await p.goto(root + '/en/lab/1982/downland/'); await p.waitForSelector('.tst-open');
+  await p.click('.tst-open');
+  const en = await p.evaluate(() => { const g = document.querySelector('dialog.tst-dlg'); return { b: document.querySelector('.tst-open').textContent, heb: /[֐-׿]/.test(g.innerText), t: g.querySelector('h2').textContent }; });
+  check('en game page: "🐞 Tried it? Tell us if it worked", and the form has no Hebrew', en.b === '🐞 Tried it? Tell us if it worked' && !en.heb && /Tried it/.test(en.t), JSON.stringify(en));
+  await p.keyboard.press('Escape');
+  await p.locator('.gv-tabs button', { hasText: 'About' }).click();
+  check('en: "Tested by:" with one name and a thank-you link', (await p.locator('.tst-credits').textContent()) === 'Tested by: Zed · Thank you! 🐞');
+  // דף התודה
+  await p.goto(root + '/lab/1982/testers/#the-count'); await p.waitForSelector('#tst-list li');
+  const tp = await p.evaluate(() => ({ ids: [...document.querySelectorAll('#tst-list li')].map(l => l.id), who: document.querySelector('#the-count .who').textContent, empty: document.getElementById('tst-empty').hidden }));
+  check('the thank-you page lists every approved tester by game, in shelf order, with an anchor per game', tp.ids.join() === 'downland,the-count' && tp.who === 'נבדק על ידי: Ann, Ben, Cy, Dee, Eve' && tp.empty, JSON.stringify(tp));
+  await p.goto(root + '/en/lab/1982/testers/'); await p.waitForSelector('#tst-list li');
+  check('en thank-you page: English game names, no Hebrew except the language link', await p.evaluate(() => [...document.querySelectorAll('main *')].every(e => !/[֐-׿]/.test(e.textContent))));
+  await p.goto(root + '/lab/1982/');
+  check('the machine page links to the thank-you page next to the downloads link', (await p.locator('.shelf a[href="/lab/1982/testers/"]').count()) === 1);
+  // דף הקריאה הפרטי
+  await p.goto(root + '/lab/1982/reports/');
+  check('the private page is noindex and asks for the key', (await p.getAttribute('meta[name=robots]', 'content')).includes('noindex') && await p.locator('#key').isVisible());
+  await p.fill('#key', 'bad'); await p.click('#key-box button');
+  await p.waitForFunction(() => /לא נכון/.test(document.getElementById('msg').textContent));
+  await p.fill('#key', 'k1'); await p.click('#key-box button');
+  await p.waitForSelector('#list li');
+  const rp = await p.evaluate(() => ({ n: document.querySelectorAll('#list li').length, first: document.querySelector('#list li').innerText, btns: document.querySelectorAll('.ok-name').length, saved: localStorage.getItem('d32-reports-key') }));
+  check('with the key: all reports, newest first, with game, result, device, note, name and contact; one approve button (only the one that asked)', rp.n === 2 && /the-count[\s\S]*לא עבד[\s\S]*iPhone · Safari[\s\S]*stuck[\s\S]*Ann[\s\S]*a@b\.c/.test(rp.first) && rp.btns === 1 && rp.saved === 'k1', JSON.stringify(rp));
+  await p.selectOption('#f-result', 'ok');
+  check('filter by result', (await p.locator('#list li').count()) === 1 && /downland/.test(await p.locator('#list li').innerText()));
+  await p.selectOption('#f-result', ''); await p.selectOption('#f-game', 'the-count');
+  await p.click('.ok-name'); await p.waitForFunction(() => document.querySelector('.ok-name.on'));
+  check('approve name sends PATCH with the key, and the button shows it', patches.length === 1 && patches[0][0] === 'k1' && patches[0][1].id === 2 && patches[0][1].approved === true);
+  await p.reload(); await p.waitForSelector('#list li');
+  check('the key is remembered in this browser', await p.locator('#panel').isVisible());
+  check('no page errors', !errs.length, errs.join(' | '));
+  await ctx.close();
+}
+
 // הגרסה האנגלית (/en/): דפדפן באנגלית מגיע אליה לבד, אין בה עברית גלויה, והבחירה בשפה נשמרת
 if (part('english')) {
   console.log('english');

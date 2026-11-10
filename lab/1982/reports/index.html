@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Dragon 1982 — דיווחי בודקים</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;700&amp;display=swap">
+<!-- דף פרטי של גונן (10.11): קריאת הדיווחים מ"בדקתם? ספרו לנו". לא מקושר מאף מקום ולא במפת האתר.
+     המפתח (REPORTS_KEY שב-Vercel env) נשמר רק בדפדפן הזה (localStorage), ונשלח בכותרת x-reports-key. -->
+<style>
+:root { --bg: #0e0b09; --ink: #efe6d2; --muted: #c9bba5; --line: #4a3d31; --accent: #f2c94c; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 'IBM Plex Sans Hebrew', system-ui, sans-serif; }
+main { max-width: 900px; margin: 0 auto; padding: 12px 16px 40px; }
+h1 { font-size: 24px; margin: 6px 0 10px; }
+a { color: var(--accent); }
+.muted { color: var(--muted); font-size: 14px; }
+input, select, button { font: inherit; font-size: 16px; color: var(--ink); background: #1b1511; border: 1.5px solid var(--line); border-radius: 8px; padding: 7px 10px; }
+button { cursor: pointer; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--accent); outline-offset: 1px; }
+.key-box, .bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; margin: 8px 0 12px; }
+.bar label, .key-box label { display: flex; flex-direction: column; font-size: 13px; color: var(--muted); }
+.list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.list li { padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 12px; background: #1a1511; }
+.list .r-ok { border-inline-start: 6px solid #4caf50; }
+.list .r-partly { border-inline-start: 6px solid #f2c94c; }
+.list .r-no { border-inline-start: 6px solid #e0503c; }
+.row1 { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: baseline; }
+.gm { font-weight: 700; }
+.note { white-space: pre-wrap; overflow-wrap: anywhere; margin: 6px 0 0; }
+.who { margin: 4px 0 0; font-size: 14px; color: var(--muted); overflow-wrap: anywhere; }
+.ok-name { margin-top: 6px; }
+.ok-name.on { border-color: var(--accent); color: var(--accent); }
+.msg { color: #ff9c8c; font-weight: 700; }
+.msg:empty { display: none; }
+</style>
+</head>
+<body>
+<main>
+<h1>🐞 דיווחי בודקים</h1>
+<form class="key-box" id="key-box" hidden>
+  <label>המפתח (<span dir="ltr">REPORTS_KEY</span>)<input type="password" id="key" autocomplete="current-password" dir="ltr" required></label>
+  <button type="submit">כניסה</button>
+</form>
+<div id="panel" hidden>
+  <div class="bar">
+    <label>משחק<select id="f-game"><option value="">כל המשחקים</option></select></label>
+    <label>תוצאה<select id="f-result"><option value="">הכול</option><option value="ok">✅ עבד</option><option value="partly">🟡 עבד חלקית</option><option value="no">❌ לא עבד</option></select></label>
+    <button type="button" id="reload">↻ רענון</button>
+    <button type="button" id="logout">יציאה (שכח את המפתח)</button>
+  </div>
+  <p class="muted" id="count"></p>
+</div>
+<p class="msg" id="msg" role="alert"></p>
+<ul class="list" id="list"></ul>
+</main>
+<script>
+(function () {
+  const $ = id => document.getElementById(id);
+  const RES = { ok: '✅ עבד', partly: '🟡 עבד חלקית', no: '❌ לא עבד' };
+  let key = '', all = [];
+  try { key = localStorage.getItem('d32-reports-key') || ''; } catch {}
+  const api = (method, body) => fetch('/api/report' + (method === 'GET' ? '?all=1' : ''), {
+    method, cache: 'no-store', headers: Object.assign({ 'x-reports-key': key }, body ? { 'content-type': 'application/json' } : {}), body: body ? JSON.stringify(body) : undefined });
+  function askKey(text) {
+    $('panel').hidden = true; $('list').textContent = ''; $('key-box').hidden = false; $('msg').textContent = text || ''; $('key').focus();
+  }
+  $('key-box').addEventListener('submit', e => {
+    e.preventDefault(); key = $('key').value.trim(); if (!key) return;
+    try { localStorage.setItem('d32-reports-key', key); } catch {}
+    load();
+  });
+  $('logout').addEventListener('click', () => { key = ''; try { localStorage.removeItem('d32-reports-key'); } catch {} $('key').value = ''; askKey(); });
+  $('reload').addEventListener('click', load);
+  $('f-game').addEventListener('change', show);
+  $('f-result').addEventListener('change', show);
+  async function load() {
+    $('msg').textContent = 'טוען…';
+    let r;
+    try { r = await api('GET'); } catch { $('msg').textContent = 'אין חיבור. נסו שוב.'; return; }
+    if (r.status === 401) { try { localStorage.removeItem('d32-reports-key'); } catch {} askKey('המפתח לא נכון.'); return; }
+    if (r.status === 429) { askKey('יותר מדי ניסיונות. נסו שוב בעוד שעה.'); return; }
+    if (r.status === 503) { $('msg').textContent = 'הדיווחים כבויים: חסר REPORTS_KEY או DATABASE_URL ב-Vercel env.'; return; }
+    if (!r.ok) { $('msg').textContent = 'שגיאה ' + r.status + '. נסו שוב.'; return; }
+    all = (await r.json()).reports || [];
+    $('msg').textContent = ''; $('key-box').hidden = true; $('panel').hidden = false;
+    const sel = $('f-game'), was = sel.value;
+    sel.length = 1;
+    for (const g of [...new Set(all.map(x => x.game))].sort()) { const o = document.createElement('option'); o.value = o.textContent = g; sel.appendChild(o); }
+    sel.value = was;
+    show();
+  }
+  function show() {
+    const g = $('f-game').value, res = $('f-result').value, list = $('list');
+    const rows = all.filter(x => (!g || x.game === g) && (!res || x.result === res));
+    list.textContent = '';
+    $('count').textContent = rows.length + ' מתוך ' + all.length + ' דיווחים';
+    for (const x of rows) {
+      const li = document.createElement('li');
+      li.className = 'r-' + x.result;
+      const r1 = document.createElement('div'); r1.className = 'row1';
+      const gm = document.createElement('a'); gm.className = 'gm'; gm.href = '/lab/1982/' + encodeURIComponent(x.game) + '/'; gm.target = '_blank'; gm.dir = 'ltr'; gm.textContent = x.game;
+      const rs = document.createElement('span'); rs.textContent = RES[x.result] || x.result;
+      const dv = document.createElement('span'); dv.className = 'muted'; dv.dir = 'auto'; dv.textContent = x.device || '—';
+      const dt = document.createElement('span'); dt.className = 'muted'; dt.textContent = new Date(x.created).toLocaleString('he-IL', { dateStyle: 'short', timeStyle: 'short' });
+      r1.append(gm, rs, dv, dt);
+      li.appendChild(r1);
+      if (x.note) { const n = document.createElement('p'); n.className = 'note'; n.dir = 'auto'; n.textContent = x.note; li.appendChild(n); }
+      if (x.name || x.contact) {
+        const w = document.createElement('p'); w.className = 'who';
+        if (x.name) { w.append('שם: '); const b = document.createElement('bdi'); b.textContent = x.name; w.appendChild(b); if (x.show_name) w.append(' (ביקש שיופיע)'); }
+        if (x.contact) { if (x.name) w.append(' · '); w.append('קשר: '); const b = document.createElement('bdi'); b.textContent = x.contact; w.appendChild(b); }
+        li.appendChild(w);
+      }
+      if (x.show_name && x.name) {
+        const b = document.createElement('button'); b.type = 'button'; b.className = 'ok-name' + (x.approved ? ' on' : '');
+        const label = () => { b.textContent = x.approved ? '✔ השם מופיע באתר (לחיצה מסתירה)' : 'אישור השם להופיע באתר'; b.classList.toggle('on', x.approved); b.setAttribute('aria-pressed', String(x.approved)); };
+        label();
+        b.addEventListener('click', async () => {
+          b.disabled = true;
+          try {
+            const r = await api('PATCH', { id: x.id, approved: !x.approved });
+            if (!r.ok) throw r.status;
+            x.approved = (await r.json()).approved; label();
+          } catch (s) { $('msg').textContent = s === 401 ? 'המפתח לא נכון.' : 'השינוי לא נשמר. נסו שוב.'; }
+          b.disabled = false;
+        });
+        li.appendChild(b);
+      }
+      list.appendChild(li);
+    }
+  }
+  if (key) load(); else askKey();
+})();
+</script>
+</body>
+</html>
