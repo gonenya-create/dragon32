@@ -1428,10 +1428,10 @@ if (part('testers')) {
   await p.waitForSelector('.tst-credits:not([hidden])');
   check('en: "Tested by:" with one name and a thank-you link', (await p.locator('.tst-credits').textContent()) === 'Tested by: Zed · Thank you! 🐞');
   // דף התודה
-  await p.goto(root + '/lab/1982/testers/#the-count'); await p.waitForSelector('#tst-list li');
-  const tp = await p.evaluate(() => ({ ids: [...document.querySelectorAll('#tst-list li')].map(l => l.id), who: document.querySelector('#the-count .who').textContent, empty: document.getElementById('tst-empty').hidden }));
-  check('the thank-you page lists every approved tester by game, in shelf order, with an anchor per game', tp.ids.join() === 'downland,the-count' && tp.who === 'נבדק על ידי: Ann, Ben, Cy, Dee, Eve' && tp.empty, JSON.stringify(tp));
-  await p.goto(root + '/en/lab/1982/testers/'); await p.waitForSelector('#tst-list li');
+  await p.goto(root + '/lab/1982/testers/#the-count'); await p.waitForSelector('#tst-list tr:not(.example)');
+  const tp = await p.evaluate(() => ({ ids: [...document.querySelectorAll('#tst-list tr')].map(l => l.id), who: document.querySelector('#the-count td:last-child').textContent, empty: document.getElementById('tst-empty').hidden }));
+  check('the thank-you page: a table of every approved tester by game, in shelf order, an anchor per game, and the example row is gone', tp.ids.join() === 'downland,the-count' && tp.who === 'Ann, Ben, Cy, Dee, Eve' && tp.empty, JSON.stringify(tp));
+  await p.goto(root + '/en/lab/1982/testers/'); await p.waitForSelector('#tst-list tr:not(.example)');
   check('en thank-you page: English game names, no Hebrew except the language link', await p.evaluate(() => [...document.querySelectorAll('main *')].every(e => !/[֐-׿]/.test(e.textContent))));
   await p.goto(root + '/lab/1982/');
   check('the machine page links to the thank-you page next to the downloads link', (await p.locator('.shelf a[href="/lab/1982/testers/"]').count()) === 1);

@@ -24,11 +24,13 @@ h1 { font-size: 26px; margin: 12px 0 8px; }
 .muted { color: var(--muted); }
 a { color: var(--accent); }
 a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.tst-list { list-style: none; padding: 0; margin: 12px 0; display: grid; gap: 10px; }
-.tst-list li { padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 12px; background: #1a1511; }
-.tst-list .gn { font-weight: 700; font-size: 17px; }
-.tst-list li:target { outline: 2px solid var(--accent); }
-.tst-list .who { display: block; color: var(--muted); font-size: 15px; }
+.tst-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 16px; }
+.tst-table th, .tst-table td { padding: 10px 12px; border-bottom: 1.5px solid var(--line); text-align: start; vertical-align: top; }
+.tst-table th { color: var(--accent); font-size: 14px; }
+.tst-table .gn { font-weight: 700; }
+.tst-table tr:target td { background: #2a2114; }
+.tst-table tr.example td { color: var(--muted); font-style: italic; }
+.tst-table .tag { display: inline-block; margin-inline-start: 6px; padding: 1px 8px; border: 1px dashed var(--muted); border-radius: 999px; font-size: 12px; font-style: normal; }
 </style>
 </head>
 <body>
@@ -44,7 +46,7 @@ a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 <!-- testers-names -->
 <script>window.D32_TESTER_GAMES = {"downland":"Downland","buzzard-bait":"Buzzard Bait","the-king":"The King","adventureland":"Adventureland","pirate-adventure":"Pirate Adventure","secret-mission":"Secret Mission","voodoo-castle":"Voodoo Castle","the-count":"The Count","strange-odyssey":"Strange Odyssey","mystery-fun-house":"Mystery Fun House","pyramid-of-doom":"Pyramid of Doom","ghost-town":"Ghost Town","savage-island-1":"Savage Island Part 1","savage-island-2":"Savage Island Part 2","golden-voyage":"The Golden Voyage","sorcerer-of-claymorgue-castle":"Sorcerer of Claymorgue Castle","black-sanctum":"Black Sanctum","calixto-island":"Calixto Island","cave-hunter":"Cave Hunter","escape":"Escape","invaders-revenge":"Invaders Revenge","el-diablero":"El Diablero","phantom-slayer":"Phantom Slayer","danger-ranger":"Danger Ranger","cuthbert-in-the-jungle":"Cuthbert in the Jungle","devil-assault":"Devil Assault","dungeon-raid":"Dungeon Raid","athletyx":"Athletyx","starship-chameleon":"Starship Chameleon","grabber":"Grabber","draconian":"Draconian","alcatraz-ii":"Alcatraz II","williamsburg-adventure":"Williamsburg Adventure","champions":"Champions!","lionheart":"Lionheart","sas":"SAS","hang-it":"Hang It!","deaths-head-hole":"Death's Head Hole","bonka":"Bonka","vultures":"Vultures","maurice-minor":"Maurice Minor","chess":"Chess","crusader":"Crusader","droids":"Droids","river-of-fire":"River of Fire","shenanigans":"Shenanigans","sea-search":"Sea Search","trekboer":"Trekboer","the-vortex-factor":"The Vortex Factor","starman-jones":"Starman Jones","the-sword-and-the-sorcerer":"The Sword and the Sorcerer","the-wizards-lair":"The Wizard's Lair","tim-loves-cricket":"Tim Love's Cricket","tea-time":"Tea Time","star-spores":"Star Spores","tanglewood":"Tanglewood","ninja-warrior":"Ninja Warrior","dig-it":"Dig-It","nerble-force":"Nerble Force","dungeons-of-daggorath":"Dungeons of Daggorath","snaker":"Snaker","brickout":"Brickout","blockdown":"Blockdown","dragontet":"DragonTet","dragon-eggs":"Dragon Eggs","guess-the-number":"Guess the number","moon-lander":"Moon lander","maths-quiz":"Maths quiz","rock-paper-scissors":"Rock, paper, scissors","dragon-cave":"Dragon cave","screen-drawing":"Screen drawing","horse-race":"Horse race"}</script>
 <!-- /testers-names -->
-<ul class="tst-list" id="tst-list" aria-live="polite"></ul>
+<table class="tst-table"><thead><tr><th scope="col">Game</th><th scope="col">Tested by</th></tr></thead><tbody id="tst-list" aria-live="polite"><tr class="example" id="tst-example"><td>The game you tried</td><td>Your name could be here<span class="tag">example</span></td></tr></tbody></table>
 <p class="muted" id="tst-empty" hidden>No names here yet. Maybe you'll be the first?</p>
 </main>
 <script src="/assets/dragon/langpick.js" defer></script>
