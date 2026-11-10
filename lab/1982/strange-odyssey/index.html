@@ -277,6 +277,31 @@ function fire(type, key, code) {
   const e = new KeyboardEvent(type, { key, code, bubbles: true, cancelable: true });
   canvas.dispatchEvent(e);
 }
+// Shift+Enter במקלדת המחשב = SHIFT+0 של ה-Dragon (אותיות קטנות). XRoar לוחץ SHIFT ו-0 כל עוד Enter לחוץ, גם אחרי שמרימים את Shift,
+// ואז נשאר 0 בלי SHIFT (10.11, Telewriter: מי שהרים את Shift לפני Enter קיבל שורה של 0, כי Telewriter חוזר על מקש מוחזק).
+// לכן הצירוף נשלח כלחיצה של 200 אלפיות בדיוק, כמו במקלדת המצוירת: הרמה מוקדמת של Enter או Shift מחכה לסוף, והחזרות של Enter נבלעות
+let s0 = null;
+function s0end() {
+  if (!s0 || s0.up) return;
+  s0.up = true; clearTimeout(s0.t);
+  fire('keyup', 'Enter', 'Enter');
+  if (s0.shift) fire('keyup', 'Shift', s0.shift);
+  if (s0.enter) s0 = null;
+}
+addEventListener('keydown', e => {
+  if (!e.isTrusted || e.code !== 'Enter') return;
+  if (s0 && s0.up && !e.repeat) s0 = null; // ה-keyup של Enter הלך לאיבוד (חלון אחר)
+  if (s0) { e.stopImmediatePropagation(); e.preventDefault(); return; }
+  if (e.shiftKey && !e.repeat) s0 = { up: false, enter: false, shift: '', t: setTimeout(s0end, 200) };
+}, true);
+addEventListener('keyup', e => {
+  if (!e.isTrusted || !s0) return;
+  if (e.code === 'Enter') { if (s0.up) s0 = null; else s0.enter = true; }
+  else if (e.key === 'Shift' && !s0.up) s0.shift = e.code;
+  else return;
+  e.stopImmediatePropagation(); e.preventDefault();
+}, true);
+addEventListener('blur', () => { s0end(); s0 = null; });
 function press(label, alt, hold = 70) {
   if (label === 'SHIFT') { shift = !shift; kbd.querySelectorAll('[data-k="SHIFT"]').forEach(b => b.classList.toggle('on', shift)); return; }
   let key, code, needShift = false;
