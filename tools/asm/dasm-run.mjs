@@ -12,12 +12,12 @@ for (let i = 0; i < cas.length - 3; i++) {
   if (t === 1) bin.push(...cas.subarray(i + 4, i + 4 + n));
   if (t === 0 || t === 1) i += 4 + n;
 }
-const LOAD = 0x5000;
+const LOAD = 0x3400;
 const sym = {};
 try {
   for (const l of readFileSync(new URL('games/dasm/dasm.sym', root), 'utf8').split('\n')) { const m = /^(\S+)\s+equ\s+(\d+)/.exec(l); if (m) sym[m[1]] = +m[2]; }
 } catch { console.log('run: node games/dasm/build.mjs --list (it writes dasm.sym)'); process.exit(2); }
-const SRC = 0x3c00, STOP = 0x7f10;
+const SRC = 0x0600, STOP = 0x7f10;
 
 export function run(lines) {
   const mem = new Uint8Array(65536);
@@ -32,7 +32,7 @@ export function run(lines) {
     for (const ch of t) mem[p++] = ch.charCodeAt(0);
   });
   mem[p++] = 0xff; mem[p++] = 0xff;
-  if (p > 0x5000) throw new Error('source too big for the buffer: ' + lines.length + ' lines');
+  if (p > 0x1c00) throw new Error('source too big for the buffer: ' + lines.length + ' lines');
   const wr16 = (a, v) => { mem[a] = v >> 8; mem[a + 1] = v & 255; };
   wr16(sym.curpos, 0x400);
   const c = A.cpu(a => mem[a], (a, v) => { mem[a] = v; });
@@ -43,5 +43,21 @@ export function run(lines) {
   let screen = '';
   for (let a = 0x400; a < 0x600; a += 32) screen += [...mem.subarray(a, a + 32)].map(v => { v &= 0x7f; return v >= 0x40 && v < 0x60 ? String.fromCharCode(v) : v >= 0x60 ? String.fromCharCode(v - 0x40) : String.fromCharCode(v + 0x40); }).join('') + '\n';
   return { mem, errs: rd16(sym.errcnt), entry: rd16(sym.entry), min: rd16(sym.minad), max: rd16(sym.maxad), steps: n, cyc: c.r.cyc, screen };
+}
+
+// UNASM on the Dragon: disone from `from` to `to` in memory that run() left. Returns [{a, len, text}]
+export function dis(mem, from, to) {
+  const out = [], rd16 = a => (mem[a] << 8) | mem[a + 1], wr16 = (a, v) => { mem[a] = v >> 8; mem[a + 1] = v & 255; };
+  wr16(sym.daddr, from); wr16(sym.curpos, 0x400);
+  const c = A.cpu(a => mem[a], (a, v) => { mem[a] = v; });
+  while (rd16(sym.daddr) < to && out.length < 4000) {
+    c.r.S = 0x7e00 - 2; wr16(c.r.S, STOP); c.r.PC = sym.disone;
+    let n = 0; while (c.r.PC !== STOP) { c.step(); if (++n > 2e6) throw new Error('disone did not finish'); }
+    const a = rd16(sym.dstart), e = rd16(sym.dptr), nm = rd16(sym.dname);
+    let name = ''; for (let k = 0; k < 5 && mem[nm + k]; k++) name += String.fromCharCode(mem[nm + k]);
+    let op = ''; for (let p = sym.dtext; p < rd16(sym.dtp); p++) op += String.fromCharCode(mem[p]);
+    out.push({ a, len: e - a, text: (name + ' ' + op).trim() });
+  }
+  return out;
 }
 

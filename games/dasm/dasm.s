@@ -4,10 +4,10 @@
 ; התחביר כמו באסמבלר של פינת הלמידה (learn/asm/asm6809.js), ואותם בתים לאותה תוכנית.
 ; (C) 2026 Gonen Yarom. קוד מקורי שלנו, בלי קוד של DREAM.
 ;
-; הזיכרון:  $0600-$33FF  התוכנית שמתרגמים (ברירת מחדל $2EE1, כמו בפינת הלמידה)
-;           $3400-$3BFF  טבלת השמות: 16 בתים לשם (שם 10, ערך 2, שורה 2, ידוע 1, ריק 1), עד 128 שמות
-;           $3C00-$4FFF  הטקסט: "D82S", ואז שורות [מספר:2][אורך:1][טקסט], ובסוף $FFFF
-;           $5000-...    האסמבלר עצמו, והמשתנים שלו אחריו
+; הזיכרון:  $0600-$1BFF  הטקסט: "D82S", ואז שורות [מספר:2][אורך:1][טקסט], ובסוף $FFFF (אזור דפי הגרפיקה)
+;           $1C00-$23FF  טבלת השמות: 16 בתים לשם (שם 10, ערך 2, שורה 2, ידוע 1, ריק 1), עד 128 שמות
+;           $2400-$33FF  התוכנית שמתרגמים (ברירת מחדל $2EE1, כמו בפינת הלמידה)
+;           $3400-...    האסמבלר עצמו, והמשתנים שלו אחריו. מגיעים אליו עם EXEC 13312
 ;           המחסנית: של BASIC, כמו שהייתה ב-EXEC
 
 SCREEN		equ	$0400
@@ -25,12 +25,13 @@ BLKRES		equ	$81
 BCURS		equ	$88		; הסמן של BASIC
 DEVNUM		equ	$6f
 TBUF		equ	$01da		; חוצץ הקלטת של BASIC (255 בתים)
-SRC		equ	$3c00
-SRCTOP		equ	$5000
-SYMTAB		equ	$3400
-SYMTOP		equ	$3c00
-USERLO		equ	$0600
+SRC		equ	$0600		; הטקסט: באזור של דפי הגרפיקה (תוכנית שמציירת גרפיקה מוחקת אותו)
+SRCTOP		equ	$1c00
+SYMTAB		equ	$1c00
+SYMTOP		equ	$2400
+USERLO		equ	$2400
 USERHI		equ	$3400
+SRCOLD		equ	$3c00		; קלטות טקסט מגרסה 1.0 נשמרו עם הכתובת הזאת
 MAXIN		equ	60
 ORG0		equ	$2ee1
 SY_V		equ	10
@@ -56,12 +57,17 @@ F_W		equ	4
 F_NOI		equ	8
 F_U		equ	16
 
-		org	$5000
+		org	$3400
 start		sts	bassp		; המחסנית של BASIC: BASIC חוזר דרכה
 		clra
 		tfr	a,dp
 		sta	<DEVNUM
-		clr	listf		; המשתנים לא על הקלטת: מאפסים את מה שצריך
+		ldd	#SYMTAB		; המשתנים לא על הקלטת: מאפסים את מה שצריך
+		std	symend
+		ldd	#ORG0
+		std	maddr
+		std	daddr
+		clr	listf
 		clr	lstop
 		clr	justw
 		lbsr	srcchk		; יש כבר טקסט? (EXEC שני שומר אותו)
@@ -147,8 +153,11 @@ srcchk		ldx	#SRC
 		bhi	srcnew
 		bra	1B
 2		stx	srcend
+		clr	srclost
 		rts
-srcnew		ldx	#SRC
+srcnew		lda	#1
+		sta	srclost
+		ldx	#SRC
 		ldd	#$4438
 		std	,x++
 		ldd	#$3253
@@ -348,6 +357,15 @@ cmdtab		fcn	"LIST"
 		fcn	"SYM"
 		fcb	0
 		fdb	dosym
+		fcn	"MEM"
+		fcb	'M
+		fdb	domem
+		fcn	"UNASM"
+		fcb	'U
+		fdb	dodis
+		fcn	"GO"
+		fcb	'G
+		fdb	dogo
 		fcn	"BASIC"
 		fcb	0
 		fdb	dobasic
@@ -642,7 +660,8 @@ dorun		lbsr	asmall
 		ldx	#m_empty
 		lbsr	puts
 		lbra	crlf
-2		lbsr	cls			; כמו CLS:EXEC בפינת הלמידה: התוכנית מתחילה במסך נקי
+2
+runat		lbsr	cls			; כמו CLS:EXEC בפינת הלמידה: התוכנית מתחילה במסך נקי
 		sts	runsp
 		jsr	[entry]
 		lds	runsp
@@ -655,7 +674,13 @@ dorun		lbsr	asmall
 		clr	justw
 		lbsr	getkey
 		lbsr	crlf
-		ldx	#m_back
+		lbsr	srcchk		; תוכנית שציירה גרפיקה מחקה את הטקסט?
+		tst	srclost
+		beq	1F
+		ldx	#m_lost
+		lbsr	putmsg
+		lbsr	crlf
+1		ldx	#m_back
 		lbsr	puts
 		lbra	crlf
 
@@ -894,7 +919,10 @@ doload		lbsr	getname
 		bne	notsrc
 		ldd	TBUF+13
 		cmpd	#SRC
+		beq	61F
+		cmpd	#SRCOLD
 		bne	notsrc
+61
 		ldx	#SRC
 		stx	sptr
 		jsr	[CSRDON]
@@ -940,6 +968,584 @@ prtfn		ldx	#fname
 		decb
 		bne	1B
 		rts
+
+; ================= המוניטור / the monitor =================
+; getaddr: X → ביטוי עד רווח (כמו באסמבלר: $2EE1, LOOP, LOOP+2). D = הערך. C=1 ו-X = הודעה אם יש שגיאה
+getaddr		ldy	#ebuf
+1		lda	,x
+		beq	2F
+		cmpa	#$20
+		beq	2F
+		sta	,y+
+		leax	1,x
+		bra	1B
+2		clr	,y
+		stx	gptr
+		lda	#2
+		sta	pass
+		ldd	#$ffff
+		std	curln
+		ldx	#ebuf
+		lbsr	expr
+		bcs	9F
+		ldx	gptr
+		ldd	tv+1
+		andcc	#$fe
+9		rts
+
+; MEM $2EE1: שמונה שורות של 8 בתים. MEM לבד: ממשיכים. MEM $2EE1 1 2 $41: כותבים בתים, ומראים את השורה
+domem		lbsr	skipsp
+		tst	,x
+		beq	3F
+		lbsr	getaddr
+		lbcs	cmderr
+		std	maddr
+		std	mstart
+		lbsr	skipsp
+		tst	,x
+		beq	3F
+1		lbsr	getaddr
+		lbcs	cmderr
+		lbsr	rng8
+		bcc	2F
+		ldx	#m_big8
+		lbra	cmderr
+2		ldy	maddr
+		lda	tv+2
+		sta	,y+
+		sty	maddr
+		lbsr	skipsp
+		tst	,x
+		bne	1B
+		ldd	mstart
+		std	maddr
+		lda	#1
+		bra	4F
+3		lda	#8
+4		sta	dcnt
+5		ldd	maddr
+		lbsr	prthex4
+		ldx	maddr
+		ldb	#8
+6		lda	#$20
+		lbsr	putc
+		lda	,x+
+		lbsr	prthex2
+		decb
+		bne	6B
+		stx	maddr
+		lbsr	crlf
+		lbsr	brkchk
+		bcs	9F
+		dec	dcnt
+		bne	5B
+9		rts
+
+; GO $2EE1: מריצים מכתובת, בלי לתרגם. GO לבד: מההתחלה של התרגום האחרון
+dogo		lbsr	skipsp
+		tst	,x
+		beq	1F
+		lbsr	getaddr
+		lbcs	cmderr
+		std	entry
+1		lbra	runat
+
+; UNASM $2EE1: הבתים בחזרה לפקודות, 12 שורות. UNASM לבד: ממשיכים
+dodis		lbsr	skipsp
+		tst	,x
+		beq	1F
+		lbsr	getaddr
+		lbcs	cmderr
+		std	daddr
+1		lda	#12
+		sta	dcnt
+2		lbsr	disone
+		lbsr	brkchk
+		bcs	9F
+		dec	dcnt
+		bne	2B
+9		rts
+
+M_INH		equ	0
+M_IMM		equ	1
+M_DIR		equ	2
+M_IDX		equ	3
+M_EXT		equ	4
+M_REL		equ	5
+M_LREL		equ	6
+M_STK		equ	7
+M_REG		equ	8
+clsmode		fcb	M_INH,0,0,M_IMM,M_REL,M_LREL,M_IDX,M_STK,M_REG
+
+; dfind: dop + dpage → dent (הפקודה בטבלה) ו-dmode. Z=1 אם נמצא
+dfind		ldu	#optab
+1		tst	,u
+		beq	8F
+		lda	OP_F,u
+		anda	#3
+		cmpa	dpage
+		bne	7F
+		lda	OP_C,u
+		ldb	OP_O,u
+		cmpa	#C_ACC
+		bne	3F
+		lda	OP_F,u
+		bita	#F_NOI
+		bne	2F
+		cmpb	dop
+		beq	fimm
+2		addb	#$10
+		cmpb	dop
+		beq	fdir
+		addb	#$10
+		cmpb	dop
+		beq	fidx
+		addb	#$10
+		cmpb	dop
+		beq	fext
+		bra	7F
+3		cmpa	#C_MEM
+		bne	4F
+		cmpb	dop
+		beq	fdir
+		addb	#$60
+		cmpb	dop
+		beq	fidx
+		addb	#$10
+		cmpb	dop
+		beq	fext
+		bra	7F
+4		cmpb	dop
+		bne	7F
+		ldx	#clsmode
+		ldb	a,x
+		bra	fset
+7		leau	OPLEN,u
+		bra	1B
+8		andcc	#$fb
+		rts
+fimm		ldb	#M_IMM
+		bra	fset
+fdir		ldb	#M_DIR
+		bra	fset
+fidx		ldb	#M_IDX
+		bra	fset
+fext		ldb	#M_EXT
+fset		stb	dmode
+		stu	dent
+		orcc	#4
+		rts
+
+; הטקסט של הפקודה נבנה ב-dtext
+dput		pshs	y
+		ldy	dtp
+		sta	,y+
+		sty	dtp
+		puls	y,pc
+dputs		lda	,x+
+		beq	1F
+		bsr	dput
+		bra	dputs
+1		rts
+dhx		anda	#$0f
+		adda	#'0
+		cmpa	#'9
+		bls	1F
+		adda	#7
+1		bra	dput
+dhex2		pshs	a
+		lda	#'$
+		bsr	dput
+		lda	,s
+		lsra
+		lsra
+		lsra
+		lsra
+		bsr	dhx
+		puls	a
+		bra	dhx
+dhex4		pshs	b
+		pshs	a
+		lda	#'$
+		bsr	dput
+		lda	,s
+		lsra
+		lsra
+		lsra
+		lsra
+		bsr	dhx
+		puls	a
+		bsr	dhx
+		lda	,s
+		lsra
+		lsra
+		lsra
+		lsra
+		bsr	dhx
+		puls	a
+		bra	dhx
+; ddec: D כמספר עם סימן
+ddec		tsta
+		bpl	1F
+		pshs	d
+		lda	#'-
+		bsr	dput
+		puls	d
+		coma
+		comb
+		addd	#1
+1		ldx	#argbuf
+		lbsr	dec2buf
+		ldx	#argbuf
+		bra	dputs
+; dbyte: הבית הבא מהזיכרון ל-A. dword: שני בתים ל-D
+dbyte		ldx	dptr
+		lda	,x+
+		stx	dptr
+		rts
+dword		ldx	dptr
+		ldd	,x++
+		stx	dptr
+		rts
+
+; disone: שורה אחת: כתובת, בתים, פקודה, אופרנד
+disone		ldx	daddr
+		stx	dstart
+		ldy	#dtext
+		sty	dtp
+		clr	dpage
+		lda	,x+
+		cmpa	#$10
+		bne	1F
+		ldb	#1
+		bra	2F
+1		cmpa	#$11
+		bne	3F
+		ldb	#2
+2		stb	dpage
+		lda	,x+
+3		sta	dop
+		stx	dptr
+		lbsr	dfind
+		beq	4F
+		ldx	dstart		; לא פקודה: FCB של הבית הראשון
+		leax	1,x
+		stx	dptr
+		ldx	#t_fcb
+		stx	dname
+		lda	[dstart]
+		lbsr	dhex2
+		lbra	dline
+4		ldu	dent
+		stu	dname
+		lda	dmode
+		lsla
+		ldx	#dmodes
+		jmp	[a,x]
+dmodes		fdb	dline,dimm,ddir,didx,dext,drel,dlrel,dstk,dreg
+
+dimm		lda	#'#
+		lbsr	dput
+		ldu	dent
+		lda	OP_C,u
+		cmpa	#C_ACC
+		bne	1F
+		lda	OP_F,u
+		bita	#F_W
+		beq	1F
+		lbsr	dword
+		lbsr	dhex4
+		lbra	dline
+1		lbsr	dbyte
+		lbsr	dhex2
+		lbra	dline
+ddir		lda	#'<
+		lbsr	dput
+		lbsr	dbyte
+		lbsr	dhex2
+		lbra	dline
+dext		lbsr	dword
+		tsta			; מתחת ל-$100: עם > כדי שיתורגם שוב לאותה צורה
+		bne	1F
+		pshs	d
+		lda	#'>
+		lbsr	dput
+		puls	d
+1		lbsr	dhex4
+		lbra	dline
+drel		lbsr	dbyte
+		tfr	a,b
+		sex
+		addd	dptr
+		lbsr	dhex4
+		lbra	dline
+dlrel		lbsr	dword
+		addd	dptr
+		lbsr	dhex4
+		lbra	dline
+; PSHS/PULS: רשימת המגירות, בסדר הקבוע
+dstk		lbsr	dbyte
+		sta	dpb
+		ldx	#stknm
+		ldb	#1
+		clr	dcom
+1		bitb	dpb
+		beq	3F
+		tst	dcom
+		beq	2F
+		lda	#',
+		lbsr	dput
+2		inc	dcom
+		pshs	x,b
+		cmpb	#$40		; U או S: הצד השני של הערימה
+		bne	21F
+		ldu	dent
+		lda	OP_F,u
+		bita	#F_U
+		beq	21F
+		ldx	#t_s
+21		lbsr	dputs
+		puls	x,b
+3		leax	3,x
+		lslb
+		bne	1B
+		tst	dcom
+		lbne	dline
+		lda	#'#
+		lbsr	dput
+		clra
+		lbsr	dhex2
+		lbra	dline
+stknm		fcn	"CC"
+		fcn	"A"
+		fcb	0
+		fcn	"B"
+		fcb	0
+		fcn	"DP"
+		fcn	"X"
+		fcb	0
+		fcn	"Y"
+		fcb	0
+		fcn	"U"
+		fcb	0
+		fcn	"PC"
+t_s		fcn	"S"
+; TFR/EXG: שתי מגירות
+dreg		lbsr	dbyte
+		pshs	a
+		lsra
+		lsra
+		lsra
+		lsra
+		bsr	rname
+		lda	#',
+		lbsr	dput
+		puls	a
+		anda	#$0f
+		bsr	rname
+		lbra	dline
+rname		ldx	#rnames
+		lsla
+		leax	a,x
+		lda	,x+
+		lbsr	dput
+		lda	,x
+		cmpa	#$20
+		beq	1F
+		lbsr	dput
+1		rts
+rnames		fcc	"D X Y U S PC? ? A B CCDP? ? ? ? "
+
+; אצבע: הבית שאחרי הפקודה אומר איך
+didx		lbsr	dbyte
+		sta	dpb
+		lsra
+		lsra
+		lsra
+		lsra
+		lsra
+		anda	#3
+		ldx	#t_xyus
+		lda	a,x
+		sta	dreg_
+		lda	dpb
+		bmi	1F
+		anda	#$1f		; 5 סיביות עם סימן
+		bita	#$10
+		beq	d5pos
+		ora	#$e0
+d5pos		tfr	a,b
+		sex
+		lbsr	ddec
+		lbra	dix
+1		clr	iind_
+		bita	#$10
+		beq	2F
+		inc	iind_
+		lda	#'[
+		lbsr	dput
+2		lda	dpb
+		anda	#$0f
+		lsla
+		ldx	#ditab
+		jmp	[a,x]
+ditab		fdb	di0,di1,di2,di3,di4,di5,di6,diq,di8,di9,diq,dib,dic,did,diq,dif
+di0		lbsr	dcomr
+		lda	#'+
+		lbsr	dput
+		lbra	dend
+di1		lbsr	dcomr
+		lda	#'+
+		lbsr	dput
+		lbsr	dput
+		lbra	dend
+di2		lda	#',
+		lbsr	dput
+		lda	#'-
+		lbsr	dput
+		lda	dreg_
+		lbsr	dput
+		lbra	dend
+di3		lda	#',
+		lbsr	dput
+		lda	#'-
+		lbsr	dput
+		lbsr	dput
+		lda	dreg_
+		lbsr	dput
+		lbra	dend
+di4		lbsr	dcomr
+		lbra	dend
+di5		lda	#'B
+		bra	diab
+di6		lda	#'A
+		bra	diab
+dib		lda	#'D
+diab		lbsr	dput
+		lbsr	dcomr
+		lbra	dend
+di8		lbsr	dbyte
+		tfr	a,b
+		sex
+		cmpd	#0		; 0, או 5 סיביות בלי סוגריים: עם <
+		beq	1F
+		tst	iind_
+		bne	2F
+		cmpd	#-16
+		blt	2F
+		cmpd	#15
+		bgt	2F
+1		pshs	d
+		lda	#'<
+		lbsr	dput
+		puls	d
+2		lbsr	ddec
+		lbsr	dcomr
+		lbra	dend
+di9		lbsr	dword
+		cmpd	#-128		; נכנס בבית אחד: עם >
+		blt	1F
+		cmpd	#127
+		bgt	1F
+		pshs	d
+		lda	#'>
+		lbsr	dput
+		puls	d
+1		lbsr	ddec
+		lbsr	dcomr
+		lbra	dend
+dic		lbsr	dbyte
+		tfr	a,b
+		sex
+		addd	dptr
+		bra	dpcr
+did		lbsr	dword
+		addd	dptr
+		pshs	d		; היה נכנס בבית אחד? אז >
+		subd	dptr
+		addd	#1
+		cmpd	#-128
+		blt	1F
+		cmpd	#127
+		bgt	1F
+		lda	#'>
+		lbsr	dput
+1		puls	d
+dpcr		lbsr	dhex4
+		ldx	#t_pcr
+		lbsr	dputs
+		lbra	dend
+dif		lbsr	dword
+		lbsr	dhex4
+		lbra	dend
+diq		lda	#'?
+		lbsr	dput
+dend		lda	dpb
+		bita	#$10
+		lbeq	dline
+		lda	#']
+		lbsr	dput
+		lbra	dline
+dix		lbsr	dcomr
+		lbra	dline
+dcomr		lda	#',
+		lbsr	dput
+		lda	dreg_
+		lbra	dput
+t_xyus		fcc	"XYUS"
+t_pcr		fcn	",PCR"
+t_fcb		fcn	"FCB"
+
+; dline: מדפיסים את השורה: כתובת, עד 4 בתים, השם, האופרנד
+dline		ldd	dstart
+		lbsr	prthex4
+		lda	#$20
+		lbsr	putc
+		ldd	dptr
+		subd	dstart
+		stb	dlen
+		ldx	dstart
+		ldb	#4
+1		tst	dlen
+		beq	2F
+		lda	,x+
+		lbsr	prthex2
+		dec	dlen
+		decb
+		bne	1B
+		tst	dlen
+		beq	3F
+		lda	#'+
+		lbsr	putc
+		bra	4F
+2		lda	#$20		; ריפוד: 2 רווחים לבית חסר
+		lbsr	putc
+		lbsr	putc
+		decb
+		bne	2B
+3		lda	#$20
+		lbsr	putc
+4		ldx	dname
+		ldb	#5
+5		lda	,x+
+		beq	6F
+		lbsr	putc
+		decb
+		bne	5B
+6		incb			; עד 6 עמודות לשם
+7		lda	#$20
+		lbsr	putc
+		decb
+		bne	7B
+		ldx	#dtext
+8		cmpx	dtp
+		bhs	9F
+		lda	,x+
+		lbsr	putc
+		bra	8B
+9		ldx	dptr
+		stx	daddr
+		lbra	crlf
 
 ; ================= המתרגם / the assembler =================
 ; asmall: מעבר ראשון, מעברים עד שהמקומות לא זזים, ומעבר אחרון שכותב לזיכרון ומדווח על שגיאות
@@ -3270,7 +3876,15 @@ t_help		fcc	"100  LDA #1  TYPE A LINE"
 		fcb	13
 		fcc	"ANY KEY: MORE"
 		fcb	0
-t_help2		fcc	"ASM L        LIST WITH BYTES"
+t_help2		fcc	"MEM $2EE1    SEE MEMORY (M)"
+		fcb	13
+		fcc	"MEM $2EE1 1 2  WRITE BYTES"
+		fcb	13
+		fcc	"UNASM $2EE1  BYTES TO COMMANDS"
+		fcb	13
+		fcc	"GO $2EE1     RUN FROM THERE (G)"
+		fcb	13
+		fcc	"ASM L        LIST WITH BYTES"
 		fcb	13
 		fcc	"SYM          THE NAMES"
 		fcb	13
@@ -3296,9 +3910,10 @@ m_exists	fcn	"LINE % EXISTS. INSERT STOPPED"
 m_sure		fcn	"DELETE THE WHOLE PROGRAM? (Y/N) "
 m_bye		fcc	"BACK TO BASIC."
 		fcb	13
-		fcc	"TO COME BACK: EXEC 20480"
+		fcc	"TO COME BACK: EXEC 13312"
 		fcb	13,0
 m_back		fcn	"BACK IN THE ASSEMBLER"
+m_lost		fcn	"THE PROGRAM WROTE OVER YOUR TEXT ($0600-$1BFF, WHERE GRAPHICS GO). SAVE THE TEXT WITH CSAVE BEFORE RUNNING GRAPHICS"
 m_empty		fcn	"NOTHING TO RUN"
 m_nosym		fcn	"NO NAMES"
 m_err1		fcn	"1 ERROR"
@@ -3355,7 +3970,7 @@ m_pcfar		fcn	"THE PLACE IS TOO FAR FOR A ONE-BYTE OFFSET"
 m_noshrt	fcn	"% HAS NO SHORT FORM"
 m_nopage	fcn	"% IS NOT ON THE DIRECT PAGE"
 m_noext		fcn	"% NEEDS SOMETHING ELSE HERE, LIKE % 1,X"
-m_mem		fcn	"% IS THE ASSEMBLER'S. USE $0600-$33FF"
+m_mem		fcn	"% IS THE ASSEMBLER'S. USE $2400-$33FF"
 
 		include	"ops.s"
 
@@ -3397,10 +4012,30 @@ fname		rmb	8
 anynm		rmb	1
 sptr		rmb	2
 errarg		rmb	2
+gptr		rmb	2
+maddr		rmb	2
+mstart		rmb	2
+daddr		rmb	2
+dstart		rmb	2
+dptr		rmb	2
+dtp		rmb	2
+dname		rmb	2
+dent		rmb	2
+dcnt		rmb	1
+dpage		rmb	1
+dop		rmb	1
+dmode		rmb	1
+dpb		rmb	1
+dcom		rmb	1
+dreg_		rmb	1
+iind_		rmb	1
+dlen		rmb	1
+dtext		rmb	32
 wexec		rmb	2
 wfrom		rmb	2
 wto		rmb	2
 listf		rmb	1
+srclost		rmb	1
 lstop		rmb	1
 lpc		rmb	2
 ltmp		rmb	1

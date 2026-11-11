@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 
 const here = fileURLToPath(new URL('.', import.meta.url));
 const out = fileURLToPath(new URL('../../lab/1982/tapes/dasm.cas', import.meta.url));
-const LOAD = 0x5000;
+const LOAD = 0x3400;
 
 // ---- the command table: the same commands as the learning corner's assembler (learn/asm/asm6809.js) ----
 // each entry: name (5 bytes, zero-padded), class, code, flags
