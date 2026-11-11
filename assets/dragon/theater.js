@@ -29,6 +29,8 @@ export const pagesRow = () => {
   row.className = 'd32-pages';
   row.setAttribute('aria-label', tr('עוד באתר', 'More on the site'));
   row.innerHTML = '<a href="' + (EN ? '/en/lessons/' : '/lessons/') + '"><span aria-hidden="true">🎓</span> ' + tr('לומדים בייסיק', 'Learn BASIC') + '</a>'
+    + '<a href="' + (EN ? '/en/learn/' : '/learn/') + '"><span aria-hidden="true">🧠</span> ' + tr('פינת הלמידה: שפת מכונה', 'The Learning Corner: machine code') + '</a>'
+    + '<a href="' + (EN ? '/en/learn/asm/' : '/learn/asm/') + '"><span aria-hidden="true">🛠️</span> ' + tr('האסמבלר: כתוב תוכנית משלך', 'The Assembler: write your own program') + '</a>'
     + '<a href="' + (EN ? '/en/story/' : '/story/') + '"><span aria-hidden="true">📜</span> ' + tr('יומן המסע', 'The journey') + '</a>'
     + '<a href="' + (EN ? '/en/magazine/' : '/magazine/') + '"><span aria-hidden="true">📰</span> ' + tr('מה קראו בעלי <bdi dir="ltr">Dragon</bdi>', 'What Dragon Owners Were Reading') + '</a>'
     + '<a href="' + (EN ? '/en/guides/' : '/guides/') + '"><span aria-hidden="true">💾</span> ' + tr('תוכנות של אז', 'Software of the Day') + '</a>'
