@@ -1,0 +1,7 @@
+{
+ "note": "made by tools/asm/check-ref.mjs: the corpus (tools/asm/corpus.mjs) assembled by lwasm 4.25 and asm6809 2.17 (the same bytes); cycles = lwasm listing, except CWAI/SYNC/RTI (datasheet ranges)",
+ "lines": 7984,
+ "bytes": 22747,
+ "sha256": "c97022c105ab9f946a29ddb61375c4bc5e7f058bc684e5bd169e4676a9765a5a",
+ "cycles": "82e8d16fdfac6856e36ab7766d31c8b618a09a6f121293cee4c6e1078b04ed61"
+}
