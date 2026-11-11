@@ -1817,6 +1817,107 @@ if (part('learn')) {
   await ctx.close();
 }
 
+if (part('asm')) {
+  // האסמבלר (/learn/asm/): מתרגם 6809 מלא ומעבד מלא, משלנו. הבתים מול lwasm ו-asm6809, המעבד מול מכונת ה-Dragon (11.11)
+  console.log('\nasm (the Assembler)');
+  await import('../learn/asm/asm6809.js');
+  const A = globalThis.ASM6809;
+  const { corpus } = await import('./asm/corpus.mjs');
+  const { CPU_PROGS } = await import('./asm/cpu-progs.mjs');
+  const { createHash } = await import('node:crypto');
+  const sha = b => createHash('sha256').update(b).digest('hex');
+  const ref = JSON.parse(await readFile(new URL('./asm/corpus-ref.json', import.meta.url), 'utf8'));
+  const big = A.assemble(' ORG $2EE1\n' + corpus(A).join('\n') + '\n');
+  const lines = big.lines.filter(l => l.bytes.length);
+  check(`the byte tables: every 6809 command in every mode (${lines.length} lines, ${big.end - big.start} bytes) = lwasm and asm6809, and the cycle counts = lwasm's`,
+    !big.errs.length && lines.length === ref.lines && sha(Buffer.from(big.mem.slice(big.start, big.end))) === ref.sha256 && sha(lines.map(l => l.cyc).join(',')) === ref.cycles,
+    big.errs.slice(0, 3).map(e => e.line + ' ' + e.en).join('\n'));
+  // what DREAM did on our machine (11.11): $12 → short (direct), 0,X → ,X, a later name as an offset → the shortest form
+  const hx = s => { const r = A.assemble(s); return r.errs.length ? 'ERR ' + r.errs[0].en : Buffer.from(r.mem.slice(r.start, r.end)).toString('hex'); };
+  const dream = [[' LDA $12\n LDA 0,X\n LDA FWD\n LDA FWD2,X\n LDA >$12\nFWD EQU $10\nFWD2 EQU 5\n', '9612a684b60010a605b60012'],
+    [' LDA F3,X\n LDA F4,X\n LDA F5,Y\n LEAX FAR,PCR\n RMB 200\nFAR RTS\nF3 EQU 1000\nF4 EQU 100\nF5 EQU -3\n', 'a68903e8a68864a63d308d00c8' + '00'.repeat(200) + '39'],
+    [' MUL\n TFR A,B\n EXG X,Y\n PSHU A,B,X\n LBRA *\n', '3d1f891e12361616fffd'],
+    [' ORG $2FFE\nTOP LDA TOP,PCR\n LDA 5,PC\n', 'a68cfda68dd000']];
+  check('like DREAM on our machine: LDA $12 is short (direct), 0,X is ,X, a later name in an offset takes the shortest form, n,PC = n,PCR, MUL/TFR/EXG/PSHU/LBRA',
+    dream.every(([s, h]) => hx(s) === h), dream.map(([s, h]) => hx(s).slice(0, 40) + ' / ' + h.slice(0, 40)).join('\n'));
+  const errOf = s => { const r = A.assemble(s); return r.errs[0] || {}; };
+  const e1 = errOf(' LDA #300\n'), e2 = errOf('LDA #1\n'), e3 = errOf(' BRA FAR\n RMB 200\nFAR RTS\n'), e4 = errOf(' TFR A,X\n'), e5 = errOf(' INC A\n'), e6 = errOf(' LDA LOOP\n');
+  check('friendly errors with the line number, in Hebrew and English (too big, no space, too far, sizes, INCA, unknown place)',
+    e1.line === 1 && /גדול מדי/.test(e1.he) && /too big/.test(e1.en) && /בלי רווח/.test(e2.he) && e3.line === 1 && /LBRA/.test(e3.he) && /בגדלים שונים/.test(e4.he) && /INCA/.test(e5.he) && /LOOP/.test(e6.he),
+    JSON.stringify([e1, e2, e3, e4, e5, e6].map(e => e.he)));
+  // the CPU: three programs (arithmetic + lamps; 16 bits + MUL + every branch; every addressing mode + stack + TFR/EXG) against what XRoar's 6809 wrote
+  let exp = {}; try { exp = JSON.parse(await readFile(new URL('./asm/cpu-expected.json', import.meta.url), 'utf8')); } catch {}
+  for (const k of Object.keys(CPU_PROGS)) {
+    const img = A.assemble(CPU_PROGS[k]()), mem = new Uint8Array(65536), w = new Set();
+    for (let a = 0; a < 65536; a++) if (img.used[a]) mem[a] = img.mem[a];
+    const cpu = A.cpu(a => mem[a], (a, v) => { mem[a] = v; if (a >= 0x6000 && a < 0x7800) w.add(a); });
+    cpu.r.PC = img.entry; cpu.r.S = 0x7EF0; mem[0x7EF0] = 0xFF; mem[0x7EF1] = 0xF0;
+    while (cpu.r.PC !== 0xFFF0 && cpu.r.steps < 2e6) cpu.step();
+    const got = Buffer.from([...w].sort((a, b) => a - b).map(a => mem[a])).toString('hex');
+    check(`the CPU, program "${k}": all ${w.size} result bytes = what the Dragon machine (XRoar's 6809) wrote`, !!exp[k] && got === exp[k].hex, exp[k] ? 'differs' : 'no machine result saved (tools/asm/machine-check.mjs --save)');
+  }
+  // the pages
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 800 } });
+  await ctx.addInitScript(() => { window.open = u => { window.__opened = u; return null; }; });
+  const p = await ctx.newPage();
+  const errs = []; p.on('pageerror', e => errs.push(e.message));
+  for (const path of ['/learn/asm/', '/en/learn/asm/']) {
+    const before = errs.length;
+    const r = await p.goto(new URL(path, PAGE).href);
+    await p.waitForTimeout(300);
+    const sw = await p.evaluate(() => document.documentElement.scrollWidth);
+    const html = await p.content();
+    check(`${path}: loads, no page errors, no sideways scroll at 390px, own title/description/canonical, link to the other language`,
+      r.ok() && errs.length === before && sw <= 390 && html.includes(`rel="canonical" href="https://dragon1982.com${path}"`) && /name="description" content="[^"]{60,}/.test(html) && html.includes(path === '/learn/asm/' ? 'href="/en/learn/asm/"' : 'href="/learn/asm/"'),
+      `status ${r.status()} width ${sw} ${errs.slice(before).join('; ')}`);
+  }
+  await p.goto(new URL('/learn/asm/', PAGE).href);
+  await p.evaluate(() => { localStorage.removeItem('d32-asm-src'); localStorage.removeItem('d32-lab-tapes'); });
+  await p.reload();
+  const ex = await p.evaluate(() => window.__asm.EX.map(e => { const r = ASM6809.assemble(e.src.join('\n')); return { id: e.id, errs: r.errs.length, n: r.count }; }));
+  check(`every example assembles with no errors (${ex.map(e => e.id + ' ' + e.n).join(', ')}); the catch game is 154 bytes, as in DREAM`, ex.every(e => !e.errs && e.n > 0) && ex.find(e => e.id === 'catch').n === 154, JSON.stringify(ex));
+  // run: the alphabet; it waits for a key, then RTS back to BASIC
+  await p.selectOption('#asm-ex', 'abc');
+  await p.click('#asm-run');
+  await p.waitForTimeout(800);
+  const scr = await p.evaluate(() => String.fromCharCode(...window.__asm.mem().slice(0x400, 0x41A)));
+  await p.locator('#asm-keys [data-k="32"]').click();
+  await p.waitForTimeout(500);
+  const said = await p.locator('#asm-say').textContent();
+  check('▶ runs the alphabet on the page\'s screen (A to Z at $0400), waits for a key, then goes back to BASIC (RTS)', scr === 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' && /BASIC/.test(said), scr + ' | ' + said);
+  // step: one command at a time
+  await p.click('#asm-reset'); await p.click('#asm-step'); await p.click('#asm-step');
+  const st = await p.evaluate(() => ({ X: window.__asm.cpu.r.X, A: window.__asm.cpu.r.A, pc: document.querySelector('#asm-lst tr.pc td:nth-child(2)')?.textContent }));
+  check('"Step" runs one command at a time: X = $0400, A = \'A\', and the next line is marked in the listing', st.X === 0x400 && st.A === 0x41 && st.pc === '2EE6', JSON.stringify(st));
+  // an error in the editor
+  await p.evaluate(() => { const t = document.getElementById('asm-src'); t.value = ' LDA #$41\nLOOP STA $0400\n BRA LOP\n'; t.dispatchEvent(new Event('input')); });
+  await p.waitForTimeout(500);
+  const er = await p.locator('#asm-errs').textContent();
+  check('an error shows the line number and a friendly message (BRA to a missing place)', /בשורה 3/.test(er) && /LOP/.test(er), er);
+  // the page can't show sound: it stops politely and points at the machine
+  await p.evaluate(() => { const t = document.getElementById('asm-src'); t.value = ' LDA #$FF\n STA $FF20\n RTS\n'; t.dispatchEvent(new Event('input')); });
+  await p.waitForTimeout(400); await p.click('#asm-run'); await p.waitForTimeout(300);
+  check('sound ($FF20): "את זה רואים במכונה", and the send button is highlighted', /רואים במכונה/.test(await p.locator('#asm-say').textContent()) && await p.locator('#asm-send.hot').count() === 1);
+  // send: a CSAVEM-style tape in My tapes, and the machine opens
+  await p.selectOption('#asm-ex', 'mul');
+  await p.click('#asm-send');
+  const tape = await p.evaluate(() => { const t = JSON.parse(localStorage.getItem('d32-lab-tapes'))[0], img = window.__asm.img; return { n: t.n, hdr: t.b[0].slice(9), len: t.b.filter(b => b[0] === 1).reduce((a, b) => a + b.length - 1, 0), end: t.b[t.b.length - 1][0], opened: window.__opened, size: img.end - img.start }; });
+  check('🐉 send: the tape TIMES (machine code, type 2, load and run at $2EE1) is in My tapes, and the machine opens',
+    tape.n === 'TIMES' && tape.hdr.join() === [2, 0, 0, 0x2e, 0xe1, 0x2e, 0xe1].join() && tape.len === tape.size && tape.end === 255 && tape.opened === '/lab/1982/?learn=TIMES', JSON.stringify(tape));
+  await p.evaluate(() => { const t = document.getElementById('asm-src'); t.value = ' ORG $0600\n RTS\n'; t.dispatchEvent(new Event('input')); });
+  await p.waitForTimeout(400); await p.click('#asm-send');
+  check('send: a program outside the free memory ($2EE1–$7DFF) gets a clear message, and no tape', /\$2EE1/.test(await p.locator('#asm-sendsay').textContent()));
+  await p.evaluate(() => { localStorage.removeItem('d32-asm-src'); localStorage.removeItem('d32-lab-tapes'); localStorage.removeItem('d32-asm-name'); });
+  const sm = await p.request.get(new URL('/sitemap.xml', PAGE).href).then(r => r.text());
+  await p.goto(new URL('/learn/', PAGE).href);
+  const land = await p.locator('a[href="/learn/asm/"]').count();
+  await p.goto(new URL('/learn/ch15/', PAGE).href);
+  const c15 = await p.locator('#ch15 a[href="/learn/asm/"]').count();
+  check('links: /learn/ and chapter 15 point to the Assembler; the sitemap has both languages', land > 0 && c15 > 0 && sm.includes('/learn/asm/</loc>') && sm.includes('/en/learn/asm/</loc>'));
+  check('asm: no page errors', !errs.length, errs.join('\n'));
+  await ctx.close();
+}
+
 if (part('real machine lab')) {
   console.log('real machine lab');
   {

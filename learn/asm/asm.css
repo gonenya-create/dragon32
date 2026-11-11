@@ -1,0 +1,58 @@
+/* האסמבלר (/learn/asm/): on top of the course's course.css */
+.asm-intro p{margin:.5em 0}
+.asm-ex{margin:14px 0 10px}
+.asm-ex select{font:inherit;font-size:16px;padding:5px 8px;border-radius:8px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);max-width:100%}
+.asm-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+@media (min-width:820px){.asm-grid{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)}}
+.asm-ed{display:flex;background:var(--code-bg);border-radius:12px;overflow:hidden;height:22em;direction:ltr}
+.asm-gut{margin:0;padding:10px 6px 10px 8px;min-width:2.6em;text-align:right;color:#7d8a74;background:rgba(255,255,255,.04);font:15px/1.5 Menlo,Consolas,monospace;overflow:hidden;user-select:none;white-space:pre}
+.asm-ed textarea{flex:1;min-width:0;border:0;outline:0;resize:none;background:transparent;color:var(--code-ink);font:15px/1.5 Menlo,Consolas,monospace;padding:10px;white-space:pre;overflow:auto;direction:ltr;text-align:left;tab-size:8}
+@media (max-width:480px){.asm-gut,.asm-ed textarea{font-size:16px}}
+.asm-ed:focus-within{outline:3px solid var(--hl)}
+.asm-sum{font-size:.95rem;margin-top:6px;color:var(--accent-ink)}
+.asm-errs ul{margin:4px 0;padding-inline-start:1.2em;font-size:.95rem}
+.asm-errs li{margin:4px 0}
+.asm-eline{background:var(--bad-bg);color:var(--bad);border:0;border-radius:6px;padding:0 6px;font-weight:500}
+.asm-scr{direction:ltr;border-radius:10px;overflow:hidden;background:#000;outline-offset:3px}
+.asm-scr:focus{outline:3px solid var(--hl)}
+.asm-scr canvas{display:block;width:100%;height:auto;image-rendering:pixelated;aspect-ratio:4/3}
+.asm-keys{margin:8px 0 2px;direction:ltr;justify-content:center}
+.asm-keys .key9{min-width:2.6em;padding:4px 8px;font-size:14px}
+.asm-btns,.asm-send{margin-top:10px}
+.asm-send input.num{width:7.5em;text-transform:uppercase}
+.btn.hot{background:var(--warm);color:#fff;border-color:var(--warm);box-shadow:0 0 0 4px var(--warm-bg);animation:asmhot 1.2s ease-in-out 3}
+@keyframes asmhot{50%{box-shadow:0 0 0 8px var(--warm-bg)}}
+@media (prefers-reduced-motion:reduce){.btn.hot{animation:none}}
+.asm-say{margin-top:8px;font-size:.95rem;min-height:1.6em}
+.asm-say.bad{color:var(--bad)} .asm-say.ok{color:var(--accent-ink)}
+.asm-say.machine{background:var(--warm-bg);border-radius:10px;padding:8px 10px}
+.asm-cpu{margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;box-shadow:var(--shadow)}
+.asm-regs{display:grid;grid-template-columns:repeat(auto-fill,minmax(5.6em,1fr));gap:6px}
+.asm-reg{background:#c99a5b;color:#2b1a06;border-radius:8px;padding:3px 8px;display:flex;justify-content:space-between;gap:6px;font:15px/1.5 Menlo,Consolas,monospace;transition:background .3s}
+.asm-reg b{font-family:"Rubik",system-ui,sans-serif}
+.asm-reg.chg{background:var(--hl)}
+.asm-lamps{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;margin-top:10px;font-weight:500}
+.asm-lamp{display:inline-flex;align-items:center;gap:4px}
+.asm-lamp i{width:1em;height:1em;border-radius:50%;background:#1b1d21;border:2px solid #15171a;display:inline-block}
+.asm-lamp.on i{background:#ffb020;box-shadow:0 0 6px #ffb020}
+.asm-lamp.small{font-size:.85rem;opacity:.85}
+.asm-lamp.small i{width:.8em;height:.8em}
+.asm-cyc{margin-inline-start:auto;font-size:.85rem;color:var(--soft)}
+.asm-h{margin-top:20px}
+.asm-lst{max-height:24em;overflow:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.asm-lst table{border-collapse:collapse;width:100%;font:14px/1.45 Menlo,Consolas,monospace}
+.asm-lst th{position:sticky;top:0;background:var(--paper);text-align:left;font:600 13px "Rubik",system-ui,sans-serif;padding:4px 6px;border-bottom:1px solid var(--line)}
+.asm-lst td{padding:1px 6px;white-space:pre;vertical-align:top}
+.asm-lst td:first-child{color:var(--soft);text-align:right}
+.asm-lst td:nth-child(3){color:var(--accent-ink)}
+.asm-lst td:nth-child(4){color:var(--soft)}
+.asm-lst tr{cursor:pointer}
+.asm-lst tr.bad td{background:var(--bad-bg);color:var(--bad)}
+.asm-lst tr.pc td{background:var(--hl);color:#222}
+.asm-help{margin-top:22px}
+.asm-help h3{margin-top:14px}
+.asm-help pre{background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:10px;overflow-x:auto;font:14px/1.5 Menlo,Consolas,monospace;direction:ltr;text-align:left}
+.asm-help ul{padding-inline-start:1.2em}
+.asm-help table{border-collapse:collapse;font-size:.95rem}
+.asm-help td{padding:2px 8px;border-bottom:1px dashed var(--line);vertical-align:top}
+.asm-own{color:var(--soft);font-size:.95rem}

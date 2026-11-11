@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>האסמבלר: כותבים שפת מכונה ל-Dragon 32</title>
+<meta name="description" content="כותבים תוכנית בשפת מכונה של המעבד 6809, בחופשיות: האסמבלר מתרגם למספרים, מריץ בדף צעד אחרי צעד, ושולח את התוכנית למכונת ה-Dragon של האתר. חינם, בעברית.">
+<meta property="og:title" content="האסמבלר: כותבים שפת מכונה ל-Dragon 32">
+<meta property="og:description" content="כותבים תוכנית בשפת מכונה של המעבד 6809, בחופשיות: האסמבלר מתרגם למספרים, מריץ בדף צעד אחרי צעד, ושולח את התוכנית למכונת ה-Dragon של האתר. חינם, בעברית.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/learn/asm/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/learn/asm/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/asm/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/asm/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/learn/course.css">
+<link rel="stylesheet" href="/learn/asm/asm.css">
+</head>
+<body data-ch="asm">
+<nav class="site" aria-label="ניווט">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/en/learn/asm/" lang="en" hreflang="en">English</a>
+  <a href="/learn/">כל הפרקים</a>
+  <a href="/">← לדף הבית</a>
+</nav>
+<div class="wrap">
+<header class="top">
+  <div>
+    <h1>האסמבלר</h1>
+    <p class="sub">כותבים שפת מכונה בחופשיות · כל פקודות ה-<bdi>6809</bdi></p>
+  </div>
+</header>
+<div class="asm-intro">
+<p>אסמבלר הוא <b>מתרגם</b>: כותבים פקודות במילים, כמו <code>LDA #$41</code>, והוא הופך אותן למספרים שהמעבד מבין. בקורס הכרנו חלק מהפקודות. כאן אפשר להשתמש בכולן.</p>
+<p>כותבים בחלון, ומיד רואים מתחת כל שורה עם הבית שלה והמספרים שלה. <b>▶ הרץ</b> מריץ את התוכנית על מסך הדראגון שבדף, ו<b>צעד</b> מריץ פקודה אחת ומראה מה השתנה במגירות ובנורות. כשהתוכנית מוכנה, <b>🐉 שלח למכונה</b> מעביר אותה למכונת ה-<bdi>Dragon</bdi> של האתר, כמו קלטת.</p>
+<p>התוכנית נשמרת בדפדפן הזה בלבד, ונשארת גם אחרי שסוגרים את הדף.</p>
+</div>
+<div id="asm"><noscript>האסמבלר צריך JavaScript.</noscript></div>
+<details class="step asm-help"><summary><b>עזרה: איך כותבים</b></summary>
+<h3>שורה</h3>
+<p>שם של מקום (כמו <code>LOOP</code>) כותבים צמוד לתחילת השורה. פקודה באה אחרי רווח, ולכן שורה בלי שם מתחילה ברווח. מה שבא אחרי הפקודה ורווח נוסף הוא הערה. שורה שמתחילה ב-<code>*</code> היא הערה כולה.</p>
+<pre>LOOP STA ,X+     * כותבים ומזיזים את X
+ INCA</pre>
+<h3>מספרים</h3>
+<p><code>$41</code> הקסדצימלי, <code>%01000001</code> בינארי, <code>65</code> רגיל, <code>'A</code> הקוד של האות. אפשר גם חשבון פשוט: <code>LOOP+2</code>, <code>SCREEN+32</code>, <code>*-1</code> (‏<code>*</code> הוא הבית של השורה הזאת).</p>
+<h3>הוראות למתרגם</h3>
+<table>
+<tr><td><code>ORG $3000</code></td><td>מאיזה בית לשים את התוכנית. בלי <code>ORG</code> מתחילים ב-<code>$2EE1</code>, כמו בקורס.</td></tr>
+<tr><td><code>SCREEN EQU $0400</code></td><td>נותנים שם למספר.</td></tr>
+<tr><td><code>FCB 1,2,3</code></td><td>שמים בתים בזיכרון (כל אחד 0 עד 255).</td></tr>
+<tr><td><code>FDB $0400,LOOP</code></td><td>שמים מספרים של שני בתים.</td></tr>
+<tr><td><code>FCC /HELLO/</code></td><td>שמים את הקודים של טקסט.</td></tr>
+<tr><td><code>RMB 10</code></td><td>שומרים 10 בתים ריקים.</td></tr>
+<tr><td><code>@</code></td><td>שם מיוחד: מכאן התוכנית מתחילה לרוץ (כמו בקורס). בלי <code>@</code> מתחילים בבית הראשון.</td></tr>
+</table>
+<h3>לחזור ל-<bdi>BASIC</bdi>: ‏<code>RTS</code></h3>
+<p>‏<code>EXEC</code> במכונה קופצת לתוכנית כמו <code>JSR</code>, ושמה בערימה את הבית שאליו חוזרים. בסוף התוכנית כותבים <code>RTS</code>, והמחשב חוזר ל-<bdi>BASIC</bdi> ול-<code>OK</code>. מה שהכנסתם לערימה (<code>PSHS</code>) מוציאים לפני ה-<code>RTS</code>. כדי לראות את המסך לפני שה-<code>OK</code> מופיע, מחכים קודם למקש:</p>
+<pre>KEY LDX $A000    * הבית של בודק המקלדת
+ JSR ,X          * A = המקש, או 0
+ BEQ KEY         * אין מקש? שוב
+ RTS             * חזרה ל-BASIC</pre>
+<h3>מה רואים בדף, ומה רק במכונה</h3>
+<p>הדף מראה את מסך הטקסט (‏<code>$0400</code> עד <code>$05FF</code>), את הזיכרון, את המגירות, את הנורות ואת בודק המקלדת. צליל (<code>$FF20</code>), גרפיקה (<code>PMODE</code>, ‏<code>$FFC0</code>) וקריאות אחרות ל-ROM של ה-<bdi>BASIC</bdi> רואים רק במכונה: הדף עוצר ואומר "את זה רואים במכונה", ושם שולחים בכפתור 🐉. הדף עוצר גם לולאה שלא נגמרת, וכתיבה מחוץ לזיכרון של התוכנית והמסך.</p>
+<h3>מאיפה ללמוד</h3>
+<ul>
+<li><a href="/learn/ch2/">פרק 2</a>: ‏<code>LDA</code> ו-<code>STA</code>. ‏<a href="/learn/ch5/">פרק 5</a>: עם <code>#</code> או בלי.</li>
+<li><a href="/learn/ch6/">פרק 6</a>: חשבון. ‏<a href="/learn/ch7/">פרק 7</a>: האצבע <code>X</code>. ‏<a href="/learn/ch8/">פרק 8</a>: השוואה וקפיצה.</li>
+<li><a href="/learn/ch9/">פרקים 9 עד 11</a>: לולאות, מקשים ותנועה. ‏<a href="/learn/ch12/">פרק 12</a>: תת-תוכניות והערימה.</li>
+<li><a href="/learn/ch13/">פרק 13</a>: התוכנית כמספרים. ‏<a href="/learn/ch14/">פרקים 14 ו-15</a>: המשחק, והדרך למכונה.</li>
+</ul>
+<p class="asm-own">זה כלי שכתבנו בעצמנו, בהשראת הדרך שבה עבד <bdi>DREAM</bdi> בשנת 1983. ‏<bdi>DREAM</bdi> עצמו לא שלנו, והוא לא נמצא באתר.</p>
+</details>
+</div>
+<p class="site-foot">פרויקט מחווה של חובב, לא קשור ל-<bdi>Dragon Data</bdi> ולא מורשה על ידה. הקורס, הציורים והטקסט שלנו. כל תוכנית בקורס נבדקה במכונת ה-<bdi>Dragon</bdi> של האתר (<bdi>XRoar</bdi> עם ה-<bdi>BASIC</bdi> שכתבנו).</p>
+<script src="/learn/asm/shared.js"></script>
+<script src="/learn/asm/asm6809.js"></script>
+<script src="/learn/asm/asm.js"></script>
+</body>
+</html>

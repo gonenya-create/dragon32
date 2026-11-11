@@ -88,7 +88,7 @@
     <h3><span class="n">5</span>Two hash-sign mistakes</h3>
     <p><b>Mistake 1: a hash sign on a house.</b> Someone wanted to copy the corner, and wrote <code>LDA #$0400</code>. With a hash sign it isn’t a house any more, it’s a number. But $0400 is too big for the drawer: it needs more than eight lamps.</p>
     <div class="row" style="justify-content:center"><div style="width:min(300px,100%)"><div id="broken5"></div></div></div>
-    <p>What happens in DREAM? No complaint at all. The translator keeps only what fits in eight lamps, <code>$00</code>, and an inverse @ appears in the corner (code 0). We copied nothing. <span class="verified">✓ Checked in DREAM</span></p>
+    <p>What happens in DREAM? No complaint at all. The translator (assembler) keeps only what fits in eight lamps, <code>$00</code>, and an inverse @ appears in the corner (code 0). We copied nothing. <span class="verified">✓ Checked in DREAM</span></p>
     <p><b>Mistake 2: a hash sign in STA.</b> <code>STA #$0400</code> means nothing: STA always writes <b>to a house</b>, and has nothing to do with “here is a number”.</p>
     <p>Here too DREAM doesn’t complain: it translates the line into a strange code (<code>$87</code>) that has no defined meaning in the 6809 processor. On our Dragon machine nothing was written on the screen. On a real processor the result isn’t guaranteed, so simply don’t write it that way. <span class="verified">✓ Checked in DREAM</span></p>
     <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>Rule of thumb: <b>#</b> = “here is the number”. Without <b>#</b> = “go to the house”. STA never has a hash sign.</p></div>
