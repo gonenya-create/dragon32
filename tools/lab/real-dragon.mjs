@@ -14,7 +14,7 @@ const rowsT = [...block.matchAll(/^\s*\['(\w+)', '((?:[^'\\]|\\.)*)', '((?:[^'\\
 const kinds = new Map(rowsT.map(m => [m[1], m[4] ? m[4].replace(/'/g, '') : null]));
 const names = new Map(rowsT.map(m => [m[1], [m[2], m[3]].map(x => x.replace(/\\'/g, "'"))]));
 const set = name => new Set([...(shelf.match(new RegExp('const ' + name + ' = new Set\\(\\[([^\\]]*)\\]')) || ['', ''])[1].matchAll(/'(\w+)'/g)].map(m => m[1]));
-const NO = set('REAL_NO');
+const NO = set('REAL_NO'), SHELF = set('REAL_SHELF');   // SHELF: הרשאה למדף בלבד. לא מופיעים בדף בכלל, בלי הסבר (גונן, 11.11)
 // רק השמעה, בלי הורדה (המנגנון נשאר): גונן, 10.11: רשות של מחבר מכסה הכול, גם הורדה, אז הרשימה ריקה
 const ONLY = new Set([]);
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
@@ -24,7 +24,7 @@ function list(he) {
   let out = '', n = 0;
   for (const d of cat.drawers) {
     // כל משחקי המגירה, כמו בארון. מחסניות ו-Buzzard Bait בכרטיס אפור עם הסבר, בלי כפתורים (גונן, 9.11)
-    const rows = Object.entries(cat.games).filter(([id, g]) => g.drawer === d.key && kinds.has(id));
+    const rows = Object.entries(cat.games).filter(([id, g]) => g.drawer === d.key && kinds.has(id) && !SHELF.has(id));
     if (!rows.length) continue;
     out += `<h3>${esc(he ? d.he : d.en)} <span class="cnt">${rows.length}</span></h3>\n<ul class="real-list">\n`;
     for (const [id, g] of rows) {

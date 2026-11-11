@@ -1363,10 +1363,10 @@ if (part('real dragon sound')) {
   for (const [path, n] of [['/lab/1982/real-dragon/', 'he'], ['/en/lab/1982/real-dragon/', 'en']]) {
     await p.goto(root + path); await p.waitForTimeout(800);
     const r = await p.evaluate(() => ({ rows: document.querySelectorAll('.real-list li:not(.off)').length, off: [...document.querySelectorAll('.real-list li.off')].map(x => x.id).sort().join(), machine: !!document.querySelector('canvas'),
-      count: [...document.querySelectorAll('#count .rb > *')].map(x => x.className), hang: [...document.querySelectorAll('#spores .rb > *')].map(x => x.className),
+      count: [...document.querySelectorAll('#count .rb > *')].map(x => x.className), spores: !!document.querySelector('#spores'),
       dagg: !!document.querySelector('#daggorath button'), buzz: !!document.querySelector('#buzzard button'), cas: document.querySelector('#count a.c')?.getAttribute('href') }));
-    check(n + ': the downloads page has 71 games to load, the 3 others greyed out with a reason, and no machine on it', r.rows === 71 && r.off === 'buzzard,cavehunter,daggorath' && !r.machine, JSON.stringify(r));
-    check(n + ': The Count has play, sound and tape; Star Spores too (every author permission covers downloads, Gonen 10.11); no cartridges or Buzzard Bait', r.count.join() === 'p,w,c' && r.hang.join() === 'p,w,c' && !r.dagg && !r.buzz && r.cas === '/lab/1982/tapes/count.cas', JSON.stringify(r));
+    check(n + ': the downloads page has 70 games and the Dragon Assembler to load, 3 others greyed out with a reason, Star Spores not on it at all (shelf-only permission, no explanation: Gonen 11.11), and no machine on it', r.rows === 71 && r.off === 'buzzard,cavehunter,daggorath' && !r.spores && !r.machine, JSON.stringify(r));
+    check(n + ': The Count has play, sound and tape; no cartridges or Buzzard Bait', r.count.join() === 'p,w,c' && !r.dagg && !r.buzz && r.cas === '/lab/1982/tapes/count.cas', JSON.stringify(r));
   }
   const w = await p.evaluate(async () => { const x = await (async () => window.D32Wav.casWav(new Uint8Array(await (await fetch('/lab/1982/tapes/snaker.cas')).arrayBuffer())))(); return [String.fromCharCode(...x.slice(0, 4)), String.fromCharCode(...x.slice(8, 12)), x.length]; });
   check('a shelf tape becomes a WAV sound in the browser', w[0] === 'RIFF' && w[1] === 'WAVE' && w[2] > 1000000, JSON.stringify(w));

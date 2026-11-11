@@ -1921,6 +1921,8 @@
   };
   // ל-Dragon אמיתי (גונן, 9.11): "מי שנכנס לדף המשחק נכנס בשביל לשחק". ההורדות בדף נפרד, בלי מכונה; כאן רק שורה עם קישור
   const REAL_NO = new Set(['buzzard', 'daggorath', 'cavehunter']);
+  // משחקים שההרשאה שלהם היא למדף בלבד: בלי קישור הורדה, ולא מופיעים בדף ההורדות (בלי הסבר, גונן 11.11)
+  const REAL_SHELF = new Set(['spores']);
   function openGame(id, push) {
     const t = TAPES.find(x => x[0] === id), m = meta(id);
     if (!t) return;
@@ -1968,7 +1970,7 @@
       out.addEventListener('click', () => window.d32EjectCart());
       info.append(out);
     }
-    if (!REAL_NO.has(id)) {
+    if (!REAL_NO.has(id) && !REAL_SHELF.has(id)) {
       const real = document.createElement('a');
       real.className = 'gv-real';
       real.href = (EN ? '/en' : '') + '/lab/1982/real-dragon/#' + id;
