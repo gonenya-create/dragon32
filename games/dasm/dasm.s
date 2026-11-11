@@ -58,7 +58,21 @@ F_NOI		equ	8
 F_U		equ	16
 
 		org	$3400
-start		sts	bassp		; המחסנית של BASIC: BASIC חוזר דרכה
+start		sts	bassp		; המחסנית של BASIC: BASIC חוזר דרכה, והתוכנית שמריצים רצה עליה
+		lds	#ostktop	; לאסמבלר מחסנית משלו, כדי שתוכנית שעצרה באמצע לא תיפגע
+		ldx	$0106		; SWI (נקודות עצירה) קופץ דרך ה-RAM ב-$0106, כמו במקור. שומרים את מה שהיה
+		stx	oswi
+		lda	$0108
+		sta	oswi+2
+		lda	#$7e
+		sta	$0106
+		ldx	#swient
+		stx	$0107
+		clr	stopped
+		clr	nbp
+		clr	np
+		clr	contp
+		clr	dquiet
 		clra
 		tfr	a,dp
 		sta	<DEVNUM
@@ -366,6 +380,21 @@ cmdtab		fcn	"LIST"
 		fcn	"GO"
 		fcb	'G
 		fdb	dogo
+		fcn	"BP"
+		fcb	0
+		fdb	dobp
+		fcn	"NOBP"
+		fcb	0
+		fdb	donobp
+		fcn	"TRACE"
+		fcb	'T
+		fdb	dotrace
+		fcn	"CONT"
+		fcb	'C
+		fdb	docont
+		fcn	"REG"
+		fcb	0
+		fdb	doreg
 		fcn	"BASIC"
 		fcb	0
 		fdb	dobasic
@@ -589,7 +618,12 @@ yesno		lbsr	puts
 		rts
 
 ; BASIC: חזרה ל-BASIC. ‏EXEC מחזיר לכאן, והטקסט עוד כאן
-dobasic		ldx	#m_bye
+dobasic		lbsr	unplant
+		ldx	oswi		; ה-SWI חוזר למה שהיה
+		stx	$0106
+		lda	oswi+2
+		sta	$0108
+		ldx	#m_bye
 		lbsr	puts
 		ldd	curpos
 		std	<BCURS
@@ -662,9 +696,16 @@ dorun		lbsr	asmall
 		lbra	crlf
 2
 runat		lbsr	cls			; כמו CLS:EXEC בפינת הלמידה: התוכנית מתחילה במסך נקי
-		sts	runsp
-		jsr	[entry]
-		lds	runsp
+		clr	stopped
+		lbsr	plantbp
+		lds	bassp			; התוכנית רצה על המחסנית של BASIC, ו-RTS שלה חוזר ל-runret
+		ldd	#runret
+		pshs	d
+		andcc	#$af
+		jmp	[entry]
+runret		lds	#ostktop
+		lbsr	unplant
+		clr	stopped
 		clra
 		tfr	a,dp
 		andcc	#$af
@@ -682,7 +723,8 @@ runat		lbsr	cls			; כמו CLS:EXEC בפינת הלמידה: התוכנית מת
 		lbsr	crlf
 1		ldx	#m_back
 		lbsr	puts
-		lbra	crlf
+		lbsr	crlf
+		lbra	main
 
 ; textmode: מסך הטקסט ב-$0400, כמו אחרי הדלקה
 textmode	lda	$ff22
@@ -1277,10 +1319,12 @@ drel		lbsr	dbyte
 		tfr	a,b
 		sex
 		addd	dptr
+		std	dtgt
 		lbsr	dhex4
 		lbra	dline
 dlrel		lbsr	dword
 		addd	dptr
+		std	dtgt
 		lbsr	dhex4
 		lbra	dline
 ; PSHS/PULS: רשימת המגירות, בסדר הקבוע
@@ -1497,7 +1541,12 @@ t_pcr		fcn	",PCR"
 t_fcb		fcn	"FCB"
 
 ; dline: מדפיסים את השורה: כתובת, עד 4 בתים, השם, האופרנד
-dline		ldd	dstart
+dline		tst	dquiet		; הדיבאגר רק רוצה את האורך ואת היעד
+		beq	dline2
+		ldx	dptr
+		stx	daddr
+		rts
+dline2		ldd	dstart
 		lbsr	prthex4
 		lda	#$20
 		lbsr	putc
@@ -3884,6 +3933,12 @@ t_help2		fcc	"MEM $2EE1    SEE MEMORY (M)"
 		fcb	13
 		fcc	"GO $2EE1     RUN FROM THERE (G)"
 		fcb	13
+		fcc	"BP LOOP      STOP THERE (NOBP)"
+		fcb	13
+		fcc	"T            ONE STEP (TRACE)"
+		fcb	13
+		fcc	"C   REG      GO ON, DRAWERS"
+		fcb	13
 		fcc	"ASM L        LIST WITH BYTES"
 		fcb	13
 		fcc	"SYM          THE NAMES"
@@ -3972,6 +4027,7 @@ m_nopage	fcn	"% IS NOT ON THE DIRECT PAGE"
 m_noext		fcn	"% NEEDS SOMETHING ELSE HERE, LIKE % 1,X"
 m_mem		fcn	"% IS THE ASSEMBLER'S. USE $2400-$33FF"
 
+		include	"debug.s"
 		include	"ops.s"
 
 ; ================= משתנים / variables =================
@@ -4012,6 +4068,24 @@ fname		rmb	8
 anynm		rmb	1
 sptr		rmb	2
 errarg		rmb	2
+oswi		rmb	3
+stopped		rmb	1
+nbp		rmb	1
+bpaddr		rmb	8
+np		rmb	1
+paddr		rmb	12
+pval		rmb	6
+contp		rmb	1
+dquiet		rmb	1
+dtgt		rmb	2
+nxt1		rmb	2
+nxt2		rmb	2
+isjmp		rmb	1
+usp		rmb	2
+ureg		rmb	12
+epb		rmb	1
+eptr		rmb	2
+er		rmb	2
 gptr		rmb	2
 maddr		rmb	2
 mstart		rmb	2
@@ -4105,4 +4179,6 @@ ix1		rmb	1
 ix2		rmb	1
 ixn		rmb	1
 inext		rmb	2
+ostk		rmb	320		; המחסנית של האסמבלר
+ostktop		equ	*
 vend		equ	*
