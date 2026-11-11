@@ -585,16 +585,18 @@ dorun		lbsr	asmall
 		ldx	#m_empty
 		lbsr	puts
 		lbra	crlf
-2		sts	runsp
+2		lbsr	cls			; כמו CLS:EXEC בפינת הלמידה: התוכנית מתחילה במסך נקי
+		sts	runsp
 		jsr	[entry]
 		lds	runsp
 		clra
 		tfr	a,dp
 		andcc	#$af
 		lbsr	textmode
-		ldx	#SCREND-32
+		ldx	#SCREND-32		; מה שהתוכנית כתבה נשאר על המסך עד שלוחצים מקש (הסמן מהבהב למטה)
 		stx	curpos
 		clr	justw
+		lbsr	getkey
 		lbsr	crlf
 		ldx	#m_back
 		lbsr	puts

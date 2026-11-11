@@ -89,9 +89,23 @@ s = await screen();
 check('RUN: the program writes B to Z on the top line', s.split('\n')[0].startsWith('BCDEFGHIJKLMNOPQRSTUVWXYZ'), s);
 await shot('run');
 await type(' ');
+await page.waitForTimeout(1500);
+s = await screen();
+check('the program\'s key ends it, and its screen stays', s.split('\n')[0].startsWith('BCDEFGHIJKLMNOPQRSTUVWXYZ') && !/BACK IN/.test(s), s);
+await type(' ');
+s = await until(/BACK IN THE ASSEMBLER/, 8000);
+check('another key: back in the assembler', /BACK IN THE ASSEMBLER/.test(s), s);
+
+// Gonen's program (11.11): the A it writes at the top left must still be there after the return
+await type('NEW\n'); await page.waitForTimeout(600); await type('Y');
+for (const l of ["10 @ LDA #'A", '20  STA $0400', '30  RTS', 'R']) await type(l + '\n');
+await page.waitForTimeout(2500);
+s = await screen();
+check('RUN: a clean screen, and what the program wrote stays there (A at the top left) until a key', s.split('\n')[0] === 'A' && !/BACK IN/.test(s), s);
+await type(' ');
 s = await until(/BACK IN THE ASSEMBLER/, 8000);
 check('a key: back in the assembler', /BACK IN THE ASSEMBLER/.test(s), s);
-
+for (const l of prog) await type(l + '\n');
 await type('CSAVE "ABC"\n');
 s = await until(/SAVED/, 60000);
 check('CSAVE writes the text to tape', /RECORDING ABC/.test(s) && /SAVED/.test(s), s);
@@ -115,7 +129,7 @@ check('CLOAD reads it back', /FOUND ABC/.test(s) && /LOADED/.test(s), s);
 await page.waitForTimeout(1500);
 await type('LIST\n');
 s = await until(/110 {2}RTS/, 10000);
-check('the text is back after CLOAD', /30 {2}LDA #'B/.test(s) && /110 {2}RTS/.test(s), s);
+check('the text is back after CLOAD', /30 {2}LDA #'A/.test(s) && /110 {2}RTS/.test(s), s);
 await shot('cload');
 
 await type('BASIC\n');
