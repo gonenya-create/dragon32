@@ -3097,60 +3097,199 @@ exprj		lbsr	expr
 		lbcs	lerr
 		rts
 
-; expr: X → טקסט. התוצאה ב-tv (3 בתים, עם סימן), eknown, efwd. C=1 ושגיאה ב-X
+; expr: X → טקסט. התוצאה ב-tv (3 בתים, עם סימן), eknown, efwd. C=1 ושגיאה ב-X.
+; + - * / לפי הסדר הרגיל (קודם * ו-/), סוגריים, וסימן לפני מספר. חילוק בשלמים, לכיוון אפס (כמו learn/asm/asm6809.js)
 expr		sts	esp
 		lbsr	skipsp
 		tst	,x
 		bne	1F
 		ldx	#m_nonum
 		lbra	eerr
-1		clr	tot
-		clr	tot+1
-		clr	tot+2
-		lda	#1
+1		lda	#1
 		sta	eknown
-		sta	efirst
 		clr	efwd
 		stx	estr
-2		tst	,x
-		beq	edone
-		clr	eneg
-		lda	,x
-		tst	efirst
-		beq	3F
+		bsr	esum
+		tst	,x		; נשאר משהו שלא הבנו
+		lbne	esyn
+		andcc	#$fe
+		rts
+; esum: חיבור וחיסור. הצד השמאלי נשמר במחסנית בזמן שמחשבים את הימני
+esum		bsr	eprod
+1		lda	,x
 		cmpa	#'+
-		beq	3F
+		beq	2F
 		cmpa	#'-
-		bne	4F
-3		cmpa	#'+
-		beq	31F
-		cmpa	#'-
-		bne	esyn
-		inc	eneg
-31		leax	1,x
-4		clr	efirst
-		lbsr	term
-		tst	eneg
-		bne	5F
+		bne	9F
+2		pshs	a
+		ldd	tv+1
+		pshs	d
+		lda	tv
+		pshs	a
+		leax	1,x
+		bsr	eprod
+		puls	a
+		sta	tot
+		puls	d
+		std	tot+1
+		puls	a
+		cmpa	#'+
+		bne	3F
 		ldd	tot+1
 		addd	tv+1
-		std	tot+1
+		std	tv+1
 		lda	tot
 		adca	tv
-		sta	tot
-		bra	2B
-5		ldd	tot+1
+		sta	tv
+		bra	1B
+3		ldd	tot+1
 		subd	tv+1
-		std	tot+1
+		std	tv+1
 		lda	tot
 		sbca	tv
+		sta	tv
+		bra	1B
+9		rts
+; eprod: כפל וחילוק
+eprod		bsr	eunary
+1		lda	,x
+		cmpa	#'*
+		beq	2F
+		cmpa	#'/
+		bne	9F
+2		pshs	a
+		ldd	tv+1
+		pshs	d
+		lda	tv
+		pshs	a
+		leax	1,x
+		bsr	eunary
+		puls	a
 		sta	tot
-		bra	2B
-edone		ldd	tot+1
+		puls	d
+		std	tot+1
+		puls	a
+		cmpa	#'*
+		bne	3F
+		lbsr	emul
+		bra	1B
+3		lbsr	ediv
+		bra	1B
+9		rts
+; eunary: סימן, סוגריים, או מספר/שם
+eunary		lda	,x
+		cmpa	#'-
+		bne	1F
+		leax	1,x
+		bsr	eunary
+		lbra	eneg24
+1		cmpa	#'+
+		bne	2F
+		leax	1,x
+		bra	eunary
+2		cmpa	#'(
+		bne	3F
+		leax	1,x
+		lbsr	esum
+		lda	,x
+		cmpa	#')
+		bne	4F
+		leax	1,x
+		rts
+4		ldx	#m_paren
+		lbra	eerr
+3		lbra	term
+; eneg24: tv = -tv
+eneg24		ldd	#0
+		subd	tv+1
+		std	tv+1
+		lda	#0
+		sbca	tv
+		sta	tv
+		rts
+; emul: tv = tot * tv (24 סיביות נמוכות)
+emul		clr	eres
+		clr	eres+1
+		clr	eres+2
+		lda	#24
+		sta	ecnt
+1		lsl	eres+2
+		rol	eres+1
+		rol	eres
+		lsl	tot+2
+		rol	tot+1
+		rol	tot
+		bcc	2F
+		ldd	eres+1
+		addd	tv+1
+		std	eres+1
+		lda	eres
+		adca	tv
+		sta	eres
+2		dec	ecnt
+		bne	1B
+		ldd	eres+1
+		std	tv+1
+		lda	eres
+		sta	tv
+		rts
+; ediv: tv = tot / tv, בשלמים לכיוון אפס. חילוק באפס: שגיאה (או 0, כשעוד לא יודעים את כל המקומות)
+ediv		lbsr	tvzero
+		bne	1F
+		tst	eknown
+		lbeq	9F
+		ldx	#m_div0
+		lbra	eerr
+1		lda	tot		; הסימן של התוצאה
+		eora	tv
+		sta	esgn
+		tst	tot		; |tot|
+		bpl	2F
+		ldd	#0
+		subd	tot+1
+		std	tot+1
+		lda	#0
+		sbca	tot
+		sta	tot
+2		tst	tv		; |tv|
+		bpl	3F
+		lbsr	eneg24
+3		clr	eres		; השארית
+		clr	eres+1
+		clr	eres+2
+		lda	#24
+		sta	ecnt
+4		lsl	tot+2		; המנה נכנסת ל-tot מימין
+		rol	tot+1
+		rol	tot
+		rol	eres+2
+		rol	eres+1
+		rol	eres
+		ldd	eres+1		; השארית >= המחלק?
+		subd	tv+1
+		pshs	d
+		lda	eres
+		sbca	tv
+		bcs	5F
+		sta	eres
+		puls	d
+		std	eres+1
+		inc	tot+2
+		bra	6F
+5		puls	d
+6		dec	ecnt
+		bne	4B
+		ldd	tot+1
 		std	tv+1
 		lda	tot
 		sta	tv
-		andcc	#$fe
+		tst	esgn
+		bpl	8F
+		lbra	eneg24
+8		rts
+9		clr	tv		; עוד לא ידוע: 0
+		clr	tv+1
+		clr	tv+2
 		rts
 esyn		ldd	estr
 		std	errarg
@@ -4006,6 +4145,8 @@ m_unkop		fcn	"I DON'T KNOW THE COMMAND %"
 m_noplc		fcn	"THERE IS NO PLACE CALLED %"
 m_miss		fcn	"SOMETHING IS MISSING AFTER %"
 m_nonum		fcn	"A NUMBER IS MISSING"
+m_paren		fcn	"A ) IS MISSING"
+m_div0		fcn	"YOU CAN'T DIVIDE BY ZERO"
 m_syntx		fcn	"I DON'T UNDERSTAND %"
 m_hexn		fcn	"A HEX NUMBER STARTS WITH $, LIKE $%"
 m_far		fcn	"TOO FAR FOR %. USE THE LONG JUMP: L%"
@@ -4188,6 +4329,9 @@ tptr		rmb	2
 tot		rmb	3
 tv		rmb	3
 tsave		rmb	3
+eres		rmb	3
+ecnt		rmb	1
+esgn		rmb	1
 stmp		rmb	2
 eknown		rmb	1
 efwd		rmb	1

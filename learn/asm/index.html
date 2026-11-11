@@ -46,7 +46,7 @@
 <pre>LOOP STA ,X+     * כותבים ומזיזים את X
  INCA</pre>
 <h3>מספרים</h3>
-<p><code>$41</code> הקסדצימלי, <code>%01000001</code> בינארי, <code>65</code> רגיל, <code>'A</code> הקוד של האות. אפשר גם חשבון פשוט: <code>LOOP+2</code>, <code>SCREEN+32</code>, <code>*-1</code> (‏<code>*</code> הוא הבית של השורה הזאת).</p>
+<p><code>$41</code> הקסדצימלי, <code>%01000001</code> בינארי, <code>65</code> רגיל, <code>'A</code> הקוד של האות. אפשר גם חשבון: <code>LOOP+2</code>, <code>SCREEN+32*3</code>, <code>(SIZE+1)*2</code>, <code>WIDTH/2</code>, <code>*-1</code> (‏<code>*</code> לבד הוא הבית של השורה הזאת). קודם כפל וחילוק, אחר כך חיבור וחיסור, וחילוק בשלמים.</p>
 <h3>הוראות למתרגם</h3>
 <table>
 <tr><td><code>ORG $3000</code></td><td>מאיזה בית לשים את התוכנית. בלי <code>ORG</code> מתחילים ב-<code>$2EE1</code>, כמו בקורס.</td></tr>

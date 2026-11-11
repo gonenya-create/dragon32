@@ -46,7 +46,7 @@
 <pre>LOOP STA ,X+     * write and move X
  INCA</pre>
 <h3>Numbers</h3>
-<p><code>$41</code> hex, <code>%01000001</code> binary, <code>65</code> ordinary, <code>'A</code> the letter's code. Simple sums work too: <code>LOOP+2</code>, <code>SCREEN+32</code>, <code>*-1</code> (<code>*</code> is this line's address).</p>
+<p><code>$41</code> hex, <code>%01000001</code> binary, <code>65</code> ordinary, <code>'A</code> the letter's code. Sums work too: <code>LOOP+2</code>, <code>SCREEN+32*3</code>, <code>(SIZE+1)*2</code>, <code>WIDTH/2</code>, <code>*-1</code> (<code>*</code> on its own is this line's address). Times and divide come first, then plus and minus; division is in whole numbers.</p>
 <h3>Instructions for the translator</h3>
 <table>
 <tr><td><code>ORG $3000</code></td><td>Where in memory to put the program. With no <code>ORG</code> it starts at <code>$2EE1</code>, as in the course.</td></tr>

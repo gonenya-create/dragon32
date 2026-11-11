@@ -54,6 +54,10 @@ const SMALL = {
   org: [' ORG $3000', 'START LDA #1', ' STA $10', 'V EQU $20', ' STA V', ' STA <V', ' STA >V', ' SETDP $30', ' STA $3010', ' LDD #START+2', ' END START'],
   equlater: ['N EQU M+1', 'M EQU 5', ' LDA #N', ' LDA N,X', ' LEAX M,Y', ' RTS'],
   neg: [' LDA #-1', ' LDX #-2', ' LDA -1,X', ' LDA -16,Y', ' LDA -17,U', ' LDA -129,S', ' FCB -128,255,0', ' FDB -1,$FFFF', ' LDA #%1010', ' LDA #@17', " LDA #'A", ' RTS'],
+  // stage E: + - * / with the usual order, brackets, a sign before a number, forward names inside sums
+  sums: ['W EQU 32', 'H EQU (W/2)-1', ' LDA #2*3+1', ' LDA #(2+3)*4', ' LDA #-(5-2)*-2', ' LDX #$400+W*3', ' LDA #H', ' LDA #-7/2', ' LDA #7/-2',
+    ' LDD #1000*30', ' LDD #-1000*30', ' LDD #$7FFF/3', ' LDB #200/10*3', ' LDA (2*3),X', ' LDA -(4),Y', ' LDA (W*4),U', ' LDX #END-START',
+    'START LDA #SIZE/2', ' LDB #SIZE*2+1', ' LEAX SIZE*3,PCR', ' FCB 1+2*3,(1+2)*3,W/5', ' FDB W*W*4,-W', ' RMB W/4', 'SIZE EQU 20', 'END RTS'],
 };
 for (const [k, src] of Object.entries(SMALL)) { all++; if (compare('small ' + k, src)) ok++; }
 console.log(`${ok}/${all}`);

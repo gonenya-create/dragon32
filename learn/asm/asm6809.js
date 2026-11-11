@@ -69,25 +69,22 @@
   const B = s => '<bdi class="ltr">' + String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</bdi>';
 
   /* ---------------- numbers and sums ---------------- */
-  // returns {v, known, fwd} or {err}
+  // returns {v, known, fwd} or {err}. + - * / with the usual order (* and / first), ( ), and a sign before a number.
+  // Division is whole numbers, towards zero. The Dragon Assembler (games/dasm) does the same, in 24 bits (11.11.2026)
   function expr(t, sym, here, pass) {
     t = t.trim();
     if (!t) return { err: E('חסר מספר.', 'A number is missing.') };
-    let i = 0, total = 0, known = true, fwd = false, sign = 1, first = true;
-    while (i < t.length) {
-      if (!first || t[i] === '-' || t[i] === '+') {
-        if (t[i] === '+') sign = 1; else if (t[i] === '-') sign = -1;
-        else return { err: E('אני לא מבין את ' + B(t) + '. בחשבון כאן יש רק ' + B('+') + ' ו-' + B('-') + ', למשל ' + B('LOOP+2') + '.', 'I don\'t understand ' + B(t) + '. Sums here use only ' + B('+') + ' and ' + B('-') + ', for example ' + B('LOOP+2') + '.') };
-        i++;
-      }
-      first = false;
+    let i = 0, known = true, fwd = false;
+    const fail = e => { throw e; };
+    const dunno = r => ({ err: E('אני לא מבין את ' + B(r || t) + '. בחשבון כאן יש ' + B('+ - * /') + ' וסוגריים, למשל ' + B('LOOP+2') + ' או ' + B('(SIZE+1)*2') + '.', 'I don\'t understand ' + B(r || t) + '. Sums here use ' + B('+ - * /') + ' and brackets, for example ' + B('LOOP+2') + ' or ' + B('(SIZE+1)*2') + '.') });
+    function term() {
       const r = t.slice(i);
       let m, v = null, len = 0;
       if ((m = /^\$([0-9A-F]+)/i.exec(r))) { v = parseInt(m[1], 16); len = m[0].length; }
       else if ((m = /^%([01]+)/.exec(r))) { v = parseInt(m[1], 2); len = m[0].length; }
       else if ((m = /^@([0-7]+)/.exec(r))) { v = parseInt(m[1], 8); len = m[0].length; }
       else if ((m = /^[0-9]+/.exec(r))) {
-        if (/^[0-9]+[A-Z_]/i.test(r)) return { err: E('אני לא מבין את המספר ' + B(r) + '. מספר הקסדצימלי מתחיל ב-' + B('$') + ', למשל ' + B('$' + r) + '.', 'I don\'t understand the number ' + B(r) + '. A hex number starts with ' + B('$') + ', for example ' + B('$' + r) + '.') };
+        if (/^[0-9]+[A-Z_]/i.test(r)) fail({ err: E('אני לא מבין את המספר ' + B(r) + '. מספר הקסדצימלי מתחיל ב-' + B('$') + ', למשל ' + B('$' + r) + '.', 'I don\'t understand the number ' + B(r) + '. A hex number starts with ' + B('$') + ', for example ' + B('$' + r) + '.') });
         v = parseInt(m[0], 10); len = m[0].length;
       }
       else if (r[0] === "'" && r.length >= 2) { v = r.charCodeAt(1) & 255; len = 2; }
@@ -97,13 +94,43 @@
         const sy = sym[n];
         if (!sy || (pass === 1 && !sy.known)) {
           if (pass === 1) { known = false; fwd = true; v = 0; }
-          else return { err: E('אין בתוכנית מקום בשם ' + B(n) + '. (שם של מקום כותבים צמוד לתחילת השורה.)', 'There is no place called ' + B(n) + ' in the program. (A place name is written at the very start of a line.)'), sym: n };
+          else fail({ err: E('אין בתוכנית מקום בשם ' + B(n) + '. (שם של מקום כותבים צמוד לתחילת השורה.)', 'There is no place called ' + B(n) + ' in the program. (A place name is written at the very start of a line.)'), sym: n });
         } else { v = sy.v; if (sy.line > sym.__line) fwd = true; }
       }
-      else return { err: E('אני לא מבין את ' + B(r || t) + '.', 'I don\'t understand ' + B(r || t) + '.') };
-      total += sign * v; i += len;
+      else fail(dunno(r));
+      i += len;
+      return v;
     }
-    return { v: total, known, fwd };
+    function unary() {
+      if (t[i] === '-') { i++; return -unary(); }
+      if (t[i] === '+') { i++; return unary(); }
+      if (t[i] === '(') {
+        i++; const v = sum();
+        if (t[i] !== ')') fail({ err: E('חסר ' + B(')') + ' בחשבון.', 'A ' + B(')') + ' is missing in the sum.') });
+        i++; return v;
+      }
+      return term();
+    }
+    function prod() {
+      let v = unary();
+      while (t[i] === '*' || t[i] === '/') {
+        const op = t[i++], w = unary();
+        if (op === '*') v *= w;
+        else if (w === 0) { if (known) fail({ err: E('אי אפשר לחלק באפס.', 'You can\'t divide by zero.') }); v = 0; }
+        else v = Math.trunc(v / w);
+      }
+      return v;
+    }
+    function sum() {
+      let v = prod();
+      while (t[i] === '+' || t[i] === '-') { const op = t[i++], w = prod(); v = op === '+' ? v + w : v - w; }
+      return v;
+    }
+    try {
+      const v = sum();
+      if (i < t.length) return dunno(t);
+      return { v, known, fwd };
+    } catch (e) { return e; }
   }
 
   /* split the operand from the comment: the operand ends at the first space (outside 'c) */
