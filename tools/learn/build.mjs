@@ -78,6 +78,7 @@ const T = HE ? {
 <li><a href="/learn/ch13/">פרק 13</a>: התוכנית כמספרים. ‏<a href="/learn/ch14/">פרקים 14 ו-15</a>: המשחק, והדרך למכונה.</li>
 </ul>
 <p class="asm-own">זה כלי שכתבנו בעצמנו, בהשראת הדרך שבה עבד <bdi>DREAM</bdi> בשנת 1983. ‏<bdi>DREAM</bdi> עצמו לא שלנו, והוא לא נמצא באתר.</p>
+<p class="asm-own">הבדל אחד מ-<bdi>DREAM</bdi>: סוגריים מרובעים, כמו <bdi dir="ltr">JSR [$A000]</bdi>, עובדים אצלנו כמו במעבד האמיתי. <bdi>DREAM</bdi> מתעלם מהם.</p>
 </details>`,
 } : {
   dir: 'ltr', course: 'Machine Code on the Dragon', home: '← Home', all: 'All chapters', other: 'עברית', nav: 'Navigation',
@@ -138,6 +139,7 @@ const T = HE ? {
 <li><a href="/en/learn/ch13/">Chapter 13</a>: the program as numbers. <a href="/en/learn/ch14/">Chapters 14 and 15</a>: the game, and the way to the machine.</li>
 </ul>
 <p class="asm-own">This is a tool we wrote ourselves, inspired by how <bdi>DREAM</bdi> worked in 1983. <bdi>DREAM</bdi> itself isn't ours, and it isn't on the site.</p>
+<p class="asm-own">One difference from <bdi>DREAM</bdi>: square brackets, as in <bdi dir="ltr">JSR [$A000]</bdi>, work here as they do on the real processor. <bdi>DREAM</bdi> ignores them.</p>
 </details>`,
 };
 
