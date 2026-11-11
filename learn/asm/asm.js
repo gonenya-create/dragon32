@@ -52,7 +52,7 @@
   const root = $('#asm');
   root.innerHTML = `
 <div class="asm-ex row"><label for="asm-ex">${tr('דוגמה לטעינה:', 'Load an example:')}</label> <select id="asm-ex"><option value="">${tr('בחר…', 'Choose…')}</option>${EX.map(e => `<option value="${e.id}">${esc(tr(e.he, e.en))}</option>`).join('')}</select>
-  <button class="btn ghost" type="button" id="asm-new">${tr('דף ריק', 'Blank page')}</button></div>
+  <button class="btn ghost" type="button" id="asm-new">${tr('✏️ תוכנית חדשה', '✏️ New program')}</button></div>
 <div class="asm-grid">
   <div class="asm-edwrap">
     <div class="asm-ed" dir="ltr"><pre class="asm-gut" aria-hidden="true"></pre><textarea id="asm-src" spellcheck="false" autocapitalize="characters" autocomplete="off" aria-label="${tr('התוכנית', 'The program')}"></textarea></div>
@@ -95,7 +95,7 @@
   $('#asm-ex').addEventListener('change', e => { const x = EX.find(t => t.id === e.target.value); if (!x) return; src.value = x.src.join('\n') + '\n'; name.value = x.tape; ls.set(KEY_SRC, src.value); ls.set(KEY_NAME, x.tape); gutter(); build(); reset(); e.target.value = ''; });
   // a blank page: only the start (@) and the usual ending (wait for a key, RTS); the cursor goes to the empty line between them
   $('#asm-new').addEventListener('click', () => {
-    const head = '* MY PROGRAM' + '\n@ \n';
+    const head = '* MY PROGRAM' + '\n@ \n' + '* WRITE YOUR COMMANDS HERE. EACH ONE STARTS WITH A SPACE' + '\n';   // (גונן, 11.11: לא היה ברור איפה כותבים)
     src.value = head + '\n' + WAIT.join('\n') + '\n'; name.value = 'MYPROG'; ls.set(KEY_NAME, 'MYPROG');
     ls.set(KEY_SRC, src.value); gutter(); build(); reset(); src.focus(); src.setSelectionRange(head.length, head.length);
   });
