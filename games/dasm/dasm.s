@@ -395,6 +395,15 @@ cmdtab		fcn	"LIST"
 		fcn	"REG"
 		fcb	0
 		fdb	doreg
+		fcn	"VIEW"
+		fcb	'V
+		fdb	doview
+		fcn	"FIND"
+		fcb	'F
+		fdb	dofind
+		fcn	"CHANGE"
+		fcb	0
+		fdb	dochg
 		fcn	"BASIC"
 		fcb	0
 		fdb	dobasic
@@ -3925,7 +3934,13 @@ t_help		fcc	"100  LDA #1  TYPE A LINE"
 		fcb	13
 		fcc	"ANY KEY: MORE"
 		fcb	0
-t_help2		fcc	"MEM $2EE1    SEE MEMORY (M)"
+t_help2		fcc	"V 100        FULL SCREEN EDIT"
+		fcb	13
+		fcc	"FIND LDA     LINES WITH LDA"
+		fcb	13
+		fcc	"CHANGE /A/B/ A TO B EVERYWHERE"
+		fcb	13
+		fcc	"MEM $2EE1    SEE MEMORY (M)"
 		fcb	13
 		fcc	"MEM $2EE1 1 2  WRITE BYTES"
 		fcb	13
@@ -4028,6 +4043,7 @@ m_noext		fcn	"% NEEDS SOMETHING ELSE HERE, LIKE % 1,X"
 m_mem		fcn	"% IS THE ASSEMBLER'S. USE $2400-$33FF"
 
 		include	"debug.s"
+		include	"screen.s"
 		include	"ops.s"
 
 ; ================= משתנים / variables =================
@@ -4068,6 +4084,28 @@ fname		rmb	8
 anynm		rmb	1
 sptr		rmb	2
 errarg		rmb	2
+vtopn		rmb	2
+vrow		rmb	1
+vcol		rmb	1
+vlen		rmb	1
+vmax		rmb	1
+vwid		rmb	1
+vnum		rmb	2
+vdirty		rmb	1
+vnewr		rmb	1
+vr		rmb	1
+vrp		rmb	2
+vbuf		rmb	64
+rownum		rmb	30
+fpat		rmb	2
+fplen		rmb	1
+fcount		rmb	1
+cnew		rmb	2
+cnlen		rmb	1
+cline		rmb	2
+cleft		rmb	1
+fold		rmb	64
+fnew		rmb	64
 oswi		rmb	3
 stopped		rmb	1
 nbp		rmb	1

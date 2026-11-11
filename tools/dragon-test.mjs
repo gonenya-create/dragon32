@@ -2102,7 +2102,7 @@ if (part('real machine lab')) {
       v.querySelector('.gv-back').click(); return r;
     });
     check(`${path} the Dragon Assembler has a tool page: how to load, commands, first program, about; no "tried it?" button`,
-      tool.tool && tool.tabs.length === 4 && tool.cmds === 25 && /STA \$0400/.test(tool.code || '') && !tool.testers, JSON.stringify(tool));
+      tool.tool && tool.tabs.length === 4 && tool.cmds === 28 && /STA \$0400/.test(tool.code || '') && !tool.testers, JSON.stringify(tool));
     check(`${path} every game opens its own page beside the machine, at its own address, with the 3 tabs (how to load, how to play, about; + hints in a game we finished), the red button and the credit; "back to the cabinet" returns`,
       gv.out.length === 75 && gv.out.every(g => g.id === 'dasm' ? (g.open && g.tabs === 4 && g.credit && g.go && g.url.startsWith(pre)) : g.open && g.url.startsWith(pre) && g.url.length > pre.length + 3 && g.tabs === 3 + (['adventureland', 'pirate', 'voodoo', 'mission', 'count', 'odyssey', 'pyramid', 'funhouse', 'ghost', 'golden', 'savage1', 'savage2', 'claymorgue', 'calixto', 'sanctum', 'shenan', 'seasearch', 'trekboer', 'williamsburg', 'vortex', 'diablero', 'sword', 'riverfire', 'daggorath'].includes(g.id) ? 1 : 0) && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go) && gv.after === pre && gv.closed, JSON.stringify(gv.out.filter(g => !(g.open && true && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go)).slice(0, 3)));
     // העטיפה המקורית (30.10): רק במשחק שיש עליו רשות (El Diablero, מארכיון Dragon Data), בלשונית "על המשחק", עם קרדיט וקישור. התמונה נטענת

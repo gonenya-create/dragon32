@@ -58,6 +58,7 @@ try {
   writeFileSync(join(dir, 'ops.s'), ops);
   writeFileSync(join(dir, 'dasm.s'), readFileSync(join(here, 'dasm.s')));
   writeFileSync(join(dir, 'debug.s'), readFileSync(join(here, 'debug.s')));
+  writeFileSync(join(dir, 'screen.s'), readFileSync(join(here, 'screen.s')));
   execFileSync('asm6809', ['-B', '-o', join(dir, 'dasm.bin'), '-l', join(dir, 'dasm.lst'), '-s', join(dir, 'dasm.sym'), 'dasm.s'], { cwd: dir, stdio: 'inherit' });
   bin = readFileSync(join(dir, 'dasm.bin'));
   if (process.argv.includes('--list')) {
