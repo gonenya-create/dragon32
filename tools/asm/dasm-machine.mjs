@@ -132,14 +132,36 @@ s = await until(/110 {2}RTS/, 10000);
 check('the text is back after CLOAD', /30 {2}LDA #'A/.test(s) && /110 {2}RTS/.test(s), s);
 await shot('cload');
 
+// stage A: a listing with bytes, the names, and the program as its own tape
+await type('ASM L\n');
+s = await until(/START \$2EE1/, 30000);
+check('ASM L lists address, bytes and line', /2EE1 8E0400 20 @ LDX #\$0400/.test(s) && /2EE6 A780 {3}40 LOOP STA ,X\+/.test(s), s);
+await type('SYM\n');
+s = await until(/KEY {7}\$2EED/, 20000);
+check('SYM shows each name and its place, two in a row', /@ {9}\$2EE1 LOOP {6}\$2EE6/.test(s) && /KEY {7}\$2EED/.test(s), s);
+await type('CSAVEM "ABCP"\n');
+s = await until(/RECORDING ABCP[\s\S]*SAVED/, 60000);
+const out2 = await page.evaluate(() => Array.from(FS.readFile('/out.cas')));
+check('CSAVEM writes the program as a CLOADM tape: ABCP, type 2, load and start $2EE1', (() => { for (let i = 0; i < out2.length - 20; i++) if (out2[i] === 0x55 && out2[i + 1] === 0x3c && out2[i + 2] === 0 && String.fromCharCode(...out2.slice(i + 4, i + 8)) === 'ABCP') return out2[i + 12] === 2 && out2[i + 15] === 0x2e && out2[i + 16] === 0xe1 && out2[i + 17] === 0x2e && out2[i + 18] === 0xe1; return false; })(), s);
+
 await type('BASIC\n');
-s = await until(/TYPE EXEC\s*\nOK/, 8000);
-check('BASIC goes back to BASIC', /TYPE EXEC\s*\nOK/.test(s), s);
+s = await until(/EXEC 20480\s*\nOK/, 8000);
+check('BASIC goes back to BASIC', /EXEC 20480\s*\nOK/.test(s), s);
+// the program tape runs by itself in BASIC: CLOADM, EXEC
+await page.evaluate(b => { FS.writeFile('/p.cas', new Uint8Array(b)); Module.ccall('wasm_load_file', null, ['string', 'number', 'number'], ['/p.cas', 2, 0]); }, out2);
+await type('CLOADM "ABCP"\n');
+s = await until(/ABCP[\s\S]*\nOK/, 240000);
 await type('EXEC\n');
+await page.waitForTimeout(2500);
+s = await screen();
+check('in BASIC, CLOADM and EXEC run the saved program (the alphabet on the top line)', s.split('\n')[0].startsWith('ABCDEFGHIJKLMNOPQRSTUVWXYZ'), s);
+await type(' ');
+await until(/\nOK\s*$/, 8000);
+await type('EXEC 20480\n');
 await page.waitForTimeout(1500);
 await type('L 20\n');
 s = await until(/20 @ LDX #\$0400/, 8000);
-check('EXEC comes back, and the text is still there', /20 @ LDX #\$0400/.test(s), s);
+check('EXEC 20480 comes back, and the text is still there', /20 @ LDX #\$0400/.test(s), s);
 await type('HELP\n');
 s = await until(/BASIC {8}BACK TO BASIC/, 8000);
 check('HELP lists the commands', /CSAVE NAME/.test(s) && /RUN \(R\)/.test(s), s);

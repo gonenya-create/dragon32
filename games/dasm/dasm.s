@@ -61,6 +61,9 @@ start		sts	bassp		; המחסנית של BASIC: BASIC חוזר דרכה
 		clra
 		tfr	a,dp
 		sta	<DEVNUM
+		clr	listf		; המשתנים לא על הקלטת: מאפסים את מה שצריך
+		clr	lstop
+		clr	justw
 		lbsr	srcchk		; יש כבר טקסט? (EXEC שני שומר אותו)
 		lbsr	cls
 		ldx	#t_hello
@@ -339,6 +342,12 @@ cmdtab		fcn	"LIST"
 		fcn	"CLOAD"
 		fcb	0
 		fdb	doload
+		fcn	"CSAVEM"
+		fcb	0
+		fdb	dosavm
+		fcn	"SYM"
+		fcb	0
+		fdb	dosym
 		fcn	"BASIC"
 		fcb	0
 		fdb	dobasic
@@ -571,11 +580,59 @@ dobasic		ldx	#m_bye
 		rts
 
 dohelp		ldx	#t_help
+		lbsr	puts
+		lbsr	getkey
+		lbsr	crlf
+		ldx	#t_help2
 		lbra	puts
 
 ; ASM / RUN
-doasm		lbsr	asmall
+doasm		lbsr	skipsp		; ASM L: רשימה עם הכתובות והבתים
+		lda	,x
+		lbsr	upper
+		cmpa	#'L
+		bne	1F
+		inc	listf
+1		lbsr	asmall
+		clr	listf
 		lbra	asmsum
+
+; SYM: מתרגמים, ואז כל השמות והערכים שלהם, שניים בשורה
+dosym		lbsr	asmall
+		ldd	errcnt
+		lbne	asmsum
+		ldu	#SYMTAB
+		cmpu	symend
+		bne	1F
+		ldx	#m_nosym
+		lbsr	puts
+		lbra	crlf
+1		cmpu	symend
+		bhs	8F
+		ldb	#10
+2		lda	,u+
+		bne	3F
+		lda	#$20
+3		lbsr	putc
+		decb
+		bne	2B
+		ldx	#t_spdol
+		lbsr	puts
+		ldd	,u
+		lbsr	prthex4
+		lda	#$20
+		lbsr	putc
+		leau	SYLEN-10,u
+		lda	curpos+1
+		anda	#31
+		bne	1B
+		lbsr	brkchk
+		bcc	1B
+8		lda	curpos+1
+		anda	#31
+		beq	9F
+		lbsr	crlf
+9		rts
 dorun		lbsr	asmall
 		ldd	errcnt
 		beq	1F
@@ -689,17 +746,39 @@ getname		ldy	#fname
 4		tstb
 		rts
 
-; CSAVE NAME: כותרת (סוג 2, נטען ל-$3600, מופעל ב-start) ואחריה הטקסט, כמו CSAVEM
+; CSAVE NAME: הטקסט (סוג 2, נטען ל-SRC, מופעל ב-start). CSAVEM NAME: התוכנית המתורגמת, כמו CSAVEM של BASIC
 dosave		bsr	getname
 		bne	1F
 		ldx	#t_defnm
-		ldy	#fname
-		ldb	#8
-11		lda	,x+
-		sta	,y+
-		decb
-		bne	11B
-1		ldx	#m_rec
+		lbsr	setfn
+1		ldd	#start
+		std	wexec
+		ldd	#SRC
+		std	wfrom
+		ldd	srcend
+		addd	#2
+		std	wto
+		bra	tapewr
+dosavm		lbsr	getname
+		bne	1F
+		ldx	#t_defpg
+		lbsr	setfn
+1		lbsr	asmall
+		ldd	errcnt
+		lbne	asmsum
+		tst	anyad
+		bne	2F
+		ldx	#m_nobytes
+		lbsr	puts
+		lbra	crlf
+2		ldd	entry
+		std	wexec
+		ldd	minad
+		std	wfrom
+		ldd	maxad
+		std	wto
+; tapewr: כותרת (fname, סוג 2, wexec, wfrom) ואחריה הבתים מ-wfrom עד wto
+tapewr		ldx	#m_rec
 		lbsr	puts
 		lbsr	prtfn
 		lbsr	crlf
@@ -714,9 +793,9 @@ dosave		bsr	getname
 		sta	,x+
 		clr	,x+
 		clr	,x+
-		ldd	#start
+		ldd	wexec
 		std	,x++
-		ldd	#SRC
+		ldd	wfrom
 		std	,x
 		jsr	[WRLDR]
 		ldx	#TBUF
@@ -727,10 +806,9 @@ dosave		bsr	getname
 		jsr	[BLKOUT]
 		jsr	MOTOFF
 		jsr	[WRLDR]
-		ldx	#SRC
+		ldx	wfrom
 		stx	sptr
-3		ldd	srcend
-		addd	#2
+3		ldd	wto
 		subd	sptr
 		beq	5F
 		cmpd	#255
@@ -756,6 +834,15 @@ dosave		bsr	getname
 		ldx	#m_saved
 		lbsr	puts
 		lbra	crlf
+
+; setfn: 8 תווים מ-X לשם הקלטת
+setfn		ldy	#fname
+		ldb	#8
+1		lda	,x+
+		sta	,y+
+		decb
+		bne	1B
+		rts
 
 ; CLOAD [NAME]: מחפשים כותרת (עם השם, אם נכתב), בודקים שזו קלטת של האסמבלר, וקוראים את הטקסט
 doload		lbsr	getname
@@ -858,6 +945,7 @@ prtfn		ldx	#fname
 ; asmall: מעבר ראשון, מעברים עד שהמקומות לא זזים, ומעבר אחרון שכותב לזיכרון ומדווח על שגיאות
 asmall		ldd	#SYMTAB
 		std	symend
+		clr	lstop
 		lda	#1
 		sta	pass
 		clr	emit
@@ -921,8 +1009,55 @@ apass		ldd	#ORG0
 		bne	2B
 3		clr	,u
 		sty	recp
+		ldd	apc
+		std	lpc
+		clr	obn
 		lbsr	aline
+		tst	emit
+		beq	1B
+		tst	listf
+		beq	1B
+		lbsr	prtlst
 		bra	1B
+9		rts
+
+; prtlst: שורה ברשימה (ASM L): הכתובת, עד 3 בתים, ואז השורה עצמה
+prtlst		tst	lstop
+		bne	9F
+		ldd	lpc
+		lbsr	prthex4
+		lda	#$20
+		lbsr	putc
+		ldb	obn
+		cmpb	#3
+		bls	1F
+		ldb	#3
+1		stb	ltmp
+		ldx	#obuf
+		tstb
+		beq	3F
+2		lda	,x+
+		lbsr	prthex2
+		decb
+		bne	2B
+3		ldb	#4		; ריפוד: 2 רווחים לכל בית חסר, ועוד 1
+		subb	ltmp
+		lslb
+		decb
+4		lda	#$20
+		lbsr	putc
+		decb
+		bne	4B
+		ldd	curln
+		lbsr	prtdec
+		lda	#$20
+		lbsr	putc
+		ldx	#lbuf
+		lbsr	puts
+		lbsr	crlf
+		lbsr	brkchk
+		bcc	9F
+		inc	lstop
 9		rts
 
 ; lerr: שגיאה בשורה. במעבר האחרון: מספר השורה וההודעה (X, עם % = errarg). ואז השורה נגמרת
@@ -3133,9 +3268,21 @@ t_help		fcc	"100  LDA #1  TYPE A LINE"
 		fcb	13
 		fcc	"BASIC        BACK TO BASIC"
 		fcb	13
+		fcc	"ANY KEY: MORE"
+		fcb	0
+t_help2		fcc	"ASM L        LIST WITH BYTES"
+		fcb	13
+		fcc	"SYM          THE NAMES"
+		fcb	13
+		fcc	"CSAVEM NAME  SAVE THE PROGRAM"
+		fcb	13
+		fcc	"             (CLOADM, EXEC)"
+		fcb	13
 		fcc	"[ ]  SHIFT+DOWN, SHIFT+RIGHT"
 		fcb	13,0
 t_defnm		fcc	"SOURCE  "
+t_defpg		fcc	"PROGRAM "
+t_spdol		fcn	"$"
 t_zero		fcn	"0"
 
 m_needsp	fcn	"PUT A SPACE AFTER THE LINE NUMBER"
@@ -3149,10 +3296,11 @@ m_exists	fcn	"LINE % EXISTS. INSERT STOPPED"
 m_sure		fcn	"DELETE THE WHOLE PROGRAM? (Y/N) "
 m_bye		fcc	"BACK TO BASIC."
 		fcb	13
-		fcc	"TO COME BACK, TYPE EXEC"
+		fcc	"TO COME BACK: EXEC 20480"
 		fcb	13,0
 m_back		fcn	"BACK IN THE ASSEMBLER"
 m_empty		fcn	"NOTHING TO RUN"
+m_nosym		fcn	"NO NAMES"
 m_err1		fcn	"1 ERROR"
 m_errs		fcn	" ERRORS"
 m_nobytes	fcn	"OK. NOTHING WENT INTO MEMORY"
@@ -3249,6 +3397,13 @@ fname		rmb	8
 anynm		rmb	1
 sptr		rmb	2
 errarg		rmb	2
+wexec		rmb	2
+wfrom		rmb	2
+wto		rmb	2
+listf		rmb	1
+lstop		rmb	1
+lpc		rmb	2
+ltmp		rmb	1
 pass		rmb	1
 emit		rmb	1
 changed		rmb	1
