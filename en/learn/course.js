@@ -732,7 +732,7 @@ function codePuzzle(host,cfg){
     const nl=prog.length;
     if(warnA){ res.className='fb res no'; res.innerHTML='There is an STA before any LDA: we haven’t put anything in the drawer yet. On the Dragon a random number would come out there.'; return; }
     if(!diff){ res.className='fb res ok'; res.innerHTML='✓ The screen matches the picture! '+(nl<=cfg.best?'And in the shortest way too: '+nl+' lines.':'You did it in '+nl+' lines. Challenge: it can also be done in '+cfg.best+'.')+' <span class="badge">★ Solved</span>'; if(!host._won){ host._won=1; cfg.onWin&&cfg.onWin(); } }
-    else { res.className='fb res no'; res.innerHTML='Almost! '+diff+' squares are not like the picture. I marked them in red on your screen.'+(cfg.diffHint?' '+cfg.diffHint(mine.mem):''); }
+    else { res.className='fb res no'; res.innerHTML='Almost! '+(diff===1?'1 square is not like the picture. I marked it in red on your screen.':diff+' squares are not like the picture. I marked them in red on your screen.')+(cfg.diffHint?' '+cfg.diffHint(mine.mem):''); }
   };
 }
 
@@ -1525,7 +1525,7 @@ function codePuzzle9(host,cfg){
       const pfx=multi?v.c.name+': ':'';
       if(out.err){ allOk=false; msgs.push(pfx+'⚠️ '+out.err); continue; }
       if(out.keysLeft){ allOk=false; msgs.push(pfx+'The program ended before all the keys were pressed ('+out.keysLeft+' left). Maybe a loop that goes back to ask is missing?'); continue; }
-      if(diff){ allOk=false; msgs.push(pfx+diff+' squares are not as in the picture (marked in red).'); continue; }
+      if(diff){ allOk=false; msgs.push(pfx+(diff===1?'1 square is not as in the picture (marked in red).':diff+' squares are not as in the picture (marked in red).')); continue; }
       if(cfg.minTime&&out.st.cyc/CLK9<cfg.minTime){ allOk=false; msgs.push(pfx+'The screen is right, but on the Dragon all this is over in '+secs9(out.st.cyc)+'. The eye won’t have time to see any movement. You need a wait (at least '+cfg.minTime+' second in total).'); continue; }
       await sleep(100);
     }
@@ -2265,7 +2265,7 @@ function codePuzzle12(host,cfg){
       if(out.err){ allOk=false; msgs.push(pfx+'⚠️ '+out.err); continue; }
       if(out.keysLeft){ allOk=false; msgs.push(pfx+'The program ended before all the keys were pressed ('+out.keysLeft+' left). Maybe a loop that goes back to ask is missing?'); continue; }
       if(out.back&&tail==='real'){ allOk=false; msgs.push(pfx+'The program went back to DREAM before the fixed ending (RTS took DREAM’s plate). In DREAM the screen would be wiped at once, so we would not see the picture.'); continue; }
-      if(diff){ allOk=false; msgs.push(pfx+diff+' squares are not like the picture (marked in red).'); continue; }
+      if(diff){ allOk=false; msgs.push(pfx+(diff===1?'1 square is not like the picture (marked in red).':diff+' squares are not like the picture (marked in red).')); continue; }
       if(cfg.minTime&&out.st.cyc/CLK9<cfg.minTime){ allOk=false; msgs.push(pfx+'The screen is right, but on the Dragon all this is over within '+secs9(out.st.cyc)+'. A wait is needed (at least '+cfg.minTime+' seconds in all).'); continue; }
       await sleep(60);
     }
@@ -2302,7 +2302,7 @@ function memPuzzle12(host,cfg){
     mine.mem.set(scr12(out.st)); mine.marks={}; let diff=0; for(let i=0;i<512;i++) if(mine.mem[i]!==T[i]){ diff++; mine.marks[i]='#c0392b'; } mine.draw();
     if(!n){ res.className='fb res no'; res.innerHTML='You haven’t changed any number yet. Click a number in the memory and change it.'; return; }
     if(out.err){ res.className='fb res no'; res.innerHTML='⚠️ '+out.err; return; }
-    if(diff){ res.className='fb res no'; res.innerHTML='Almost! '+diff+' squares are not like the picture (marked in red).'; return; }
+    if(diff){ res.className='fb res no'; res.innerHTML='Almost! '+(diff===1?'1 square is not like the picture (marked in red).':diff+' squares are not like the picture (marked in red).'); return; }
     if(n>cfg.changes){ res.className='fb res no'; res.innerHTML='The screen is right! But you changed '+n+' numbers. '+cfg.changes+' is enough.'; return; }
     res.className='fb res ok'; res.innerHTML='✓ The screen matches the picture, and you changed only one number! <span class="badge">★ Solved</span>'; if(!host._won){ host._won=1; cfg.onWin&&cfg.onWin(); }
   };
@@ -2917,7 +2917,7 @@ function codePuzzle2(host,cfg){
       v.mine.mem.set(out.st.mem); v.mine.marks={};
       let diff=0; for(let i=0;i<512;i++) if(v.mine.mem[i]!==v.T[i]){ diff++; v.mine.marks[i]='#c0392b'; } v.mine.draw();
       if(out.err){ allOk=false; msgs.push((multi?v.c.name+': ':'')+'⚠️ '+out.err); continue; }
-      if(diff){ allOk=false; msgs.push((multi?v.c.name+': ':'')+diff+' squares are not as in the picture (marked in red).'); }
+      if(diff){ allOk=false; msgs.push((multi?v.c.name+': ':'')+(diff===1?'1 square is not as in the picture (marked in red).':diff+' squares are not as in the picture (marked in red).')); }
       await sleep(120);
     }
     if(allOk){ res.className='fb res ok'; res.innerHTML='✓ '+(multi?'In every case the screen matches the picture!':'The screen matches the picture!')+' '+(nUser<=cfg.best?'And in the shortest way: '+nUser+' lines.':'You did it in '+nUser+' lines. Challenge: it can also be done in '+cfg.best+'.')+' <span class="badge">★ Solved</span>'; if(!host._won){ host._won=1; cfg.onWin&&cfg.onWin(); } }

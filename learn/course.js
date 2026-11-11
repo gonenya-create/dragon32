@@ -732,7 +732,7 @@ function codePuzzle(host,cfg){
     const nl=prog.length;
     if(warnA){ res.className='fb res no'; res.innerHTML='יש STA לפני שהיה LDA: במגירה עוד לא שמנו כלום. בדראגון יצא שם מספר מקרי.'; return; }
     if(!diff){ res.className='fb res ok'; res.innerHTML='✓ המסך זהה לתמונה! '+(nl<=cfg.best?'וגם בקיצור הכי גדול: '+nl+' שורות.':'עשית את זה ב-'+nl+' שורות. אתגר: אפשר גם ב-'+cfg.best+'.')+' <span class="badge">★ פתרת</span>'; if(!host._won){ host._won=1; cfg.onWin&&cfg.onWin(); } }
-    else { res.className='fb res no'; res.innerHTML='כמעט! '+diff+' משבצות לא כמו בתמונה. סימנתי אותן באדום במסך שלך.'+(cfg.diffHint?' '+cfg.diffHint(mine.mem):''); }
+    else { res.className='fb res no'; res.innerHTML='כמעט! '+(diff===1?'משבצת אחת לא כמו בתמונה. סימנתי אותה באדום במסך שלך.':diff+' משבצות לא כמו בתמונה. סימנתי אותן באדום במסך שלך.')+(cfg.diffHint?' '+cfg.diffHint(mine.mem):''); }
   };
 }
 
@@ -1525,7 +1525,7 @@ function codePuzzle9(host,cfg){
       const pfx=multi?v.c.name+': ':'';
       if(out.err){ allOk=false; msgs.push(pfx+'⚠️ '+out.err); continue; }
       if(out.keysLeft){ allOk=false; msgs.push(pfx+'התוכנית נגמרה לפני שלחצו על כל המקשים (נשארו '+out.keysLeft+'). אולי חסרה לולאה שחוזרת לשאול?'); continue; }
-      if(diff){ allOk=false; msgs.push(pfx+diff+' משבצות לא כמו בתמונה (מסומנות באדום).'); continue; }
+      if(diff){ allOk=false; msgs.push(pfx+(diff===1?'משבצת אחת לא כמו בתמונה (מסומנת באדום).':diff+' משבצות לא כמו בתמונה (מסומנות באדום).')); continue; }
       if(cfg.minTime&&out.st.cyc/CLK9<cfg.minTime){ allOk=false; msgs.push(pfx+'המסך נכון, אבל בדראגון כל זה נגמר תוך '+secs9(out.st.cyc)+'. העין לא תספיק לראות תנועה. צריך המתנה (לפחות '+cfg.minTime+' שנייה בסך הכול).'); continue; }
       await sleep(100);
     }
@@ -2265,7 +2265,7 @@ function codePuzzle12(host,cfg){
       if(out.err){ allOk=false; msgs.push(pfx+'⚠️ '+out.err); continue; }
       if(out.keysLeft){ allOk=false; msgs.push(pfx+'התוכנית נגמרה לפני שלחצו על כל המקשים (נשארו '+out.keysLeft+'). אולי חסרה לולאה שחוזרת לשאול?'); continue; }
       if(out.back&&tail==='real'){ allOk=false; msgs.push(pfx+'התוכנית חזרה ל-DREAM לפני הסוף הקבוע (‏RTS לקחה את הצלחת של DREAM). ב-DREAM המסך היה נמחק מיד, אז לא היינו רואים את הציור.'); continue; }
-      if(diff){ allOk=false; msgs.push(pfx+diff+' משבצות לא כמו בתמונה (מסומנות באדום).'); continue; }
+      if(diff){ allOk=false; msgs.push(pfx+(diff===1?'משבצת אחת לא כמו בתמונה (מסומנת באדום).':diff+' משבצות לא כמו בתמונה (מסומנות באדום).')); continue; }
       if(cfg.minTime&&out.st.cyc/CLK9<cfg.minTime){ allOk=false; msgs.push(pfx+'המסך נכון, אבל בדראגון כל זה נגמר תוך '+secs9(out.st.cyc)+'. צריך המתנה (לפחות '+cfg.minTime+' שנייה בסך הכול).'); continue; }
       await sleep(60);
     }
@@ -2302,7 +2302,7 @@ function memPuzzle12(host,cfg){
     mine.mem.set(scr12(out.st)); mine.marks={}; let diff=0; for(let i=0;i<512;i++) if(mine.mem[i]!==T[i]){ diff++; mine.marks[i]='#c0392b'; } mine.draw();
     if(!n){ res.className='fb res no'; res.innerHTML='עוד לא שינית אף מספר. לחץ על מספר בזיכרון ושנה אותו.'; return; }
     if(out.err){ res.className='fb res no'; res.innerHTML='⚠️ '+out.err; return; }
-    if(diff){ res.className='fb res no'; res.innerHTML='כמעט! '+diff+' משבצות לא כמו בתמונה (מסומנות באדום).'; return; }
+    if(diff){ res.className='fb res no'; res.innerHTML='כמעט! '+(diff===1?'משבצת אחת לא כמו בתמונה (מסומנת באדום).':diff+' משבצות לא כמו בתמונה (מסומנות באדום).'); return; }
     if(n>cfg.changes){ res.className='fb res no'; res.innerHTML='המסך נכון! אבל שינית '+n+' מספרים. אפשר להסתפק ב-'+cfg.changes+'.'; return; }
     res.className='fb res ok'; res.innerHTML='✓ המסך זהה לתמונה, ושינית רק מספר אחד! <span class="badge">★ פתרת</span>'; if(!host._won){ host._won=1; cfg.onWin&&cfg.onWin(); }
   };
@@ -2917,7 +2917,7 @@ function codePuzzle2(host,cfg){
       v.mine.mem.set(out.st.mem); v.mine.marks={};
       let diff=0; for(let i=0;i<512;i++) if(v.mine.mem[i]!==v.T[i]){ diff++; v.mine.marks[i]='#c0392b'; } v.mine.draw();
       if(out.err){ allOk=false; msgs.push((multi?v.c.name+': ':'')+'⚠️ '+out.err); continue; }
-      if(diff){ allOk=false; msgs.push((multi?v.c.name+': ':'')+diff+' משבצות לא כמו בתמונה (מסומנות באדום).'); }
+      if(diff){ allOk=false; msgs.push((multi?v.c.name+': ':'')+(diff===1?'משבצת אחת לא כמו בתמונה (מסומנת באדום).':diff+' משבצות לא כמו בתמונה (מסומנות באדום).')); }
       await sleep(120);
     }
     if(allOk){ res.className='fb res ok'; res.innerHTML='✓ '+(multi?'בכל המקרים המסך זהה לתמונה!':'המסך זהה לתמונה!')+' '+(nUser<=cfg.best?'וגם בקיצור הכי גדול: '+nUser+' שורות.':'עשית את זה ב-'+nUser+' שורות. אתגר: אפשר גם ב-'+cfg.best+'.')+' <span class="badge">★ פתרת</span>'; if(!host._won){ host._won=1; cfg.onWin&&cfg.onWin(); } }
