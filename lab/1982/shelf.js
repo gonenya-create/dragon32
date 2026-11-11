@@ -650,16 +650,6 @@
         'Saving: SAVE GAME. At PRESS ENTER WHEN READY press [ENTER], and at ENTER DATA FILE NAME: type a name and [ENTER]. The game is saved to My tapes, and ends.',
         'To carry on from the same place: load the game again, and at the question about a saved game press [Y], then [ENTER] and the same name. QUIT ends the game, and at HOW ABOUT ANOTHER (Y OR N)? press [N] to go back to BASIC.']
     },
-    dasm: {
-      he: ['כותבים שורות עם מספרים, כמו ב-BASIC, ו-[ENTER] בסוף כל שורה: 100 LOOP LDA #1. שורה בלי שם של מקום מתחילה ברווח: 100 ואחריו שני רווחים, LDA #1.',
-        'A מתרגם לשפת מכונה, ומראה כל שגיאה עם מספר השורה. R מתרגם ומריץ. L מציג את התוכנית, E 100 מתקן את שורה 100, ו-HELP מראה את כל הפקודות.',
-        'CSAVE "NAME" שומר את התוכנית ב"הקלטות שלי", ו-CLOAD "NAME" טוען אותה בחזרה.',
-        'סוגר מרובע פותח: [SHIFT] ואז [↓]. סוגר: [SHIFT] ואז [→]. ‏BASIC חוזר ל-BASIC, ו-EXEC חוזר לאסמבלר עם התוכנית.'],
-      en: ['Type lines with numbers, as in BASIC, with [ENTER] after each: 100 LOOP LDA #1. A line with no place name starts with a space: 100, then two spaces, then LDA #1.',
-        'A assembles into machine code and shows each mistake with its line number. R assembles and runs. L lists the program, E 100 changes line 100, and HELP shows every command.',
-        'CSAVE "NAME" saves the program to My tapes, and CLOAD "NAME" loads it back.',
-        'Opening square bracket: [SHIFT] then [↓]. Closing: [SHIFT] then [→]. BASIC goes back to BASIC, and EXEC comes back to the assembler with the program.']
-    },
     eggs: {
       he: ['מתחילים ב[רווח], או בכפתור של ג\'ויסטיק ימני.',
         '[←] [→] מזיזים את הסל. תופסים את הביצים, אבל לא את כדורי האש.',
@@ -1893,6 +1883,42 @@
       T2('[BREAK] עוצר. {LIST} מראה את כל הקוד, ו-{RUN} מריץ שוב.', '[BREAK] stops it. {LIST} shows the whole program, and {RUN} runs it again.'),
       T2('אפשר לשנות שורה: מקלידים אותה מחדש עם אותו מספר, ומריצים.', 'You can change a line: type it again with the same number, and run it.')];
   }
+  // דף של כלי, לא של משחק (גונן, 11.11): הפקודות, תוכנית ראשונה, ועל הכלי. בלי "בדקתם?", ומדבקה כחולה
+  const TOOLS = {
+    dasm: {
+      cmds: [['100 LOOP LDA #1', 'כותבים שורה. שורה עם אותו מספר מחליפה את הקודמת', 'Type a line. A line with the same number replaces the old one'],
+        ['100  LDA #1', 'בלי שם של מקום: שני רווחים אחרי המספר', 'No place name: two spaces after the number'],
+        ['100', 'מוחקים את שורה 100', 'Delete line 100'],
+        ['L · L 100-200', 'רואים את התוכנית, או חלק ממנה', 'List the program, or part of it'],
+        ['E 100', 'מתקנים את שורה 100: [←] מוחק, ואז [ENTER]', 'Edit line 100: [←] deletes, then [ENTER]'],
+        ['I · I 100,5', 'המספרים נכתבים לבד. [ENTER] על שורה ריקה: סוף', 'The numbers appear by themselves. [ENTER] on an empty line ends'],
+        ['D 100-200', 'מוחקים כמה שורות', 'Delete several lines'],
+        ['RENUM', 'מספרים מחדש: 10, 20, 30…', 'Renumber: 10, 20, 30…'],
+        ['A', 'מתרגמים, ורואים כל שגיאה עם מספר השורה', 'Assemble, and see each mistake with its line'],
+        ['R', 'מתרגמים ומריצים. התוצאה נשארת עד שלוחצים מקש', 'Assemble and run. The result stays until you press a key'],
+        ['CSAVE "NAME"', 'שומרים את התוכנית ב"הקלטות שלי"', 'Save the program to My tapes'],
+        ['CLOAD "NAME"', 'טוענים אותה בחזרה', 'Load it back'],
+        ['NEW', 'מתחילים מחדש (שואל קודם)', 'Start again (it asks first)'],
+        ['BASIC', 'חוזרים ל-BASIC. ‏EXEC מחזיר לכאן, עם התוכנית', 'Back to BASIC. EXEC comes back here, with the program'],
+        ['HELP', 'הרשימה הזאת, על מסך ה-Dragon', 'This list, on the Dragon\'s screen']],
+      keys: ['סוגר מרובע פותח: [SHIFT] ואז [↓]. סוגר: [SHIFT] ואז [→].', 'Opening square bracket: [SHIFT] then [↓]. Closing: [SHIFT] then [→].'],
+      first: { code: ["10 @ LDA #'A", '20  STA $0400', '30  RTS'],
+        he: ['אחרי {EXEC}, מקלידים את שלוש השורות, כל אחת עם [ENTER]. אחרי 20 ו-30 יש שני רווחים.',
+          'שורה 10: שמים במגירה A את האות A. הסימן @ אומר מאיפה התוכנית מתחילה.',
+          'שורה 20: מעבירים אותה למקום $0400, המשבצת הראשונה של המסך, למעלה משמאל.',
+          'שורה 30: {RTS}, חוזרים.',
+          'מקלידים {R} ו-[ENTER]. המסך מתנקה, ו-A מופיעה בפינה. לוחצים מקש, וחוזרים לאסמבלר.',
+          'רוצים לשמור? {CSAVE "FIRST"}, והתוכנית נכנסת ל"הקלטות שלי".'],
+        en: ['After {EXEC}, type the three lines, each with [ENTER]. After 20 and 30 there are two spaces.',
+          'Line 10: put the letter A in drawer A. The @ says where the program starts.',
+          'Line 20: move it to place $0400, the screen\'s first square, top left.',
+          'Line 30: {RTS}, go back.',
+          'Type {R} and [ENTER]. The screen clears, and A appears in the corner. Press a key to go back to the assembler.',
+          'Want to keep it? {CSAVE "FIRST"}, and the program goes into My tapes.'] },
+      links: [['/learn/', 'לא מכירים שפת מכונה? מתחילים ב', 'פינת הלמידה', 'New to machine code? Start in ', 'the Learning Corner'],
+        ['/learn/asm/', 'מעדיפים לכתוב בדפדפן? ', 'האסמבלר שבדפדפן', 'Rather write in the browser? ', 'The browser Assembler']]
+    }
+  };
   // ל-Dragon אמיתי (גונן, 9.11): "מי שנכנס לדף המשחק נכנס בשביל לשחק". ההורדות בדף נפרד, בלי מכונה; כאן רק שורה עם קישור
   const REAL_NO = new Set(['buzzard', 'daggorath', 'cavehunter']);
   function openGame(id, push) {
@@ -1900,7 +1926,9 @@
     if (!t) return;
     viewId = id;
     const [, he, en, kind, credit] = t, name = EN ? en : he, b = buttons[TAPES.indexOf(t)];
+    const tool = TOOLS[id];
     view.textContent = '';
+    view.classList.toggle('gv-is-tool', !!tool);
     const back = document.createElement('button');
     back.type = 'button';
     back.className = 'gv-back';
@@ -1948,14 +1976,14 @@
       info.appendChild(real);
     }
     // בודקים מהקהילה (גונן, 10.11): טופס "בדקתם? ספרו לנו אם עבד" (testers.js)
-    if (window.d32Testers && m.slug) { info.appendChild(window.d32Testers.button(m.slug, name)); info.appendChild(window.d32Testers.credits(m.slug)); }   // "נבדק על ידי" מתחת לכפתור, בראש הדף (גונן, 10.11)
+    if (window.d32Testers && m.slug && !tool) { info.appendChild(window.d32Testers.button(m.slug, name)); info.appendChild(window.d32Testers.credits(m.slug)); }   // "נבדק על ידי" מתחת לכפתור, בראש הדף (גונן, 10.11)
     if (status) info.appendChild(status);
     const media = document.createElement('figure');
     media.className = 'gv-media';
     const pic = document.createElement('img');
     pic.className = 'gv-shot';
     pic.src = '/lab/1982/shots/' + id + '.png';
-    pic.alt = T2('צילום מסך מהמשחק, מהמכונה שלנו', 'A screenshot of the game, from our machine');
+    pic.alt = tool ? T2('צילום מסך מהכלי, מהמכונה שלנו', 'A screenshot of the tool, from our machine') : T2('צילום מסך מהמשחק, מהמכונה שלנו', 'A screenshot of the game, from our machine');
     pic.width = 256; pic.height = 192;
     media.appendChild(pic);
     if (m.cover) {
@@ -2003,6 +2031,40 @@
       panes.push(pane);
     };
     mk(T2('איך טוענים', 'How to load'), pane => { const ol = document.createElement('ol'); for (const s of loadSteps(id, kind)) ol.appendChild(keyLine(s)); pane.appendChild(ol); });
+    if (tool) {
+      mk(T2('הפקודות', 'Commands'), pane => {
+        const tb = document.createElement('table');
+        tb.className = 'gv-cmds';
+        for (const [c, h1, e1] of tool.cmds) {
+          const tr = document.createElement('tr');
+          const td1 = document.createElement('td'); const code = document.createElement('code'); code.dir = 'ltr'; code.textContent = c; td1.appendChild(code);
+          const td2 = document.createElement('td'); const li = keyLine(EN ? e1 : h1); td2.append(...li.childNodes);
+          tr.append(td1, td2); tb.appendChild(tr);
+        }
+        const k = document.createElement('p'); k.className = 'gv-keys'; k.append(...keyLine(T2(...tool.keys)).childNodes);
+        pane.append(tb, k);
+      });
+      mk(T2('תוכנית ראשונה', 'First program'), pane => {
+        const lines = EN ? tool.first.en : tool.first.he;
+        const ol = document.createElement('ol');
+        ol.appendChild(keyLine(lines[0]));
+        const pre = document.createElement('pre'); pre.className = 'gv-code'; pre.dir = 'ltr'; pre.textContent = tool.first.code.join('\n');
+        ol.lastChild.appendChild(pre);
+        const ul = document.createElement('ul'); ul.className = 'gv-explain';
+        for (const s of lines.slice(1, 4)) ul.appendChild(keyLine(s));
+        ol.lastChild.appendChild(ul);
+        for (const s of lines.slice(4)) ol.appendChild(keyLine(s));
+        pane.appendChild(ol);
+      });
+      mk(T2('על הכלי', 'About'), pane => {
+        for (const s of (m.about ? m.about[EN ? 'en' : 'he'] : [])) { const p = document.createElement('p'); p.textContent = s; pane.appendChild(p); }
+        for (const [href, h1, h2, e1, e2] of tool.links) {
+          const p = document.createElement('p'); const a = document.createElement('a');
+          a.href = (EN ? '/en' : '') + href; a.textContent = EN ? e2 : h2;
+          p.append(EN ? e1 : h1, a, '.'); pane.appendChild(p);
+        }
+      });
+    } else {
     mk(T2('איך משחקים', 'How to play'), pane => {
       const ul = document.createElement('ul');
       ul.className = 'howto-list';
@@ -2017,6 +2079,7 @@
       for (const s of (m.about ? m.about[EN ? 'en' : 'he'] : [])) { const p = document.createElement('p'); p.textContent = s; pane.appendChild(p); }
       // "נבדק על ידי": רק שמות שגונן אישר, ונסתר כשאין
     });
+    }
     // רמזים (גונן, 7.11: "יפה"): במשחקים שעברנו עד הסוף במכונה. כל שאלה נפתחת לשלוש מדרגות, וכל מדרגה רק בלחיצה,
     // כדי שאף אחד לא יראה פתרון בטעות. התוכן ב-/lab/1982/hints/<id>.json
     if (HINTS.has(id)) mk(T2('רמזים', 'Hints'), pane => {
@@ -2126,6 +2189,16 @@ body.cart-in .gv-eject { display: block; }
 .gv-label-name { font: 700 clamp(14px, 1.6vw, 22px)/1.15 'Courier New', monospace; text-transform: uppercase; overflow-wrap: anywhere; }
 .gv-label-holes { width: 70%; height: 16%; border-radius: 999px; background: radial-gradient(circle at 22% 50%, #2b2018 0 18%, transparent 19%), radial-gradient(circle at 78% 50%, #2b2018 0 18%, transparent 19%), #d6c7a4; }
 .gv-label-by { font: 700 11px/1 'Courier New', monospace; letter-spacing: 1px; }
+/* כלי, לא משחק (גונן, 11.11): מדבקה כחולה, טבלת פקודות וקוד */
+.gv-is-tool .gv-label { border-top-color: #2f6fb0; }
+.gv-is-tool .gv-shot { outline: 2px solid #2f6fb0; outline-offset: 2px; }
+.gv-cmds { border-collapse: collapse; width: 100%; font-size: 14px; }
+.gv-cmds td { padding: 5px 6px; border-bottom: 1px solid #3a2e22; vertical-align: top; }
+.gv-cmds td:first-child { white-space: nowrap; width: 1%; }
+.gv-cmds code, .gv-code { font-family: 'Courier New', monospace; color: #9fe07a; }
+.gv-code { direction: ltr; text-align: left; background: #14100c; border: 1px solid #3a2e22; border-radius: 6px; padding: 8px 10px; margin: 6px 0; white-space: pre; overflow-x: auto; }
+.gv-keys { margin-top: 10px; }
+.gv-explain { margin: 4px 0 6px; }
 .gv-tabs { display: flex; gap: 6px; margin-top: 14px; border-bottom: 1px solid #4a3a2a; flex-wrap: wrap; }
 .gv-tabs button { font: inherit; font-size: 14px; font-weight: 700; color: #b9a98f; background: transparent; border: 1px solid #4a3a2a; border-bottom: 0; border-radius: 8px 8px 0 0; padding: 6px 12px; cursor: pointer; min-height: 36px; }
 .gv-tabs button[aria-selected="true"] { background: #2a2119; color: var(--accent, #f2d23a); }

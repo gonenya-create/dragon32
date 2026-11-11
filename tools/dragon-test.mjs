@@ -2096,8 +2096,15 @@ if (part('real machine lab')) {
       return { out, after: location.pathname, closed: !document.body.classList.contains('game-open') };
     });
     const pre = path;
+    const tool = await p.evaluate(async () => {
+      document.querySelector('.tape.row[data-id="dasm"]').click(); await new Promise(f => setTimeout(f, 50));
+      const v = document.querySelector('.game-view'), r = { tabs: [...v.querySelectorAll('.gv-tabs button')].map(b => b.textContent), cmds: v.querySelectorAll('.gv-cmds tr').length, code: (v.querySelector('.gv-code') || {}).textContent, testers: !!v.querySelector('.tst-open'), tool: v.classList.contains('gv-is-tool') };
+      v.querySelector('.gv-back').click(); return r;
+    });
+    check(`${path} the Dragon Assembler has a tool page: how to load, commands, first program, about; no "tried it?" button`,
+      tool.tool && tool.tabs.length === 4 && tool.cmds === 15 && /STA \$0400/.test(tool.code || '') && !tool.testers, JSON.stringify(tool));
     check(`${path} every game opens its own page beside the machine, at its own address, with the 3 tabs (how to load, how to play, about; + hints in a game we finished), the red button and the credit; "back to the cabinet" returns`,
-      gv.out.length === 75 && gv.out.every(g => g.open && g.url.startsWith(pre) && g.url.length > pre.length + 3 && g.tabs === 3 + (['adventureland', 'pirate', 'voodoo', 'mission', 'count', 'odyssey', 'pyramid', 'funhouse', 'ghost', 'golden', 'savage1', 'savage2', 'claymorgue', 'calixto', 'sanctum', 'shenan', 'seasearch', 'trekboer', 'williamsburg', 'vortex', 'diablero', 'sword', 'riverfire', 'daggorath'].includes(g.id) ? 1 : 0) && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go) && gv.after === pre && gv.closed, JSON.stringify(gv.out.filter(g => !(g.open && true && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go)).slice(0, 3)));
+      gv.out.length === 75 && gv.out.every(g => g.id === 'dasm' ? (g.open && g.tabs === 4 && g.credit && g.go && g.url.startsWith(pre)) : g.open && g.url.startsWith(pre) && g.url.length > pre.length + 3 && g.tabs === 3 + (['adventureland', 'pirate', 'voodoo', 'mission', 'count', 'odyssey', 'pyramid', 'funhouse', 'ghost', 'golden', 'savage1', 'savage2', 'claymorgue', 'calixto', 'sanctum', 'shenan', 'seasearch', 'trekboer', 'williamsburg', 'vortex', 'diablero', 'sword', 'riverfire', 'daggorath'].includes(g.id) ? 1 : 0) && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go) && gv.after === pre && gv.closed, JSON.stringify(gv.out.filter(g => !(g.open && true && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go)).slice(0, 3)));
     // העטיפה המקורית (30.10): רק במשחק שיש עליו רשות (El Diablero, מארכיון Dragon Data), בלשונית "על המשחק", עם קרדיט וקישור. התמונה נטענת
     const cv = await browser.newPage({ viewport: { width: 1280, height: 900 } });
     await cv.goto(base.replace(/\/$/, '') + path + 'el-diablero/'); await cv.waitForTimeout(1500);
