@@ -312,7 +312,8 @@ function press(label, alt, hold = 70) {
   if (shift && label === '↑') { key = '_'; code = 'Minus'; needShift = true; }
   // SHIFT then 0: switch between capitals and lowercase, like the Dragon (10.11, Telewriter). In XRoar it's Shift+Enter, held a little longer
   else if (shift && label === '0') { key = 'Enter'; code = 'Enter'; needShift = true; hold = Math.max(hold, 200); }
-  else if (CODE[label]) [key, code] = CODE[label];
+  // SHIFT ואז חץ: SHIFT לחוץ באמת, כמו ב-Dragon (11.11: באסמבלר שבתוך ה-Dragon, SHIFT+↓ הוא [ ו-SHIFT+→ הוא ])
+  else if (CODE[label]) { [key, code] = CODE[label]; needShift = shift && /^[↓→←]$/.test(label); }
   else {
     key = shift && alt ? alt : label;
     // SHIFT + a letter really presses SHIFT, like on the Dragon (Gonen, 1.11: on an iPhone, SHIFT+N in DK COCO sent only N)

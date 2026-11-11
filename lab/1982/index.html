@@ -312,7 +312,8 @@ function press(label, alt, hold = 70) {
   if (shift && label === '↑') { key = '_'; code = 'Minus'; needShift = true; }
   // SHIFT ואז 0: מעבר בין אותיות גדולות לקטנות, כמו ב-Dragon (10.11, Telewriter). ב-XRoar זה Shift+Enter, ומחזיקים קצת יותר
   else if (shift && label === '0') { key = 'Enter'; code = 'Enter'; needShift = true; hold = Math.max(hold, 200); }
-  else if (CODE[label]) [key, code] = CODE[label];
+  // SHIFT ואז חץ: SHIFT לחוץ באמת, כמו ב-Dragon (11.11: באסמבלר שבתוך ה-Dragon, SHIFT+↓ הוא [ ו-SHIFT+→ הוא ])
+  else if (CODE[label]) { [key, code] = CODE[label]; needShift = shift && /^[↓→←]$/.test(label); }
   else {
     key = shift && alt ? alt : label;
     // SHIFT ואות: לוחצים באמת על SHIFT, כמו ב-Dragon (גונן, 1.11: ב-DK COCO באייפון SHIFT+N שלח רק N, והמשחק חיכה ל-N גדולה)
