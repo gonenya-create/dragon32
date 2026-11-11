@@ -17,6 +17,74 @@ function paintDone(){
   document.querySelectorAll('[data-done]').forEach(s=>{ s.textContent = d[s.dataset.done] ? ' ✓' : ''; });
 }
 
+/* ---------------- send to the Dragon machine (11.11.2026) ----------------
+   The program in a window becomes a machine-code tape, exactly like CSAVEM writes it (header: name, type 2, binary, no gaps,
+   exec address, load address; then blocks of up to 255 bytes; then the end block). It goes into "My tapes" of the Dragon
+   machine on the site (localStorage 'd32-lab-tapes', the same list the machine's CSAVE fills), and the machine opens.
+   There: CLOADM "NAME", then CLS:EXEC. The fixed ending ends with RTS, so after a key the program goes back to BASIC's OK.
+   The bytes are the ones asm12 makes, the same DREAM makes (checked byte by byte on our machine).
+   Works only on the site (same origin as /lab/1982/); from a file on the computer the button says so. Hebrew and English. */
+const EN_SEND=document.documentElement.lang==='en';
+const SEND_TX=EN_SEND?{
+  btn:'🐉 Send to the Dragon machine', gap:'First choose the missing line, then send.', err:'This program can\'t be sent yet: ',
+  file:'The button works on the site, dragon1982.com/learn. From a file on your computer it can\'t reach the Dragon machine.',
+  full:'The browser has no room left to keep the tape.', open:'Open the Dragon machine →',
+  done:(n,b)=>'✓ The tape <b class="ltr">'+n+'</b> ('+b+' bytes) is in "My tapes" of the Dragon machine, and the machine opens in a new tab. There:',
+  steps:n=>['Wait until the machine is on and shows <code>OK</code>.','Type <code class="ltr">CLOADM "'+n+'"</code> and ENTER. The tape loads, and <code>OK</code> appears again.','Type <code class="ltr">CLS:EXEC</code> and ENTER. <code>CLS</code> clears the screen, and <code>EXEC</code> runs the program from the address the tape remembers.','When the program ends, it waits for a key (the fixed ending). One more key, and you are back at BASIC\'s <code>OK</code>.']
+}:{
+  btn:'🐉 שלח למכונת הדראגון', gap:'קודם בחר את השורה החסרה, ואז שולחים.', err:'את התוכנית הזאת עוד אי אפשר לשלוח: ',
+  file:'הכפתור עובד באתר, dragon1982.com/learn. מקובץ במחשב הוא לא מגיע למכונת הדראגון.',
+  full:'בדפדפן אין מקום לשמור את הקלטת.', open:'לפתוח את מכונת הדראגון ←',
+  done:(n,b)=>'✓ הקלטת <b class="ltr">'+n+'</b> ('+b+' בתים) נמצאת ב"הקלטות שלי" של מכונת הדראגון, והמכונה נפתחת בלשונית חדשה. שם:',
+  steps:n=>['מחכים שהמכונה תידלק ויופיע <code>OK</code>.','מקלידים <code class="ltr">CLOADM "'+n+'"</code> ו-ENTER. הקלטת נטענת, ושוב מופיע <code>OK</code>.','מקלידים <code class="ltr">CLS:EXEC</code> ו-ENTER. ‏<code>CLS</code> מנקה את המסך, ו-<code>EXEC</code> מריצה את התוכנית מהבית שהקלטת זוכרת.','כשהתוכנית נגמרת, היא מחכה למקש (הסוף הקבוע). עוד מקש, וחוזרים ל-<code>OK</code> של BASIC.']
+};
+const SEND_KEY='d32-lab-tapes', SEND_MAX=40, SEND_LAB=EN_SEND?'/en/lab/1982/':'/lab/1982/';
+/* a line as DREAM wants it: a command that is not a name of a place starts with a space */
+const sendLine=l=>{ if(l==null) return l; const t=(l.trim().split(/\s+/)[0]||'').toUpperCase(); return (l[0]!==' '&&(T12[t]||t==='FCB'))?' '+l:l; };
+function sendImg(g){
+  if(!g||!g.lines) return null;
+  if(g.lines.includes(null)) return {gap:true};
+  const lines=g.lines.map(sendLine), img=g.user?asm12({user:lines,tail:g.tail||'real'}):asm12({pre:lines,tail:g.tail||'real',post:(g.sub||[]).map(sendLine)});
+  if(g.edits) for(const a in g.edits) img.mem[a]=g.edits[a];
+  return img;
+}
+/* the tape, in the form "My tapes" keeps it: {n:name, b:[[0,...header],[1,...data]…,[255]]} */
+function sendTapeFile(name,bytes,load,exec){
+  const hdr=Array.from(name.padEnd(8),c=>c.charCodeAt(0)).concat([2,0,0,exec>>8,exec&255,load>>8,load&255]);
+  const f={n:name,b:[[0].concat(hdr)]};
+  for(let i=0;i<bytes.length;i+=255) f.b.push([1].concat(bytes.slice(i,i+255)));
+  f.b.push([255]);
+  return f;
+}
+function sendTape(name,g,say){
+  say.hidden=false;
+  const img=sendImg(g);
+  if(!img) return;
+  if(img.gap){ say.innerHTML=SEND_TX.gap; return; }
+  if(img.errs.length){ say.innerHTML='⚠️ '+SEND_TX.err+img.errs[0]; return; }
+  if(location.protocol==='file:'){ say.innerHTML=SEND_TX.file; return; }
+  const bytes=Array.from(img.mem.slice(img.start,img.end)), f=sendTapeFile(name,bytes,img.start,img.entry);
+  // first in the list: the machine puts "My tapes" on one tape, so this one is near the start. The oldest go out at 40, like the machine does
+  let list=[]; try{ list=JSON.parse(localStorage.getItem(SEND_KEY))||[]; }catch(e){}
+  if(!Array.isArray(list)) list=[];
+  list=[f].concat(list.filter(t=>t&&t.n!==name).slice(0,SEND_MAX-1));
+  try{ localStorage.setItem(SEND_KEY,JSON.stringify(list)); }catch(e){ say.innerHTML='⚠️ '+SEND_TX.full; return; }
+  const url=SEND_LAB+'?learn='+encodeURIComponent(name);
+  say.innerHTML=SEND_TX.done(name,bytes.length)+'<ol>'+SEND_TX.steps(name).map(s=>'<li>'+s+'</li>').join('')+'</ol><a class="btn warm" href="'+url+'" target="dragon-machine">'+SEND_TX.open+'</a>';
+  try{ window.open(url,'dragon-machine'); }catch(e){}
+}
+/* the button, under a program window (or the translator). The tape's name: cfg.tape, or the window's id (pw121 → PW121) */
+function sendBtn(P,host,cfg,get){
+  if(!P||!host) return;
+  const name=String(cfg.tape||host.id||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,8);
+  if(!name) return;
+  const d=document.createElement('div'); d.className='send12';
+  d.innerHTML='<button class="btn ghost sendgo" type="button"></button><div class="sendsay" hidden></div>';
+  d.querySelector('.sendgo').textContent=SEND_TX.btn;
+  d.querySelector('.sendgo').onclick=()=>sendTape(name,get(),d.querySelector('.sendsay'));
+  P.appendChild(d);
+}
+
 /* ---------------- Dragon screen colours (sampled from our machine) ---------------- */
 const VDG = { green:'#1daa1d', dark:'#001000', black:'#050505',
   sg:['#1daa1d','#ffff83','#1b166b','#6b0f1b','#ffffff','#1d9871','#ff46ff','#ff5c1d'] };
@@ -550,6 +618,7 @@ function progWindow(host,cfg){
   const sc=new Screen(P.querySelector('.scr'),{labels:true,hexcols:!!cfg.hexcols,interactive:!!(cfg.predict&&cfg.predict.cell),onClick:i=>pickCell(i),onHover:()=>{}});
   const aval=P.querySelector('.aval'), adec=P.querySelector('.adec'), drawer=P.querySelector('.drawerA');
   let lines=cfg.lines.slice(), pc=0, A=null, guess=null, busy=false, gapOk=!cfg.gap, stopped=false;
+  sendBtn(P,host,cfg,()=>({lines,tail:'real'}));
   const btnS=P.querySelector('.st'), btnR=P.querySelector('.run');
   function renderCode(){
     ol.innerHTML='';
@@ -1275,6 +1344,7 @@ function progWindow9(host,cfg){
   const sc=new Screen9(P.querySelector('.scr'),{labels:true,hexcols:true,interactive:!!(cfg.predict&&cfg.predict.cell),onClick:i=>pickCell(i),onHover:()=>{}});
   const btnS=P.querySelector('.st'), btnR=P.querySelector('.run'), btnK=P.querySelector('.skip'), rng=P.querySelector('input[type=range]'), spdn=P.querySelector('.spdn'), trk=P.querySelector('.track9');
   let lines=(variants?variants[0].lines:cfg.lines).slice(), guess=null, busy=false, gapOk=!cfg.gap, stopped=false, ended=false, running=false, st, prog, labels, lastKey=null, lastExit=false;
+  sendBtn(P,host,cfg,()=>({lines,tail:tail==='none'?'none':'real'}));
   const io={poll:()=>{ const k=st.key; st.key=null; showKey(); return k||0; }};
   function build(){ const r=asm9(lines.filter(l=>l!=null).join('\n'),{tail}); prog=r.prog; labels=r.labels; if(r.errs.length) console.warn(cfg.title,r.errs); }
   function renderCode(){
@@ -2030,6 +2100,7 @@ function progWindow12(host,cfg){
   const sc=new Screen9(P.querySelector('.scr'),{labels:true,hexcols:true,interactive:!!(cfg.predict&&cfg.predict.cell),onClick:i=>pickCell(i),onHover:()=>{}});
   const btnS=P.querySelector('.st'), btnR=P.querySelector('.run'), btnK=P.querySelector('.skip'), btnO=P.querySelector('.orig'), rng=P.querySelector('input[type=range]'), spdn=P.querySelector('.spdn');
   let lines=(variants?variants[0].lines:cfg.lines).slice(), sub=(variants&&variants[0].sub||cfg.sub||[]).slice(), guess=null, busy=false, gapOk=!cfg.gap, stopped=false, ended=false, running=false, st, img, edits={};
+  sendBtn(P,host,cfg,()=>({lines,sub,tail,edits}));
   const io={poll:()=>{ const k=st.key; st.key=null; showKey(); return k||0; }};
   const w={get st(){ return st; }, get img(){ return img; }, edits, P};
   function build(){ img=asm12({pre:lines.filter(l=>l!=null),tail,post:sub}); if(img.errs.length) console.warn(cfg.title,img.errs);
@@ -2248,6 +2319,7 @@ function asmTool12(host,cfg){
     ol.innerHTML=img.items.map(P=>'<li'+(P.kind==='tail'?' class="tl9"':'')+'><span class="ad12">'+hex4(P.addr).slice(1)+'</span><span class="by12">'+P.bytes.map(v=>hex2(v).slice(1)).join('')+'</span>'+codeLine9(P.text)+'</li>').join('')+'<li><span class="ad12">'+hex4(img.end).slice(1)+'</span></li>';
     const n=img.end-img.start; sum.innerHTML=cfg.tape?('The program takes up <b>'+n+' houses</b>: from '+L(hex4(img.start))+' to '+L(hex4(img.end-1))+'. The line for saving to tape:<br><code class="ltr big12">CSAVEM "'+(cfg.name||'CATCH')+'",&H'+hex4(img.start).slice(1)+',&H'+hex4(img.end-1).slice(1)+',&H'+hex4(img.entry).slice(1)+'</code>'):('The program takes up <b>'+n+' houses</b> in memory, from '+L(hex4(img.start))+' to '+L(hex4(img.end-1))+'. DREAM writes the next free house at the end of the listing: '+L(hex4(img.end))+'.'); };
   ta.addEventListener('input',go); go();
+  if(cfg.send) sendBtn(host.querySelector('.tool12'),host,{tape:cfg.name},()=>({lines:ta.value.replace(/\r/g,'').split('\n'),tail:cfg.tail||'real',user:true}));
 }
 /* =================== chapters 12–15: the programs (one place, used by the page and by verify/) =================== */
 const PRG12=(()=>{
@@ -2444,17 +2516,17 @@ codePuzzle12(document.getElementById('pz141'),{tag:'Stage 5 · Each apple from s
   solution:PRG12.pz141.solution,onWin:()=>{ win14('5'); win14('6'); }});
 
 /* ---------- chapter 15 ---------- */
-progWindow12(document.getElementById('pw151'),{title:'The game “Catch”',show:SH14,keys:['←','→','Q'],speed:4,lines:PRG12.game.lines,sub:PRG12.game.sub});
+progWindow12(document.getElementById('pw151'),{title:'The game “Catch”',tape:'CATCH',show:SH14,keys:['←','→','Q'],speed:4,lines:PRG12.game.lines,sub:PRG12.game.sub});
 function fig151(){
   const box=(x,w,t1,t2,col)=>`<rect x="${x}" y="40" width="${w}" height="78" rx="12" fill="${col}"/>`+heb(x+w/2,72,t1,13,'#fff',700)+heb(x+w/2,96,t2,11.5,'#eee');
-  let s=box(10,150,'The Dragon machine','DREAM: type, A, X','#2f6fd0');
-  s+=arrow(162,79,196,79)+box(198,150,'BASIC','CSAVEM "CATCH"','#3b4048');
-  s+=arrow(350,79,384,79)+box(386,150,'My tapes','🔊 a wav file','#8e44ad');
-  s+=arrow(538,79,572,79)+box(574,170,'A real Dragon','CLOADM, then EXEC','#6b0f1b');
+  let s=box(10,150,'The course','🐉 Send to the machine','#2f6fd0');
+  s+=arrow(162,79,196,79)+box(198,150,'My tapes','The tape CATCH','#8e44ad');
+  s+=arrow(350,79,384,79)+box(386,150,'The Dragon machine','CLOADM, then EXEC','#3b4048');
+  s+=arrow(538,79,572,79)+box(574,170,'A real Dragon','🔊 a wav file','#6b0f1b');
   return svg(754,140,s);
 }
 put('fig151',fig151());
-asmTool12(document.getElementById('tool15'),{tape:true,name:'CATCH',rows:8,label:'Your program (as you typed it into DREAM, including the fixed ending and the houses after it):',tail:'none',start:PRG12.game.lines.concat(TAIL9,PRG12.game.sub).join('\n')+'\n'});
+asmTool12(document.getElementById('tool15'),{tape:true,send:true,name:'MYGAME',rows:8,label:'Your program (as you typed it into DREAM, including the fixed ending and the houses after it):',tail:'none',start:PRG12.game.lines.concat(TAIL9,PRG12.game.sub).join('\n')+'\n'});
 (function(){ // the certificate
   const h=document.getElementById('cert15'); let name=''; try{ name=localStorage.getItem('d32course-name')||''; }catch(e){}
   h.innerHTML='<div class="row cert-in"><label>Your name: <input class="certname" maxlength="30" value=""></label><button class="btn certgo">Make certificate</button><button class="btn ghost certpr">Print</button></div><div class="cert12" hidden></div>';
@@ -2473,7 +2545,7 @@ const OKM12='<span class="verified">✓ Checked on our Dragon machine</span>';
 put('mach12','<b>What we saw on our Dragon machine:</b> every program in the chapter (including the three answers to “a line is missing”, both versions of example 3 and the solutions to the puzzles) was typed into DREAM, assembled with no errors (<code>0000</code>) and run. The screen was checked square by square, and it is the same as what the windows show. The numbers in memory are the same too, house by house. In DREAM you write exactly as here: <code>JSR DOT</code>, <code>PSHS A</code>, <code>PSHS A,B</code>, <code>PULS A</code>.<br>And what we measured on the stack: when the program starts, <code>S = $2E05</code>, and the top plate says <code>$6DD0</code>, the place where DREAM carries on. After asking the keyboard checker, S comes back to exactly the same place, and B, Y and U are not touched. With <code>BRA SQUARE</code> or <code>RTS</code> in the missing place in example 2, DREAM came back at once and the editor appeared on the screen.<br>And example 4 (a forgotten plate), on our Dragon machine: the A and the line appeared, and then everything froze. SPACE and BREAK didn’t help, and DREAM didn’t come back. At house <code>$412E</code> there were numbers that are not a program (<code>FF FF 00 00</code>...). The machine stayed stuck until we closed it. '+OKM12);
 put('mach13','<b>What we saw on our Dragon machine:</b> after assembling in DREAM we read the machine’s memory, from <code>$2EE1</code>: for every program in the chapter (and every program in chapters 12 to 15) it holds exactly the numbers the windows here show. Changing a number was also really tested, on the machine: we left DREAM for BASIC, changed a house, and ran it. Each of the four tasks of example 3, and both puzzles, did exactly on the machine what the window shows.<br><b>Try it yourself:</b> assemble example 3 in DREAM, then <b>BREAK</b>, <b>Q</b>, ENTER. In BASIC: <code>PRINT PEEK(&amp;H2EE1)</code> answers <code>134</code>, which is <code>$86</code>: <code>LDA #</code>. <code>POKE &amp;H2EE2,66</code> writes 66 (<code>$42</code>, the letter B) into the second house. <code>CLS:EXEC &amp;H2EE1</code> runs the program, and a B appears on the screen. Press a key, and you are back at <code>OK</code>. To go back to DREAM: <code>EXEC &amp;H6080</code> (where DREAM starts), and then N. '+OKM12);
 put('mach14','<b>What we saw on our Dragon machine:</b> all five stages, all three lines of each stage, and the solution to stage 5, were typed into DREAM, assembled with no errors (<code>0000</code>) and run. The keys were really pressed. The screen at the end is the same as the windows, square by square, and so are the numbers in memory. The timing was checked too: the apple went down a row every 0.18 to 0.19 seconds (the window works out 0.185), and landed after about 2.6 seconds. In stage 2 with <code>LEAU 1,U</code> it crawled for about 25 seconds. In the whole game we pressed the right arrow 13 times, fast: the basket reached column 29 within a second and a half, and the apples fell in columns 16, 29, 10, 23 and 4, exactly as in the window. The final score: 1. '+OKM12);
-put('mach15','<b>What we saw on our Dragon machine:</b> we tested the whole way on the Dragon machine, except for the real Dragon itself. Assembling in DREAM, BREAK and Q, and then <code>CLS:EXEC &amp;H2EE1</code> ran the game straight from BASIC, and Q plus a key brought us back to <code>OK</code>. <code>CSAVEM "CATCH",&amp;H2EE1,&amp;H2F7A,&amp;H2EE1</code> made the tape CATCH in “My tapes”, with the ⬇ and 🔊 buttons. We wiped the game from memory (we wrote 0 in all its houses), loaded it back with <code>CLOADM "CATCH"</code>, and the houses came back exactly as we saved them. <code>CLS:EXEC</code> ran it, and <code>EXEC &amp;H6080</code> took us back to DREAM. '+OKM12+'<br>We haven’t yet tried the sound file on a real Dragon ourselves: the instructions in step 4 are the Dragon machine’s own; they are written there next to “My tapes”.');
+put('mach15','<b>What we saw on our Dragon machine:</b> the button <b>🐉 Send to the Dragon machine</b> was tested on the machine: the tape CATCH appeared in “My tapes”, <code>CLOADM "CATCH"</code> loaded it, <code>CLS:EXEC</code> ran the game, and the screen matched the window, square by square. A key brought us back to <code>OK</code>. The same went for a program from Chapter 12 and one from Chapter 2. '+OKM12+'<br>And the DREAM way too: we tested the whole way on the Dragon machine, except for the real Dragon itself. Assembling in DREAM, BREAK and Q, and then <code>CLS:EXEC &amp;H2EE1</code> ran the game straight from BASIC, and Q plus a key brought us back to <code>OK</code>. <code>CSAVEM "CATCH",&amp;H2EE1,&amp;H2F7A,&amp;H2EE1</code> made the tape CATCH in “My tapes”, with the ⬇ and 🔊 buttons. We wiped the game from memory (we wrote 0 in all its houses), loaded it back with <code>CLOADM "CATCH"</code>, and the houses came back exactly as we saved them. <code>CLS:EXEC</code> ran it, and <code>EXEC &amp;H6080</code> took us back to DREAM. '+OKM12+'<br>We haven’t yet tried the sound file on a real Dragon ourselves: the instructions in step 4 are the Dragon machine’s own; they are written there next to “My tapes”.');
 
 /* ---------------- chapters are pages (site build) ---------------- */
 const TABS=["ch0","ch1","ch2","ch3","ch4","ch5","ch6","ch7","ch8","ch9","ch10","ch11","ch12","ch13","ch14","ch15"];
@@ -2735,6 +2807,7 @@ function progWindow2(host,cfg){
   const P=host.querySelector('.prog'), pfb=P.querySelector('.pfb')||document.createElement('div'), ol=P.querySelector('ol.code'), sayb=P.querySelector('.stepsay .box'), cpuEl=P.querySelector('.cpu');
   const sc=new Screen2(P.querySelector('.scr'),{labels:true,hexcols:true,interactive:!!(cfg.predict&&cfg.predict.cell),onClick:i=>pickCell(i),onHover:()=>{}});
   let lines=(variants?variants[0].lines:cfg.lines).slice(), guess=null, busy=false, gapOk=!cfg.gap, stopped=false, ended=false, A, st, prog, labels;
+  sendBtn(P,host,cfg,()=>({lines,tail:'real'}));
   const btnS=P.querySelector('.st'), btnR=P.querySelector('.run');
   function build(){ const r=asm2(lines.filter(l=>l!=null).join('\n')); prog=r.prog; labels=r.labels; if(r.errs.length) console.warn(cfg.title,r.errs); }
   function renderCode(){

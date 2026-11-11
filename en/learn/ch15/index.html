@@ -55,7 +55,7 @@
 </nav>
 
 <section class="ch" aria-labelledby="h-ch15" id="ch15">
-  <div class="ch-head"><div><div class="num">Chapter 15</div><h2 id="h-ch15">To the real machine</h2></div><span class="time">About 30 minutes · DREAM, tape, Dragon</span></div>
+  <div class="ch-head"><div><div class="num">Chapter 15</div><h2 id="h-ch15">To the real machine</h2></div><span class="time">About 20 minutes · a button, a tape, a machine</span></div>
 
   <div class="step">
     <h3><span class="n">1</span>Your game, complete</h3>
@@ -65,40 +65,45 @@
   </div>
 
   <div class="step">
-    <h3><span class="n">2</span>Typing it into DREAM, on the Dragon machine</h3>
-    <figure><div id="fig151"></div><figcaption>Figure 30: the game’s journey. Type it into DREAM on the Dragon machine, assemble it, save it on tape, and from there to a real Dragon.</figcaption></figure>
+    <h3><span class="n">2</span>Send it to the Dragon machine</h3>
+    <p>Until now the game has run in a window of the course. Now it moves to the Dragon machine on the site: a whole computer, with the Dragon’s processor, memory and screen. There it runs just as it would in 1982.</p>
+    <figure><div id="fig151"></div><figcaption>Figure 30: the game’s journey. The button turns the numbers into a tape, the tape goes into “My tapes”, and on the machine you load it and run it.</figcaption></figure>
     <ol class="steps15">
-      <li>Open the Dragon machine: <a href="https://dragon1982.com/lab/1982/" target="_blank" rel="noopener"><bdi class="ltr">dragon1982.com/lab/1982</bdi></a>.</li>
-      <li>Load DREAM, as in the first DREAM lesson: <code>CLEAR 200,12000</code>, <code>CLOADM</code>, <code>EXEC</code>, and then <b>N</b> (a new program).</li>
-      <li>Type in the game, line by line, exactly as in the window above. Including the fixed ending, and after it the four houses (<code>SCORE FCB 0</code> ...).</li>
-      <li><b>BREAK</b> and then <b>A</b>: assemble. At the end you should see <code>0000</code> errors. Is there an error? DREAM shows the line. Fix it and assemble again.</li>
-      <li><b>BREAK</b> and then <b>X</b>: play! Q quits, and one more key takes you back to DREAM.</li>
+      <li>Press the button <b>🐉 Send to the Dragon machine</b>, under the game window above. The button takes the game’s numbers, 154 houses, and puts them on a tape called <b class="ltr">CATCH</b>, in the machine’s “My tapes”.</li>
+      <li>The Dragon machine opens in a new tab. Wait until <code>OK</code> appears.</li>
+      <li>Type <code class="ltr">CLOADM "CATCH"</code> and ENTER. <code>CLOADM</code> means “load machine code from the tape”. The numbers go into memory, into the same houses as in the window, from <code class="ltr">$2EE1</code>, and <code>OK</code> appears again.</li>
+      <li>Type <code class="ltr">CLS:EXEC</code> and ENTER. <code>CLS</code> clears the screen, and <code>EXEC</code> tells the processor: “jump to the first house of the program”. The tape remembers which house that is.</li>
+      <li>Play! The arrows move the basket. <b>Q</b> quits, and one more key takes you back to BASIC’s <code>OK</code>.</li>
     </ol>
-    <div class="note">Want to play again? It is best to assemble again (BREAK, A) before each <b>X</b>. That way the counter <code>TICK</code> starts from 25 every time, like in the window.</div>
+    <div class="note">Why does it go back to BASIC? Thanks to the fixed ending. Its last line is <code>RTS</code>: “go back to whoever called you”. In the course windows DREAM called us, and on the machine BASIC’s <code>EXEC</code> called us. It’s like the plate from Chapter 12: whoever put it down gets the processor back.</div>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>The same button is under every window in the course, from Chapter 2 to here. Any program you have seen, you can send to the machine and watch it run there.</p></div>
   </div>
 
   <div class="step">
-    <h3><span class="n">3</span>Saving on tape</h3>
-    <p>In the 1980s, programs were saved on a cassette tape. The Dragon machine saves “tapes” too: they appear in its drawer <b>My tapes</b>. To save <b>the game itself</b>, that is, the numbers in memory, you go out to BASIC and use <code>CSAVEM</code>. It needs three numbers: the first house, the last house, and the house it starts running from.</p>
-    <p>Paste your program here (it is already written), and get the exact line:</p>
+    <h3><span class="n">3</span>Your version</h3>
+    <p>Want to change something in the game? Here it is, written out, and you may change anything in it: the 5 in <code>LEFT</code> (how many apples), the 25 in <code>TICK</code> (how fast), the colours. Underneath you can see every line with its numbers. When there are no errors, the button below sends your version to the machine, on a tape called <b class="ltr">MYGAME</b>: <code class="ltr">CLOADM "MYGAME"</code>, then <code class="ltr">CLS:EXEC</code>.</p>
     <div id="tool15"></div>
-    <ol class="steps15">
-      <li>After assembling in DREAM: <b>BREAK</b>, then <b>Q</b> and <b>ENTER</b>. BASIC’s <code>OK</code> appears. The game’s numbers stay in memory.</li>
-      <li>Type the <code>CSAVEM</code> line from above, and ENTER. The tape <b>CATCH</b> appears in “My tapes”.</li>
-      <li>Check it: type <code>CLS:EXEC &amp;H2EE1</code> and ENTER (CLS clears the screen, and EXEC runs), and the game runs straight from BASIC. At the end (Q plus a key) it goes back to <code>OK</code>.</li>
-      <li>To load from the tape: <code>CLOADM "CATCH"</code>, and then <code>CLS:EXEC</code>.</li>
-      <li>To go back to DREAM: <code>EXEC &amp;H6080</code> (where DREAM starts), and then <b>N</b>.</li>
-    </ol>
   </div>
 
   <div class="step">
     <h3><span class="n">4</span>On a real Dragon</h3>
     <ol class="steps15">
-      <li>In “My tapes” there is a 🔊 button next to the tape: it downloads it as <b>sound</b> (a <bdi class="ltr">wav</bdi> file), like a tape from back then.</li>
+      <li>On the Dragon machine, in “My tapes”, there is a 🔊 button next to the tape: it downloads it as <b>sound</b> (a <bdi class="ltr">wav</bdi> file), like a tape from back then.</li>
       <li>Connect the Dragon’s cassette cable (the <bdi class="ltr">EAR</bdi> plug) to the headphone socket of the computer or phone.</li>
-      <li>On the Dragon: <code>CLEAR 200,12000</code>, then <code>CLOADM</code>, and play the sound at about 75% volume. When <code>OK</code> appears: <code>CLS:EXEC</code>.</li>
+      <li>On the Dragon: <code>CLOADM</code>, and play the sound at about 75% volume. When <code>OK</code> appears: <code>CLS:EXEC</code>.</li>
       <li>Does <code>?IO ERROR</code> appear? Change the volume and try again.</li>
     </ol>
+    <details class="dream15">
+      <summary>Have a real Dragon with DREAM? You can also do it the old way</summary>
+      <p>In 1983 people wrote a game like this in DREAM, the editor and assembler from <bdi class="ltr">Dragon Data</bdi>, and saved it to tape themselves:</p>
+      <ol class="steps15">
+        <li>Load DREAM: <code>CLEAR 200,12000</code>, <code>CLOADM</code>, <code>EXEC</code>, then <b>N</b> (new program).</li>
+        <li>Type in the game, line after line, including the fixed ending and the houses after it. <b>BREAK</b> then <b>A</b>: assemble, until <code>0000</code> errors. <b>BREAK</b> then <b>X</b>: play.</li>
+        <li>To save to tape: <b>BREAK</b>, <b>Q</b> and ENTER (out to BASIC; the numbers stay in memory), then the <code>CSAVEM</code> line from step 3, under your version. It needs three numbers: the first house, the last house, and the house where it starts running.</li>
+        <li>To go back to DREAM: <code>EXEC &amp;H6080</code> (where DREAM starts), then <b>N</b>.</li>
+      </ol>
+      <p>The numbers come out the same: the button assembles exactly like DREAM, house after house.</p>
+    </details>
     <div class="machine" id="mach15"></div>
   </div>
 
@@ -119,12 +124,13 @@
       <li><b>Two players.</b> Two baskets: one with the arrows, and one with letters, for example Z and X. Two scores, one in each corner.</li>
       <li><b>Sound.</b> A beep when you catch. That is a topic for the next course: the Dragon plays sound when you write numbers to a special house, again and again, very fast.</li>
     </ul>
+    <p>Write each idea in step 3, and send it to the machine with the same button.</p>
     <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>You did it. You wrote a game in the language the games of 1982 were written in, and it runs on the machine. Every programmer of that time started exactly here: one block on the screen, and then another.</p></div>
   </div>
 
   <div class="recap">
-    <div><b>What we learned:</b> assemble in DREAM, go out to BASIC, and save the numbers on tape: <span class="ltr">CSAVEM "CATCH",&amp;H2EE1,&amp;H…,&amp;H2EE1</span>. Load with <span class="ltr">CLOADM</span>, and run with <span class="ltr">EXEC</span>.</div>
-    <div>From the tape in the browser, through a sound file, to a real Dragon: exactly the same numbers.</div>
+    <div><b>What we learned:</b> the program is numbers, and the numbers go onto a tape. <span class="ltr">CLOADM "CATCH"</span> loads them into memory, and <span class="ltr">EXEC</span> runs from the first house.</div>
+    <div>From the course, through “My tapes”, to the Dragon machine, and as a sound file to a real Dragon too: exactly the same numbers.</div>
     <div class="next">The course is over. The rest is up to you.</div>
     <button class="btn warm nextch" data-go="ch0">Back to the start →</button>
   </div>

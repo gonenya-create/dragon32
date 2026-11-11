@@ -263,6 +263,11 @@ code.big12{display:inline-block;font-size:1rem;padding:4px 8px;margin-top:4px;us
 @media (max-width:560px){.pz-mem{grid-template-columns:1fr}.m12c,.m12in{width:30px;height:26px;font-size:12px}}
 @media print{body *{visibility:hidden}.cert12,.cert12 *{visibility:visible}.cert12{position:fixed;inset:20px auto auto 50%;transform:translateX(-50%);width:80%}}
 
+.send12{margin-top:10px}
+.tool12 code.big12{white-space:normal;overflow-wrap:anywhere;max-width:100%}
+.send12 .sendsay{margin-top:8px;padding:10px 12px;border-radius:10px;background:var(--accent-bg);font-size:.95rem}
+.send12 .sendsay ol{margin:.4em 0;padding-inline-start:1.4em}
+.send12 .sendsay .btn{display:inline-block;margin-top:6px;text-decoration:none}
 .foot{color:var(--soft);font-size:.85rem;margin-top:40px;border-top:1px solid var(--line);padding-top:12px}
 
 /* --- site pages (tools/learn/build.mjs) --- */
