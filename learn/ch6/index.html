@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>פרק 6 · חשבון: המגירה לומדת לספור — שפת מכונה בדראגון</title>
+<meta name="description" content="עד עכשיו המגירה A רק החזיקה מספר. עכשיו היא לומדת לחשב. הפקודה הראשונה הכי פשוטה: INCA אומרת &quot;הוסף 1 למה שבמגירה A&quot;. אין אחריה מספר, היא תמיד מוסיפה בדיוק 1.">
+<meta property="og:title" content="פרק 6 · חשבון: המגירה לומדת לספור — שפת מכונה בדראגון">
+<meta property="og:description" content="עד עכשיו המגירה A רק החזיקה מספר. עכשיו היא לומדת לחשב. הפקודה הראשונה הכי פשוטה: INCA אומרת &quot;הוסף 1 למה שבמגירה A&quot;. אין אחריה מספר, היא תמיד מוסיפה בדיוק 1.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/learn/ch6/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/learn/ch6/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch6/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch6/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/learn/course.css">
+</head>
+<body data-ch="ch6">
+<nav class="site" aria-label="ניווט">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/en/learn/ch6/" lang="en" hreflang="en">English</a>
+  <a href="/learn/">כל הפרקים</a>
+  <a href="/">← לדף הבית</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>שפת מכונה מאפס</h1>
+    <p class="sub">קורס ל-דראגון 32 · פרקים 0 עד 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/learn/ch0/" data-tab="ch0">0 · רחוב של תאים<span class="done" data-done="0"></span></a>
+  <a href="/learn/ch1/" data-tab="ch1">1 · המסך הוא זיכרון<span class="done" data-done="1"></span></a>
+  <a href="/learn/ch2/" data-tab="ch2">2 · LDA ו-STA<span class="done" data-done="2"></span></a>
+  <a href="/learn/ch3/" data-tab="ch3">3 · מד המרחק<span class="done" data-done="3"></span></a>
+  <a href="/learn/ch4/" data-tab="ch4">4 · ארבע נורות<span class="done" data-done="4"></span></a>
+  <a href="/learn/ch5/" data-tab="ch5">5 · עם # או בלי<span class="done" data-done="5"></span></a>
+  <a href="/learn/ch6/" data-tab="ch6">6 · חשבון<span class="done" data-done="6"></span></a>
+  <a href="/learn/ch7/" data-tab="ch7">7 · האצבע X<span class="done" data-done="7"></span></a>
+  <a href="/learn/ch8/" data-tab="ch8">8 · צומת<span class="done" data-done="8"></span></a>
+  <a href="/learn/ch9/" data-tab="ch9">9 · לולאות<span class="done" data-done="9"></span></a>
+  <a href="/learn/ch10/" data-tab="ch10">10 · מקשים<span class="done" data-done="10"></span></a>
+  <a href="/learn/ch11/" data-tab="ch11">11 · תנועה<span class="done" data-done="11"></span></a>
+  <a href="/learn/ch12/" data-tab="ch12">12 · תת-תוכניות<span class="done" data-done="12"></span></a>
+  <a href="/learn/ch13/" data-tab="ch13">13 · מספרים ברחוב<span class="done" data-done="13"></span></a>
+  <a href="/learn/ch14/" data-tab="ch14">14 · המשחק<span class="done" data-done="14"></span></a>
+  <a href="/learn/ch15/" data-tab="ch15">15 · למכונה<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch6" id="ch6">
+  <div class="ch-head"><div><div class="num">פרק 6</div><h2 id="h-ch6">חשבון: המגירה לומדת לספור</h2></div><span class="time">כ-25 דקות · INCA, ‏DECA, ‏ADDA, ‏SUBA, ‏CLRA, ‏INC, ‏DEC</span></div>
+
+  <div class="step">
+    <h3><span class="n">1</span>ועוד 1: ‏INCA</h3>
+    <p>עד עכשיו המגירה A רק החזיקה מספר. עכשיו היא לומדת לחשב. הפקודה הראשונה הכי פשוטה: <code>INCA</code> אומרת "<b>הוסף 1 למה שבמגירה A</b>". אין אחריה מספר, היא תמיד מוסיפה בדיוק 1.</p>
+    <p>זוכר שהאותיות באות זו אחרי זו? A היא <code>$41</code>, ‏B היא <code>$42</code>, ‏C היא <code>$43</code>. אז אם במגירה יש A ומוסיפים 1, יש בה B.</p>
+    <div id="pw61"></div>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>שים לב למגירה בציור: למטה הופיעה <b>שורת נורות</b>. בינתיים יש בה נורה אחת, C. עוד מעט נבין מתי היא נדלקת. סימן שאלה בנורה אומר "עוד לא יודעים".</p></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>פחות 1: ‏DECA</h3>
+    <p><code>DECA</code> היא ההפך: "<b>הורד 1 ממה שבמגירה A</b>". מ-Z הולכים אחורה: Y, ואז X.</p>
+    <div id="pw62"></div>
+    <div class="quiz" data-quiz="q6a"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>לחבר כל מספר: ‏ADDA</h3>
+    <p><code>INCA</code> מוסיפה רק 1. כשרוצים להוסיף יותר, יש את <code>ADDA</code> ("הוסף ל-A"). אחריה כותבים כמה להוסיף, עם סולמית, בדיוק כמו ב-LDA: ‏<code>ADDA #$10</code> מוסיפה <code>$10</code>.</p>
+    <p>ולמה דווקא <code>$10</code>? זוכר מפרק 4 שבמשבצת צבע <b>הספרה השמאלית היא הצבע</b>? ‏<code>$10</code> מקדם את הספרה השמאלית ב-1, ומשאיר את הנורות במקום. כלומר: <b>אותה צורה, בצבע הבא</b>.</p>
+    <div id="pw63"></div>
+    <p>ומה אם אין סולמית? בדיוק כמו ב-LDA: בלי <code>#</code> המספר הוא <b>בית</b>. ‏<code>ADDA $0400</code> הולכת לבית <code>$0400</code>, מצלמת את מה שכתוב שם, ומוסיפה אותו למגירה.</p>
+    <div id="pw64"></div>
+    <p>ויש גם חיסור: <code>SUBA</code> ("הורד מ-A"). ‏<code>SUBA #2</code> מורידה 2, ו-<code>SUBA $0400</code> מורידה את מה שכתוב בבית.</p>
+    <div class="quiz" data-quiz="q6b"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>המד מתהפך: נורת C</h3>
+    <p>זוכר את מד המרחק מפרק 3? במגירה A יש <b>שני גלגלים</b>, כל אחד 0 עד F. מה קורה ב-<code>$FF</code> ועוד 1? שני הגלגלים מתהפכים ל-0, וה-1 שהיה צריך לעבור לגלגל שלישי... אין לו לאן ללכת. אין גלגל שלישי במגירה.</p>
+    <figure><div id="fig61"></div><figcaption>ציור 18: ‏<bdi class="ltr">$FF</bdi> ועוד 1. במגירה נשאר <bdi class="ltr">$00</bdi>, וה-1 שיצא מדליק את נורת C.</figcaption></figure>
+    <p>המעבד לא שוכח את ה-1 הזה: הוא מדליק <b>נורה</b> בשם <b>C</b>. כל <code>ADDA</code> מעדכנת אותה: התוצאה עברה את <code>$FF</code>? הנורה דולקת. נכנסה? כבויה. גם <code>SUBA</code> מעדכנת אותה: אם ירדנו מתחת ל-0, המד מסתובב אחורה ל-<code>$FF</code>, ו-C נדלקת.</p>
+    <p>נסה בעצמך. במגירה מתחיל <code>$FE</code>:</p>
+    <div id="odo6"></div>
+    <ul class="missions" id="m6"></ul>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>גילית משהו מוזר? <code>INCA</code> מגיעה בדיוק לאותו <code>$00</code> כמו <code>ADDA #1</code>, אבל <b>לא נוגעת בנורת C</b>. כך תכננו את המעבד 6809: ‏INCA ו-DECA הן פקודות "ספירה" מהירות, והן משאירות את C כמו שהייתה.</p></div>
+    <div id="pw65"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">5</span>מאפסים: ‏CLRA, ועוד ניסוי על C</h3>
+    <p><code>CLRA</code> ("נקה את A") שמה 0 במגירה, וגם מכבה את נורת C. בתוכנית הבאה היא מכבה את C בהתחלה, ואז שתי דרכים להגיע ל-<code>$00</code>. תסתכל על הנורה.</p>
+    <div id="pw66"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">6</span>חשבון ישר על המסך: ‏INC ו-DEC</h3>
+    <p>בלי ה-A בסוף, <code>INC</code> ו-<code>DEC</code> עובדות <b>ישר על בית</b>: ‏<code>INC $0500</code> הולכת לבית <code>$0500</code>, מוסיפה 1 למספר שכתוב שם, וכותבת אותו בחזרה. המגירה A בכלל לא משתתפת.</p>
+    <div id="pw67"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">7</span>חסרה שורה</h3>
+    <p>רצינו לכתוב ABC באמצע המסך, עם LDA אחת בלבד.</p>
+    <div id="pw68"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>חידות</h3>
+    <p>כמו בפרקים הקודמים: המסך שלך צריך להיות זהה לתמונה. מעכשיו שורה בלי שם <b>מתחילה ברווח</b>, בדיוק כמו ב-DREAM.</p>
+    <div class="puzzle" id="pz61"></div>
+    <div class="puzzle" id="pz62"></div>
+    <div class="puzzle" id="pz63"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">▶</span>בדראגון האמיתי</h3>
+    <p>כל התוכניות בפרק, וגם הפתרונות של החידות, הוקלדו ב-DREAM במכונה שלנו והורצו. בדקנו משבצת-משבצת שהמסך זהה לחלונות כאן. בדקנו גם את <b>הנורות</b>: הוספנו בסוף כל תוכנית שורות שמעתיקות את הנורות ואת המגירות למסך, והשווינו לחלון.</p>
+    <div class="machine" id="mach6"></div>
+  </div>
+
+  <div class="recap">
+    <div><b>מה למדנו:</b> ‏<span class="ltr">INCA</span> ועוד 1, ‏<span class="ltr">DECA</span> פחות 1, ‏<span class="ltr">ADDA</span> חיבור, ‏<span class="ltr">SUBA</span> חיסור, ‏<span class="ltr">CLRA</span> אפס. ‏<span class="ltr">INC</span> ו-<span class="ltr">DEC</span> עובדות ישר על בית.</div>
+    <div>המגירה מתהפכת כמו מד מרחק. ADDA ו-SUBA מדליקות את נורת C כשעוברים את הקצה. INCA ו-DECA לא נוגעות בה.</div>
+    <div class="next">בפרק הבא: מגירה חדשה, X. היא לא מחזיקה אות, אלא מספר של בית: אצבע שמצביעה על משבצת.</div>
+    <button class="btn warm nextch" data-go="ch7">לפרק 7 ←</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">פרויקט מחווה של חובב, לא קשור ל-<bdi>Dragon Data</bdi> ולא מורשה על ידה. הקורס, הציורים והטקסט שלנו. כל תוכנית בקורס נבדקה במכונת ה-<bdi>Dragon</bdi> של האתר (<bdi>XRoar</bdi> עם ה-<bdi>BASIC</bdi> שכתבנו).</p>
+<script src="/learn/course.js"></script>
+</body>
+</html>

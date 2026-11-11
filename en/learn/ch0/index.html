@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 0 · What is a computer? A street of houses — Machine Code on the Dragon</title>
+<meta name="description" content="By the end of the course you will write this game yourself: a yellow apple falls, and you catch it in a blue basket. You will write it in the language the…">
+<meta property="og:title" content="Chapter 0 · What is a computer? A street of houses — Machine Code on the Dragon">
+<meta property="og:description" content="By the end of the course you will write this game yourself: a yellow apple falls, and you catch it in a blue basket. You will write it in the language the…">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/en/learn/ch0/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/en/learn/ch0/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch0/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch0/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/en/learn/course.css">
+</head>
+<body data-ch="ch0">
+<nav class="site" aria-label="Navigation">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/learn/ch0/" lang="he" hreflang="he">עברית</a>
+  <a href="/en/learn/">All chapters</a>
+  <a href="/en/">← Home</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>Machine code from zero</h1>
+    <p class="sub">A course for the Dragon 32 · Chapters 0 to 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/en/learn/ch0/" data-tab="ch0">0 · A street of houses<span class="done" data-done="0"></span></a>
+  <a href="/en/learn/ch1/" data-tab="ch1">1 · The screen is memory<span class="done" data-done="1"></span></a>
+  <a href="/en/learn/ch2/" data-tab="ch2">2 · LDA and STA<span class="done" data-done="2"></span></a>
+  <a href="/en/learn/ch3/" data-tab="ch3">3 · The odometer<span class="done" data-done="3"></span></a>
+  <a href="/en/learn/ch4/" data-tab="ch4">4 · Four lamps<span class="done" data-done="4"></span></a>
+  <a href="/en/learn/ch5/" data-tab="ch5">5 · With # or without<span class="done" data-done="5"></span></a>
+  <a href="/en/learn/ch6/" data-tab="ch6">6 · Sums<span class="done" data-done="6"></span></a>
+  <a href="/en/learn/ch7/" data-tab="ch7">7 · The finger X<span class="done" data-done="7"></span></a>
+  <a href="/en/learn/ch8/" data-tab="ch8">8 · Crossroads<span class="done" data-done="8"></span></a>
+  <a href="/en/learn/ch9/" data-tab="ch9">9 · Loops<span class="done" data-done="9"></span></a>
+  <a href="/en/learn/ch10/" data-tab="ch10">10 · Keys<span class="done" data-done="10"></span></a>
+  <a href="/en/learn/ch11/" data-tab="ch11">11 · Movement<span class="done" data-done="11"></span></a>
+  <a href="/en/learn/ch12/" data-tab="ch12">12 · Subroutines<span class="done" data-done="12"></span></a>
+  <a href="/en/learn/ch13/" data-tab="ch13">13 · Numbers on the street<span class="done" data-done="13"></span></a>
+  <a href="/en/learn/ch14/" data-tab="ch14">14 · The game<span class="done" data-done="14"></span></a>
+  <a href="/en/learn/ch15/" data-tab="ch15">15 · To the machine<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch0" id="ch0">
+  <div class="ch-head"><div><div class="num">Chapter 0</div><h2 id="h-ch0">What is a computer? A street of houses</h2><div class="why0">On the Dragon, as on every computer, we count from zero. So we start here too.</div></div><span class="time">About 10 minutes · no code at all</span></div>
+
+  <div class="step">
+    <h3><span class="n">★</span>Where we are going</h3>
+    <p>By the end of the course you will write this game yourself: a yellow apple falls, and you catch it in a blue basket. You will write it in the language the fast games of 1982 were written in: <b>machine code</b>.</p>
+    <div class="scr-wrap" id="teaser" style="max-width:420px;margin:8px auto"></div>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>Hello. I’ll be with you all through the course. Sounds hard? Don’t worry. We’ll go slowly: in every step one idea, a picture, and something to press. If you understand how to write a number in a house, you’ve already come most of the way.</p></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">1</span>Memory is a street</h3>
+    <p>Inside the computer there is a very long street of little houses. Every house has a <b>house number</b>, like on a real street.</p>
+    <p>On every house hangs a <b>small wipeable board</b>, and on it is written <b>one number</b>. Only one, never two. The number is always between 0 and 255.</p>
+    <figure><div id="fig01"></div><figcaption>Figure 1: The street of houses. On the sign: the house number. On the board: the number that lives in the house.</figcaption></figure>
+    <p>The Dragon has 65,536 houses like these. The game, the letters on the screen, the sounds: it is all numbers on these boards.</p>
+    <div class="note">Every sign shows the number in two ways: <b>1024</b>, and below it, small, <code>$0400</code>. It is the same number, in the computer’s way of writing. For now you can ignore the small line. We’ll learn it in Chapter 3.</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>Writing: wipe, then write</h3>
+    <p>When you write a number in a house, the board is wiped first. The old number disappears, and the new one is written in its place.</p>
+    <figure><div id="fig02"></div><figcaption>Figure 2: It was 5. Wipe. Write 7. Now the board holds only 7.</figcaption></figure>
+    <div class="quiz" data-quiz="q0a"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>Reading: take a photo, and the original stays</h3>
+    <p>When the computer reads a number from a house, it doesn’t take the board. It <b>takes a photo</b> of it. The copy goes onto a note in its hand, and the number stays in the house exactly as it was.</p>
+    <figure><div id="fig03"></div><figcaption>Figure 3: Reading takes a photo. House 1025 still holds 65, and the note holds 65 too.</figcaption></figure>
+    <div class="quiz" data-quiz="q0b"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>Try it yourself on the street</h3>
+    <p>Click a house to choose it. Then write a number in it, or take a photo of it onto the note.</p>
+    <div id="street1"></div>
+    <ul class="missions" id="m0"></ul>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>Did you try to write 300? The board won’t have it. The biggest number that fits is 255. That isn’t our rule, it is how the Dragon itself works. Why 255 of all numbers? We’ll find out in Chapter 4.</p></div>
+    <div class="machine"><b>What happens on the real Dragon with 300?</b> In BASIC the command <code>POKE 1024,300</code> answers <code>?FC ERROR</code>. In DREAM the line <code>LDA #300</code> doesn’t complain, but keeps only what fits: 44 (because 300 minus 256). <span class="verified">✓ Both checked on our Dragon machine</span></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>Puzzles</h3>
+    <div class="puzzle">
+      <span class="tag">Puzzle 1 · Follow along</span>
+      <p>At the start, house 1030 holds 4. Now we do, in this order:</p>
+      <ol>
+        <li>Write 8 in house 1030.</li>
+        <li>Take a photo of house 1030 onto the note.</li>
+        <li>Write 2 in house 1030.</li>
+        <li>Write what is on the note in house 1031.</li>
+      </ol>
+      <div class="row">House 1030 holds: <input class="num" id="t1a" inputmode="numeric"> and house 1031 holds: <input class="num" id="t1b" inputmode="numeric"> <button class="btn" id="t1go">Check</button></div>
+      <div class="fb" id="t1fb"></div>
+    </div>
+    <div class="puzzle">
+      <span class="tag">Puzzle 2 · Copy without typing</span>
+      <p>Copy the number from house 1029 to house 1033, without typing it. You may only use “Photo to the note” and “Write from the note”.</p>
+      <div id="street2"></div>
+      <div class="fb" id="s2fb"></div>
+    </div>
+  </div>
+
+  <div class="recap">
+    <div><b>What we learnt:</b> memory is a street of numbered houses, and every house has a board with one number between 0 and 255.</div>
+    <div>Writing wipes the old and writes the new. Reading takes a photo, and the original stays.</div>
+    <div class="next">Next chapter: a little secret. Part of this street is the screen itself.</div>
+    <button class="btn warm nextch" data-go="ch1">To Chapter 1 →</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">A hobbyist tribute project, not affiliated with or endorsed by <bdi>Dragon Data</bdi>. The course, drawings and text are our own. Every program in the course was checked on the site's <bdi>Dragon</bdi> machine (<bdi>XRoar</bdi> running the <bdi>BASIC</bdi> we wrote).</p>
+<script src="/en/learn/course.js"></script>
+</body>
+</html>

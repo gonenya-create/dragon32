@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>פרק 1 · המסך הוא זיכרון — שפת מכונה בדראגון</title>
+<meta name="description" content="הבתים מ-1024 עד 1535 מיוחדים. כל אחד מהם הוא משבצת על המסך. מה שכתוב על הלוח של הבית, זה מה שהמשבצת מראה.">
+<meta property="og:title" content="פרק 1 · המסך הוא זיכרון — שפת מכונה בדראגון">
+<meta property="og:description" content="הבתים מ-1024 עד 1535 מיוחדים. כל אחד מהם הוא משבצת על המסך. מה שכתוב על הלוח של הבית, זה מה שהמשבצת מראה.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/learn/ch1/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/learn/ch1/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch1/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch1/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/learn/course.css">
+</head>
+<body data-ch="ch1">
+<nav class="site" aria-label="ניווט">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/en/learn/ch1/" lang="en" hreflang="en">English</a>
+  <a href="/learn/">כל הפרקים</a>
+  <a href="/">← לדף הבית</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>שפת מכונה מאפס</h1>
+    <p class="sub">קורס ל-דראגון 32 · פרקים 0 עד 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/learn/ch0/" data-tab="ch0">0 · רחוב של תאים<span class="done" data-done="0"></span></a>
+  <a href="/learn/ch1/" data-tab="ch1">1 · המסך הוא זיכרון<span class="done" data-done="1"></span></a>
+  <a href="/learn/ch2/" data-tab="ch2">2 · LDA ו-STA<span class="done" data-done="2"></span></a>
+  <a href="/learn/ch3/" data-tab="ch3">3 · מד המרחק<span class="done" data-done="3"></span></a>
+  <a href="/learn/ch4/" data-tab="ch4">4 · ארבע נורות<span class="done" data-done="4"></span></a>
+  <a href="/learn/ch5/" data-tab="ch5">5 · עם # או בלי<span class="done" data-done="5"></span></a>
+  <a href="/learn/ch6/" data-tab="ch6">6 · חשבון<span class="done" data-done="6"></span></a>
+  <a href="/learn/ch7/" data-tab="ch7">7 · האצבע X<span class="done" data-done="7"></span></a>
+  <a href="/learn/ch8/" data-tab="ch8">8 · צומת<span class="done" data-done="8"></span></a>
+  <a href="/learn/ch9/" data-tab="ch9">9 · לולאות<span class="done" data-done="9"></span></a>
+  <a href="/learn/ch10/" data-tab="ch10">10 · מקשים<span class="done" data-done="10"></span></a>
+  <a href="/learn/ch11/" data-tab="ch11">11 · תנועה<span class="done" data-done="11"></span></a>
+  <a href="/learn/ch12/" data-tab="ch12">12 · תת-תוכניות<span class="done" data-done="12"></span></a>
+  <a href="/learn/ch13/" data-tab="ch13">13 · מספרים ברחוב<span class="done" data-done="13"></span></a>
+  <a href="/learn/ch14/" data-tab="ch14">14 · המשחק<span class="done" data-done="14"></span></a>
+  <a href="/learn/ch15/" data-tab="ch15">15 · למכונה<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch1" id="ch1">
+  <div class="ch-head"><div><div class="num">פרק 1</div><h2 id="h-ch1">המסך הוא זיכרון</h2></div><span class="time">כ-15 דקות · עדיין בלי קוד</span></div>
+
+  <div class="step">
+    <h3><span class="n">1</span>הסוד: 512 בתים שרואים</h3>
+    <p>הבתים מ-1024 עד 1535 מיוחדים. כל אחד מהם הוא <b>משבצת על המסך</b>. מה שכתוב על הלוח של הבית, זה מה שהמשבצת מראה.</p>
+    <p>איך 512 בתים ברחוב אחד הופכים למסך? חותכים את הרחוב כל 32 בתים, ומניחים את החתיכות זו מתחת לזו. יוצאות 16 שורות של 32 משבצות.</p>
+    <figure><div id="fig11"></div><figcaption>ציור 4: מקפלים את הרחוב לשורות של 32. הבית הראשון, 1024, הוא הפינה השמאלית העליונה.</figcaption></figure>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>המסך החי</h3>
+    <p>זה המסך של הדראגון, משבצת אחרי משבצת. רחף עם העכבר מעל משבצת (בטלפון: גע בה), ותראה את מספר הבית שלה ומה כתוב בה. לחיצה בוחרת משבצת, ואז אפשר לכתוב בה מספר.</p>
+    <div id="ex1"></div>
+    <ul class="missions" id="m1"></ul>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>שמת לב? לא כתבת "A". כתבת 65, והמסך הראה A. המחשב לא מכיר אותיות, רק מספרים. ל-A הוא קורא 65.</p></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>ימינה ועוד 1, למטה ועוד 32</h3>
+    <p>צעד ימינה הוא פשוט הבית הבא ברחוב: ועוד 1. צעד למטה מדלג על שורה שלמה: ועוד 32, כי בכל שורה 32 בתים.</p>
+    <figure><div id="fig12"></div><figcaption>ציור 5: מפת המסך. בצד: מספר הבית הראשון בכל שורה.</figcaption></figure>
+    <div class="quiz" data-quiz="q1a"></div>
+    <p>עכשיו נסה במסך החי למעלה: משימות 6 ו-7.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>איזה מספר עושה מה</h3>
+    <p>כל מספר מ-0 עד 255 מצייר משהו במשבצת. הנה הכי שימושיים. אין צורך לזכור. הטבלה תמיד כאן.</p>
+    <table class="codes" id="codes"></table>
+    <div class="quiz" data-quiz="q1b"></div>
+    <div class="note">צבעים יש שמונה, וכל משבצת צבע יכולה להיות גם חצי או רבע. החשבון של זה מחכה לפרק 4. בינתיים: 191 אדום, 175 כחול, 159 צהוב, 207 לבן.</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">5</span>בדראגון האמיתי</h3>
+    <p>את אותו דבר אפשר לעשות במכונה עצמה, ב-BASIC, בלי שום כלי נוסף. הפקודה <code>POKE</code> כותבת מספר בבית:</p>
+    <p class="ltr" style="text-align:left"><code>CLS:POKE 1295,65:POKE 1535,191</code></p>
+    <p>ה-A יופיע באמצע המסך, וריבוע אדום בפינה הימנית התחתונה.</p>
+    <div class="machine">טיפ שגילינו בבדיקה: השורה העליונה לא טובה לניסוי ב-BASIC. מיד אחרי הפקודה BASIC כותב שם <code>OK</code>, ובדרך מוחק את כל השורה. לכן בדקו באמצע המסך. <span class="verified">✓ נבדק במכונה שלנו</span></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>חידות</h3>
+    <div class="puzzle" id="pz11"></div>
+    <div class="puzzle" id="pz12"></div>
+    <div class="puzzle" id="pz13"></div>
+  </div>
+
+  <div class="recap">
+    <div><b>מה למדנו:</b> המסך הוא 512 בתים, מ-1024 עד 1535, בשורות של 32. ימינה זה ועוד 1, למטה זה ועוד 32.</div>
+    <div>המספר בבית קובע מה רואים: 65 הוא A, ‏96 משבצת ריקה, ‏191 ריבוע אדום.</div>
+    <div class="next">בפרק הבא: עד עכשיו אתה כתבת בבתים. עכשיו נכיר את מי שכותב בהם בתוך המחשב, ונכתוב תוכנית ראשונה.</div>
+    <button class="btn warm nextch" data-go="ch2">לפרק 2 ←</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">פרויקט מחווה של חובב, לא קשור ל-<bdi>Dragon Data</bdi> ולא מורשה על ידה. הקורס, הציורים והטקסט שלנו. כל תוכנית בקורס נבדקה במכונת ה-<bdi>Dragon</bdi> של האתר (<bdi>XRoar</bdi> עם ה-<bdi>BASIC</bdi> שכתבנו).</p>
+<script src="/learn/course.js"></script>
+</body>
+</html>

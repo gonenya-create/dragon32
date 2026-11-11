@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>פרק 7 · האצבע X — שפת מכונה בדראגון</title>
+<meta name="description" content="עד עכשיו, בכל STA כתבנו את מספר הבית בעצמנו. רוצים לצייר במקום אחר? משנים את כל השורות. יש דרך טובה יותר.">
+<meta property="og:title" content="פרק 7 · האצבע X — שפת מכונה בדראגון">
+<meta property="og:description" content="עד עכשיו, בכל STA כתבנו את מספר הבית בעצמנו. רוצים לצייר במקום אחר? משנים את כל השורות. יש דרך טובה יותר.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/learn/ch7/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/learn/ch7/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch7/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch7/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/learn/course.css">
+</head>
+<body data-ch="ch7">
+<nav class="site" aria-label="ניווט">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/en/learn/ch7/" lang="en" hreflang="en">English</a>
+  <a href="/learn/">כל הפרקים</a>
+  <a href="/">← לדף הבית</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>שפת מכונה מאפס</h1>
+    <p class="sub">קורס ל-דראגון 32 · פרקים 0 עד 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/learn/ch0/" data-tab="ch0">0 · רחוב של תאים<span class="done" data-done="0"></span></a>
+  <a href="/learn/ch1/" data-tab="ch1">1 · המסך הוא זיכרון<span class="done" data-done="1"></span></a>
+  <a href="/learn/ch2/" data-tab="ch2">2 · LDA ו-STA<span class="done" data-done="2"></span></a>
+  <a href="/learn/ch3/" data-tab="ch3">3 · מד המרחק<span class="done" data-done="3"></span></a>
+  <a href="/learn/ch4/" data-tab="ch4">4 · ארבע נורות<span class="done" data-done="4"></span></a>
+  <a href="/learn/ch5/" data-tab="ch5">5 · עם # או בלי<span class="done" data-done="5"></span></a>
+  <a href="/learn/ch6/" data-tab="ch6">6 · חשבון<span class="done" data-done="6"></span></a>
+  <a href="/learn/ch7/" data-tab="ch7">7 · האצבע X<span class="done" data-done="7"></span></a>
+  <a href="/learn/ch8/" data-tab="ch8">8 · צומת<span class="done" data-done="8"></span></a>
+  <a href="/learn/ch9/" data-tab="ch9">9 · לולאות<span class="done" data-done="9"></span></a>
+  <a href="/learn/ch10/" data-tab="ch10">10 · מקשים<span class="done" data-done="10"></span></a>
+  <a href="/learn/ch11/" data-tab="ch11">11 · תנועה<span class="done" data-done="11"></span></a>
+  <a href="/learn/ch12/" data-tab="ch12">12 · תת-תוכניות<span class="done" data-done="12"></span></a>
+  <a href="/learn/ch13/" data-tab="ch13">13 · מספרים ברחוב<span class="done" data-done="13"></span></a>
+  <a href="/learn/ch14/" data-tab="ch14">14 · המשחק<span class="done" data-done="14"></span></a>
+  <a href="/learn/ch15/" data-tab="ch15">15 · למכונה<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch7" id="ch7">
+  <div class="ch-head"><div><div class="num">פרק 7</div><h2 id="h-ch7">האצבע X</h2></div><span class="time">כ-25 דקות · LDX, ‏,X, ‏,X+, ‏LEAX</span></div>
+
+  <div class="step">
+    <h3><span class="n">1</span>מגירה חדשה, גדולה יותר</h3>
+    <p>עד עכשיו, בכל STA כתבנו את מספר הבית בעצמנו. רוצים לצייר במקום אחר? משנים את כל השורות. יש דרך טובה יותר.</p>
+    <p>במעבד יש מגירה בשם <b>X</b>. היא <b>רחבה פי שתיים</b> מ-A: יש בה ארבע ספרות, ולכן נכנס בה מספר של בית (<code>$0400</code>, ‏<code>$05FF</code>...). חשוב עליה כעל <b>אצבע</b>: המספר שבתוכה הוא הבית שהאצבע מצביעה עליו.</p>
+    <figure><div id="fig71"></div><figcaption>ציור 19: במגירה X כתוב <bdi class="ltr">$0402</bdi>, אז האצבע מצביעה על בית <bdi class="ltr">$0402</bdi>. ‏<bdi class="ltr">,X</bdi> הוא הבית הזה, ו-<bdi class="ltr">1,X</bdi> הוא השכן שמימין.</figcaption></figure>
+    <p><code>LDX #$0400</code> אומרת: "<b>שים $0400 במגירה X</b>", כלומר: הצבע על בית <code>$0400</code>. בדיוק כמו LDA עם סולמית, רק למגירה הגדולה.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>כותבים איפה שהאצבע: ‏STA ,X</h3>
+    <p>במקום מספר בית, כותבים <code>,X</code> (פסיק ואז X). ‏<code>STA ,X</code> אומרת: "<b>כתוב את A בבית שהאצבע מצביעה עליו</b>". במסך שבחלון, האצבע מצוירת מעל המשבצת שלה.</p>
+    <div id="pw71"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>מזיזים את האצבע: ‏LEAX</h3>
+    <p><code>LEAX 1,X</code> אומרת: "<b>הזז את האצבע צעד אחד ימינה</b>". המספר לפני הפסיק הוא כמה להזיז: ‏<code>LEAX 32,X</code> מורידה את האצבע שורה למטה (32 משבצות בשורה, זוכר?). ומספר עם מינוס מזיז אחורה: ‏<code>LEAX -1,X</code> שמאלה, ‏<code>LEAX -32,X</code> למעלה.</p>
+    <p>נסה בעצמך: האצבע מתחילה ב-<code>$0400</code>, ובמגירה A יש ריבוע אדום.</p>
+    <div id="fw7"></div>
+    <ul class="missions" id="m7"></ul>
+    <div id="pw72"></div>
+    <div id="pw74"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>כתוב וזוז: ‏STA ,X+</h3>
+    <p>כותבים אות ואז זזים צעד: זה כל כך נפוץ, שיש לזה קיצור. ‏<code>STA ,X+</code> אומרת: "<b>כתוב איפה שהאצבע, ואז הזז אותה צעד ימינה</b>". הפלוס בא <b>אחרי</b> ה-X, כי הצעד בא אחרי הכתיבה.</p>
+    <div id="pw73"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">5</span>ליד האצבע: ‏1,X ‏32,X</h3>
+    <p>אפשר לכתוב גם <b>ליד</b> האצבע בלי להזיז אותה. ‏<code>STA 1,X</code> כותבת בבית שמימין לאצבע, ו-<code>STA 32,X</code> בבית שמתחתיה. האצבע נשארת במקום.</p>
+    <p>וכאן הקסם: התוכנית הבאה מציירת ריבוע גדול. בחר מקום אחר, ורק <b>השורה הראשונה</b> משתנה. כל השאר נשאר אותו דבר, והציור זז.</p>
+    <div id="pw75"></div>
+    <div class="quiz" data-quiz="q7a"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">6</span>קוראים עם האצבע: ‏LDA ,X</h3>
+    <p>מה שעובד בכתיבה עובד גם בקריאה. ‏<code>LDA ,X</code> מצלמת את הבית שהאצבע מצביעה עליו. ‏<code>LDA 1,X</code> מצלמת את השכן.</p>
+    <div id="pw76"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">7</span>חסרה שורה</h3>
+    <p>רצינו קו של שלושה ריבועים אדומים.</p>
+    <div id="pw77"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">8</span>סוד הסוף הקבוע (חלק 1)</h3>
+    <p>מההתחלה כל תוכנית נגמרת באותן ארבע שורות. עכשיו אפשר להבין את הראשונה:</p>
+    <p class="ltr" style="text-align:left"><code>KEY LDX $A000</code></p>
+    <p>‏<b>KEY</b> הוא שם של מקום (מיד נשתמש בו). ‏<code>LDX $A000</code> בלי סולמית: "לך לבית <code>$A000</code> וצלם". המגירה X רחבה, אז היא מצלמת <b>שני</b> בתים: <code>$A000</code> ו-<code>$A001</code>. שם, בזיכרון הקבוע של הדראגון, כתוב מספר של בית: הבית שבו גרה עבודה קטנה שבודקת "האם נלחץ מקש?". האצבע מצביעה עכשיו עליה.</p>
+    <p>והשורה השנייה, <code>JSR ,X</code>: "<b>לך לעשות את העבודה שהאצבע מצביעה עליה, וחזור</b>". על JSR עוד נלמד הרבה. את השורה השלישית נבין בפרק הבא.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>חידות: מציירים עם אצבע</h3>
+    <p>בחידות האלה <b>אסור לכתוב מספר בית</b> אחרי STA. כל הכתיבה דרך האצבע.</p>
+    <div class="puzzle" id="pz71"></div>
+    <div class="puzzle" id="pz72"></div>
+    <div class="puzzle" id="pz73"></div>
+    <div class="puzzle" id="pz74"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">▶</span>בדראגון האמיתי</h3>
+    <div class="machine" id="mach7"></div>
+  </div>
+
+  <div class="recap">
+    <div><b>מה למדנו:</b> ‏X היא מגירה של מספר בית: אצבע. ‏<span class="ltr">LDX #$0400</span> מצביעה. ‏<span class="ltr">,X</span> הוא הבית של האצבע, ‏<span class="ltr">1,X</span> ו-<span class="ltr">32,X</span> השכנים.</div>
+    <div>‏<span class="ltr">STA ,X+</span> כותבת וזזה. ‏<span class="ltr">LEAX 32,X</span> מזיזה את האצבע שורה למטה. משנים את LDX, וכל הציור זז.</div>
+    <div class="next">בפרק הבא: צומת דרכים. המעבד משווה, מדליק נורה, ומחליט לאן לפנות.</div>
+    <button class="btn warm nextch" data-go="ch8">לפרק 8 ←</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">פרויקט מחווה של חובב, לא קשור ל-<bdi>Dragon Data</bdi> ולא מורשה על ידה. הקורס, הציורים והטקסט שלנו. כל תוכנית בקורס נבדקה במכונת ה-<bdi>Dragon</bdi> של האתר (<bdi>XRoar</bdi> עם ה-<bdi>BASIC</bdi> שכתבנו).</p>
+<script src="/learn/course.js"></script>
+</body>
+</html>

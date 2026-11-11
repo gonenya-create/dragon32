@@ -2873,6 +2873,14 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       setTimeout(() => { addTapes([f]); if (mineDrawer) mineDrawer.open = true; gameKeys(null); play(tapeBytes([f]), '/mine.cas', name, null, true, true); }, 2000);
     }, 300);
   }
+  // הגיעו מפינת הלמידה (/learn/) עם ?learn=NAME: הכפתור "שלח למכונת הדראגון" כבר שם את הקלטת ב"הקלטות שלי".
+  // רק אומרים מה להקליד ופותחים את המגירה. הטעינה וההרצה ביד, כמו ב-1982 (11.11)
+  const learnName = new URLSearchParams(location.search).get('learn');
+  if (status && learnName && /^[A-Z0-9]{1,8}$/.test(learnName) && myTapes().some(t => t && t.n === learnName)) {
+    if (mineDrawer) mineDrawer.open = true;
+    status.textContent = EN ? 'The tape ' + learnName + ' from the course is in My tapes. When OK appears, type CLOADM "' + learnName + '", and after OK type CLS:EXEC.'
+      : 'הקלטת ' + learnName + ' מהקורס נמצאת ב"הקלטות שלי". כשמופיע OK, הקלידו CLOADM "' + learnName + '", ואחרי ה-OK הקלידו CLS:EXEC.';
+  }
   const mineName = new URLSearchParams(location.search).get('mine');
   const linkCode = (/[#&]p=([A-Za-z0-9_-]+)/.exec(location.hash) || [])[1];
   if (mineName && /^[A-Z0-9]{1,8}$/.test(mineName)) {

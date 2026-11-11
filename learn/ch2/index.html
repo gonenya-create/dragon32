@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>פרק 2 · הפקודות הראשונות: LDA ו-STA — שפת מכונה בדראגון</title>
+<meta name="description" content="בתוך הדראגון יש שבב אחד שעושה את כל העבודה: המעבד, ששמו 6809. כל מה שראינו בפרקים הקודמים, הכתיבה בבתים, הוא עושה בעצמו, מאות אלפי פעולות קטנות בשנייה.">
+<meta property="og:title" content="פרק 2 · הפקודות הראשונות: LDA ו-STA — שפת מכונה בדראגון">
+<meta property="og:description" content="בתוך הדראגון יש שבב אחד שעושה את כל העבודה: המעבד, ששמו 6809. כל מה שראינו בפרקים הקודמים, הכתיבה בבתים, הוא עושה בעצמו, מאות אלפי פעולות קטנות בשנייה.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/learn/ch2/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/learn/ch2/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch2/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch2/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/learn/course.css">
+</head>
+<body data-ch="ch2">
+<nav class="site" aria-label="ניווט">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/en/learn/ch2/" lang="en" hreflang="en">English</a>
+  <a href="/learn/">כל הפרקים</a>
+  <a href="/">← לדף הבית</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>שפת מכונה מאפס</h1>
+    <p class="sub">קורס ל-דראגון 32 · פרקים 0 עד 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/learn/ch0/" data-tab="ch0">0 · רחוב של תאים<span class="done" data-done="0"></span></a>
+  <a href="/learn/ch1/" data-tab="ch1">1 · המסך הוא זיכרון<span class="done" data-done="1"></span></a>
+  <a href="/learn/ch2/" data-tab="ch2">2 · LDA ו-STA<span class="done" data-done="2"></span></a>
+  <a href="/learn/ch3/" data-tab="ch3">3 · מד המרחק<span class="done" data-done="3"></span></a>
+  <a href="/learn/ch4/" data-tab="ch4">4 · ארבע נורות<span class="done" data-done="4"></span></a>
+  <a href="/learn/ch5/" data-tab="ch5">5 · עם # או בלי<span class="done" data-done="5"></span></a>
+  <a href="/learn/ch6/" data-tab="ch6">6 · חשבון<span class="done" data-done="6"></span></a>
+  <a href="/learn/ch7/" data-tab="ch7">7 · האצבע X<span class="done" data-done="7"></span></a>
+  <a href="/learn/ch8/" data-tab="ch8">8 · צומת<span class="done" data-done="8"></span></a>
+  <a href="/learn/ch9/" data-tab="ch9">9 · לולאות<span class="done" data-done="9"></span></a>
+  <a href="/learn/ch10/" data-tab="ch10">10 · מקשים<span class="done" data-done="10"></span></a>
+  <a href="/learn/ch11/" data-tab="ch11">11 · תנועה<span class="done" data-done="11"></span></a>
+  <a href="/learn/ch12/" data-tab="ch12">12 · תת-תוכניות<span class="done" data-done="12"></span></a>
+  <a href="/learn/ch13/" data-tab="ch13">13 · מספרים ברחוב<span class="done" data-done="13"></span></a>
+  <a href="/learn/ch14/" data-tab="ch14">14 · המשחק<span class="done" data-done="14"></span></a>
+  <a href="/learn/ch15/" data-tab="ch15">15 · למכונה<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch2" id="ch2">
+  <div class="ch-head"><div><div class="num">פרק 2</div><h2 id="h-ch2">הפקודות הראשונות: LDA ו-STA</h2></div><span class="time">כ-20 דקות · שתי פקודות בלבד</span></div>
+
+  <div class="step">
+    <h3><span class="n">1</span>הכירו את המעבד</h3>
+    <p>בתוך הדראגון יש שבב אחד שעושה את כל העבודה: <b>המעבד</b>, ששמו 6809. כל מה שראינו בפרקים הקודמים, הכתיבה בבתים, הוא עושה בעצמו, מאות אלפי פעולות קטנות בשנייה.</p>
+    <p>למעבד יש כמה <b>מגירות</b> קטנות. היום נכיר רק אחת: <b>מגירה A</b>. במגירה יש מספר אחד, בדיוק כמו בלוח של בית. (זוכר את הפתק מפרק 0? זו היא.)</p>
+    <figure><div id="fig21"></div><figcaption>ציור 6: המעבד. היום פתוחה רק מגירה A. את השאר נגלה כשנצטרך אותן.</figcaption></figure>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>שתי פקודות</h3>
+    <p><code>LDA</code> אומרת: <b>שים מספר במגירה A</b>. ‏(LD מ-Load, "טען".) מה שהיה במגירה קודם נמחק.</p>
+    <p><code>STA</code> אומרת: <b>כתוב את מה שבמגירה A בבית הזה</b>. ‏(ST מ-Store, "שמור".) הבית נמחק ונכתב, ו<b>המגירה לא מתרוקנת</b>: נשאר בה אותו מספר.</p>
+    <figure><div id="fig22"></div><figcaption>ציור 7: LDA שמה מספר במגירה. STA מצלמת את המגירה וכותבת לבית. במגירה עדיין $41.</figcaption></figure>
+    <figure><div id="fig23"></div><figcaption>ציור 8: מה יש בשורה אחת.</figcaption></figure>
+    <div class="note">מהיום המספרים בקוד כתובים בכתיב של המחשב, עם <code>$</code>: ‏<code>$41</code> הוא 65, ו-<code>$0400</code> הוא 1024. בכל מקום נכתוב לידם גם את המספר הרגיל, עד שנלמד את הכתיב בפרק 3.</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>תוכנית ראשונה, צעד אחרי צעד</h3>
+    <p>בכל חלון: קודם נחש, אחר כך לחץ <b>צעד</b> כדי לראות שורה אחת קורית. החץ הצהוב מראה איזו שורה תקרה עכשיו.</p>
+    <div id="pw1"></div>
+    <div id="pw2"></div>
+    <div id="pw3"></div>
+    <div id="pw4"></div>
+    <div id="pw5"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>מה זה "הסוף הקבוע"?</h3>
+    <p>בתחתית כל חלון יש שורה אפורה: "הסוף הקבוע". אלה 4 שורות שמחכות שתלחץ על מקש:</p>
+    <ol class="code"><li><span class="op">KEY LDX</span> <span class="arg">$A000</span></li><li> <span class="op">JSR</span> <span class="arg">,X</span></li><li> <span class="op">BEQ</span> <span class="arg">KEY</span></li><li> <span class="op">RTS</span></li></ol>
+    <p>למה צריך אותן? כשתוכנית נגמרת ב-DREAM, העורך חוזר מיד ומצייר את עצמו על המסך, ולא היית מספיק לראות כלום. כרגע פשוט מעתיקים אותן לסוף כל תוכנית, כמו חתימה. בפרק 10 נבין כל מילה בהן.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">5</span>חסרה שורה</h3>
+    <p>בתוכנית הזאת רצינו לכתוב <b>OK</b> באמצע המסך, אבל שורה אחת נמחקה. איזו שורה צריכה להיות במקום הריק?</p>
+    <div id="pw6"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">6</span>תוכנית שבורה: שכחו סולמית</h3>
+    <p>מישהו רצה A בפינה, וכתב כך:</p>
+    <ol class="code"><li>@ <span class="op">LDA</span> <span class="arg">$41</span></li><li> <span class="op">STA</span> <span class="arg">$0400</span></li><li class="tail">… הסוף הקבוע</li></ol>
+    <p>חסרה ה-<code>#</code>. בלי סולמית, LDA לא מקבלת את המספר עצמו. היא הולכת <b>לבית מספר $41</b> (בית 65), ומצלמת את מה שכתוב על הלוח שלו.</p>
+    <div class="row" style="justify-content:center;gap:18px">
+      <div style="width:min(300px,100%)"><div class="scr-wrap" id="broken"></div></div>
+    </div>
+    <p>מה שראינו כשהרצנו את זה ב-DREAM במכונה שלנו: משבצת כהה עם <b>@</b>. בבית 65 היה במקרה 0, ו-0 על המסך הוא @ הפוך. ביום אחר יכול להיות שם מספר אחר, ואז תופיע משבצת אחרת. <span class="verified">✓ נבדק ב-DREAM</span></p>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>זו הטעות הכי נפוצה בשפה. אם יצא לך משהו מוזר במקום מה שרצית, הדבר הראשון שבודקים: האם יש <code>#</code>? פרק 5 כולו מוקדש לזה.</p></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>חידות: כתוב לבד</h3>
+    <p>כתוב תוכנית בחלון השחור ולחץ <b>הרץ ובדוק</b>. מספיק לכתוב את השורות של LDA ו-STA. את הסוף הקבוע נוסיף לבד.</p>
+    <div class="puzzle" id="pz21"></div>
+    <div class="puzzle" id="pz22"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">▶</span>להריץ בדראגון (DREAM)</h3>
+    <p>את כל התוכניות בחלונות של הפרק הזה, וגם את הפתרונות של שתי החידות, הקלדנו ב-DREAM במכונה שלנו, תרגמנו (<code>0000 ERRS</code>) והרצנו. הן עושות בדיוק את מה שהחלונות כאן מראים. איך טוענים את DREAM: ב"DREAM — שיעור ראשון". אחרי <code>N</code> ל-<code>OLD TEXT ?</code> מקלידים:</p>
+    <ol class="code"><li>@ <span class="op">LDA</span> <span class="arg">#$41</span></li><li> <span class="op">STA</span> <span class="arg">$0400</span></li><li><span class="op">KEY LDX</span> <span class="arg">$A000</span></li><li> <span class="op">JSR</span> <span class="arg">,X</span></li><li> <span class="op">BEQ</span> <span class="arg">KEY</span></li><li> <span class="op">RTS</span></li></ol>
+    <p>שורה בלי שם מתחילה ב<b>רווח</b> אמיתי. <code>@</code> אומר "כאן התוכנית מתחילה". אחר כך BREAK, ‏A, ‏ENTER כדי לתרגם, ו-BREAK, ‏X, ‏ENTER כדי להריץ. A מופיעה בפינה. מקש כלשהו מחזיר לעורך.</p>
+  </div>
+
+  <div class="recap">
+    <div><b>מה למדנו:</b> <span class="ltr">LDA #</span> שמה מספר במגירה A, ו-<span class="ltr">STA</span> כותבת את מה שבמגירה בבית. המגירה לא מתרוקנת.</div>
+    <div>בלי <span class="ltr">#</span> המחשב הולך לבית במספר הזה ומצלם אותו. זו הטעות הנפוצה ביותר.</div>
+    <div class="next">בפרק הבא: מה זה בעצם $0400? נלמד לספור כמו המחשב, עד 15 בכל ספרה.</div>
+    <button class="btn warm nextch" data-go="ch3">לפרק 3 ←</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">פרויקט מחווה של חובב, לא קשור ל-<bdi>Dragon Data</bdi> ולא מורשה על ידה. הקורס, הציורים והטקסט שלנו. כל תוכנית בקורס נבדקה במכונת ה-<bdi>Dragon</bdi> של האתר (<bdi>XRoar</bdi> עם ה-<bdi>BASIC</bdi> שכתבנו).</p>
+<script src="/learn/course.js"></script>
+</body>
+</html>

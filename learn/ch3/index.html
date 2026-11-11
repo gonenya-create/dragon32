@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>פרק 3 · מד המרחק: לספור כמו המחשב — שפת מכונה בדראגון</title>
+<meta name="description" content="כבר ראית את $0400 עשרות פעמים, ותמיד עם תרגום לידו: 1024. הגיע הזמן להבין אותו.">
+<meta property="og:title" content="פרק 3 · מד המרחק: לספור כמו המחשב — שפת מכונה בדראגון">
+<meta property="og:description" content="כבר ראית את $0400 עשרות פעמים, ותמיד עם תרגום לידו: 1024. הגיע הזמן להבין אותו.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/learn/ch3/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/learn/ch3/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch3/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch3/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/learn/course.css">
+</head>
+<body data-ch="ch3">
+<nav class="site" aria-label="ניווט">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/en/learn/ch3/" lang="en" hreflang="en">English</a>
+  <a href="/learn/">כל הפרקים</a>
+  <a href="/">← לדף הבית</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>שפת מכונה מאפס</h1>
+    <p class="sub">קורס ל-דראגון 32 · פרקים 0 עד 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/learn/ch0/" data-tab="ch0">0 · רחוב של תאים<span class="done" data-done="0"></span></a>
+  <a href="/learn/ch1/" data-tab="ch1">1 · המסך הוא זיכרון<span class="done" data-done="1"></span></a>
+  <a href="/learn/ch2/" data-tab="ch2">2 · LDA ו-STA<span class="done" data-done="2"></span></a>
+  <a href="/learn/ch3/" data-tab="ch3">3 · מד המרחק<span class="done" data-done="3"></span></a>
+  <a href="/learn/ch4/" data-tab="ch4">4 · ארבע נורות<span class="done" data-done="4"></span></a>
+  <a href="/learn/ch5/" data-tab="ch5">5 · עם # או בלי<span class="done" data-done="5"></span></a>
+  <a href="/learn/ch6/" data-tab="ch6">6 · חשבון<span class="done" data-done="6"></span></a>
+  <a href="/learn/ch7/" data-tab="ch7">7 · האצבע X<span class="done" data-done="7"></span></a>
+  <a href="/learn/ch8/" data-tab="ch8">8 · צומת<span class="done" data-done="8"></span></a>
+  <a href="/learn/ch9/" data-tab="ch9">9 · לולאות<span class="done" data-done="9"></span></a>
+  <a href="/learn/ch10/" data-tab="ch10">10 · מקשים<span class="done" data-done="10"></span></a>
+  <a href="/learn/ch11/" data-tab="ch11">11 · תנועה<span class="done" data-done="11"></span></a>
+  <a href="/learn/ch12/" data-tab="ch12">12 · תת-תוכניות<span class="done" data-done="12"></span></a>
+  <a href="/learn/ch13/" data-tab="ch13">13 · מספרים ברחוב<span class="done" data-done="13"></span></a>
+  <a href="/learn/ch14/" data-tab="ch14">14 · המשחק<span class="done" data-done="14"></span></a>
+  <a href="/learn/ch15/" data-tab="ch15">15 · למכונה<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch3" id="ch3">
+  <div class="ch-head"><div><div class="num">פרק 3</div><h2 id="h-ch3">מד המרחק: לספור כמו המחשב</h2></div><span class="time">כ-20 דקות · בלי פקודות חדשות</span></div>
+
+  <div class="step">
+    <h3><span class="n">1</span>למה בכלל כתיב אחר?</h3>
+    <p>כבר ראית את <code>$0400</code> עשרות פעמים, ותמיד עם תרגום לידו: 1024. הגיע הזמן להבין אותו.</p>
+    <p>אנחנו סופרים בעשר ספרות, 0 עד 9. המחשב אוהב לספור ב-<b>16</b> סימנים: 0 עד 9, ואחריהם A, ‏B, ‏C, ‏D, ‏E, ‏F. ה-<code>$</code> מלפנים אומר: "המספר הזה כתוב בספירה של 16".</p>
+    <figure><div id="fig31"></div><figcaption>ציור 9: שישה-עשר הסימנים. אחרי 9 לא עוברים ל-10, אלא ממשיכים עם אותיות.</figcaption></figure>
+    <p>למה זה נוח? כי הכול נכנס בדיוק: מספר בבית אחד הוא תמיד <b>שתי ספרות</b> (‏<code>$00</code> עד <code>$FF</code>), מספר בית הוא תמיד <b>ארבע ספרות</b>, ושורה במסך היא בדיוק <code>$20</code>.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>מד מרחק של מכונית</h3>
+    <p>זוכר את מד המרחק הישן במכונית? גלגלים עם ספרות. הגלגל הימני מסתובב, וכשהוא עובר את 9 הוא חוזר ל-0 ו<b>מקדם את הגלגל שלידו</b> באחד.</p>
+    <p>במד של המחשב בדיוק אותו דבר, רק שכל גלגל מגיע עד F לפני שהוא חוזר ל-0.</p>
+    <figure><div id="fig32"></div><figcaption>ציור 10: למעלה המד של המחשב, למטה המד הרגיל. אותו רגע, אותו רעיון: הגלגל הימני מתהפך ומקדם את השכן.</figcaption></figure>
+    <div class="quiz" data-quiz="q3a"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>סובב בעצמך</h3>
+    <p>המד מתחיל ב-<code>$0400</code>, הבית הראשון של המסך. מתחת לו, אותו מספר בספירה רגילה. לחץ על הכפתורים וצפה בגלגלים.</p>
+    <div id="odo"></div>
+    <ul class="missions" id="m3"></ul>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>שים לב לכפתור <b>‎+$20</b>: הוא תמיד מוריד אותך שורה אחת במסך. ‏<code>$20</code> הוא 32, ובשורה 32 משבצות.</p></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>כמה שווה כל גלגל</h3>
+    <p>בספירה רגילה, ב-<b>254</b> הספרה 2 שווה מאתיים, כי כל מקום שמאלה שווה פי 10. במד של המחשב כל מקום שמאלה שווה פי <b>16</b>: ‏1, ‏16, ‏256, ‏4096.</p>
+    <figure><div id="fig33"></div><figcaption>ציור 11: מתרגמים את <bdi class="ltr">$0420</bdi>: כל ספרה כפול הערך של המקום שלה, ומחברים.</figcaption></figure>
+    <p>לא צריך לחשב את זה בראש בכל פעם. מה שחשוב לזכור הם כמה מספרים שחוזרים כל הזמן:</p>
+    <table class="codes" id="hexkeys"></table>
+    <div class="quiz" data-quiz="q3b"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">5</span>מפת המסך, הפעם בכתיב של המחשב</h3>
+    <p>עכשיו מבינים את המספרים שבצד המסך. כל שורה מתחילה <code>$20</code> אחרי הקודמת. אחרי 8 שורות הגלגל מתהפך, וה-4 הופך ל-5: באמצע המסך מגיעים ל-<code>$0500</code>.</p>
+    <figure><div id="fig34"></div><figcaption>ציור 12: תחילת כל שורה. הדפוס חוזר: ‏00, ‏20, ‏40, ‏60, ‏80, ‏A0, ‏C0, ‏E0, ואז הגלגל הבא מתקדם.</figcaption></figure>
+    <p>ובתוך השורה? מוסיפים את מספר העמודה, גם הוא בכתיב של המחשב. עמודה 15 היא <code>$0F</code>, ועמודה 16 היא <code>$10</code>. לכן המשבצת בשורה 8, עמודה 16, היא <code>$0500</code> ועוד <code>$10</code>: ‏<code>$0510</code>.</p>
+    <div class="note">במסכים שבחלונות מכאן והלאה, מספרי העמודות למעלה כתובים בכתיב של המחשב: ‏00 עד 1F.</div>
+    <div class="quiz" data-quiz="q3c"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">6</span>תוכניות עם בתים בכתיב של המחשב</h3>
+    <p>אותן שתי פקודות מפרק 2. רק הבתים מתחילים לדבר בשפה של המחשב. קודם נחש, אחר כך צעד.</p>
+    <div id="pw31"></div>
+    <div id="pw32"></div>
+    <div id="pw33"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">7</span>חסרה שורה</h3>
+    <p>רצינו A, ומתחת לה B. שורה אחת חסרה. איזו?</p>
+    <div id="pw34"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>חידות</h3>
+    <div class="puzzle">
+      <span class="tag">חידה 1 · מתרגם</span>
+      <p>תרגם לספירה רגילה. אפשר להיעזר במד שלמעלה.</p>
+      <div class="row"><code>$0420</code> = <input class="num" id="h1a" inputmode="numeric"> &nbsp; <code>$05FF</code> = <input class="num" id="h1b" inputmode="numeric"> &nbsp; <code>$FF</code> = <input class="num" id="h1c" inputmode="numeric"> <button class="btn" id="h1go">בדוק</button></div>
+      <div class="fb" id="h1fb"></div>
+    </div>
+    <p>ועכשיו חידות קוד. הבתים נתונים רק בכתיב של המחשב.</p>
+    <div class="puzzle" id="pz31"></div>
+    <div class="puzzle" id="pz32"></div>
+    <div class="puzzle" id="pz33"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">▶</span>בדראגון האמיתי</h3>
+    <p>ב-DREAM אפשר לכתוב מספרים בשני הכתיבים. <code>STA $0400</code> ו-<code>STA 1024</code> הן אותה שורה בדיוק: מספר בלי <code>$</code> נחשב רגיל.</p>
+    <p>וב-BASIC יש סימן משלו לכתיב של המחשב: <code>&amp;H</code>. נסה:</p>
+    <p class="ltr" style="text-align:left"><code>PRINT &amp;H0400</code></p>
+    <p>והמחשב יענה 1024.</p>
+    <div class="machine"><b>מה ראינו במכונה שלנו:</b> ב-BASIC, ‏<code>PRINT &amp;H0400</code> ענה 1024, ו-<code>PRINT &amp;H05FF,&amp;HFF</code> ענה 1535 ו-255. ב-DREAM, השורות <code>LDA #88</code> ו-<code>STA 1056</code> תורגמו לאותם מספרים בדיוק כמו <code>LDA #$58</code> ו-<code>STA $0420</code>, וה-X הופיע במשבצת <code>$0420</code>. <span class="verified">✓ נבדק במכונה שלנו</span></div>
+  </div>
+
+  <div class="recap">
+    <div><b>מה למדנו:</b> ‏<span class="ltr">$</span> אומר "ספירה של 16". כל גלגל עובר 0 עד F, ואז מתהפך ומקדם את השכן.</div>
+    <div>שורה במסך היא <span class="ltr">$20</span>. המסך הוא <span class="ltr">$0400</span> עד <span class="ltr">$05FF</span>, ובאמצע <span class="ltr">$0500</span>.</div>
+    <div class="next">בפרק הבא: הספרות של המחשב מסתתרות גם בתוך משבצות הצבע. ושם נגלה סוף סוף למה 255.</div>
+    <button class="btn warm nextch" data-go="ch4">לפרק 4 ←</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">פרויקט מחווה של חובב, לא קשור ל-<bdi>Dragon Data</bdi> ולא מורשה על ידה. הקורס, הציורים והטקסט שלנו. כל תוכנית בקורס נבדקה במכונת ה-<bdi>Dragon</bdi> של האתר (<bdi>XRoar</bdi> עם ה-<bdi>BASIC</bdi> שכתבנו).</p>
+<script src="/learn/course.js"></script>
+</body>
+</html>

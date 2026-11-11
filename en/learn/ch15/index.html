@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 15 · To the real machine — Machine Code on the Dragon</title>
+<meta name="description" content="This is the game from the last stage, at “Dragon speed”. Press Run, and move the basket with the arrows (under the screen, or on your own keyboard after…">
+<meta property="og:title" content="Chapter 15 · To the real machine — Machine Code on the Dragon">
+<meta property="og:description" content="This is the game from the last stage, at “Dragon speed”. Press Run, and move the basket with the arrows (under the screen, or on your own keyboard after…">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/en/learn/ch15/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/en/learn/ch15/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch15/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch15/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/en/learn/course.css">
+</head>
+<body data-ch="ch15">
+<nav class="site" aria-label="Navigation">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/learn/ch15/" lang="he" hreflang="he">עברית</a>
+  <a href="/en/learn/">All chapters</a>
+  <a href="/en/">← Home</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>Machine code from zero</h1>
+    <p class="sub">A course for the Dragon 32 · Chapters 0 to 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/en/learn/ch0/" data-tab="ch0">0 · A street of houses<span class="done" data-done="0"></span></a>
+  <a href="/en/learn/ch1/" data-tab="ch1">1 · The screen is memory<span class="done" data-done="1"></span></a>
+  <a href="/en/learn/ch2/" data-tab="ch2">2 · LDA and STA<span class="done" data-done="2"></span></a>
+  <a href="/en/learn/ch3/" data-tab="ch3">3 · The odometer<span class="done" data-done="3"></span></a>
+  <a href="/en/learn/ch4/" data-tab="ch4">4 · Four lamps<span class="done" data-done="4"></span></a>
+  <a href="/en/learn/ch5/" data-tab="ch5">5 · With # or without<span class="done" data-done="5"></span></a>
+  <a href="/en/learn/ch6/" data-tab="ch6">6 · Sums<span class="done" data-done="6"></span></a>
+  <a href="/en/learn/ch7/" data-tab="ch7">7 · The finger X<span class="done" data-done="7"></span></a>
+  <a href="/en/learn/ch8/" data-tab="ch8">8 · Crossroads<span class="done" data-done="8"></span></a>
+  <a href="/en/learn/ch9/" data-tab="ch9">9 · Loops<span class="done" data-done="9"></span></a>
+  <a href="/en/learn/ch10/" data-tab="ch10">10 · Keys<span class="done" data-done="10"></span></a>
+  <a href="/en/learn/ch11/" data-tab="ch11">11 · Movement<span class="done" data-done="11"></span></a>
+  <a href="/en/learn/ch12/" data-tab="ch12">12 · Subroutines<span class="done" data-done="12"></span></a>
+  <a href="/en/learn/ch13/" data-tab="ch13">13 · Numbers on the street<span class="done" data-done="13"></span></a>
+  <a href="/en/learn/ch14/" data-tab="ch14">14 · The game<span class="done" data-done="14"></span></a>
+  <a href="/en/learn/ch15/" data-tab="ch15">15 · To the machine<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch15" id="ch15">
+  <div class="ch-head"><div><div class="num">Chapter 15</div><h2 id="h-ch15">To the real machine</h2></div><span class="time">About 30 minutes · DREAM, tape, Dragon</span></div>
+
+  <div class="step">
+    <h3><span class="n">1</span>Your game, complete</h3>
+    <p>This is the game from the last stage, at “Dragon speed”. Press <b>Run</b>, and move the basket with the arrows (under the screen, or on your own keyboard after clicking on the window). Five apples. How many will you catch?</p>
+    <div id="pw151"></div>
+    <div class="note">On the Dragon, a key that you hold down counts <b>once</b> (we saw this in chapter 10). To move the basket three steps, you press three times.</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>Typing it into DREAM, on the Dragon machine</h3>
+    <figure><div id="fig151"></div><figcaption>Figure 30: the game’s journey. Type it into DREAM on the Dragon machine, assemble it, save it on tape, and from there to a real Dragon.</figcaption></figure>
+    <ol class="steps15">
+      <li>Open the Dragon machine: <a href="https://dragon1982.com/lab/1982/" target="_blank" rel="noopener"><bdi class="ltr">dragon1982.com/lab/1982</bdi></a>.</li>
+      <li>Load DREAM, as in the first DREAM lesson: <code>CLEAR 200,12000</code>, <code>CLOADM</code>, <code>EXEC</code>, and then <b>N</b> (a new program).</li>
+      <li>Type in the game, line by line, exactly as in the window above. Including the fixed ending, and after it the four houses (<code>SCORE FCB 0</code> ...).</li>
+      <li><b>BREAK</b> and then <b>A</b>: assemble. At the end you should see <code>0000</code> errors. Is there an error? DREAM shows the line. Fix it and assemble again.</li>
+      <li><b>BREAK</b> and then <b>X</b>: play! Q quits, and one more key takes you back to DREAM.</li>
+    </ol>
+    <div class="note">Want to play again? It is best to assemble again (BREAK, A) before each <b>X</b>. That way the counter <code>TICK</code> starts from 25 every time, like in the window.</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>Saving on tape</h3>
+    <p>In the 1980s, programs were saved on a cassette tape. The Dragon machine saves “tapes” too: they appear in its drawer <b>My tapes</b>. To save <b>the game itself</b>, that is, the numbers in memory, you go out to BASIC and use <code>CSAVEM</code>. It needs three numbers: the first house, the last house, and the house it starts running from.</p>
+    <p>Paste your program here (it is already written), and get the exact line:</p>
+    <div id="tool15"></div>
+    <ol class="steps15">
+      <li>After assembling in DREAM: <b>BREAK</b>, then <b>Q</b> and <b>ENTER</b>. BASIC’s <code>OK</code> appears. The game’s numbers stay in memory.</li>
+      <li>Type the <code>CSAVEM</code> line from above, and ENTER. The tape <b>CATCH</b> appears in “My tapes”.</li>
+      <li>Check it: type <code>CLS:EXEC &amp;H2EE1</code> and ENTER (CLS clears the screen, and EXEC runs), and the game runs straight from BASIC. At the end (Q plus a key) it goes back to <code>OK</code>.</li>
+      <li>To load from the tape: <code>CLOADM "CATCH"</code>, and then <code>CLS:EXEC</code>.</li>
+      <li>To go back to DREAM: <code>EXEC &amp;H6080</code> (where DREAM starts), and then <b>N</b>.</li>
+    </ol>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>On a real Dragon</h3>
+    <ol class="steps15">
+      <li>In “My tapes” there is a 🔊 button next to the tape: it downloads it as <b>sound</b> (a <bdi class="ltr">wav</bdi> file), like a tape from back then.</li>
+      <li>Connect the Dragon’s cassette cable (the <bdi class="ltr">EAR</bdi> plug) to the headphone socket of the computer or phone.</li>
+      <li>On the Dragon: <code>CLEAR 200,12000</code>, then <code>CLOADM</code>, and play the sound at about 75% volume. When <code>OK</code> appears: <code>CLS:EXEC</code>.</li>
+      <li>Does <code>?IO ERROR</code> appear? Change the volume and try again.</li>
+    </ol>
+    <div class="machine" id="mach15"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">★</span>Certificate of completion</h3>
+    <div id="cert15"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">→</span>What now? Ideas to carry on</h3>
+    <p>The game is yours, and you may change anything in it. Some ideas, from easy to hard:</p>
+    <ul class="ideas15">
+      <li><b>More apples, or faster.</b> Change the 5 in <code>LEFT</code>, or the 25 in <code>TICK</code> (in both places). Smaller = faster.</li>
+      <li><b>Winning.</b> When the score reaches 5, write <code>YOU WIN</code> on the middle row, letter by letter, as in chapter 2.</li>
+      <li><b>A wide basket.</b> A basket of three squares is easier to catch with. The check <code>LDA ,U</code> will still work with no change: it only asks “is there blue underneath?”.</li>
+      <li><b>A title screen.</b> The name of the game in the middle of the screen, and “press a key” (the keyboard loop from chapter 10). Only after a key do you start.</li>
+      <li><b>Subroutines.</b> Put the drawing of the basket and the drawing of the apple into subroutines (chapter 12). The main program will be short and easy to read.</li>
+      <li><b>Two players.</b> Two baskets: one with the arrows, and one with letters, for example Z and X. Two scores, one in each corner.</li>
+      <li><b>Sound.</b> A beep when you catch. That is a topic for the next course: the Dragon plays sound when you write numbers to a special house, again and again, very fast.</li>
+    </ul>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>You did it. You wrote a game in the language the games of 1982 were written in, and it runs on the machine. Every programmer of that time started exactly here: one block on the screen, and then another.</p></div>
+  </div>
+
+  <div class="recap">
+    <div><b>What we learned:</b> assemble in DREAM, go out to BASIC, and save the numbers on tape: <span class="ltr">CSAVEM "CATCH",&amp;H2EE1,&amp;H…,&amp;H2EE1</span>. Load with <span class="ltr">CLOADM</span>, and run with <span class="ltr">EXEC</span>.</div>
+    <div>From the tape in the browser, through a sound file, to a real Dragon: exactly the same numbers.</div>
+    <div class="next">The course is over. The rest is up to you.</div>
+    <button class="btn warm nextch" data-go="ch0">Back to the start →</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">A hobbyist tribute project, not affiliated with or endorsed by <bdi>Dragon Data</bdi>. The course, drawings and text are our own. Every program in the course was checked on the site's <bdi>Dragon</bdi> machine (<bdi>XRoar</bdi> running the <bdi>BASIC</bdi> we wrote).</p>
+<script src="/en/learn/course.js"></script>
+</body>
+</html>

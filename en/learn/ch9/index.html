@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 9 · A race track: loops — Machine Code on the Dragon</title>
+<meta name="description" content="At the end of Chapter 8 you saw a crossroads that goes back. That is the whole secret of this chapter. Think of a race track: the car passes one station…">
+<meta property="og:title" content="Chapter 9 · A race track: loops — Machine Code on the Dragon">
+<meta property="og:description" content="At the end of Chapter 8 you saw a crossroads that goes back. That is the whole secret of this chapter. Think of a race track: the car passes one station…">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/en/learn/ch9/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/en/learn/ch9/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch9/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch9/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/en/learn/course.css">
+</head>
+<body data-ch="ch9">
+<nav class="site" aria-label="Navigation">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/learn/ch9/" lang="he" hreflang="he">עברית</a>
+  <a href="/en/learn/">All chapters</a>
+  <a href="/en/">← Home</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>Machine code from zero</h1>
+    <p class="sub">A course for the Dragon 32 · Chapters 0 to 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/en/learn/ch0/" data-tab="ch0">0 · A street of houses<span class="done" data-done="0"></span></a>
+  <a href="/en/learn/ch1/" data-tab="ch1">1 · The screen is memory<span class="done" data-done="1"></span></a>
+  <a href="/en/learn/ch2/" data-tab="ch2">2 · LDA and STA<span class="done" data-done="2"></span></a>
+  <a href="/en/learn/ch3/" data-tab="ch3">3 · The odometer<span class="done" data-done="3"></span></a>
+  <a href="/en/learn/ch4/" data-tab="ch4">4 · Four lamps<span class="done" data-done="4"></span></a>
+  <a href="/en/learn/ch5/" data-tab="ch5">5 · With # or without<span class="done" data-done="5"></span></a>
+  <a href="/en/learn/ch6/" data-tab="ch6">6 · Sums<span class="done" data-done="6"></span></a>
+  <a href="/en/learn/ch7/" data-tab="ch7">7 · The finger X<span class="done" data-done="7"></span></a>
+  <a href="/en/learn/ch8/" data-tab="ch8">8 · Crossroads<span class="done" data-done="8"></span></a>
+  <a href="/en/learn/ch9/" data-tab="ch9">9 · Loops<span class="done" data-done="9"></span></a>
+  <a href="/en/learn/ch10/" data-tab="ch10">10 · Keys<span class="done" data-done="10"></span></a>
+  <a href="/en/learn/ch11/" data-tab="ch11">11 · Movement<span class="done" data-done="11"></span></a>
+  <a href="/en/learn/ch12/" data-tab="ch12">12 · Subroutines<span class="done" data-done="12"></span></a>
+  <a href="/en/learn/ch13/" data-tab="ch13">13 · Numbers on the street<span class="done" data-done="13"></span></a>
+  <a href="/en/learn/ch14/" data-tab="ch14">14 · The game<span class="done" data-done="14"></span></a>
+  <a href="/en/learn/ch15/" data-tab="ch15">15 · To the machine<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch9" id="ch9">
+  <div class="ch-head"><div><div class="num">Chapter 9</div><h2 id="h-ch9">A race track: loops</h2></div><span class="time">About 25 minutes · New drawer: B</span></div>
+
+  <div class="step">
+    <h3><span class="n">1</span>The road goes back</h3>
+    <p>At the end of Chapter 8 you saw a crossroads that goes <b>back</b>. That is the whole secret of this chapter. Think of a race track: the car passes one station after another, and at the end of the lap there is a gate. If the gate is closed, it drives another lap. When it opens, the car leaves on the straight road, to the end.</p>
+    <figure><div id="fig91"></div><figcaption>Figure 22: the loop as a track. On every lap <bdi class="ltr">STA ,X+</bdi> writes a square and moves the finger. <bdi class="ltr">BLO LOOP</bdi> is the gate: as long as X is lower than <bdi class="ltr">$0520</bdi>, it stays closed.</figcaption></figure>
+    <p>You write a loop with a <b>name for a place</b> at the start of the track (here <code>LOOP</code>), and a crossroads at its end that jumps back to it. In this window the track is drawn next to the program, and the car moves along with it.</p>
+    <div id="pw91"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>The whole screen in five lines</h3>
+    <p>The same loop, only the gate moves: instead of <code>$0520</code> (the end of row 8), <code>$0600</code>, the house just after the screen. And X starts in the corner, at <code>$0400</code>.</p>
+    <div id="pw92"></div>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>Try the speed slider. At one step a second, the loop’s 1,536 instructions take 25 minutes. On the Dragon: less than eight thousandths of a second. This is the moment you understand why people write in machine code.</p></div>
+    <p>Where does that number come from? Inside the processor a <b>clock</b> ticks, about 890,000 ticks a second. Each instruction takes a few ticks: <code>STA ,X+</code> takes 6, <code>CMPX</code> takes 4, <code>BLO</code> takes 3. One lap = 13 ticks. 512 laps = 6,656 ticks. Under every window there is now a clock that counts them for you.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>A new drawer: B, the lap counter</h3>
+    <p>Sometimes we don’t care <b>how far</b>, but <b>how many times</b>. “Draw 5 blocks.” For that the processor has another small drawer, <b>B</b>. It is just like A: one number, 0 to 255. It has <code>LDB</code> and <code>STB</code>, just like A.</p>
+    <p>And the new instruction: <code>DECB</code>, “take 1 off B”. When B reaches 0, lamp Z comes on. So <code>BNE</code> (“turn if Z is off”) goes back as long as we haven’t reached zero.</p>
+    <figure><div id="fig92"></div><figcaption>Figure 23: counting down. <bdi class="ltr">LDB #5</bdi>, and after every lap <bdi class="ltr">DECB</bdi>. Only when B reaches 0 does lamp Z come on, and BNE lets you out.</figcaption></figure>
+    <div id="pw93"></div>
+    <div class="quiz" data-quiz="q9a"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>Counting on the screen</h3>
+    <p>A can be a counter too. Here A is both the digit we write and the counter. Remember Chapter 1? The ordinary digit 0 is <code>$70</code>, and the digit 9 is <code>$79</code>.</p>
+    <div id="pw94"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">5</span>A line is missing</h3>
+    <p>We wanted a column of 8 yellow blocks, from top to bottom. B counts 8 laps. What do we need to do to the finger on every lap?</p>
+    <div id="pw95"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">6</span>A loop inside a loop</h3>
+    <p>A small track inside a big track. The inner loop (<code>COL</code>) writes 6 squares in a row. The outer loop (<code>ROW</code>) moves to the next row and does it again. <code>LEAX 26,X</code>: after 6 steps to the right, 26 more bring us exactly to the start of the next row, because 6 + 26 = 32.</p>
+    <div id="pw96"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">7</span>Slower: a waiting loop</h3>
+    <p>The Dragon is too fast for the eye. To see something happen, you have to let it <b>wait</b>. How does a computer wait? It counts! A loop that does nothing but count down:</p>
+    <ol class="code" style="max-width:420px;margin:8px auto"><li> <span class="op">LDX</span> <span class="arg">#$2000</span></li><li><span class="lbl">WAIT</span> <span class="op">LEAX</span> <span class="arg">-1,X</span></li><li> <span class="op">BNE</span> <span class="arg">WAIT</span></li></ol>
+    <p><code>LEAX -1,X</code> takes 1 off X, and lamp Z comes on when X reaches 0. <code>$2000</code> is 8,192 laps, each lap 8 ticks: about 0.07 of a second.</p>
+    <p>But wait: X is busy counting now. So who points at the screen? <b>A second finger, Y</b>. It works just like X: <code>LDY</code>, <code>STA ,Y+</code>, <code>CMPY</code>. On the screen it is marked in red.</p>
+    <div id="pw97"></div>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>In this window the speed is already on “Dragon speed”. And if you run it in steps, a <b>⏩ Skip the wait</b> button appears inside the wait, so you don’t have to press 16,000 times.</p></div>
+    <div class="quiz" data-quiz="q9b"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>Puzzles: with a loop</h3>
+    <p>In these puzzles you may not write an STA line for every square. Only a loop.</p>
+    <div class="puzzle" id="pz91"></div>
+    <div class="puzzle" id="pz92"></div>
+    <div class="puzzle" id="pz93"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">▶</span>On the real Dragon</h3>
+    <div class="machine" id="mach9"></div>
+  </div>
+
+  <div class="recap">
+    <div><b>What we learned:</b> a loop = a name for a place, and at the end a crossroads that jumps back to it. The gate is the comparison: <span class="ltr">CMPX</span> and <span class="ltr">BLO</span>, or a counter: <span class="ltr">LDB #5</span>, <span class="ltr">DECB</span>, <span class="ltr">BNE</span>.</div>
+    <div>The Dragon does about 890,000 ticks a second. So the eye can see, we count down in a waiting loop, and leave Y to do the drawing.</div>
+    <div class="next">Next chapter: the fixed ending, all the way. The Dragon listens to the keyboard, and we decide what to do with every key.</div>
+    <button class="btn warm nextch" data-go="ch10">To Chapter 10 →</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">A hobbyist tribute project, not affiliated with or endorsed by <bdi>Dragon Data</bdi>. The course, drawings and text are our own. Every program in the course was checked on the site's <bdi>Dragon</bdi> machine (<bdi>XRoar</bdi> running the <bdi>BASIC</bdi> we wrote).</p>
+<script src="/en/learn/course.js"></script>
+</body>
+</html>

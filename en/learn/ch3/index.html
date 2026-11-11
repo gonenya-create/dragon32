@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 3 · The odometer: counting like the computer — Machine Code on the Dragon</title>
+<meta name="description" content="You have seen $0400 dozens of times by now, always with a translation next to it: 1024. Time to understand it.">
+<meta property="og:title" content="Chapter 3 · The odometer: counting like the computer — Machine Code on the Dragon">
+<meta property="og:description" content="You have seen $0400 dozens of times by now, always with a translation next to it: 1024. Time to understand it.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/en/learn/ch3/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/en/learn/ch3/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch3/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch3/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/en/learn/course.css">
+</head>
+<body data-ch="ch3">
+<nav class="site" aria-label="Navigation">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/learn/ch3/" lang="he" hreflang="he">עברית</a>
+  <a href="/en/learn/">All chapters</a>
+  <a href="/en/">← Home</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>Machine code from zero</h1>
+    <p class="sub">A course for the Dragon 32 · Chapters 0 to 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/en/learn/ch0/" data-tab="ch0">0 · A street of houses<span class="done" data-done="0"></span></a>
+  <a href="/en/learn/ch1/" data-tab="ch1">1 · The screen is memory<span class="done" data-done="1"></span></a>
+  <a href="/en/learn/ch2/" data-tab="ch2">2 · LDA and STA<span class="done" data-done="2"></span></a>
+  <a href="/en/learn/ch3/" data-tab="ch3">3 · The odometer<span class="done" data-done="3"></span></a>
+  <a href="/en/learn/ch4/" data-tab="ch4">4 · Four lamps<span class="done" data-done="4"></span></a>
+  <a href="/en/learn/ch5/" data-tab="ch5">5 · With # or without<span class="done" data-done="5"></span></a>
+  <a href="/en/learn/ch6/" data-tab="ch6">6 · Sums<span class="done" data-done="6"></span></a>
+  <a href="/en/learn/ch7/" data-tab="ch7">7 · The finger X<span class="done" data-done="7"></span></a>
+  <a href="/en/learn/ch8/" data-tab="ch8">8 · Crossroads<span class="done" data-done="8"></span></a>
+  <a href="/en/learn/ch9/" data-tab="ch9">9 · Loops<span class="done" data-done="9"></span></a>
+  <a href="/en/learn/ch10/" data-tab="ch10">10 · Keys<span class="done" data-done="10"></span></a>
+  <a href="/en/learn/ch11/" data-tab="ch11">11 · Movement<span class="done" data-done="11"></span></a>
+  <a href="/en/learn/ch12/" data-tab="ch12">12 · Subroutines<span class="done" data-done="12"></span></a>
+  <a href="/en/learn/ch13/" data-tab="ch13">13 · Numbers on the street<span class="done" data-done="13"></span></a>
+  <a href="/en/learn/ch14/" data-tab="ch14">14 · The game<span class="done" data-done="14"></span></a>
+  <a href="/en/learn/ch15/" data-tab="ch15">15 · To the machine<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch3" id="ch3">
+  <div class="ch-head"><div><div class="num">Chapter 3</div><h2 id="h-ch3">The odometer: counting like the computer</h2></div><span class="time">About 20 minutes · no new commands</span></div>
+
+  <div class="step">
+    <h3><span class="n">1</span>Why a different way of writing at all?</h3>
+    <p>You have seen <code>$0400</code> dozens of times by now, always with a translation next to it: 1024. Time to understand it.</p>
+    <p>We count with ten digits, 0 to 9. The computer likes to count with <b>16</b> signs: 0 to 9, and after them A, B, C, D, E, F. The <code>$</code> in front says: “this number is written in counting by 16”.</p>
+    <figure><div id="fig31"></div><figcaption>Figure 9: the sixteen signs. After 9 we don’t go to 10; we carry on with letters.</figcaption></figure>
+    <p>Why is this handy? Because everything fits exactly: a number in one house is always <b>two digits</b> (<code>$00</code> to <code>$FF</code>), a house number is always <b>four digits</b>, and a row on the screen is exactly <code>$20</code>.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>A car’s odometer</h3>
+    <p>Remember the old odometer in a car? Wheels with digits. The right wheel turns, and when it passes 9 it goes back to 0 and <b>moves the wheel next to it</b> on by one.</p>
+    <p>The computer’s odometer is exactly the same, except that each wheel goes up to F before it goes back to 0.</p>
+    <figure><div id="fig32"></div><figcaption>Figure 10: on top, the computer’s odometer; below, the ordinary one. Same moment, same idea: the right wheel rolls over and moves its neighbour on.</figcaption></figure>
+    <div class="quiz" data-quiz="q3a"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>Turn it yourself</h3>
+    <p>The odometer starts at <code>$0400</code>, the first house of the screen. Under it, the same number in ordinary counting. Press the buttons and watch the wheels.</p>
+    <div id="odo"></div>
+    <ul class="missions" id="m3"></ul>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>Look at the <b>+$20</b> button: it always takes you one row down on the screen. <code>$20</code> is 32, and a row has 32 squares.</p></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>What each wheel is worth</h3>
+    <p>In ordinary counting, in <b>254</b> the digit 2 is worth two hundred, because each place to the left is worth 10 times more. On the computer’s odometer each place to the left is worth <b>16</b> times more: 1, 16, 256, 4096.</p>
+    <figure><div id="fig33"></div><figcaption>Figure 11: translating <bdi class="ltr">$0420</bdi>: each digit times the value of its place, then add them up.</figcaption></figure>
+    <p>You don’t need to work this out in your head every time. What matters is to remember a few numbers that come up all the time:</p>
+    <table class="codes" id="hexkeys"></table>
+    <div class="quiz" data-quiz="q3b"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">5</span>The screen map, this time in the computer’s way of writing</h3>
+    <p>Now the numbers at the side of the screen make sense. Each row starts <code>$20</code> after the one before. After 8 rows the wheel rolls over, and the 4 becomes 5: halfway down the screen we reach <code>$0500</code>.</p>
+    <figure><div id="fig34"></div><figcaption>Figure 12: the start of each row. The pattern repeats: 00, 20, 40, 60, 80, A0, C0, E0, and then the next wheel moves on.</figcaption></figure>
+    <p>And inside the row? Add the column number, also in the computer’s way of writing. Column 15 is <code>$0F</code>, and column 16 is <code>$10</code>. So the square in row 8, column 16, is <code>$0500</code> plus <code>$10</code>: <code>$0510</code>.</p>
+    <div class="note">From now on, on the screens in the windows, the column numbers along the top are in the computer’s way of writing: 00 to 1F.</div>
+    <div class="quiz" data-quiz="q3c"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">6</span>Programs with houses in the computer’s way of writing</h3>
+    <p>The same two commands from Chapter 2. Only the houses start speaking the computer’s language. Guess first, then Step.</p>
+    <div id="pw31"></div>
+    <div id="pw32"></div>
+    <div id="pw33"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">7</span>A line is missing</h3>
+    <p>We wanted A, with B under it. One line is missing. Which one?</p>
+    <div id="pw34"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>Puzzles</h3>
+    <div class="puzzle">
+      <span class="tag">Puzzle 1 · Translator</span>
+      <p>Translate into ordinary counting. You can use the odometer above to help.</p>
+      <div class="row"><code>$0420</code> = <input class="num" id="h1a" inputmode="numeric"> &nbsp; <code>$05FF</code> = <input class="num" id="h1b" inputmode="numeric"> &nbsp; <code>$FF</code> = <input class="num" id="h1c" inputmode="numeric"> <button class="btn" id="h1go">Check</button></div>
+      <div class="fb" id="h1fb"></div>
+    </div>
+    <p>And now code puzzles. The houses are given only in the computer’s way of writing.</p>
+    <div class="puzzle" id="pz31"></div>
+    <div class="puzzle" id="pz32"></div>
+    <div class="puzzle" id="pz33"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">▶</span>On the real Dragon</h3>
+    <p>In DREAM you can write numbers both ways. <code>STA $0400</code> and <code>STA 1024</code> are exactly the same line: a number without <code>$</code> counts as ordinary.</p>
+    <p>And BASIC has its own sign for the computer’s way of writing: <code>&amp;H</code>. Try:</p>
+    <p class="ltr" style="text-align:left"><code>PRINT &amp;H0400</code></p>
+    <p>And the computer will answer 1024.</p>
+    <div class="machine"><b>What we saw on our Dragon machine:</b> in BASIC, <code>PRINT &amp;H0400</code> answered 1024, and <code>PRINT &amp;H05FF,&amp;HFF</code> answered 1535 and 255. In DREAM, the lines <code>LDA #88</code> and <code>STA 1056</code> were translated into exactly the same numbers as <code>LDA #$58</code> and <code>STA $0420</code>, and the X appeared in square <code>$0420</code>. <span class="verified">✓ Checked on our Dragon machine</span></div>
+  </div>
+
+  <div class="recap">
+    <div><b>What we learned:</b> <span class="ltr">$</span> means “counting by 16”. Each wheel goes 0 to F, then rolls over and moves its neighbour on.</div>
+    <div>A row on the screen is <span class="ltr">$20</span>. The screen is <span class="ltr">$0400</span> to <span class="ltr">$05FF</span>, and the middle is <span class="ltr">$0500</span>.</div>
+    <div class="next">Next chapter: the computer’s digits hide inside the colour squares too. And there we finally find out why 255.</div>
+    <button class="btn warm nextch" data-go="ch4">To Chapter 4 →</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">A hobbyist tribute project, not affiliated with or endorsed by <bdi>Dragon Data</bdi>. The course, drawings and text are our own. Every program in the course was checked on the site's <bdi>Dragon</bdi> machine (<bdi>XRoar</bdi> running the <bdi>BASIC</bdi> we wrote).</p>
+<script src="/en/learn/course.js"></script>
+</body>
+</html>

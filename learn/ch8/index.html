@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>פרק 8 · צומת: משווים ופונים — שפת מכונה בדראגון</title>
+<meta name="description" content="עד עכשיו כל תוכנית רצה שורה אחרי שורה, תמיד באותה דרך. בפרק הזה התוכנית לומדת להחליט. כל החלטה מתחילה בשאלה.">
+<meta property="og:title" content="פרק 8 · צומת: משווים ופונים — שפת מכונה בדראגון">
+<meta property="og:description" content="עד עכשיו כל תוכנית רצה שורה אחרי שורה, תמיד באותה דרך. בפרק הזה התוכנית לומדת להחליט. כל החלטה מתחילה בשאלה.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/learn/ch8/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/learn/ch8/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch8/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch8/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/learn/course.css">
+</head>
+<body data-ch="ch8">
+<nav class="site" aria-label="ניווט">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/en/learn/ch8/" lang="en" hreflang="en">English</a>
+  <a href="/learn/">כל הפרקים</a>
+  <a href="/">← לדף הבית</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>שפת מכונה מאפס</h1>
+    <p class="sub">קורס ל-דראגון 32 · פרקים 0 עד 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/learn/ch0/" data-tab="ch0">0 · רחוב של תאים<span class="done" data-done="0"></span></a>
+  <a href="/learn/ch1/" data-tab="ch1">1 · המסך הוא זיכרון<span class="done" data-done="1"></span></a>
+  <a href="/learn/ch2/" data-tab="ch2">2 · LDA ו-STA<span class="done" data-done="2"></span></a>
+  <a href="/learn/ch3/" data-tab="ch3">3 · מד המרחק<span class="done" data-done="3"></span></a>
+  <a href="/learn/ch4/" data-tab="ch4">4 · ארבע נורות<span class="done" data-done="4"></span></a>
+  <a href="/learn/ch5/" data-tab="ch5">5 · עם # או בלי<span class="done" data-done="5"></span></a>
+  <a href="/learn/ch6/" data-tab="ch6">6 · חשבון<span class="done" data-done="6"></span></a>
+  <a href="/learn/ch7/" data-tab="ch7">7 · האצבע X<span class="done" data-done="7"></span></a>
+  <a href="/learn/ch8/" data-tab="ch8">8 · צומת<span class="done" data-done="8"></span></a>
+  <a href="/learn/ch9/" data-tab="ch9">9 · לולאות<span class="done" data-done="9"></span></a>
+  <a href="/learn/ch10/" data-tab="ch10">10 · מקשים<span class="done" data-done="10"></span></a>
+  <a href="/learn/ch11/" data-tab="ch11">11 · תנועה<span class="done" data-done="11"></span></a>
+  <a href="/learn/ch12/" data-tab="ch12">12 · תת-תוכניות<span class="done" data-done="12"></span></a>
+  <a href="/learn/ch13/" data-tab="ch13">13 · מספרים ברחוב<span class="done" data-done="13"></span></a>
+  <a href="/learn/ch14/" data-tab="ch14">14 · המשחק<span class="done" data-done="14"></span></a>
+  <a href="/learn/ch15/" data-tab="ch15">15 · למכונה<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch8" id="ch8">
+  <div class="ch-head"><div><div class="num">פרק 8</div><h2 id="h-ch8">צומת: משווים ופונים</h2></div><span class="time">כ-30 דקות · CMPA, ‏BEQ, ‏BNE, ‏BRA, ‏BLO, ‏BHS, ‏CMPX</span></div>
+
+  <div class="step">
+    <h3><span class="n">1</span>שאלה: ‏CMPA</h3>
+    <p>עד עכשיו כל תוכנית רצה שורה אחרי שורה, תמיד באותה דרך. בפרק הזה התוכנית לומדת <b>להחליט</b>. כל החלטה מתחילה בשאלה.</p>
+    <p><code>CMPA #$41</code> שואלת: "<b>מה שבמגירה A, ביחס ל-$41?</b>". המעבד עושה חיסור בראש, <b>לא שומר את התוצאה</b>, ורק מדליק נורות:</p>
+    <ul>
+      <li>נורה <b>Z</b> (מ"אפס"): דולקת אם יצא 0, כלומר <b>שווים</b>.</li>
+      <li>נורה <b>C</b>, שכבר מכירים: דולקת אם היינו צריכים לרדת מתחת ל-0, כלומר A <b>קטן יותר</b>.</li>
+    </ul>
+    <p>המגירה A עצמה לא משתנה. ‏CMPA היא SUBA שרק מסתכלת.</p>
+    <figure><div id="fig81"></div><figcaption>ציור 20: שלוש תשובות אפשריות של CMPA. ‏A עצמה לא משתנה.</figcaption></figure>
+    <div id="pw81"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>ונורה N, בקצרה</h3>
+    <p>בחלון למעלה דלקה לפעמים גם נורה שלישית, <b>N</b>. היא פשוטה: היא מראה את <b>הנורה 128</b> של התוצאה האחרונה, הנורה הכי שמאלית מבין השמונה (פרק 4). אחרי <code>LDA</code>, נורה N דולקת בדיוק כשהמספר 128 ומעלה. ובמסך שלנו זה אומר: <b>משבצת צבע</b>.</p>
+    <p>לא רק CMPA נוגעת בנורות. גם LDA, ‏STA, ‏INCA, ‏DECA ושאר החשבון מעדכנות את Z ואת N, לפי המספר שיצא להן. נורה C שונה: רק ADDA, ‏SUBA ו-CMPA משנות אותה (ו-CLRA מכבה אותה).</p>
+    <div class="quiz" data-quiz="q8a"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>הצומת: ‏BEQ ו-BNE</h3>
+    <p>עכשיו ההחלטה. <code>BEQ</code> היא צומת דרכים: "<b>אם נורה Z דולקת, פנה</b>". אחריה כותבים <b>שם של מקום</b> בתוכנית, לאן לפנות. אם הנורה כבויה, ממשיכים ישר לשורה הבאה. ‏<code>BNE</code> היא ההפך: פונים כשהנורה <b>כבויה</b> (לא שווים).</p>
+    <figure><div id="fig82"></div><figcaption>ציור 21: הצומת. BEQ מסתכלת על נורה Z, ובוחרת דרך.</figcaption></figure>
+    <p>שם של מקום כותבים <b>צמוד לתחילת השורה</b>, לפני הפקודה, כמו ה-<b>@</b> שתמיד היה שם. ויש שם אחד שכבר קיים בכל תוכנית: <b>KEY</b>, הסוף הקבוע. ‏<code>BEQ KEY</code> אומרת "אם שווים, לך לסוף".</p>
+    <p>נסה את הצומת. בחר מה במגירה ומה שואלים, ותראה לאן כל סוג צומת שולח:</p>
+    <div id="jw8"></div>
+    <ul class="missions" id="m8"></ul>
+    <div id="pw82"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>אם... ואם לא: ‏BRA</h3>
+    <p>בדוגמה הקודמת היה "אם לא Y, צייר אדום". מה אם רוצים <b>שתי</b> דרכים: Y כחול, אחרת אדום? צריך גם פקודה שאומרת "דלג על הדרך השנייה". זו <code>BRA</code>: צומת ש<b>תמיד</b> פונה, בלי לשאול.</p>
+    <div id="pw83"></div>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>בלי ה-BRA, אחרי הכחול התוכנית הייתה ממשיכה ישר אל השורה NO ומציירת גם אדום, על אותה משבצת. נסה בראש: מה היה נשאר?</p></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">5</span>קטן או גדול: ‏BLO ו-BHS</h3>
+    <p>נורה C אומרת "A קטן יותר". אז יש צמתים גם בשבילה: <code>BLO</code> ("פנה אם נמוך") פונה כש-C דולקת, ו-<code>BHS</code> ("פנה אם גבוה או שווה") פונה כש-C כבויה.</p>
+    <p>אותיות הן מספרים, והן בסדר של האלף-בית. אז "קטן מ-M" פירושו "<b>לפני M</b>". התוכנית הבאה שמה אות בצד שמאל של המסך אם היא לפני M, ובצד ימין אם לא:</p>
+    <div id="pw85"></div>
+    <div class="note">שים לב ל-M עצמה: היא <b>לא</b> לפני M, אז היא הולכת ימינה. BLO פירושה "קטן ממש", ושווה כבר לא נחשב.</div>
+    <div class="quiz" data-quiz="q8b"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">6</span>האם המשבצת ריקה?</h3>
+    <p>שאלה שימושית מאוד במשחקים: "האם יש כאן משהו?". משבצת ריקה היא <code>$60</code> (פרק 5).</p>
+    <div id="pw84"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">7</span>הנורות זוכרות רק את האחרון</h3>
+    <p>הנורות לא שומרות את התשובה לאורך זמן. כל פקודה שמעדכנת אותן מוחקת את מה שהיה. ‏<code>STA</code>, למשל, מדליקה או מכבה את Z לפי מה שכתבה. לכן <b>שמים את הצומת מיד אחרי השאלה</b>.</p>
+    <div id="pw86"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">8</span>חסר צומת</h3>
+    <div id="pw88"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">9</span>סוד הסוף הקבוע (חלק 2)</h3>
+    <p>עכשיו אפשר לקרוא את כל הסוף הקבוע:</p>
+    <ol class="code" style="max-width:420px;margin:8px auto"><li><span class="lbl">KEY</span> <span class="op">LDX</span> <span class="arg">$A000</span></li><li> <span class="op">JSR</span> <span class="arg">,X</span></li><li> <span class="op">BEQ</span> <span class="arg">KEY</span></li><li> <span class="op">RTS</span></li></ol>
+    <p>העבודה הקטנה של הדראגון בודקת את המקלדת. כשלא נלחץ כלום, היא חוזרת עם נורה Z <b>דולקת</b>. ואז <code>BEQ KEY</code>: אם Z דולקת, פנה ל-KEY, כלומר <b>חזור אחורה</b> ושאל שוב. ושוב. ושוב. מאות פעמים בשנייה, עד שנלחץ מקש. אז Z כבויה, ממשיכים ל-<code>RTS</code>, וחוזרים ל-DREAM.</p>
+    <p>צומת שמחזיר <b>אחורה</b>: זו לולאה. ראית אותה בכל תוכנית מאז פרק 2.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">10</span>טעימה מפרק 9: הדרך חוזרת</h3>
+    <p>אם אפשר לחזור אחורה ל-KEY, אפשר לחזור אחורה לכל מקום. התוכנית הזאת משתמשת ב-<code>CMPX</code>: אותה השוואה, רק לאצבע. "האם האצבע כבר הגיעה ל-<code>$0520</code>?" אם לא, חוזרים לכתוב עוד ריבוע.</p>
+    <div id="pw87"></div>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>חמש שורות, ושורה שלמה של ריבועים. לחץ <b>מהר ⚡</b> ותראה. על זה כל פרק 9.</p></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>חידות: תוכנית שמחליטה</h3>
+    <p>כאן כל חידה נבדקת <b>בכמה מקרים</b>. השורות הנעולות שמות משהו בפינה, ובכל מקרה משהו אחר. התוכנית שלך צריכה לעבוד נכון בכולם.</p>
+    <div class="puzzle" id="pz81"></div>
+    <div class="puzzle" id="pz82"></div>
+    <div class="puzzle" id="pz83"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">▶</span>בדראגון האמיתי</h3>
+    <div class="machine" id="mach8"></div>
+  </div>
+
+  <div class="recap">
+    <div><b>מה למדנו:</b> ‏<span class="ltr">CMPA</span> משווה בלי לשנות את A, ומדליקה נורות: Z = שווים, C = A קטן יותר. ‏N = נורה 128 של התוצאה.</div>
+    <div>‏<span class="ltr">BEQ</span>/<span class="ltr">BNE</span> לפי Z, ‏<span class="ltr">BLO</span>/<span class="ltr">BHS</span> לפי C, ‏<span class="ltr">BRA</span> תמיד. שמים את הצומת מיד אחרי השאלה.</div>
+    <div class="next">בפרק הבא: לולאות. הדרך חוזרת אחורה, ותוכנית של 5 שורות ממלאת את כל המסך.</div>
+    <button class="btn warm nextch" data-go="ch9">לפרק 9 ←</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">פרויקט מחווה של חובב, לא קשור ל-<bdi>Dragon Data</bdi> ולא מורשה על ידה. הקורס, הציורים והטקסט שלנו. כל תוכנית בקורס נבדקה במכונת ה-<bdi>Dragon</bdi> של האתר (<bdi>XRoar</bdi> עם ה-<bdi>BASIC</bdi> שכתבנו).</p>
+<script src="/learn/course.js"></script>
+</body>
+</html>

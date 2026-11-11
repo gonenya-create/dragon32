@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 8 · Crossroads: compare and turn — Machine Code on the Dragon</title>
+<meta name="description" content="Until now every program ran line after line, always the same way. In this chapter the program learns to decide. Every decision starts with a question.">
+<meta property="og:title" content="Chapter 8 · Crossroads: compare and turn — Machine Code on the Dragon">
+<meta property="og:description" content="Until now every program ran line after line, always the same way. In this chapter the program learns to decide. Every decision starts with a question.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/en/learn/ch8/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/en/learn/ch8/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch8/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch8/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/en/learn/course.css">
+</head>
+<body data-ch="ch8">
+<nav class="site" aria-label="Navigation">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/learn/ch8/" lang="he" hreflang="he">עברית</a>
+  <a href="/en/learn/">All chapters</a>
+  <a href="/en/">← Home</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>Machine code from zero</h1>
+    <p class="sub">A course for the Dragon 32 · Chapters 0 to 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/en/learn/ch0/" data-tab="ch0">0 · A street of houses<span class="done" data-done="0"></span></a>
+  <a href="/en/learn/ch1/" data-tab="ch1">1 · The screen is memory<span class="done" data-done="1"></span></a>
+  <a href="/en/learn/ch2/" data-tab="ch2">2 · LDA and STA<span class="done" data-done="2"></span></a>
+  <a href="/en/learn/ch3/" data-tab="ch3">3 · The odometer<span class="done" data-done="3"></span></a>
+  <a href="/en/learn/ch4/" data-tab="ch4">4 · Four lamps<span class="done" data-done="4"></span></a>
+  <a href="/en/learn/ch5/" data-tab="ch5">5 · With # or without<span class="done" data-done="5"></span></a>
+  <a href="/en/learn/ch6/" data-tab="ch6">6 · Sums<span class="done" data-done="6"></span></a>
+  <a href="/en/learn/ch7/" data-tab="ch7">7 · The finger X<span class="done" data-done="7"></span></a>
+  <a href="/en/learn/ch8/" data-tab="ch8">8 · Crossroads<span class="done" data-done="8"></span></a>
+  <a href="/en/learn/ch9/" data-tab="ch9">9 · Loops<span class="done" data-done="9"></span></a>
+  <a href="/en/learn/ch10/" data-tab="ch10">10 · Keys<span class="done" data-done="10"></span></a>
+  <a href="/en/learn/ch11/" data-tab="ch11">11 · Movement<span class="done" data-done="11"></span></a>
+  <a href="/en/learn/ch12/" data-tab="ch12">12 · Subroutines<span class="done" data-done="12"></span></a>
+  <a href="/en/learn/ch13/" data-tab="ch13">13 · Numbers on the street<span class="done" data-done="13"></span></a>
+  <a href="/en/learn/ch14/" data-tab="ch14">14 · The game<span class="done" data-done="14"></span></a>
+  <a href="/en/learn/ch15/" data-tab="ch15">15 · To the machine<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch8" id="ch8">
+  <div class="ch-head"><div><div class="num">Chapter 8</div><h2 id="h-ch8">Crossroads: compare and turn</h2></div><span class="time">About 30 minutes · CMPA, BEQ, BNE, BRA, BLO, BHS, CMPX</span></div>
+
+  <div class="step">
+    <h3><span class="n">1</span>A question: CMPA</h3>
+    <p>Until now every program ran line after line, always the same way. In this chapter the program learns to <b>decide</b>. Every decision starts with a question.</p>
+    <p><code>CMPA #$41</code> asks: “<b>what is in drawer A, compared with $41?</b>”. The processor does a subtraction in its head, <b>doesn’t keep the result</b>, and only lights up lamps:</p>
+    <ul>
+      <li>Lamp <b>Z</b> (for “zero”): on if the answer was 0, in other words <b>equal</b>.</li>
+      <li>Lamp <b>C</b>, which we already know: on if we had to go below 0, in other words A is <b>smaller</b>.</li>
+    </ul>
+    <p>Drawer A itself doesn’t change. CMPA is a SUBA that only looks.</p>
+    <figure><div id="fig81"></div><figcaption>Figure 20: three possible answers from CMPA. A itself doesn’t change.</figcaption></figure>
+    <div id="pw81"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>And lamp N, briefly</h3>
+    <p>In the window above, a third lamp, <b>N</b>, sometimes came on too. It is simple: it shows <b>lamp 128</b> of the last result, the leftmost lamp of the eight (Chapter 4). After <code>LDA</code>, lamp N is on exactly when the number is 128 or more. And on our screen that means: <b>a colour square</b>.</p>
+    <p>CMPA isn’t the only one that touches the lamps. LDA, STA, INCA, DECA and the rest of the sums also update Z and N, according to the number they produce. Lamp C is different: only ADDA, SUBA and CMPA change it (and CLRA turns it off).</p>
+    <div class="quiz" data-quiz="q8a"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>The crossroads: BEQ and BNE</h3>
+    <p>Now the decision. <code>BEQ</code> is a crossroads: “<b>if lamp Z is on, turn</b>”. After it you write the <b>name of a place</b> in the program, where to turn to. If the lamp is off, you carry straight on to the next line. <code>BNE</code> is the opposite: you turn when the lamp is <b>off</b> (not equal).</p>
+    <figure><div id="fig82"></div><figcaption>Figure 21: the crossroads. BEQ looks at lamp Z and chooses a way.</figcaption></figure>
+    <p>You write the name of a place <b>right at the start of the line</b>, before the instruction, like the <b>@</b> that was always there. And there is one name that already exists in every program: <b>KEY</b>, the fixed ending. <code>BEQ KEY</code> says “if equal, go to the end”.</p>
+    <p>Try the crossroads. Choose what is in the drawer and what we ask, and see where each kind of crossroads sends you:</p>
+    <div id="jw8"></div>
+    <ul class="missions" id="m8"></ul>
+    <div id="pw82"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>If... and if not: BRA</h3>
+    <p>In the last example it was “if not Y, draw red”. What if we want <b>two</b> ways: Y blue, otherwise red? We also need an instruction that says “skip the second way”. That is <code>BRA</code>: a crossroads that <b>always</b> turns, without asking.</p>
+    <div id="pw83"></div>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>Without the BRA, after the blue the program would carry straight on to the line NO and draw red as well, on the same square. Work it out in your head: what would be left?</p></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">5</span>Smaller or bigger: BLO and BHS</h3>
+    <p>Lamp C says “A is smaller”. So there are crossroads for it too: <code>BLO</code> (“turn if lower”) turns when C is on, and <code>BHS</code> (“turn if higher or same”) turns when C is off.</p>
+    <p>Letters are numbers, and they are in alphabetical order. So “smaller than M” means “<b>before M</b>”. The next program puts a letter on the left side of the screen if it comes before M, and on the right side if not:</p>
+    <div id="pw85"></div>
+    <div class="note">Look at M itself: it is <b>not</b> before M, so it goes to the right. BLO means “really smaller”, and equal no longer counts.</div>
+    <div class="quiz" data-quiz="q8b"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">6</span>Is the square empty?</h3>
+    <p>A very useful question in games: “is there something here?”. An empty square is <code>$60</code> (Chapter 5).</p>
+    <div id="pw84"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">7</span>The lamps only remember the last one</h3>
+    <p>The lamps don’t keep the answer for long. Every instruction that updates them wipes out what was there. <code>STA</code>, for example, turns Z on or off according to what it wrote. That is why <b>you put the crossroads right after the question</b>.</p>
+    <div id="pw86"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">8</span>A crossroads is missing</h3>
+    <div id="pw88"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">9</span>The secret of the fixed ending (part 2)</h3>
+    <p>Now we can read the whole fixed ending:</p>
+    <ol class="code" style="max-width:420px;margin:8px auto"><li><span class="lbl">KEY</span> <span class="op">LDX</span> <span class="arg">$A000</span></li><li> <span class="op">JSR</span> <span class="arg">,X</span></li><li> <span class="op">BEQ</span> <span class="arg">KEY</span></li><li> <span class="op">RTS</span></li></ol>
+    <p>The Dragon’s small job checks the keyboard. When nothing has been pressed, it comes back with lamp Z <b>on</b>. And then <code>BEQ KEY</code>: if Z is on, turn to KEY, in other words <b>go back</b> and ask again. And again. And again. Hundreds of times a second, until a key is pressed. Then Z is off, we carry on to <code>RTS</code>, and go back to DREAM.</p>
+    <p>A crossroads that sends you <b>back</b>: that is a loop. You’ve seen it in every program since Chapter 2.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">10</span>A taste of Chapter 9: the road goes back</h3>
+    <p>If you can go back to KEY, you can go back to any place. This program uses <code>CMPX</code>: the same comparison, only for the finger. “Has the finger reached <code>$0520</code> yet?” If not, go back and write another block.</p>
+    <div id="pw87"></div>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>Five lines, and a whole row of blocks. Press <b>Fast ⚡</b> and see. That is what all of Chapter 9 is about.</p></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>Puzzles: a program that decides</h3>
+    <p>Here each puzzle is checked <b>in several cases</b>. The locked lines put something in the corner, and in each case something different. Your program has to work correctly in all of them.</p>
+    <div class="puzzle" id="pz81"></div>
+    <div class="puzzle" id="pz82"></div>
+    <div class="puzzle" id="pz83"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">▶</span>On the real Dragon</h3>
+    <div class="machine" id="mach8"></div>
+  </div>
+
+  <div class="recap">
+    <div><b>What we learned:</b> <span class="ltr">CMPA</span> compares without changing A, and lights up lamps: Z = equal, C = A is smaller. N = lamp 128 of the result.</div>
+    <div><span class="ltr">BEQ</span>/<span class="ltr">BNE</span> by Z, <span class="ltr">BLO</span>/<span class="ltr">BHS</span> by C, <span class="ltr">BRA</span> always. Put the crossroads right after the question.</div>
+    <div class="next">Next chapter: loops. The road goes back, and a 5-line program fills the whole screen.</div>
+    <button class="btn warm nextch" data-go="ch9">To Chapter 9 →</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">A hobbyist tribute project, not affiliated with or endorsed by <bdi>Dragon Data</bdi>. The course, drawings and text are our own. Every program in the course was checked on the site's <bdi>Dragon</bdi> machine (<bdi>XRoar</bdi> running the <bdi>BASIC</bdi> we wrote).</p>
+<script src="/en/learn/course.js"></script>
+</body>
+</html>

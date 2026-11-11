@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 11 · Movement: a cartoon — Machine Code on the Dragon</title>
+<meta name="description" content="It doesn’t really move. Like in a cartoon, you draw a picture, wait a moment, erase it, and draw it again one step further on. When this happens fast…">
+<meta property="og:title" content="Chapter 11 · Movement: a cartoon — Machine Code on the Dragon">
+<meta property="og:description" content="It doesn’t really move. Like in a cartoon, you draw a picture, wait a moment, erase it, and draw it again one step further on. When this happens fast…">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/en/learn/ch11/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/en/learn/ch11/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch11/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch11/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/en/learn/course.css">
+</head>
+<body data-ch="ch11">
+<nav class="site" aria-label="Navigation">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/learn/ch11/" lang="he" hreflang="he">עברית</a>
+  <a href="/en/learn/">All chapters</a>
+  <a href="/en/">← Home</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>Machine code from zero</h1>
+    <p class="sub">A course for the Dragon 32 · Chapters 0 to 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/en/learn/ch0/" data-tab="ch0">0 · A street of houses<span class="done" data-done="0"></span></a>
+  <a href="/en/learn/ch1/" data-tab="ch1">1 · The screen is memory<span class="done" data-done="1"></span></a>
+  <a href="/en/learn/ch2/" data-tab="ch2">2 · LDA and STA<span class="done" data-done="2"></span></a>
+  <a href="/en/learn/ch3/" data-tab="ch3">3 · The odometer<span class="done" data-done="3"></span></a>
+  <a href="/en/learn/ch4/" data-tab="ch4">4 · Four lamps<span class="done" data-done="4"></span></a>
+  <a href="/en/learn/ch5/" data-tab="ch5">5 · With # or without<span class="done" data-done="5"></span></a>
+  <a href="/en/learn/ch6/" data-tab="ch6">6 · Sums<span class="done" data-done="6"></span></a>
+  <a href="/en/learn/ch7/" data-tab="ch7">7 · The finger X<span class="done" data-done="7"></span></a>
+  <a href="/en/learn/ch8/" data-tab="ch8">8 · Crossroads<span class="done" data-done="8"></span></a>
+  <a href="/en/learn/ch9/" data-tab="ch9">9 · Loops<span class="done" data-done="9"></span></a>
+  <a href="/en/learn/ch10/" data-tab="ch10">10 · Keys<span class="done" data-done="10"></span></a>
+  <a href="/en/learn/ch11/" data-tab="ch11">11 · Movement<span class="done" data-done="11"></span></a>
+  <a href="/en/learn/ch12/" data-tab="ch12">12 · Subroutines<span class="done" data-done="12"></span></a>
+  <a href="/en/learn/ch13/" data-tab="ch13">13 · Numbers on the street<span class="done" data-done="13"></span></a>
+  <a href="/en/learn/ch14/" data-tab="ch14">14 · The game<span class="done" data-done="14"></span></a>
+  <a href="/en/learn/ch15/" data-tab="ch15">15 · To the machine<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch11" id="ch11">
+  <div class="ch-head"><div><div class="num">Chapter 11</div><h2 id="h-ch11">Movement: a cartoon</h2></div><span class="time">About 25 minutes · Erase, move, draw, wait</span></div>
+
+  <div class="step">
+    <h3><span class="n">1</span>How does something move on a screen?</h3>
+    <p>It doesn’t really move. Like in a cartoon, you draw a picture, wait a moment, erase it, and draw it again one step further on. When this happens fast enough, the eye sees movement.</p>
+    <figure><div id="fig111"></div><figcaption>Figure 25: four pictures of the same block, and one lap of the track: draw, wait, erase, move, and again.</figcaption></figure>
+    <p>That is exactly what we already have: a loop (Chapter 9), a waiting loop (Chapter 9), and a finger Y that moves.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>A block that drives to the wall</h3>
+    <p>The block sets off from the left edge of row 8, and drives right until the wall. <code>CMPY #$051F</code> asks “have you reached the last square in the row?”, and if so, <code>BEQ KEY</code> stops there.</p>
+    <div id="pw111"></div>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>Try the three versions. Without the wait the block “jumps” to the end, because the whole drive takes less than a thousandth of a second. And without erasing, the block leaves a trail behind it: all the pictures stay on the screen.</p></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>A block on the arrows</h3>
+    <p>The same idea, only instead of waiting for the clock, we wait <b>for a key</b>. On every press: erase, move by the arrow, and draw. Press the arrows under the screen (or on your own keyboard).</p>
+    <div id="pw112"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>A bouncing ball</h3>
+    <p>Now the ball doesn’t stop at the wall: it <b>turns round</b>. For that we keep <b>the direction</b> in drawer B: 1 = right, -1 = left. <code>LEAY B,Y</code> moves finger Y by whatever is in B. At the right wall we put -1 in B, and at the left wall 1.</p>
+    <p>And the program stops when you press a key: it asks the keyboard once on every lap, and doesn’t wait. If nothing was pressed, it keeps running. If something was, <code>RTS</code>: back to DREAM.</p>
+    <div id="pw113"></div>
+    <div class="note">-1 in a drawer is <code>$FF</code>. When B is used as a distance (<code>B,Y</code>), the processor reads numbers from <code>$80</code> upwards as negative numbers: <code>$FF</code> = -1, <code>$DF</code> = -33. That is lamp 128 from Chapter 8, again.</div>
+    <div class="quiz" data-quiz="q11a"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">5</span>Further on: a ball all over the screen</h3>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>A ball bouncing between four walls needs <b>two</b> directions: left-right, and up-down too. In the folder there is a program like that, “BALL — bouncing ball”, which already runs on our Dragon machine. It uses a few tools we haven’t learned yet, like putting a drawer aside for a moment. We’ll learn that in the next chapter.</p></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>Puzzles: movement</h3>
+    <p>In the movement puzzles we also check <b>the time</b>: if everything is over in less than a second on the Dragon, the eye won’t see movement, and it doesn’t count.</p>
+    <div class="puzzle" id="pz111"></div>
+    <div class="puzzle" id="pz112"></div>
+    <div class="puzzle" id="pz113"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">▶</span>On the real Dragon</h3>
+    <div class="machine" id="mach11"></div>
+  </div>
+
+  <div class="recap">
+    <div><b>What we learned:</b> movement = draw, wait, erase, move, and again. Without the wait it is too fast for the eye; without erasing, a trail is left.</div>
+    <div>The direction sits in a drawer: <span class="ltr">LDB #1</span> or <span class="ltr">LDB #-1</span>, and <span class="ltr">LEAY B,Y</span>. At the wall you flip B.</div>
+    <div class="next">Next chapter: subroutines and the stack. How to write “draw a block” once and use it many times, and how to put a drawer aside.</div>
+    <button class="btn warm nextch" data-go="ch12">To Chapter 12 →</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">A hobbyist tribute project, not affiliated with or endorsed by <bdi>Dragon Data</bdi>. The course, drawings and text are our own. Every program in the course was checked on the site's <bdi>Dragon</bdi> machine (<bdi>XRoar</bdi> running the <bdi>BASIC</bdi> we wrote).</p>
+<script src="/en/learn/course.js"></script>
+</body>
+</html>

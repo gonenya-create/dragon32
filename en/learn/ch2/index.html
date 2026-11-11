@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 2 · The first commands: LDA and STA — Machine Code on the Dragon</title>
+<meta name="description" content="Inside the Dragon there is one chip that does all the work: the processor, called the 6809. Everything we saw in the earlier chapters, the writing in…">
+<meta property="og:title" content="Chapter 2 · The first commands: LDA and STA — Machine Code on the Dragon">
+<meta property="og:description" content="Inside the Dragon there is one chip that does all the work: the processor, called the 6809. Everything we saw in the earlier chapters, the writing in…">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/en/learn/ch2/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/en/learn/ch2/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch2/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch2/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/en/learn/course.css">
+</head>
+<body data-ch="ch2">
+<nav class="site" aria-label="Navigation">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/learn/ch2/" lang="he" hreflang="he">עברית</a>
+  <a href="/en/learn/">All chapters</a>
+  <a href="/en/">← Home</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>Machine code from zero</h1>
+    <p class="sub">A course for the Dragon 32 · Chapters 0 to 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/en/learn/ch0/" data-tab="ch0">0 · A street of houses<span class="done" data-done="0"></span></a>
+  <a href="/en/learn/ch1/" data-tab="ch1">1 · The screen is memory<span class="done" data-done="1"></span></a>
+  <a href="/en/learn/ch2/" data-tab="ch2">2 · LDA and STA<span class="done" data-done="2"></span></a>
+  <a href="/en/learn/ch3/" data-tab="ch3">3 · The odometer<span class="done" data-done="3"></span></a>
+  <a href="/en/learn/ch4/" data-tab="ch4">4 · Four lamps<span class="done" data-done="4"></span></a>
+  <a href="/en/learn/ch5/" data-tab="ch5">5 · With # or without<span class="done" data-done="5"></span></a>
+  <a href="/en/learn/ch6/" data-tab="ch6">6 · Sums<span class="done" data-done="6"></span></a>
+  <a href="/en/learn/ch7/" data-tab="ch7">7 · The finger X<span class="done" data-done="7"></span></a>
+  <a href="/en/learn/ch8/" data-tab="ch8">8 · Crossroads<span class="done" data-done="8"></span></a>
+  <a href="/en/learn/ch9/" data-tab="ch9">9 · Loops<span class="done" data-done="9"></span></a>
+  <a href="/en/learn/ch10/" data-tab="ch10">10 · Keys<span class="done" data-done="10"></span></a>
+  <a href="/en/learn/ch11/" data-tab="ch11">11 · Movement<span class="done" data-done="11"></span></a>
+  <a href="/en/learn/ch12/" data-tab="ch12">12 · Subroutines<span class="done" data-done="12"></span></a>
+  <a href="/en/learn/ch13/" data-tab="ch13">13 · Numbers on the street<span class="done" data-done="13"></span></a>
+  <a href="/en/learn/ch14/" data-tab="ch14">14 · The game<span class="done" data-done="14"></span></a>
+  <a href="/en/learn/ch15/" data-tab="ch15">15 · To the machine<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch2" id="ch2">
+  <div class="ch-head"><div><div class="num">Chapter 2</div><h2 id="h-ch2">The first commands: LDA and STA</h2></div><span class="time">About 20 minutes · just two commands</span></div>
+
+  <div class="step">
+    <h3><span class="n">1</span>Meet the processor</h3>
+    <p>Inside the Dragon there is one chip that does all the work: <b>the processor</b>, called the 6809. Everything we saw in the earlier chapters, the writing in houses, it does by itself, hundreds of thousands of little actions a second.</p>
+    <p>The processor has a few small <b>drawers</b>. Today we’ll meet only one: <b>drawer A</b>. The drawer holds one number, just like a house’s board. (Remember the note from Chapter 0? This is it.)</p>
+    <figure><div id="fig21"></div><figcaption>Figure 6: The processor. Today only drawer A is open. We’ll discover the rest when we need them.</figcaption></figure>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>Two commands</h3>
+    <p><code>LDA</code> says: <b>put a number in drawer A</b>. (LD from Load.) Whatever was in the drawer before is wiped out.</p>
+    <p><code>STA</code> says: <b>write what is in drawer A in this house</b>. (ST from Store.) The house is wiped and written, and <b>the drawer doesn’t empty</b>: the same number stays in it.</p>
+    <figure><div id="fig22"></div><figcaption>Figure 7: LDA puts a number in the drawer. STA takes a photo of the drawer and writes it to the house. The drawer still holds $41.</figcaption></figure>
+    <figure><div id="fig23"></div><figcaption>Figure 8: What is in one line.</figcaption></figure>
+    <div class="note">From today the numbers in the code are written in the computer’s way of writing, with <code>$</code>: <code>$41</code> is 65, and <code>$0400</code> is 1024. Everywhere we’ll also write the ordinary number next to them, until we learn this way of writing in Chapter 3.</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>A first program, step by step</h3>
+    <p>In each window: guess first, then press <b>Step</b> to see one line happen. The yellow arrow shows which line will happen now.</p>
+    <div id="pw1"></div>
+    <div id="pw2"></div>
+    <div id="pw3"></div>
+    <div id="pw4"></div>
+    <div id="pw5"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>What is “the fixed ending”?</h3>
+    <p>At the bottom of every window there is a grey line: “the fixed ending”. These are 4 lines that wait for you to press a key:</p>
+    <ol class="code"><li><span class="op">KEY LDX</span> <span class="arg">$A000</span></li><li> <span class="op">JSR</span> <span class="arg">,X</span></li><li> <span class="op">BEQ</span> <span class="arg">KEY</span></li><li> <span class="op">RTS</span></li></ol>
+    <p>Why do we need them? When a program ends in DREAM, the editor comes straight back and draws itself on the screen, and you wouldn’t have time to see anything. For now we just copy them to the end of every program, like a signature. In Chapter 10 we’ll understand every word in them.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">5</span>A line is missing</h3>
+    <p>In this program we wanted to write <b>OK</b> in the middle of the screen, but one line was deleted. Which line should be in the empty place?</p>
+    <div id="pw6"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">6</span>A broken program: the hash sign was forgotten</h3>
+    <p>Someone wanted an A in the corner, and wrote this:</p>
+    <ol class="code"><li>@ <span class="op">LDA</span> <span class="arg">$41</span></li><li> <span class="op">STA</span> <span class="arg">$0400</span></li><li class="tail">… the fixed ending</li></ol>
+    <p>The <code>#</code> is missing. Without the hash sign, LDA doesn’t get the number itself. It goes <b>to house number $41</b> (house 65), and takes a photo of what is written on its board.</p>
+    <div class="row" style="justify-content:center;gap:18px">
+      <div style="width:min(300px,100%)"><div class="scr-wrap" id="broken"></div></div>
+    </div>
+    <p>What we saw when we ran this in DREAM on our Dragon machine: a dark square with <b>@</b>. House 65 happened to hold 0, and 0 on the screen is an inverted @. On another day there could be a different number there, and then a different square would appear. <span class="verified">✓ Checked in DREAM</span></p>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>This is the most common mistake in the language. If you got something strange instead of what you wanted, the first thing to check: is there a <code>#</code>? Chapter 5 is all about this.</p></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>Puzzles: write it yourself</h3>
+    <p>Write a program in the black window and press <b>Run and check</b>. It is enough to write the LDA and STA lines. We’ll add the fixed ending ourselves.</p>
+    <div class="puzzle" id="pz21"></div>
+    <div class="puzzle" id="pz22"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">▶</span>Running it on the Dragon (DREAM)</h3>
+    <p>All the programs in this chapter’s windows, and the solutions to both puzzles too, we typed into DREAM on our Dragon machine, assembled (<code>0000 ERRS</code>) and ran. They do exactly what the windows here show. How to load DREAM: in “DREAM — first lesson”. After <code>N</code> to <code>OLD TEXT ?</code> you type:</p>
+    <ol class="code"><li>@ <span class="op">LDA</span> <span class="arg">#$41</span></li><li> <span class="op">STA</span> <span class="arg">$0400</span></li><li><span class="op">KEY LDX</span> <span class="arg">$A000</span></li><li> <span class="op">JSR</span> <span class="arg">,X</span></li><li> <span class="op">BEQ</span> <span class="arg">KEY</span></li><li> <span class="op">RTS</span></li></ol>
+    <p>A line without a name starts with a real <b>SPACE</b>. <code>@</code> says “the program starts here”. Then BREAK, A, ENTER to assemble, and BREAK, X, ENTER to run. A appears in the corner. Any key takes you back to the editor.</p>
+  </div>
+
+  <div class="recap">
+    <div><b>What we learnt:</b> <span class="ltr">LDA #</span> puts a number in drawer A, and <span class="ltr">STA</span> writes what is in the drawer in a house. The drawer doesn’t empty.</div>
+    <div>Without <span class="ltr">#</span> the computer goes to the house with that number and takes a photo of it. This is the most common mistake.</div>
+    <div class="next">Next chapter: what is $0400 really? We’ll learn to count like the computer, up to 15 in each digit.</div>
+    <button class="btn warm nextch" data-go="ch3">To Chapter 3 →</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">A hobbyist tribute project, not affiliated with or endorsed by <bdi>Dragon Data</bdi>. The course, drawings and text are our own. Every program in the course was checked on the site's <bdi>Dragon</bdi> machine (<bdi>XRoar</bdi> running the <bdi>BASIC</bdi> we wrote).</p>
+<script src="/en/learn/course.js"></script>
+</body>
+</html>

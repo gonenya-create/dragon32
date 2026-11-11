@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 4 · Colour squares: four lamps — Machine Code on the Dragon</title>
+<meta name="description" content="In Chapter 1 you saw that 191 is a red block. But every colour square is really four small blocks, two on top and two below. Each small block is a lamp:…">
+<meta property="og:title" content="Chapter 4 · Colour squares: four lamps — Machine Code on the Dragon">
+<meta property="og:description" content="In Chapter 1 you saw that 191 is a red block. But every colour square is really four small blocks, two on top and two below. Each small block is a lamp:…">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/en/learn/ch4/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/en/learn/ch4/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch4/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch4/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/en/learn/course.css">
+</head>
+<body data-ch="ch4">
+<nav class="site" aria-label="Navigation">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/learn/ch4/" lang="he" hreflang="he">עברית</a>
+  <a href="/en/learn/">All chapters</a>
+  <a href="/en/">← Home</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>Machine code from zero</h1>
+    <p class="sub">A course for the Dragon 32 · Chapters 0 to 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/en/learn/ch0/" data-tab="ch0">0 · A street of houses<span class="done" data-done="0"></span></a>
+  <a href="/en/learn/ch1/" data-tab="ch1">1 · The screen is memory<span class="done" data-done="1"></span></a>
+  <a href="/en/learn/ch2/" data-tab="ch2">2 · LDA and STA<span class="done" data-done="2"></span></a>
+  <a href="/en/learn/ch3/" data-tab="ch3">3 · The odometer<span class="done" data-done="3"></span></a>
+  <a href="/en/learn/ch4/" data-tab="ch4">4 · Four lamps<span class="done" data-done="4"></span></a>
+  <a href="/en/learn/ch5/" data-tab="ch5">5 · With # or without<span class="done" data-done="5"></span></a>
+  <a href="/en/learn/ch6/" data-tab="ch6">6 · Sums<span class="done" data-done="6"></span></a>
+  <a href="/en/learn/ch7/" data-tab="ch7">7 · The finger X<span class="done" data-done="7"></span></a>
+  <a href="/en/learn/ch8/" data-tab="ch8">8 · Crossroads<span class="done" data-done="8"></span></a>
+  <a href="/en/learn/ch9/" data-tab="ch9">9 · Loops<span class="done" data-done="9"></span></a>
+  <a href="/en/learn/ch10/" data-tab="ch10">10 · Keys<span class="done" data-done="10"></span></a>
+  <a href="/en/learn/ch11/" data-tab="ch11">11 · Movement<span class="done" data-done="11"></span></a>
+  <a href="/en/learn/ch12/" data-tab="ch12">12 · Subroutines<span class="done" data-done="12"></span></a>
+  <a href="/en/learn/ch13/" data-tab="ch13">13 · Numbers on the street<span class="done" data-done="13"></span></a>
+  <a href="/en/learn/ch14/" data-tab="ch14">14 · The game<span class="done" data-done="14"></span></a>
+  <a href="/en/learn/ch15/" data-tab="ch15">15 · To the machine<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch4" id="ch4">
+  <div class="ch-head"><div><div class="num">Chapter 4</div><h2 id="h-ch4">Colour squares: four lamps</h2></div><span class="time">About 20 minutes · and at the end: why 255</span></div>
+
+  <div class="step">
+    <h3><span class="n">1</span>A magnifying glass on a colour square</h3>
+    <p>In Chapter 1 you saw that 191 is a red block. But every colour square is really <b>four small blocks</b>, two on top and two below. Each small block is a <b>lamp</b>: on, in colour, or off (black).</p>
+    <p>Each lamp has a fixed value: top left 8, top right 4, bottom left 2, bottom right 1. Add up the values of the lamps that are on, and you get a number from 0 to 15. That is, <b>one digit</b> of the computer: 0 to F.</p>
+    <figure><div id="fig41"></div><figcaption>Figure 13: the four lamps and their values, and four examples.</figcaption></figure>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>The left digit: the colour</h3>
+    <p>The number of a colour square has two digits. The right one, as we saw, says <b>which lamps are on</b>. The left one says <b>which colour</b>: 8 green, 9 yellow, A blue, B red, C white, D cyan, E magenta, F orange.</p>
+    <figure><div id="fig42"></div><figcaption>Figure 14: the eight colours, and the left digit of each one.</figcaption></figure>
+    <figure><div id="fig43"></div><figcaption>Figure 15: reading a square: <bdi class="ltr">$BC</bdi> = red, top half.</figcaption></figure>
+    <div class="note">And what about 191 from Chapter 1? 191 is <code>$BF</code>: red, with all the lamps on (8+4+2+1 = 15 = F). Now it is also clear why 143 (<code>$8F</code>) can’t be seen: full green on a green background.</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>Light them yourself</h3>
+    <p>Press the lamps to turn them on and off, and choose a colour. Next to it you can see how the number is built.</p>
+    <div id="lamp"></div>
+    <ul class="missions" id="m4"></ul>
+    <div class="quiz" data-quiz="q4a"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>The secret of 255</h3>
+    <p>In Chapter 0 we promised to find out why a house only holds up to 255. Here is the answer: every house is really <b>eight lamps</b>. Four for the left digit and four more for the right one.</p>
+    <p>Here too each lamp has a value: from the right 1, 2, 4, 8, and we keep doubling: 16, 32, 64, 128. When all eight are on: 128+64+32+16+8+4+2+1 = <b>255</b>. There is no ninth lamp, so there is no room for 256.</p>
+    <div id="byte"></div>
+    <ul class="missions" id="m4b"></ul>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>Every house in memory is eight lamps like these, even when it isn’t a colour square. The letter A (65) is lamp 64 and lamp 1. The computer doesn’t know it’s a letter; only the screen draws it that way.</p></div>
+    <div class="note">And what happened to 300 in Chapter 0? It needs a ninth lamp (256). DREAM threw it away, and only what was in the eight lamps was left: 300 minus 256 = 44.</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">5</span>Drawing with a program</h3>
+    <div id="pw41"></div>
+    <div id="pw42"></div>
+    <div id="pw43"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">6</span>A number is missing</h3>
+    <p>We wanted a square with only its left half blue. Which number goes in the empty space?</p>
+    <div id="pw44"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>Puzzles: draw it like the picture</h3>
+    <p>Your screen has to match the picture. Squares that are different will be marked in red. Hover over the picture (or tap it) to see the house number and the number in each square.</p>
+    <div class="puzzle" id="pz41"></div>
+    <div class="puzzle" id="pz42"></div>
+    <div class="puzzle" id="pz43"></div>
+  </div>
+
+  <div class="note">All the programs in this chapter’s windows, and the puzzle solutions too, were typed into DREAM on our Dragon machine, translated with no errors (<code>0000 ERRS</code>) and run. We checked number by number: what was written in each square of the screen matches what the windows here show, and the colours match the Dragon machine’s colours too.</div>
+
+  <div class="recap">
+    <div><b>What we learned:</b> colour square = <span class="ltr">$8?</span> to <span class="ltr">$F?</span>. The left digit is the colour, the right one is the lamps: 8, 4, 2, 1.</div>
+    <div>Every house is eight lamps. All on = 255 = <span class="ltr">$FF</span>. That’s why there is no more.</div>
+    <div class="next">Next chapter: back to the hash sign. What exactly happens when LDA goes to a house, and how to copy a square when we don’t know what is in it.</div>
+    <button class="btn warm nextch" data-go="ch5">To Chapter 5 →</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">A hobbyist tribute project, not affiliated with or endorsed by <bdi>Dragon Data</bdi>. The course, drawings and text are our own. Every program in the course was checked on the site's <bdi>Dragon</bdi> machine (<bdi>XRoar</bdi> running the <bdi>BASIC</bdi> we wrote).</p>
+<script src="/en/learn/course.js"></script>
+</body>
+</html>

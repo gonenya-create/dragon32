@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 12 · Subroutines: go, and come back — Machine Code on the Dragon</title>
+<meta name="description" content="You are reading a book. Mum calls you: “Pop to the shop and get some bread.” What do you do with the book? You put a bookmark in the page, go, get the…">
+<meta property="og:title" content="Chapter 12 · Subroutines: go, and come back — Machine Code on the Dragon">
+<meta property="og:description" content="You are reading a book. Mum calls you: “Pop to the shop and get some bread.” What do you do with the book? You put a bookmark in the page, go, get the…">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/en/learn/ch12/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/en/learn/ch12/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch12/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch12/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/en/learn/course.css">
+</head>
+<body data-ch="ch12">
+<nav class="site" aria-label="Navigation">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/learn/ch12/" lang="he" hreflang="he">עברית</a>
+  <a href="/en/learn/">All chapters</a>
+  <a href="/en/">← Home</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>Machine code from zero</h1>
+    <p class="sub">A course for the Dragon 32 · Chapters 0 to 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/en/learn/ch0/" data-tab="ch0">0 · A street of houses<span class="done" data-done="0"></span></a>
+  <a href="/en/learn/ch1/" data-tab="ch1">1 · The screen is memory<span class="done" data-done="1"></span></a>
+  <a href="/en/learn/ch2/" data-tab="ch2">2 · LDA and STA<span class="done" data-done="2"></span></a>
+  <a href="/en/learn/ch3/" data-tab="ch3">3 · The odometer<span class="done" data-done="3"></span></a>
+  <a href="/en/learn/ch4/" data-tab="ch4">4 · Four lamps<span class="done" data-done="4"></span></a>
+  <a href="/en/learn/ch5/" data-tab="ch5">5 · With # or without<span class="done" data-done="5"></span></a>
+  <a href="/en/learn/ch6/" data-tab="ch6">6 · Sums<span class="done" data-done="6"></span></a>
+  <a href="/en/learn/ch7/" data-tab="ch7">7 · The finger X<span class="done" data-done="7"></span></a>
+  <a href="/en/learn/ch8/" data-tab="ch8">8 · Crossroads<span class="done" data-done="8"></span></a>
+  <a href="/en/learn/ch9/" data-tab="ch9">9 · Loops<span class="done" data-done="9"></span></a>
+  <a href="/en/learn/ch10/" data-tab="ch10">10 · Keys<span class="done" data-done="10"></span></a>
+  <a href="/en/learn/ch11/" data-tab="ch11">11 · Movement<span class="done" data-done="11"></span></a>
+  <a href="/en/learn/ch12/" data-tab="ch12">12 · Subroutines<span class="done" data-done="12"></span></a>
+  <a href="/en/learn/ch13/" data-tab="ch13">13 · Numbers on the street<span class="done" data-done="13"></span></a>
+  <a href="/en/learn/ch14/" data-tab="ch14">14 · The game<span class="done" data-done="14"></span></a>
+  <a href="/en/learn/ch15/" data-tab="ch15">15 · To the machine<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch12" id="ch12">
+  <div class="ch-head"><div><div class="num">Chapter 12</div><h2 id="h-ch12">Subroutines: go, and come back</h2></div><span class="time">About 25 minutes · JSR, RTS and the pile of plates</span></div>
+
+  <div class="step">
+    <h3><span class="n">1</span>“Go and get some bread, and come back”</h3>
+    <p>You are reading a book. Mum calls you: “Pop to the shop and get some bread.” What do you do with the book? You put a <b>bookmark</b> in the page, go, get the bread, come back, and carry on exactly where you stopped.</p>
+    <p>The processor can do this too. <code>JSR</code> tells it: “Go and do this job, and come back.” A piece of program that you go to and come back from is called a <b>subroutine</b>. At its end is written <code>RTS</code>: “Go back to the bookmark.”</p>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>You already know this! Since Chapter 2 you have been writing <code>JSR ,X</code> in the fixed ending. That is a jump to one of the Dragon’s subroutines, the <b>keyboard checker</b>, and it comes back from it with the answer. Now we will write subroutines of our own.</p></div>
+    <p>In this example there is a subroutine called <code>DOT</code>, which draws a red brick (two squares) at the place the finger Y points at. The main program calls it three times. Notice where <code>DOT</code> is written: <b>after</b> the fixed ending. The processor will never walk into it by itself, only through <code>JSR</code>.</p>
+    <div id="pw121"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>Where is the bookmark kept? On a pile of plates</h3>
+    <p>The processor’s bookmark is a <b>house number</b>: the house of the line after the <code>JSR</code>. It writes it on a <b>plate</b>, and puts the plate on a <b>pile</b>. This pile is called the <b>stack</b>.</p>
+    <figure><div id="fig121"></div><figcaption>Figure 26: the pile of plates. The hand S always holds the top plate. <bdi class="ltr">JSR</bdi> puts a new plate on top, and <bdi class="ltr">RTS</bdi> takes the top plate and goes back to the house written on it.</figcaption></figure>
+    <ul>
+      <li>A new drawer in the processor: <b>S</b>. It is a finger, like X and Y, and it always points at the top plate.</li>
+      <li>A <code>JSR</code> plate takes up <b>two houses</b> (a house number is a big number). So <code>JSR</code> takes S down by 2, and <code>RTS</code> takes it up by 2. The pile grows <b>downwards</b> in memory.</li>
+      <li>You always take only the <b>top</b> plate. Just like a real pile of plates.</li>
+    </ul>
+    <div class="note">And what about the plate that is already sitting there when the program starts? DREAM ran your program like a subroutine: before it jumped to it, it put down a plate. Written on it is where DREAM carries on. That is why the fixed ending finishes with <code>RTS</code>: it takes DREAM’s plate, and goes back to it. The whole program is a subroutine too.</div>
+    <div class="quiz" data-quiz="q12a"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>A subroutine with instructions: “draw a square”</h3>
+    <p>A good subroutine does one job, and you can ask it for that job again and again, a little differently each time. <code>SQUARE</code> draws a 2 by 2 square. Before calling it, you put the “instructions” in the drawers: in Y <b>where</b>, in A <b>which colour</b>.</p>
+    <div id="pw122"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>Keeping a drawer aside: PSHS and PULS</h3>
+    <p>The main program writes letters: A, then B, then C... It keeps the letter in drawer A, and adds 1 on every lap (<code>INCA</code>). The subroutine <code>UNDER</code> draws a red line under each letter. But for that it needs A for the colour. What will happen to the letter?</p>
+    <p>The answer: before it touches A, it puts a <b>copy</b> of A on the pile of plates: <code>PSHS A</code>. At the end it takes it back: <code>PULS A</code>. That way the main program gets A back exactly as it left it.</p>
+    <div id="pw123"></div>
+    <div class="note"><code>PSHS</code> = “put on the pile” (push). <code>PULS</code> = “take from the pile” (pull). You can put several drawers on at once, for example <code>PSHS A,B</code>. And remember: what goes on last comes off first.</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">5</span>What happens if you forget a plate?</h3>
+    <p>The same program, but someone forgot the <code>PULS A</code>. <code>RTS</code> doesn’t know what is on the plates. It simply takes <b>two houses from the top</b>, and trusts that this is the bookmark.</p>
+    <figure><div id="fig122"></div><figcaption>Figure 27: on top sits A’s plate (<bdi class="ltr">$41</bdi>), and under it the bookmark (<bdi class="ltr">$2E $EC</bdi>). <bdi class="ltr">RTS</bdi> takes two houses: <bdi class="ltr">$41</bdi> and half the bookmark. Together: <bdi class="ltr">$412E</bdi>. That is where the processor jumps.</figcaption></figure>
+    <div id="pw124"></div>
+    <p>This is one of the most famous bugs in machine code. The rule: <b>in every subroutine, as many plates as you put on, that many you take off</b>, before the <code>RTS</code>.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>Puzzles: subroutines</h3>
+    <div class="puzzle" id="pz121"></div>
+    <div class="puzzle" id="pz122"></div>
+    <div class="puzzle" id="pz123"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">▶</span>On the real Dragon</h3>
+    <div class="machine" id="mach12"></div>
+  </div>
+
+  <div class="recap">
+    <div><b>What we learned:</b> <span class="ltr">JSR</span> = go to a subroutine, and put on a plate with the return house. <span class="ltr">RTS</span> = take the top plate and go back. <span class="ltr">PSHS</span> / <span class="ltr">PULS</span> = keep a drawer on the pile, and take it back.</div>
+    <div>The hand S holds the top plate. As many plates as you put on, that many you take off. Otherwise <span class="ltr">RTS</span> jumps somewhere strange.</div>
+    <div class="next">Next chapter: what does DREAM do when it “assembles”? It turns out the program itself is numbers on the street of houses.</div>
+    <button class="btn warm nextch" data-go="ch13">To Chapter 13 →</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">A hobbyist tribute project, not affiliated with or endorsed by <bdi>Dragon Data</bdi>. The course, drawings and text are our own. Every program in the course was checked on the site's <bdi>Dragon</bdi> machine (<bdi>XRoar</bdi> running the <bdi>BASIC</bdi> we wrote).</p>
+<script src="/en/learn/course.js"></script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 10 · Keys: the Dragon listens — Machine Code on the Dragon</title>
+<meta name="description" content="In Chapters 7 and 8 we opened up the fixed ending: LDX $A000 points the finger at the keyboard checker, a small job that lives in the Dragon’s fixed…">
+<meta property="og:title" content="Chapter 10 · Keys: the Dragon listens — Machine Code on the Dragon">
+<meta property="og:description" content="In Chapters 7 and 8 we opened up the fixed ending: LDX $A000 points the finger at the keyboard checker, a small job that lives in the Dragon’s fixed…">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/en/learn/ch10/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/en/learn/ch10/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch10/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch10/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/en/learn/course.css">
+</head>
+<body data-ch="ch10">
+<nav class="site" aria-label="Navigation">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/learn/ch10/" lang="he" hreflang="he">עברית</a>
+  <a href="/en/learn/">All chapters</a>
+  <a href="/en/">← Home</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>Machine code from zero</h1>
+    <p class="sub">A course for the Dragon 32 · Chapters 0 to 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/en/learn/ch0/" data-tab="ch0">0 · A street of houses<span class="done" data-done="0"></span></a>
+  <a href="/en/learn/ch1/" data-tab="ch1">1 · The screen is memory<span class="done" data-done="1"></span></a>
+  <a href="/en/learn/ch2/" data-tab="ch2">2 · LDA and STA<span class="done" data-done="2"></span></a>
+  <a href="/en/learn/ch3/" data-tab="ch3">3 · The odometer<span class="done" data-done="3"></span></a>
+  <a href="/en/learn/ch4/" data-tab="ch4">4 · Four lamps<span class="done" data-done="4"></span></a>
+  <a href="/en/learn/ch5/" data-tab="ch5">5 · With # or without<span class="done" data-done="5"></span></a>
+  <a href="/en/learn/ch6/" data-tab="ch6">6 · Sums<span class="done" data-done="6"></span></a>
+  <a href="/en/learn/ch7/" data-tab="ch7">7 · The finger X<span class="done" data-done="7"></span></a>
+  <a href="/en/learn/ch8/" data-tab="ch8">8 · Crossroads<span class="done" data-done="8"></span></a>
+  <a href="/en/learn/ch9/" data-tab="ch9">9 · Loops<span class="done" data-done="9"></span></a>
+  <a href="/en/learn/ch10/" data-tab="ch10">10 · Keys<span class="done" data-done="10"></span></a>
+  <a href="/en/learn/ch11/" data-tab="ch11">11 · Movement<span class="done" data-done="11"></span></a>
+  <a href="/en/learn/ch12/" data-tab="ch12">12 · Subroutines<span class="done" data-done="12"></span></a>
+  <a href="/en/learn/ch13/" data-tab="ch13">13 · Numbers on the street<span class="done" data-done="13"></span></a>
+  <a href="/en/learn/ch14/" data-tab="ch14">14 · The game<span class="done" data-done="14"></span></a>
+  <a href="/en/learn/ch15/" data-tab="ch15">15 · To the machine<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch10" id="ch10">
+  <div class="ch-head"><div><div class="num">Chapter 10</div><h2 id="h-ch10">Keys: the Dragon listens</h2></div><span class="time">About 20 minutes · The fixed ending, all the way</span></div>
+
+  <div class="step">
+    <h3><span class="n">1</span>What the keyboard checker gives back</h3>
+    <p>In Chapters 7 and 8 we opened up the fixed ending: <code>LDX $A000</code> points the finger at the <b>keyboard checker</b>, a small job that lives in the Dragon’s fixed memory. <code>JSR ,X</code> goes to it and comes back. We saw that when nothing is pressed, lamp Z is on.</p>
+    <p>Now the missing part: the checker comes back with <b>the key’s code in drawer A</b>. G pressed? A will hold <code>$47</code>, exactly like <code>LDA #'G</code>. Nothing pressed? A will hold 0, and that is why Z is on.</p>
+    <figure><div id="fig101"></div><figcaption>Figure 24: the keyboard is connected to drawer A. After <bdi class="ltr">JSR ,X</bdi>: a key pressed = its code in A, and lamp Z off. No key = 0 in A, and lamp Z on.</figcaption></figure>
+    <p>Now you can read the fixed ending like a sentence: “Ask the keyboard. If nothing was pressed, ask again. If something was pressed, go back to DREAM.” Until now we didn’t care <b>which</b> key. From today we do.</p>
+    <p>From here on the fixed ending is written out in the windows, and the processor really runs it. At the end of every run you will have to press a key, just like on the Dragon.</p>
+    <div id="pw101"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>Wait for a key, and show it</h3>
+    <p>The fixed ending’s waiting loop, in the middle of the program. Here it is called <code>WAIT</code>, because the name KEY is taken. Under the screen there is a small keyboard. You can also press keys on your own keyboard, after clicking on the window.</p>
+    <div id="pw102"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>Every key has a code</h3>
+    <p>Press the keys and see what arrives in drawer A. The letters have a code you already know. The arrows and SPACE have codes of their own.</p>
+    <div id="keys10"></div>
+    <ul class="missions" id="m10"></ul>
+    <table class="codes" id="keytab"></table>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>A typewriter</h3>
+    <p>Every key you press is written on the screen, one after another. Q stops. Notice the two questions: <code>BEQ LOOP</code> = “nothing pressed? ask again”. <code>CMPA #'Q</code> and <code>BEQ KEY</code> = “Q pressed? go to the end”.</p>
+    <div class="note">Why is the finger on the screen Y? Because <code>LDX $A000</code> overwrites X on every question. The keyboard checker doesn’t touch Y or B, so they are safe.</div>
+    <div id="pw103"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">5</span>Answering a key</h3>
+    <p>Now we decide by the key: R paints the square red, B blue, Q leaves. This is exactly the crossroads from Chapter 8, only the question is “which key?”.</p>
+    <p>Notice: the colour goes through <b>B</b> (<code>LDB</code>, <code>STB</code>). Why not A? Because A holds the key’s code, and we still need it for the next question.</p>
+    <div id="pw104"></div>
+    <div class="quiz" data-quiz="q10a"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>Puzzles: keys</h3>
+    <p>Each puzzle is checked in several cases. In each case different keys are “pressed”, one after another, and at the end the screen must look like the picture. You don’t need to type the fixed ending: it is already there, and the Q key must get to it.</p>
+    <div class="puzzle" id="pz101"></div>
+    <div class="puzzle" id="pz102"></div>
+    <div class="puzzle" id="pz103"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">▶</span>On the real Dragon</h3>
+    <div class="machine" id="mach10"></div>
+  </div>
+
+  <div class="recap">
+    <div><b>What we learned:</b> <span class="ltr">LDX $A000</span> and <span class="ltr">JSR ,X</span> ask the keyboard. The key’s code comes back in A. No key: 0, and lamp Z is on.</div>
+    <div>Codes: arrows <span class="ltr">$5E $0A $08 $09</span>, SPACE <span class="ltr">$20</span>, a letter = its own code. The checker overwrites X; the finger on the screen is Y.</div>
+    <div class="next">Next chapter: movement. Erase, move, draw, wait, and round again. Like a cartoon.</div>
+    <button class="btn warm nextch" data-go="ch11">To Chapter 11 →</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">A hobbyist tribute project, not affiliated with or endorsed by <bdi>Dragon Data</bdi>. The course, drawings and text are our own. Every program in the course was checked on the site's <bdi>Dragon</bdi> machine (<bdi>XRoar</bdi> running the <bdi>BASIC</bdi> we wrote).</p>
+<script src="/en/learn/course.js"></script>
+</body>
+</html>

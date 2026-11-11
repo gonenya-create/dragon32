@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 6 · Sums: the drawer learns to count — Machine Code on the Dragon</title>
+<meta name="description" content="Until now drawer A only held a number. Now it learns to calculate. The first instruction is the simplest: INCA says “add 1 to what is in drawer A”. No…">
+<meta property="og:title" content="Chapter 6 · Sums: the drawer learns to count — Machine Code on the Dragon">
+<meta property="og:description" content="Until now drawer A only held a number. Now it learns to calculate. The first instruction is the simplest: INCA says “add 1 to what is in drawer A”. No…">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/en/learn/ch6/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/en/learn/ch6/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch6/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch6/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/en/learn/course.css">
+</head>
+<body data-ch="ch6">
+<nav class="site" aria-label="Navigation">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/learn/ch6/" lang="he" hreflang="he">עברית</a>
+  <a href="/en/learn/">All chapters</a>
+  <a href="/en/">← Home</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>Machine code from zero</h1>
+    <p class="sub">A course for the Dragon 32 · Chapters 0 to 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/en/learn/ch0/" data-tab="ch0">0 · A street of houses<span class="done" data-done="0"></span></a>
+  <a href="/en/learn/ch1/" data-tab="ch1">1 · The screen is memory<span class="done" data-done="1"></span></a>
+  <a href="/en/learn/ch2/" data-tab="ch2">2 · LDA and STA<span class="done" data-done="2"></span></a>
+  <a href="/en/learn/ch3/" data-tab="ch3">3 · The odometer<span class="done" data-done="3"></span></a>
+  <a href="/en/learn/ch4/" data-tab="ch4">4 · Four lamps<span class="done" data-done="4"></span></a>
+  <a href="/en/learn/ch5/" data-tab="ch5">5 · With # or without<span class="done" data-done="5"></span></a>
+  <a href="/en/learn/ch6/" data-tab="ch6">6 · Sums<span class="done" data-done="6"></span></a>
+  <a href="/en/learn/ch7/" data-tab="ch7">7 · The finger X<span class="done" data-done="7"></span></a>
+  <a href="/en/learn/ch8/" data-tab="ch8">8 · Crossroads<span class="done" data-done="8"></span></a>
+  <a href="/en/learn/ch9/" data-tab="ch9">9 · Loops<span class="done" data-done="9"></span></a>
+  <a href="/en/learn/ch10/" data-tab="ch10">10 · Keys<span class="done" data-done="10"></span></a>
+  <a href="/en/learn/ch11/" data-tab="ch11">11 · Movement<span class="done" data-done="11"></span></a>
+  <a href="/en/learn/ch12/" data-tab="ch12">12 · Subroutines<span class="done" data-done="12"></span></a>
+  <a href="/en/learn/ch13/" data-tab="ch13">13 · Numbers on the street<span class="done" data-done="13"></span></a>
+  <a href="/en/learn/ch14/" data-tab="ch14">14 · The game<span class="done" data-done="14"></span></a>
+  <a href="/en/learn/ch15/" data-tab="ch15">15 · To the machine<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch6" id="ch6">
+  <div class="ch-head"><div><div class="num">Chapter 6</div><h2 id="h-ch6">Sums: the drawer learns to count</h2></div><span class="time">About 25 minutes · INCA, DECA, ADDA, SUBA, CLRA, INC, DEC</span></div>
+
+  <div class="step">
+    <h3><span class="n">1</span>Plus 1: INCA</h3>
+    <p>Until now drawer A only held a number. Now it learns to calculate. The first instruction is the simplest: <code>INCA</code> says “<b>add 1 to what is in drawer A</b>”. No number comes after it; it always adds exactly 1.</p>
+    <p>Remember that the letters come one after another? A is <code>$41</code>, B is <code>$42</code>, C is <code>$43</code>. So if the drawer holds A and we add 1, it holds B.</p>
+    <div id="pw61"></div>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>Look at the drawer in the picture: a <b>row of lamps</b> has appeared at the bottom. For now it has one lamp, C. Soon we’ll see when it lights up. A question mark on a lamp means “we don’t know yet”.</p></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>Minus 1: DECA</h3>
+    <p><code>DECA</code> is the opposite: “<b>take 1 away from what is in drawer A</b>”. From Z we go backwards: Y, then X.</p>
+    <div id="pw62"></div>
+    <div class="quiz" data-quiz="q6a"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>Add any number: ADDA</h3>
+    <p><code>INCA</code> only adds 1. When you want to add more, there is <code>ADDA</code> (“add to A”). After it you write how much to add, with a hash sign, just like LDA: <code>ADDA #$10</code> adds <code>$10</code>.</p>
+    <p>And why <code>$10</code>, of all numbers? Remember from Chapter 4 that in a colour square <b>the left digit is the colour</b>? <code>$10</code> moves the left digit up by 1 and leaves the lamps where they are. In other words: <b>the same shape, in the next colour</b>.</p>
+    <div id="pw63"></div>
+    <p>And what if there is no hash sign? Just like LDA: without <code>#</code> the number is a <b>house</b>. <code>ADDA $0400</code> goes to house <code>$0400</code>, copies what is written there, and adds it to the drawer.</p>
+    <div id="pw64"></div>
+    <p>And there is subtraction too: <code>SUBA</code> (“take away from A”). <code>SUBA #2</code> takes away 2, and <code>SUBA $0400</code> takes away what is written in the house.</p>
+    <div class="quiz" data-quiz="q6b"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>The odometer rolls over: lamp C</h3>
+    <p>Remember the odometer from Chapter 3? Drawer A has <b>two wheels</b>, each 0 to F. What happens at <code>$FF</code> plus 1? Both wheels roll over to 0, and the 1 that should move on to a third wheel... has nowhere to go. There is no third wheel in the drawer.</p>
+    <figure><div id="fig61"></div><figcaption>Figure 18: <bdi class="ltr">$FF</bdi> plus 1. The drawer is left with <bdi class="ltr">$00</bdi>, and the 1 that fell out lights up lamp C.</figcaption></figure>
+    <p>The processor doesn’t forget that 1: it lights up a <b>lamp</b> called <b>C</b>. Every <code>ADDA</code> updates it: did the result go past <code>$FF</code>? The lamp is on. Did it fit? Off. <code>SUBA</code> updates it too: if we went below 0, the odometer turns back to <code>$FF</code>, and C lights up.</p>
+    <p>Try it yourself. The drawer starts with <code>$FE</code>:</p>
+    <div id="odo6"></div>
+    <ul class="missions" id="m6"></ul>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>Did you find something strange? <code>INCA</code> reaches exactly the same <code>$00</code> as <code>ADDA #1</code>, but <b>doesn’t touch lamp C</b>. That is how the 6809 processor was designed: INCA and DECA are fast “counting” instructions, and they leave C as it was.</p></div>
+    <div id="pw65"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">5</span>Back to zero: CLRA, and another test on C</h3>
+    <p><code>CLRA</code> (“clear A”) puts 0 in the drawer, and also turns lamp C off. In the next program it turns C off at the start, and then there are two ways to reach <code>$00</code>. Watch the lamp.</p>
+    <div id="pw66"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">6</span>Sums straight on the screen: INC and DEC</h3>
+    <p>Without the A at the end, <code>INC</code> and <code>DEC</code> work <b>straight on a house</b>: <code>INC $0500</code> goes to house <code>$0500</code>, adds 1 to the number written there, and writes it back. Drawer A takes no part at all.</p>
+    <div id="pw67"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">7</span>A line is missing</h3>
+    <p>We wanted to write ABC in the middle of the screen, with only one LDA.</p>
+    <div id="pw68"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>Puzzles</h3>
+    <p>As in the earlier chapters: your screen must match the picture. From now on a line with no name <b>starts with a space</b>, just like in DREAM.</p>
+    <div class="puzzle" id="pz61"></div>
+    <div class="puzzle" id="pz62"></div>
+    <div class="puzzle" id="pz63"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">▶</span>On the real Dragon</h3>
+    <p>All the programs in this chapter, and the puzzle solutions too, were typed into DREAM on our Dragon machine and run. We checked square by square that the screen matches the windows here. We also checked the <b>lamps</b>: we added lines at the end of each program that copy the lamps and the drawers onto the screen, and compared them with the window.</p>
+    <div class="machine" id="mach6"></div>
+  </div>
+
+  <div class="recap">
+    <div><b>What we learned:</b> <span class="ltr">INCA</span> plus 1, <span class="ltr">DECA</span> minus 1, <span class="ltr">ADDA</span> add, <span class="ltr">SUBA</span> subtract, <span class="ltr">CLRA</span> zero. <span class="ltr">INC</span> and <span class="ltr">DEC</span> work straight on a house.</div>
+    <div>The drawer rolls over like an odometer. ADDA and SUBA light up lamp C when you pass the edge. INCA and DECA don’t touch it.</div>
+    <div class="next">Next chapter: a new drawer, X. It doesn’t hold a letter, but the number of a house: a finger that points at a square.</div>
+    <button class="btn warm nextch" data-go="ch7">To Chapter 7 →</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">A hobbyist tribute project, not affiliated with or endorsed by <bdi>Dragon Data</bdi>. The course, drawings and text are our own. Every program in the course was checked on the site's <bdi>Dragon</bdi> machine (<bdi>XRoar</bdi> running the <bdi>BASIC</bdi> we wrote).</p>
+<script src="/en/learn/course.js"></script>
+</body>
+</html>

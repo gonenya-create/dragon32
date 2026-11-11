@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>פרק 0 · מה זה מחשב? רחוב של תאים — שפת מכונה בדראגון</title>
+<meta name="description" content="בסוף הקורס תכתוב בעצמך את המשחק הזה: תפוח צהוב נופל, ואתה תופס אותו בסל כחול. תכתוב אותו בשפה שבה נכתבו המשחקים המהירים של 1982: שפת מכונה.">
+<meta property="og:title" content="פרק 0 · מה זה מחשב? רחוב של תאים — שפת מכונה בדראגון">
+<meta property="og:description" content="בסוף הקורס תכתוב בעצמך את המשחק הזה: תפוח צהוב נופל, ואתה תופס אותו בסל כחול. תכתוב אותו בשפה שבה נכתבו המשחקים המהירים של 1982: שפת מכונה.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/learn/ch0/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/learn/ch0/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch0/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch0/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/learn/course.css">
+</head>
+<body data-ch="ch0">
+<nav class="site" aria-label="ניווט">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/en/learn/ch0/" lang="en" hreflang="en">English</a>
+  <a href="/learn/">כל הפרקים</a>
+  <a href="/">← לדף הבית</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>שפת מכונה מאפס</h1>
+    <p class="sub">קורס ל-דראגון 32 · פרקים 0 עד 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/learn/ch0/" data-tab="ch0">0 · רחוב של תאים<span class="done" data-done="0"></span></a>
+  <a href="/learn/ch1/" data-tab="ch1">1 · המסך הוא זיכרון<span class="done" data-done="1"></span></a>
+  <a href="/learn/ch2/" data-tab="ch2">2 · LDA ו-STA<span class="done" data-done="2"></span></a>
+  <a href="/learn/ch3/" data-tab="ch3">3 · מד המרחק<span class="done" data-done="3"></span></a>
+  <a href="/learn/ch4/" data-tab="ch4">4 · ארבע נורות<span class="done" data-done="4"></span></a>
+  <a href="/learn/ch5/" data-tab="ch5">5 · עם # או בלי<span class="done" data-done="5"></span></a>
+  <a href="/learn/ch6/" data-tab="ch6">6 · חשבון<span class="done" data-done="6"></span></a>
+  <a href="/learn/ch7/" data-tab="ch7">7 · האצבע X<span class="done" data-done="7"></span></a>
+  <a href="/learn/ch8/" data-tab="ch8">8 · צומת<span class="done" data-done="8"></span></a>
+  <a href="/learn/ch9/" data-tab="ch9">9 · לולאות<span class="done" data-done="9"></span></a>
+  <a href="/learn/ch10/" data-tab="ch10">10 · מקשים<span class="done" data-done="10"></span></a>
+  <a href="/learn/ch11/" data-tab="ch11">11 · תנועה<span class="done" data-done="11"></span></a>
+  <a href="/learn/ch12/" data-tab="ch12">12 · תת-תוכניות<span class="done" data-done="12"></span></a>
+  <a href="/learn/ch13/" data-tab="ch13">13 · מספרים ברחוב<span class="done" data-done="13"></span></a>
+  <a href="/learn/ch14/" data-tab="ch14">14 · המשחק<span class="done" data-done="14"></span></a>
+  <a href="/learn/ch15/" data-tab="ch15">15 · למכונה<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch0" id="ch0">
+  <div class="ch-head"><div><div class="num">פרק 0</div><h2 id="h-ch0">מה זה מחשב? רחוב של תאים</h2><div class="why0">בדראגון, כמו בכל מחשב, סופרים מאפס. אז גם אנחנו מתחילים כאן.</div></div><span class="time">כ-10 דקות · בלי קוד בכלל</span></div>
+
+  <div class="step">
+    <h3><span class="n">★</span>לאן אנחנו הולכים</h3>
+    <p>בסוף הקורס תכתוב בעצמך את המשחק הזה: תפוח צהוב נופל, ואתה תופס אותו בסל כחול. תכתוב אותו בשפה שבה נכתבו המשחקים המהירים של 1982: <b>שפת מכונה</b>.</p>
+    <div class="scr-wrap" id="teaser" style="max-width:420px;margin:8px auto"></div>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>שלום. אני אלווה אותך לאורך הקורס. נשמע קשה? אל דאגה. נלך לאט: בכל צעד רעיון אחד, ציור, ומשהו ללחוץ עליו. מי שמבין איך כותבים מספר בתא, כבר עשה את רוב הדרך.</p></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">1</span>הזיכרון הוא רחוב</h3>
+    <p>בתוך המחשב יש רחוב ארוך מאוד של בתים קטנים. לכל בית יש <b>מספר בית</b>, כמו ברחוב אמיתי.</p>
+    <p>בכל בית תלוי <b>לוח מחיק קטן</b>, ועליו כתוב <b>מספר אחד</b>. רק אחד, אף פעם לא שניים. המספר תמיד בין 0 ל-255.</p>
+    <figure><div id="fig01"></div><figcaption>ציור 1: רחוב התאים. על השלט: מספר הבית. על הלוח: המספר שגר בבית.</figcaption></figure>
+    <p>בדראגון יש 65,536 בתים כאלה. המשחק, האותיות על המסך, הצלילים: הכול מספרים על הלוחות האלה.</p>
+    <div class="note">על כל שלט יש שני כתיבים: <b>1024</b>, ומתחת בקטן <code>$0400</code>. זה אותו מספר, בכתיב של המחשב. כרגע אפשר להתעלם מהשורה הקטנה. נלמד אותה בפרק 3.</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>כתיבה: מוחקים, ואז כותבים</h3>
+    <p>כשכותבים מספר בבית, הלוח נמחק קודם. המספר הישן נעלם, והחדש נכתב במקומו.</p>
+    <figure><div id="fig02"></div><figcaption>ציור 2: היה 5. מוחקים. כותבים 7. עכשיו יש בלוח רק 7.</figcaption></figure>
+    <div class="quiz" data-quiz="q0a"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>קריאה: מצלמים, והמקור נשאר</h3>
+    <p>כשהמחשב קורא מספר מבית, הוא לא לוקח את הלוח. הוא <b>מצלם</b> אותו. העותק עובר לפתק ביד, והמספר נשאר בבית בדיוק כמו שהיה.</p>
+    <figure><div id="fig03"></div><figcaption>ציור 3: קריאה מצלמת. בבית 1025 עדיין 65, וגם בפתק 65.</figcaption></figure>
+    <div class="quiz" data-quiz="q0b"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>נסה בעצמך ברחוב</h3>
+    <p>לחץ על בית כדי לבחור אותו. אחר כך כתוב בו מספר, או צלם אותו לפתק.</p>
+    <div id="street1"></div>
+    <ul class="missions" id="m0"></ul>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>ניסית לכתוב 300? הלוח לא מסכים. הגדול ביותר שנכנס הוא 255. זה לא חוק שלנו, ככה זה בדראגון עצמו. למה דווקא 255? נגלה בפרק 4.</p></div>
+    <div class="machine"><b>מה קורה בדראגון האמיתי עם 300?</b> ב-BASIC הפקודה <code>POKE 1024,300</code> עונה <code>?FC ERROR</code>. ב-DREAM השורה <code>LDA #300</code> לא מתלוננת, אבל שומרת רק מה שנכנס: 44 (כי 300 פחות 256). <span class="verified">✓ שניהם נבדקו במכונה שלנו</span></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>חידות</h3>
+    <div class="puzzle">
+      <span class="tag">חידה 1 · מעקב</span>
+      <p>בהתחלה, בבית 1030 כתוב 4. עכשיו עושים לפי הסדר:</p>
+      <ol>
+        <li>כותבים 8 בבית 1030.</li>
+        <li>מצלמים את בית 1030 לפתק.</li>
+        <li>כותבים 2 בבית 1030.</li>
+        <li>כותבים את מה שבפתק בבית 1031.</li>
+      </ol>
+      <div class="row">בבית 1030 יש: <input class="num" id="t1a" inputmode="numeric"> ובבית 1031 יש: <input class="num" id="t1b" inputmode="numeric"> <button class="btn" id="t1go">בדוק</button></div>
+      <div class="fb" id="t1fb"></div>
+    </div>
+    <div class="puzzle">
+      <span class="tag">חידה 2 · העתקה בלי להקליד</span>
+      <p>העתק את המספר מבית 1029 לבית 1033, בלי להקליד אותו. מותר רק "צלם לפתק" ו"כתוב מהפתק".</p>
+      <div id="street2"></div>
+      <div class="fb" id="s2fb"></div>
+    </div>
+  </div>
+
+  <div class="recap">
+    <div><b>מה למדנו:</b> הזיכרון הוא רחוב של בתים ממוספרים, ובכל בית לוח עם מספר אחד בין 0 ל-255.</div>
+    <div>כתיבה מוחקת את הישן וכותבת חדש. קריאה מצלמת, והמקור נשאר.</div>
+    <div class="next">בפרק הבא: סוד קטן. חלק מהרחוב הזה הוא המסך עצמו.</div>
+    <button class="btn warm nextch" data-go="ch1">לפרק 1 ←</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">פרויקט מחווה של חובב, לא קשור ל-<bdi>Dragon Data</bdi> ולא מורשה על ידה. הקורס, הציורים והטקסט שלנו. כל תוכנית בקורס נבדקה במכונת ה-<bdi>Dragon</bdi> של האתר (<bdi>XRoar</bdi> עם ה-<bdi>BASIC</bdi> שכתבנו).</p>
+<script src="/learn/course.js"></script>
+</body>
+</html>

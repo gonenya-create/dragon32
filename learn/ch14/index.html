@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>פרק 14 · הפרויקט: משחק &quot;תפוס&quot; — שפת מכונה בדראגון</title>
+<meta name="description" content="זוכר את המשחק שראית בפרק 0? תפוח צהוב נופל, וסל כחול בשורה התחתונה תופס אותו. עכשיו אתה יודע את כל מה שצריך כדי לכתוב אותו. לא בבת אחת: בחמישה שלבים, וכל…">
+<meta property="og:title" content="פרק 14 · הפרויקט: משחק &quot;תפוס&quot; — שפת מכונה בדראגון">
+<meta property="og:description" content="זוכר את המשחק שראית בפרק 0? תפוח צהוב נופל, וסל כחול בשורה התחתונה תופס אותו. עכשיו אתה יודע את כל מה שצריך כדי לכתוב אותו. לא בבת אחת: בחמישה שלבים, וכל…">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/learn/ch14/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/learn/ch14/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch14/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch14/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/learn/course.css">
+</head>
+<body data-ch="ch14">
+<nav class="site" aria-label="ניווט">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/en/learn/ch14/" lang="en" hreflang="en">English</a>
+  <a href="/learn/">כל הפרקים</a>
+  <a href="/">← לדף הבית</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>שפת מכונה מאפס</h1>
+    <p class="sub">קורס ל-דראגון 32 · פרקים 0 עד 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/learn/ch0/" data-tab="ch0">0 · רחוב של תאים<span class="done" data-done="0"></span></a>
+  <a href="/learn/ch1/" data-tab="ch1">1 · המסך הוא זיכרון<span class="done" data-done="1"></span></a>
+  <a href="/learn/ch2/" data-tab="ch2">2 · LDA ו-STA<span class="done" data-done="2"></span></a>
+  <a href="/learn/ch3/" data-tab="ch3">3 · מד המרחק<span class="done" data-done="3"></span></a>
+  <a href="/learn/ch4/" data-tab="ch4">4 · ארבע נורות<span class="done" data-done="4"></span></a>
+  <a href="/learn/ch5/" data-tab="ch5">5 · עם # או בלי<span class="done" data-done="5"></span></a>
+  <a href="/learn/ch6/" data-tab="ch6">6 · חשבון<span class="done" data-done="6"></span></a>
+  <a href="/learn/ch7/" data-tab="ch7">7 · האצבע X<span class="done" data-done="7"></span></a>
+  <a href="/learn/ch8/" data-tab="ch8">8 · צומת<span class="done" data-done="8"></span></a>
+  <a href="/learn/ch9/" data-tab="ch9">9 · לולאות<span class="done" data-done="9"></span></a>
+  <a href="/learn/ch10/" data-tab="ch10">10 · מקשים<span class="done" data-done="10"></span></a>
+  <a href="/learn/ch11/" data-tab="ch11">11 · תנועה<span class="done" data-done="11"></span></a>
+  <a href="/learn/ch12/" data-tab="ch12">12 · תת-תוכניות<span class="done" data-done="12"></span></a>
+  <a href="/learn/ch13/" data-tab="ch13">13 · מספרים ברחוב<span class="done" data-done="13"></span></a>
+  <a href="/learn/ch14/" data-tab="ch14">14 · המשחק<span class="done" data-done="14"></span></a>
+  <a href="/learn/ch15/" data-tab="ch15">15 · למכונה<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch14" id="ch14">
+  <div class="ch-head"><div><div class="num">פרק 14</div><h2 id="h-ch14">הפרויקט: משחק "תפוס"</h2></div><span class="time">כ-40 דקות · חמישה שלבים</span></div>
+
+  <div class="step">
+    <h3><span class="n">★</span>המשחק מפרק 0</h3>
+    <p>זוכר את המשחק שראית בפרק 0? תפוח צהוב נופל, וסל כחול בשורה התחתונה תופס אותו. עכשיו אתה יודע את כל מה שצריך כדי לכתוב אותו. לא בבת אחת: בחמישה שלבים, וכל שלב הוא תוכנית שעובדת לבד.</p>
+    <figure><div id="fig141"></div><figcaption>ציור 29: חמשת השלבים. 1: סל שזז בחצים. 2: תפוח שנופל. 3: שניהם יחד, ובדיקה אם נתפס. 4: ניקוד, וחמישה תפוחים. 5: כל תפוח נופל ממקום אחר.</figcaption></figure>
+    <p>בכל שלב חסרה שורה אחת, ויש שלוש אפשרויות. נסה גם את הלא נכונות: הן מראות מה כל שורה עושה. את השלב האחרון תכתוב לבד.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">1</span>שלב 1: סל שזז</h3>
+    <p>הסל (‏<code>$AF</code>, כחול) בשורה התחתונה. האצבע שלו היא Y. חץ שמאלה מזיז אותו צעד שמאלה, חץ ימינה צעד ימינה, ו-Q יוצאת. ובקירות הוא נעצר: ‏<code>CMPY #$05E0</code> שואלת "אני כבר בקצה השמאלי?".</p>
+    <p>אין כאן שום דבר חדש: זה הריבוע בחיצים מפרק 11, רק בשורה התחתונה.</p>
+    <div id="pw141"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>שלב 2: תפוח שנופל</h3>
+    <p>התפוח (‏<code>$9F</code>, צהוב) מתחיל בשורה 1, בעמודה 16, ונופל עד השורה התחתונה. כמו התפוח מהחידה בפרק 11. רק דבר אחד חדש: האצבע שלו היא <b>U</b>, אצבע שלישית (סגולה). ‏X עסוקה בבודק המקלדת, Y בסל. ‏U עובדת בדיוק כמו Y: ‏<code>LDU</code>, ‏<code>STA ,U</code>, ‏<code>LEAU</code>, ‏<code>CMPU</code>.</p>
+    <div id="pw142"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>שלב 3: שניהם יחד, ונתפס או לא?</h3>
+    <p>הקושי: הסל צריך לזוז <b>בזמן</b> שהתפוח נופל. אבל לולאת המקלדת מפרק 10 מחכה למקש, ובזמן הזה שום דבר לא זז. לכן הלולאה הגדולה עושה בכל סיבוב <b>קצת מכל דבר</b>:</p>
+    <ol>
+      <li>מציירת את הסל ואת התפוח.</li>
+      <li>מחכה רגע קצר (‏<code>LDX #800</code>: בערך 7 אלפיות שנייה).</li>
+      <li>שואלת את המקלדת <b>פעם אחת</b>. לא נלחץ כלום? לא מחכים: ממשיכים הלאה.</li>
+      <li>נלחץ חץ? מזיזה את הסל.</li>
+      <li>ורק פעם ב-25 סיבובים: התפוח יורד שורה.</li>
+    </ol>
+    <p>איך יודעים מתי עברו 25 סיבובים? צריך <b>מונה</b>, וכל המגירות תפוסות. אז שומרים אותו בזיכרון, בבית משלו, אחרי הסוף הקבוע: <code>TICK FCB 25</code>. ‏<code>FCB</code> היא לא פקודה למעבד. היא אומרת ל-DREAM: "שים כאן בית אחד, ובו 25". ‏<code>DEC TICK</code> מורידה ממנו 1, ישר בזיכרון. ראית בפרק 13: התוכנית גרה ברחוב, אז יכולים לגור לידה גם המספרים שלה.</p>
+    <p>וכשהתפוח מגיע לשורה התחתונה? <b>מסתכלים מה יש על המסך</b> במקום שאליו הוא נוחת: ‏<code>LDA ,U</code>. יש שם כחול (‏<code>$AF</code>)? הוא נחת בסל. כותבים Y (כן) או N (לא) בפינה, ונגמר.</p>
+    <div id="pw143"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>שלב 4: ניקוד, וחמישה תפוחים</h3>
+    <p>עוד שני בתים בזיכרון: <code>SCORE</code> (הניקוד) ו-<code>LEFT</code> (כמה תפוחים נשארו). בהתחלה <code>CLR SCORE</code> מאפסת את הניקוד. כל תפוח שנתפס: <code>INC SCORE</code>. אחרי כל תפוח: <code>DEC LEFT</code>, ותפוח חדש מלמעלה. אחרי חמישה, הסוף.</p>
+    <p>הניקוד מופיע בפינה כספרה: <code>$70</code> היא הספרה 0 על המסך, אז <code>$70</code> ועוד הניקוד היא הספרה של הניקוד.</p>
+    <div id="pw144"></div>
+    <div class="quiz" data-quiz="q14a"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">5</span>שלב 5: כל תפוח ממקום אחר. הפעם לבד</h3>
+    <div class="puzzle" id="pz141"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">▶</span>בדראגון האמיתי</h3>
+    <div class="machine" id="mach14"></div>
+  </div>
+
+  <div class="recap">
+    <div><b>מה למדנו:</b> משחק נבנה בשלבים, וכל שלב נבדק לבד. לולאה אחת עושה בכל סיבוב קצת מכל דבר: מציירת, מחכה קצת, שואלת את המקלדת בלי לחכות, ומזיזה.</div>
+    <div>‏<span class="ltr">FCB</span> שומרת בית בזיכרון למספר (מונה, ניקוד). ‏U היא אצבע שלישית. ‏<span class="ltr">ANDB #31</span> חותכת מספר לעמודה בין 0 ל-31.</div>
+    <div class="next">בפרק האחרון: לוקחים את המשחק למכונה, שומרים אותו בקלטת, ומריצים על דראגון אמיתי.</div>
+    <button class="btn warm nextch" data-go="ch15">לפרק 15 ←</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">פרויקט מחווה של חובב, לא קשור ל-<bdi>Dragon Data</bdi> ולא מורשה על ידה. הקורס, הציורים והטקסט שלנו. כל תוכנית בקורס נבדקה במכונת ה-<bdi>Dragon</bdi> של האתר (<bdi>XRoar</bdi> עם ה-<bdi>BASIC</bdi> שכתבנו).</p>
+<script src="/learn/course.js"></script>
+</body>
+</html>

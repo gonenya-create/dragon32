@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>פרק 5 · עם סולמית או בלי — שפת מכונה בדראגון</title>
+<meta name="description" content="עם #: LDA #$41 אומרת &quot;הנה המספר&quot;. $41 נכנס למגירה.">
+<meta property="og:title" content="פרק 5 · עם סולמית או בלי — שפת מכונה בדראגון">
+<meta property="og:description" content="עם #: LDA #$41 אומרת &quot;הנה המספר&quot;. $41 נכנס למגירה.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/learn/ch5/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/learn/ch5/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch5/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch5/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/learn/course.css">
+</head>
+<body data-ch="ch5">
+<nav class="site" aria-label="ניווט">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/en/learn/ch5/" lang="en" hreflang="en">English</a>
+  <a href="/learn/">כל הפרקים</a>
+  <a href="/">← לדף הבית</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>שפת מכונה מאפס</h1>
+    <p class="sub">קורס ל-דראגון 32 · פרקים 0 עד 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/learn/ch0/" data-tab="ch0">0 · רחוב של תאים<span class="done" data-done="0"></span></a>
+  <a href="/learn/ch1/" data-tab="ch1">1 · המסך הוא זיכרון<span class="done" data-done="1"></span></a>
+  <a href="/learn/ch2/" data-tab="ch2">2 · LDA ו-STA<span class="done" data-done="2"></span></a>
+  <a href="/learn/ch3/" data-tab="ch3">3 · מד המרחק<span class="done" data-done="3"></span></a>
+  <a href="/learn/ch4/" data-tab="ch4">4 · ארבע נורות<span class="done" data-done="4"></span></a>
+  <a href="/learn/ch5/" data-tab="ch5">5 · עם # או בלי<span class="done" data-done="5"></span></a>
+  <a href="/learn/ch6/" data-tab="ch6">6 · חשבון<span class="done" data-done="6"></span></a>
+  <a href="/learn/ch7/" data-tab="ch7">7 · האצבע X<span class="done" data-done="7"></span></a>
+  <a href="/learn/ch8/" data-tab="ch8">8 · צומת<span class="done" data-done="8"></span></a>
+  <a href="/learn/ch9/" data-tab="ch9">9 · לולאות<span class="done" data-done="9"></span></a>
+  <a href="/learn/ch10/" data-tab="ch10">10 · מקשים<span class="done" data-done="10"></span></a>
+  <a href="/learn/ch11/" data-tab="ch11">11 · תנועה<span class="done" data-done="11"></span></a>
+  <a href="/learn/ch12/" data-tab="ch12">12 · תת-תוכניות<span class="done" data-done="12"></span></a>
+  <a href="/learn/ch13/" data-tab="ch13">13 · מספרים ברחוב<span class="done" data-done="13"></span></a>
+  <a href="/learn/ch14/" data-tab="ch14">14 · המשחק<span class="done" data-done="14"></span></a>
+  <a href="/learn/ch15/" data-tab="ch15">15 · למכונה<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch5" id="ch5">
+  <div class="ch-head"><div><div class="num">פרק 5</div><h2 id="h-ch5">עם סולמית או בלי</h2></div><span class="time">כ-20 דקות · LDA לומדת לקרוא</span></div>
+
+  <div class="step">
+    <h3><span class="n">1</span>שתי דרכים לתת ל-LDA מספר</h3>
+    <p>עם <code>#</code>: ‏<code>LDA #$41</code> אומרת "<b>הנה המספר</b>". ‏$41 נכנס למגירה.</p>
+    <p>בלי <code>#</code>: ‏<code>LDA $0400</code> אומרת "<b>לך לבית $0400, צלם מה שכתוב שם, ושים במגירה</b>". מה שנכנס למגירה תלוי במה שיש בבית באותו רגע.</p>
+    <figure><div id="fig51"></div><figcaption>ציור 16: עם סולמית, המספר ביד. בלי סולמית, המספר הוא כתובת, והולכים לבית.</figcaption></figure>
+    <div class="quiz" data-quiz="q5a"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>קריאה מצלמת, כתיבה מוחקת</h3>
+    <p>זה בדיוק מה שעשית ברחוב בפרק 0: "צלם לפתק" ו"כתוב מהפתק". ‏<code>LDA $0400</code> מצלמת את הבית, והבית לא משתנה. ‏<code>STA $0401</code> מוחקת וכותבת.</p>
+    <figure><div id="fig52"></div><figcaption>ציור 17: העתקה מבית לבית בשתי שורות. בסוף 65 בשני הבתים, וגם במגירה.</figcaption></figure>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>מעתיקים על המסך</h3>
+    <div id="pw51"></div>
+    <div id="pw52"></div>
+    <div id="pw53"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>חסרה שורה</h3>
+    <p>רצינו להעתיק את המשבצת האדומה מהפינה השמאלית העליונה לפינה הימנית התחתונה.</p>
+    <div id="pw54"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">5</span>שתי טעויות סולמית</h3>
+    <p><b>טעות 1: סולמית על בית.</b> מישהו רצה להעתיק את הפינה, וכתב <code>LDA #$0400</code>. עם סולמית זה כבר לא בית, זה מספר. אבל $0400 גדול מדי למגירה: הוא צריך יותר משמונה נורות.</p>
+    <div class="row" style="justify-content:center"><div style="width:min(300px,100%)"><div id="broken5"></div></div></div>
+    <p>מה קורה ב-DREAM? שום תלונה. המתרגם שומר רק את מה שנכנס בשמונה נורות, <code>$00</code>, ובפינה מופיעה @ הפוכה (קוד 0). לא העתקנו כלום. <span class="verified">✓ נבדק ב-DREAM</span></p>
+    <p><b>טעות 2: סולמית ב-STA.</b> ‏<code>STA #$0400</code> לא אומרת כלום: STA תמיד כותבת <b>לבית</b>, ואין לה מה לעשות עם "הנה מספר".</p>
+    <p>גם כאן DREAM לא מתלונן: הוא מתרגם את השורה לקוד מוזר (<code>$87</code>) שאין לו משמעות מוגדרת במעבד 6809. במכונה שלנו לא נכתב כלום על המסך. במעבד אמיתי התוצאה לא מובטחת, אז פשוט לא כותבים ככה. <span class="verified">✓ נבדק ב-DREAM</span></p>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>כלל אצבע: <b>#</b> = "הנה המספר". בלי <b>#</b> = "לך לבית". ב-STA אף פעם אין סולמית.</p></div>
+    <div class="quiz" data-quiz="q5b"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>חידות: בלי סולמית</h3>
+    <p>בחידות האלה השורות הראשונות כבר כתובות (הן מציירות משהו על המסך). אתה ממשיך אחריהן, ו<b>בשורות שלך אסור להשתמש ב-#</b>. מותר רק להעתיק.</p>
+    <div class="puzzle" id="pz51"></div>
+    <div class="puzzle" id="pz52"></div>
+    <div class="puzzle" id="pz53"></div>
+  </div>
+
+  <div class="note">כל התוכניות בפרק, וגם הפתרונות של החידות (כולל השורות הנעולות), הוקלדו ב-DREAM במכונה שלנו והורצו. גם שם, אחרי BREAK X, המסך מתחיל נקי: בכל משבצת <code>$60</code>. לכן "משבצת ריקה" בדוגמה 2 היא באמת ריקה. <span class="verified">✓ נבדק</span></div>
+
+  <div class="recap">
+    <div><b>מה למדנו:</b> ‏<span class="ltr">LDA #$41</span> = המספר עצמו. ‏<span class="ltr">LDA $0400</span> = מה שיש בבית $0400 עכשיו.</div>
+    <div>קריאה מצלמת והבית נשאר. ‏STA תמיד בלי סולמית. ככה מעתיקים בלי לדעת מה מעתיקים.</div>
+    <div class="next">בפרק הבא: חשבון. המגירה לומדת להוסיף 1, והמד מתהפך גם בתוך המעבד.</div>
+    <button class="btn warm nextch" data-go="ch6">לפרק 6 ←</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">פרויקט מחווה של חובב, לא קשור ל-<bdi>Dragon Data</bdi> ולא מורשה על ידה. הקורס, הציורים והטקסט שלנו. כל תוכנית בקורס נבדקה במכונת ה-<bdi>Dragon</bdi> של האתר (<bdi>XRoar</bdi> עם ה-<bdi>BASIC</bdi> שכתבנו).</p>
+<script src="/learn/course.js"></script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 5 · With # or without — Machine Code on the Dragon</title>
+<meta name="description" content="With #: LDA #$41 says “here is the number”. $41 goes into the drawer.">
+<meta property="og:title" content="Chapter 5 · With # or without — Machine Code on the Dragon">
+<meta property="og:description" content="With #: LDA #$41 says “here is the number”. $41 goes into the drawer.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/en/learn/ch5/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/en/learn/ch5/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch5/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch5/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/en/learn/course.css">
+</head>
+<body data-ch="ch5">
+<nav class="site" aria-label="Navigation">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/learn/ch5/" lang="he" hreflang="he">עברית</a>
+  <a href="/en/learn/">All chapters</a>
+  <a href="/en/">← Home</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>Machine code from zero</h1>
+    <p class="sub">A course for the Dragon 32 · Chapters 0 to 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/en/learn/ch0/" data-tab="ch0">0 · A street of houses<span class="done" data-done="0"></span></a>
+  <a href="/en/learn/ch1/" data-tab="ch1">1 · The screen is memory<span class="done" data-done="1"></span></a>
+  <a href="/en/learn/ch2/" data-tab="ch2">2 · LDA and STA<span class="done" data-done="2"></span></a>
+  <a href="/en/learn/ch3/" data-tab="ch3">3 · The odometer<span class="done" data-done="3"></span></a>
+  <a href="/en/learn/ch4/" data-tab="ch4">4 · Four lamps<span class="done" data-done="4"></span></a>
+  <a href="/en/learn/ch5/" data-tab="ch5">5 · With # or without<span class="done" data-done="5"></span></a>
+  <a href="/en/learn/ch6/" data-tab="ch6">6 · Sums<span class="done" data-done="6"></span></a>
+  <a href="/en/learn/ch7/" data-tab="ch7">7 · The finger X<span class="done" data-done="7"></span></a>
+  <a href="/en/learn/ch8/" data-tab="ch8">8 · Crossroads<span class="done" data-done="8"></span></a>
+  <a href="/en/learn/ch9/" data-tab="ch9">9 · Loops<span class="done" data-done="9"></span></a>
+  <a href="/en/learn/ch10/" data-tab="ch10">10 · Keys<span class="done" data-done="10"></span></a>
+  <a href="/en/learn/ch11/" data-tab="ch11">11 · Movement<span class="done" data-done="11"></span></a>
+  <a href="/en/learn/ch12/" data-tab="ch12">12 · Subroutines<span class="done" data-done="12"></span></a>
+  <a href="/en/learn/ch13/" data-tab="ch13">13 · Numbers on the street<span class="done" data-done="13"></span></a>
+  <a href="/en/learn/ch14/" data-tab="ch14">14 · The game<span class="done" data-done="14"></span></a>
+  <a href="/en/learn/ch15/" data-tab="ch15">15 · To the machine<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch5" id="ch5">
+  <div class="ch-head"><div><div class="num">Chapter 5</div><h2 id="h-ch5">With # or without</h2></div><span class="time">About 20 minutes · LDA learns to read</span></div>
+
+  <div class="step">
+    <h3><span class="n">1</span>Two ways to give LDA a number</h3>
+    <p>With <code>#</code>: <code>LDA #$41</code> says “<b>here is the number</b>”. $41 goes into the drawer.</p>
+    <p>Without <code>#</code>: <code>LDA $0400</code> says “<b>go to house $0400, copy what is written there, and put it in the drawer</b>”. What goes into the drawer depends on what is in the house at that moment.</p>
+    <figure><div id="fig51"></div><figcaption>Figure 16: with a hash sign, the number is in your hand. Without a hash sign, the number is an address, and you go to the house.</figcaption></figure>
+    <div class="quiz" data-quiz="q5a"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>Reading takes a photo, writing rubs out</h3>
+    <p>This is exactly what you did on the street in Chapter 0: “Photo to the note” and “Write from the note”. <code>LDA $0400</code> takes a photo of the house, and the house doesn’t change. <code>STA $0401</code> rubs out and writes.</p>
+    <figure><div id="fig52"></div><figcaption>Figure 17: copying from house to house in two lines. At the end, 65 in both houses, and in the drawer too.</figcaption></figure>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>Copying on the screen</h3>
+    <div id="pw51"></div>
+    <div id="pw52"></div>
+    <div id="pw53"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>A line is missing</h3>
+    <p>We wanted to copy the red square from the top left corner to the bottom right corner.</p>
+    <div id="pw54"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">5</span>Two hash-sign mistakes</h3>
+    <p><b>Mistake 1: a hash sign on a house.</b> Someone wanted to copy the corner, and wrote <code>LDA #$0400</code>. With a hash sign it isn’t a house any more, it’s a number. But $0400 is too big for the drawer: it needs more than eight lamps.</p>
+    <div class="row" style="justify-content:center"><div style="width:min(300px,100%)"><div id="broken5"></div></div></div>
+    <p>What happens in DREAM? No complaint at all. The translator keeps only what fits in eight lamps, <code>$00</code>, and an inverse @ appears in the corner (code 0). We copied nothing. <span class="verified">✓ Checked in DREAM</span></p>
+    <p><b>Mistake 2: a hash sign in STA.</b> <code>STA #$0400</code> means nothing: STA always writes <b>to a house</b>, and has nothing to do with “here is a number”.</p>
+    <p>Here too DREAM doesn’t complain: it translates the line into a strange code (<code>$87</code>) that has no defined meaning in the 6809 processor. On our Dragon machine nothing was written on the screen. On a real processor the result isn’t guaranteed, so simply don’t write it that way. <span class="verified">✓ Checked in DREAM</span></p>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>Rule of thumb: <b>#</b> = “here is the number”. Without <b>#</b> = “go to the house”. STA never has a hash sign.</p></div>
+    <div class="quiz" data-quiz="q5b"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>Puzzles: no hash sign</h3>
+    <p>In these puzzles the first lines are already written (they draw something on the screen). You carry on after them, and <b>in your lines you may not use #</b>. You may only copy.</p>
+    <div class="puzzle" id="pz51"></div>
+    <div class="puzzle" id="pz52"></div>
+    <div class="puzzle" id="pz53"></div>
+  </div>
+
+  <div class="note">All the programs in this chapter, and the puzzle solutions too (including the locked lines), were typed into DREAM on our Dragon machine and run. There too, after BREAK X, the screen starts clean: every square holds <code>$60</code>. So the “empty square” in example 2 really is empty. <span class="verified">✓ Checked</span></div>
+
+  <div class="recap">
+    <div><b>What we learned:</b> <span class="ltr">LDA #$41</span> = the number itself. <span class="ltr">LDA $0400</span> = what is in house $0400 right now.</div>
+    <div>Reading copies, and the house stays as it is. STA never has a hash sign. That’s how we copy without knowing what we are copying.</div>
+    <div class="next">Next chapter: sums. The drawer learns to add 1, and the odometer rolls over inside the processor too.</div>
+    <button class="btn warm nextch" data-go="ch6">To Chapter 6 →</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">A hobbyist tribute project, not affiliated with or endorsed by <bdi>Dragon Data</bdi>. The course, drawings and text are our own. Every program in the course was checked on the site's <bdi>Dragon</bdi> machine (<bdi>XRoar</bdi> running the <bdi>BASIC</bdi> we wrote).</p>
+<script src="/en/learn/course.js"></script>
+</body>
+</html>

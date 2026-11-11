@@ -1758,6 +1758,65 @@ if (part('lessons and magazine')) {
   await p.close();
 }
 
+// פינת הלמידה: קורס שפת המכונה, דף לכל פרק (tools/learn/build.mjs). הכפתור "שלח למכונת הדראגון" שם קלטת ב"הקלטות שלי"
+if (part('learn')) {
+  console.log('\nlearn');
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 800 } });
+  await ctx.addInitScript(() => { window.open = u => { window.__opened = u; return null; }; });   // בלי לפתוח את המכונה עצמה
+  const p = await ctx.newPage();
+  const errs = [];
+  p.on('pageerror', e => errs.push(e.message));
+  const langs = ['/learn/'];
+  if (await p.request.get(new URL('/en/learn/', PAGE).href).then(r => r.ok())) langs.push('/en/learn/');
+  for (const base of langs) {
+    const bad = [];
+    for (const path of [base, ...Array.from({ length: 16 }, (_, i) => base + 'ch' + i + '/')]) {
+      const before = errs.length;
+      const r = await p.goto(new URL(path, PAGE).href);
+      await p.waitForTimeout(150);
+      const sw = await p.evaluate(() => document.documentElement.scrollWidth);
+      if (!r.ok() || errs.length > before || sw > 390) bad.push(path + ' (' + (r.ok() ? '' : 'status ' + r.status() + ' ') + (sw > 390 ? 'width ' + sw + ' ' : '') + errs.slice(before).join('; ') + ')');
+    }
+    check(`${base}: the landing page and all 16 chapters load, no page errors, no sideways scroll at 390px`, !bad.length, bad.join('\n'));
+    await p.goto(new URL(base + 'ch3/', PAGE).href);
+    const html = await p.content();
+    check(`${base}ch3/: own title, description, canonical, and the chapter is marked in the chapter list`, /<title>[^<]*3[^<]*<\/title>/.test(html) && /name="description" content="[^"]{40,}/.test(html) && html.includes(`rel="canonical" href="https://dragon1982.com${base}ch3/"`) && await p.locator('nav.toc a.on[data-tab="ch3"]').count() === 1);
+    await p.locator('nav.toc a[data-tab="ch4"]').click();
+    const nav1 = await p.waitForURL(u => u.pathname === base + 'ch4/', { timeout: 5000 }).then(() => true, () => false);
+    await p.locator('#ch4 .nextch').click();
+    const nav2 = await p.waitForURL(u => u.pathname === base + 'ch5/', { timeout: 5000 }).then(() => true, () => false);
+    check(`${base}: the chapter list and the "next chapter" button go to the other pages`, nav1 && nav2);
+  }
+  const sm = await p.request.get(new URL('/sitemap.xml', PAGE).href).then(r => r.text());
+  check('sitemap has /learn/ and its 16 chapters', sm.includes('<loc>https://dragon1982.com/learn/</loc>') && sm.includes('<loc>https://dragon1982.com/learn/ch15/</loc>'));
+  // חידה: הפתרון עובר, והפרק מסומן ✓ גם בדפים האחרים (אותו מפתח בדפדפן)
+  await p.goto(new URL('/learn/ch12/', PAGE).href);
+  await p.evaluate(() => { localStorage.removeItem('mc-course-done'); localStorage.removeItem('d32-lab-tapes'); });
+  await p.locator('#pz121 textarea').fill(await p.evaluate(() => PRG12.pz121.solution));
+  await p.locator('#pz121 .go').click();
+  await p.waitForTimeout(1500);
+  check('/learn/ch12/: the solution of puzzle 1 (subroutine LINE) passes', await p.locator('#pz121 .fb.ok').count() > 0, (await p.locator('#pz121').textContent()).slice(-300));
+  await p.goto(new URL('/learn/ch15/', PAGE).href);
+  await p.locator('#cert15 .certname').fill('Test');
+  await p.locator('#cert15 .certgo').click();
+  await p.goto(new URL('/learn/ch3/', PAGE).href);
+  const badge = await p.locator('nav.toc [data-done="15"]').textContent();
+  await p.goto(new URL('/learn/', PAGE).href);
+  check('progress: the chapter 15 certificate puts ✓ on chapter 15 in the other pages and on the landing page', /✓/.test(badge) && /✓/.test(await p.locator('ol.chapters [data-done="15"]').textContent()));
+  // שלח למכונת הדראגון: קלטת שפת מכונה כמו של CSAVEM, ב"הקלטות שלי" של המכונה, והמכונה נפתחת
+  await p.goto(new URL('/learn/ch15/', PAGE).href);
+  await p.locator('#pw151 .sendgo').click();
+  const tape = await p.evaluate(() => { const t = JSON.parse(localStorage.getItem('d32-lab-tapes'))[0]; return { n: t.n, hdr: t.b[0].slice(9), len: t.b.filter(b => b[0] === 1).reduce((a, b) => a + b.length - 1, 0), end: t.b[t.b.length - 1][0], opened: window.__opened }; });
+  check('/learn/ch15/: "send to the Dragon machine" puts the tape CATCH (154 bytes, machine code at $2EE1) in My tapes and opens the machine',
+    tape.n === 'CATCH' && tape.hdr.join() === [2, 0, 0, 0x2e, 0xe1, 0x2e, 0xe1].join() && tape.len === 154 && tape.end === 255 && tape.opened === '/lab/1982/?learn=CATCH', JSON.stringify(tape));
+  await p.goto(new URL('/learn/ch2/', PAGE).href);
+  await p.locator('#pw6 .sendgo').click();
+  check('/learn/ch2/: a window with a missing line asks for the line before sending', /השורה החסרה/.test(await p.locator('#pw6 .sendsay').textContent()));
+  await p.evaluate(() => { localStorage.removeItem('mc-course-done'); localStorage.removeItem('d32-lab-tapes'); localStorage.removeItem('d32course-name'); });
+  check('learn: no page errors', !errs.length, errs.join('\n'));
+  await ctx.close();
+}
+
 if (part('real machine lab')) {
   console.log('real machine lab');
   {

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 1 · The screen is memory — Machine Code on the Dragon</title>
+<meta name="description" content="The houses from 1024 to 1535 are special. Each one of them is a square on the screen. What is written on the house’s board is what the square shows.">
+<meta property="og:title" content="Chapter 1 · The screen is memory — Machine Code on the Dragon">
+<meta property="og:description" content="The houses from 1024 to 1535 are special. Each one of them is a square on the screen. What is written on the house’s board is what the square shows.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/en/learn/ch1/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/en/learn/ch1/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch1/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch1/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/en/learn/course.css">
+</head>
+<body data-ch="ch1">
+<nav class="site" aria-label="Navigation">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/learn/ch1/" lang="he" hreflang="he">עברית</a>
+  <a href="/en/learn/">All chapters</a>
+  <a href="/en/">← Home</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>Machine code from zero</h1>
+    <p class="sub">A course for the Dragon 32 · Chapters 0 to 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/en/learn/ch0/" data-tab="ch0">0 · A street of houses<span class="done" data-done="0"></span></a>
+  <a href="/en/learn/ch1/" data-tab="ch1">1 · The screen is memory<span class="done" data-done="1"></span></a>
+  <a href="/en/learn/ch2/" data-tab="ch2">2 · LDA and STA<span class="done" data-done="2"></span></a>
+  <a href="/en/learn/ch3/" data-tab="ch3">3 · The odometer<span class="done" data-done="3"></span></a>
+  <a href="/en/learn/ch4/" data-tab="ch4">4 · Four lamps<span class="done" data-done="4"></span></a>
+  <a href="/en/learn/ch5/" data-tab="ch5">5 · With # or without<span class="done" data-done="5"></span></a>
+  <a href="/en/learn/ch6/" data-tab="ch6">6 · Sums<span class="done" data-done="6"></span></a>
+  <a href="/en/learn/ch7/" data-tab="ch7">7 · The finger X<span class="done" data-done="7"></span></a>
+  <a href="/en/learn/ch8/" data-tab="ch8">8 · Crossroads<span class="done" data-done="8"></span></a>
+  <a href="/en/learn/ch9/" data-tab="ch9">9 · Loops<span class="done" data-done="9"></span></a>
+  <a href="/en/learn/ch10/" data-tab="ch10">10 · Keys<span class="done" data-done="10"></span></a>
+  <a href="/en/learn/ch11/" data-tab="ch11">11 · Movement<span class="done" data-done="11"></span></a>
+  <a href="/en/learn/ch12/" data-tab="ch12">12 · Subroutines<span class="done" data-done="12"></span></a>
+  <a href="/en/learn/ch13/" data-tab="ch13">13 · Numbers on the street<span class="done" data-done="13"></span></a>
+  <a href="/en/learn/ch14/" data-tab="ch14">14 · The game<span class="done" data-done="14"></span></a>
+  <a href="/en/learn/ch15/" data-tab="ch15">15 · To the machine<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch1" id="ch1">
+  <div class="ch-head"><div><div class="num">Chapter 1</div><h2 id="h-ch1">The screen is memory</h2></div><span class="time">About 15 minutes · still no code</span></div>
+
+  <div class="step">
+    <h3><span class="n">1</span>The secret: 512 houses you can see</h3>
+    <p>The houses from 1024 to 1535 are special. Each one of them is a <b>square on the screen</b>. What is written on the house’s board is what the square shows.</p>
+    <p>How do 512 houses on one street become a screen? Cut the street every 32 houses, and lay the pieces one under the other. You get 16 rows of 32 squares.</p>
+    <figure><div id="fig11"></div><figcaption>Figure 4: We fold the street into rows of 32. The first house, 1024, is the top left corner.</figcaption></figure>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>The live screen</h3>
+    <p>This is the Dragon’s screen, square by square. Hover the mouse over a square (on a phone: tap it), and you’ll see its house number and what is written in it. A click chooses a square, and then you can write a number in it.</p>
+    <div id="ex1"></div>
+    <ul class="missions" id="m1"></ul>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>Did you notice? You didn’t write “A”. You wrote 65, and the screen showed A. The computer doesn’t know letters, only numbers. A is what it calls 65.</p></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>Right is plus 1, down is plus 32</h3>
+    <p>A step to the right is simply the next house on the street: plus 1. A step down skips a whole row: plus 32, because every row has 32 houses.</p>
+    <figure><div id="fig12"></div><figcaption>Figure 5: The map of the screen. At the side: the number of the first house in each row.</figcaption></figure>
+    <div class="quiz" data-quiz="q1a"></div>
+    <p>Now try it on the live screen above: tasks 6 and 7.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>Which number does what</h3>
+    <p>Every number from 0 to 255 draws something in the square. Here are the most useful ones. No need to remember them. The table is always here.</p>
+    <table class="codes" id="codes"></table>
+    <div class="quiz" data-quiz="q1b"></div>
+    <div class="note">There are eight colours, and every colour square can also be a half or a quarter. The maths of that is waiting for Chapter 4. For now: 191 red, 175 blue, 159 yellow, 207 white.</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">5</span>On the real Dragon</h3>
+    <p>You can do the same thing on the machine itself, in BASIC, with no extra tool. The command <code>POKE</code> writes a number in a house:</p>
+    <p class="ltr" style="text-align:left"><code>CLS:POKE 1295,65:POKE 1535,191</code></p>
+    <p>The A will appear in the middle of the screen, and a red block in the bottom right corner.</p>
+    <div class="machine">A tip we found while checking: the top row is not good for trying things in BASIC. Straight after the command BASIC writes <code>OK</code> there, and on the way it wipes the whole row. So check in the middle of the screen. <span class="verified">✓ Checked on our Dragon machine</span></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>Puzzles</h3>
+    <div class="puzzle" id="pz11"></div>
+    <div class="puzzle" id="pz12"></div>
+    <div class="puzzle" id="pz13"></div>
+  </div>
+
+  <div class="recap">
+    <div><b>What we learnt:</b> the screen is 512 houses, from 1024 to 1535, in rows of 32. Right is plus 1, down is plus 32.</div>
+    <div>The number in the house decides what you see: 65 is A, 96 an empty square, 191 a red block.</div>
+    <div class="next">Next chapter: so far you have written in the houses. Now we’ll meet the one who writes in them inside the computer, and write a first program.</div>
+    <button class="btn warm nextch" data-go="ch2">To Chapter 2 →</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">A hobbyist tribute project, not affiliated with or endorsed by <bdi>Dragon Data</bdi>. The course, drawings and text are our own. Every program in the course was checked on the site's <bdi>Dragon</bdi> machine (<bdi>XRoar</bdi> running the <bdi>BASIC</bdi> we wrote).</p>
+<script src="/en/learn/course.js"></script>
+</body>
+</html>

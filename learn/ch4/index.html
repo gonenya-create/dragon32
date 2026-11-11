@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>פרק 4 · משבצות צבע: ארבע נורות — שפת מכונה בדראגון</title>
+<meta name="description" content="בפרק 1 ראית ש-191 הוא ריבוע אדום. אבל כל משבצת צבע היא בעצם ארבעה ריבועים קטנים, שניים למעלה ושניים למטה. כל ריבוע קטן הוא נורה: דולקת בצבע, או כבויה (שחורה).">
+<meta property="og:title" content="פרק 4 · משבצות צבע: ארבע נורות — שפת מכונה בדראגון">
+<meta property="og:description" content="בפרק 1 ראית ש-191 הוא ריבוע אדום. אבל כל משבצת צבע היא בעצם ארבעה ריבועים קטנים, שניים למעלה ושניים למטה. כל ריבוע קטן הוא נורה: דולקת בצבע, או כבויה (שחורה).">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/learn/ch4/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/learn/ch4/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch4/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch4/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/learn/course.css">
+</head>
+<body data-ch="ch4">
+<nav class="site" aria-label="ניווט">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/en/learn/ch4/" lang="en" hreflang="en">English</a>
+  <a href="/learn/">כל הפרקים</a>
+  <a href="/">← לדף הבית</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>שפת מכונה מאפס</h1>
+    <p class="sub">קורס ל-דראגון 32 · פרקים 0 עד 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/learn/ch0/" data-tab="ch0">0 · רחוב של תאים<span class="done" data-done="0"></span></a>
+  <a href="/learn/ch1/" data-tab="ch1">1 · המסך הוא זיכרון<span class="done" data-done="1"></span></a>
+  <a href="/learn/ch2/" data-tab="ch2">2 · LDA ו-STA<span class="done" data-done="2"></span></a>
+  <a href="/learn/ch3/" data-tab="ch3">3 · מד המרחק<span class="done" data-done="3"></span></a>
+  <a href="/learn/ch4/" data-tab="ch4">4 · ארבע נורות<span class="done" data-done="4"></span></a>
+  <a href="/learn/ch5/" data-tab="ch5">5 · עם # או בלי<span class="done" data-done="5"></span></a>
+  <a href="/learn/ch6/" data-tab="ch6">6 · חשבון<span class="done" data-done="6"></span></a>
+  <a href="/learn/ch7/" data-tab="ch7">7 · האצבע X<span class="done" data-done="7"></span></a>
+  <a href="/learn/ch8/" data-tab="ch8">8 · צומת<span class="done" data-done="8"></span></a>
+  <a href="/learn/ch9/" data-tab="ch9">9 · לולאות<span class="done" data-done="9"></span></a>
+  <a href="/learn/ch10/" data-tab="ch10">10 · מקשים<span class="done" data-done="10"></span></a>
+  <a href="/learn/ch11/" data-tab="ch11">11 · תנועה<span class="done" data-done="11"></span></a>
+  <a href="/learn/ch12/" data-tab="ch12">12 · תת-תוכניות<span class="done" data-done="12"></span></a>
+  <a href="/learn/ch13/" data-tab="ch13">13 · מספרים ברחוב<span class="done" data-done="13"></span></a>
+  <a href="/learn/ch14/" data-tab="ch14">14 · המשחק<span class="done" data-done="14"></span></a>
+  <a href="/learn/ch15/" data-tab="ch15">15 · למכונה<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch4" id="ch4">
+  <div class="ch-head"><div><div class="num">פרק 4</div><h2 id="h-ch4">משבצות צבע: ארבע נורות</h2></div><span class="time">כ-20 דקות · ובסוף: למה 255</span></div>
+
+  <div class="step">
+    <h3><span class="n">1</span>זכוכית מגדלת על משבצת צבע</h3>
+    <p>בפרק 1 ראית ש-191 הוא ריבוע אדום. אבל כל משבצת צבע היא בעצם <b>ארבעה ריבועים קטנים</b>, שניים למעלה ושניים למטה. כל ריבוע קטן הוא <b>נורה</b>: דולקת בצבע, או כבויה (שחורה).</p>
+    <p>לכל נורה יש ערך קבוע: למעלה משמאל 8, למעלה מימין 4, למטה משמאל 2, למטה מימין 1. מחברים את הערכים של הנורות הדולקות, ומקבלים מספר בין 0 ל-15. כלומר, <b>ספרה אחת</b> של המחשב: 0 עד F.</p>
+    <figure><div id="fig41"></div><figcaption>ציור 13: ארבע הנורות והערכים שלהן, וארבע דוגמאות.</figcaption></figure>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>הספרה השמאלית: הצבע</h3>
+    <p>מספר של משבצת צבע הוא שתי ספרות. הימנית, כמו שראינו, אומרת <b>אילו נורות דולקות</b>. השמאלית אומרת <b>איזה צבע</b>: 8 ירוק, 9 צהוב, A כחול, B אדום, C לבן, D טורקיז, E סגול, F כתום.</p>
+    <figure><div id="fig42"></div><figcaption>ציור 14: שמונת הצבעים, והספרה השמאלית של כל אחד.</figcaption></figure>
+    <figure><div id="fig43"></div><figcaption>ציור 15: קוראים משבצת: <bdi class="ltr">$BC</bdi> = אדום, חצי עליון.</figcaption></figure>
+    <div class="note">ומה עם 191 מפרק 1? ‏191 הוא <code>$BF</code>: אדום, וכל הנורות דולקות (8+4+2+1 = 15 = F). עכשיו ברור גם למה 143 (‏<code>$8F</code>) לא נראה: ירוק מלא על רקע ירוק.</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>הדלק בעצמך</h3>
+    <p>לחץ על הנורות כדי להדליק ולכבות, ובחר צבע. מימין רואים איך המספר נבנה.</p>
+    <div id="lamp"></div>
+    <ul class="missions" id="m4"></ul>
+    <div class="quiz" data-quiz="q4a"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>הסוד של 255</h3>
+    <p>בפרק 0 הבטחנו לגלות למה בבית נכנס רק עד 255. הנה התשובה: כל בית הוא בעצם <b>שמונה נורות</b>. ארבע לספרה השמאלית ועוד ארבע לימנית.</p>
+    <p>גם כאן לכל נורה ערך: מימין 1, ‏2, ‏4, ‏8, וממשיכים להכפיל: 16, ‏32, ‏64, ‏128. כשכל השמונה דולקות: 128+64+32+16+8+4+2+1 = <b>255</b>. אין נורה תשיעית, אז אין מקום ל-256.</p>
+    <div id="byte"></div>
+    <ul class="missions" id="m4b"></ul>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>כל בית בזיכרון הוא שמונה נורות כאלה, גם כשהוא לא משבצת צבע. האות A (‏65) היא נורה 64 ונורה 1. המחשב לא יודע שזו אות; רק המסך מצייר אותה ככה.</p></div>
+    <div class="note">ומה קרה ל-300 בפרק 0? הוא צריך נורה תשיעית (256). DREAM זרק אותה, ונשאר רק מה שבשמונה הנורות: 300 פחות 256 = 44.</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">5</span>מציירים בתוכנית</h3>
+    <div id="pw41"></div>
+    <div id="pw42"></div>
+    <div id="pw43"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">6</span>חסר מספר</h3>
+    <p>רצינו משבצת שרק החצי השמאלי שלה כחול. איזה מספר צריך במקום הריק?</p>
+    <div id="pw44"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>חידות: צייר לפי התמונה</h3>
+    <p>המסך שלך צריך להיות זהה לתמונה. משבצות שונות יסומנו באדום. רחף מעל התמונה (או גע בה) כדי לראות את מספר הבית ואת המספר של כל משבצת.</p>
+    <div class="puzzle" id="pz41"></div>
+    <div class="puzzle" id="pz42"></div>
+    <div class="puzzle" id="pz43"></div>
+  </div>
+
+  <div class="note">כל התוכניות בחלונות של הפרק, וגם הפתרונות של החידות, הוקלדו ב-DREAM במכונה שלנו, תורגמו בלי שגיאות (<code>0000 ERRS</code>) והורצו. בדקנו מספר-מספר: מה שנכתב בכל משבצת של המסך זהה למה שהחלונות כאן מראים, וגם הצבעים זהים לצבעים של המכונה.</div>
+
+  <div class="recap">
+    <div><b>מה למדנו:</b> משבצת צבע = <span class="ltr">$8?</span> עד <span class="ltr">$F?</span>. הספרה השמאלית היא הצבע, הימנית היא הנורות: 8, ‏4, ‏2, ‏1.</div>
+    <div>כל בית הוא שמונה נורות. כולן דולקות = 255 = <span class="ltr">$FF</span>. לכן אין יותר.</div>
+    <div class="next">בפרק הבא: נחזור לסולמית. מה בדיוק קורה כש-LDA הולכת לבית, ואיך מעתיקים משבצת שאנחנו לא יודעים מה יש בה.</div>
+    <button class="btn warm nextch" data-go="ch5">לפרק 5 ←</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">פרויקט מחווה של חובב, לא קשור ל-<bdi>Dragon Data</bdi> ולא מורשה על ידה. הקורס, הציורים והטקסט שלנו. כל תוכנית בקורס נבדקה במכונת ה-<bdi>Dragon</bdi> של האתר (<bdi>XRoar</bdi> עם ה-<bdi>BASIC</bdi> שכתבנו).</p>
+<script src="/learn/course.js"></script>
+</body>
+</html>

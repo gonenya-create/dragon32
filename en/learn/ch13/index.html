@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 13 · The program lives on the street — Machine Code on the Dragon</title>
+<meta name="description" content="In Chapter 0 we said: in memory there are only numbers, from 0 to 255, one in each house. So where is your program? It isn’t written there in words. The…">
+<meta property="og:title" content="Chapter 13 · The program lives on the street — Machine Code on the Dragon">
+<meta property="og:description" content="In Chapter 0 we said: in memory there are only numbers, from 0 to 255, one in each house. So where is your program? It isn’t written there in words. The…">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/en/learn/ch13/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/en/learn/ch13/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch13/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch13/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/en/learn/course.css">
+</head>
+<body data-ch="ch13">
+<nav class="site" aria-label="Navigation">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/learn/ch13/" lang="he" hreflang="he">עברית</a>
+  <a href="/en/learn/">All chapters</a>
+  <a href="/en/">← Home</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>Machine code from zero</h1>
+    <p class="sub">A course for the Dragon 32 · Chapters 0 to 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/en/learn/ch0/" data-tab="ch0">0 · A street of houses<span class="done" data-done="0"></span></a>
+  <a href="/en/learn/ch1/" data-tab="ch1">1 · The screen is memory<span class="done" data-done="1"></span></a>
+  <a href="/en/learn/ch2/" data-tab="ch2">2 · LDA and STA<span class="done" data-done="2"></span></a>
+  <a href="/en/learn/ch3/" data-tab="ch3">3 · The odometer<span class="done" data-done="3"></span></a>
+  <a href="/en/learn/ch4/" data-tab="ch4">4 · Four lamps<span class="done" data-done="4"></span></a>
+  <a href="/en/learn/ch5/" data-tab="ch5">5 · With # or without<span class="done" data-done="5"></span></a>
+  <a href="/en/learn/ch6/" data-tab="ch6">6 · Sums<span class="done" data-done="6"></span></a>
+  <a href="/en/learn/ch7/" data-tab="ch7">7 · The finger X<span class="done" data-done="7"></span></a>
+  <a href="/en/learn/ch8/" data-tab="ch8">8 · Crossroads<span class="done" data-done="8"></span></a>
+  <a href="/en/learn/ch9/" data-tab="ch9">9 · Loops<span class="done" data-done="9"></span></a>
+  <a href="/en/learn/ch10/" data-tab="ch10">10 · Keys<span class="done" data-done="10"></span></a>
+  <a href="/en/learn/ch11/" data-tab="ch11">11 · Movement<span class="done" data-done="11"></span></a>
+  <a href="/en/learn/ch12/" data-tab="ch12">12 · Subroutines<span class="done" data-done="12"></span></a>
+  <a href="/en/learn/ch13/" data-tab="ch13">13 · Numbers on the street<span class="done" data-done="13"></span></a>
+  <a href="/en/learn/ch14/" data-tab="ch14">14 · The game<span class="done" data-done="14"></span></a>
+  <a href="/en/learn/ch15/" data-tab="ch15">15 · To the machine<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch13" id="ch13">
+  <div class="ch-head"><div><div class="num">Chapter 13</div><h2 id="h-ch13">The program lives on the street</h2></div><span class="time">About 20 minutes · words turn into numbers</span></div>
+
+  <div class="step">
+    <h3><span class="n">1</span>What does DREAM do when it “assembles”?</h3>
+    <p>In Chapter 0 we said: in memory there are only numbers, from 0 to 255, one in each house. So where is your program? It isn’t written there in words. The processor doesn’t know the word <code>LDA</code>. It only knows numbers.</p>
+    <p>When you press <b>A</b> (assemble) in DREAM, DREAM turns each line into <b>numbers</b>, and writes them on the street of houses, house after house. On our machine (after <code>CLEAR 200,12000</code>) it starts at house <code>$2EE1</code>.</p>
+    <figure><div id="fig131"></div><figcaption>Figure 28: a little DREAM dictionary. On the left, what you write; on the right, what is written on the street. The word turns into one number (sometimes two), and the number you wrote is written straight after it.</figcaption></figure>
+    <p>In DREAM you saw this all the time, without noticing: in the listing after assembling, on the left, is the house number, and after it the numbers written there. This window also has a <b>street</b>: the program’s memory, eight houses to a row.</p>
+    <div id="pw131"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>PC: the finger that walks over the numbers</h3>
+    <p>How does the processor know which command is next? It has one more finger, <b>PC</b>. It points at the house where the next command starts. The processor reads the number there (<code>$86</code>? That’s <code>LDA #</code>!), reads as many numbers as the command needs, does it, and PC moves on to the command after it.</p>
+    <p>And a loop? <code>BLO LOOP</code> turned into two numbers: <code>$25</code> (that’s BLO) and <code>$F9</code>. <code>$F9</code> is -7: “if you need to turn, go back 7 houses” (counting from the house after the BLO). DREAM counted for you how many houses back <code>LOOP</code> is. The name has gone. Only a number is left.</p>
+    <div id="pw132"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>Change one number, and the program changes</h3>
+    <p>Now comes the most surprising moment in the course. If the program is numbers on the street, you can <b>change a number</b>, without touching the words, and the processor will do something else. In this window you can click a number on the street and type another (two digits, like <code>AF</code>).</p>
+    <div id="pw133"></div>
+    <ul class="missions" id="m13"></ul>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>Did you notice task 3? You changed one number, and the word <code>LDA</code> turned into <code>LDB</code>. The processor can’t tell “words” from “numbers you wrote”. It is all the same thing: numbers on the street.</p></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>How much room does the program take up?</h3>
+    <p>You count houses. <code>LDA #$BF</code> takes up 2. <code>STA $0510</code> takes up 3. The fixed ending takes up 8. In DREAM, the last line of the listing shows the free house after the program. Take <code>$2EE1</code> away from it, and you know how many houses.</p>
+    <p>Write lines here, and see what they turn into. (The assembler adds the fixed ending by itself.)</p>
+    <div id="tool13"></div>
+    <div class="quiz" data-quiz="q13a"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>Puzzles: one number only</h3>
+    <p>In these puzzles you may not touch the words. You change <b>one number</b> on the street, and run.</p>
+    <div class="puzzle" id="pz131"></div>
+    <div class="puzzle" id="pz132"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">▶</span>On the real Dragon</h3>
+    <div class="machine" id="mach13"></div>
+  </div>
+
+  <div class="recap">
+    <div><b>What we learned:</b> the program is numbers in memory. <span class="ltr">LDA #</span> = <span class="ltr">$86</span>, <span class="ltr">STA</span> = <span class="ltr">$B7</span>, <span class="ltr">RTS</span> = <span class="ltr">$39</span>. DREAM translates words into numbers, and place names into distances.</div>
+    <div>The finger PC points at the next command. Change one number on the street, and the processor does something else.</div>
+    <div class="next">Next chapter: the project. A “Catch” game, step by step.</div>
+    <button class="btn warm nextch" data-go="ch14">To Chapter 14 →</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">A hobbyist tribute project, not affiliated with or endorsed by <bdi>Dragon Data</bdi>. The course, drawings and text are our own. Every program in the course was checked on the site's <bdi>Dragon</bdi> machine (<bdi>XRoar</bdi> running the <bdi>BASIC</bdi> we wrote).</p>
+<script src="/en/learn/course.js"></script>
+</body>
+</html>

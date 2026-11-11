@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>פרק 13 · התוכנית גרה ברחוב — שפת מכונה בדראגון</title>
+<meta name="description" content="בפרק 0 אמרנו: בזיכרון יש רק מספרים, מ-0 עד 255, בכל בית אחד. אז איפה התוכנית שלך? היא לא כתובה שם במילים. המעבד לא מכיר את המילה LDA. הוא מכיר רק מספרים.">
+<meta property="og:title" content="פרק 13 · התוכנית גרה ברחוב — שפת מכונה בדראגון">
+<meta property="og:description" content="בפרק 0 אמרנו: בזיכרון יש רק מספרים, מ-0 עד 255, בכל בית אחד. אז איפה התוכנית שלך? היא לא כתובה שם במילים. המעבד לא מכיר את המילה LDA. הוא מכיר רק מספרים.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/learn/ch13/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/learn/ch13/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch13/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch13/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/learn/course.css">
+</head>
+<body data-ch="ch13">
+<nav class="site" aria-label="ניווט">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/en/learn/ch13/" lang="en" hreflang="en">English</a>
+  <a href="/learn/">כל הפרקים</a>
+  <a href="/">← לדף הבית</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>שפת מכונה מאפס</h1>
+    <p class="sub">קורס ל-דראגון 32 · פרקים 0 עד 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/learn/ch0/" data-tab="ch0">0 · רחוב של תאים<span class="done" data-done="0"></span></a>
+  <a href="/learn/ch1/" data-tab="ch1">1 · המסך הוא זיכרון<span class="done" data-done="1"></span></a>
+  <a href="/learn/ch2/" data-tab="ch2">2 · LDA ו-STA<span class="done" data-done="2"></span></a>
+  <a href="/learn/ch3/" data-tab="ch3">3 · מד המרחק<span class="done" data-done="3"></span></a>
+  <a href="/learn/ch4/" data-tab="ch4">4 · ארבע נורות<span class="done" data-done="4"></span></a>
+  <a href="/learn/ch5/" data-tab="ch5">5 · עם # או בלי<span class="done" data-done="5"></span></a>
+  <a href="/learn/ch6/" data-tab="ch6">6 · חשבון<span class="done" data-done="6"></span></a>
+  <a href="/learn/ch7/" data-tab="ch7">7 · האצבע X<span class="done" data-done="7"></span></a>
+  <a href="/learn/ch8/" data-tab="ch8">8 · צומת<span class="done" data-done="8"></span></a>
+  <a href="/learn/ch9/" data-tab="ch9">9 · לולאות<span class="done" data-done="9"></span></a>
+  <a href="/learn/ch10/" data-tab="ch10">10 · מקשים<span class="done" data-done="10"></span></a>
+  <a href="/learn/ch11/" data-tab="ch11">11 · תנועה<span class="done" data-done="11"></span></a>
+  <a href="/learn/ch12/" data-tab="ch12">12 · תת-תוכניות<span class="done" data-done="12"></span></a>
+  <a href="/learn/ch13/" data-tab="ch13">13 · מספרים ברחוב<span class="done" data-done="13"></span></a>
+  <a href="/learn/ch14/" data-tab="ch14">14 · המשחק<span class="done" data-done="14"></span></a>
+  <a href="/learn/ch15/" data-tab="ch15">15 · למכונה<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch13" id="ch13">
+  <div class="ch-head"><div><div class="num">פרק 13</div><h2 id="h-ch13">התוכנית גרה ברחוב</h2></div><span class="time">כ-20 דקות · מילים הופכות למספרים</span></div>
+
+  <div class="step">
+    <h3><span class="n">1</span>מה DREAM עושה כשהוא "מתרגם"?</h3>
+    <p>בפרק 0 אמרנו: בזיכרון יש רק מספרים, מ-0 עד 255, בכל בית אחד. אז איפה התוכנית שלך? היא לא כתובה שם במילים. המעבד לא מכיר את המילה <code>LDA</code>. הוא מכיר רק מספרים.</p>
+    <p>כשלוחצים ב-DREAM על <b>A</b> (תרגום), ‏DREAM הופך כל שורה ל<b>מספרים</b>, וכותב אותם ברחוב התאים, בית אחרי בית. אצלנו (אחרי <code>CLEAR 200,12000</code>) הוא מתחיל בבית <code>$2EE1</code>.</p>
+    <figure><div id="fig131"></div><figcaption>ציור 28: מילון קטן של DREAM. משמאל מה שאתה כותב, מימין מה שנכתב ברחוב. המילה הופכת למספר אחד (לפעמים שניים), והמספר שכתבת נכתב מיד אחריה.</figcaption></figure>
+    <p>ב-DREAM ראית את זה כל הזמן, בלי לשים לב: ברשימה שאחרי התרגום, בצד שמאל, כתוב מספר הבית, ואחריו המספרים שנכתבו בו. בחלון הזה יש גם <b>רחוב</b>: הזיכרון של התוכנית, שמונה בתים בשורה.</p>
+    <div id="pw131"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>PC: האצבע שהולכת על המספרים</h3>
+    <p>איך המעבד יודע איזו פקודה עכשיו? יש לו עוד אצבע, <b>PC</b>. היא מצביעה על הבית שבו מתחילה הפקודה הבאה. המעבד קורא את המספר שם (‏<code>$86</code>? זו <code>LDA #</code>!), קורא כמה מספרים שהפקודה צריכה, מבצע, ו-PC עוברת לפקודה שאחריה.</p>
+    <p>ולולאה? ‏<code>BLO LOOP</code> הפכה לשני מספרים: <code>$25</code> (זו BLO) ו-<code>$F9</code>. ‏<code>$F9</code> הוא ‎-7: "אם צריך לפנות, תחזור 7 בתים אחורה" (סופרים מהבית שאחרי ה-BLO). ‏DREAM ספר בשבילך כמה בתים אחורה נמצא <code>LOOP</code>. השם נעלם. נשאר רק מספר.</p>
+    <div id="pw132"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>משנים מספר אחד, והתוכנית משתנה</h3>
+    <p>עכשיו הרגע הכי מפתיע בקורס. אם התוכנית היא מספרים ברחוב, אפשר <b>לשנות מספר</b>, בלי לגעת במילים, והמעבד יעשה משהו אחר. בחלון הזה אפשר ללחוץ על מספר ברחוב ולהקליד אחר (שתי ספרות, כמו <code>AF</code>).</p>
+    <div id="pw133"></div>
+    <ul class="missions" id="m13"></ul>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>שמת לב למשימה 3? שינית מספר אחד, והמילה <code>LDA</code> הפכה ל-<code>LDB</code>. המעבד לא מבחין בין "מילים" ל"מספרים שכתבת". הכול אותו דבר: מספרים ברחוב.</p></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>כמה מקום תופסת התוכנית?</h3>
+    <p>סופרים בתים. ‏<code>LDA #$BF</code> תופסת 2. ‏<code>STA $0510</code> תופסת 3. הסוף הקבוע תופס 8. ב-DREAM, בשורה האחרונה של הרשימה, כתוב הבית הפנוי שאחרי התוכנית. מורידים ממנו <code>$2EE1</code>, ויודעים כמה בתים.</p>
+    <p>כתוב כאן שורות, וראה למה הן הופכות. (את הסוף הקבוע המתרגם מוסיף לבד.)</p>
+    <div id="tool13"></div>
+    <div class="quiz" data-quiz="q13a"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>חידות: מספר אחד בלבד</h3>
+    <p>בחידות האלה אסור לגעת במילים. משנים <b>מספר אחד</b> ברחוב, ומריצים.</p>
+    <div class="puzzle" id="pz131"></div>
+    <div class="puzzle" id="pz132"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">▶</span>בדראגון האמיתי</h3>
+    <div class="machine" id="mach13"></div>
+  </div>
+
+  <div class="recap">
+    <div><b>מה למדנו:</b> התוכנית היא מספרים בזיכרון. ‏<span class="ltr">LDA #</span> = <span class="ltr">$86</span>, ‏<span class="ltr">STA</span> = <span class="ltr">$B7</span>, ‏<span class="ltr">RTS</span> = <span class="ltr">$39</span>. ‏DREAM מתרגם מילים למספרים, ושמות של מקומות למרחקים.</div>
+    <div>האצבע PC מצביעה על הפקודה הבאה. משנים מספר אחד ברחוב, והמעבד עושה משהו אחר.</div>
+    <div class="next">בפרק הבא: הפרויקט. משחק "תפוס", שלב אחרי שלב.</div>
+    <button class="btn warm nextch" data-go="ch14">לפרק 14 ←</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">פרויקט מחווה של חובב, לא קשור ל-<bdi>Dragon Data</bdi> ולא מורשה על ידה. הקורס, הציורים והטקסט שלנו. כל תוכנית בקורס נבדקה במכונת ה-<bdi>Dragon</bdi> של האתר (<bdi>XRoar</bdi> עם ה-<bdi>BASIC</bdi> שכתבנו).</p>
+<script src="/learn/course.js"></script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 14 · The project: a “Catch” game — Machine Code on the Dragon</title>
+<meta name="description" content="Remember the game you saw in Chapter 0? A yellow apple falls, and a blue basket on the bottom row catches it. Now you know everything you need to write it.…">
+<meta property="og:title" content="Chapter 14 · The project: a “Catch” game — Machine Code on the Dragon">
+<meta property="og:description" content="Remember the game you saw in Chapter 0? A yellow apple falls, and a blue basket on the bottom row catches it. Now you know everything you need to write it.…">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/en/learn/ch14/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/en/learn/ch14/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch14/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch14/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/en/learn/course.css">
+</head>
+<body data-ch="ch14">
+<nav class="site" aria-label="Navigation">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/learn/ch14/" lang="he" hreflang="he">עברית</a>
+  <a href="/en/learn/">All chapters</a>
+  <a href="/en/">← Home</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>Machine code from zero</h1>
+    <p class="sub">A course for the Dragon 32 · Chapters 0 to 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/en/learn/ch0/" data-tab="ch0">0 · A street of houses<span class="done" data-done="0"></span></a>
+  <a href="/en/learn/ch1/" data-tab="ch1">1 · The screen is memory<span class="done" data-done="1"></span></a>
+  <a href="/en/learn/ch2/" data-tab="ch2">2 · LDA and STA<span class="done" data-done="2"></span></a>
+  <a href="/en/learn/ch3/" data-tab="ch3">3 · The odometer<span class="done" data-done="3"></span></a>
+  <a href="/en/learn/ch4/" data-tab="ch4">4 · Four lamps<span class="done" data-done="4"></span></a>
+  <a href="/en/learn/ch5/" data-tab="ch5">5 · With # or without<span class="done" data-done="5"></span></a>
+  <a href="/en/learn/ch6/" data-tab="ch6">6 · Sums<span class="done" data-done="6"></span></a>
+  <a href="/en/learn/ch7/" data-tab="ch7">7 · The finger X<span class="done" data-done="7"></span></a>
+  <a href="/en/learn/ch8/" data-tab="ch8">8 · Crossroads<span class="done" data-done="8"></span></a>
+  <a href="/en/learn/ch9/" data-tab="ch9">9 · Loops<span class="done" data-done="9"></span></a>
+  <a href="/en/learn/ch10/" data-tab="ch10">10 · Keys<span class="done" data-done="10"></span></a>
+  <a href="/en/learn/ch11/" data-tab="ch11">11 · Movement<span class="done" data-done="11"></span></a>
+  <a href="/en/learn/ch12/" data-tab="ch12">12 · Subroutines<span class="done" data-done="12"></span></a>
+  <a href="/en/learn/ch13/" data-tab="ch13">13 · Numbers on the street<span class="done" data-done="13"></span></a>
+  <a href="/en/learn/ch14/" data-tab="ch14">14 · The game<span class="done" data-done="14"></span></a>
+  <a href="/en/learn/ch15/" data-tab="ch15">15 · To the machine<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch14" id="ch14">
+  <div class="ch-head"><div><div class="num">Chapter 14</div><h2 id="h-ch14">The project: a “Catch” game</h2></div><span class="time">About 40 minutes · five stages</span></div>
+
+  <div class="step">
+    <h3><span class="n">★</span>The game from Chapter 0</h3>
+    <p>Remember the game you saw in Chapter 0? A yellow apple falls, and a blue basket on the bottom row catches it. Now you know everything you need to write it. Not all at once: in five stages, and each stage is a program that works by itself.</p>
+    <figure><div id="fig141"></div><figcaption>Figure 29: the five stages. 1: a basket that moves with the arrows. 2: an apple that falls. 3: both together, and a check whether it was caught. 4: a score, and five apples. 5: each apple falls from a different place.</figcaption></figure>
+    <p>In each stage one line is missing, and there are three choices. Try the wrong ones too: they show what each line does. The last stage you will write by yourself.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">1</span>Stage 1: a basket that moves</h3>
+    <p>The basket (<code>$AF</code>, blue) is on the bottom row. Its finger is Y. The left arrow moves it one step left, the right arrow one step right, and Q quits. And at the walls it stops: <code>CMPY #$05E0</code> asks “am I at the left edge already?”.</p>
+    <p>There is nothing new here: it is the block moved with the arrows from Chapter 11, only on the bottom row.</p>
+    <div id="pw141"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>Stage 2: an apple that falls</h3>
+    <p>The apple (<code>$9F</code>, yellow) starts on row 1, in column 16, and falls to the bottom row. Like the apple from the puzzle in Chapter 11. Only one thing is new: its finger is <b>U</b>, a third finger (purple). X is busy with the keyboard checker, Y with the basket. U works exactly like Y: <code>LDU</code>, <code>STA ,U</code>, <code>LEAU</code>, <code>CMPU</code>.</p>
+    <div id="pw142"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>Stage 3: both together, and caught or not?</h3>
+    <p>The hard part: the basket has to move <b>while</b> the apple falls. But the keyboard loop from Chapter 10 waits for a key, and while it waits nothing moves. So on every lap the big loop does <b>a little of everything</b>:</p>
+    <ol>
+      <li>It draws the basket and the apple.</li>
+      <li>It waits a short moment (<code>LDX #800</code>: about 7 thousandths of a second).</li>
+      <li>It asks the keyboard <b>once</b>. Nothing pressed? No waiting: it carries on.</li>
+      <li>An arrow pressed? It moves the basket.</li>
+      <li>And only once every 25 laps: the apple goes down a row.</li>
+    </ol>
+    <p>How do you know when 25 laps have gone by? You need a <b>counter</b>, and all the drawers are taken. So you keep it in memory, in a house of its own, after the fixed ending: <code>TICK FCB 25</code>. <code>FCB</code> is not a command for the processor. It tells DREAM: “Put one house here, with 25 in it.” <code>DEC TICK</code> takes 1 off it, straight in memory. You saw in Chapter 13: the program lives on the street, so its numbers can live next to it too.</p>
+    <p>And when the apple reaches the bottom row? <b>Look at what is on the screen</b> at the place where it lands: <code>LDA ,U</code>. Is there blue there (<code>$AF</code>)? It landed in the basket. Write Y (yes) or N (no) in the corner, and that’s it.</p>
+    <div id="pw143"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>Stage 4: a score, and five apples</h3>
+    <p>Two more houses in memory: <code>SCORE</code> (the score) and <code>LEFT</code> (how many apples are left). At the start, <code>CLR SCORE</code> sets the score to zero. Every apple caught: <code>INC SCORE</code>. After every apple: <code>DEC LEFT</code>, and a new apple from the top. After five, the end.</p>
+    <p>The score shows in the corner as a digit: <code>$70</code> is the digit 0 on the screen, so <code>$70</code> plus the score is the digit of the score.</p>
+    <div id="pw144"></div>
+    <div class="quiz" data-quiz="q14a"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">5</span>Stage 5: each apple from a different place. This time on your own</h3>
+    <div class="puzzle" id="pz141"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">▶</span>On the real Dragon</h3>
+    <div class="machine" id="mach14"></div>
+  </div>
+
+  <div class="recap">
+    <div><b>What we learned:</b> a game is built in stages, and each stage is checked by itself. One loop does a little of everything on every lap: it draws, waits a little, asks the keyboard without waiting, and moves.</div>
+    <div><span class="ltr">FCB</span> keeps a house in memory for a number (a counter, a score). U is a third finger. <span class="ltr">ANDB #31</span> cuts a number down to a column from 0 to 31.</div>
+    <div class="next">In the last chapter: we take the game to the Dragon machine, save it to tape, and run it on a real Dragon.</div>
+    <button class="btn warm nextch" data-go="ch15">To Chapter 15 →</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">A hobbyist tribute project, not affiliated with or endorsed by <bdi>Dragon Data</bdi>. The course, drawings and text are our own. Every program in the course was checked on the site's <bdi>Dragon</bdi> machine (<bdi>XRoar</bdi> running the <bdi>BASIC</bdi> we wrote).</p>
+<script src="/en/learn/course.js"></script>
+</body>
+</html>

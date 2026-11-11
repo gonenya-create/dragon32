@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>פרק 10 · מקשים: הדראגון מקשיב — שפת מכונה בדראגון</title>
+<meta name="description" content="בפרקים 7 ו-8 פתחנו את הסוף הקבוע: LDX $A000 מכוונת את האצבע אל בודק המקלדת, עבודה קטנה שגרה בזיכרון הקבוע של הדראגון. JSR ,X הולכת אליה וחוזרת. ראינו שכשלא…">
+<meta property="og:title" content="פרק 10 · מקשים: הדראגון מקשיב — שפת מכונה בדראגון">
+<meta property="og:description" content="בפרקים 7 ו-8 פתחנו את הסוף הקבוע: LDX $A000 מכוונת את האצבע אל בודק המקלדת, עבודה קטנה שגרה בזיכרון הקבוע של הדראגון. JSR ,X הולכת אליה וחוזרת. ראינו שכשלא…">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/learn/ch10/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/learn/ch10/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch10/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch10/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/learn/course.css">
+</head>
+<body data-ch="ch10">
+<nav class="site" aria-label="ניווט">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/en/learn/ch10/" lang="en" hreflang="en">English</a>
+  <a href="/learn/">כל הפרקים</a>
+  <a href="/">← לדף הבית</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>שפת מכונה מאפס</h1>
+    <p class="sub">קורס ל-דראגון 32 · פרקים 0 עד 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/learn/ch0/" data-tab="ch0">0 · רחוב של תאים<span class="done" data-done="0"></span></a>
+  <a href="/learn/ch1/" data-tab="ch1">1 · המסך הוא זיכרון<span class="done" data-done="1"></span></a>
+  <a href="/learn/ch2/" data-tab="ch2">2 · LDA ו-STA<span class="done" data-done="2"></span></a>
+  <a href="/learn/ch3/" data-tab="ch3">3 · מד המרחק<span class="done" data-done="3"></span></a>
+  <a href="/learn/ch4/" data-tab="ch4">4 · ארבע נורות<span class="done" data-done="4"></span></a>
+  <a href="/learn/ch5/" data-tab="ch5">5 · עם # או בלי<span class="done" data-done="5"></span></a>
+  <a href="/learn/ch6/" data-tab="ch6">6 · חשבון<span class="done" data-done="6"></span></a>
+  <a href="/learn/ch7/" data-tab="ch7">7 · האצבע X<span class="done" data-done="7"></span></a>
+  <a href="/learn/ch8/" data-tab="ch8">8 · צומת<span class="done" data-done="8"></span></a>
+  <a href="/learn/ch9/" data-tab="ch9">9 · לולאות<span class="done" data-done="9"></span></a>
+  <a href="/learn/ch10/" data-tab="ch10">10 · מקשים<span class="done" data-done="10"></span></a>
+  <a href="/learn/ch11/" data-tab="ch11">11 · תנועה<span class="done" data-done="11"></span></a>
+  <a href="/learn/ch12/" data-tab="ch12">12 · תת-תוכניות<span class="done" data-done="12"></span></a>
+  <a href="/learn/ch13/" data-tab="ch13">13 · מספרים ברחוב<span class="done" data-done="13"></span></a>
+  <a href="/learn/ch14/" data-tab="ch14">14 · המשחק<span class="done" data-done="14"></span></a>
+  <a href="/learn/ch15/" data-tab="ch15">15 · למכונה<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch10" id="ch10">
+  <div class="ch-head"><div><div class="num">פרק 10</div><h2 id="h-ch10">מקשים: הדראגון מקשיב</h2></div><span class="time">כ-20 דקות · הסוף הקבוע, עד הסוף</span></div>
+
+  <div class="step">
+    <h3><span class="n">1</span>מה מחזיר בודק המקלדת</h3>
+    <p>בפרקים 7 ו-8 פתחנו את הסוף הקבוע: <code>LDX $A000</code> מכוונת את האצבע אל <b>בודק המקלדת</b>, עבודה קטנה שגרה בזיכרון הקבוע של הדראגון. ‏<code>JSR ,X</code> הולכת אליה וחוזרת. ראינו שכשלא נלחץ כלום, נורת Z דולקת.</p>
+    <p>עכשיו החלק שחסר: הבודק חוזר עם <b>קוד המקש במגירה A</b>. נלחץ G? ב-A יהיה <code>$47</code>, בדיוק כמו <code>LDA #'G</code>. לא נלחץ כלום? ב-A יהיה 0, ולכן Z דולקת.</p>
+    <figure><div id="fig101"></div><figcaption>ציור 24: המקלדת מחוברת למגירה A. אחרי <bdi class="ltr">JSR ,X</bdi>: מקש שנלחץ = הקוד שלו ב-A, ונורת Z כבויה. בלי מקש = 0 ב-A, ונורת Z דולקת.</figcaption></figure>
+    <p>עכשיו אפשר לקרוא את הסוף הקבוע כמו משפט: "שאל את המקלדת. אם לא נלחץ כלום, שאל שוב. אם נלחץ משהו, חזור ל-DREAM". עד היום לא עניין אותנו <b>איזה</b> מקש. מהיום כן.</p>
+    <p>מכאן והלאה הסוף הקבוע כתוב בחלונות בגלוי, והמעבד באמת מבצע אותו. בסוף כל הרצה תצטרך ללחוץ מקש, כמו בדראגון.</p>
+    <div id="pw101"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>חכה למקש, והראה אותו</h3>
+    <p>לולאת ההמתנה של הסוף הקבוע, באמצע התוכנית. היא נקראת כאן <code>WAIT</code>, כי השם KEY תפוס. מתחת למסך יש מקלדת קטנה. אפשר גם ללחוץ במקלדת שלך, אחרי שלוחצים על החלון.</p>
+    <div id="pw102"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>לכל מקש יש קוד</h3>
+    <p>לחץ על המקשים ותראה מה מגיע למגירה A. לאותיות כבר יש קוד שאתה מכיר. לחצים ולרווח יש קודים משלהם.</p>
+    <div id="keys10"></div>
+    <ul class="missions" id="m10"></ul>
+    <table class="codes" id="keytab"></table>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>מכונת כתיבה</h3>
+    <p>כל מקש שנלחץ נכתב על המסך, אחד אחרי השני. ‏Q עוצרת. שים לב לשתי שאלות: ‏<code>BEQ LOOP</code> = "לא נלחץ כלום? שאל שוב". ‏<code>CMPA #'Q</code> ו-<code>BEQ KEY</code> = "נלחץ Q? לך לסוף".</p>
+    <div class="note">למה האצבע על המסך היא Y? כי <code>LDX $A000</code> דורסת את X בכל שאלה. בודק המקלדת לא נוגע ב-Y וב-B, אז הן בטוחות.</div>
+    <div id="pw103"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">5</span>להגיב למקש</h3>
+    <p>עכשיו מחליטים לפי המקש: ‏R צובעת את המשבצת באדום, ‏B בכחול, ‏Q יוצאת. זה בדיוק הצומת מפרק 8, רק שהשאלה היא "איזה מקש?".</p>
+    <p>שים לב: את הצבע מעבירים דרך <b>B</b> (‏<code>LDB</code>, ‏<code>STB</code>). למה לא A? כי ב-A יושב קוד המקש, ואנחנו עוד צריכים אותו לשאלה הבאה.</p>
+    <div id="pw104"></div>
+    <div class="quiz" data-quiz="q10a"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>חידות: מקשים</h3>
+    <p>כל חידה נבדקת בכמה מקרים. בכל מקרה "לוחצים" על מקשים אחרים, אחד אחרי השני, והמסך בסוף צריך להיות כמו בתמונה. את הסוף הקבוע לא צריך להקליד: הוא כבר שם, והמקש Q צריך להגיע אליו.</p>
+    <div class="puzzle" id="pz101"></div>
+    <div class="puzzle" id="pz102"></div>
+    <div class="puzzle" id="pz103"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">▶</span>בדראגון האמיתי</h3>
+    <div class="machine" id="mach10"></div>
+  </div>
+
+  <div class="recap">
+    <div><b>מה למדנו:</b> ‏<span class="ltr">LDX $A000</span> ו-<span class="ltr">JSR ,X</span> שואלות את המקלדת. ב-A חוזר קוד המקש. בלי מקש: 0, ונורת Z דולקת.</div>
+    <div>קודים: חצים <span class="ltr">$5E $0A $08 $09</span>, רווח <span class="ltr">$20</span>, אות = הקוד שלה. הבודק דורס את X; האצבע על המסך היא Y.</div>
+    <div class="next">בפרק הבא: תנועה. מוחקים, זזים, מציירים, מחכים, וחוזר חלילה. כמו סרט מצויר.</div>
+    <button class="btn warm nextch" data-go="ch11">לפרק 11 ←</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">פרויקט מחווה של חובב, לא קשור ל-<bdi>Dragon Data</bdi> ולא מורשה על ידה. הקורס, הציורים והטקסט שלנו. כל תוכנית בקורס נבדקה במכונת ה-<bdi>Dragon</bdi> של האתר (<bdi>XRoar</bdi> עם ה-<bdi>BASIC</bdi> שכתבנו).</p>
+<script src="/learn/course.js"></script>
+</body>
+</html>

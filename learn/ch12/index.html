@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>פרק 12 · תת-תוכניות: לך, ותחזור — שפת מכונה בדראגון</title>
+<meta name="description" content="אתה קורא ספר. אמא קוראת לך: &quot;תקפוץ למכולת ותביא לחם&quot;. מה אתה עושה עם הספר? שם סימנייה בעמוד, הולך, מביא, חוזר, וממשיך בדיוק מאיפה שעצרת.">
+<meta property="og:title" content="פרק 12 · תת-תוכניות: לך, ותחזור — שפת מכונה בדראגון">
+<meta property="og:description" content="אתה קורא ספר. אמא קוראת לך: &quot;תקפוץ למכולת ותביא לחם&quot;. מה אתה עושה עם הספר? שם סימנייה בעמוד, הולך, מביא, חוזר, וממשיך בדיוק מאיפה שעצרת.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/learn/ch12/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/learn/ch12/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch12/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch12/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/learn/course.css">
+</head>
+<body data-ch="ch12">
+<nav class="site" aria-label="ניווט">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/en/learn/ch12/" lang="en" hreflang="en">English</a>
+  <a href="/learn/">כל הפרקים</a>
+  <a href="/">← לדף הבית</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>שפת מכונה מאפס</h1>
+    <p class="sub">קורס ל-דראגון 32 · פרקים 0 עד 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/learn/ch0/" data-tab="ch0">0 · רחוב של תאים<span class="done" data-done="0"></span></a>
+  <a href="/learn/ch1/" data-tab="ch1">1 · המסך הוא זיכרון<span class="done" data-done="1"></span></a>
+  <a href="/learn/ch2/" data-tab="ch2">2 · LDA ו-STA<span class="done" data-done="2"></span></a>
+  <a href="/learn/ch3/" data-tab="ch3">3 · מד המרחק<span class="done" data-done="3"></span></a>
+  <a href="/learn/ch4/" data-tab="ch4">4 · ארבע נורות<span class="done" data-done="4"></span></a>
+  <a href="/learn/ch5/" data-tab="ch5">5 · עם # או בלי<span class="done" data-done="5"></span></a>
+  <a href="/learn/ch6/" data-tab="ch6">6 · חשבון<span class="done" data-done="6"></span></a>
+  <a href="/learn/ch7/" data-tab="ch7">7 · האצבע X<span class="done" data-done="7"></span></a>
+  <a href="/learn/ch8/" data-tab="ch8">8 · צומת<span class="done" data-done="8"></span></a>
+  <a href="/learn/ch9/" data-tab="ch9">9 · לולאות<span class="done" data-done="9"></span></a>
+  <a href="/learn/ch10/" data-tab="ch10">10 · מקשים<span class="done" data-done="10"></span></a>
+  <a href="/learn/ch11/" data-tab="ch11">11 · תנועה<span class="done" data-done="11"></span></a>
+  <a href="/learn/ch12/" data-tab="ch12">12 · תת-תוכניות<span class="done" data-done="12"></span></a>
+  <a href="/learn/ch13/" data-tab="ch13">13 · מספרים ברחוב<span class="done" data-done="13"></span></a>
+  <a href="/learn/ch14/" data-tab="ch14">14 · המשחק<span class="done" data-done="14"></span></a>
+  <a href="/learn/ch15/" data-tab="ch15">15 · למכונה<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch12" id="ch12">
+  <div class="ch-head"><div><div class="num">פרק 12</div><h2 id="h-ch12">תת-תוכניות: לך, ותחזור</h2></div><span class="time">כ-25 דקות · JSR, ‏RTS וערימת הצלחות</span></div>
+
+  <div class="step">
+    <h3><span class="n">1</span>"לך תביא לחם, ותחזור"</h3>
+    <p>אתה קורא ספר. אמא קוראת לך: "תקפוץ למכולת ותביא לחם". מה אתה עושה עם הספר? שם <b>סימנייה</b> בעמוד, הולך, מביא, חוזר, וממשיך בדיוק מאיפה שעצרת.</p>
+    <p>גם המעבד יודע לעשות את זה. ‏<code>JSR</code> אומרת לו: "לך לעשות את העבודה הזאת, ותחזור". חתיכת תוכנית שהולכים אליה וחוזרים ממנה נקראת <b>תת-תוכנית</b>. בסוף שלה כתוב <code>RTS</code>: "חזור לסימנייה".</p>
+    <div class="say"><svg viewBox="0 0 120 120" class="m"></svg><p>אתה כבר מכיר את זה! מפרק 2 אתה כותב <code>JSR ,X</code> בסוף הקבוע. זו קפיצה לתת-תוכנית של הדראגון, <b>בודק המקלדת</b>, והוא חוזר ממנה עם התשובה. עכשיו נכתוב תת-תוכניות משלנו.</p></div>
+    <p>בדוגמה הזאת יש תת-תוכנית בשם <code>DOT</code>, שמציירת לבנה אדומה (שתי משבצות) במקום שהאצבע Y מצביעה עליו. התוכנית הראשית קוראת לה שלוש פעמים. שים לב איפה <code>DOT</code> כתובה: <b>אחרי</b> הסוף הקבוע. המעבד אף פעם לא ייכנס אליה לבד, רק דרך <code>JSR</code>.</p>
+    <div id="pw121"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>איפה שמורה הסימנייה? בערימת צלחות</h3>
+    <p>הסימנייה של המעבד היא <b>מספר בית</b>: הבית של השורה שאחרי ה-<code>JSR</code>. הוא כותב אותה על <b>צלחת</b>, ומניח את הצלחת על <b>ערימה</b>. לערימה הזאת קוראים <b>מחסנית</b>.</p>
+    <figure><div id="fig121"></div><figcaption>ציור 26: ערימת הצלחות. היד S מחזיקה תמיד את הצלחת העליונה. ‏<bdi class="ltr">JSR</bdi> מניחה צלחת חדשה למעלה, ו-<bdi class="ltr">RTS</bdi> לוקחת את הצלחת העליונה וחוזרת לבית שכתוב עליה.</figcaption></figure>
+    <ul>
+      <li>מגירה חדשה במעבד: <b>S</b>. היא אצבע, כמו X ו-Y, והיא מצביעה תמיד על הצלחת העליונה.</li>
+      <li>צלחת של <code>JSR</code> תופסת <b>שני בתים</b> (מספר בית הוא מספר גדול). לכן ‏<code>JSR</code> מורידה את S ב-2, ו-<code>RTS</code> מעלה אותה ב-2. הערימה גדלה <b>כלפי מטה</b> בזיכרון.</li>
+      <li>לוקחים תמיד רק את הצלחת <b>העליונה</b>. בדיוק כמו בערימת צלחות אמיתית.</li>
+    </ul>
+    <div class="note">ומה הצלחת שכבר יושבת שם כשהתוכנית מתחילה? ‏DREAM הריץ את התוכנית שלך כמו תת-תוכנית: לפני שקפץ אליה, הוא הניח צלחת. כתוב עליה איפה DREAM ממשיך. לכן הסוף הקבוע נגמר ב-<code>RTS</code>: היא לוקחת את הצלחת של DREAM, וחוזרת אליו. גם התוכנית כולה היא תת-תוכנית.</div>
+    <div class="quiz" data-quiz="q12a"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>תת-תוכנית עם הוראות: "צייר ריבוע"</h3>
+    <p>תת-תוכנית טובה עושה עבודה אחת, ואפשר לבקש ממנה אותה שוב ושוב, כל פעם קצת אחרת. ‏<code>SQUARE</code> מציירת ריבוע של 2 על 2. לפני שקוראים לה, שמים במגירות את ה"הוראות": ב-Y <b>איפה</b>, ב-A <b>באיזה צבע</b>.</p>
+    <div id="pw122"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>לשמור מגירה בצד: PSHS ו-PULS</h3>
+    <p>התוכנית הראשית כותבת אותיות: A, ואחריה B, ואחריה C... היא שומרת את האות במגירה A, ומוסיפה 1 בכל סיבוב (<code>INCA</code>). תת-התוכנית <code>UNDER</code> מציירת קו אדום מתחת לכל אות. אבל בשביל זה היא צריכה את A לצבע. מה יקרה לאות?</p>
+    <p>הפתרון: לפני שהיא נוגעת ב-A, היא שמה <b>עותק</b> של A על ערימת הצלחות: <code>PSHS A</code>. בסוף היא לוקחת אותו בחזרה: <code>PULS A</code>. ככה התוכנית הראשית מקבלת את A בדיוק כמו שהשאירה.</p>
+    <div id="pw123"></div>
+    <div class="note">‏<code>PSHS</code> = "שים על הערימה" (‏push). ‏<code>PULS</code> = "קח מהערימה" (‏pull). אפשר לשים כמה מגירות בבת אחת, למשל <code>PSHS A,B</code>. וזוכרים: מה שנכנס אחרון, יוצא ראשון.</div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">5</span>מה קורה אם שוכחים צלחת?</h3>
+    <p>אותה תוכנית, אבל מישהו שכח את <code>PULS A</code>. ‏<code>RTS</code> לא יודעת מה יש על הצלחות. היא פשוט לוקחת <b>שני בתים מלמעלה</b>, ומאמינה שזו הסימנייה.</p>
+    <figure><div id="fig122"></div><figcaption>ציור 27: למעלה יושבת הצלחת של A (‏<bdi class="ltr">$41</bdi>), ומתחתיה הסימנייה (‏<bdi class="ltr">$2E $EC</bdi>). ‏<bdi class="ltr">RTS</bdi> לוקחת שני בתים: <bdi class="ltr">$41</bdi> וחצי סימנייה. יחד: <bdi class="ltr">$412E</bdi>. לשם המעבד קופץ.</figcaption></figure>
+    <div id="pw124"></div>
+    <p>זה אחד הבאגים הכי מפורסמים בשפת מכונה. הכלל: <b>בכל תת-תוכנית, כמה צלחות שמת, כך צלחות אתה מוריד</b>, לפני ה-<code>RTS</code>.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>חידות: תת-תוכניות</h3>
+    <div class="puzzle" id="pz121"></div>
+    <div class="puzzle" id="pz122"></div>
+    <div class="puzzle" id="pz123"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">▶</span>בדראגון האמיתי</h3>
+    <div class="machine" id="mach12"></div>
+  </div>
+
+  <div class="recap">
+    <div><b>מה למדנו:</b> ‏<span class="ltr">JSR</span> = לך לתת-תוכנית, ושים צלחת עם בית החזרה. ‏<span class="ltr">RTS</span> = קח את הצלחת העליונה וחזור. ‏<span class="ltr">PSHS</span> / <span class="ltr">PULS</span> = שמור מגירה על הערימה, וקח אותה בחזרה.</div>
+    <div>היד S מחזיקה את הצלחת העליונה. כמה צלחות שמים, כך מורידים. אחרת <span class="ltr">RTS</span> קופצת למקום מוזר.</div>
+    <div class="next">בפרק הבא: מה DREAM עושה כשהוא "מתרגם"? מסתבר שהתוכנית עצמה היא מספרים ברחוב התאים.</div>
+    <button class="btn warm nextch" data-go="ch13">לפרק 13 ←</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">פרויקט מחווה של חובב, לא קשור ל-<bdi>Dragon Data</bdi> ולא מורשה על ידה. הקורס, הציורים והטקסט שלנו. כל תוכנית בקורס נבדקה במכונת ה-<bdi>Dragon</bdi> של האתר (<bdi>XRoar</bdi> עם ה-<bdi>BASIC</bdi> שכתבנו).</p>
+<script src="/learn/course.js"></script>
+</body>
+</html>

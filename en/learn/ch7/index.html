@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 7 · The finger X — Machine Code on the Dragon</title>
+<meta name="description" content="Until now, in every STA we wrote the house number ourselves. Want to draw somewhere else? You change all the lines. There is a better way.">
+<meta property="og:title" content="Chapter 7 · The finger X — Machine Code on the Dragon">
+<meta property="og:description" content="Until now, in every STA we wrote the house number ourselves. Want to draw somewhere else? You change all the lines. There is a better way.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dragon1982.com/en/learn/ch7/">
+<meta property="og:image" content="https://dragon1982.com/icon-512.png">
+<link rel="canonical" href="https://dragon1982.com/en/learn/ch7/">
+<link rel="alternate" hreflang="en" href="https://dragon1982.com/en/learn/ch7/">
+<link rel="alternate" hreflang="he" href="https://dragon1982.com/learn/ch7/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="/en/learn/course.css">
+</head>
+<body data-ch="ch7">
+<nav class="site" aria-label="Navigation">
+  <b dir="ltr">Dragon 1982</b>
+  <a href="/learn/ch7/" lang="he" hreflang="he">עברית</a>
+  <a href="/en/learn/">All chapters</a>
+  <a href="/en/">← Home</a>
+</nav>
+<div class="wrap">
+
+<header class="top">
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true" id="mascotBig"></svg>
+  <div>
+    <h1>Machine code from zero</h1>
+    <p class="sub">A course for the Dragon 32 · Chapters 0 to 15</p>
+  </div>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="/en/learn/ch0/" data-tab="ch0">0 · A street of houses<span class="done" data-done="0"></span></a>
+  <a href="/en/learn/ch1/" data-tab="ch1">1 · The screen is memory<span class="done" data-done="1"></span></a>
+  <a href="/en/learn/ch2/" data-tab="ch2">2 · LDA and STA<span class="done" data-done="2"></span></a>
+  <a href="/en/learn/ch3/" data-tab="ch3">3 · The odometer<span class="done" data-done="3"></span></a>
+  <a href="/en/learn/ch4/" data-tab="ch4">4 · Four lamps<span class="done" data-done="4"></span></a>
+  <a href="/en/learn/ch5/" data-tab="ch5">5 · With # or without<span class="done" data-done="5"></span></a>
+  <a href="/en/learn/ch6/" data-tab="ch6">6 · Sums<span class="done" data-done="6"></span></a>
+  <a href="/en/learn/ch7/" data-tab="ch7">7 · The finger X<span class="done" data-done="7"></span></a>
+  <a href="/en/learn/ch8/" data-tab="ch8">8 · Crossroads<span class="done" data-done="8"></span></a>
+  <a href="/en/learn/ch9/" data-tab="ch9">9 · Loops<span class="done" data-done="9"></span></a>
+  <a href="/en/learn/ch10/" data-tab="ch10">10 · Keys<span class="done" data-done="10"></span></a>
+  <a href="/en/learn/ch11/" data-tab="ch11">11 · Movement<span class="done" data-done="11"></span></a>
+  <a href="/en/learn/ch12/" data-tab="ch12">12 · Subroutines<span class="done" data-done="12"></span></a>
+  <a href="/en/learn/ch13/" data-tab="ch13">13 · Numbers on the street<span class="done" data-done="13"></span></a>
+  <a href="/en/learn/ch14/" data-tab="ch14">14 · The game<span class="done" data-done="14"></span></a>
+  <a href="/en/learn/ch15/" data-tab="ch15">15 · To the machine<span class="done" data-done="15"></span></a>
+</nav>
+
+<section class="ch" aria-labelledby="h-ch7" id="ch7">
+  <div class="ch-head"><div><div class="num">Chapter 7</div><h2 id="h-ch7">The finger X</h2></div><span class="time">About 25 minutes · LDX, ,X, ,X+, LEAX</span></div>
+
+  <div class="step">
+    <h3><span class="n">1</span>A new, bigger drawer</h3>
+    <p>Until now, in every STA we wrote the house number ourselves. Want to draw somewhere else? You change all the lines. There is a better way.</p>
+    <p>The processor has a drawer called <b>X</b>. It is <b>twice as wide</b> as A: it holds four digits, so the number of a house fits in it (<code>$0400</code>, <code>$05FF</code>...). Think of it as a <b>finger</b>: the number inside it is the house the finger points at.</p>
+    <figure><div id="fig71"></div><figcaption>Figure 19: drawer X holds <bdi class="ltr">$0402</bdi>, so the finger points at house <bdi class="ltr">$0402</bdi>. <bdi class="ltr">,X</bdi> is that house, and <bdi class="ltr">1,X</bdi> is the neighbour on its right.</figcaption></figure>
+    <p><code>LDX #$0400</code> says: “<b>put $0400 in drawer X</b>”, in other words: point at house <code>$0400</code>. Just like LDA with a hash sign, only for the big drawer.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>Writing where the finger is: STA ,X</h3>
+    <p>Instead of a house number, you write <code>,X</code> (a comma, then X). <code>STA ,X</code> says: “<b>write A in the house the finger points at</b>”. On the screen in the window, the finger is drawn above its square.</p>
+    <div id="pw71"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">3</span>Moving the finger: LEAX</h3>
+    <p><code>LEAX 1,X</code> says: “<b>move the finger one step to the right</b>”. The number before the comma is how far to move: <code>LEAX 32,X</code> moves the finger one row down (32 squares in a row, remember?). And a number with a minus moves backwards: <code>LEAX -1,X</code> left, <code>LEAX -32,X</code> up.</p>
+    <p>Try it yourself: the finger starts at <code>$0400</code>, and drawer A holds a red block.</p>
+    <div id="fw7"></div>
+    <ul class="missions" id="m7"></ul>
+    <div id="pw72"></div>
+    <div id="pw74"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>Write and move: STA ,X+</h3>
+    <p>Writing a letter and then moving one step is so common that there is a shortcut for it. <code>STA ,X+</code> says: “<b>write where the finger is, then move it one step to the right</b>”. The plus comes <b>after</b> the X, because the step comes after the writing.</p>
+    <div id="pw73"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">5</span>Next to the finger: 1,X 32,X</h3>
+    <p>You can also write <b>next to</b> the finger without moving it. <code>STA 1,X</code> writes in the house to the right of the finger, and <code>STA 32,X</code> in the house below it. The finger stays where it is.</p>
+    <p>And here is the magic: the next program draws a big block. Choose another place, and only <b>the first line</b> changes. Everything else stays the same, and the drawing moves.</p>
+    <div id="pw75"></div>
+    <div class="quiz" data-quiz="q7a"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">6</span>Reading with the finger: LDA ,X</h3>
+    <p>What works for writing works for reading too. <code>LDA ,X</code> copies the house the finger points at. <code>LDA 1,X</code> copies the neighbour.</p>
+    <div id="pw76"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">7</span>A line is missing</h3>
+    <p>We wanted a line of three red blocks.</p>
+    <div id="pw77"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">8</span>The secret of the fixed ending (part 1)</h3>
+    <p>From the start, every program has ended with the same four lines. Now we can understand the first one:</p>
+    <p class="ltr" style="text-align:left"><code>KEY LDX $A000</code></p>
+    <p><b>KEY</b> is the name of a place (we’ll use it in a moment). <code>LDX $A000</code> without a hash sign: “go to house <code>$A000</code> and copy”. Drawer X is wide, so it copies <b>two</b> houses: <code>$A000</code> and <code>$A001</code>. There, in the Dragon’s fixed memory, the number of a house is written: the house where a small job lives that checks “has a key been pressed?”. The finger now points at it.</p>
+    <p>And the second line, <code>JSR ,X</code>: “<b>go and do the job the finger points at, and come back</b>”. We’ll learn a lot more about JSR. We’ll understand the third line in the next chapter.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">?</span>Puzzles: drawing with a finger</h3>
+    <p>In these puzzles <b>you may not write a house number</b> after STA. All the writing goes through the finger.</p>
+    <div class="puzzle" id="pz71"></div>
+    <div class="puzzle" id="pz72"></div>
+    <div class="puzzle" id="pz73"></div>
+    <div class="puzzle" id="pz74"></div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">▶</span>On the real Dragon</h3>
+    <div class="machine" id="mach7"></div>
+  </div>
+
+  <div class="recap">
+    <div><b>What we learned:</b> X is a drawer for a house number: a finger. <span class="ltr">LDX #$0400</span> points. <span class="ltr">,X</span> is the finger’s house, <span class="ltr">1,X</span> and <span class="ltr">32,X</span> the neighbours.</div>
+    <div><span class="ltr">STA ,X+</span> writes and moves. <span class="ltr">LEAX 32,X</span> moves the finger one row down. Change the LDX, and the whole drawing moves.</div>
+    <div class="next">Next chapter: a crossroads. The processor compares, lights up a lamp, and decides which way to turn.</div>
+    <button class="btn warm nextch" data-go="ch8">To Chapter 8 →</button>
+  </div>
+</section>
+
+</div>
+<p class="site-foot">A hobbyist tribute project, not affiliated with or endorsed by <bdi>Dragon Data</bdi>. The course, drawings and text are our own. Every program in the course was checked on the site's <bdi>Dragon</bdi> machine (<bdi>XRoar</bdi> running the <bdi>BASIC</bdi> we wrote).</p>
+<script src="/en/learn/course.js"></script>
+</body>
+</html>
