@@ -152,6 +152,11 @@ window.D32_GAMES = {
           "Games"
         ],
         [
+          "tools",
+          "כלים: לכתוב תוכנית בשפת מכונה בתוך ה-Dragon",
+          "Tools: write a machine-code program inside the Dragon"
+        ],
+        [
           "basic",
           "תוכניות BASIC קצרות: לשחק, לקרוא את הקוד ולשנות",
           "Short BASIC programs: play them, read the code, change it"
@@ -1352,6 +1357,39 @@ window.D32_GAMES = {
         116,
         0,
         48
+      ]
+    },
+    "dasm": {
+      "slug": "dragon-assembler",
+      "drawer": "ours",
+      "group": "tools",
+      "year": "2026",
+      "tag": [
+        "כלי",
+        "tool"
+      ],
+      "players": [
+        "",
+        ""
+      ],
+      "load": [
+        "כדקה",
+        "about a minute"
+      ],
+      "about": {
+        "he": [
+          "אסמבלר שרץ בתוך ה-Dragon עצמו, כמו בשנות השמונים: כותבים תוכנית בשפת מכונה, מתרגמים, מריצים ושומרים בקלטת. כתבנו אותו ב-2026, בשפת מכונה, והקוד פתוח ב-GitHub.",
+          "אותו תחביר ואותם בתים כמו האסמבלר שבדפדפן, בפינת הלמידה."
+        ],
+        "en": [
+          "An assembler that runs inside the Dragon itself, as in the eighties: write a machine-code program, assemble it, run it and save it on tape. We wrote it in 2026, in machine code, and the code is open on GitHub.",
+          "The same syntax and the same bytes as the browser Assembler in the learning corner."
+        ]
+      },
+      "icon": [
+        0,
+        0,
+        96
       ]
     },
     "guess": {

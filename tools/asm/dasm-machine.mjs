@@ -42,8 +42,8 @@ await type('CLOADM\n');
 let s = await until(/ASSEMBLR[\s\S]*\nOK/, 240000);
 check('CLOADM loads the tape', /ASSEMBLR[\s\S]*\nOK/.test(s), s);
 await type('EXEC\n');
-s = await until(/DRAGON 1982 ASSEMBLER/, 10000);
-check('EXEC starts the assembler', /DRAGON 1982 ASSEMBLER/.test(s), s);
+s = await until(/DRAGON ASSEMBLER/, 10000);
+check('EXEC starts the assembler', /DRAGON ASSEMBLER/.test(s), s);
 await shot('hello');
 
 const prog = ['10 * THE ALPHABET', '20 @ LDX #$0400', "30  LDA #'A", '40 LOOP STA ,X+', '50  INCA', "60  CMPA #'Z+1", '70  BNE LOOP', '80 KEY LDX $A000', '90  JSR ,X', '100  BEQ KEY', '110  RTS'];

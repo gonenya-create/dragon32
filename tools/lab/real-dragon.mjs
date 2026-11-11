@@ -41,7 +41,7 @@ function list(he) {
         ? `<span class="only">${he ? 'השמעה בלבד' : 'play only'}</span>`
         : `<button type="button" class="w">⬇ ${he ? 'צליל' : 'sound'}</button><a class="c" href="/lab/1982/tapes/${id}.cas" download="${esc(file)}.cas">⬇ ${he ? 'קלטת' : 'tape'}</a>`);
       out += `  <li id="${id}" data-id="${id}" data-file="${esc(file)}"><span class="rn"><bdi>${esc(name)}</bdi></span><span class="rm">${he ? 'ב-<bdi dir="ltr">Dragon</bdi> מקלידים:' : 'On the Dragon, type:'} <code dir="ltr">${cmd}</code>${L(g.load) ? '<br>' + (he ? 'טעינה: ' : 'Loading: ') + esc(L(g.load)) : ''}</span><span class="rb">${btns}</span><span class="bar"><i></i><span></span></span></li>\n`;
-      n++;
+      if (g.group !== 'tools') n++;   // האסמבלר הוא כלי, לא משחק: לא בספירה
     }
     out += '</ul>\n';
   }

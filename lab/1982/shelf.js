@@ -13,6 +13,9 @@
     // שפת מכונה (CLOADM ואז EXEC): נבנה מ-games/eggs (node games/eggs/build.mjs)
     ['eggs', 'ביצי הדרקון', 'Dragon Eggs', 'm',
       ['Gonen Yarom, 2026', 'https://github.com/gonenya-create/dragon32/tree/main/games/eggs', null]],
+    // האסמבלר שרץ בתוך ה-Dragon (גונן, 11.11): נבנה מ-games/dasm (node games/dasm/build.mjs). כלי, לא משחק
+    ['dasm', 'אסמבלר ה-Dragon', 'Dragon Assembler', 'm',
+      ['Gonen Yarom, 2026', 'https://github.com/gonenya-create/dragon32/tree/main/games/dasm', null]],
     // משחקים של אחרים, באישור המחבר ועם קרדיט (CLAUDE.md). 'a' = שפת מכונה שמתחילה לבד אחרי CLOADM.
     // [מחבר, תיעוד (חובה לפי הרישיון), אתר המחבר או קוד המקור, רישיון נפרד אם יש]
     ['blockdown', 'Blockdown', 'Blockdown', 'a',
@@ -646,6 +649,16 @@
         'Move with GO and a direction: GO NORTH, GO SOUTH, GO EAST, GO WEST, GO UP, GO DOWN. TAKE INVENTORY shows what you carry, and SCORE shows your score.',
         'Saving: SAVE GAME. At PRESS ENTER WHEN READY press [ENTER], and at ENTER DATA FILE NAME: type a name and [ENTER]. The game is saved to My tapes, and ends.',
         'To carry on from the same place: load the game again, and at the question about a saved game press [Y], then [ENTER] and the same name. QUIT ends the game, and at HOW ABOUT ANOTHER (Y OR N)? press [N] to go back to BASIC.']
+    },
+    dasm: {
+      he: ['כותבים שורות עם מספרים, כמו ב-BASIC, ו-[ENTER] בסוף כל שורה: 100 LOOP LDA #1. שורה בלי שם של מקום מתחילה ברווח: 100 ואחריו שני רווחים, LDA #1.',
+        'A מתרגם לשפת מכונה, ומראה כל שגיאה עם מספר השורה. R מתרגם ומריץ. L מציג את התוכנית, E 100 מתקן את שורה 100, ו-HELP מראה את כל הפקודות.',
+        'CSAVE "NAME" שומר את התוכנית ב"הקלטות שלי", ו-CLOAD "NAME" טוען אותה בחזרה.',
+        'סוגר מרובע פותח: [SHIFT] ואז [↓]. סוגר: [SHIFT] ואז [→]. ‏BASIC חוזר ל-BASIC, ו-EXEC חוזר לאסמבלר עם התוכנית.'],
+      en: ['Type lines with numbers, as in BASIC, with [ENTER] after each: 100 LOOP LDA #1. A line with no place name starts with a space: 100, then two spaces, then LDA #1.',
+        'A assembles into machine code and shows each mistake with its line number. R assembles and runs. L lists the program, E 100 changes line 100, and HELP shows every command.',
+        'CSAVE "NAME" saves the program to My tapes, and CLOAD "NAME" loads it back.',
+        'Opening square bracket: [SHIFT] then [↓]. Closing: [SHIFT] then [→]. BASIC goes back to BASIC, and EXEC comes back to the assembler with the program.']
     },
     eggs: {
       he: ['מתחילים ב[רווח], או בכפתור של ג\'ויסטיק ימני.',
@@ -1482,6 +1495,7 @@
     sanctum: ['אחרי EXEC מופיע מסך הפתיחה: לוחצים מקש, ועל השאלה על משחק שמור לוחצים [N].', 'After EXEC the title screen appears: press a key, and at the question about a saved game press [N].'],
     calixto: ['אחרי EXEC מופיע מסך הפתיחה: לוחצים מקש, ועל השאלה על משחק שמור לוחצים [N].', 'After EXEC the title screen appears: press a key, and at the question about a saved game press [N].'],
     eggs: ['המשחק מופיע. מתחילים ב[רווח].', 'The game appears. Press [Space] to start.'],
+    dasm: ['האסמבלר מופיע. כותבים HELP ו-[ENTER] כדי לראות את הפקודות.', 'The assembler appears. Type HELP and [ENTER] to see the commands.'],
     blockdown: ['כשהטעינה נגמרת המשחק מתחיל לבד. מתחילים ב[רווח].', 'When loading ends the game starts by itself. Press [Space] to start.'],
     dragontet: ['מופיע תפריט: בוחרים ב[↑] [↓] ומאשרים ב[ENTER].', 'A menu appears: choose with [↑] [↓] and confirm with [ENTER].'],
     escape: ['מופיעים מסך הפתיחה וההקדמה, ואז המסדרון: [↑] קדימה, [←] [→] מסתובבים.', 'The title screen and the introduction appear, then the corridor: [↑] forward, [←] [→] turn.'],
@@ -1549,6 +1563,7 @@
     sanctum: ['הרפתקת מילים: בקתה בהרים המושלגים, מנזר ישן, וכוחות של כישוף שחור שצריך להשמיד.', 'A text adventure: a cabin in the snowy mountains, an old monastery, and forces of black magic to destroy.'],
     calixto: ['הרפתקת מילים: מחדר העבודה של פרופסור אל אי טרופי ופירמידה של המאיה, בחיפוש אחרי אוצר.', 'A text adventure: from a professor\'s study to a tropical island and a Mayan pyramid, after a treasure.'],
     eggs: ['תופסים בסל את הביצים שהדרקון מטיל. לשחקן אחד.', 'Catch the dragon\'s eggs in a basket. 1 player.'],
+    dasm: ['אסמבלר בתוך ה-Dragon: כותבים תוכנית בשפת מכונה, מתרגמים, מריצים ושומרים בקלטת.', 'An assembler inside the Dragon: write a machine-code program, assemble it, run it and save it on tape.'],
     blockdown: ['קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים.', 'Falling blocks: complete the lines. 1 or 2 players.'],
     dragontet: ['קוביות נופלות: משלימים שורות. לשחקן אחד או לשניים.', 'Falling blocks: complete the lines. 1 or 2 players.'],
     escape: ['מבוך תלת-ממדי של חידות: מוצאים דמויות עם רמזים, ומפענחים את הקוד של המעלית כדי לצאת מהבניין. לשחקן אחד.', 'A 3D puzzle maze: find characters with clues, and work out the elevator code to get out of the building. 1 player.'],

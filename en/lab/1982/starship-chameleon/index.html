@@ -192,6 +192,7 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
     <div id="tapes"></div>
     <details class="drawer" id="drawer-mine" data-drawer="mine"><summary><span class="drawer-name">My tapes</span> <span class="drawer-count" id="mine-count">0</span></summary><div class="drawer-body">
     <div class="mine-tools"><button type="button" class="mini upload" id="tape-upload">📂 Load a tape from a file</button></div>
+    <p class="note mine-asm">🛠️ <a href="/en/learn/asm/">Write your own program in the Assembler</a>, and send it here. Or write it inside the <bdi dir="ltr">Dragon</bdi>, in the <a href="/en/lab/1982/dragon-assembler/">Dragon Assembler</a>.</p>
     <input type="file" id="tape-file" accept=".cas" hidden>
     <div class="mytapes" id="mytapes"></div>
     <details class="note mine-how"><summary>ℹ️ How it works</summary>
@@ -309,7 +310,8 @@ function press(label, alt, hold = 70) {
   if (shift && label === '↑') { key = '_'; code = 'Minus'; needShift = true; }
   // SHIFT then 0: switch between capitals and lowercase, like the Dragon (10.11, Telewriter). In XRoar it's Shift+Enter, held a little longer
   else if (shift && label === '0') { key = 'Enter'; code = 'Enter'; needShift = true; hold = Math.max(hold, 200); }
-  else if (CODE[label]) [key, code] = CODE[label];
+  // SHIFT ואז חץ: SHIFT לחוץ באמת, כמו ב-Dragon (11.11: באסמבלר שבתוך ה-Dragon, SHIFT+↓ הוא [ ו-SHIFT+→ הוא ])
+  else if (CODE[label]) { [key, code] = CODE[label]; needShift = shift && /^[↓→←]$/.test(label); }
   else {
     key = shift && alt ? alt : label;
     // SHIFT + a letter really presses SHIFT, like on the Dragon (Gonen, 1.11: on an iPhone, SHIFT+N in DK COCO sent only N)

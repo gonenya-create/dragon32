@@ -3097,7 +3097,7 @@ shifted		pshs	a,b
 		rts
 
 ; ================= טקסטים / texts =================
-t_hello		fcc	"DRAGON 1982 ASSEMBLER 1.0"
+t_hello		fcc	"DRAGON ASSEMBLER 1.0"
 		fcb	13
 		fcc	"(C) 2026 GONEN YAROM"
 		fcb	13

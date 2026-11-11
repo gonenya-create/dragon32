@@ -55,7 +55,7 @@ for (const en of [false, true]) {
   }).join('\n');
   const comm = rowsOf('community');
   const commRows = comm.map((id, i) => { const g = G.games[id]; return `<tr><td class="num">${i + 1}</td><td class="name">${link(id)}</td><td>${L(author(id))}</td><td class="topic">${en ? esc(g.tag[1]) : esc(g.tag[0])}</td><td class="yr">${L(g.year)}</td></tr>`; }).join('\n');
-  const ours = rowsOf('ours');
+  const ours = rowsOf('ours').filter(id => G.games[id].group !== 'tools');   // כלים (האסמבלר) הם לא משחקים
   const oursRows = ours.map((id, i) => { const g = G.games[id]; return `<tr><td class="num">${i + 1}</td><td class="name">${link(id)}</td><td class="lng">${g.group === 'basic' ? L('BASIC') : t('שפת מכונה', 'Machine code')}</td><td>${esc(firstSentence((en ? g.about.en : g.about.he)[0]))}</td></tr>`; }).join('\n');
   const U = 'https://dragon1982.com', heU = `${U}/lab/1982/games/`, enU = `${U}/en/lab/1982/games/`;
   const title = t('כל המשחקים במדף — Dragon 1982', 'Every game on the shelf — Dragon 1982');
