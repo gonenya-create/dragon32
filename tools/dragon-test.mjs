@@ -1682,7 +1682,8 @@ if (part('adverts gallery')) {
   const { ADVERTS } = await import('./adverts/data.mjs');
   const p = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   p.on('pageerror', e => pageErrors.push(e.message));
-  const bad = []; p.on('response', r => { if (r.status() >= 400 && new URL(r.url()).host === new URL(PAGE).host) bad.push(r.status() + ' ' + r.url()); });
+  // /_vercel/ (ספירת הביקורים) קיים רק ב-Vercel, לא בשרת הבדיקה המקומי
+  const bad = []; p.on('response', r => { if (r.status() >= 400 && new URL(r.url()).host === new URL(PAGE).host && !new URL(r.url()).pathname.startsWith('/_vercel/')) bad.push(r.status() + ' ' + r.url()); });
   for (const [base, he] of [['/adverts/', true], ['/en/adverts/', false]]) {
     await p.goto(new URL(base, PAGE).href);
     const cards = await p.$$eval('.scan-card', as => as.map(a => ({ href: a.getAttribute('href'), img: a.querySelector('img').complete && a.querySelector('img').naturalWidth > 0 })));
