@@ -15,80 +15,19 @@ GPRADR		equ	$cb		; תחילת השורה במסך
 GPRMSK		equ	$cd		; המסכה של תחילת השורה
 
 ; ---------- DRAW מחרוזת (קורא 11) ----------
-; dxstr: "X שם;" של DRAW ושל PLAY. חייבת להיות מחרוזת (?TM), ואז בדיקת מקום (?OM): B = הבתים
-; פחות 2, כי כאן המחסנית עמוקה ב-2. מחרוזת ריקה: חוזרים. אחרת המחרוזת הנוכחית נדחפת למחסנית של
-; הקורא ([אורך][כתובת]), ועוברים לחדשה. Y משתנה
-dxstr		pshs	b
-		bsr	dvar
-		lbsr	chkstr
-		puls	b
-		lbsr	getstk
-		ldx	VARPNT
-		lda	,x
-		beq	9F		; ריקה או לא קיימת
-		puls	y		; כתובת החזרה
-		ldu	DPTR
-		ldb	DLEN
-		pshs	b,u
-		sta	DLEN
-		ldx	2,x
-		stx	DPTR
-		jmp	,y
-dfc		lbra	err_fc
-
-; dget: התו הבא בלי רווחים → A. בסוף המחרוזת: C=1. X משתנה
-dget		tst	DLEN
-		beq	8F
-		dec	DLEN
-		ldx	DPTR
-		lda	,x+
-		stx	DPTR
-		cmpa	#$20
-		beq	dget
-		andcc	#$fe
-9		rts
-8		coma			; C=1 (אף קורא לא משתמש ב-A בסוף המחרוזת)
-		rts
-; dgetf: כמו dget, אבל בסוף המחרוזת: ?FC
-dgetf		bsr	dget
-		bcs	dfc
-9		rts
+; הסדר כאן (13.11): dback ו-dfc, ואז $B051 (ההתחלה של DRAW במקור: קפיצה ל-draw_st), ואחריו dval, dgetf,
+; dmval, darg, dvar, dget ו-dxstr. כך $B051 נופל בדיוק אחרי ה-lbra של dfc, וכל הקפיצות הקצרות עדיין מגיעות.
+; עד 13.11 כאן היה אמצע של dxstr
 ; dback: מחזירים את התו האחרון
 dback		inc	DLEN
 		ldx	DPTR
 		leax	-1,x
 		stx	DPTR
 		rts
+dfc		lbra	err_fc
+		fill	$ff,$b051-*	;@isl
+		jmp	draw_st	;@isl
 
-; dvar: "שם;" → VARPNT ו-VALTYP, דרך ptrget הרגיל. האות הראשונה A-Z, וחייב ';' (אחרת ?FC).
-; TXTPTR מצביע בינתיים על השם, ואחר כך חוזר
-dvar		bsr	dgetf
-		suba	#'A		; A-Z (A לא נחוץ אחר כך)
-		cmpa	#'Z-'A
-		bhi	dfc
-		ldu	TXTPTR
-		pshs	u
-		ldx	DPTR
-		leax	-1,x
-		stx	TXTPTR
-1		bsr	dgetf
-		cmpa	#';
-		bne	1B
-		ldb	#1		; כמו בביטוי: משתנה שלא קיים לא נוצר (0 או מחרוזת ריקה; קורא: צליל 9.3)
-		lbsr	ptrget
-		puls	x
-		stx	TXTPTR
-		rts
-
-; darg: המספר אחרי אות → B. בסוף המחרוזת, או כשבא אחריה אות גדולה: 1
-darg		bsr	dget
-		bcs	1F
-		bsr	dback
-		suba	#'A		; לא אות גדולה: dval קורא מחדש
-		cmpa	#'Z-'A
-		bhi	dval
-1		ldb	#1
-		rts
 ; dval: ערך 0-255 → B: "=שם;" או ספרות (הראשונה חייבת להיות ספרה). מעל 255: ?FC
 dval		bsr	dgetf
 		cmpa	#'=
@@ -111,12 +50,16 @@ dval		bsr	dgetf
 		pshs	b
 		bsr	dget
 		puls	b		; puls לא נוגע בדגלים
-		bcs	9B		; סוף המחרוזת: המספר נגמר
+		bcs	drts		; סוף המחרוזת: המספר נגמר
 		suba	#'0
 		cmpa	#9
 		bls	2B
 		bra	dback		; לא ספרה: חוזר למחרוזת
 
+; dgetf: כמו dget, אבל בסוף המחרוזת: ?FC
+dgetf		bsr	dget
+		bcs	dfc
+		rts
 ; dmval: [+|-]ערך → D עם סימן. DSIGN = התו של הסימן (0 אם אין)
 dmval		bsr	dgetf
 		cmpa	#'+
@@ -134,6 +77,68 @@ dmval		bsr	dgetf
 		clra
 		rts
 
+; darg: המספר אחרי אות → B. בסוף המחרוזת, או כשבא אחריה אות גדולה: 1
+darg		bsr	dget
+		bcs	1F
+		bsr	dback
+		suba	#'A		; לא אות גדולה: dval קורא מחדש
+		cmpa	#'Z-'A
+		bhi	dval
+1		ldb	#1
+		rts
+; dvar: "שם;" → VARPNT ו-VALTYP, דרך ptrget הרגיל. האות הראשונה A-Z, וחייב ';' (אחרת ?FC).
+; TXTPTR מצביע בינתיים על השם, ואחר כך חוזר
+dvar		bsr	dgetf
+		suba	#'A		; A-Z (A לא נחוץ אחר כך)
+		cmpa	#'Z-'A
+		bhi	dfc
+		ldu	TXTPTR
+		pshs	u
+		ldx	DPTR
+		leax	-1,x
+		stx	TXTPTR
+1		bsr	dgetf
+		cmpa	#';
+		bne	1B
+		ldb	#1		; כמו בביטוי: משתנה שלא קיים לא נוצר (0 או מחרוזת ריקה; קורא: צליל 9.3)
+		lbsr	ptrget
+		puls	x
+		stx	TXTPTR
+		rts
+
+; dget: התו הבא בלי רווחים → A. בסוף המחרוזת: C=1. X משתנה
+dget		tst	DLEN
+		beq	8F
+		dec	DLEN
+		ldx	DPTR
+		lda	,x+
+		stx	DPTR
+		cmpa	#$20
+		beq	dget
+		andcc	#$fe
+drts		rts
+8		coma			; C=1 (אף קורא לא משתמש ב-A בסוף המחרוזת)
+		rts
+; dxstr: "X שם;" של DRAW ושל PLAY. חייבת להיות מחרוזת (?TM), ואז בדיקת מקום (?OM): B = הבתים
+; פחות 2, כי כאן המחסנית עמוקה ב-2. מחרוזת ריקה: חוזרים. אחרת המחרוזת הנוכחית נדחפת למחסנית של
+; הקורא ([אורך][כתובת]), ועוברים לחדשה. Y משתנה
+dxstr		pshs	b
+		bsr	dvar
+		lbsr	chkstr
+		puls	b
+		lbsr	getstk
+		ldx	VARPNT
+		lda	,x
+		beq	drts		; ריקה או לא קיימת
+		puls	y		; כתובת החזרה
+		ldu	DPTR
+		ldb	DLEN
+		pshs	b,u
+		sta	DLEN
+		ldx	2,x
+		stx	DPTR
+		jmp	,y
+
 ; המחרוזות המקוננות (X) נשמרות במחסנית: [אורך][כתובת]. הסמן בתחתית: כתובת 0
 draw_st		lbsr	evstr		; לא מחרוזת: ?TM
 		sta	DLEN
@@ -147,7 +152,7 @@ draw_st		lbsr	evstr		; לא מחרוזת: ?TM
 		lbsr	gsetac
 		ldx	#0
 		pshs	a,x		; הסמן
-dloop		lbsr	dget
+dloop		bsr	dget		; (13.11: קצר, dget עכשיו קרוב)
 		bcc	1F
 		puls	a,x		; המחרוזת נגמרה: חוזרים לחיצונית
 		sta	DLEN
@@ -169,7 +174,7 @@ dloop		lbsr	dget
 3		cmpa	#'X
 		bne	4F
 		ldb	#1		; X שם; : מחרוזת אחרת. getstk של 3 בתים
-		lbsr	dxstr
+		bsr	dxstr		; (13.11: קצר)
 		bra	dloop
 4		cmpa	#'M
 		beq	dmcmd
@@ -182,17 +187,18 @@ dloop		lbsr	dget
 		stb	GFORE
 		lbsr	gsetac
 		bra	dloop
-5		ldx	#GANGLE
-		cmpa	#'A
+; A ו-S: כל אחת עם הבדיקה והשמירה שלה (13.11: בית פחות; עם שתי הקריאות הקצרות למעלה, 3 הבתים של $B051)
+5		cmpa	#'A
 		bne	6F
 		cmpb	#4
-		bra	61F
+		bhs	dfc2
+		stb	GANGLE
+		bra	dloop
 6		cmpa	#'S
 		bne	7F
-		leax	1,x		; GSCALE
 		cmpb	#63		; 63 נדחה (כמו במקור)
-61		bhs	dfc2
-		stb	,x
+		bhs	dfc2
+		stb	GSCALE
 		bra	dloop
 ; U R D L הם U מסובב 0-3 פעמים, ו-E F G H הם E (n,-n) מסובב
 7		leax	dlet,pcr

@@ -1,7 +1,7 @@
 next	equ	37216
 IT_SL	equ	236
 sincon	equ	41520
-dget	equ	45162
+dget	equ	45274
 POLLS	equ	130
 getadr	equ	39664
 strfb	equ	40067
@@ -13,14 +13,14 @@ IT_SA	equ	234
 mul10	equ	36077
 cr_str	equ	34388
 gcfc	equ	44629
-dxstr	equ	45125
+dxstr	equ	45295
 pset_st	equ	43815
 run85	equ	36647
 isl_b469_e	equ	46188
 sqrhlf	equ	41418
 gat	equ	44480
 us_exp	equ	43256
-dgetf	equ	45183
+dgetf	equ	45191
 LASTKEY	equ	1020
 gl_brk	equ	34881
 LOWTR	equ	1014
@@ -548,7 +548,7 @@ DEVWID	equ	109
 csv2	equ	47762
 main	equ	33813
 tdefs	equ	49068
-dback	equ	45188
+dback	equ	45125
 gprow	equ	45891
 inloop0	equ	39483
 pr_comma	equ	36990
@@ -564,7 +564,7 @@ sgxyp	equ	41612
 DEGREE	equ	85
 x_strout	equ	40746
 search	equ	47448
-dvar	equ	45197
+dvar	equ	45240
 pc_adv	equ	48738
 SYNCNT	equ	131
 fnext	equ	33515
@@ -573,7 +573,7 @@ fn_mem	equ	40293
 edit_st	equ	42260
 frefac	equ	38246
 isl_a95d_e	equ	43364
-dval	equ	45246
+dval	equ	45140
 cosc	equ	41329
 IDXTMP	equ	242
 fn_abs	equ	37817
@@ -627,7 +627,7 @@ divsub	equ	35868
 cls	equ	48688
 fprts	equ	35744
 GLY	equ	201
-dfc	equ	45159
+dfc	equ	45134
 GLX	equ	199
 logeb2	equ	41438
 GCEND	equ	217
@@ -778,7 +778,7 @@ DATPTR	equ	51
 isl_b93e	equ	47422
 isl_852b_e	equ	34099
 floats	equ	35530
-draw_st	equ	45326
+draw_st	equ	45329
 us_out	equ	43330
 USBASE	equ	252
 isdig	equ	34267
@@ -833,7 +833,7 @@ chkstr	equ	37932
 gmax	equ	43644
 finl2	equ	35322
 frestr0	equ	37930
-dmval	equ	45297
+dmval	equ	45196
 FACSGN	equ	84
 isl_852b	equ	34091
 kwmatch	equ	34435
@@ -849,6 +849,7 @@ USPOS	equ	211
 RNOLD	equ	209
 conupk	equ	35205
 ed_end	equ	42437
+drts	equ	45292
 glgx	equ	44158
 GPBIT	equ	212
 defusr	equ	40533
@@ -964,7 +965,7 @@ VARNAM	equ	55
 sndon	equ	46092
 fout9	equ	36300
 INDEX	equ	240
-dloop	equ	45350
+dloop	equ	45353
 mainx	equ	33833
 us_yes	equ	43089
 fout5	equ	36307
@@ -1072,7 +1073,7 @@ ed_s	equ	42555
 clmfn	equ	46899
 fin	equ	35906
 ed_head	equ	42311
-darg	equ	45231
+darg	equ	45225
 ed_q	equ	42682
 isl_ba6b_e	equ	47726
 incfac	equ	35483

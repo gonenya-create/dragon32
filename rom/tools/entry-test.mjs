@@ -302,6 +302,9 @@ try {
   ok('$B238 (CIRCLE) מצייר עיגול ברדיוס 20 סביב (128,96) (קורא 10.3)', /^ 1  0 ?$/m.test(s), show(tail(s)));
   s = await run(['PMODE 3,1:PCLS:COLOR 4,1:LINE(10,10)-(30,30),PSET,B', ...stmt('AC87', '2832302C323029 2C 32 2C 34 00'), 'EXEC &H7000:A=PPOINT(20,20):B=PPOINT(40,40):PRINT A;B']);
   ok('$AC87 (PAINT) צובע בצבע 2 בתוך מלבן בצבע 4 (קורא 10.2)', /^ 2  1 ?$/m.test(s), show(tail(s)));
+  // $B051 (13.11): DRAW מהכניסה של המפזר, כמו ש-Tanglewood מצייר את הטירה. המחרוזת: "BM50,150R146U104L146D104"
+  s = await run(['PMODE 4,1:PCLS', ...stmt('B051', '22424D35302C31353052313436553130344C3134364431303422 00'), 'EXEC &H7000:A=PPOINT(120,150):B=PPOINT(196,100):C=PPOINT(120,46):D=PPOINT(50,100):E=PPOINT(120,100):PRINT A;B;C;D;E']);
+  ok('$B051 (DRAW) מצייר מלבן מהמחרוזת שב-$A6 וחוזר (Tanglewood)', /^ 1  1  1  1  0 ?$/m.test(s), show(tail(s)));
 } catch (e) {
   fail++; console.log('  ✗ ' + e.message);
 }

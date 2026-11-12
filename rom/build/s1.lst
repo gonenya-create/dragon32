@@ -240,7 +240,7 @@ FFC0                  SAM             equ     $ffc0
 81B8 AF25                             fdb     paint_st        ; $B2 PAINT
 81BA B2A2                             fdb     get_st          ; $B3 GET
 81BC B2A4                             fdb     put_st          ; $B4 PUT
-81BE B10E                             fdb     draw_st         ; $B5 DRAW
+81BE B111                             fdb     draw_st         ; $B5 DRAW
 81C0 B279                             fdb     pcopy_st                ; $B6 PCOPY
 81C2 AB8D                             fdb     pmode_st                ; $B7 PMODE
 81C4 B48D                             fdb     play_st         ; $B8 PLAY
@@ -6601,185 +6601,191 @@ B045                                  include "mitdraw.s"
 00CD                  GPRMSK          equ     $cd             ; המסכה של תחילת השורה
                       
                       ; ---------- DRAW מחרוזת (קורא 11) ----------
+                      ; הסדר כאן (13.11): dback ו-dfc, ואז $B051 (ההתחלה של DRAW במקור: קפיצה ל-draw_st), ואחריו dval, dgetf,
+                      ; dmval, darg, dvar, dget ו-dxstr. כך $B051 נופל בדיוק אחרי ה-lbra של dfc, וכל הקפיצות הקצרות עדיין מגיעות.
+                      ; עד 13.11 כאן היה אמצע של dxstr
+                      ; dback: מחזירים את התו האחרון
+B045 0CD8             dback           inc     DLEN
+B047 9ED9                             ldx     DPTR
+B049 301F                             leax    -1,x
+B04B 9FD9                             stx     DPTR
+B04D 39                               rts
+B04E 16D8B7           dfc             lbra    err_fc
+B051                                  fill    $ff,$b051-*     ;@isl
+B051 7EB111                           jmp     draw_st ;@isl
+                      
+                      ; dval: ערך 0-255 → B: "=שם;" או ספרות (הראשונה חייבת להיות ספרה). מעל 255: ?FC
+B054 8D31             dval            bsr     dgetf
+B056 813D                             cmpa    #'=
+B058 260A                             bne     1F
+B05A 8D5C                             bsr     dvar
+B05C 9E39                             ldx     VARPNT
+B05E 17D930                           lbsr    movfm
+B061 16E3D6                           lbra    conint          ; מחרוזת: ?TM, מחוץ ל-0-255: ?FC
+B064 5F               1               clrb
+B065 8030                             suba    #'0
+B067 8109                             cmpa    #9
+B069 22E3                             bhi     dfc
+B06B 3402             2               pshs    a               ; B = B*10 + הספרה
+B06D 860A                             lda     #10
+B06F 3D                               mul
+B070 4D                               tsta
+B071 26DB                             bne     dfc
+B073 EBE0                             addb    ,s+
+B075 25D7                             bcs     dfc
+B077 3404                             pshs    b
+B079 8D5F                             bsr     dget
+B07B 3504                             puls    b               ; puls לא נוגע בדגלים
+B07D 256D                             bcs     drts            ; סוף המחרוזת: המספר נגמר
+B07F 8030                             suba    #'0
+B081 8109                             cmpa    #9
+B083 23E6                             bls     2B
+B085 20BE                             bra     dback           ; לא ספרה: חוזר למחרוזת
+                      
+                      ; dgetf: כמו dget, אבל בסוף המחרוזת: ?FC
+B087 8D51             dgetf           bsr     dget
+B089 25C3                             bcs     dfc
+B08B 39                               rts
+                      ; dmval: [+|-]ערך → D עם סימן. DSIGN = התו של הסימן (0 אם אין)
+B08C 8DF9             dmval           bsr     dgetf
+B08E 812B                             cmpa    #'+
+B090 2707                             beq     1F
+B092 812D                             cmpa    #'-
+B094 2703                             beq     1F
+B096 8DAD                             bsr     dback
+B098 4F                               clra
+B099 3402             1               pshs    a
+B09B 8DB7                             bsr     dval
+B09D 3502                             puls    a
+B09F 97D7                             sta     DSIGN
+B0A1 802D                             suba    #'-
+B0A3 102701BA                         lbeq    dneg            ; A = 0
+B0A7 4F                               clra
+B0A8 39                               rts
+                      
+                      ; darg: המספר אחרי אות → B. בסוף המחרוזת, או כשבא אחריה אות גדולה: 1
+B0A9 8D2F             darg            bsr     dget
+B0AB 2508                             bcs     1F
+B0AD 8D96                             bsr     dback
+B0AF 8041                             suba    #'A             ; לא אות גדולה: dval קורא מחדש
+B0B1 8119                             cmpa    #'Z-'A
+B0B3 229F                             bhi     dval
+B0B5 C601             1               ldb     #1
+B0B7 39                               rts
+                      ; dvar: "שם;" → VARPNT ו-VALTYP, דרך ptrget הרגיל. האות הראשונה A-Z, וחייב ';' (אחרת ?FC).
+                      ; TXTPTR מצביע בינתיים על השם, ואחר כך חוזר
+B0B8 8DCD             dvar            bsr     dgetf
+B0BA 8041                             suba    #'A             ; A-Z (A לא נחוץ אחר כך)
+B0BC 8119                             cmpa    #'Z-'A
+B0BE 228E                             bhi     dfc
+B0C0 DEA6                             ldu     TXTPTR
+B0C2 3440                             pshs    u
+B0C4 9ED9                             ldx     DPTR
+B0C6 301F                             leax    -1,x
+B0C8 9FA6                             stx     TXTPTR
+B0CA 8DBB             1               bsr     dgetf
+B0CC 813B                             cmpa    #';
+B0CE 26FA                             bne     1B
+B0D0 C601                             ldb     #1              ; כמו בביטוי: משתנה שלא קיים לא נוצר (0 או מחרוזת ריקה; קורא: צליל 9.3)
+B0D2 17E0D7                           lbsr    ptrget
+B0D5 3510                             puls    x
+B0D7 9FA6                             stx     TXTPTR
+B0D9 39                               rts
+                      
+                      ; dget: התו הבא בלי רווחים → A. בסוף המחרוזת: C=1. X משתנה
+B0DA 0DD8             dget            tst     DLEN
+B0DC 270F                             beq     8F
+B0DE 0AD8                             dec     DLEN
+B0E0 9ED9                             ldx     DPTR
+B0E2 A680                             lda     ,x+
+B0E4 9FD9                             stx     DPTR
+B0E6 8120                             cmpa    #$20
+B0E8 27F0                             beq     dget
+B0EA 1CFE                             andcc   #$fe
+B0EC 39               drts            rts
+B0ED 43               8               coma                    ; C=1 (אף קורא לא משתמש ב-A בסוף המחרוזת)
+B0EE 39                               rts
                       ; dxstr: "X שם;" של DRAW ושל PLAY. חייבת להיות מחרוזת (?TM), ואז בדיקת מקום (?OM): B = הבתים
                       ; פחות 2, כי כאן המחסנית עמוקה ב-2. מחרוזת ריקה: חוזרים. אחרת המחרוזת הנוכחית נדחפת למחסנית של
                       ; הקורא ([אורך][כתובת]), ועוברים לחדשה. Y משתנה
-B045 3404             dxstr           pshs    b
-B047 8D44                             bsr     dvar
-B049 17E3E0                           lbsr    chkstr
-B04C 3504                             puls    b
-B04E 17EA93                           lbsr    getstk
-B051 9E39                             ldx     VARPNT
-B053 A684                             lda     ,x
-B055 2725                             beq     9F              ; ריקה או לא קיימת
-B057 3520                             puls    y               ; כתובת החזרה
-B059 DED9                             ldu     DPTR
-B05B D6D8                             ldb     DLEN
-B05D 3444                             pshs    b,u
-B05F 97D8                             sta     DLEN
-B061 AE02                             ldx     2,x
-B063 9FD9                             stx     DPTR
-B065 6EA4                             jmp     ,y
-B067 16D89E           dfc             lbra    err_fc
-                      
-                      ; dget: התו הבא בלי רווחים → A. בסוף המחרוזת: C=1. X משתנה
-B06A 0DD8             dget            tst     DLEN
-B06C 270F                             beq     8F
-B06E 0AD8                             dec     DLEN
-B070 9ED9                             ldx     DPTR
-B072 A680                             lda     ,x+
-B074 9FD9                             stx     DPTR
-B076 8120                             cmpa    #$20
-B078 27F0                             beq     dget
-B07A 1CFE                             andcc   #$fe
-B07C 39               9               rts
-B07D 43               8               coma                    ; C=1 (אף קורא לא משתמש ב-A בסוף המחרוזת)
-B07E 39                               rts
-                      ; dgetf: כמו dget, אבל בסוף המחרוזת: ?FC
-B07F 8DE9             dgetf           bsr     dget
-B081 25E4                             bcs     dfc
-B083 39               9               rts
-                      ; dback: מחזירים את התו האחרון
-B084 0CD8             dback           inc     DLEN
-B086 9ED9                             ldx     DPTR
-B088 301F                             leax    -1,x
-B08A 9FD9                             stx     DPTR
-B08C 39                               rts
-                      
-                      ; dvar: "שם;" → VARPNT ו-VALTYP, דרך ptrget הרגיל. האות הראשונה A-Z, וחייב ';' (אחרת ?FC).
-                      ; TXTPTR מצביע בינתיים על השם, ואחר כך חוזר
-B08D 8DF0             dvar            bsr     dgetf
-B08F 8041                             suba    #'A             ; A-Z (A לא נחוץ אחר כך)
-B091 8119                             cmpa    #'Z-'A
-B093 22D2                             bhi     dfc
-B095 DEA6                             ldu     TXTPTR
-B097 3440                             pshs    u
-B099 9ED9                             ldx     DPTR
-B09B 301F                             leax    -1,x
-B09D 9FA6                             stx     TXTPTR
-B09F 8DDE             1               bsr     dgetf
-B0A1 813B                             cmpa    #';
-B0A3 26FA                             bne     1B
-B0A5 C601                             ldb     #1              ; כמו בביטוי: משתנה שלא קיים לא נוצר (0 או מחרוזת ריקה; קורא: צליל 9.3)
-B0A7 17E102                           lbsr    ptrget
-B0AA 3510                             puls    x
-B0AC 9FA6                             stx     TXTPTR
-B0AE 39                               rts
-                      
-                      ; darg: המספר אחרי אות → B. בסוף המחרוזת, או כשבא אחריה אות גדולה: 1
-B0AF 8DB9             darg            bsr     dget
-B0B1 2508                             bcs     1F
-B0B3 8DCF                             bsr     dback
-B0B5 8041                             suba    #'A             ; לא אות גדולה: dval קורא מחדש
-B0B7 8119                             cmpa    #'Z-'A
-B0B9 2203                             bhi     dval
-B0BB C601             1               ldb     #1
-B0BD 39                               rts
-                      ; dval: ערך 0-255 → B: "=שם;" או ספרות (הראשונה חייבת להיות ספרה). מעל 255: ?FC
-B0BE 8DBF             dval            bsr     dgetf
-B0C0 813D                             cmpa    #'=
-B0C2 260A                             bne     1F
-B0C4 8DC7                             bsr     dvar
-B0C6 9E39                             ldx     VARPNT
-B0C8 17D8C6                           lbsr    movfm
-B0CB 16E36C                           lbra    conint          ; מחרוזת: ?TM, מחוץ ל-0-255: ?FC
-B0CE 5F               1               clrb
-B0CF 8030                             suba    #'0
-B0D1 8109                             cmpa    #9
-B0D3 2292                             bhi     dfc
-B0D5 3402             2               pshs    a               ; B = B*10 + הספרה
-B0D7 860A                             lda     #10
-B0D9 3D                               mul
-B0DA 4D                               tsta
-B0DB 268A                             bne     dfc
-B0DD EBE0                             addb    ,s+
-B0DF 2586                             bcs     dfc
-B0E1 3404                             pshs    b
-B0E3 8D85                             bsr     dget
-B0E5 3504                             puls    b               ; puls לא נוגע בדגלים
-B0E7 259A                             bcs     9B              ; סוף המחרוזת: המספר נגמר
-B0E9 8030                             suba    #'0
-B0EB 8109                             cmpa    #9
-B0ED 23E6                             bls     2B
-B0EF 2093                             bra     dback           ; לא ספרה: חוזר למחרוזת
-                      
-                      ; dmval: [+|-]ערך → D עם סימן. DSIGN = התו של הסימן (0 אם אין)
-B0F1 8D8C             dmval           bsr     dgetf
-B0F3 812B                             cmpa    #'+
-B0F5 2707                             beq     1F
-B0F7 812D                             cmpa    #'-
-B0F9 2703                             beq     1F
-B0FB 8D87                             bsr     dback
-B0FD 4F                               clra
-B0FE 3402             1               pshs    a
-B100 8DBC                             bsr     dval
-B102 3502                             puls    a
-B104 97D7                             sta     DSIGN
-B106 802D                             suba    #'-
-B108 10270155                         lbeq    dneg            ; A = 0
-B10C 4F                               clra
-B10D 39                               rts
+B0EF 3404             dxstr           pshs    b
+B0F1 8DC5                             bsr     dvar
+B0F3 17E336                           lbsr    chkstr
+B0F6 3504                             puls    b
+B0F8 17E9E9                           lbsr    getstk
+B0FB 9E39                             ldx     VARPNT
+B0FD A684                             lda     ,x
+B0FF 27EB                             beq     drts            ; ריקה או לא קיימת
+B101 3520                             puls    y               ; כתובת החזרה
+B103 DED9                             ldu     DPTR
+B105 D6D8                             ldb     DLEN
+B107 3444                             pshs    b,u
+B109 97D8                             sta     DLEN
+B10B AE02                             ldx     2,x
+B10D 9FD9                             stx     DPTR
+B10F 6EA4                             jmp     ,y
                       
                       ; המחרוזות המקוננות (X) נשמרות במחסנית: [אורך][כתובת]. הסמן בתחתית: כתובת 0
-B10E 1708C5           draw_st         lbsr    evstr           ; לא מחרוזת: ?TM
-B111 97D8                             sta     DLEN
-B113 9FD9                             stx     DPTR
-B115 4F                               clra
-B116 5F                               clrb
-B117 DDD5                             std     DN              ; N ו-B כבויים
-B119 4C                               inca
-B11A 97C2                             sta     GSETF
-B11C D6B2                             ldb     GFORE
-B11E 17F9E9                           lbsr    gsetac
-B121 8E0000                           ldx     #0
-B124 3412                             pshs    a,x             ; הסמן
-B126 17FF41           dloop           lbsr    dget
-B129 2409                             bcc     1F
-B12B 3512                             puls    a,x             ; המחרוזת נגמרה: חוזרים לחיצונית
-B12D 97D8                             sta     DLEN
-B12F 9FD9                             stx     DPTR
-B131 26F3                             bne     dloop
-B133 39                               rts                     ; הסמן: סוף DRAW
-B134 813B             1               cmpa    #';
-B136 27EE                             beq     dloop
-B138 8127                             cmpa    #''
-B13A 27EA                             beq     dloop
-B13C 814E                             cmpa    #'N
-B13E 2604                             bne     2F
-B140 03D5                             com     DN
-B142 20E2                             bra     dloop
-B144 8142             2               cmpa    #'B
-B146 2604                             bne     3F
-B148 03D6                             com     DB
-B14A 20DA                             bra     dloop
-B14C 8158             3               cmpa    #'X
-B14E 2607                             bne     4F
-B150 C601                             ldb     #1              ; X שם; : מחרוזת אחרת. getstk של 3 בתים
-B152 17FEF0                           lbsr    dxstr
-B155 20CF                             bra     dloop
-B157 814D             4               cmpa    #'M
-B159 2764                             beq     dmcmd
-B15B 3402                             pshs    a               ; כל אות אחרת: קודם המספר
-B15D 17FF4F                           lbsr    darg
-B160 3502                             puls    a
-B162 8143                             cmpa    #'C
-B164 260A                             bne     5F
-B166 17F97E                           lbsr    gcolor          ; 9 ומעלה: ?FC. נשאר צבע הכתיבה גם אחרי DRAW
-B169 D7B2                             stb     GFORE
-B16B 17F99C                           lbsr    gsetac
-B16E 20B6                             bra     dloop
-B170 8E00E8           5               ldx     #GANGLE
-B173 8141                             cmpa    #'A
-B175 2604                             bne     6F
-B177 C104                             cmpb    #4
-B179 2008                             bra     61F
-B17B 8153             6               cmpa    #'S
-B17D 260A                             bne     7F
-B17F 3001                             leax    1,x             ; GSCALE
+B111 1708C2           draw_st         lbsr    evstr           ; לא מחרוזת: ?TM
+B114 97D8                             sta     DLEN
+B116 9FD9                             stx     DPTR
+B118 4F                               clra
+B119 5F                               clrb
+B11A DDD5                             std     DN              ; N ו-B כבויים
+B11C 4C                               inca
+B11D 97C2                             sta     GSETF
+B11F D6B2                             ldb     GFORE
+B121 17F9E6                           lbsr    gsetac
+B124 8E0000                           ldx     #0
+B127 3412                             pshs    a,x             ; הסמן
+B129 8DAF             dloop           bsr     dget            ; (13.11: קצר, dget עכשיו קרוב)
+B12B 2409                             bcc     1F
+B12D 3512                             puls    a,x             ; המחרוזת נגמרה: חוזרים לחיצונית
+B12F 97D8                             sta     DLEN
+B131 9FD9                             stx     DPTR
+B133 26F4                             bne     dloop
+B135 39                               rts                     ; הסמן: סוף DRAW
+B136 813B             1               cmpa    #';
+B138 27EF                             beq     dloop
+B13A 8127                             cmpa    #''
+B13C 27EB                             beq     dloop
+B13E 814E                             cmpa    #'N
+B140 2604                             bne     2F
+B142 03D5                             com     DN
+B144 20E3                             bra     dloop
+B146 8142             2               cmpa    #'B
+B148 2604                             bne     3F
+B14A 03D6                             com     DB
+B14C 20DB                             bra     dloop
+B14E 8158             3               cmpa    #'X
+B150 2606                             bne     4F
+B152 C601                             ldb     #1              ; X שם; : מחרוזת אחרת. getstk של 3 בתים
+B154 8D99                             bsr     dxstr           ; (13.11: קצר)
+B156 20D1                             bra     dloop
+B158 814D             4               cmpa    #'M
+B15A 2763                             beq     dmcmd
+B15C 3402                             pshs    a               ; כל אות אחרת: קודם המספר
+B15E 17FF48                           lbsr    darg
+B161 3502                             puls    a
+B163 8143                             cmpa    #'C
+B165 260A                             bne     5F
+B167 17F97D                           lbsr    gcolor          ; 9 ומעלה: ?FC. נשאר צבע הכתיבה גם אחרי DRAW
+B16A D7B2                             stb     GFORE
+B16C 17F99B                           lbsr    gsetac
+B16F 20B8                             bra     dloop
+                      ; A ו-S: כל אחת עם הבדיקה והשמירה שלה (13.11: בית פחות; עם שתי הקריאות הקצרות למעלה, 3 הבתים של $B051)
+B171 8141             5               cmpa    #'A
+B173 2608                             bne     6F
+B175 C104                             cmpb    #4
+B177 2443                             bhs     dfc2
+B179 D7E8                             stb     GANGLE
+B17B 20AC                             bra     dloop
+B17D 8153             6               cmpa    #'S
+B17F 2608                             bne     7F
 B181 C13F                             cmpb    #63             ; 63 נדחה (כמו במקור)
-B183 2437             61              bhs     dfc2
-B185 E784                             stb     ,x
-B187 209D                             bra     dloop
+B183 2437                             bhs     dfc2
+B185 D7E9                             stb     GSCALE
+B187 20A0                             bra     dloop
                       ; U R D L הם U מסובב 0-3 פעמים, ו-E F G H הם E (n,-n) מסובב
 B189 308C28           7               leax    dlet,pcr
 B18C 3404                             pshs    b
@@ -6807,14 +6813,14 @@ B1B4 5552444C45464748 dlet            fcc     "URDLEFGH"
 B1BC 16D749           dfc2            lbra    err_fc
                       
                       ; M x,y: סימן לפני x = יחסי (קנה מידה וזווית). אחרת מוחלט: בלי בדיקת שלילי, רק החיתוך
-B1BF 17FF2F           dmcmd           lbsr    dmval
+B1BF 17FECA           dmcmd           lbsr    dmval
 B1C2 DDC3                             std     GX2
 B1C4 96D7                             lda     DSIGN
 B1C6 3402                             pshs    a
-B1C8 17FEB4                           lbsr    dgetf
+B1C8 17FEBC                           lbsr    dgetf
 B1CB 812C                             cmpa    #',
 B1CD 26ED                             bne     dfc2
-B1CF 17FF1F                           lbsr    dmval
+B1CF 17FEBA                           lbsr    dmval
 B1D2 DDC5                             std     GY2
 B1D4 3502                             puls    a
 B1D6 4D                               tsta
@@ -6878,7 +6884,7 @@ B23F 17FB09                           lbsr    gline
 B242 4F               4               clra
 B243 5F                               clrb
 B244 DDD5                             std     DN
-B246 16FEDD                           lbra    dloop
+B246 16FEE0                           lbra    dloop
                       ; dscl: המספר עם הסימן ב-X כפול קנה המידה, חלקי 4 (16 ביט, בלי סימן)
 B249 EC84             dscl            ldd     ,x
 B24B 3402                             pshs    a
@@ -7238,7 +7244,7 @@ B498 17E0C5                           lbsr    frestr          ; לא מחרוז�
 B49B 97D8             pset            sta     DLEN
 B49D 9FD9                             stx     DPTR
 B49F 27A7                             beq     pend            ; כתובת 0: הסמן, סוף PLAY
-B4A1 17FBC6           ploop           lbsr    dget
+B4A1 17FC36           ploop           lbsr    dget
 B4A4 25E2                             bcs     pdone
 B4A6 813B             p_ch            cmpa    #';
 B4A8 27F7                             beq     ploop
@@ -7276,13 +7282,13 @@ B4DC 5D                               tstb
 B4DD 27A6             pfc_t           beq     pfc             ; (3.11: גם T ו-P קופצים לכאן, Z=1, כדי ש-pfc2 יעבור ליד parg)
 B4DF D7E1                             stb     NOTELN
 B4E1 0FE5                             clr     DOTVAL
-B4E3 17FB84           31              lbsr    dget            ; הנקודות: רק מיד אחרי L
+B4E3 17FBF4           31              lbsr    dget            ; הנקודות: רק מיד אחרי L
 B4E6 25B9                             bcs     ploop
 B4E8 812E                             cmpa    #'.
 B4EA 2604                             bne     32F
 B4EC 0CE5                             inc     DOTVAL
 B4EE 20F3                             bra     31B
-B4F0 17FB91           32              lbsr    dback
+B4F0 17FB52           32              lbsr    dback
 B4F3 20AC                             bra     ploop
 B4F5 8154             4               cmpa    #'T
 B4F7 260F                             bne     5F
@@ -7296,7 +7302,7 @@ B505                                  fill    $ff,$b505-*     ;@isl
 B505 7E9F32                           jmp     x_inch7 ;@isl
 B508 8150             5               cmpa    #'P
 B50A 261F                             bne     6F
-B50C 17FBAF                           lbsr    dval            ; רק "=שם;" או ספרות
+B50C 17FB45                           lbsr    dval            ; רק "=שם;" או ספרות
 B50F 5D                               tstb
 B510 27CB                             beq     pfc_t
 B512 9EDF                             ldx     VOLHI           ; השתיקה: תו C בעוצמה $7C/$7C, בלי נקודות, ואחר כך חזרה
@@ -7314,13 +7320,13 @@ B529 20D8                             bra     ploop_t         ; (3.11: דרך ה
 B52B 8158             6               cmpa    #'X
 B52D 260C                             bne     7F
 B52F C602                             ldb     #2              ; X שם; : מחרוזת אחרת. getstk של 4 בתים (שתי מילים)
-B531 17FB11                           lbsr    dxstr
+B531 17FBBB                           lbsr    dxstr
 B534 20CD                             bra     ploop_t         ; (3.11: דרך הקפיצה הקרובה, בשביל $B505)
 B536 FFFF                             fill    $ff,$b538-*     ;@isl
 B538 7EBF80                           jmp     getkey  ;@isl
 B53B 814E             7               cmpa    #'N             ; N לפני תו: מדלגים
 B53D 2603                             bne     8F
-B53F 17FB3D                           lbsr    dgetf
+B53F 17FB45                           lbsr    dgetf
 B542 8141             8               cmpa    #'A
 B544 2533                             blo     9F
 B546 8147                             cmpa    #'G
@@ -7335,7 +7341,7 @@ B553 8B07                             adda    #7
 B555 8103             84              cmpa    #3              ; C=1 כש-k < 3
 B557 49                               rola
 B558 3402                             pshs    a
-B55A 17FB0D                           lbsr    dget            ; # או + מעלים, - מוריד. בלי מעבר אוקטבה
+B55A 17FB7D                           lbsr    dget            ; # או + מעלים, - מוריד. בלי מעבר אוקטבה
 B55D 2516                             bcs     83F
 B55F 8123                             cmpa    #'#
 B561 2710                             beq     81F
@@ -7343,15 +7349,15 @@ B563 812B                             cmpa    #'+
 B565 270C                             beq     81F
 B567 812D                             cmpa    #'-
 B569 2705                             beq     82F
-B56B 17FB16                           lbsr    dback
+B56B 17FAD7                           lbsr    dback
 B56E 2005                             bra     83F
 B570 6AE4             82              dec     ,s
 B572 8C                               fcb     $8c             ; cmpx: מדלג על ה-inc
 B573 6CE4             81              inc     ,s
 B575 3502             83              puls    a
 B577 2008                             bra     91F
-B579 17FB08           9               lbsr    dback           ; תו לפי מספר, 1-12 (כל תו אחר: ?FC)
-B57C 17FB3F                           lbsr    dval
+B579 17FAC9           9               lbsr    dback           ; תו לפי מספר, 1-12 (כל תו אחר: ?FC)
+B57C 17FAD5                           lbsr    dval
 B57F 1F98                             tfr     b,a
 B581 4A               91              deca
 B582 810B                             cmpa    #11
@@ -7365,7 +7371,7 @@ B592 16D373           pfc2            lbra    err_fc          ; (3.11: עבר ל
                       
                       ; parg: הארגומנט של O V L T → B. B = הערך הנוכחי. + - > < משנים אותו, אחרת "=שם;" או ספרות
 B595 3404             parg            pshs    b
-B597 17FAE5                           lbsr    dgetf
+B597 17FAED                           lbsr    dgetf
 B59A 3504                             puls    b
 B59C 812B                             cmpa    #'+
 B59E 2604                             bne     1F
@@ -7390,8 +7396,8 @@ B5BB 5D                               tstb
 B5BC 27D4                             beq     pfc2
 B5BE 54                               lsrb
 B5BF 39                               rts
-B5C0 17FAC1           4               lbsr    dback
-B5C3 16FAF8                           lbra    dval
+B5C0 17FA82           4               lbsr    dback
+B5C3 16FA8E                           lbra    dval
 B5C6                                  fill    $ff,$b5c6-*     ;@isl
 B5C6 BD0182                           jsr     HK_LINE ;@isl
 B5C9 7E8877                           jmp     x_inlin ;@isl
