@@ -1485,7 +1485,7 @@
     sanctum: ['אחרי EXEC מופיע מסך הפתיחה: לוחצים מקש, ועל השאלה על משחק שמור לוחצים [N].', 'After EXEC the title screen appears: press a key, and at the question about a saved game press [N].'],
     calixto: ['אחרי EXEC מופיע מסך הפתיחה: לוחצים מקש, ועל השאלה על משחק שמור לוחצים [N].', 'After EXEC the title screen appears: press a key, and at the question about a saved game press [N].'],
     eggs: ['המשחק מופיע. מתחילים ב[רווח].', 'The game appears. Press [Space] to start.'],
-    dasm: ['האסמבלר מופיע. כותבים HELP ו-[ENTER] כדי לראות את הפקודות.', 'The assembler appears. Type HELP and [ENTER] to see the commands.'],
+    dasm: ['האסמבלר מופיע. כותבים HELP ו-[ENTER] כדי לראות את הפקודות. יצאתם ל-BASIC? חוזרים עם {EXEC 13312}. זה עובד תמיד, גם אחרי שטענתם תוכנית אחרת.', 'The assembler appears. Type HELP and [ENTER] to see the commands. Went back to BASIC? Come back with {EXEC 13312}. It always works, even after loading another program.'],
     blockdown: ['כשהטעינה נגמרת המשחק מתחיל לבד. מתחילים ב[רווח].', 'When loading ends the game starts by itself. Press [Space] to start.'],
     dragontet: ['מופיע תפריט: בוחרים ב[↑] [↓] ומאשרים ב[ENTER].', 'A menu appears: choose with [↑] [↓] and confirm with [ENTER].'],
     escape: ['מופיעים מסך הפתיחה וההקדמה, ואז המסדרון: [↑] קדימה, [←] [→] מסתובבים.', 'The title screen and the introduction appear, then the corridor: [↑] forward, [←] [→] turn.'],
@@ -1951,6 +1951,25 @@
       videos: [{ n: 1, he: 'התוכנית הראשונה בשפת מכונה', en: 'Your first machine code program', len: { he: '2:47', en: '2:55' },
         sum: ['טוענים את האסמבלר, כותבים תוכנית שממלאת את השורה העליונה באותיות A עד Z, מתרגמים, מריצים, משנים ושומרים.',
           'Load the assembler, write a program that fills the top line with the letters A to Z, assemble it, run it, change it and save it.'] }],
+      // אחרי התוכנית הראשונה (גונן, 12.11: כל מקום שבו נתקע כשניסה בעצמו): ASM L, תוכנית האלף-בית, ושתי דרכים לשמור
+      more: [
+        { h: ['מה רואים ב-ASM L', 'What ASM L shows'], lines: [
+          ['מקלידים {ASM L} ו-[ENTER]: האסמבלר מתרגם ומראה רשימה, שורה לכל שורה שכתבתם.', 'Type {ASM L} and [ENTER]: the assembler assembles and shows a list, one line for each line you wrote.'],
+          ['משמאל: הכתובת בזיכרון. באמצע: הבתים שהמעבד באמת קורא. מימין: השורה שכתבתם.', 'On the left: the address in memory. In the middle: the bytes the processor really reads. On the right: the line you wrote.'],
+          ["למשל {LDA #'A} הופך לשני בתים, {86} ו-{41}. ‏86 פירושו \"טוענים את A\", ו-41 הוא הקוד של האות A.", "For example {LDA #'A} becomes two bytes, {86} and {41}. 86 means \"load A\", and 41 is the code of the letter A."],
+          ['בסוף: מאיפה עד איפה התוכנית בזיכרון, וכמה בתים יצאו.', 'At the end: where the program starts and ends in memory, and how many bytes it came to.']] },
+        { h: ['תוכנית שנייה: כל האותיות מ-A עד Z', 'A second program: all the letters from A to Z'],
+          code: ['10 * THE ALPHABET', '20 @ LDX #$0400', "30  LDA #'A", '40 LOOP STA ,X+', '50  INCA', "60  CMPA #'Z+1", '70  BNE LOOP', '80 KEY LDX $A000', '90  JSR ,X', '100  BEQ KEY', '110  RTS'],
+          lines: [
+          ['מקלידים את השורות, ואחר כך {R} ו-[ENTER]. כל האותיות מופיעות בשורה העליונה של המסך.', 'Type the lines, then {R} and [ENTER]. All the letters appear on the top line of the screen.'],
+          ['שורות 80 עד 100 מחכות למקש. לוחצים מקש אחד כדי לסיים את התוכנית, ועוד מקש כדי לחזור לאסמבלר.', 'Lines 80 to 100 wait for a key. Press one key to end the program, and another key to go back to the assembler.'],
+          ['נסו לשנות: {20 @ LDX #$0500} מוריד את האותיות לאמצע המסך (כל שורה במסך היא 32 בתים).', 'Try changing it: {20 @ LDX #$0500} moves the letters to the middle of the screen (each screen line is 32 bytes).'],
+          ["ספרות במקום אותיות: {30  LDA #'0} ו-{60  CMPA #'9+1}.", "Digits instead of letters: {30  LDA #'0} and {60  CMPA #'9+1}."],
+          ['בלשונית 🎬 סרטונים יש שיעור שעובר על התוכנית הזאת, שורה אחרי שורה.', 'The 🎬 Videos tab has a lesson that goes through this program, line by line.']] },
+        { h: ['שמירה: שתי דרכים', 'Saving: two ways'], lines: [
+          ['{CSAVE "NAME"} שומר את הטקסט שכתבתם, כדי להמשיך לעבוד עליו. טוענים אותו בחזרה באסמבלר עם {CLOAD "NAME"}.', '{CSAVE "NAME"} saves the text you wrote, so you can keep working on it. Load it back in the assembler with {CLOAD "NAME"}.'],
+          ['{CSAVEM "NAME"} שומר את התוכנית המתורגמת, רק את הבתים. היא רצה לבד, בלי האסמבלר: ב-BASIC מקלידים {CLOADM} ואחר כך {EXEC}. כך נמכרו משחקים בשפת מכונה.', '{CSAVEM "NAME"} saves the assembled program, just the bytes. It runs on its own, without the assembler: in BASIC type {CLOADM} and then {EXEC}. That is how machine-code games were sold.'],
+          ['הקלטות נשמרות ב"הקלטות שלי", רק בדפדפן הזה ובמכשיר הזה. כדי להעביר אותן למכשיר אחר: ⬇ מוריד את הקלטת כקובץ.', 'Tapes are kept in My tapes, only in this browser on this device. To move one to another device: ⬇ downloads the tape as a file.']] }],
       links: [['/learn/', 'לא מכירים שפת מכונה? מתחילים ב', 'פינת הלמידה', 'New to machine code? Start in ', 'the Learning Corner'],
         ['/learn/asm/', 'מעדיפים לכתוב בדפדפן? ', 'האסמבלר שבדפדפן', 'Rather write in the browser? ', 'The browser Assembler']]
     }
@@ -2093,6 +2112,13 @@
         ol.lastChild.appendChild(ul);
         for (const s of lines.slice(4)) ol.appendChild(keyLine(s));
         pane.appendChild(ol);
+        for (const sec of tool.more || []) {
+          const h = document.createElement('h4'); h.className = 'gv-more-title'; h.textContent = T2(...sec.h); pane.appendChild(h);
+          if (sec.code) { const pre = document.createElement('pre'); pre.className = 'gv-code'; pre.dir = 'ltr'; pre.textContent = sec.code.join('\n'); pane.appendChild(pre); }
+          const ul = document.createElement('ul'); ul.className = 'gv-explain gv-more';
+          for (const l of sec.lines) ul.appendChild(keyLine(T2(...l)));
+          pane.appendChild(ul);
+        }
       });
       // סרטונים (גונן, 12.11): קוביות קטנות עם שם השיעור, ובחירה פותחת נגן אחד מעליהן. בנוי לרשימה ארוכה
       if (tool.videos) mk(T2('🎬 סרטונים', '🎬 Videos'), pane => {
@@ -2273,6 +2299,7 @@ body.cart-in .gv-eject { display: block; }
 .gv-explain { margin: 4px 0 6px; }
 .gv-video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #120d08; border-radius: 10px; margin: 6px 0 4px; }
 .gv-video-title { margin: 10px 0 0; font-size: 16px; }
+.gv-more-title { margin: 18px 0 4px; font-size: 16px; }
 .gv-video-sum { margin: 0 0 12px; font-size: 14px; color: #c9b99f; }
 .gv-vgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
 .gv-vtile { font: inherit; text-align: start; color: inherit; background: #2a2119; border: 1px solid #4a3a2a; border-radius: 10px; padding: 6px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; }
