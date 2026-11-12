@@ -288,8 +288,8 @@ parg		pshs	b
 		jsr	HK_LINE	;@isl
 		jmp	x_inlin	;@isl
 
-; הסדר כאן (טבלה, שגרות, טבלה, ואחרי $B663 ההתחלה של pnote) נקבע כך ש-$B663 ייפול בדיוק על קפיצה,
-; והקפיצות הקצרות עדיין מגיעות (3.11)
+; הסדר כאן (טבלה, שגרות, ההתחלה של pnote ו-pn8, טבלה, שגרה, ואז $B663, ‏pn16, ‏$B682 ו-pstart) נקבע כך
+; ש-$B663 ו-$B682 ייפלו בדיוק על קפיצה, והקפיצות הקצרות עדיין מגיעות (3.11, ‏12.11)
 ptab8		fcb	166,156,147,139,131,123,116,109,103,97,91,86
 		fcb	81,76,71,67,63,59,55,52,49,46,43,40
 		fcb	38,35,33,31,29,27,25,24,22,20,19,18
@@ -299,45 +299,7 @@ pseg8		sta	PIA1
 1		decb
 		bne	1B
 		rts
-pn8		leay	ptab8-24,pcr	; אוקטבות 3-5: ספירה של 8 ביט
-		leay	b,y
-		bsr	pstart
-		lda	#$7c
-		pshs	a
-3		lda	,s		; 25+5m, ואחרי הנמוך 28+5m
-		bsr	pseg8
-		lda	VOLHI
-		bsr	pseg8
-		lda	,s
-		bsr	pseg8
-		lda	VOLLO
-		bsr	pseg8
-		bra	3B
-; pstart: הספירה של התו: 255, או עם k נקודות (k+2, 8 ביט) × 255 חלקי 2
-pstart		ldb	DOTVAL
-		bne	1F
-		ldd	#255
-		bra	pgo
-1		addb	#2
-		lda	#255
-		mul
-		lsra
-		rorb
-pgo		std	PLYTMR		; מכאן התו רץ (התווית: לבדיקות)
-		rts
-pseg16		sta	PIA1
-		ldx	,y
-1		leax	-1,x
-		bne	1B
-		rts
-; @endnofill
-ptab16		fdb	424,400,378,356,336,317,299,282,266,251,237,223
-		fdb	211,199,187,177,166,157,148,139,131,124,117,110
-; @endnofill
-		fill	$ff,$b663-*	;@isl
-		jmp	clsone	;@isl
 ; pnote: A = התו (0-11), B = האורך. U = המקום של כתובת החזרה: פסיקת השדה חוזרת לשם כשהתו נגמר (קורא 9)
-; @nofill
 pnote		pshs	a
 		lda	TEMPO
 		mul
@@ -348,13 +310,36 @@ pnote		pshs	a
 		mul
 		addb	,s+
 		cmpb	#24
-		lbhs	pn8		; (3.11: ארוך, pn8 לפני $B663)
-		lslb			; אוקטבות 1-2: ספירה של 16 ביט
+		blo	pn16		; (12.11: pn16 אחרי $B663, ו-pn8 מיד כאן, כדי לפנות את $B682)
+pn8		leay	ptab8-24,pcr	; אוקטבות 3-5: ספירה של 8 ביט
+		leay	b,y
+		bsr	pstart
+		pshs	a		; A = $7C, מ-pstart
+3		lda	,s		; 25+5m, ואחרי הנמוך 28+5m
+		bsr	pseg8
+		lda	VOLHI
+		bsr	pseg8
+		lda	,s
+		bsr	pseg8
+		lda	VOLLO
+		bsr	pseg8
+		bra	3B
+ptab16		fdb	424,400,378,356,336,317,299,282,266,251,237,223
+		fdb	211,199,187,177,166,157,148,139,131,124,117,110
+pseg16		sta	PIA1
+		ldx	,y
+1		leax	-1,x
+		bne	1B
+		rts
+; @endnofill
+		fill	$ff,$b663-*	;@isl
+		jmp	clsone	;@isl
+; @nofill
+pn16		lslb			; אוקטבות 1-2: ספירה של 16 ביט
 		leay	ptab16,pcr
 		leay	b,y
 		bsr	pstart
-		lda	#$7c
-		pshs	a
+		pshs	a		; A = $7C, מ-pstart
 2		lda	,s		; מרכז, גבוה, מרכז, נמוך: 26+8n מחזורים, ואחרי הנמוך 29+8n
 		bsr	pseg16
 		lda	VOLHI
@@ -364,4 +349,22 @@ pnote		pshs	a
 		lda	VOLLO
 		bsr	pseg16
 		bra	2B
+; @endnofill
+		fill	$ff,$b682-*	;@isl
+		jmp	csave_st	;@isl
+; @nofill
+; pstart: הספירה של התו: 255, או עם k נקודות (k+2, 8 ביט) × 255 חלקי 2. בסוף A = $7C, המרכז של הגל (12.11: כאן
+; ולא אצל הקוראים, אותם מחזורים, ושני בתים פחות)
+pstart		ldb	DOTVAL
+		bne	1F
+		ldd	#255
+		bra	pgo
+1		addb	#2
+		lda	#255
+		mul
+		lsra
+		rorb
+pgo		std	PLYTMR		; מכאן התו רץ (התווית: לבדיקות)
+		lda	#$7c
+		rts
 ; @endnofill

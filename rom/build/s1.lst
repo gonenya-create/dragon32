@@ -7306,7 +7306,7 @@ B518 8E7C7C                           ldx     #$7c7c
 B51B 9FDF                             stx     VOLHI
 B51D 0FE5                             clr     DOTVAL
 B51F 4F                               clra
-B520 170143                           lbsr    pnote
+B520 1700D6                           lbsr    pnote
 B523 3512                             puls    a,x
 B525 9FDF                             stx     VOLHI
 B527 97E5                             sta     DOTVAL
@@ -7357,7 +7357,7 @@ B581 4A               91              deca
 B582 810B                             cmpa    #11
 B584 220C                             bhi     pfc2
 B586 D6E1                             ldb     NOTELN
-B588 1700DB                           lbsr    pnote           ; (3.11: lbsr, כי pnote עבר אחרי $B663)
+B588 17006E                           lbsr    pnote           ; (3.11: lbsr, כי pnote עבר אחרי $B663)
 B58B 16FF13                           lbra    ploop
 B58E FF                               fill    $ff,$b58f-*     ;@isl
 B58F 7EBE3F                           jmp     putc    ;@isl
@@ -7396,8 +7396,8 @@ B5C6                                  fill    $ff,$b5c6-*     ;@isl
 B5C6 BD0182                           jsr     HK_LINE ;@isl
 B5C9 7E8877                           jmp     x_inlin ;@isl
                       
-                      ; הסדר כאן (טבלה, שגרות, טבלה, ואחרי $B663 ההתחלה של pnote) נקבע כך ש-$B663 ייפול בדיוק על קפיצה,
-                      ; והקפיצות הקצרות עדיין מגיעות (3.11)
+                      ; הסדר כאן (טבלה, שגרות, ההתחלה של pnote ו-pn8, טבלה, שגרה, ואז $B663, ‏pn16, ‏$B682 ו-pstart) נקבע כך
+                      ; ש-$B663 ו-$B682 ייפלו בדיוק על קפיצה, והקפיצות הקצרות עדיין מגיעות (3.11, ‏12.11)
 B5CC A69C938B837B746D ptab8           fcb     166,156,147,139,131,123,116,109,103,97,91,86
      67615B56
 B5D8 514C47433F3B3734                 fcb     81,76,71,67,63,59,55,52,49,46,43,40
@@ -7410,75 +7410,78 @@ B5F3 E6A4                             ldb     ,y
 B5F5 5A               1               decb
 B5F6 26FD                             bne     1B
 B5F8 39                               rts
-B5F9 318CB8           pn8             leay    ptab8-24,pcr    ; אוקטבות 3-5: ספירה של 8 ביט
-B5FC 31A5                             leay    b,y
-B5FE 8D16                             bsr     pstart
-B600 867C                             lda     #$7c
-B602 3402                             pshs    a
-B604 A6E4             3               lda     ,s              ; 25+5m, ואחרי הנמוך 28+5m
-B606 8DE8                             bsr     pseg8
-B608 96DF                             lda     VOLHI
-B60A 8DE4                             bsr     pseg8
-B60C A6E4                             lda     ,s
-B60E 8DE0                             bsr     pseg8
-B610 96E0                             lda     VOLLO
-B612 8DDC                             bsr     pseg8
-B614 20EE                             bra     3B
-                      ; pstart: הספירה של התו: 255, או עם k נקודות (k+2, 8 ביט) × 255 חלקי 2
-B616 D6E5             pstart          ldb     DOTVAL
-B618 2605                             bne     1F
-B61A CC00FF                           ldd     #255
-B61D 2007                             bra     pgo
-B61F CB02             1               addb    #2
-B621 86FF                             lda     #255
-B623 3D                               mul
-B624 44                               lsra
-B625 56                               rorb
-B626 DDE3             pgo             std     PLYTMR          ; מכאן התו רץ (התווית: לבדיקות)
-B628 39                               rts
-B629 B7FF20           pseg16          sta     PIA1
-B62C AEA4                             ldx     ,y
-B62E 301F             1               leax    -1,x
-B630 26FC                             bne     1B
-B632 39                               rts
-                      ; @endnofill
-B633 01A80190017A0164 ptab16          fdb     424,400,378,356,336,317,299,282,266,251,237,223
+                      ; pnote: A = התו (0-11), B = האורך. U = המקום של כתובת החזרה: פסיקת השדה חוזרת לשם כשהתו נגמר (קורא 9)
+B5F9 3402             pnote           pshs    a
+B5FB 96E2                             lda     TEMPO
+B5FD 3D                               mul
+B5FE DDD5                             std     PSTEP           ; כל שדה מוריד אורך × קצב
+B600 3361                             leau    1,s
+B602 96DE                             lda     OCTAVE          ; המקום בטבלה: אוקטבה × 12 + התו
+B604 C60C                             ldb     #12
+B606 3D                               mul
+B607 EBE0                             addb    ,s+
+B609 C118                             cmpb    #24
+B60B 2559                             blo     pn16            ; (12.11: pn16 אחרי $B663, ו-pn8 מיד כאן, כדי לפנות את $B682)
+B60D 318CA4           pn8             leay    ptab8-24,pcr    ; אוקטבות 3-5: ספירה של 8 ביט
+B610 31A5                             leay    b,y
+B612 8D71                             bsr     pstart
+B614 3402                             pshs    a               ; A = $7C, מ-pstart
+B616 A6E4             3               lda     ,s              ; 25+5m, ואחרי הנמוך 28+5m
+B618 8DD6                             bsr     pseg8
+B61A 96DF                             lda     VOLHI
+B61C 8DD2                             bsr     pseg8
+B61E A6E4                             lda     ,s
+B620 8DCE                             bsr     pseg8
+B622 96E0                             lda     VOLLO
+B624 8DCA                             bsr     pseg8
+B626 20EE                             bra     3B
+B628 01A80190017A0164 ptab16          fdb     424,400,378,356,336,317,299,282,266,251,237,223
      0150013D012B011A
      010A00FB00ED00DF
-B64B 00D300C700BB00B1                 fdb     211,199,187,177,166,157,148,139,131,124,117,110
+B640 00D300C700BB00B1                 fdb     211,199,187,177,166,157,148,139,131,124,117,110
      00A6009D0094008B
      0083007C0075006E
+B658 B7FF20           pseg16          sta     PIA1
+B65B AEA4                             ldx     ,y
+B65D 301F             1               leax    -1,x
+B65F 26FC                             bne     1B
+B661 39                               rts
                       ; @endnofill
-B663                                  fill    $ff,$b663-*     ;@isl
+B662 FF                               fill    $ff,$b663-*     ;@isl
 B663 7EBCFF                           jmp     clsone  ;@isl
-                      ; pnote: A = התו (0-11), B = האורך. U = המקום של כתובת החזרה: פסיקת השדה חוזרת לשם כשהתו נגמר (קורא 9)
                       ; @nofill
-B666 3402             pnote           pshs    a
-B668 96E2                             lda     TEMPO
-B66A 3D                               mul
-B66B DDD5                             std     PSTEP           ; כל שדה מוריד אורך × קצב
-B66D 3361                             leau    1,s
-B66F 96DE                             lda     OCTAVE          ; המקום בטבלה: אוקטבה × 12 + התו
-B671 C60C                             ldb     #12
-B673 3D                               mul
-B674 EBE0                             addb    ,s+
-B676 C118                             cmpb    #24
-B678 1024FF7D                         lbhs    pn8             ; (3.11: ארוך, pn8 לפני $B663)
-B67C 58                               lslb                    ; אוקטבות 1-2: ספירה של 16 ביט
-B67D 318CB3                           leay    ptab16,pcr
-B680 31A5                             leay    b,y
-B682 8D92                             bsr     pstart
-B684 867C                             lda     #$7c
-B686 3402                             pshs    a
-B688 A6E4             2               lda     ,s              ; מרכז, גבוה, מרכז, נמוך: 26+8n מחזורים, ואחרי הנמוך 29+8n
-B68A 8D9D                             bsr     pseg16
-B68C 96DF                             lda     VOLHI
-B68E 8D99                             bsr     pseg16
-B690 A6E4                             lda     ,s
-B692 8D95                             bsr     pseg16
-B694 96E0                             lda     VOLLO
-B696 8D91                             bsr     pseg16
-B698 20EE                             bra     2B
+B666 58               pn16            lslb                    ; אוקטבות 1-2: ספירה של 16 ביט
+B667 318CBE                           leay    ptab16,pcr
+B66A 31A5                             leay    b,y
+B66C 8D17                             bsr     pstart
+B66E 3402                             pshs    a               ; A = $7C, מ-pstart
+B670 A6E4             2               lda     ,s              ; מרכז, גבוה, מרכז, נמוך: 26+8n מחזורים, ואחרי הנמוך 29+8n
+B672 8DE4                             bsr     pseg16
+B674 96DF                             lda     VOLHI
+B676 8DE0                             bsr     pseg16
+B678 A6E4                             lda     ,s
+B67A 8DDC                             bsr     pseg16
+B67C 96E0                             lda     VOLLO
+B67E 8DD8                             bsr     pseg16
+B680 20EE                             bra     2B
+                      ; @endnofill
+B682                                  fill    $ff,$b682-*     ;@isl
+B682 7EBA0C                           jmp     csave_st        ;@isl
+                      ; @nofill
+                      ; pstart: הספירה של התו: 255, או עם k נקודות (k+2, 8 ביט) × 255 חלקי 2. בסוף A = $7C, המרכז של הגל (12.11: כאן
+                      ; ולא אצל הקוראים, אותם מחזורים, ושני בתים פחות)
+B685 D6E5             pstart          ldb     DOTVAL
+B687 2605                             bne     1F
+B689 CC00FF                           ldd     #255
+B68C 2007                             bra     pgo
+B68E CB02             1               addb    #2
+B690 86FF                             lda     #255
+B692 3D                               mul
+B693 44                               lsra
+B694 56                               rorb
+B695 DDE3             pgo             std     PLYTMR          ; מכאן התו רץ (התווית: לבדיקות)
+B697 867C                             lda     #$7c
+B699 39                               rts
                       ; @endnofill
 B69A                                  include "mittape.s"
                       ; Dragon 1982 BASIC — שלב 3, חלק 5: קלטת. צעד 1: הבסיס (מנוע, כתיבה וקריאה של ביט, בית ובלוק).
