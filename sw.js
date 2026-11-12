@@ -13,6 +13,8 @@ self.addEventListener('fetch', e => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
   if (url.pathname.startsWith('/api/') || url.pathname.startsWith('/_vercel/')) return;
+  // סרטונים: ישר מהרשת. הדפדפן מבקש אותם בחלקים, ואת 8MB לא שומרים במטמון
+  if (url.pathname.endsWith('.mp4')) return;
   e.respondWith(
     fetch(req).then(res => {
       if (res.ok && (url.origin === location.origin || url.hostname.endsWith('fonts.googleapis.com') || url.hostname.endsWith('fonts.gstatic.com'))) {
