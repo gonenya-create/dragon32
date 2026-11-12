@@ -2127,9 +2127,16 @@
         intro.textContent = T2('בוחרים שיעור, צופים, ואז מנסים בעצמכם במכונה שבדף הזה.', 'Pick a lesson, watch it, then try it yourself on the machine on this page.');
         const player = document.createElement('div'); player.className = 'gv-player'; player.hidden = true;
         const ph = document.createElement('h4'); ph.className = 'gv-video-title';
+        // סגירת הנגן (גונן, 12.11: "פתחתי סרטון ועכשיו אני לא יכול לסגור אותו")
+        const close = document.createElement('button'); close.type = 'button'; close.className = 'gv-video-close'; close.textContent = T2('✕ סגירה', '✕ Close');
+        const top = document.createElement('div'); top.className = 'gv-player-top'; top.append(ph, close);
         const vid = document.createElement('video'); vid.className = 'gv-video'; vid.controls = true; vid.preload = 'none'; vid.playsInline = true;
         const sum = document.createElement('p'); sum.className = 'gv-video-sum';
-        player.append(ph, vid, sum);
+        player.append(top, vid, sum);
+        close.addEventListener('click', () => {
+          vid.pause(); vid.removeAttribute('src'); vid.load(); player.hidden = true;
+          grid.querySelectorAll('.gv-vtile').forEach(t => t.setAttribute('aria-pressed', 'false'));
+        });
         const grid = document.createElement('div'); grid.className = 'gv-vgrid';
         const open = (v, tile, play) => {
           grid.querySelectorAll('.gv-vtile').forEach(t => t.setAttribute('aria-pressed', t === tile ? 'true' : 'false'));
@@ -2299,6 +2306,9 @@ body.cart-in .gv-eject { display: block; }
 .gv-explain { margin: 4px 0 6px; }
 .gv-video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #120d08; border-radius: 10px; margin: 6px 0 4px; }
 .gv-video-title { margin: 10px 0 0; font-size: 16px; }
+.gv-player-top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.gv-video-close { font: inherit; font-size: 13px; font-weight: 700; color: #e6d8bc; background: #2a2119; border: 1px solid #4a3a2a; border-radius: 8px; padding: 4px 10px; min-height: 32px; cursor: pointer; flex: none; }
+.gv-video-close:hover, .gv-video-close:focus-visible { border-color: var(--accent, #f2d23a); }
 .gv-more-title { margin: 18px 0 4px; font-size: 16px; }
 .gv-video-sum { margin: 0 0 12px; font-size: 14px; color: #c9b99f; }
 .gv-vgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }

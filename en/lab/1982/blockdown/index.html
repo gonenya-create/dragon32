@@ -82,8 +82,10 @@ html[dir="rtl"] .howto:not([open]) > summary::after { transform: rotate(90deg); 
 .cabinet { margin-top: 10px; border: 2px solid #5a4430; border-radius: 14px; background: linear-gradient(#2b2018, #1f1712); padding: 8px; display: grid; gap: 8px; box-shadow: inset 0 0 0 1px #00000060; }
 .drawer { border: 1.5px solid #5a4430; border-radius: 10px; background: #261c15; }
 /* "האגדות" (גונן, 2.11): מגירה במעמד מיוחד, בראש הארון, במסגרת זהב */
-.drawer[data-drawer="legends"] { border-color: var(--accent, #f2d23a); box-shadow: 0 0 0 1px #f2d23a40, 0 4px 14px #f2d23a1a; }
-.drawer[data-drawer="legends"] > summary::before { background: var(--accent, #f2d23a); }
+/* המסגרת הצהובה נודדת עם הדפדוף (גונן, 12.11): על המגירה הפתוחה, ובמחשב גם על זו שהעכבר עליה */
+.drawer[open], .drawer:has(> summary:focus-visible) { border-color: var(--accent, #f2d23a); box-shadow: 0 0 0 1px #f2d23a40, 0 4px 14px #f2d23a1a; }
+.drawer[open] > summary::before { background: var(--accent, #f2d23a); }
+@media (hover: hover) { .drawer:hover { border-color: var(--accent, #f2d23a); } .drawer:hover > summary::before { background: var(--accent, #f2d23a); } }
 .drawer > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 10px 12px; min-height: 44px; box-sizing: border-box; font-weight: 700; }
 .drawer > summary::-webkit-details-marker { display: none; }
 .drawer > summary::before { content: ''; width: 26px; height: 6px; border-radius: 3px; background: #b08a5a; flex: none; box-shadow: 0 1px 0 #00000080; }

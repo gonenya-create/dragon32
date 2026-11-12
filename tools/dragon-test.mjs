@@ -2113,14 +2113,15 @@ if (part('real machine lab')) {
       const vt = [...v.querySelectorAll('.gv-tabs button')].find(b => /סרטונים|Videos/.test(b.textContent)); if (vt) vt.click();
       const tile = v.querySelector('.gv-vtile'); r.tiles = v.querySelectorAll('.gv-vtile').length; r.hiddenBefore = !!v.querySelector('.gv-player')?.hidden; if (tile) tile.click();
       const vid = v.querySelector('.gv-video'); if (vid) vid.pause(); r.video = vid ? { src: vid.getAttribute('src'), poster: vid.getAttribute('poster'), preload: vid.preload, shown: vid.offsetWidth > 0 } : null;
-      if (r.video) { const h = await fetch(r.video.src, { method: 'HEAD' }); r.video.ok = h.ok;
+      if (r.video) { const c = v.querySelector('.gv-video-close'); if (c) c.click(); r.video.closes = !!c && v.querySelector('.gv-player').hidden && !v.querySelector('.gv-vtile[aria-pressed="true"]');
+        const h = await fetch(r.video.src, { method: 'HEAD' }); r.video.ok = h.ok;
         // תמונת השער שונה בכל שפה (באג 12.11: גם באנגלית יצאה השער העברי)
         const buf = async u => new Uint8Array(await (await fetch(u)).arrayBuffer()).join(',');
         r.video.ownPoster = (await buf(r.video.poster)) !== (await buf(r.video.poster.replace(/-(he|en)\.jpg$/, (m, l) => l === 'he' ? '-en.jpg' : '-he.jpg'))); }
       v.querySelector('.gv-back').click(); return r;
     });
-    check(`${path} the Dragon Assembler has a tool page: how to load, commands, first program, videos (small tiles with the lesson's name; a tile opens the player, lesson 1 in the page's language, kept on the site), about; no "tried it?" button`,
-      tool.tool && tool.tabs.length === 5 && tool.tiles >= 1 && tool.hiddenBefore && !!tool.video && tool.video.ok && tool.video.ownPoster && tool.video.shown && tool.video.preload === 'none' && tool.video.src.endsWith((path.startsWith('/en') ? '-en' : '-he') + '.mp4') && tool.cmds === 28 && /STA \$0400/.test(tool.code || '') && !tool.testers, JSON.stringify(tool));
+    check(`${path} the Dragon Assembler has a tool page: how to load, commands, first program, videos (small tiles with the lesson's name; a tile opens the player and ✕ closes it, lesson 1 in the page's language, kept on the site), about; no "tried it?" button`,
+      tool.tool && tool.tabs.length === 5 && tool.tiles >= 1 && tool.hiddenBefore && !!tool.video && tool.video.ok && tool.video.closes && tool.video.ownPoster && tool.video.shown && tool.video.preload === 'none' && tool.video.src.endsWith((path.startsWith('/en') ? '-en' : '-he') + '.mp4') && tool.cmds === 28 && /STA \$0400/.test(tool.code || '') && !tool.testers, JSON.stringify(tool));
     check(`${path} every game opens its own page beside the machine, at its own address, with the 3 tabs (how to load, how to play, about; + hints in a game we finished), the red button and the credit; "back to the cabinet" returns`,
       gv.out.length === 75 && gv.out.every(g => g.id === 'dasm' ? (g.open && g.tabs === 5 && g.credit && g.go && g.url.startsWith(pre)) : g.open && g.url.startsWith(pre) && g.url.length > pre.length + 3 && g.tabs === 3 + (['adventureland', 'pirate', 'voodoo', 'mission', 'count', 'odyssey', 'pyramid', 'funhouse', 'ghost', 'golden', 'savage1', 'savage2', 'claymorgue', 'calixto', 'sanctum', 'shenan', 'seasearch', 'trekboer', 'williamsburg', 'vortex', 'diablero', 'sword', 'riverfire', 'daggorath', 'dhh'].includes(g.id) ? 1 : 0) && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go) && gv.after === pre && gv.closed, JSON.stringify(gv.out.filter(g => !(g.open && true && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go)).slice(0, 3)));
     // העטיפה המקורית (30.10): רק במשחק שיש עליו רשות (El Diablero, מארכיון Dragon Data), בלשונית "על המשחק", עם קרדיט וקישור. התמונה נטענת
