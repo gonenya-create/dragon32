@@ -412,6 +412,50 @@ export const ADVERTS = [
     }
   },
   {
+    // השנה: הארכיון כותב "TANO Sept 83", ובשם הקובץ Rainbow-Sept-83 (המגזין האמריקאי של מחשבי ה-Color Computer). המחיר "below $400" מתאים ל-399 דולר בראיון עם Tano ב-Dragon User, ספטמבר 1983
+    id: 'the-color-computer',
+    kind: 'ad',
+    year: { he: 'ספטמבר 1983', en: 'September 1983' },
+    archive: 'http://dragondata.co.uk/adverts/TANO/Rainbow-Sept-83/Rainbow-Sept-83.html',
+    source: 'archive',
+    images: ['the-color-computer.jpg'],
+    original: 'Dragon! The color computer you\'ve been waiting for.',
+    he: {
+      title: '"Dragon! מחשב הצבע שחיכיתם לו"',
+      summary: 'פרסומת אמריקאית של TANO, החברה מניו אורלינס שייצרה ומכרה את ה-Dragon 64 בארצות הברית, מהמגזין Rainbow, ספטמבר 1983. דרקון מצויר יורק אש מעל הכותרת, והטקסט מציג את ה-Dragon לקונים האמריקאים: אחד המחשבים הנמכרים בבריטניה, עם 64K זיכרון, במחיר של פחות מ-400 דולר. באותו חודש סיפר Dragon User על התוכניות של TANO.',
+      facts: [
+        ['הזיכרון', '64K RAM כבר בבסיס'],
+        ['המחיר', 'פחות מ-400 דולר'],
+        ['המעבד', '6809E, "התקדמות גדולה" לעומת ה-6502 של המתחרים'],
+        ['השפה', 'Extended Color BASIC של Microsoft, עם פקודות גרפיקה'],
+        ['הגרפיקה', '9 צבעים, ‏5 רזולוציות, עד 256×192 נקודות'],
+        ['המקלדת', 'מקלדת כמו של מכונת כתיבה, עם אחריות ל-20 מיליון הקשות']
+      ],
+      translation: [
+        '**Dragon! מחשב הצבע שחיכיתם לו.**',
+        'זה, פשוטו כמשמעו, מחשב הצבע שאמריקה חיכתה לו. ה-Dragon, אחד המחשבים הנמכרים ביותר בבריטניה, ייוצר בקרוב על ידי TANO, בשביל צרכנים אמריקאים שרוצים מחשב רציני ובמחיר סביר. מחשב שכבר הוכיח את עצמו בתוכנות לימוד ולניהול הבית, וגם במשחקים ובכיף.',
+        'כדי לעמוד באתגר הזה נולד ה-Dragon. עם 64K זיכרון RAM כבר בבסיס. מקלדת מקצועית כמו של מכונת כתיבה, עם אחריות ל-20 מיליון הקשות. ומבחר מרשים של תוספות: בקר דיסקים וכונן, מדפסת, רשמקול, מודם (חיבור טורי RS-232), ג\'ויסטיקים, משחקים במחסניות, וספר הדרכה ל-BASIC במתנה.',
+        'עם המעבד החדש 6809E (התקדמות גדולה לעומת ה-6502 הישן, שהמתחרים שלנו עדיין משתמשים בו), ה-Dragon מביא פעולות מחשב מתקדמות לטווח היד. ובמחיר של פחות מ-400 דולר, הוא כל דבר חוץ מיקר.',
+        'אבל אלה לא ההבדלים היחידים שבזכותם ה-Dragon שלנו שואג. בשונה מרוב המחשבים, ה-Dragon נותן לכם Extended Color BASIC של Microsoft כשפה הרגילה שלו, בזמן שהמתחרים עדיין תקועים עם BASIC ללימוד של Microsoft. פקודות הגרפיקה המתקדמות של ה-Dragon כוללות SET, ‏LINE, ‏DRAW, ‏CIRCLE, ‏PAINT, ‏PRINT @ ו-PRINT USING. ול-Dragon יש, כמובן, גם יכולות צליל מתקדמות.',
+        'ואפשרויות עריכה מלאות מאפשרות להוסיף, למחוק או לשנות כרצונכם.',
+        'אה כן, אל תשכחו את הצבעים! ל-Dragon יש תשעה, עם חמש רזולוציות שונות: מ-512 נקודות של טקסט (16×32) ועד 49,152 נקודות (256×192) ברזולוציה גבוהה. ואת התופעות המדהימות האלה אפשר לראות במסך וידאו או בטלוויזיה רגילה.',
+        'זה הסיפור של ה-Dragon. אם תרצו לדעת עוד, שלחו את התלוש או התקשרו לג\'ורג\' מרצ\'נט (מנהל השיווק שלנו) בחינם. מפתחי תוכנה ומשווקים מוזמנים לפנות. ה-Dragon נועד להפוך לאגדה, כשאמריקה תגלה שהביצועים הנהדרים שלו הם לא מיתוס.'
+      ]
+    },
+    en: {
+      title: 'Dragon! The color computer you\'ve been waiting for',
+      context: 'An American advert by TANO, the New Orleans company that made and sold the Dragon 64 in the US, from the magazine Rainbow, September 1983. A drawn dragon breathes fire over the headline, and the copy introduces the Dragon to American buyers: one of Britain\'s best sellers, with 64K of memory, for under $400. That same month Dragon User reported on TANO\'s plans.',
+      facts: [
+        ['Memory', '64K RAM as standard'],
+        ['Price', 'Below $400'],
+        ['Processor', '6809E, "a great advance on the original 6502 still used by our competition"'],
+        ['Language', 'Microsoft Extended Color BASIC, with graphics commands'],
+        ['Graphics', 'Nine colours, five resolutions, up to 256×192'],
+        ['Keyboard', 'Typewriter-style, guaranteed for 20 million key operations']
+      ]
+    }
+  },
+  {
     id: 'earls-court-1984',
     kind: 'ad',
     year: { he: '1984', en: '1984' },

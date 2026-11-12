@@ -92,7 +92,8 @@ for (const path of [...GALLERY, ...LINKS]) {
 
   const hidden = a.seen.filter(s => !b.seen.includes(s));
   const missing = b.imgs.filter(i => !i.ok).map(i => i.src);
-  const mine = blocked.filter(u => u.startsWith(base));
+  // ספירת הביקורים של Vercel (/_vercel/insights) נחסמת בכוונה אצל מי שיש לו חוסם. זה לא משנה את הדף, ולכן לא נספר כאן (12.11)
+  const mine = blocked.filter(u => u.startsWith(base) && !u.startsWith(base + '/_vercel/'));
   if (GALLERY.includes(path)) {
     out(hidden.length === 0 && missing.length === 0 && mine.length === 0 && a.imgs.length > 0, `${path} looks the same with an ad blocker`,
       [hidden.length && 'hidden: ' + [...new Set(hidden)].slice(0, 8).join(' '), missing.length && 'images not loaded: ' + missing.join(' '), mine.length && 'blocked: ' + mine.join(' ')].filter(Boolean).join(' | '));
