@@ -1929,7 +1929,7 @@
           'Type {R} and [ENTER]. The screen clears, and A appears in the corner. Press a key to go back to the assembler.',
           'Want to keep it? {CSAVE "FIRST"}, and the program goes into My tapes.'] },
       // סרטונים (גונן, 12.11): שמורים באתר עצמו (בלי נגן יוטיוב, כי אין באתר עוגיות). כל דף מראה את השפה שלו
-      videos: [{ n: 1, he: 'שיעור 1: התוכנית הראשונה בשפת מכונה', en: 'Lesson 1: Your first machine code program', len: { he: '2:47', en: '2:55' },
+      videos: [{ n: 1, he: 'התוכנית הראשונה בשפת מכונה', en: 'Your first machine code program', len: { he: '2:47', en: '2:55' },
         sum: ['טוענים את האסמבלר, כותבים תוכנית שממלאת את השורה העליונה באותיות A עד Z, מתרגמים, מריצים, משנים ושומרים.',
           'Load the assembler, write a program that fills the top line with the letters A to Z, assemble it, run it, change it and save it.'] }],
       links: [['/learn/', 'לא מכירים שפת מכונה? מתחילים ב', 'פינת הלמידה', 'New to machine code? Start in ', 'the Learning Corner'],
@@ -2075,20 +2075,33 @@
         for (const s of lines.slice(4)) ol.appendChild(keyLine(s));
         pane.appendChild(ol);
       });
+      // סרטונים (גונן, 12.11): קוביות קטנות עם שם השיעור, ובחירה פותחת נגן אחד מעליהן. בנוי לרשימה ארוכה
       if (tool.videos) mk(T2('🎬 סרטונים', '🎬 Videos'), pane => {
+        const lang = EN ? 'en' : 'he', base = v => `/lab/1982/video/asm-lesson${v.n}-${lang}`;
         const intro = document.createElement('p');
-        intro.textContent = T2('צופים בשיעור, ואז מנסים בעצמכם, במכונה שבדף הזה.', 'Watch the lesson, then try it yourself on the machine on this page.');
-        pane.appendChild(intro);
+        intro.textContent = T2('בוחרים שיעור, צופים, ואז מנסים בעצמכם במכונה שבדף הזה.', 'Pick a lesson, watch it, then try it yourself on the machine on this page.');
+        const player = document.createElement('div'); player.className = 'gv-player'; player.hidden = true;
+        const ph = document.createElement('h4'); ph.className = 'gv-video-title';
+        const vid = document.createElement('video'); vid.className = 'gv-video'; vid.controls = true; vid.preload = 'none'; vid.playsInline = true;
+        const sum = document.createElement('p'); sum.className = 'gv-video-sum';
+        player.append(ph, vid, sum);
+        const grid = document.createElement('div'); grid.className = 'gv-vgrid';
+        const open = (v, tile, play) => {
+          grid.querySelectorAll('.gv-vtile').forEach(t => t.setAttribute('aria-pressed', t === tile ? 'true' : 'false'));
+          ph.textContent = T2(`שיעור ${v.n}: `, `Lesson ${v.n}: `) + v[lang]; sum.textContent = T2(...v.sum);
+          vid.poster = base(v) + '.jpg'; vid.src = base(v) + '.mp4'; vid.setAttribute('aria-label', v[lang]);
+          player.hidden = false; if (play) vid.play().catch(() => {});
+        };
         for (const v of tool.videos) {
-          const lang = EN ? 'en' : 'he', f = `/lab/1982/video/${id === 'dasm' ? 'asm' : id}-lesson${v.n}-${lang}`;
-          const h = document.createElement('h4'); h.className = 'gv-video-title'; h.textContent = `${v[lang]} (${v.len[lang]})`;
-          const vid = document.createElement('video');
-          vid.className = 'gv-video'; vid.controls = true; vid.preload = 'none'; vid.playsInline = true; vid.poster = f + '.jpg';
-          vid.setAttribute('aria-label', v[lang]);
-          const src = document.createElement('source'); src.src = f + '.mp4'; src.type = 'video/mp4'; vid.appendChild(src);
-          const p = document.createElement('p'); p.textContent = T2(...v.sum);
-          pane.append(h, vid, p);
+          const t = document.createElement('button'); t.type = 'button'; t.className = 'gv-vtile'; t.setAttribute('aria-pressed', 'false');
+          const im = document.createElement('img'); im.src = base(v) + '-thumb.jpg'; im.alt = ''; im.loading = 'lazy';
+          const n = document.createElement('span'); n.className = 'gv-vtile-n'; n.textContent = T2(`שיעור ${v.n}`, `Lesson ${v.n}`) + ' · ' + v.len[lang];
+          const nm = document.createElement('span'); nm.className = 'gv-vtile-name'; nm.textContent = v[lang];
+          t.append(im, n, nm);
+          t.addEventListener('click', () => open(v, t, true));
+          grid.appendChild(t);
         }
+        pane.append(intro, player, grid);
       });
       mk(T2('על הכלי', 'About'), pane => {
         for (const s of (m.about ? m.about[EN ? 'en' : 'he'] : [])) { const p = document.createElement('p'); p.textContent = s; pane.appendChild(p); }
@@ -2234,8 +2247,16 @@ body.cart-in .gv-eject { display: block; }
 .gv-code { direction: ltr; text-align: left; background: #14100c; border: 1px solid #3a2e22; border-radius: 6px; padding: 8px 10px; margin: 6px 0; white-space: pre; overflow-x: auto; }
 .gv-keys { margin-top: 10px; }
 .gv-explain { margin: 4px 0 6px; }
-.gv-video { display: block; width: 100%; max-width: 640px; aspect-ratio: 16 / 9; background: #120d08; border-radius: 10px; margin: 6px 0 4px; }
-.gv-video-title { margin: 14px 0 0; font-size: 16px; }
+.gv-video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #120d08; border-radius: 10px; margin: 6px 0 4px; }
+.gv-video-title { margin: 10px 0 0; font-size: 16px; }
+.gv-video-sum { margin: 0 0 12px; font-size: 14px; color: #c9b99f; }
+.gv-vgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
+.gv-vtile { font: inherit; text-align: start; color: inherit; background: #2a2119; border: 1px solid #4a3a2a; border-radius: 10px; padding: 6px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; }
+.gv-vtile:hover, .gv-vtile:focus-visible { border-color: var(--accent, #f2d23a); }
+.gv-vtile[aria-pressed="true"] { border-color: var(--accent, #f2d23a); box-shadow: 0 0 0 1px var(--accent, #f2d23a); }
+.gv-vtile img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 6px; display: block; }
+.gv-vtile-n { font-size: 11px; color: var(--accent, #f2d23a); font-weight: 700; }
+.gv-vtile-name { font-size: 12px; font-weight: 700; line-height: 1.3; }
 .gv-tabs { display: flex; gap: 6px; margin-top: 14px; border-bottom: 1px solid #4a3a2a; flex-wrap: wrap; }
 .gv-tabs button { font: inherit; font-size: 14px; font-weight: 700; color: #b9a98f; background: transparent; border: 1px solid #4a3a2a; border-bottom: 0; border-radius: 8px 8px 0 0; padding: 6px 12px; cursor: pointer; min-height: 36px; }
 .gv-tabs button[aria-selected="true"] { background: #2a2119; color: var(--accent, #f2d23a); }
