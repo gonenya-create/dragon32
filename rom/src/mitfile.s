@@ -215,6 +215,9 @@ cadr		lbsr	comfrm
 csavem		jsr	<chrget		; ה-M
 		lbsr	getfn
 		bra	isl_ba6b_e	;@isl
+; csv2c: סוף ההמשך של CSAVEM: כולל הסוף, וכותבים (11.11: ברווח שלפני $BA6B, כדי לפנות מקום ל-$B409)
+csv2c		addd	#1
+		lbra	wdata
 		fill	$ff,$ba6b-*	;@isl
 		jmp	x_clsb	;@isl
 isl_ba6b_e	;@isl
@@ -236,7 +239,10 @@ isl_ba77_e	;@isl
 		lbsr	nochr
 csv2		lda	#2		; ‏$991B נכנס כאן (בלי השורה של ה-pshs: הכתובות כבר במחסנית)
 		clrb
-		lbra	csv2b		; (3.11: ההמשך עבר ל-mitsnd.s, כדי שהצליל יחזור ל-$BAA0)
+		lbsr	wrhdr		; ההמשך של CSAVEM: הכותרת, מבוא, ואז מההתחלה עד הסוף (11.11: כאן, ברווח שלפני $BAA0)
+		jsr	tleader
+		puls	d,x		; D = הסוף, X = ההתחלה
+		bra	csv2c
 		fill	$ff,$baa0-*	;@isl
 ; ---------- הצליל, בכתובות של המקור (3.11) ----------
 ; ‏$BAA0 (קורא 2.7): ‏SOUND מאוגרים: B = המשך, הטון כבר ב-$8C. ‏SNDTMR = 4B שדות

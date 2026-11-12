@@ -25,6 +25,14 @@ sndsel		ldx	#PIA0+1
 		orb	#8
 2		stb	,x
 		rts
+; evnzb: ביטוי → B בין 1 ל-255. שלילי, 0 או מעל 255: ?FC. השבר נחתך (קורא 1.1)
+evnzb		lbsr	evbyte
+		tstb
+		lbeq	pfc
+		rts
+; ‏$B409 (11.11): במקור נקודה בתוך ההתחלה הקרה. ‏Manic Miner ו-Jet Set Willy קופצים לכאן אחרי שני קודים שגויים
+		fill	$ff,$b409-*	;@isl
+		jmp	swinit	;@isl
 ; sndon / sndoff: ביט 3 של $FF23 (הצליל לטלוויזיה). B משתנה
 sndon		ldb	PIA1+3
 		orb	#8
@@ -32,12 +40,6 @@ sndon		ldb	PIA1+3
 sndoff		ldb	PIA1+3
 		andb	#$f7
 1		stb	PIA1+3
-		rts
-
-; evnzb: ביטוי → B בין 1 ל-255. שלילי, 0 או מעל 255: ?FC. השבר נחתך (קורא 1.1)
-evnzb		lbsr	evbyte
-		tstb
-		beq	pfc
 		rts
 
 ; ---------- SOUND טון,משך (קורא 1) ----------
@@ -67,12 +69,6 @@ devfac		lbsr	ayint
 		sta	SPCIO
 9		rts
 8		lbra	err_dn
-; csv2b: ההמשך של CSAVEM ($991B): הכותרת, מבוא, ואז מההתחלה עד הסוף, כולל הסוף (עבר לכאן מ-mitfile.s ב-3.11)
-csv2b		lbsr	wrhdr
-		jsr	tleader
-		puls	d,x		; D = הסוף, X = ההתחלה
-		addd	#1		; כולל הסוף
-		lbra	wdata
 ; סוף PLAY (4.11, חבילה 8: כאן, ברווח שלפני $B44F, כדי שהכניסה $B482 תיכנס)
 pend		bra	sndoff		; הסמן: סוף PLAY
 		fill	$ff,$b44f-*	;@isl

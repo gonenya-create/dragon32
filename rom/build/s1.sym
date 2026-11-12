@@ -232,14 +232,14 @@ go	equ	36672
 PIA0	equ	65280
 close_st	equ	48357
 fe_lp	equ	37468
-wdata	equ	47535
 tclose	equ	48376
+wdata	equ	47535
 TBUF	equ	474
 strdn2	equ	39568
 del_st	equ	41795
 GPRMSK	equ	205
 ploop_t	equ	46339
-getdev	equ	46099
+getdev	equ	46108
 log2c	equ	41433
 clrto	equ	48691
 eio2	equ	48600
@@ -467,7 +467,7 @@ DBLZER	equ	138
 DEVCFW	equ	106
 if_no	equ	38966
 wrhdx	equ	47378
-pend	equ	46157
+pend	equ	46152
 pr_semi	equ	37020
 strcmp	equ	38196
 wrhdr	equ	47372
@@ -494,7 +494,7 @@ isl_bcab_e	equ	48302
 clmx	equ	46939
 GR	equ	207
 GSTART	equ	186
-devfac	equ	46108
+devfac	equ	46117
 g2pt	equ	44120
 inloop	equ	39485
 cadr	equ	47702
@@ -690,8 +690,8 @@ ARGMOH	equ	94
 fdig	equ	36415
 dlist2	equ	34556
 thh	equ	47341
-refill	equ	48190
 stmtbl	equ	33108
+refill	equ	48190
 LINBUF	equ	733
 ed_key	equ	42317
 zero5	equ	37451
@@ -786,7 +786,7 @@ GSETF	equ	194
 fn_hex	equ	40005
 FBUFPT	equ	100
 evstr	equ	47574
-evnzb	equ	46092
+evnzb	equ	46076
 LINNUM	equ	43
 CSUM	equ	128
 rnd_seed	equ	39753
@@ -960,7 +960,7 @@ gbox	equ	44259
 us_lit	equ	42795
 lnum	equ	34531
 VARNAM	equ	55
-sndon	equ	46076
+sndon	equ	46092
 fout9	equ	36300
 INDEX	equ	240
 dloop	equ	45350
@@ -1001,9 +1001,9 @@ gdl	equ	44468
 p_v	equ	46261
 on	equ	39027
 mem_om	equ	40658
+csv2c	equ	47715
 fn_sin	equ	41250
 trmnok	equ	39614
-csv2b	equ	46143
 rst2	equ	33542
 trace	equ	41725
 err_uf	equ	35119
@@ -1053,9 +1053,9 @@ givb	equ	35521
 BLKTYP	equ	124
 ary_om	equ	38866
 OCTAVE	equ	222
-efmo	equ	48354
 newstk	equ	36751
 ed_x	equ	42573
+efmo	equ	48354
 us_num	equ	43107
 pfmult	equ	40994
 joyrd	equ	40407
@@ -1079,7 +1079,7 @@ DSIGN	equ	215
 gaddr	equ	43658
 finlog	equ	36068
 swinit	equ	33563
-sndoff	equ	46083
+sndoff	equ	46099
 ki_col	equ	48909
 ed_l	equ	42642
 ed_k	equ	42560
