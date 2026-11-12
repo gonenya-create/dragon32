@@ -382,7 +382,7 @@
   // איך משחקים (גונן, 25.10: "לא בטוח שהמשתמשים יבינו איך משחקים"): תיבה נפתחת מתחת לכל משחק בשפת מכונה.
   // [מקש] נהיה מקש מצויר. המקשים לפי התיעוד של המחבר, ונבדקו במכונה. במק: BREAK הוא Esc, ו-CLEAR הוא Home (fn+←).
   // משחקים שיש להם רמזים (lab/1982/hints/<id>.json): רק אחרי שעברנו אותם עד הסוף במכונה
-  const HINTS = new Set(['adventureland', 'pirate', 'voodoo', 'mission', 'count', 'odyssey', 'pyramid', 'funhouse', 'ghost', 'golden', 'savage1', 'savage2', 'claymorgue', 'calixto', 'sanctum', 'shenan', 'seasearch', 'trekboer', 'williamsburg', 'vortex', 'diablero', 'sword', 'riverfire', 'daggorath']);
+  const HINTS = new Set(['adventureland', 'pirate', 'voodoo', 'mission', 'count', 'odyssey', 'pyramid', 'funhouse', 'ghost', 'golden', 'savage1', 'savage2', 'claymorgue', 'calixto', 'sanctum', 'shenan', 'seasearch', 'trekboer', 'williamsburg', 'vortex', 'diablero', 'sword', 'riverfire', 'daggorath', 'dhh']);
   const hintData = {};
   const hintsFor = id => (hintData[id] = hintData[id] || fetch('/lab/1982/hints/' + id + '.json').then(r => { if (!r.ok) throw 0; return r.json(); }).catch(e => { delete hintData[id]; throw e; }));
   // שאלה אחת: נפתחת לרמז קטן, ובתוכו הרמז הברור, ובתוכו הפתרון. כל מדרגה מופיעה רק אחרי שפותחים את הקודמת
@@ -1080,11 +1080,11 @@
     dhh: {
       he: ['שלושה חוקרי מערות אבדו עמוק ב-Death\'s Head Hole, ליד הכפר Priddy שבסומרסט. אתם וחבריכם בצוות ההצלה יורדים להציל את שלושתם, לפני שהגשם מציף את המעברים.',
         'רוב הזמן משחקים בארבעה מקשים: [N] [S] [E] [W] לצפון, דרום, מזרח ומערב. על המסך כתוב לאן אפשר ללכת. כיוון שלא כתוב הוא אזור לא נחקר: מסוכן, ומעייף יותר.',
-        '[L] מקשיבים: שומעים אם יש חוקר אבוד בקרבת מקום. [F] אוכלים מנת מזון. [C] מצייר מפה של המערה (ברמת NOVICE גם החוקרים האבודים מופיעים בה), אבל עולה 350 כוח. [P] הניקוד, רק במשבצת הכניסה. [G] מוותרים.',
+        '[L] מקשיבים: שומעים אם יש חוקר אבוד בקרבת מקום. [F] אוכלים מנת מזון. [C] מצייר מפה של המערה. ברמת NOVICE גם החוקרים האבודים מופיעים בה, אבל היא עולה 350 כוח. ברמת EXPERT היא בחינם, בלי החוקרים. [P] הניקוד, רק במשבצת הכניסה. [G] מוותרים.',
         'שמרו על הכוח (FITNESS) ועל הפנסים (LIGHTS): הם יורדים כל הזמן. בעזרת סולם יורדים בירידה תלולה, בעזרת חבל מטפסים, בעזרת אֵת פותחים מעבר סתום, וציוד הצלילה מעביר מעבר מוצף. לתהום לא נכנסים אף פעם.'],
       en: ['Three cavers are lost deep in Death\'s Head Hole, near the village of Priddy in Somerset. You and your rescue team go down to save all three, before the rain floods the passages.',
         'Most of the time you play with four keys: [N] [S] [E] [W] for north, south, east and west. The screen tells you which ways are open. A way it doesn\'t name is unexplored: dangerous, and more tiring.',
-        '[L] listens for a lost caver nearby. [F] eats a food pack. [C] draws a map of the cave (in NOVICE the lost cavers show on it too), but costs 350 fitness. [P] gives the score, only on the entrance square. [G] gives up.',
+        '[L] listens for a lost caver nearby. [F] eats a food pack. [C] draws a map of the cave. In NOVICE the lost cavers show on it too, but it costs 350 fitness. In EXPERT it is free, without the cavers. [P] gives the score, only on the entrance square. [G] gives up.',
         'Watch your FITNESS and your LIGHTS: they run down all the time. A ladder gets you down a pitch, a rope up a climb, a shovel through a choked passage, and the sub-aqua set through a sump. Never step into a chasm.']
     },
     // נבדק במכונה (29.10): CLOAD, ‏RUN, שם הקבוצה, ההקדמה, מסך הקבוצה והתפריט. ההוראות לפי העטיפה המקורית של Peaksoft

@@ -1,0 +1,244 @@
+{
+  "note": "Survival tips for Death's Head Hole in our own words, from reading how the game works (its BASIC program) and from playing it on the Dragon machine (12.11.2026). The cavers and some dangers are placed by chance in every game, so there is no single solution: these are the rules of the cave. Each question has three levels: a small hint, a clearer hint and the full answer.",
+  "where": "The hint button reads the whole screen (the game writes its information low down). Words the game prints in lower case show as inverse letters and can't be read, so \"at\" uses only words in capitals.",
+  "screen": "all",
+  "at": [
+    [
+      "RANGE OF EQUIPMENT",
+      "CHOICES LEFT",
+      "WHICH ITEM"
+    ],
+    [
+      "RESCUER",
+      "FOUND"
+    ],
+    [
+      "OUT OF ENERGY",
+      "MUNCH",
+      "NO FOOD"
+    ],
+    [
+      "THE LIGHTS HAVE FAILED",
+      "SPARES LEFT",
+      "NOTHING TO LIGHT"
+    ],
+    [
+      "PITCH",
+      "CLIMB",
+      "NO LADDERS LEFT",
+      "NO ROPES LEFT"
+    ],
+    [
+      "SUMP",
+      "DROWNED"
+    ],
+    [
+      "CHOKED PASSAGE",
+      "UNSTABLE BOULDERS",
+      "RUCKLE"
+    ],
+    [
+      "CHASM",
+      "A ROPE!",
+      "A SHOVEL!",
+      "A LADDER!",
+      "A BUCKET!",
+      "TWO SPARE LAMPS!"
+    ],
+    [
+      "LOST - FOR GOOD"
+    ],
+    [
+      "DAYLIGHT",
+      "COWARD",
+      "TWO MORE YET",
+      "OTHER ONE",
+      "SLIP OF"
+    ],
+    [
+      "NEWSFLASH",
+      "POLICE REPORT",
+      "YOU'VE DONE IT"
+    ]
+  ],
+  "he": [
+    {
+      "q": "לבחור את הציוד הרגיל, או לבחור לבד?",
+      "h": [
+        "הציוד הרגיל טוב להתחלה. אם בוחרים לבד, יש דבר אחד קטן שאסור לשכוח.",
+        "בלי מצית ({LIGHTER}), הפנסים הרזרביים לא שווים כלום: כשהאור נגמר, אין במה להדליק אותם.",
+        "על השאלה {STANDARD RANGE OF EQUIPMENT} לוחצים [Y], ומקבלים: מצית אחד, 4 פנסים רזרביים, 3 מנות מזון, 5 סולמות, 5 חבלים, 4 את חפירה, 2 דליים וציוד צלילה אחד. בבחירה לבד יש 25 פריטים לחלק. תמיד לפחות מצית אחד, ורק ציוד צלילה אחד מספיק לכל המשחק."
+      ]
+    },
+    {
+      "q": "איך מוצאים את חוקרי המערות האבודים?",
+      "h": [
+        "יש שתי דרכים לחפש: להקשיב, ולהסתכל במפה.",
+        "[L] מקשיב: הוא שומע חוקר שנמצא עד 3 משבצות מכם, לכל כיוון. [C] מצייר מפה של המערה.",
+        "ברמת {NOVICE} המפה מראה גם את שלושת החוקרים, אבל עולה 350 כוח. ברמת {EXPERT} המפה לא עולה כלום, אבל בלי החוקרים. כל הקשבה עולה 20 כוח ו-10 אור. כדאי לדעת: חוקר אחד תמיד בחצי המזרחי של המערה, ואחד בחלק הצפון-מערבי. כשעומדים ליד חוקר, המסך כותב {LOST CAVER} והכיוון, ונכנסים אליו."
+      ]
+    },
+    {
+      "q": "הכוח ({fitness}) יורד כל הזמן. מה עושים?",
+      "h": [
+        "כמעט כל דבר עולה כוח. השאלה היא איך לא לבזבז.",
+        "צעד במעבר יבש עולה 1, במעבר של נחל 2, טיפוס וירידה 10, הקשבה 20. גם לעמוד במקום עולה קצת. מנת מזון מחזירה 150.",
+        "[F] אוכלים מנת מזון בכל רגע. כשהכוח מגיע ל-0, המשחק אוכל מנה לבד, ואם אין, נגמר. במערה יש מחסני מזון ({food dump}) שנותנים מנה. וחשוב: מתחת ל-750 כוח המערה מתחילה להשתנות בכל צעד: מעברים מוצפים, מעברים נסתמים, ותהומות חדשות נפתחות. לכן כדאי לזוז מהר ובלי צעדים מיותרים בהתחלה."
+      ]
+    },
+    {
+      "q": "האור ({lights}) נגמר.",
+      "h": [
+        "האור יורד בכל לחיצה, גם בלחיצה שלא עושה כלום.",
+        "כל מקש עולה נקודת אור אחת. שטח לא נחקר עולה 25, והקשבה 10. כשהאור מגיע ל-0, מדליקים פנס רזרבי, אם יש, ומקבלים 75.",
+        "בלי פנס רזרבי, או בלי מצית להדליק אותו, המשחק נגמר בחושך. לא לוחצים סתם על מקשים. במחסני ציוד ({equipment dump}) יש לפעמים 2 פנסים רזרביים."
+      ]
+    },
+    {
+      "q": "יש מולי ירידה תלולה ({PITCH}) או טיפוס ({CLIMB}).",
+      "h": [
+        "לכל אחד מהם יש ציוד משלו.",
+        "לירידה ({25' PITCH}) צריך סולם, ולטיפוס ({CLIMB}) צריך חבל. הסולם והחבל נשארים במקום, אז בפעם הבאה לא צריך עוד אחד (אבל המעבר עדיין עולה 10 כוח).",
+        "בלי סולם או חבל, אחד מהצוות נופל ({THE LAST MAN FELL}), ואם נשארתם לבד, המשחק נגמר. מספר אנשי הצוות כתוב ליד {RESCUER}. עוד סולמות וחבלים יש במחסני הציוד, וכולם במערת התהומות ({cave of chasms}) שבמזרח."
+      ]
+    },
+    {
+      "q": "יש מולי {SUMP} או {STATIC SUMP}.",
+      "h": [
+        "אלה שני דברים שונים: מעבר מוצף, ובור מים עומדים.",
+        "{SUMP} הוא מעבר מלא מים: צוללים בו עם ציוד צלילה. {STATIC SUMP} הוא בור של מים עומדים: מרוקנים אותו בדלי.",
+        "ציוד צלילה אחד מספיק לכל המשחק, הוא לא נגמר. בלי ציוד צלילה, בתוך {SUMP} טובעים. כל דלי מרוקן 5 בורות ואז נשבר. בלי דלי, אחד מהצוות טובע."
+      ]
+    },
+    {
+      "q": "מעבר סתום ({CHOKED PASSAGE}) או סלעים לא יציבים ({UNSTABLE BOULDERS}).",
+      "h": [
+        "אחד פותחים, והשני עדיף לעקוף.",
+        "מעבר סתום פותחים באת חפירה. סלעים לא יציבים הם הימור: פעם מתוך חמש הם קורסים.",
+        "את חפירה נשבר פעם מתוך חמש, לכן כדאי לקחת כמה. בלי את, חופרים בידיים והתקרה נופלת על אחד מהצוות. כשהסלעים קורסים, אחד מהצוות נפגע, או אתם אם נשארתם לבד. אם יש דרך אחרת, עוקפים אותם."
+      ]
+    },
+    {
+      "q": "מה עם התהומות ({CHASM})?",
+      "h": [
+        "לתהום לא נכנסים אף פעם. אבל יש גם תהומות שמופיעות.",
+        "צעד לתוך {CHASM} הוא סוף המשחק. במערת התהומות ({cave of chasms}) במזרח נפתחות תהומות חדשות כשהכוח יורד מתחת ל-750.",
+        "מלכודת שקל לפספס: אחרי שלוקחים ציוד ממחסן ציוד ({equipment dump}), המשבצת של המחסן הופכת לתהום. לא חוזרים אליה. קוראים את המסך לפני כל צעד."
+      ]
+    },
+    {
+      "q": "כדאי להיכנס לשטח לא נחקר ({unexplored territory})?",
+      "h": [
+        "זה נותן נקודות, אבל יקר ומסוכן.",
+        "כיוון שהמסך לא כותב הוא שטח לא נחקר. כל צעד כזה נותן 50 נקודות, אבל עולה 75 כוח ו-25 אור.",
+        "בקצה של המערה, צעד לשטח לא נחקר יכול להוציא אתכם מהמפה: {YOU'RE LOST - FOR GOOD}, והמשחק נגמר. עדיף ללכת במעברים שהמסך כותב, ולהיכנס לשטח לא נחקר רק כשאין ברירה."
+      ]
+    },
+    {
+      "q": "חזרתי לכניסה, ורק [N] עובד.",
+      "h": [
+        "משבצת הכניסה היא משבצת מיוחדת.",
+        "ביציאה ({in daylight}) [N] מחזיר פנימה ו-[P] מראה את הניקוד. [S], [E] או [W] מורידים 100 נקודות.",
+        "מנצחים כשחוזרים לכניסה עם שלושת החוקרים. עם פחות, המשחק אומר כמה חסרים ({THERE ARE TWO MORE YET}, {WHAT ABOUT THE OTHER ONE?}). בסבב הבא, מי שחוזר בלי אף אחד מהחוקרים החדשים שומע {COWARD! GET BACK IN THERE!}. [G] מוותר, ומראה איפה היו החוקרים שלא מצאתם."
+      ]
+    },
+    {
+      "q": "ניצחתי, ויש עוד ({NEWSFLASH}).",
+      "h": [
+        "המשחק לא נגמר בשלושה חוקרים.",
+        "אחרי כל שלושה, החדשות מודיעות על עוד שלושה אבודים, ואתם יורדים שוב.",
+        "אין צוות חדש ואין ציוד חדש: ממשיכים עם מה שנשאר, עם הכוח והאור שיש. אבל מחסני הציוד והמזון במערה מתמלאים שוב. זה נמשך עד 12 חוקרים. מי שמציל את כולם מקבל {BET YOU CAN'T DO IT AGAIN!}."
+      ]
+    }
+  ],
+  "en": [
+    {
+      "q": "Take the standard equipment, or choose my own?",
+      "h": [
+        "The standard set is fine to start with. If you choose your own, there is one small thing you must not forget.",
+        "Without a {LIGHTER}, the spare lamps are useless: when the light runs out, there is nothing to light them with.",
+        "At {STANDARD RANGE OF EQUIPMENT} press [Y] and you get: one lighter, 4 spare lamps, 3 food packs, 5 ladders, 5 ropes, 4 shovels, 2 buckets and one sub-aqua set. Choosing your own, you share out 25 items. Always at least one lighter, and one sub-aqua set is enough for the whole game."
+      ]
+    },
+    {
+      "q": "How do I find the lost cavers?",
+      "h": [
+        "There are two ways to search: listening, and looking at the map.",
+        "[L] listens: it hears a caver up to 3 squares away in any direction. [C] draws a map of the cave.",
+        "At {NOVICE} level the map also shows the three cavers, but it costs 350 fitness. At {EXPERT} the map costs nothing, but shows no cavers. Each listen costs 20 fitness and 10 light. Good to know: one caver is always in the eastern half of the cave, and one in the north-west part. Next to a caver the screen says {LOST CAVER} and the direction, and you step in."
+      ]
+    },
+    {
+      "q": "My {fitness} keeps going down. What do I do?",
+      "h": [
+        "Nearly everything costs fitness. The trick is not to waste it.",
+        "A step in a dry passage costs 1, in a stream passage 2, a climb or a pitch 10, listening 20. Even standing still costs a little. A food pack gives back 150.",
+        "[F] eats a food pack at any time. When fitness reaches 0 the game eats one for you, and if there is none, it's over. Food dumps in the cave give you a pack. And important: below 750 fitness the cave starts to change with every step: passages flood, passages choke and new chasms open. So move quickly and without spare steps at the start."
+      ]
+    },
+    {
+      "q": "My {lights} ran out.",
+      "h": [
+        "Light goes down with every key you press, even one that does nothing.",
+        "Every key costs one light point. Unexplored territory costs 25, listening 10. When light reaches 0 you light a spare lamp, if you have one, and get 75.",
+        "Without a spare lamp, or without a lighter to light it, the game ends in the dark. Don't press keys for nothing. Equipment dumps sometimes hold 2 spare lamps."
+      ]
+    },
+    {
+      "q": "There's a {PITCH} or a {CLIMB} ahead.",
+      "h": [
+        "Each one needs its own equipment.",
+        "Going down a {25' PITCH} takes a ladder, going up a {CLIMB} takes a rope. The ladder or rope stays in place, so next time you don't need another one (crossing still costs 10 fitness).",
+        "Without a ladder or a rope, one of your team falls ({THE LAST MAN FELL}), and if you are on your own, the game ends. Your team size is shown next to {RESCUER}. More ladders and ropes are in the equipment dumps, and they are all in the {cave of chasms}, in the east."
+      ]
+    },
+    {
+      "q": "There's a {SUMP} or a {STATIC SUMP} ahead.",
+      "h": [
+        "These are two different things: a flooded passage, and a pool of still water.",
+        "A {SUMP} is a passage full of water: you dive through it with the sub-aqua set. A {STATIC SUMP} is a pool of still water: you bail it out with a bucket.",
+        "One sub-aqua set lasts the whole game. Without one, you drown in a {SUMP}. Each bucket bails 5 pools and then breaks. Without a bucket, one of your team drowns."
+      ]
+    },
+    {
+      "q": "A {CHOKED PASSAGE} or {UNSTABLE BOULDERS}.",
+      "h": [
+        "One you open, the other is better avoided.",
+        "A choked passage is opened with a shovel. Unstable boulders are a gamble: one time in five they collapse.",
+        "A shovel breaks one time in five, so take several. Without one, you dig with your hands and the roof falls on one of your team. When the boulders collapse, one of your team is hit, or you if you are on your own. If there is another way round, take it."
+      ]
+    },
+    {
+      "q": "What about the {CHASM}s?",
+      "h": [
+        "Never step into a chasm. But some chasms appear.",
+        "A step into a {CHASM} ends the game. In the {cave of chasms}, in the east, new chasms open once fitness goes below 750.",
+        "An easy trap to miss: after you take equipment from an {equipment dump}, the dump's square turns into a chasm. Don't go back onto it. Read the screen before every step."
+      ]
+    },
+    {
+      "q": "Is {unexplored territory} worth it?",
+      "h": [
+        "It gives points, but it is costly and risky.",
+        "A direction the screen doesn't name is unexplored. Each step there gives 50 points, but costs 75 fitness and 25 light.",
+        "At the edge of the cave, a step into unexplored territory can take you off the map: {YOU'RE LOST - FOR GOOD}, and the game ends. Better to walk the passages the screen names, and go unexplored only when there's no choice."
+      ]
+    },
+    {
+      "q": "I'm back at the entrance, and only [N] works.",
+      "h": [
+        "The entrance square is a special square.",
+        "At the way out ({in daylight}) [N] takes you back in and [P] shows the score. [S], [E] or [W] cost 100 points.",
+        "You win by coming back to the entrance with all three cavers. With fewer, the game says how many are missing ({THERE ARE TWO MORE YET}, {WHAT ABOUT THE OTHER ONE?}). In the next round, coming back without any of the new cavers gets {COWARD! GET BACK IN THERE!}. [G] gives up, and shows where the cavers you missed were."
+      ]
+    },
+    {
+      "q": "I won, and there's more ({NEWSFLASH}).",
+      "h": [
+        "The game doesn't end with three cavers.",
+        "After every three, the news reports three more lost, and you go down again.",
+        "No new team and no new kit: you carry on with what is left, and with the fitness and light you have. But the equipment and food dumps in the cave fill up again. It goes on up to 12 cavers. Whoever saves them all gets {BET YOU CAN'T DO IT AGAIN!}."
+      ]
+    }
+  ]
+}
