@@ -2128,7 +2128,7 @@ A22B                  fone            equ     expcon+36               ; 1: המ�
 8FCE 9E4D                             ldx     DSCPNT
 8FD0 A684                             lda     ,x
 8FD2 AE02                             ldx     2,x
-8FD4 17051E                           lbsr    movstr
+8FD4 17051B                           lbsr    movstr
 8FD7 8E0056                           ldx     #DSCTMP
 8FDA 9F4D             3               stx     DSCPNT
 8FDC 1705A9                           lbsr    fretms          ; משחררים את הזמני (בלי לשחרר את המקום)
@@ -2190,7 +2190,7 @@ A22B                  fone            equ     expcon+36               ; 1: המ�
 904A 170209                           lbsr    frmevl
 904D 0D06                             tst     VALTYP
 904F 2705                             beq     3F
-9051 1704B0                           lbsr    strprt          ; מחרוזת
+9051 1704AD                           lbsr    strprt          ; מחרוזת
 9054 2016                             bra     4F
 9056 17FD32           3               lbsr    fout
 9059 8E03DA                           ldx     #FBUFFR
@@ -2268,7 +2268,7 @@ A22B                  fone            equ     expcon+36               ; 1: המ�
 90E2 2007                             bra     isl_90e5_e      ;@isl
 90E4 FF                               fill    $ff,$90e5-*     ;@isl
 90E5 7E9F2A                           jmp     x_strout        ;@isl
-90E8 7E9504                           jmp     strprt  ;@isl
+90E8 7E9501                           jmp     strprt  ;@isl
 90EB                  isl_90e5_e      ;@isl
 90EB 8E03E0                           ldx     #TEMPLIM
 90EE 17F8CB                           lbsr    movmf
@@ -2528,7 +2528,7 @@ A22B                  fone            equ     expcon+36               ; 1: המ�
 92ED 2709                             beq     72F
 92EF 118389FC                         cmpu    #faddt
 92F3 26ED                             bne     75B
-92F5 CE9514                           ldu     #cat            ; חיבור מחרוזות
+92F5 CE9511                           ldu     #cat            ; חיבור מחרוזות
 92F8 ADC4             72              jsr     ,u              ; FAC = ARG op FAC
 92FA 16FF5F                           lbra    fe_lp
 92FD 3584             9               puls    b,pc
@@ -2717,7 +2717,7 @@ A22B                  fone            equ     expcon+36               ; 1: המ�
                       ; dorel: יחס (mit: DOREL 3547, DOCMP 3590). OPMASK: 1 = >, 2 = =, 4 = <. התוצאה -1 או 0
 946D 0D06             dorel           tst     VALTYP
 946F 2705                             beq     1F
-9471 1700C0                           lbsr    strcmp          ; מחרוזות (A כמו של fcomp)
+9471 1700BD                           lbsr    strcmp          ; מחרוזות (A כמו של fcomp)
 9474 200E                             bra     2F
 9476 9661             1               lda     ARGSGN          ; אורזים את ARG ומשווים
 9478 8A7F                             ora     #$7f
@@ -2760,7 +2760,9 @@ A22B                  fone            equ     expcon+36               ; 1: המ�
                       
                       ; strlit: מחרוזת במרכאות. X = התו הראשון אחרי המרכאות. בונה מתאר זמני (FAC), ו-STRNG2 = התו שאחרי.
                       ; strlt2: אותו דבר, אבל המחרוזת נגמרת ב-0, ב-CHARAC או ב-ENDCHR (READ/INPUT). אם נגמרה במרכאות, מדלגים עליהן.
-                      ; מחרוזת שבתוך התוכנית נשארת שם; אחרת (שורה ישירה, שורת קלט) מועתקת לשטח המחרוזות (mit: STRLT2/STRCP)
+                      ; רק מחרוזת שבמאגרים של המערכת (מתחת ל-$0400: שורה ישירה, שורת קלט, FBUFFR של STR$) מועתקת לשטח המחרוזות;
+                      ; כל מחרוזת אחרת נשארת במקומה, גם מחוץ לתוכנית (mit: STRLT2/STRCP, "IF PAGE 0, COPY"; קורא: קלטת 11.4).
+                      ; ‏13.11: עד אז הועתקה כל מחרוזת שמחוץ לתוכנית, ו-Tanglewood (‏DRAW דרך $B051, המחרוזת בקוד המשחק, בלי שטח מחרוזות) קיבל ?OS
 0001                  CHARAC          equ     $01             ; קורא: מפריד מחרוזת
 0002                  ENDCHR          equ     $02
 9495 8622             strlit          lda     #'"
@@ -2782,117 +2784,115 @@ A22B                  fone            equ     expcon+36               ; 1: המ�
 94B4 D756                             stb     DSCTMP
 94B6 BD0197                           jsr     HK_STR          ; 20: B = האורך, X = הסוף
 94B9 9E58                             ldx     DSCTMP+2
-94BB 9C19                             cmpx    TXTTAB
-94BD 2504                             blo     4F
-94BF 9C1B                             cmpx    VARTAB
-94C1 250B                             blo     putnew          ; בתוך התוכנית: בלי העתקה
-94C3 1F98             4               tfr     b,a
-94C5 9F62                             stx     STRNG1
-94C7 1700D1                           lbsr    strspa          ; מקום, והכתובת ב-DSCTMP+2
-94CA 9E62                             ldx     STRNG1
-94CC 8D27             movput          bsr     movstr
+94BB 8C0400                           cmpx    #$0400
+94BE 240B                             bhs     putnew          ; לא במאגר: בלי העתקה
+94C0 1F98                             tfr     b,a
+94C2 9F62                             stx     STRNG1
+94C4 1700D4                           lbsr    strspa          ; מקום, והכתובת ב-DSCTMP+2
+94C7 9E62                             ldx     STRNG1
+94C9 8D27             movput          bsr     movstr
                       ; putnew: המתאר שב-DSCTMP → מתאר זמני, ו-FAC מצביע עליו (mit: PUTNEW)
-94CE 9E0B             putnew          ldx     TEMPPT
-94D0 8C01D1                           cmpx    #TEMPEND
-94D3 1027F452                         lbeq    err_st
-94D7 9656                             lda     DSCTMP
-94D9 5F                               clrb
-94DA ED84                             std     ,x
-94DC E704                             stb     4,x
-94DE DC58                             ldd     DSCTMP+2
-94E0 ED02                             std     2,x
-94E2 9F52                             stx     FACMO
-94E4 9F0D                             stx     LASTPT
-94E6 0F63                             clr     FACOV
-94E8 86FF                             lda     #$ff
-94EA 9706                             sta     VALTYP
-94EC 3005                             leax    5,x
-94EE 9F0B                             stx     TEMPPT
-94F0 39                               rts
+94CB 9E0B             putnew          ldx     TEMPPT
+94CD 8C01D1                           cmpx    #TEMPEND
+94D0 1027F455                         lbeq    err_st
+94D4 9656                             lda     DSCTMP
+94D6 5F                               clrb
+94D7 ED84                             std     ,x
+94D9 E704                             stb     4,x
+94DB DC58                             ldd     DSCTMP+2
+94DD ED02                             std     2,x
+94DF 9F52                             stx     FACMO
+94E1 9F0D                             stx     LASTPT
+94E3 0F63                             clr     FACOV
+94E5 86FF                             lda     #$ff
+94E7 9706                             sta     VALTYP
+94E9 3005                             leax    5,x
+94EB 9F0B                             stx     TEMPPT
+94ED 39                               rts
                       
                       ; movstr: מעתיק A תווים מ-X אל FRESPC, ו-FRESPC מתקדם (mit: MOVSTR/MOVDO)
                       ; movdsc: אותו דבר מהמתאר שב-X
-94F1 A684             movdsc          lda     ,x
-94F3 AE02                             ldx     2,x
-94F5 DE25             movstr          ldu     FRESPC
-94F7 4D                               tsta
-94F8 2707                             beq     2F
-94FA E680             1               ldb     ,x+
-94FC E7C0                             stb     ,u+
-94FE 4A                               deca
-94FF 26F9                             bne     1B
-9501 DF25             2               stu     FRESPC
-9503 39                               rts
+94EE A684             movdsc          lda     ,x
+94F0 AE02                             ldx     2,x
+94F2 DE25             movstr          ldu     FRESPC
+94F4 4D                               tsta
+94F5 2707                             beq     2F
+94F7 E680             1               ldb     ,x+
+94F9 E7C0                             stb     ,u+
+94FB 4A                               deca
+94FC 26F9                             bne     1B
+94FE DF25             2               stu     FRESPC
+9500 39                               rts
                       
                       ; strprt: מדפיס את המחרוזת שבמתאר של FAC (mit: STRPRT)
-9504 8D60             strprt          bsr     frefac
-9506 1F89                             tfr     a,b
-9508 5D                               tstb
-9509 2708                             beq     9F
-950B A680             1               lda     ,x+
-950D 172633                           lbsr    chrout          ; שומר על B ו-X
-9510 5A                               decb
-9511 26F8                             bne     1B
-9513 39               9               rts
+9501 8D60             strprt          bsr     frefac
+9503 1F89                             tfr     a,b
+9505 5D                               tstb
+9506 2708                             beq     9F
+9508 A680             1               lda     ,x+
+950A 172636                           lbsr    chrout          ; שומר על B ו-X
+950D 5A                               decb
+950E 26F8                             bne     1B
+9510 39               9               rts
                       
                       ; cat: חיבור מחרוזות. FAC = הראשונה; הימנית כבר חושבה ל-FAC, והשמאלית ב-ARGMO (mit: CAT)
-9514 9E5F             cat             ldx     ARGMO           ; השמאלית
-9516 9F62                             stx     STRNG1
-9518 A684                             lda     ,x
-951A 9E52                             ldx     FACMO
-951C AB84                             adda    ,x
-951E 1025F404                         lbcs    err_ls          ; יותר מ-255
-9522 8D73                             bsr     strini          ; DSCPNT = הימנית
-9524 9E62                             ldx     STRNG1          ; מעתיקים את השמאלית
-9526 8DC9                             bsr     movdsc
-9528 9E4D                             ldx     DSCPNT          ; ואת הימנית, ומשחררים אותה
-952A 8D3C                             bsr     fretmp
-952C 8DC7                             bsr     movstr
-952E 9E62                             ldx     STRNG1
-9530 8D36                             bsr     fretmp
-9532 209A                             bra     putnew
+9511 9E5F             cat             ldx     ARGMO           ; השמאלית
+9513 9F62                             stx     STRNG1
+9515 A684                             lda     ,x
+9517 9E52                             ldx     FACMO
+9519 AB84                             adda    ,x
+951B 1025F407                         lbcs    err_ls          ; יותר מ-255
+951F 8D76                             bsr     strini          ; DSCPNT = הימנית
+9521 9E62                             ldx     STRNG1          ; מעתיקים את השמאלית
+9523 8DC9                             bsr     movdsc
+9525 9E4D                             ldx     DSCPNT          ; ואת הימנית, ומשחררים אותה
+9527 8D3C                             bsr     fretmp
+9529 8DC7                             bsr     movstr
+952B 9E62                             ldx     STRNG1
+952D 8D36                             bsr     fretmp
+952F 209A                             bra     putnew
                       
                       ; strcmp: השוואת מחרוזות. ARG = השמאלית, FAC = הימנית. A = 1 אם הימנית גדולה, 0 שוות, $FF אם קטנה
                       ; (כמו fcomp: הסימן של FAC פחות ARG) (mit: STRCMP 3557)
-9534 8D30             strcmp          bsr     frefac          ; הימנית: A = אורך, X = כתובת
-9536 3412                             pshs    a,x
-9538 9E5F                             ldx     ARGMO
-953A 8D2C                             bsr     fretmp          ; השמאלית
-953C 3544                             puls    b,u             ; U = הימנית, X = השמאלית; B = אורך הימנית, A = אורך השמאלית
-953E 4D               1               tsta
-953F 2711                             beq     3F
-9541 5D                               tstb
-9542 2717                             beq     4F
-9544 3402                             pshs    a
-9546 A680                             lda     ,x+
-9548 A1C0                             cmpa    ,u+
-954A 3502                             puls    a               ; הדגלים של ההשוואה נשארים
-954C 260B                             bne     5F
-954E 4A                               deca
-954F 5A                               decb
-9550 20EC                             bra     1B
-9552 5D               3               tstb                    ; השמאלית נגמרה (A = 0)
-9553 2708                             beq     7F              ; שוות
-9555 8601             8               lda     #1              ; הימנית ארוכה יותר: גדולה
-9557 2004                             bra     7F
-9559 25FA             5               bcs     8B              ; התו של השמאלית קטן: הימנית גדולה
-955B 86FF             4               lda     #$ff            ; הימנית נגמרה קודם, או התו שלה קטן: קטנה
-955D 0F06             7               clr     VALTYP
-955F 39                               rts
+9531 8D30             strcmp          bsr     frefac          ; הימנית: A = אורך, X = כתובת
+9533 3412                             pshs    a,x
+9535 9E5F                             ldx     ARGMO
+9537 8D2C                             bsr     fretmp          ; השמאלית
+9539 3544                             puls    b,u             ; U = הימנית, X = השמאלית; B = אורך הימנית, A = אורך השמאלית
+953B 4D               1               tsta
+953C 2711                             beq     3F
+953E 5D                               tstb
+953F 2717                             beq     4F
+9541 3402                             pshs    a
+9543 A680                             lda     ,x+
+9545 A1C0                             cmpa    ,u+
+9547 3502                             puls    a               ; הדגלים של ההשוואה נשארים
+9549 260B                             bne     5F
+954B 4A                               deca
+954C 5A                               decb
+954D 20EC                             bra     1B
+954F 5D               3               tstb                    ; השמאלית נגמרה (A = 0)
+9550 2708                             beq     7F              ; שוות
+9552 8601             8               lda     #1              ; הימנית ארוכה יותר: גדולה
+9554 2004                             bra     7F
+9556 25FA             5               bcs     8B              ; התו של השמאלית קטן: הימנית גדולה
+9558 86FF             4               lda     #$ff            ; הימנית נגמרה קודם, או התו שלה קטן: קטנה
+955A 0F06             7               clr     VALTYP
+955C 39                               rts
                       
                       ; frestr: הביטוי חייב להיות מחרוזת. משחרר את המתאר הזמני. A = האורך, X = הכתובת (וגם INDEX) (mit: FRESTR)
-9560 0D06             frestr          tst     VALTYP
-9562 1027F3BA                         lbeq    err_tm
-9566 9E52             frefac          ldx     FACMO
-9568 8D1E             fretmp          bsr     fretms          ; Z=1 אם זה היה הזמני האחרון
-956A 2615                             bne     9F
-956C EC02                             ldd     2,x             ; זה היה הזמני האחרון; אם המחרוזת שלו היא הנמוכה בשטח, משחררים גם אותה
-956E 830001                           subd    #1
-9571 109323                           cmpd    FRETOP
-9574 260B                             bne     9F
-9576 EB84                             addb    ,x              ; D = FRETOP
-9578 2003                             bra     isl_957a_e      ;@isl
-957A                                  fill    $ff,$957a-*     ;@isl
+955D 0D06             frestr          tst     VALTYP
+955F 1027F3BD                         lbeq    err_tm
+9563 9E52             frefac          ldx     FACMO
+9565 8D21             fretmp          bsr     fretms          ; Z=1 אם זה היה הזמני האחרון
+9567 2618                             bne     9F
+9569 EC02                             ldd     2,x             ; זה היה הזמני האחרון; אם המחרוזת שלו היא הנמוכה בשטח, משחררים גם אותה
+956B 830001                           subd    #1
+956E 109323                           cmpd    FRETOP
+9571 260E                             bne     9F
+9573 EB84                             addb    ,x              ; D = FRETOP
+9575 2006                             bra     isl_957a_e      ;@isl
+9577 FFFFFF                           fill    $ff,$957a-*     ;@isl
 957A 7E87AD                           jmp     prnum   ;@isl
 957D                  isl_957a_e      ;@isl
 957D 8900                             adca    #0
@@ -2938,13 +2938,13 @@ A22B                  fone            equ     expcon+36               ; 1: המ�
 0007                  GARBFL          equ     $07
                       
                       ; ---------- פונקציות מחרוזת בסיסיות (mit: LEN 4730, ASC 4741, CHR 4627, LEFT 4642, RIGHT 4672, MID 4677) ----------
-95C6 8D98             fn_asc          bsr     frestr
+95C6 8D95             fn_asc          bsr     frestr
 95C8 0F06                             clr     VALTYP
 95CA 4D                               tsta
 95CB 272C                             beq     str_fc
 95CD E684                             ldb     ,x
 95CF 2006                             bra     1F
-95D1 8D8D             fn_len          bsr     frestr
+95D1 8D8A             fn_len          bsr     frestr
 95D3 0F06                             clr     VALTYP
 95D5 1F89                             tfr     a,b
 95D7 16F4E7           1               lbra    givb
@@ -2954,15 +2954,15 @@ A22B                  fone            equ     expcon+36               ; 1: המ�
 95E1 8DB8                             bsr     strspa
 95E3 3504                             puls    b
 95E5 E784                             stb     ,x              ; X = הכתובת (strspa)
-95E7 16FEE4                           lbra    putnew
+95E7 16FEE1                           lbra    putnew
                       ; left$/right$/mid$: X = מתאר המחרוזת, B = התחלה (0..), A = כמה תווים. מעתיקים לזמני חדש
 95EA 3416             substr          pshs    a,b,x
 95EC 8DAD                             bsr     strspa          ; מקום ל-A תווים (עלול לאסוף: מחשבים את המקור אחר כך)
 95EE AE62                             ldx     2,s
-95F0 17FF75                           lbsr    fretmp          ; X = כתובת המקור
+95F0 17FF72                           lbsr    fretmp          ; X = כתובת המקור
 95F3 3546                             puls    d,u             ; A = כמה, B = התחלה (U סתם)
 95F5 3A                               abx
-95F6 16FED3                           lbra    movput
+95F6 16FED0                           lbra    movput
 95F9 16F30C           str_fc          lbra    err_fc
                       
                       ; ---------- MID$ כפקודה: MID$(A$,n[,m])=B$ (קורא, docs/DRAGON-SPEC-FUNCTIONS.md) ----------
@@ -2984,7 +2984,7 @@ A22B                  fone            equ     expcon+36               ; 1: המ�
 9619 A684             1               lda     ,x              ; מעתיקים את כל המחרוזת לשטח המחרוזות
 961B 17FF7D                           lbsr    strspa
 961E AEE4                             ldx     ,s
-9620 17FECE                           lbsr    movdsc
+9620 17FECB                           lbsr    movdsc
 9623 AEE4                             ldx     ,s
 9625 DC58                             ldd     DSCTMP+2
 9627 ED02                             std     2,x
@@ -3527,7 +3527,7 @@ A22B                  fone            equ     expcon+36               ; 1: המ�
 99D2 9FA6                             stx     TXTPTR
 99D4 863B                             lda     #';
 99D6 17F4CC                           lbsr    synchk
-99D9 17FB28                           lbsr    strprt
+99D9 17FB25                           lbsr    strprt
 99DC 39               9               rts
                       ; (6.11: READ עבר לכאן, ו-errdir/prompt עברו לפני CONT, כדי ש-$99E6 ייפול מיד אחרי סוף של שגרה)
 99DD 9E33             read            ldx     DATPTR
@@ -3790,7 +3790,7 @@ A22B                  fone            equ     expcon+36               ; 1: המ�
                       
                       ; ---------- STR$, VAL, HEX$, &H/&O ----------
                       ; VAL: המספר שבתחילת המחרוזת. אפס זמני אחרי המחרוזת, ו-TXTPTR עליה (mit: VAL)
-9BC5 17F998           fn_val          lbsr    frestr
+9BC5 17F995           fn_val          lbsr    frestr
 9BC8 0F06                             clr     VALTYP
 9BCA 4D                               tsta
 9BCB 1027EF23                         lbeq    zerofc
@@ -3912,11 +3912,11 @@ A22B                  fone            equ     expcon+36               ; 1: המ�
 9CAF 3410                             pshs    x
 9CB1 17F1E9                           lbsr    chkrp
 9CB4 3510                             puls    x               ; משחררים: קודם t$, אחר כך s$
-9CB6 17F8AF                           lbsr    fretmp
+9CB6 17F8AC                           lbsr    fretmp
 9CB9 97EF                             sta     IT_TL
 9CBB 9FED                             stx     IT_TA
 9CBD 3510                             puls    x
-9CBF 17F8A6                           lbsr    fretmp
+9CBF 17F8A3                           lbsr    fretmp
 9CC2 97EC                             sta     IT_SL
 9CC4 9FEA                             stx     IT_SA
 9CC6 0F06                             clr     VALTYP
@@ -3959,7 +3959,7 @@ A22B                  fone            equ     expcon+36               ; 1: המ�
 9D0B 2605                             bne     1F
 9D0D 17F72A                           lbsr    conint
 9D10 200A                             bra     2F
-9D12 17F84B           1               lbsr    frestr          ; מחרוזת: התו הראשון; ריקה ?FC גם כש-n=0
+9D12 17F848           1               lbsr    frestr          ; מחרוזת: התו הראשון; ריקה ?FC גם כש-n=0
 9D15 4D                               tsta
 9D16 1027EBEE                         lbeq    err_fc
 9D1A E684                             ldb     ,x
@@ -3987,7 +3987,7 @@ A22B                  fone            equ     expcon+36               ; 1: המ�
 9D45 FF                               fill    $ff,$9d46-*     ;@isl
 9D46 7EBFC1                           jmp     irqtk   ;@isl
 9D49                  isl_9d3d_e      ;@isl
-9D49 16F782           4               lbra    putnew
+9D49 16F77F           4               lbra    putnew
                       
                       ; ---------- POS, MEM, VARPTR, TIMER (קורא) ----------
                       ; POS(n) (קורא: מדפסת 1.9): ההתקן כמו ב-PRINT #, בדיקת "פתוח לכתיבה", והמקום מפרמטרי ההתקן.
@@ -4046,7 +4046,7 @@ A22B                  fone            equ     expcon+36               ; 1: המ�
 9DB8 4D                               tsta
 9DB9 2702                             beq     3F
 9DBB E784                             stb     ,x
-9DBD 16F70E           3               lbra    putnew
+9DBD 16F70B           3               lbra    putnew
                       
                       ; ---------- JOYSTK(n) (קורא + ספר) ----------
                       ; 0 מרענן את ארבע הדגימות ($015A-$015D, בסדר 3,2,1,0); 1-3 מחזירים את השמורה
@@ -4241,7 +4241,7 @@ A22B                  fone            equ     expcon+36               ; 1: המ�
                       ; x_strout ($90E5): X = הכתובת שלפני המחרוזת. נגמרת ב-0 או במרכאות (קורא 2.4)
 9F2A 3001             x_strout        leax    1,x
 9F2C 17F566                           lbsr    strlit
-9F2F 16F5D2                           lbra    strprt
+9F2F 16F5CF                           lbra    strprt
                       ; x_inch ($B50A): תו מההתקן הנוכחי. מקלדת: מחכים עם סמן מהבהב, ובסוף רווח במקום הסמן, בלי הד.
                       ; קלטת: הבית הבא מהחוצץ, ו-EOFFLG בסוף. ‏$B505: אותו דבר בלי ביט 7. ‏$A0EA: בסוף הקובץ ?IO (קורא 8.1)
 9F32 8D03             x_inch7         bsr     x_inch
@@ -5360,7 +5360,7 @@ A7B5 8D4F                             bsr     us_pre1
 A7B7 20EE                             bra     3B
                       
                       ; (6.11: us_str עבר לכאן, אחרי us_nf, כדי שהקפיצה הקצרה מ-us_nf ל-us_no תגיע גם עם $A749 ביניהן)
-A7B9 17EDA4           us_str          lbsr    frestr          ; A = האורך, X = התווים
+A7B9 17EDA1           us_str          lbsr    frestr          ; A = האורך, X = התווים
 A7BC 97D1                             sta     USN
 A7BE D6DC                             ldb     USW             ; התחלה עד הרוחב, ורווחים מימין
 A7C0 0DD1             1               tst     USN
@@ -7240,7 +7240,7 @@ B491 8DD9                             bsr     snds            ; ‏A חוזר 0
 B493 9E8A                             ldx     <DBLZER         ; X = 0
 B495 4C                               inca                    ; A = 1
 B496 3412                             pshs    a,x
-B498 17E0C5                           lbsr    frestr          ; לא מחרוזת: ?TM
+B498 17E0C2                           lbsr    frestr          ; לא מחרוזת: ?TM
 B49B 97D8             pset            sta     DLEN
 B49D 9FD9                             stx     DPTR
 B49F 27A7                             beq     pend            ; כתובת 0: הסמן, סוף PLAY
@@ -8003,7 +8003,7 @@ B9D3 16FCC4                           lbra    motoff
                       ; evstr: ביטוי שחייב להיות מחרוזת (לא מחרוזת: ?TM), ומשחררים אותה: A = האורך, X = התווים. 6.11: ארבעה מקומות
                       ; קוראים לכאן במקום שתי קריאות, וכך התפנו 6 בתים לכתובות של Picture Maker
 B9D6 17D87D           evstr           lbsr    frmevl
-B9D9 16DB84                           lbra    frestr
+B9D9 16DB81                           lbra    frestr
                       
                       ; skipfl (3.7): מדלגים על הקובץ שהכותרת שלו בחוצץ. עם פערים: כל בלוק עם מנוע משלו. רציף: סנכרון פעם אחת.
                       ; סוג 0 או $81-$FE, או שגיאת קריאה: ?IO. $FF: הסוף. המנוע כבוי בסוף

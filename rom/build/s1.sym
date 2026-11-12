@@ -109,7 +109,7 @@ cr_rest	equ	34275
 HK_STR	equ	407
 screen_st	equ	44014
 dvcmp	equ	35813
-strprt	equ	38148
+strprt	equ	38145
 fn_inkey	equ	40354
 tbhunt	equ	47206
 ed_loop	equ	42475
@@ -323,7 +323,7 @@ synchk	equ	36517
 plyx	equ	46224
 log	equ	41033
 lowtab	equ	35029
-movdsc	equ	38129
+movdsc	equ	38126
 gcolor	equ	43751
 rs_st	equ	41722
 INPFLG	equ	9
@@ -333,7 +333,7 @@ timset	equ	40335
 HK_RUN	equ	404
 gcxy	equ	44725
 CBFPTR	equ	122
-movput	equ	38092
+movput	equ	38089
 IKEYIM	equ	135
 USFLG	equ	215
 tsin	equ	47045
@@ -387,7 +387,7 @@ condcr	equ	33872
 piaddr	equ	48649
 GRR	equ	207
 err_io	equ	35131
-putnew	equ	38094
+putnew	equ	38091
 warm2	equ	33755
 pset	equ	46235
 CRMODE	equ	1016
@@ -469,7 +469,7 @@ if_no	equ	38966
 wrhdx	equ	47378
 pend	equ	46152
 pr_semi	equ	37020
-strcmp	equ	38196
+strcmp	equ	38193
 wrhdr	equ	47372
 shfarg	equ	35854
 trbit	equ	47157
@@ -571,7 +571,7 @@ fnext	equ	33515
 mneg	equ	41320
 fn_mem	equ	40293
 edit_st	equ	42260
-frefac	equ	38246
+frefac	equ	38243
 isl_a95d_e	equ	43364
 dval	equ	45140
 cosc	equ	41329
@@ -681,7 +681,7 @@ dorel	equ	37997
 pi2	equ	41443
 fn_right	equ	37838
 HK_CKOUT	equ	368
-movstr	equ	38133
+movstr	equ	38130
 err_bs	equ	35092
 DEFPNT	equ	75
 thl	equ	47347
@@ -712,7 +712,7 @@ BLKLEN	equ	125
 nz9999	equ	35158
 EDNUM	equ	209
 gpset	equ	43714
-frestr	equ	38240
+frestr	equ	38237
 tchin	equ	48151
 csavem	equ	47708
 nochr	equ	34928
@@ -733,7 +733,7 @@ VOLHI	equ	223
 RSTFLG	equ	113
 evadr	equ	40348
 CBFCNT	equ	121
-fretmp	equ	38248
+fretmp	equ	38245
 m_err	equ	33503
 SHIFTED	equ	48856
 pfc	equ	46213
@@ -1099,7 +1099,7 @@ us_numw	equ	43095
 ARGLO	equ	96
 hw_init	equ	48607
 isl_8c36_e	equ	35900
-cat	equ	38164
+cat	equ	38161
 m_in	equ	33510
 ed_a	equ	42652
 err_sn	equ	35071

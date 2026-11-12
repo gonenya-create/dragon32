@@ -25,7 +25,9 @@ INDEX		equ	$f0		; פנימי: כתובת המחרוזת אחרי frestr
 
 ; strlit: מחרוזת במרכאות. X = התו הראשון אחרי המרכאות. בונה מתאר זמני (FAC), ו-STRNG2 = התו שאחרי.
 ; strlt2: אותו דבר, אבל המחרוזת נגמרת ב-0, ב-CHARAC או ב-ENDCHR (READ/INPUT). אם נגמרה במרכאות, מדלגים עליהן.
-; מחרוזת שבתוך התוכנית נשארת שם; אחרת (שורה ישירה, שורת קלט) מועתקת לשטח המחרוזות (mit: STRLT2/STRCP)
+; רק מחרוזת שבמאגרים של המערכת (מתחת ל-$0400: שורה ישירה, שורת קלט, FBUFFR של STR$) מועתקת לשטח המחרוזות;
+; כל מחרוזת אחרת נשארת במקומה, גם מחוץ לתוכנית (mit: STRLT2/STRCP, "IF PAGE 0, COPY"; קורא: קלטת 11.4).
+; ‏13.11: עד אז הועתקה כל מחרוזת שמחוץ לתוכנית, ו-Tanglewood (‏DRAW דרך $B051, המחרוזת בקוד המשחק, בלי שטח מחרוזות) קיבל ?OS
 CHARAC		equ	$01		; קורא: מפריד מחרוזת
 ENDCHR		equ	$02
 strlit		lda	#'"
@@ -47,11 +49,9 @@ strlt2		stx	DSCTMP+2
 		stb	DSCTMP
 		jsr	HK_STR		; 20: B = האורך, X = הסוף
 		ldx	DSCTMP+2
-		cmpx	TXTTAB
-		blo	4F
-		cmpx	VARTAB
-		blo	putnew		; בתוך התוכנית: בלי העתקה
-4		tfr	b,a
+		cmpx	#$0400
+		bhs	putnew		; לא במאגר: בלי העתקה
+		tfr	b,a
 		stx	STRNG1
 		lbsr	strspa		; מקום, והכתובת ב-DSCTMP+2
 		ldx	STRNG1
