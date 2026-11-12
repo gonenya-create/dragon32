@@ -239,6 +239,8 @@ ${altLinks(path)}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 ${fonts}
 <link rel="stylesheet" href="${BASE}course.css">
+<!-- ספירת ביקורים של Vercel, בלי עוגיות ובלי זיהוי אישי (גונן, 12.11) -->
+<script defer src="/_vercel/insights/script.js"></script>
 </head>`;
 const siteNav = path => `<nav class="site" aria-label="${T.nav}">
   <b dir="ltr">Dragon 1982</b>

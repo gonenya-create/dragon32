@@ -77,6 +77,8 @@ function head(t, { title, desc, url, image, ogTitle = title, ogDesc = desc }) {
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;700&amp;family=Rubik:wght@400;700;900&amp;display=swap">
 <link rel="stylesheet" href="/magazine/magazine.css">
 <link rel="stylesheet" href="/assets/scans/scans.css">
+<!-- ספירת ביקורים של Vercel, בלי עוגיות ובלי זיהוי אישי (גונן, 12.11) -->
+<script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 <nav class="site" aria-label="${t.navLabel}">
