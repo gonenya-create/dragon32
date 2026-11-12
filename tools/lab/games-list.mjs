@@ -45,7 +45,7 @@ for (const en of [false, true]) {
   const nm = id => isLatin(name(id)) ? L(name(id)) : esc(name(id));
   const link = id => `<a href="${base}${G.games[id].slug}/">${nm(id)}</a>`;
   const dname = d => en ? d.en : esc(d.he).replace(/([A-Za-z][A-Za-z0-9 .'-]*[A-Za-z0-9])/g, '<span dir="ltr">$1</span>');
-  const period = drawers.filter(d => d.key !== 'community' && d.key !== 'ours');
+  const period = drawers.filter(d => d.key !== 'community' && d.key !== 'ours' && d.key !== 'tools');   // "כלים" (מ-12.11): האסמבלר הוא לא משחק
   const periodCount = period.reduce((n, d) => n + rowsOf(d.key).length, 0);
   let n = 0;
   const periodRows = period.map(d => {
