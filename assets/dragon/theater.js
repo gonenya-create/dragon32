@@ -54,7 +54,8 @@ export function createTheater({ root, input, machine, sound, powerOn }) {
   // פס עליון: יציאה וצליל המקשים
   const bar = document.createElement('div');
   bar.className = 'd32-theater-bar';
-  bar.innerHTML = '<span class="d32-bar-brand"><b dir="ltr">Dragon 1982</b><span class="d32-status" role="status" data-s="off">' + tr('כבוי', 'Off') + '</span></span>'
+  // "Dragon 1982" חוזר למסך הראשי, מסך הבחירה (גונן, 12.11). ‏/ בלי #app פותח אותו
+  bar.innerHTML = '<span class="d32-bar-brand"><a class="d32-home" href="' + (EN ? '/en/' : '/') + '" title="' + tr('המסך הראשי', 'Home screen') + '" aria-label="Dragon 1982 — ' + tr('המסך הראשי', 'Home screen') + '"><span aria-hidden="true">🏠</span> <b dir="ltr">Dragon 1982</b></a><span class="d32-status" role="status" data-s="off">' + tr('כבוי', 'Off') + '</span></span>'
     + '<p class="d32-theater-hint">' + tr('מקלידים במקלדת שלכם, או לוחצים על המקשים המצוירים. <bdi dir="ltr">Esc</bdi> הוא <bdi dir="ltr">BREAK</bdi>.', 'Type on your own keyboard, or click the drawn keys. <bdi dir="ltr">Esc</bdi> is <bdi dir="ltr">BREAK</bdi>.') + '</p>'
     + '<span class="d32-theater-btns"><button type="button" class="d32-theater-code" aria-pressed="false">' + tr('ארגז כלים', 'Toolbox') + '</button>'
     + '<button type="button" class="d32-theater-kbd" aria-pressed="true">' + tr('מקלדת מצוירת', 'Drawn keyboard') + '</button>'

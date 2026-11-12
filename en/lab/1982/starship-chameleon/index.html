@@ -23,6 +23,8 @@
 body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 'IBM Plex Sans Hebrew', system-ui, sans-serif; }
 header { display: flex; align-items: center; gap: 12px; padding: 10px 16px; flex-wrap: wrap; }
 header b { font-size: 18px; }
+header a.home { border: 0; padding: 4px 6px; display: inline-flex; align-items: center; gap: 6px; }
+header a.home:hover b, header a.home:focus-visible b { text-decoration: underline; }
 .tag { font-size: 13px; padding: 3px 10px; border-radius: 999px; background: #3a2a10; color: var(--accent); }
 #full-open { margin-inline-start: auto; }
 header a, #full-open { color: var(--ink); text-decoration: none; border: 1.5px solid var(--line); border-radius: 8px; padding: 6px 12px; font-size: 14px; }
@@ -168,7 +170,7 @@ body.full .machine { width: min(100%, calc((100dvh - 360px) * 4 / 3 + 28px)); mi
 </head>
 <body data-game="chameleon">
 <header>
-  <b dir="ltr">Dragon 1982</b><span class="tag">The Dragon machine · being built</span>
+  <a class="home" href="/en/" title="Home screen" aria-label="Dragon 1982 — Home screen"><span aria-hidden="true">🏠</span> <b dir="ltr">Dragon 1982</b></a><span class="tag">The Dragon machine · being built</span>
   <button type="button" id="full-open">📺 Full screen</button>
   <a href="https://github.com/gonenya-create/dragon32" class="gh">Open source on GitHub</a>
   <a href="/lab/1982/starship-chameleon/" lang="he" hreflang="he" data-lang="he">עברית</a>

@@ -248,6 +248,8 @@ html.d32-booting .page { visibility: hidden; }
 /* שורת המותג והמצב (שלב 1 של העיצוב החדש, 16.10) */
 .d32-bar-brand { display: flex; align-items: center; gap: 12px; color: #efe6d2; white-space: nowrap; }
 .d32-bar-brand b { font: 700 19px/1.2 var(--font-body); }
+.d32-home { color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; padding: 2px 4px; }
+.d32-home:hover b, .d32-home:focus-visible b { text-decoration: underline; }
 .d32-status { font-size: 13px; padding: 3px 10px; border-radius: 999px; background: #2b241d; color: #c9bba5; }
 .d32-status::before { content: '● '; }
 .d32-status[data-s="ok"] { background: #1f3a22; color: #8fe39a; }

@@ -1331,6 +1331,8 @@ if (part('home choice')) {
     await p.locator('.d32-choose-app').click();
     await p.waitForTimeout(500);
     check(name + ': "the app" opens the app', await open() && !(await p.locator('.d32-choose').count()));
+    // מתוך האפליקציה: 🏠 Dragon 1982 חוזר למסך הראשי (גונן, 12.11)
+    check(name + ': in the app, 🏠 Dragon 1982 leads back to the home screen', (await p.locator('.d32-home').first().getAttribute('href')) === (path === '/en/' ? '/en/' : '/'));
     await p.goto(base.replace(/\/$/, '') + path);
     await p.waitForSelector('.d32-choose');
     await p.locator('.d32-choose-guide').click();
@@ -2058,9 +2060,18 @@ if (part('real machine lab')) {
       kalish: document.querySelector('.cabinet [data-drawer="period"] .drawer-name')?.textContent,
       hughey: document.querySelector('.cabinet [data-drawer="hughey"] .drawer-name')?.textContent,
       icons: [...document.querySelectorAll('.tape.row .ic')].every(i => /shots\/|covers\//.test(i.style.backgroundImage)) }));
-    check(`${path} the cabinet: "Legends" first (The King, Buzzard Bait, Downland), then drawers in time order (Scott Adams 1979–84, Ron Krebs' games 1981, Ken Kalish's games, Mike Hughey's games, Harry Whitehouse's games, John Morrison's games, Bob Withers' adventures, Paul Garner's games, more from the time, the community, ours, my tapes, and type it in at the bottom), the years left to right, rows by year, an icon from each game's screen`,
-      cab.drawers.join() === 'legends,adams,krebs,period,hughey,harry,morrison,withers,garner,more,coco,community,ours,mine,type' && cab.years.map(y => y[0]).join() === '1983–85,1979–84,1981,1982–85,1982–84,1983,1983,1983–85,1984–85,1983–86,1982–87,2021–2025,2026,1983–85' && /Ken Kalish/.test(cab.kalish) && /Mike Hughey/.test(cab.hughey) && cab.years.every(y => y[1] === 'ltr')
-      && cab.rows.adams.join() === 'adventureland,pirate,mission,voodoo,count,odyssey,funhouse,pyramid,ghost,savage1,savage2,golden,claymorgue' && cab.rows.period.join() === 'escape,invrev,diablero,phantom,ranger,cuthbert,devil,chameleon,dungeon,athletyx' && cab.rows.hughey.join() === 'alcatraz,williamsburg,grabber,draconian' && cab.rows.morrison.join() === 'bonka,vultures,maurice,mchess,crusader,droids,riverfire' && cab.rows.garner.join() === 'starman,sword,wizlair' && cab.rows.harry.join() === 'hangit,dhh,champs,lionht,sas' && cab.rows.krebs.join() === 'sanctum,calixto,cavehunter' && cab.rows.legends.join() === 'king,buzzard,downland,manic,jsw' && cab.rows.withers.join() === 'shenan,seasearch,trekboer,vortex' && cab.rows.more.join() === 'ninja,cricket,teatime,spores,nerble,tangle,digit' && cab.rows.coco.join() === 'daggorath,snaker,brickout' && cab.rows.community.join() === 'blockdown,dragontet' && cab.rows.ours.length === 9 && cab.rows.ours[0] === 'eggs' && cab.icons, JSON.stringify(cab));
+    check(`${path} the cabinet: "Legends" first (The King, Buzzard Bait, Downland), then drawers in time order (Scott Adams 1979–84, Ron Krebs' games 1981, Ken Kalish's games, Mike Hughey's games, Harry Whitehouse's games, John Morrison's games, Bob Withers' adventures, Paul Garner's games, more from the time, the community, ours, tools, my tapes, and type it in at the bottom), the years left to right, rows by year, an icon from each game's screen`,
+      cab.drawers.join() === 'legends,adams,krebs,period,hughey,harry,morrison,withers,garner,more,coco,community,ours,tools,mine,type' && cab.years.map(y => y[0]).join() === '1983–85,1979–84,1981,1982–85,1982–84,1983,1983,1983–85,1984–85,1983–86,1982–87,2021–2025,2026,2026,1983–85' && /Ken Kalish/.test(cab.kalish) && /Mike Hughey/.test(cab.hughey) && cab.years.every(y => y[1] === 'ltr')
+      && cab.rows.adams.join() === 'adventureland,pirate,mission,voodoo,count,odyssey,funhouse,pyramid,ghost,savage1,savage2,golden,claymorgue' && cab.rows.period.join() === 'escape,invrev,diablero,phantom,ranger,cuthbert,devil,chameleon,dungeon,athletyx' && cab.rows.hughey.join() === 'alcatraz,williamsburg,grabber,draconian' && cab.rows.morrison.join() === 'bonka,vultures,maurice,mchess,crusader,droids,riverfire' && cab.rows.garner.join() === 'starman,sword,wizlair' && cab.rows.harry.join() === 'hangit,dhh,champs,lionht,sas' && cab.rows.krebs.join() === 'sanctum,calixto,cavehunter' && cab.rows.legends.join() === 'king,buzzard,downland,manic,jsw' && cab.rows.withers.join() === 'shenan,seasearch,trekboer,vortex' && cab.rows.more.join() === 'ninja,cricket,teatime,spores,nerble,tangle,digit' && cab.rows.coco.join() === 'daggorath,snaker,brickout' && cab.rows.community.join() === 'blockdown,dragontet' && cab.rows.ours.length === 8 && cab.rows.ours[0] === 'eggs' && cab.rows.tools.join() === 'dasm' && cab.icons, JSON.stringify(cab));
+    // שני חלקים במדף (גונן, 12.11): בהתחלה רק "משחקים מהתקופה"; "שלנו ושלכם" מראה את השאר. ו-🏠 Dragon 1982 חוזר למסך הראשי
+    const parts = await p.evaluate(() => {
+      const vis = () => [...document.querySelectorAll('.cabinet .drawer')].filter(d => d.offsetParent).map(d => d.dataset.drawer);
+      const tabs = [...document.querySelectorAll('.part-tabs button')].map(b => b.textContent);
+      const a = vis(); document.querySelector('.part-tabs [data-part="ours"]').click(); const b = vis(); document.querySelector('.part-tabs [data-part="period"]').click();
+      return { tabs, a, b, home: document.querySelector('header a.home')?.getAttribute('href') };
+    });
+    check(`${path} the shelf has two parts: "games from the period" (64, shown first) and "ours and yours" (community, ours, tools, my tapes, type it in); 🏠 Dragon 1982 goes back to the home screen`,
+      parts.tabs.length === 2 && /64/.test(parts.tabs[0]) && parts.a.length === 11 && parts.a[0] === 'legends' && !parts.a.includes('mine') && parts.b.join() === 'community,ours,tools,mine,type' && parts.home === (path.startsWith('/en') ? '/en/' : '/'), JSON.stringify(parts));
     // הברכה של Scott Adams במגירה שלו: המילים שלו באנגלית משמאל לימין, עם חתימה; בעברית גם תרגום (28.10)
     const sq = await p.evaluate(() => { const q = document.querySelector('.cabinet [data-drawer="adams"] blockquote.drawer-quote');
       return q && { dir: getComputedStyle(q).direction, t: q.textContent, he: !!document.querySelector('.cabinet [data-drawer="adams"] .drawer-quote-he'), n: document.querySelectorAll('blockquote.drawer-quote').length }; });
@@ -2233,7 +2244,7 @@ if (part('real machine lab')) {
       await m.evaluate(() => d32Type('LIST\n'));
       await m.waitForTimeout(1500);
       check('after a reload, CLOAD "MYPROG" loads it back', (await m.evaluate(() => d32Screen())).includes('10 PRINT "SAVED"') && merrs.length === 0, (await m.evaluate(() => d32Screen())).filter(Boolean).join(' | ') + merrs.join(' | '));
-      await m.evaluate(() => { document.getElementById('drawer-mine').open = true; });   // המגירות נסגרות בכל כניסה (גונן, 28.10)
+      await m.evaluate(() => { document.querySelector('.part-tabs [data-part="ours"]').click(); document.getElementById('drawer-mine').open = true; });   // המגירות נסגרות בכל כניסה (גונן, 28.10)
       const del = m.locator('#mytapes .mytape .mini[aria-label^="מחיקת"], #mytapes .mytape .mini[aria-label^="Delete"]').first();   // ⬇ 🔊 ✕: המחיקה לפי השם, לא לפי המקום
       await del.click();
       await del.click();

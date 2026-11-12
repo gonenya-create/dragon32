@@ -53,6 +53,7 @@
   const d = document.createElement('details');
   d.className = 'drawer';
   d.dataset.drawer = 'type';
+  d.dataset.part = 'ours';
   d.open = false;
   d.innerHTML = '<summary><span class="drawer-name"></span> <span class="drawer-count"></span></summary><div class="drawer-body"><p class="note typein-note"></p><div class="tapes"></div></div>';
   d.querySelector('.drawer-name').textContent = T('הקלד בעצמך', 'Type it in');

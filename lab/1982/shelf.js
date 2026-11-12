@@ -1672,12 +1672,15 @@
   const yearChip = y => { const s = document.createElement('span'); s.className = 'yr'; s.dir = 'ltr'; s.textContent = y; return s; };
   const yearKey = id => parseInt(meta(id).year, 10) || 9999;
   const grids = {};
+  // שני חלקים במדף (גונן, 12.11): "משחקים מהתקופה" ו"שלנו ושלכם" (מהקהילה, מתוצרת Dragon 1982, כלים, הקלטות שלי, הקלד בעצמך)
+  const OURS = new Set(['type', 'community', 'ours', 'tools', 'mine']);
   for (const dr of G.drawers) {
     if (dr.key === 'type') continue;   // typein.js בונה אותה, ושם אותה במקום שלה בסדר
     const ids = TAPES.filter(t => meta(t[0]).drawer === dr.key).map(t => t[0]);
     const d = document.createElement('details');
     d.className = 'drawer';
     d.dataset.drawer = dr.key;
+    d.dataset.part = OURS.has(dr.key) ? 'ours' : 'period';
     d.open = false;
     d.innerHTML = '<summary><span class="drawer-name"></span> <span class="drawer-count"></span></summary><div class="drawer-body"></div>';
     d.querySelector('.drawer-name').textContent = EN ? dr.en : dr.he;
@@ -1723,7 +1726,23 @@
     grids.community.after(more);
   }
   const mineDrawer = document.getElementById('drawer-mine');
-  const openDrawerOf = b => { const d = b && b.closest('details.drawer'); if (d) d.open = true; if (b && b.classList.contains('folded') && b.parentNode.unfold) b.parentNode.unfold(); };
+  if (mineDrawer) mineDrawer.dataset.part = 'ours';
+  const cabinet = box.closest('.cabinet');
+  const partTabs = document.createElement('div');
+  partTabs.className = 'part-tabs'; partTabs.setAttribute('role', 'tablist'); partTabs.setAttribute('aria-label', EN ? 'Shelf' : 'המדף');
+  const showPart = part => {
+    if (!cabinet) return;
+    cabinet.dataset.show = part;
+    partTabs.querySelectorAll('button').forEach(b => b.setAttribute('aria-selected', b.dataset.part === part ? 'true' : 'false'));
+  };
+  const periodCount = TAPES.filter(t => !OURS.has(meta(t[0]).drawer)).length;
+  for (const [part, he, en] of [['period', `משחקים מהתקופה (${periodCount})`, `Games from the period (${periodCount})`], ['ours', 'שלנו ושלכם', 'Ours and yours']]) {
+    const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'tab'); b.dataset.part = part; b.textContent = EN ? en : he;
+    b.addEventListener('click', () => showPart(part));
+    partTabs.appendChild(b);
+  }
+  if (cabinet) { cabinet.before(partTabs); showPart('period'); }
+  const openDrawerOf = b => { const d = b && b.closest('details.drawer'); if (d) { d.open = true; if (d.dataset.part) showPart(d.dataset.part); } if (b && b.classList.contains('folded') && b.parentNode.unfold) b.parentNode.unfold(); };
   // צלמית: חלק קטן מצילום המסך של המשחק (מהמכונה שלנו), מוגדל בפיקסלים חדים
   function icon(id) {
     const m = meta(id), s = document.createElement('span');
@@ -2185,6 +2204,11 @@
   css.textContent = `
 .drawer summary .yr { margin-inline-start: auto; }
 .yr { direction: ltr; unicode-bidi: isolate; font: 700 12px/1.6 'Courier New', monospace; color: var(--accent, #f2d23a); border: 1px solid #6a5434; border-radius: 999px; padding: 0 8px; white-space: nowrap; }
+.part-tabs { display: flex; gap: 6px; margin: 10px 0 8px; flex-wrap: wrap; }
+.part-tabs button { font: inherit; font-size: 13px; font-weight: 700; color: #b9a98f; background: #221b14; border: 1.5px solid #5a4430; border-radius: 999px; padding: 6px 11px; min-height: 40px; cursor: pointer; }
+.part-tabs button[aria-selected="true"] { color: #1b1511; background: var(--accent, #f2d23a); border-color: var(--accent, #f2d23a); }
+.part-tabs button:focus-visible { outline: 3px solid var(--accent, #f2d23a); outline-offset: 2px; }
+.cabinet[data-show="period"] .drawer[data-part="ours"], .cabinet[data-show="ours"] .drawer[data-part="period"] { display: none; }
 .drawer-note { margin: 2px 4px 8px; font-size: 14px; color: #b9a98f; line-height: 1.5; }
 .drawer-note a { color: var(--accent, #f2d23a); }
 .drawer-quote { margin: 4px 4px 10px; padding: 8px 12px; border-inline-start: 3px solid var(--accent, #f2d23a); background: #221b14; border-radius: 6px; font-size: 14px; line-height: 1.55; color: #e6d8bc; text-align: left; }
@@ -2785,7 +2809,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       const gapped = !(dream && dream.length) && gapTape(bytes, found.reduce((a, t) => a + t.b.length, 0));
       if (gapped) found = [gapped];
       if (!found.length) { const raw = rawTape(bytes); if (raw) found = [raw]; }
-      if (found.length) { addTapes(found); if (mineDrawer) mineDrawer.open = true; status.textContent = (EN ? 'Added to my tapes: ' : 'נוסף לקלטות שלי: ') + found.map(t => t.n).join(', '); }
+      if (found.length) { addTapes(found); if (mineDrawer) { mineDrawer.open = true; showPart('ours'); } status.textContent = (EN ? 'Added to my tapes: ' : 'נוסף לקלטות שלי: ') + found.map(t => t.n).join(', '); }
       else status.textContent = EN ? 'No program found in this file.' : 'לא נמצאה תוכנית בקובץ הזה.';
     });
   }
@@ -2976,7 +3000,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
     outDone = files.length;
     addTapes(fresh);
     status.textContent = (EN ? 'Saved to my tapes: ' : 'נשמר בקלטות שלי: ') + fresh.map(t => t.n).join(', ');
-    if (mineDrawer) mineDrawer.open = true;
+    if (mineDrawer) { mineDrawer.open = true; showPart('ours'); }
   }, 1000);
   // אחרי כל CLOAD שהסתיים (OK או שגיאה): מריצים את הרשמקול אחורה, כדי ש-CLOAD הבא ימצא כל קלטת
   let lastDone = '';
@@ -3016,14 +3040,14 @@ body.game-open .shelf > :not(.game-view) { display: none; }
     const go = setInterval(() => {
       if (!window.d32Ready) return;
       clearInterval(go);
-      setTimeout(() => { addTapes([f]); if (mineDrawer) mineDrawer.open = true; gameKeys(null); play(tapeBytes([f]), '/mine.cas', name, null, true, true); }, 2000);
+      setTimeout(() => { addTapes([f]); if (mineDrawer) { mineDrawer.open = true; showPart('ours'); } gameKeys(null); play(tapeBytes([f]), '/mine.cas', name, null, true, true); }, 2000);
     }, 300);
   }
   // הגיעו מפינת הלמידה (/learn/) עם ?learn=NAME: הכפתור "שלח למכונת הדראגון" כבר שם את הקלטת ב"הקלטות שלי".
   // רק אומרים מה להקליד ופותחים את המגירה. הטעינה וההרצה ביד, כמו ב-1982 (11.11)
   const learnName = new URLSearchParams(location.search).get('learn');
   if (status && learnName && /^[A-Z0-9]{1,8}$/.test(learnName) && myTapes().some(t => t && t.n === learnName)) {
-    if (mineDrawer) mineDrawer.open = true;
+    if (mineDrawer) { mineDrawer.open = true; showPart('ours'); }
     status.textContent = EN ? 'The tape ' + learnName + ' from the course is in My tapes. When OK appears, type CLOADM "' + learnName + '", and after OK type CLS:EXEC.'
       : 'הקלטת ' + learnName + ' מהקורס נמצאת ב"הקלטות שלי". כשמופיע OK, הקלידו CLOADM "' + learnName + '", ואחרי ה-OK הקלידו CLS:EXEC.';
   }

@@ -152,15 +152,20 @@ window.D32_GAMES = {
           "Games"
         ],
         [
-          "tools",
-          "כלים: לכתוב תוכנית בשפת מכונה בתוך ה-Dragon",
-          "Tools: write a machine-code program inside the Dragon"
-        ],
-        [
           "basic",
           "תוכניות BASIC קצרות: לשחק, לקרוא את הקוד ולשנות",
           "Short BASIC programs: play them, read the code, change it"
         ]
+      ]
+    },
+    {
+      "key": "tools",
+      "he": "🛠️ כלים",
+      "en": "🛠️ Tools",
+      "years": "2026",
+      "note": [
+        "כלים לכתוב תוכנית בשפת מכונה בתוך ה-Dragon.",
+        "Tools to write a machine-code program inside the Dragon."
       ]
     }
   ],
@@ -1361,8 +1366,7 @@ window.D32_GAMES = {
     },
     "dasm": {
       "slug": "dragon-assembler",
-      "drawer": "ours",
-      "group": "tools",
+      "drawer": "tools",
       "year": "2026",
       "tag": [
         "כלי",
