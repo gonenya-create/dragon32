@@ -1290,14 +1290,18 @@
         'משחק מילים באנגלית: כותבים פועל ושם עצם ולוחצים [ENTER]. למשל {CLIMB TREE} (לטפס על העץ), {GET AXE} (להרים את הגרזן), {LIGHT LAMP} (להדליק את המנורה).',
         'שלוש האותיות הראשונות מספיקות: {LIG LAM}. הולכים בשש דרכים: {N S E W UP DOWN} (צפון, דרום, מזרח, מערב, למעלה, למטה).',
         'תיאור המקום תמיד מופיע למעלה במסך. {INVENTORY} מראה מה בידיים, {HELP} נותן רמז, {SCORE} מראה כמה אוצרות נאספו.',
-        'המטרה: למצוא 13 אוצרות, שמסומנים בכוכביות כמו {*GOLDEN FISH*}, ולהביא אותם למקום שבו שומרים אותם.'],
+        'המטרה: למצוא 13 אוצרות, שמסומנים בכוכביות כמו {*GOLDEN FISH*}, ולהביא אותם למקום שבו שומרים אותם.',
+        'שמירה: {SAVE GAME}, ועל {READY TAPE AND PRESS ENTER?} לוחצים [ENTER]. המשחק נשמר ב"הקלטות שלי" בשם ADVENT1, השמירה הבאה בשם ADVENT2, וכן הלאה.',
+        'המשך משחק שמור, גם בביקור אחר: טוענים את המשחק כרגיל, ועל {RESTORE A PREVIOUSLY SAVED GAME?} עונים [Y] ו-[ENTER]. לוחצים על השמירה ב"הקלטות שלי", ואז [ENTER].'],
       en: ['Loading takes a little under two minutes, and the game starts by itself.',
         'Three questions first. At DO YOU HAVE LOWERCASE? answer [N] and [ENTER].',
         'At PRESS ENTER press [ENTER], and at RESTORE A PREVIOUSLY SAVED GAME? answer [N] and [ENTER].',
         'A word game: type a verb and a noun, then [ENTER]. For example CLIMB TREE, GET AXE, LIGHT LAMP.',
         'The first three letters are enough: LIG LAM. There are six ways to go: N S E W UP DOWN.',
         'The description of the place always stays at the top of the screen. INVENTORY shows what you carry, HELP gives a hint, SCORE shows your treasures.',
-        'The goal: find the 13 treasures, marked with stars like *GOLDEN FISH*, and bring them to where they are stored.']
+        'The goal: find the 13 treasures, marked with stars like *GOLDEN FISH*, and bring them to where they are stored.',
+        'Saving: SAVE GAME, and at READY TAPE AND PRESS ENTER? press [ENTER]. The game is saved to My tapes as ADVENT1, the next save as ADVENT2, and so on.',
+        'Carrying on a saved game, even on another visit: load the game as usual, and at RESTORE A PREVIOUSLY SAVED GAME? answer [Y] and [ENTER]. Click the save in My tapes, then [ENTER].']
     },
     // נבדק במכונה (26.10): טעינה, שאלות הפתיחה, הרמת חפץ, מלאי, עלייה במדרגות, HELP וניקוד
     pirate: {
@@ -1307,14 +1311,18 @@
         'מתחילים בדירה בלונדון. כותבים פועל ושם עצם באנגלית ולוחצים [ENTER]. למשל {GET RUM} (לקחת את הרום), או {GO STAIRS} (לעלות במדרגות).',
         'שלוש האותיות הראשונות מספיקות. הולכים בשש דרכים: {N S E W UP DOWN}.',
         'תיאור המקום תמיד מופיע למעלה במסך. {INVENTORY} מראה מה בידיים, {HELP} נותן רמז, {SCORE} מראה כמה אוצרות נאספו.',
-        'המטרה: להגיע לאי של הפיראטים, למצוא את האוצרות ולהביא אותם לדירה, כמו שכתוב על השלט שם.'],
+        'המטרה: להגיע לאי של הפיראטים, למצוא את האוצרות ולהביא אותם לדירה, כמו שכתוב על השלט שם.',
+        'שמירה: {SAVE GAME}, ועל {READY TAPE AND PRESS ENTER?} לוחצים [ENTER]. המשחק נשמר ב"הקלטות שלי" בשם PIRATE1, השמירה הבאה בשם PIRATE2, וכן הלאה.',
+        'המשך משחק שמור, גם בביקור אחר: טוענים את המשחק כרגיל, ועל {RESTORE A PREVIOUSLY SAVED GAME?} עונים [Y] ו-[ENTER]. לוחצים על השמירה ב"הקלטות שלי", ואז [ENTER].'],
       en: ['Loading takes a little under two minutes, and the game starts by itself.',
         'Three questions first. At DO YOU HAVE LOWERCASE? answer [N] and [ENTER].',
         'At PRESS ENTER press [ENTER], and at RESTORE A PREVIOUSLY SAVED GAME? answer [N] and [ENTER].',
         'You start in a flat in London. Type a verb and a noun, then [ENTER]. For example GET RUM or GO STAIRS.',
         'The first three letters are enough. There are six ways to go: N S E W UP DOWN.',
         'The description of the place always stays at the top of the screen. INVENTORY shows what you carry, HELP gives a hint, SCORE shows your treasures.',
-        'The goal: reach the pirates\' island, find the treasures and bring them back to the flat, as the sign there says.']
+        'The goal: reach the pirates\' island, find the treasures and bring them back to the flat, as the sign there says.',
+        'Saving: SAVE GAME, and at READY TAPE AND PRESS ENTER? press [ENTER]. The game is saved to My tapes as PIRATE1, the next save as PIRATE2, and so on.',
+        'Carrying on a saved game, even on another visit: load the game as usual, and at RESTORE A PREVIOUSLY SAVED GAME? answer [Y] and [ENTER]. Click the save in My tapes, then [ENTER].']
     },
     // נבדק במכונה (26.10): טעינה, שאלות הפתיחה, מלאי, HELP, תנועה למסדרון, LOOK ו-SCORE
     mission: {
@@ -1324,14 +1332,18 @@
         'אתם סוכן חשאי בכור גרעיני אוטומטי, ומישהו הטמין בו פצצת זמן. מתחילים בחדר תדריך.',
         'כותבים פועל ושם עצם באנגלית ולוחצים [ENTER]. למשל {GO WEST} (ללכת מערבה). שלוש האותיות הראשונות מספיקות. הולכים בשש דרכים: {N S E W UP DOWN}.',
         'תיאור המקום תמיד מופיע למעלה במסך. {INVENTORY} מראה מה בידיים, ו-{HELP} נותן רמז. כאן אין ניקוד: או שמצליחים, או ש...',
-        'יש לחץ של זמן: אל תתעכבו. הגלאי שבידיים זוהר בירוק כל עוד הפצצה לא עומדת להתפוצץ.'],
+        'יש לחץ של זמן: אל תתעכבו. הגלאי שבידיים זוהר בירוק כל עוד הפצצה לא עומדת להתפוצץ.',
+        'שמירה: {SAVE GAME}, ועל {READY TAPE AND PRESS ENTER?} לוחצים [ENTER]. המשחק נשמר ב"הקלטות שלי" בשם MISSION1, השמירה הבאה בשם MISSION2, וכן הלאה.',
+        'המשך משחק שמור, גם בביקור אחר: טוענים את המשחק כרגיל, ועל {RESTORE A PREVIOUSLY SAVED GAME?} עונים [Y] ו-[ENTER]. לוחצים על השמירה ב"הקלטות שלי", ואז [ENTER].'],
       en: ['Loading takes a little under two minutes, and the game starts by itself.',
         'Three questions first. At DO YOU HAVE LOWERCASE? answer [N] and [ENTER].',
         'At PRESS ENTER press [ENTER], and at RESTORE A PREVIOUSLY SAVED GAME? answer [N] and [ENTER].',
         'You are a secret agent in an automated nuclear reactor, and someone has planted a time bomb. You start in a briefing room.',
         'Type a verb and a noun, then [ENTER]. For example GO WEST. The first three letters are enough. There are six ways to go: N S E W UP DOWN.',
         'The description of the place always stays at the top of the screen. INVENTORY shows what you carry, and HELP gives a hint. There is no score here: either you make it, or...',
-        'Time is short, so don\'t dawdle. The detector you carry glows green while the bomb is still safe.']
+        'Time is short, so don\'t dawdle. The detector you carry glows green while the bomb is still safe.',
+        'Saving: SAVE GAME, and at READY TAPE AND PRESS ENTER? press [ENTER]. The game is saved to My tapes as MISSION1, the next save as MISSION2, and so on.',
+        'Carrying on a saved game, even on another visit: load the game as usual, and at RESTORE A PREVIOUSLY SAVED GAME? answer [Y] and [ENTER]. Click the save in My tapes, then [ENTER].']
     },
     // נבדק במכונה (26.10): טעינה, שאלות הפתיחה, פתיחת הארון, תנועה, הרמת הסכין ומלאי
     voodoo: {
@@ -1341,14 +1353,18 @@
         'הרוזן כריסטו קולל בקללת וודו, ואתם צריכים להסיר אותה. מתחילים בקפלה של הטירה, ליד ארון מתים סגור.',
         'כותבים פועל ושם עצם באנגלית ולוחצים [ENTER]. למשל {OPEN COFFIN} (לפתוח את הארון), {GO EAST} (ללכת מזרחה), {GET KNIFE} (להרים את הסכין). שלוש האותיות הראשונות מספיקות.',
         'תיאור המקום תמיד מופיע למעלה במסך. הולכים בשש דרכים: {N S E W UP DOWN}, ו-{INVENTORY} מראה מה בידיים.',
-        'כאן אין ניקוד ו-{HELP} לא עוזר: בודקים כל חפץ ומנסים דברים.'],
+        'כאן אין ניקוד ו-{HELP} לא עוזר: בודקים כל חפץ ומנסים דברים.',
+        'שמירה: {SAVE GAME}, ועל {READY TAPE AND PRESS ENTER?} לוחצים [ENTER]. המשחק נשמר ב"הקלטות שלי" בשם VOODOO1, השמירה הבאה בשם VOODOO2, וכן הלאה.',
+        'המשך משחק שמור, גם בביקור אחר: טוענים את המשחק כרגיל, ועל {RESTORE A PREVIOUSLY SAVED GAME?} עונים [Y] ו-[ENTER]. לוחצים על השמירה ב"הקלטות שלי", ואז [ENTER].'],
       en: ['Loading takes a little under two minutes, and the game starts by itself.',
         'Three questions first. At DO YOU HAVE LOWERCASE? answer [N] and [ENTER].',
         'At PRESS ENTER press [ENTER], and at RESTORE A PREVIOUSLY SAVED GAME? answer [N] and [ENTER].',
         'Count Cristo has been cursed with a voodoo hex, and you must lift it. You start in the castle chapel, next to a closed coffin.',
         'Type a verb and a noun, then [ENTER]. For example OPEN COFFIN, GO EAST, GET KNIFE. The first three letters are enough.',
         'The description of the place always stays at the top of the screen. There are six ways to go: N S E W UP DOWN, and INVENTORY shows what you carry.',
-        'There is no score here and HELP doesn\'t help: examine everything and try things out.']
+        'There is no score here and HELP doesn\'t help: examine everything and try things out.',
+        'Saving: SAVE GAME, and at READY TAPE AND PRESS ENTER? press [ENTER]. The game is saved to My tapes as VOODOO1, the next save as VOODOO2, and so on.',
+        'Carrying on a saved game, even on another visit: load the game as usual, and at RESTORE A PREVIOUSLY SAVED GAME? answer [Y] and [ENTER]. Click the save in My tapes, then [ENTER].']
     },
     // נבדק במכונה (28.10, גם ב-WebKit): טעינה, שתי שאלות פתיחה (אין כאן שאלה על אותיות קטנות), HELP, מלאי, LOOK, SCORE (אין ניקוד) ושמירה לקלטת
     count: {
@@ -1357,13 +1373,17 @@
         'מתעוררים במיטת נחושת גדולה: מישהו השכיב אתכם לישון, כבר אחר הצהריים ואיחרתם לקום. איפה אתם, ומי הרוזן?',
         'כותבים פועל ושם עצם באנגלית ולוחצים [ENTER]. למשל {LOOK} (להסתכל), {GO NORTH} (ללכת צפונה), {INVENTORY} (מה בידיים). שלוש האותיות הראשונות מספיקות.',
         'תיאור המקום תמיד מופיע למעלה במסך. הולכים בשש דרכים: {N S E W UP DOWN}. כשנתקעים, {HELP} נותן רמז.',
-        'כאן אין ניקוד. {SAVE GAME} שומר את המשחק לקלטת, ואפשר להמשיך אחר כך.'],
+        'כאן אין ניקוד.',
+        'שמירה: {SAVE GAME}, ועל {READY TAPE AND PRESS ENTER?} לוחצים [ENTER]. המשחק נשמר ב"הקלטות שלי" בשם COUNT1, השמירה הבאה בשם COUNT2, וכן הלאה.',
+        'המשך משחק שמור, גם בביקור אחר: טוענים את המשחק כרגיל, ועל {RESTORE A PREVIOUSLY SAVED GAME?} עונים [Y] ו-[ENTER]. לוחצים על השמירה ב"הקלטות שלי", ואז [ENTER].'],
       en: ['Loading takes a little under two minutes, and the game starts by itself.',
         'Two questions first: at PRESS ENTER press [ENTER], and at RESTORE A PREVIOUSLY SAVED GAME? answer [N] and [ENTER].',
         'You wake up in a large brass bed: someone put you to bed, it is already afternoon and you overslept. Where are you, and who is the Count?',
         'Type a verb and a noun, then [ENTER]. For example LOOK, GO NORTH, INVENTORY. The first three letters are enough.',
         'The description of the place always stays at the top of the screen. There are six ways to go: N S E W UP DOWN. When stuck, HELP gives a hint.',
-        'There is no score here. SAVE GAME saves the game to tape, so you can carry on later.']
+        'There is no score here.',
+        'Saving: SAVE GAME, and at READY TAPE AND PRESS ENTER? press [ENTER]. The game is saved to My tapes as COUNT1, the next save as COUNT2, and so on.',
+        'Carrying on a saved game, even on another visit: load the game as usual, and at RESTORE A PREVIOUSLY SAVED GAME? answer [Y] and [ENTER]. Click the save in My tapes, then [ENTER].']
     },
     // שמונה ההרפתקאות הבאות נבדקו במכונה (30.10): טעינה, שאלות הפתיחה, LOOK, INVENTORY, SCORE
     odyssey: {
@@ -1372,13 +1392,15 @@
         'מתחילים בחללית קטנה של אדם אחד, שנחתה על אסטרואיד רחוק. בחוץ מחכים שרידים של ציוויליזציה עתיקה.',
         'כותבים פועל ושם עצם באנגלית ולוחצים [ENTER]. למשל {OPEN DOOR} (לפתוח את הדלת), {GO DOWN} (לרדת), {GET CONSOLE} (להרים את הלוח). שלוש האותיות הראשונות מספיקות.',
         'תיאור המקום תמיד מופיע למעלה במסך. הולכים בשש דרכים: {N S E W UP DOWN}. {INVENTORY} מראה מה בידיים, ו-{HELP} נותן רמז.',
-        '{SAVE GAME} שומר את המשחק לקלטת, ואפשר להמשיך אחר כך.'],
+        'שמירה: {SAVE GAME}, ועל {READY TAPE AND PRESS ENTER?} לוחצים [ENTER]. המשחק נשמר ב"הקלטות שלי" בשם ODYSSEY1, השמירה הבאה בשם ODYSSEY2, וכן הלאה.',
+        'המשך משחק שמור, גם בביקור אחר: טוענים את המשחק כרגיל, ועל {RESTORE A PREVIOUSLY SAVED GAME?} עונים [Y] ו-[ENTER]. לוחצים על השמירה ב"הקלטות שלי", ואז [ENTER].'],
       en: ['Loading takes a little under two minutes, and the game starts by itself.',
         'Three questions first. At DO YOU HAVE LOWERCASE? answer [N] and [ENTER], at PRESS ENTER press [ENTER], and at RESTORE A PREVIOUSLY SAVED GAME? answer [N] and [ENTER].',
         'You start in a one-man scout ship, landed on a distant asteroid. Outside wait the remains of an ancient civilisation.',
         'Type a verb and a noun, then [ENTER]. For example OPEN DOOR, GO DOWN, LOOK CONSOLE. The first three letters are enough.',
         'The description of the place always stays at the top of the screen. There are six ways to go: N S E W UP DOWN. INVENTORY shows what you carry, and HELP gives a hint.',
-        'SAVE GAME saves the game to tape, so you can carry on later.']
+        'Saving: SAVE GAME, and at READY TAPE AND PRESS ENTER? press [ENTER]. The game is saved to My tapes as ODYSSEY1, the next save as ODYSSEY2, and so on.',
+        'Carrying on a saved game, even on another visit: load the game as usual, and at RESTORE A PREVIOUSLY SAVED GAME? answer [Y] and [ENTER]. Click the save in My tapes, then [ENTER].']
     },
     funhouse: {
       he: ['הטעינה לוקחת קצת פחות משתי דקות, והמשחק מתחיל לבד.',
@@ -1386,13 +1408,15 @@
         'עומדים מול בית שעשועים בלונה פארק, עם נעליים, שעון ומסטיק יבש בכיס. בפנים: מראות, מבוכים והפתעות.',
         'כותבים פועל ושם עצם באנגלית ולוחצים [ENTER]. למשל {READ SIGN} (לקרוא את השלט), {GO EAST} (ללכת מזרחה), {LOOK COUNTER} (להסתכל על הדלפק). שלוש האותיות הראשונות מספיקות.',
         'תיאור המקום תמיד מופיע למעלה במסך. הולכים בשש דרכים: {N S E W UP DOWN}. {INVENTORY} מראה מה בידיים, ו-{HELP} נותן רמז.',
-        '{SAVE GAME} שומר את המשחק לקלטת, ואפשר להמשיך אחר כך.'],
+        'שמירה: {SAVE GAME}, ועל {READY TAPE AND PRESS ENTER?} לוחצים [ENTER]. המשחק נשמר ב"הקלטות שלי" בשם FUNHOU1, השמירה הבאה בשם FUNHOU2, וכן הלאה.',
+        'המשך משחק שמור, גם בביקור אחר: טוענים את המשחק כרגיל, ועל {RESTORE A PREVIOUSLY SAVED GAME?} עונים [Y] ו-[ENTER]. לוחצים על השמירה ב"הקלטות שלי", ואז [ENTER].'],
       en: ['Loading takes a little under two minutes, and the game starts by itself.',
         'Two questions first: at PRESS ENTER press [ENTER], and at RESTORE A PREVIOUSLY SAVED GAME? answer [N] and [ENTER].',
         'You stand in front of a fun house at a fairground, with shoes, a watch and some dry chewing gum. Inside: mirrors, mazes and surprises.',
         'Type a verb and a noun, then [ENTER]. For example READ SIGN, GO EAST, LOOK COUNTER. The first three letters are enough.',
         'The description of the place always stays at the top of the screen. There are six ways to go: N S E W UP DOWN. INVENTORY shows what you carry, and HELP gives a hint.',
-        'SAVE GAME saves the game to tape, so you can carry on later.']
+        'Saving: SAVE GAME, and at READY TAPE AND PRESS ENTER? press [ENTER]. The game is saved to My tapes as FUNHOU1, the next save as FUNHOU2, and so on.',
+        'Carrying on a saved game, even on another visit: load the game as usual, and at RESTORE A PREVIOUSLY SAVED GAME? answer [Y] and [ENTER]. Click the save in My tapes, then [ENTER].']
     },
     pyramid: {
       he: ['הטעינה לוקחת קצת פחות משתי דקות. כשמופיע OK מקלידים {EXEC} ו-[ENTER].',
@@ -1400,13 +1424,17 @@
         'מתחילים במדבר, עם מימייה ריקה ופנס כבוי. מוט עץ בולט מהחול, ומתחתיו פירמידה מלאה אוצרות ומלכודות.',
         'כותבים פועל ושם עצם באנגלית ולוחצים [ENTER]. למשל {DIG SAND} (לחפור בחול), {GET POLE} (להרים את המוט), {GO NORTH} (ללכת צפונה). שלוש האותיות הראשונות מספיקות.',
         'תיאור המקום תמיד מופיע למעלה במסך. הולכים בשש דרכים: {N S E W UP DOWN}. {INVENTORY} מראה מה בידיים, ו-{HELP} נותן רמז.',
-        '{SCORE} מראה כמה אוצרות נאספו. {SAVE GAME} שומר את המשחק לקלטת.'],
+        '{SCORE} מראה כמה אוצרות נאספו.',
+        'שמירה: {SAVE GAME}, ועל {READY TAPE AND PRESS ENTER?} לוחצים [ENTER]. המשחק נשמר ב"הקלטות שלי" בשם PYRAMID1, השמירה הבאה בשם PYRAMID2, וכן הלאה.',
+        'המשך משחק שמור, גם בביקור אחר: טוענים את המשחק כרגיל, ועל {RESTORE A PREVIOUSLY SAVED GAME?} עונים [Y] ו-[ENTER]. לוחצים על השמירה ב"הקלטות שלי", ואז [ENTER].'],
       en: ['Loading takes a little under two minutes. When OK appears, type EXEC and [ENTER].',
         'Three questions first. At DO YOU HAVE LOWERCASE? answer [N] and [ENTER], at PRESS ENTER press [ENTER], and at RESTORE A PREVIOUSLY SAVED GAME? answer [N] and [ENTER].',
         'You start in a desert with an empty canteen and an unlit flashlight. A wooden pole sticks out of the sand, and below lies a pyramid full of treasure and traps.',
         'Type a verb and a noun, then [ENTER]. For example DIG SAND, GET POLE, GO NORTH. The first three letters are enough.',
         'The description of the place always stays at the top of the screen. There are six ways to go: N S E W UP DOWN. INVENTORY shows what you carry, and HELP gives a hint.',
-        'SCORE shows your treasures. SAVE GAME saves the game to tape.']
+        'SCORE shows your treasures.',
+        'Saving: SAVE GAME, and at READY TAPE AND PRESS ENTER? press [ENTER]. The game is saved to My tapes as PYRAMID1, the next save as PYRAMID2, and so on.',
+        'Carrying on a saved game, even on another visit: load the game as usual, and at RESTORE A PREVIOUSLY SAVED GAME? answer [Y] and [ENTER]. Click the save in My tapes, then [ENTER].']
     },
     ghost: {
       he: ['הטעינה לוקחת קצת פחות משתי דקות, והמשחק מתחיל לבד.',
@@ -1414,13 +1442,17 @@
         'מתחילים ברחוב של עיירת רפאים במערב הפרוע: מספרה, בית כלא ובתים נטושים. האוצרות מחכים למי שיעז להיכנס.',
         'כותבים פועל ושם עצם באנגלית ולוחצים [ENTER]. למשל {GO JAIL} (להיכנס לכלא), {GO BARBERSHOP} (להיכנס למספרה), {GO EAST} (ללכת מזרחה). שלוש האותיות הראשונות מספיקות.',
         'תיאור המקום תמיד מופיע למעלה במסך. הולכים בשש דרכים: {N S E W UP DOWN}. {INVENTORY} מראה מה בידיים, ו-{HELP} נותן רמז.',
-        '{SCORE} מראה כמה אוצרות נאספו. {SAVE GAME} שומר את המשחק לקלטת.'],
+        '{SCORE} מראה כמה אוצרות נאספו.',
+        'שמירה: {SAVE GAME}, ועל {READY TAPE AND PRESS ENTER?} לוחצים [ENTER]. המשחק נשמר ב"הקלטות שלי" בשם GHOST1, השמירה הבאה בשם GHOST2, וכן הלאה.',
+        'המשך משחק שמור, גם בביקור אחר: טוענים את המשחק כרגיל, ועל {RESTORE A PREVIOUSLY SAVED GAME?} עונים [Y] ו-[ENTER]. לוחצים על השמירה ב"הקלטות שלי", ואז [ENTER].'],
       en: ['Loading takes a little under two minutes, and the game starts by itself.',
         'Three questions first. At DO YOU HAVE LOWERCASE? answer [N] and [ENTER], at PRESS ENTER press [ENTER], and at RESTORE A PREVIOUSLY SAVED GAME? answer [N] and [ENTER].',
         'You start on the street of a Wild West ghost town: a barber shop, a jail and empty houses. The treasures wait for whoever dares to go in.',
         'Type a verb and a noun, then [ENTER]. For example GO JAIL, GO BARBERSHOP, GO EAST. The first three letters are enough.',
         'The description of the place always stays at the top of the screen. There are six ways to go: N S E W UP DOWN. INVENTORY shows what you carry, and HELP gives a hint.',
-        'SCORE shows your treasures. SAVE GAME saves the game to tape.']
+        'SCORE shows your treasures.',
+        'Saving: SAVE GAME, and at READY TAPE AND PRESS ENTER? press [ENTER]. The game is saved to My tapes as GHOST1, the next save as GHOST2, and so on.',
+        'Carrying on a saved game, even on another visit: load the game as usual, and at RESTORE A PREVIOUSLY SAVED GAME? answer [Y] and [ENTER]. Click the save in My tapes, then [ENTER].']
     },
     savage1: {
       he: ['הטעינה לוקחת קצת פחות משתי דקות, והמשחק מתחיל לבד.',
@@ -1428,13 +1460,17 @@
         'מתחילים על חוף של אי פראי, ליד ראש אבן ענק וג\'ונגל סבוך. סערה מתקרבת. זו הרפתקה קשה, לשחקנים מנוסים.',
         'כותבים פועל ושם עצם באנגלית ולוחצים [ENTER]. למשל {GO JUNGLE} (להיכנס לג\'ונגל), {LOOK HEAD} (להסתכל על הראש), {GO EAST} (ללכת מזרחה). שלוש האותיות הראשונות מספיקות.',
         'תיאור המקום תמיד מופיע למעלה במסך. הולכים בשש דרכים: {N S E W UP DOWN}. {INVENTORY} מראה מה בידיים, ו-{HELP} נותן רמז.',
-        '{SCORE} מראה כמה אוצרות נאספו. {SAVE GAME} שומר את המשחק לקלטת.'],
+        '{SCORE} מראה כמה אוצרות נאספו.',
+        'שמירה: {SAVE GAME}, ועל {READY TAPE AND PRESS ENTER?} לוחצים [ENTER]. המשחק נשמר ב"הקלטות שלי" בשם SAV1-1, השמירה הבאה בשם SAV1-2, וכן הלאה.',
+        'המשך משחק שמור, גם בביקור אחר: טוענים את המשחק כרגיל, ועל {RESTORE A PREVIOUSLY SAVED GAME?} עונים [Y] ו-[ENTER]. לוחצים על השמירה ב"הקלטות שלי", ואז [ENTER].'],
       en: ['Loading takes a little under two minutes, and the game starts by itself.',
         'Two questions first: at PRESS ENTER press [ENTER], and at RESTORE A PREVIOUSLY SAVED GAME? answer [N] and [ENTER].',
         'You start on the beach of a savage island, beside a huge stone head and an impenetrable jungle. A storm is coming. This one is hard, for experienced players.',
         'Type a verb and a noun, then [ENTER]. For example GO JUNGLE, LOOK HEAD, GO EAST. The first three letters are enough.',
         'The description of the place always stays at the top of the screen. There are six ways to go: N S E W UP DOWN. INVENTORY shows what you carry, and HELP gives a hint.',
-        'SCORE shows your treasures. SAVE GAME saves the game to tape.']
+        'SCORE shows your treasures.',
+        'Saving: SAVE GAME, and at READY TAPE AND PRESS ENTER? press [ENTER]. The game is saved to My tapes as SAV1-1, the next save as SAV1-2, and so on.',
+        'Carrying on a saved game, even on another visit: load the game as usual, and at RESTORE A PREVIOUSLY SAVED GAME? answer [Y] and [ENTER]. Click the save in My tapes, then [ENTER].']
     },
     savage2: {
       he: ['הטעינה לוקחת קצת פחות משתי דקות, והמשחק מתחיל לבד.',
@@ -1442,13 +1478,17 @@
         'ההמשך של חלק 1. בהתחלה קול מתכתי מבקש סיסמה: מקבלים אותה בסוף חלק 1. מי שעונה לא נכון, ההרפתקה נגמרת מיד.',
         'כותבים פועל ושם עצם באנגלית ולוחצים [ENTER]. שלוש האותיות הראשונות מספיקות.',
         'תיאור המקום תמיד מופיע למעלה במסך. הולכים בשש דרכים: {N S E W UP DOWN}. {INVENTORY} מראה מה בידיים, ו-{HELP} נותן רמז.',
-        '{SCORE} מראה כמה אוצרות נאספו. {SAVE GAME} שומר את המשחק לקלטת.'],
+        '{SCORE} מראה כמה אוצרות נאספו.',
+        'שמירה: {SAVE GAME}, ועל {READY TAPE AND PRESS ENTER?} לוחצים [ENTER]. המשחק נשמר ב"הקלטות שלי" בשם SAV2-1, השמירה הבאה בשם SAV2-2, וכן הלאה.',
+        'המשך משחק שמור, גם בביקור אחר: טוענים את המשחק כרגיל, ועל {RESTORE A PREVIOUSLY SAVED GAME?} עונים [Y] ו-[ENTER]. לוחצים על השמירה ב"הקלטות שלי", ואז [ENTER].'],
       en: ['Loading takes a little under two minutes, and the game starts by itself.',
         'Two questions first: at PRESS ENTER press [ENTER], and at RESTORE A PREVIOUSLY SAVED GAME? answer [N] and [ENTER].',
         'The sequel to part 1. At the start a metallic voice asks for a password: you get it at the end of part 1. A wrong answer ends the adventure at once.',
         'Type a verb and a noun, then [ENTER]. The first three letters are enough.',
         'The description of the place always stays at the top of the screen. There are six ways to go: N S E W UP DOWN. INVENTORY shows what you carry, and HELP gives a hint.',
-        'SCORE shows your treasures. SAVE GAME saves the game to tape.']
+        'SCORE shows your treasures.',
+        'Saving: SAVE GAME, and at READY TAPE AND PRESS ENTER? press [ENTER]. The game is saved to My tapes as SAV2-1, the next save as SAV2-2, and so on.',
+        'Carrying on a saved game, even on another visit: load the game as usual, and at RESTORE A PREVIOUSLY SAVED GAME? answer [Y] and [ENTER]. Click the save in My tapes, then [ENTER].']
     },
     golden: {
       he: ['הטעינה לוקחת קצת פחות משתי דקות, והמשחק מתחיל לבד.',
@@ -1456,13 +1496,17 @@
         'מתחילים בעיר פרסית, ליד סוחר. מלך זקן מחכה לסוד הנעורים, וצריך להפליג ולמצוא אותו לפני שיהיה מאוחר.',
         'כותבים פועל ושם עצם באנגלית ולוחצים [ENTER]. למשל {GET SANDALS} (להרים את הסנדלים), {TALK MERCHANT} (לדבר עם הסוחר), {GO WEST} (ללכת מערבה). שלוש האותיות הראשונות מספיקות.',
         'תיאור המקום תמיד מופיע למעלה במסך. הולכים בשש דרכים: {N S E W UP DOWN}. {INVENTORY} מראה מה בידיים, ו-{HELP} נותן רמז.',
-        '{SCORE} מראה כמה אוצרות נאספו. {SAVE GAME} שומר את המשחק לקלטת.'],
+        '{SCORE} מראה כמה אוצרות נאספו.',
+        'שמירה: {SAVE GAME}, ועל {READY TAPE AND PRESS ENTER?} לוחצים [ENTER]. המשחק נשמר ב"הקלטות שלי" בשם GOLDEN1, השמירה הבאה בשם GOLDEN2, וכן הלאה.',
+        'המשך משחק שמור, גם בביקור אחר: טוענים את המשחק כרגיל, ועל {RESTORE A PREVIOUSLY SAVED GAME?} עונים [Y] ו-[ENTER]. לוחצים על השמירה ב"הקלטות שלי", ואז [ENTER].'],
       en: ['Loading takes a little under two minutes, and the game starts by itself.',
         'Two questions first: at PRESS ENTER press [ENTER], and at RESTORE A PREVIOUSLY SAVED GAME? answer [N] and [ENTER].',
         'You start in a Persian city, beside a merchant. An old king awaits the secret of youth, and you must sail out and find it before it is too late.',
         'Type a verb and a noun, then [ENTER]. For example GET SANDALS, TALK MERCHANT, GO WEST. The first three letters are enough.',
         'The description of the place always stays at the top of the screen. There are six ways to go: N S E W UP DOWN. INVENTORY shows what you carry, and HELP gives a hint.',
-        'SCORE shows your treasures. SAVE GAME saves the game to tape.']
+        'SCORE shows your treasures.',
+        'Saving: SAVE GAME, and at READY TAPE AND PRESS ENTER? press [ENTER]. The game is saved to My tapes as GOLDEN1, the next save as GOLDEN2, and so on.',
+        'Carrying on a saved game, even on another visit: load the game as usual, and at RESTORE A PREVIOUSLY SAVED GAME? answer [Y] and [ENTER]. Click the save in My tapes, then [ENTER].']
     },
     claymorgue: {
       he: ['הטעינה לוקחת קצת פחות משתי דקות, והמשחק מתחיל לבד.',
@@ -1470,13 +1514,17 @@
         'אתם שוליה של קוסם, עם שישה כישופים בכיס: אש, זרע, אור ועוד. צריך למצוא 13 כוכבים בטירה של מכשף רשע.',
         'כותבים פועל ושם עצם באנגלית ולוחצים [ENTER]. למשל {CAST FIRE} (להטיל את כישוף האש), {GO NORTH} (ללכת צפונה), {LOOK MOAT} (להסתכל על החפיר). שלוש האותיות הראשונות מספיקות.',
         'תיאור המקום תמיד מופיע למעלה במסך. הולכים בשש דרכים: {N S E W UP DOWN}. {INVENTORY} מראה מה בידיים, ו-{HELP} נותן רמז.',
-        '{SCORE} מראה כמה אוצרות נאספו. {SAVE GAME} שומר את המשחק לקלטת.'],
+        '{SCORE} מראה כמה אוצרות נאספו.',
+        'שמירה: {SAVE GAME}, ועל {READY TAPE AND PRESS ENTER?} לוחצים [ENTER]. המשחק נשמר ב"הקלטות שלי" בשם CLAYM1, השמירה הבאה בשם CLAYM2, וכן הלאה.',
+        'המשך משחק שמור, גם בביקור אחר: טוענים את המשחק כרגיל, ועל {RESTORE A PREVIOUSLY SAVED GAME?} עונים [Y] ו-[ENTER]. לוחצים על השמירה ב"הקלטות שלי", ואז [ENTER].'],
       en: ['Loading takes a little under two minutes, and the game starts by itself.',
         'Three questions first. At DO YOU HAVE LOWERCASE? answer [N] and [ENTER], at PRESS ENTER press [ENTER], and at RESTORE A PREVIOUSLY SAVED GAME? answer [N] and [ENTER].',
         'You are a wizard\'s apprentice with six spells in your pocket: fire, seed, light and more. Find the 13 stars in the castle of an evil sorcerer.',
         'Type a verb and a noun, then [ENTER]. For example CAST FIRE, GO NORTH, LOOK MOAT. The first three letters are enough.',
         'The description of the place always stays at the top of the screen. There are six ways to go: N S E W UP DOWN. INVENTORY shows what you carry, and HELP gives a hint.',
-        'SCORE shows your treasures. SAVE GAME saves the game to tape.']
+        'SCORE shows your treasures.',
+        'Saving: SAVE GAME, and at READY TAPE AND PRESS ENTER? press [ENTER]. The game is saved to My tapes as CLAYM1, the next save as CLAYM2, and so on.',
+        'Carrying on a saved game, even on another visit: load the game as usual, and at RESTORE A PREVIOUSLY SAVED GAME? answer [Y] and [ENTER]. Click the save in My tapes, then [ENTER].']
     }
   };
   // מה קורה אחרי הטעינה ומה לוחצים: השורה האחרונה של "איך טוענים", וגם ההודעה מתחת לכפתור האדום
@@ -2538,7 +2586,8 @@ body.game-open .shelf > :not(.game-view) { display: none; }
   // עד 40 קלטות (10.11: ב-20, כל שמירה של Family Budget דחפה החוצה את הקלטת הוותיקה, בלי הודעה). מה שיוצא נאמר בשורת המצב
   const KEY = 'd32-lab-tapes', MAX = 40, LONG = 4500;   // LONG: מבוא של כ-25 שניות לפני שמירה של משחק
   // שמות לשמירות של משחקים ששומרים בלי שם (13.11, Tanglewood: CSAVEM ריק). כל שמירה מקבלת מספר משלה, כדי שכמה שמירות יישארו
-  const SAVE_NAMES = { tangle: 'TANGLE' };
+  // שם ומספר לשמירה של משחק (TANGLE1, ADVENT1...). עד 7 תווים, כדי שיישאר מקום למספר בשם של 8
+  const SAVE_NAMES = { tangle: 'TANGLE', adventureland: 'ADVENT', pirate: 'PIRATE', voodoo: 'VOODOO', mission: 'MISSION', count: 'COUNT', odyssey: 'ODYSSEY', pyramid: 'PYRAMID', funhouse: 'FUNHOU', ghost: 'GHOST', golden: 'GOLDEN', savage1: 'SAV1-', savage2: 'SAV2-', claymorgue: 'CLAYM' };
   const mineBox = document.getElementById('mytapes');
   function myTapes() { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { return []; } }
   function keep(list) { try { localStorage.setItem(KEY, JSON.stringify(list.slice(-MAX))); return true; } catch (e) { return false; } }
