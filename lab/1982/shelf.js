@@ -2555,7 +2555,11 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       let sum = type + len;
       for (const b of data) sum += b;
       if ((sum & 255) !== bytes[i + 4 + len]) continue;
-      const name = String.fromCharCode(...data.slice(0, 8)).replace(/[ `]+$/, "").trim();   // DREAM ממלא את השם ב-` ולא ברווחים
+      // DREAM ממלא את השם ב-` ולא ברווחים, ו-Calixto Island ב-0 (13.11)
+      let name = String.fromCharCode(...data.slice(0, 8)).replace(/[\0 `]+$/, "").trim();
+      // Dungeons of Daggorath כותב את השם בקוד משלו: A=1 עד Z=26, וממלא ב-$FF (13.11). רק לתצוגה; הכותרת עצמה לא משתנה
+      const n8 = data.slice(0, 8);
+      if (type === 0 && n8.some(c => c >= 1 && c <= 26) && n8.every(c => c === 0 || c === 0xff || (c >= 1 && c <= 26))) name = n8.filter(c => c >= 1 && c <= 26).map(c => String.fromCharCode(64 + c)).join('');
       // כותרת בלי שם אחרי קובץ = החלק השני של אותה קלטת (Donkey King של Microdeal: הטוען, ואחריו המשחק בלי שם).
       // נשמרים יחד, כדי שהטעינה תביא את שניהם (גונן, 1.11: "לא נטען כבר מלא זמן")
       // own: שמירות של המכונה עצמה (13.11, Tanglewood שומר כל פעם בלי שם): כל כותרת היא שמירה חדשה, לא חלק שני
@@ -3024,7 +3028,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
   // הסוג בכותרת שאנחנו שומרים בשביל הרשימה הוא 1 (נתונים), ולכן הוא נכנס לתחילת הקלטת של "הקלטות שלי"
   function headless(bytes) {
     const out = [];
-    let start = -1, named = false;
+    let start = -1, named = false, oddAt = -1, oddEnd = -1;
     for (let i = 0; i + 4 < bytes.length; i++) {
       if (bytes[i] !== 0x55 || bytes[i + 1] !== 0x3c) continue;
       const type = bytes[i + 2], len = bytes[i + 3];
@@ -3032,22 +3036,38 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       let sum = type + len;
       for (let k = 0; k < len; k++) sum += bytes[i + 4 + k];
       if ((sum & 255) !== bytes[i + 4 + len]) continue;
+      // שמירה בבלוקים מסוג משלה, בלי כותרת ובלי בלוק סוף (13.11, ההרפתקאות של Scott Adams: שני בלוקים מסוג $43).
+      // הרצף נגמר בבלוק רגיל או בסוף מה שנכתב עד עכשיו (הקריאה כאן רק אחרי שהקובץ הפסיק לגדול)
+      const odd = type !== 0 && type !== 1 && type !== 255;
+      // מבוא ארוך בין שני בלוקים כאלה = שמירה חדשה (בתוך שמירה אחת הבלוקים צמודים)
+      if (odd && oddAt >= 0 && i - oddEnd > 64) { out.push(bytes.subarray(oddAt, oddEnd)); oddAt = -1; }
+      if (odd) { if (oddAt < 0 && !named && start < 0) oddAt = Math.max(0, i - 128); oddEnd = i + 5 + len; }
+      else if (oddAt >= 0) { out.push(bytes.subarray(oddAt, oddEnd)); oddAt = -1; }
       if (type === 0) named = true;
       else if (type === 1 && !named && start < 0) start = Math.max(0, i - 128);
       else if (type === 255) { if (start >= 0) out.push(bytes.subarray(start, i + 5 + len)); start = -1; named = false; }
       i += 4 + len;
     }
+    if (oddAt >= 0) out.push(bytes.subarray(oddAt, oddEnd));
     return out;
   }
-  let outSize = 0, outDone = 0, outRaw = 0, cartName = '';
+  let outSize = 0, outDone = 0, outRaw = 0, cartName = '', outSeen = 0;
   setInterval(() => {
     if (!window.d32Ready) return;
     let bytes;
-    try { if (FS.stat('/out.cas').size === outSize) return; bytes = FS.readFile('/out.cas'); } catch (e) { return; }
+    // קוראים רק אחרי שהקובץ הפסיק לגדול (שנייה בלי שינוי), כדי לא לתפוס שמירה באמצע הכתיבה
+    try { const sz = FS.stat('/out.cas').size; if (sz !== outSeen) { outSeen = sz; return; } if (sz === outSize) return; bytes = FS.readFile('/out.cas'); } catch (e) { return; }
     outSize = bytes.length;
     const raws = headless(bytes);
+    const takenRaw = new Set(myTapes().map(t => t.n));
     const freshRaw = raws.slice(outRaw).map(r => {
-      const n = (cartName || 'NONAME').slice(0, 8);
+      // שמירה של משחק מהמדף: שם המשחק ומספר, כמו TANGLE1 (בלי מספר, שמירה שנייה הייתה מחליפה את הראשונה)
+      let n = (cartName || 'NONAME').slice(0, 8);
+      if (!cartName && lastGame) {
+        const base = SAVE_NAMES[lastGame] || lastGame.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 6);
+        let k = 1; while (takenRaw.has(base + k)) k++;
+        n = base + k; takenRaw.add(n);
+      }
       let bin = '';
       for (let k = 0; k < r.length; k += 8192) bin += String.fromCharCode(...r.subarray(k, k + 8192));
       return { n, b: [[0, ...Array.from(n.padEnd(8), c => c.charCodeAt(0)), 1, 0, 0, 0, 0, 0, 0]], r: btoa(bin) };
