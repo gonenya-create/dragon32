@@ -1,0 +1,417 @@
+{
+ "note": "Hints for Tanglewood in our own words. The game was played to the win on the Dragon machine (13.11.2026, game day 12), and the code was read to understand the rules (MIT licence). Places are given as (row,column) on the woods map: row 0 is the top, column 0 the left. Some things are placed by chance in every game (the batteries' bin, the paths in the pond and under the water, the magic word): there the hints give the rule, not a fixed answer. Each question has three levels: a small hint, a clearer hint, and the full method.",
+ "where": "The game draws all its text on the picture screen, so the hint button cannot read where you are and shows all the questions for this game.",
+ "at": [
+  [
+   "SCHARK"
+  ],
+  [
+   "SCHARK"
+  ],
+  [
+   "DOGHOUSE"
+  ],
+  [
+   "COIN"
+  ],
+  [
+   "ANTS"
+  ],
+  [
+   "TICKET",
+   "CARPET"
+  ],
+  [
+   "GARDEN",
+   "BRANCH",
+   "CARROT"
+  ],
+  [
+   "SPECS",
+   "ROD",
+   "GNOME"
+  ],
+  [
+   "CATMINT"
+  ],
+  [
+   "JAMMER"
+  ],
+  [
+   "CASTLE"
+  ],
+  [
+   "BOATHOUSE"
+  ],
+  [
+   "FIREFLIES"
+  ],
+  [
+   "DWARF DIVE",
+   "ARRESTED"
+  ],
+  [
+   "WHISKERS",
+   "ARCHANGEL"
+  ],
+  [
+   "HAT"
+  ],
+  [
+   "SPELLWORD"
+  ],
+  [
+   "SURROUND"
+  ],
+  [
+   "MANHOLE",
+   "CELLAR"
+  ],
+  [
+   "SAY"
+  ],
+  [
+   "EXTRA TIME"
+  ]
+ ],
+ "he": [
+  {
+   "q": "מה בכלל המטרה, ומאיפה מתחילים?",
+   "h": [
+    "בסוף, אחת החיות צריכה להגיע בלילה לחדר השינה של Schark בטירה ולהגיד שם מילת קסם. כל השאר הוא הכנה לרגע הזה.",
+    "רק Beanbag הצפרדע יכול להגיד את מילת הקסם. הוא נכנס לטירה מלמטה, דרך המחילות (Burrows), ובשביל זה צריך: שהעין האלקטרונית במרתף תיהרס, שארבע חיות יקיפו את הטירה, ש-Beanbag יחזיק את ה-{ARCHANGEL} ואת ה-{FIREFLIES}, וש-Beanbag יחבוש את הכובע ({HAT}). את המילה של היום שואלים במשרד הייעוץ ({CAB}).",
+    "הסדר שעבד אצלנו: (1) עצם ל-Peabody, (2) שני מטבעות, (3) צמח שמגרש את הנמלים, (4) כרטיס, שטיח מעופף ושרביט, (5) ענף וגזר ל-Beanbag, ופתיחת דלת הגן, (6) חכה, דייג ומשקפיים ל-Foghorn, (7) מכשיר שיבוש, סוללות וחיסול העין במרתף, (8) מפתח, בית הסירות ורשת, (9) גחליליות, (10) בטירת הגמדים: כפתור, שפם ו-{ARCHANGEL}, (11) הכובע, (12) מילת הקסם, (13) ארבע חיות סביב הטירה, (14) Beanbag במחילות, בטירה, ו-{SAY}. לכל שלב יש כאן שאלה משלו. כדאי לשמור ({SAVE}) לפני כל צעד מסוכן."
+   ]
+  },
+  {
+   "q": "Schark הופך את החיות שלי לפסלים.",
+   "h": [
+    "Schark מסתובב ביער ביום, ומאבן כל חיה שלא מוגנת. הלילה הוא הזמן הבטוח.",
+    "חיה בבית שלה, או בחנות, מוגנת: מופיעה המילה {SAFE}. מהיום השני Schark מאבן תוך דקות, גם ביום ראשון. {TIME} ביער מקפיץ ישר ל-21:00 או ל-07:00. בלילה הליכה עולה יותר כוח, ו-{SLEEP} מחזיר כוח.",
+    "השיטה: עובדים בלילה, ולפני 07:00 כל חיה בבית, בחנות, או בבית הריק Bide-a-wee ב-(4,20), שמגן על כל חיה. חיה שנשארת בחוץ ביום הופכת לפסל, והחפצים שלה נלקחים לטירה. משחררים פסל כך: Beanbag עומד ליד הפסל בלילה, כשאין עוד חיה לידו, וכותב {TOUCH}. זה עובד רק עד חצות של יום רביעי, השישי במשחק. אחר כך משחררים רק עם עוגה ({FEED ROCK CAKE}). חשוב: פסל שעומד על אחת מארבע המשבצות שליד הטירה עוזר בסוף (ראו \"להקיף את המרכז\")."
+   ]
+  },
+  {
+   "q": "איפה Peabody, הכלב?",
+   "h": [
+    "Peabody לא בבית בהתחלה. כלבים חוזרים הביתה בשביל אוכל.",
+    "צריך עצם, ומניחים אותה ליד הבית שלו, The Doghouse ב-(18,28). את העצם חופרים, ובשביל זה צריך את חפירה.",
+    "חיה אחת לוקחת את חפירה ({GET SPADE}) ב-(0,29), הולכת ל-(12,0) וכותבת {DIG}: \"I'VE FOUND A BONE\" ו-{GET BONE}. אחר כך ל-The Doghouse ב-(18,28) ו-{DROP BONE}. Peabody מופיע מיד. מעכשיו אפשר לעבור אליו במקש [5]."
+   ]
+  },
+  {
+   "q": "צריך כסף. איפה המטבעות?",
+   "h": [
+    "יש שני מטבעות, ושניהם במים: אחד באי, ואחד מתחת למים.",
+    "Peabody יודע לשחות לאי ולחפור בו בלי את. Beanbag יודע לצלול ({DIVE}).",
+    "Peabody נכנס לבריכה מ-(12,8), בלי לשאת כלום, ושוחה עד שמופיע \"PEABODY SNIFFS HOPEFULLY\" (זה האי, (10,6)). שם {DIG} ואז {GET SILVER COIN}. Beanbag נכנס לבריכה, כותב {DIVE}, ושוחה מתחת למים עד \"SOMETHING GLITTERS BELOW\": {GET GOLD COIN}. שימו לב: בבריכה ומתחת למים החיצים מסתובבים באקראי בכל כניסה, אז מנסים ומקשיבים לטקסט. אחר כך כל אחד מעביר את המטבע שלו ({TRANSFER}) לחיה שהולכת ביבשה ועומדת לידו."
+   ]
+  },
+  {
+   "q": "הנמלים חוסמות את הדרך למערב.",
+   "h": [
+    "נמלים שונאות צמח מסוים. קונים אותו.",
+    "בחנות הצמחים (Herbalist, ב-(14,29)) קונים צמח בשני המטבעות. החנויות פתוחות ביום, לא ביום ראשון.",
+    "חיה עם שני המטבעות נכנסת לחנות ב-(14,29) ביום וכותבת {BUY HERB}: \"HERE'S TANSY. ANTS HATE IT\". הולכים ל-(12,3) (או ל-(2,7)) וכותבים {THROW TANSY}: שתי משבצות הנמלים הופכות לשביל. עכשיו פתוחים המערב, משרד הייעוץ, השטיח, הצנצנת ({JAR}) בפח שב-(2,1) והבאר."
+   ]
+  },
+  {
+   "q": "איך משיגים את השרביט?",
+   "h": [
+    "את השרביט נותן השטיח המעופף, אבל השטיח לא טס בלי כרטיס.",
+    "הכרטיס בקן ציפור על צמרות העצים. רק Goliath העכבר קל מספיק כדי להגיע אליו. השטיח ב-(0,1), וטס ביום.",
+    "Goliath עומד ב-(12,20), נכנס לצמרות ב-[←], וממשיך [←] [↓] [→] [↓] עד \"A BIRD'S NEST\": {GET TICKET}, ויוצא. אחר כך, ביום, כשהוא נושא רק את הכרטיס, הולך ל-(0,2) ונכנס לשטיח שמשמאל. השטיח טס, ובבוקר שאחרי Goliath חוזר ל-(0,2) עם השרביט ({WAND}). כדאי שיחזור הביתה לפני שהשמש עולה."
+   ]
+  },
+  {
+   "q": "איך נכנסים לגן המוקף חומה?",
+   "h": [
+    "יש לגן דלת שלא נשארת פתוחה. צריך לתקוע אותה, ולהגיע אליה מבפנים, דרך המחילות.",
+    "צריך ענף ({BRANCH}) לתקוע את הדלת, וגזר ({CARROT}) לארנב במחילות. שניהם עוברים ל-Beanbag.",
+    "Foghorn החתול עומד ב-(12,20), נכנס לצמרות ב-[←], וממשיך [←] [↓]: \"THE BRANCH BREAKS\", ו-{GET BRANCH}. חיה אחרת לוקחת את הגזר ב-(2,27). שניהם מעבירים ל-Beanbag ({TRANSFER}). Beanbag עומד ב-(6,27) ונכנס למחילות ב-[↑]. שם [↑] [→] [→], ו-{FEED CARROT}. אחר כך [→], ו-[→] שוב, בלילה בלבד, והוא בגן: {WEDGE DOOR}. הערה: {TIME} לא עובד בתוך המחילות. כותבים אותו רק ביער."
+   ]
+  },
+  {
+   "q": "Foghorn לא רואה כלום בלילה. איפה משקפיים?",
+   "h": [
+    "את המשקפיים מוציאים מהמים בחכה. את החכה מחזיק גמד אבן בגן.",
+    "Goliath עם השרביט נכנס לגן ומטיל כישוף ({CAST}). הגמד בורח ומשאיר חכה. דגים ב-(14,24).",
+    "Goliath עם השרביט בלבד עומד בדלת הגן (3,28), [↑] לתוך הגן, ו-{CAST}: \"IT WORKED. THE GNOME RAN OFF LEAVING HIS FISHING ROD\". שרביט וחכה ביחד כבדים מדי: יוצאים, {DROP WAND} ב-(3,28), חוזרים ו-{GET ROD}. נשארים בגן עד הלילה (ביום Schark מחכה בחוץ), ובלילה הולכים ל-(14,24) ו-{FISH}: \"I'VE GOT THEM\", המשקפיים על המשבצת, {GET SPECS}. מעבירים ל-Foghorn, והוא {WEAR SPECS}. רק עם משקפיים Foghorn רואה את היער בלילה ונכנס לביצה."
+   ]
+  },
+  {
+   "q": "איך מוגנים בלילה, רחוק מהבית?",
+   "h": [
+    "לכמה מהחיות יש צמח שמגן עליהן בלילה.",
+    "Foghorn אוכל {CATMINT}, ‏Goliath אוכל {MOUSE-EAR}, ‏Peabody אוכל {DOG'S MERCURY}. אחרי האכילה מופיע {SAFE}.",
+    "את ה-{CATMINT} ב-(0,19) לוקח Beanbag (הוא נמצא בנחל) ומעביר ל-Foghorn. {MOUSE-EAR} ב-(0,3), ‏{DOG'S MERCURY} ב-(18,6). אוכלים בלילה: {EAT CATMINT}. הצמח נשאר אצל החיה ואפשר לאכול אותו שוב בלילה הבא. בלי צמח: בית, חנות, או Bide-a-wee ב-(4,20). חיה מוגנת יכולה גם להיכנס לטירה בלילה. Beanbag תמיד מוגן."
+   ]
+  },
+  {
+   "q": "מה עושים עם העין האלקטרונית?",
+   "h": [
+    "במרתף של הטירה יש עין ששומרת על הכניסה מלמטה. צריך לשרוף אותה במכשיר שיבוש.",
+    "מכשיר השיבוש ({JAMMER}) במטבח של הטירה. הוא צריך סוללות ({BATTERIES}), שנמצאות בפח אחד ביער. בכל משחק בפח אחר.",
+    "חיה מוגנת (למשל Foghorn אחרי {EAT CATMINT}) נכנסת בלילה בדלת הדרומית, מ-(10,14) עם [↑], מוצאת את המטבח (\"I'M IN THE KITCHENS\"), {GET JAMMER}, ויוצאת. מחפשים את הסוללות בפחים: ב-(0,11), ‏(2,1), ‏(2,8), ‏(3,25), ‏(5,15), ‏(7,19), ‏(7,28), ‏(12,15), ‏(13,9), ‏(14,20), ‏(14,25), ‏(18,0), ‏(19,0), ‏(19,15). אצלנו היו ב-(19,0). הינשוף ביער לפעמים רומז איפה. {INSTALL BATTERIES} (משקל מקסימום 3: אולי צריך להניח משהו קודם). שוב לטירה בלילה, למרתף (\"I'M IN THE CELLAR\"): {MOVE COAL} ומיד {USE JAMMER}: \"THE ELECTRONIC EYE FUSES\". לא לזוז בין שתי הפקודות: צעד אחד = \"I'M BEING WATCHED\", שניים = מעצר. לצאת מהטירה לפני 07:00."
+   ]
+  },
+  {
+   "q": "איך מסתובבים בטירה?",
+   "h": [
+    "בטירה החיצים עובדים אחרת: לא צפון ודרום, אלא קדימה וסיבוב.",
+    "[↑] צעד קדימה, [←] ו-[→] מסובבים ברבע, [↓] מסתובב לאחור. נכנסים רק בלילה, רק חיה מוגנת, ובבוקר בשעה 07:00 מי שבפנים נזרק החוצה והופך לפסל.",
+    "אחרי כל מקש מחכים שהתמונה תסתיים להצטייר, אחרת המקש הבא הולך לאיבוד. חדר עם מעלית ({A LIFT}) לוקח אותכם בקומה במקש הבא, והמעליות בכיוון אחד. אולמות יציאה זורקים החוצה: אחד ליד המשבצת המזרחית (8,16), ואחד ליד המערבית (8,12). שתיהן כיסים סגורים: מהמזרחית יוצאים דרך הגשר (11,17) והצמרות ([↓] [↓] [↓], ואז [←] החוצה ב-(12,20)). בטירה הכוח יורד מהר: לישון ({SLEEP}) לפני שנכנסים. אי אפשר לשמור בתוך הטירה."
+   ]
+  },
+  {
+   "q": "בית הסירות נעול.",
+   "h": [
+    "יש מפתח, והוא בטירה, בקומה העליונה.",
+    "חיה מוגנת נכנסת בלילה בדלת הדרומית, עולה במעלית לקומה 4, ומוצאת את המפתח. הדלת של בית הסירות ב-(8,9).",
+    "Foghorn (עם {CATMINT}) נכנס מ-(10,14), במעלית לקומה 4 (\"THE LIGHT IS STRANGE HERE\"), מסתובב עד {LOOK} \"I SEE...KEY\" ו-{GET KEY}, ויוצא. בית הסירות בכיס המערבי, שמגיעים אליו מאולם היציאה המערבי של הטירה או מהיציאה (5,10) של טירת הגמדים. ב-(8,9): {OPEN BOATHOUSE}, [↓] פנימה, {GET NET}. אפשר גם לישון בבית הסירות: הוא מגן."
+   ]
+  },
+  {
+   "q": "איפה הגחליליות?",
+   "h": [
+    "הגחליליות בביצה, ורק בלילה. רק חתול עם משקפיים מוצא שם את הדרך.",
+    "Foghorn עם משקפיים, רשת ({NET}) וצנצנת ({JAR}) נכנס לביצה בלילה מ-(15,12).",
+    "Foghorn, חובש משקפיים ונושא {NET} ו-{JAR}, עומד ב-(15,13) בלילה ו-[←] לביצה. שם [←] [←] [↓] [↑] עד \"GENTLE BUZZING NEARBY\", ו-{GET FIREFLIES}. הרשת והצנצנת נעלמות, והגחליליות נשארות. יוצאים: [↓] [→] [→] חזרה ל-(15,13)."
+   ]
+  },
+  {
+   "q": "בטירת הגמדים (Dwarf Dive) עוצרים אותי.",
+   "h": [
+    "בפנים יש שומרים, והם זזים צעד אחרי כל צעד שלכם. אם שומר נוגע בכם, אתם נעצרים.",
+    "קודם צריך שהמעליות יעבדו: לוחצים על הכפתור. מטפסים בסולמות ובחבלים, ולכל חיה יש מגבלה. השומרים זזים גם כשהצעד שלכם נדחה, ואל תעמדו בתור שלהם.",
+    "כניסות: (3,9), ‏(3,11), ‏(5,10). רק Bruce יכול להפעיל את המעליות: הוא הולך לכפתור ו-{PRESS BUTTON} (לא {PRESS RESET}). Bruce לא מטפס למעלה בחבל, ‏Foghorn לא יורד בסולם או בחבל (\"CATS DO NOT CLIMB DOWNWARDS\"), ‏Goliath לא לוחץ על כפתור המעלית למעלה, ו-Peabody ו-Beanbag לא נכנסים. כל מעלית היא קרון אחד שנשאר איפה שירד, אז חיה אחת יכולה \"לסדר\" את הקרונות לחיה אחרת. נעצרתם? החיה נזרקת ליציאת החירום (5,8). לכן שומרים לפני הכניסה, ומחכים במקום בטוח עד שהשומרים רחוקים."
+   ]
+  },
+  {
+   "q": "איך משיגים את השפם ואת ה-ARCHANGEL?",
+   "h": [
+    "שניהם בטירת הגמדים, על מדפים שמגיעים אליהם רק בטיפוס למעלה בחבל.",
+    "קודם השפם ({WHISKERS}): רק עם השפם Goliath מורשה להיכנס. ואז Goliath מביא את ה-{ARCHANGEL}.",
+    "Bruce נכנס, {PRESS BUTTON}, ונוסע במעליות כך שהקרונות יישארו במקום שבו Foghorn צריך אותם. Foghorn (שלא יורד בסולמות) נכנס ב-(3,9), מגיע לשפם בפינה השמאלית התחתונה, {GET WHISKERS}, ויוצא. שני שומרים מסתובבים בפינה הזאת: לחכות עד ששניהם רחוקים. מעבירים את השפם ל-Goliath (ליד Bide-a-wee ‏(4,20)), ‏{WEAR WHISKERS}, וכניסה ב-(3,12). ה-{ARCHANGEL} על מדף שעולים אליו בחבל. אצלנו Goliath נתקע בלי דרך החוצה, כי הוא לא יכול לנסוע במעלית למעלה: Bruce הוריד קודם את הקרון שב-(19,4) ל-(21,4), וזה פתח גשר. Goliath יצא ב-(5,10)."
+   ]
+  },
+  {
+   "q": "Beanbag צריך כובע.",
+   "h": [
+    "הכובע בחנות הקסמים (Magical Outfitters), על אי בבריכה. מי שמגיע לשם צריך לקפוץ.",
+    "Bruce הקנגורו קופץ אחרי ששתה מים מיוחדים, מקרש הקפיצה ב-(7,4), וביום בלבד.",
+    "Bruce בבאר (5,3): {DRINK} (\"NICE...IT'S SPRING WATER\"). ביום, על קרש הקפיצה ב-(7,4): {JUMP} → לתוך החנות ב-(9,6), ‏{GET HAT}. חזרה: [↓] לאי (10,6), ‏{JUMP} → (10,4). ‏Beanbag לא יכול להיכנס לפח, אז אם הכובע מונח שם, חיה אחרת מביאה אותו ומעבירה. ‏Beanbag: {WEAR HAT}. הכובע חושף בטירה מעלית נסתרת."
+   ]
+  },
+  {
+   "q": "מה מילת הקסם?",
+   "h": [
+    "יש מקום ביער שעונה על שאלות.",
+    "משרד הייעוץ ({CAB}) ב-(3,0) אומר את המילה של היום, ביום ולא ביום ראשון. המילה מתחלפת כל בוקר ב-07:00.",
+    "חיה שהולכת ביבשה נכנסת ביום ל-(3,0) וכותבת {ASK}: \"TODAY'S SPELLWORD IS ...\". יש שלוש מילים אפשריות, והמשחק בוחר. שואלים ביום שלפני הלילה האחרון: המילה טובה עד 07:00 בבוקר שאחריו. מילה לא נכונה בחדר של Schark מעירה אותו, וזה סוף המשחק."
+   ]
+  },
+  {
+   "q": "\"SURROUND THE CENTRE\": איך מקיפים את הטירה?",
+   "h": [
+    "ארבע חיות צריכות לעמוד סביב הטירה, אחת בכל צד, בלילה.",
+    "המשבצות: צפון (6,14), מערב (8,12), מזרח (8,16), דרום (10,14). פסלים נחשבים.",
+    "הדרך הקלה: מעמידים ארבע חיות (Bruce, ‏Goliath, ‏Foghorn, ‏Peabody) על ארבע המשבצות לפני 21:00. בלילה הן הופכות לפסלים ונשארות שם, וזה מספיק. המערבית והמזרחית בכיסים: מגיעים אליהן דרך הטירה (נכנסים בדלת אחת ונזרקים מאולם יציאה) או, למערבית, דרך טירת הגמדים. Beanbag לא צריך לעמוד שם: הוא זה שנכנס."
+   ]
+  },
+  {
+   "q": "המכסה של הביוב לא נפתח.",
+   "h": [
+    "המחילות מובילות למכסה ביוב מתחת למרתף הטירה. הוא נפתח רק כשהכול מוכן.",
+    "המשחק אומר מה חסר: \"SURROUND CENTRE\", \"DAYTIME\" או \"NO ARCHANGEL\". צריך גם את הגחליליות בדרך, ואת העין שרופה.",
+    "‏Beanbag, חובש {HAT}, נושא {ARCHANGEL} ו-{FIREFLIES}, בלילה, אחרי ש-\"THE ELECTRONIC EYE FUSES\" ועם ארבע חיות סביב הטירה. עומד ב-(6,27) ונכנס למחילות ב-[↑], ואז [↑] [→] [↓] [↓] [↑]: \"A MANHOLE COVER ABOVE\". עוד [↑]: \"I'M IN THE CELLAR / THE MANHOLE'S OPEN\"."
+   ]
+  },
+  {
+   "q": "איך מגיעים לחדר של Schark ומנצחים?",
+   "h": [
+    "החדר של Schark בקומה העליונה. הדרך עוברת במעלית נסתרת שרק הכובע מגלה.",
+    "מהמרתף הולכים לקומה הראשונה, משם למעלית הנסתרת שלוקחת לקומה 4, ושם לחדר השינה. בחדר: {SAY} ומילת הקסם של היום. לא להתמהמה: השעון רץ, וב-07:00 נגמר.",
+    "מה שעבד אצלנו, מקש אחרי מקש, מהרגע שבמרתף מופיע \"THE MANHOLE'S OPEN\" (לחכות כ-3 שניות אחרי כל מקש, עד שהתמונה גמורה): (1) [↓] (2) [↑] (3) [←] (4) [←] (5) [↑] (6) [↑] (7) [→] (8) [↑] (9) [↑] (10) [→] (11) [↑] (12) [↑] (13) [→] (14) [↑] (15) [→] (16) [↑] (17) [←] (18) [↑] (19) [↑] (20) [↑] (21) [↑] (22) [←] (23) [←] (24) [↑] (25) [↑] (26) [↑] (27) [←] (28) [↑] (29) [→] (30) [↑] (31) [↑] (32) [→] (33) [↑] (34) [←] (35) [↑] (36) [→] (37) [↑] (38) [↑] (39) [→] (40) [↑] (41) [↑] (42) [←] (43) [↑] (44) [↑]. שני המקשים הראשונים מורידים את Beanbag למחילה ומחזירים אותו, וזה מכוון אותו לכיוון הנכון. עכשיו בחדר השינה: {SAY} ומילת הקסם, למשל {SAY HADDOCK}. המשחק כותב {YOU DID IT. SCHARK IS BEATEN. THE WOODS ARE SAVED. THE PRINCE IS RESTORED.}"
+   ]
+  },
+  {
+   "q": "לא מספיקים בזמן.",
+   "h": [
+    "יש למשחק מגבלת ימים, ואפשר לבקש עוד זמן כבר בהתחלה.",
+    "במשחק חדש המשחק שואל {EXTRA TIME?}. עונים [Y] ומקבלים יותר ימים.",
+    "בלי תוספת יש עשרה ימים, מיום שישי. עם תוספת יש יותר, ואנחנו ניצחנו ביום ה-12. השעון רץ גם כשחושבים, וגם כשהמשחק מחכה למקש. כדאי להשתמש ב-{TIME} כדי לדלג על ימים שאין בהם מה לעשות, ולשמור הרבה ({SAVE})."
+   ]
+  }
+ ],
+ "en": [
+  {
+   "q": "What is the goal, and where do I start?",
+   "h": [
+    "In the end one of the animals must reach Schark's bedroom in the castle at night and say a magic word there. Everything else is preparation for that moment.",
+    "Only Beanbag the frog can say the magic word. He gets into the castle from below, through the Burrows, and for that: the electronic eye in the cellar must be destroyed, four animals must surround the castle, Beanbag must carry the {ARCHANGEL} and the {FIREFLIES}, and Beanbag must wear the {HAT}. You ask for today's word at the Citizen's Advice Bureau ({CAB}).",
+    "The order that worked for us: (1) a bone for Peabody, (2) two coins, (3) a herb that drives the ants away, (4) a ticket, the magic carpet and the wand, (5) a branch and a carrot for Beanbag, and wedging the garden door, (6) the fishing rod, fishing and specs for Foghorn, (7) the jammer, batteries and the eye in the cellar, (8) the key, the boathouse and the net, (9) the fireflies, (10) in the Dwarf Dive: the button, the whiskers and the {ARCHANGEL}, (11) the hat, (12) the magic word, (13) four animals around the castle, (14) Beanbag through the Burrows, the castle, and {SAY}. Each stage has its own question here. {SAVE} before every risky step."
+   ]
+  },
+  {
+   "q": "Schark turns my animals to stone.",
+   "h": [
+    "Schark roams the woods by day and turns any animal that is not protected to stone. Night is the safe time.",
+    "An animal at home, or in a shop, is protected: the word {SAFE} shows. From the second day Schark strikes within minutes, Sundays too. {TIME} in the woods jumps straight to 21:00 or 07:00. At night moving costs more energy, and {SLEEP} gives it back.",
+    "The method: work at night, and before 07:00 have every animal at home, in a shop, or in the empty house Bide-a-wee at (4,20), which protects any animal. An animal left outside by day becomes a statue, and its objects are taken to the castle. To free a statue: Beanbag stands next to it at night, with no other animal next to him, and types {TOUCH}. This works only until midnight on Wednesday, the sixth day of the game. After that only a cake frees them ({FEED ROCK CAKE}). Note: a statue standing on one of the four squares next to the castle helps at the end (see \"surround the centre\")."
+   ]
+  },
+  {
+   "q": "Where is Peabody, the dog?",
+   "h": [
+    "Peabody is not at home at the start. Dogs come home for food.",
+    "You need a bone, put down next to his home, The Doghouse at (18,28). The bone has to be dug up, and for that you need the spade.",
+    "One animal takes the spade ({GET SPADE}) at (0,29), walks to (12,0) and types {DIG}: \"I'VE FOUND A BONE\", then {GET BONE}. Then to The Doghouse at (18,28) and {DROP BONE}. Peabody appears at once. From now on key [5] switches to him."
+   ]
+  },
+  {
+   "q": "I need money. Where are the coins?",
+   "h": [
+    "There are two coins, both in the water: one on the island, one under the water.",
+    "Peabody can swim to the island and dig there without a spade. Beanbag can dive ({DIVE}).",
+    "Peabody goes into the pond from (12,8), carrying nothing, and swims until \"PEABODY SNIFFS HOPEFULLY\" shows (that is the island, (10,6)). There {DIG}, then {GET SILVER COIN}. Beanbag goes into the pond, types {DIVE}, and swims under water until \"SOMETHING GLITTERS BELOW\": {GET GOLD COIN}. Note: in the pond and under the water the arrows are turned at random each time you go in, so try and read the text. Then each one hands his coin ({TRANSFER}) to a land animal standing next to him."
+   ]
+  },
+  {
+   "q": "The ants block the way west.",
+   "h": [
+    "Ants hate a certain herb. Buy it.",
+    "At the Herbalist, at (14,29), you buy a herb with both coins. Shops are open by day, not on Sunday.",
+    "An animal with both coins goes into the shop at (14,29) by day and types {BUY HERB}: \"HERE'S TANSY. ANTS HATE IT\". Go to (12,3) (or (2,7)) and type {THROW TANSY}: both ant squares become path. Now the west is open: the Advice Bureau, the carpet, the jar ({JAR}) in the bin at (2,1) and the well."
+   ]
+  },
+  {
+   "q": "How do I get the wand?",
+   "h": [
+    "The magic carpet gives you the wand, but the carpet won't fly without a ticket.",
+    "The ticket is in a bird's nest in the treetops. Only Goliath the mouse is light enough to reach it. The carpet is at (0,1) and flies by day.",
+    "Goliath stands at (12,20), enters the treetops with [←], and goes on [←] [↓] [→] [↓] to \"A BIRD'S NEST\": {GET TICKET}, and out. Then, by day, carrying only the ticket, he walks to (0,2) and steps left onto the carpet. The carpet flies, and the next morning Goliath is back at (0,2) with the wand ({WAND}). Get him home before sunrise."
+   ]
+  },
+  {
+   "q": "How do I get into the walled garden?",
+   "h": [
+    "The garden has a door that won't stay open. It must be wedged, and you reach it from inside, through the Burrows.",
+    "You need a branch ({BRANCH}) to wedge the door, and a carrot ({CARROT}) for the rabbit in the Burrows. Both go to Beanbag.",
+    "Foghorn the cat stands at (12,20), enters the treetops with [←], and goes on [←] [↓]: \"THE BRANCH BREAKS\", and {GET BRANCH}. Another animal takes the carrot at (2,27). Both hand them to Beanbag ({TRANSFER}). Beanbag stands at (6,27) and enters the Burrows with [↑]. There [↑] [→] [→], and {FEED CARROT}. Then [→], and [→] again, at night only, and he is in the garden: {WEDGE DOOR}. Note: {TIME} does not work inside the Burrows. Type it only in the woods."
+   ]
+  },
+  {
+   "q": "Foghorn can't see a thing at night. Where are specs?",
+   "h": [
+    "The specs are fished out of the water with a rod. A stone gnome in the garden holds the rod.",
+    "Goliath with the wand goes into the garden and casts a spell ({CAST}). The gnome runs off and leaves a rod. You fish at (14,24).",
+    "Goliath, carrying only the wand, stands at the garden door (3,28), [↑] into the garden, and {CAST}: \"IT WORKED. THE GNOME RAN OFF LEAVING HIS FISHING ROD\". Wand and rod together are too heavy: step out, {DROP WAND} at (3,28), go back in and {GET ROD}. Stay in the garden until night (by day Schark waits outside), then walk to (14,24) and {FISH}: \"I'VE GOT THEM\", the specs are on the square, {GET SPECS}. Hand them to Foghorn, and he types {WEAR SPECS}. Only with specs does Foghorn see the woods at night and get into the marsh."
+   ]
+  },
+  {
+   "q": "How do I stay safe at night, far from home?",
+   "h": [
+    "Some of the animals have a plant that protects them at night.",
+    "Foghorn eats {CATMINT}, Goliath eats {MOUSE-EAR}, Peabody eats {DOG'S MERCURY}. After eating, {SAFE} shows.",
+    "The {CATMINT} at (0,19) is fetched by Beanbag (it grows in the stream) and handed to Foghorn. {MOUSE-EAR} is at (0,3), {DOG'S MERCURY} at (18,6). Eat at night: {EAT CATMINT}. The plant stays with the animal and can be eaten again the next night. Without a plant: home, a shop, or Bide-a-wee at (4,20). A protected animal may also go into the castle at night. Beanbag is always safe."
+   ]
+  },
+  {
+   "q": "What do I do about the electronic eye?",
+   "h": [
+    "In the castle cellar an eye guards the way in from below. It must be burnt out with a jammer.",
+    "The jammer ({JAMMER}) is in the castle kitchens. It needs batteries ({BATTERIES}), which are in one bin in the woods. A different bin in every game.",
+    "A protected animal (for example Foghorn after {EAT CATMINT}) goes in at night by the south door, from (10,14) with [↑], finds the kitchens (\"I'M IN THE KITCHENS\"), {GET JAMMER}, and leaves. Look for the batteries in the bins at (0,11), (2,1), (2,8), (3,25), (5,15), (7,19), (7,28), (12,15), (13,9), (14,20), (14,25), (18,0), (19,0), (19,15). Ours were at (19,0). The owl in the woods sometimes hints where. {INSTALL BATTERIES} (weight limit 3: you may need to put something down first). Back into the castle at night, to the cellar (\"I'M IN THE CELLAR\"): {MOVE COAL} and at once {USE JAMMER}: \"THE ELECTRONIC EYE FUSES\". Don't move between the two: one step = \"I'M BEING WATCHED\", two = arrest. Get out of the castle before 07:00."
+   ]
+  },
+  {
+   "q": "How do I find my way in the castle?",
+   "h": [
+    "In the castle the arrows work differently: not north and south, but forward and turn.",
+    "[↑] steps forward, [←] and [→] turn a quarter, [↓] turns around. You go in only at night, only a protected animal, and at 07:00 anyone inside is thrown out and turned to stone.",
+    "After each key wait for the picture to finish drawing, or the next key is lost. A room with a lift ({A LIFT}) takes you a floor on the next key, and lifts go one way. Exit halls throw you out: one next to the east square (8,16), one next to the west square (8,12). Both are closed pockets: from the east one you leave by the bridge (11,17) and the treetops ([↓] [↓] [↓], then [←] out at (12,20)). Energy drops fast in the castle: {SLEEP} before you go in. You can't save inside the castle."
+   ]
+  },
+  {
+   "q": "The boathouse is locked.",
+   "h": [
+    "There is a key, and it is in the castle, on the top floor.",
+    "A protected animal goes in at night by the south door, takes a lift to floor 4, and finds the key. The boathouse door is at (8,9).",
+    "Foghorn (with {CATMINT}) goes in from (10,14), by lift to floor 4 (\"THE LIGHT IS STRANGE HERE\"), walks around until {LOOK} says \"I SEE...KEY\", {GET KEY}, and leaves. The boathouse is in the west pocket, which you reach from the castle's west exit hall or from the Dwarf Dive exit at (5,10). At (8,9): {OPEN BOATHOUSE}, [↓] inside, {GET NET}. You can also sleep in the boathouse: it protects."
+   ]
+  },
+  {
+   "q": "Where are the fireflies?",
+   "h": [
+    "The fireflies are in the marsh, at night only. Only a cat with specs finds his way there.",
+    "Foghorn with specs, a net ({NET}) and a jar ({JAR}) goes into the marsh at night from (15,12).",
+    "Foghorn, wearing specs and carrying {NET} and {JAR}, stands at (15,13) at night and [←] into the marsh. There [←] [←] [↓] [↑] to \"GENTLE BUZZING NEARBY\", and {GET FIREFLIES}. The net and jar go, the fireflies stay. Out: [↓] [→] [→] back to (15,13)."
+   ]
+  },
+  {
+   "q": "I keep getting arrested in the Dwarf Dive.",
+   "h": [
+    "Inside there are guards, and they move a step after each of your steps. If a guard touches you, you are arrested.",
+    "First the lifts must work: press the button. You climb ladders and ropes, and each animal has a limit. The guards move even when your step is refused, so don't stand in their path.",
+    "Entrances: (3,9), (3,11), (5,10). Only Bruce can start the lifts: he walks to the button and types {PRESS BUTTON} (not {PRESS RESET}). Bruce can't climb up a rope, Foghorn can't go down a ladder or rope (\"CATS DO NOT CLIMB DOWNWARDS\"), Goliath can't press the lift's up button, and Peabody and Beanbag can't go in. Each lift is a single car that stays where it went, so one animal can \"set\" the cars for another. Arrested? The animal is thrown out at the fire exit (5,8). So save before going in, and wait in a safe spot until the guards are far."
+   ]
+  },
+  {
+   "q": "How do I get the whiskers and the ARCHANGEL?",
+   "h": [
+    "Both are in the Dwarf Dive, on ledges you reach only by climbing up a rope.",
+    "First the whiskers ({WHISKERS}): only wearing them may Goliath go in. Then Goliath fetches the {ARCHANGEL}.",
+    "Bruce goes in, {PRESS BUTTON}, and rides the lifts so the cars are left where Foghorn needs them. Foghorn (who can't go down ladders) goes in at (3,9), reaches the whiskers in the bottom-left corner, {GET WHISKERS}, and leaves. Two guards walk that corner: wait until both are far. Hand the whiskers to Goliath (next to Bide-a-wee (4,20)), {WEAR WHISKERS}, and in at (3,12). The {ARCHANGEL} is on a ledge you climb up to by rope. Our Goliath got stuck with no way out, because he can't ride a lift up: Bruce first lowered the car at (19,4) to (21,4), which made a bridge. Goliath left at (5,10)."
+   ]
+  },
+  {
+   "q": "Beanbag needs a hat.",
+   "h": [
+    "The hat is in the Magical Outfitters, on an island in the pond. Whoever goes there has to jump.",
+    "Bruce the wallaby jumps after drinking special water, from the diving board at (7,4), by day only.",
+    "Bruce at the well (5,3): {DRINK} (\"NICE...IT'S SPRING WATER\"). By day, on the diving board at (7,4): {JUMP} → into the shop at (9,6), {GET HAT}. Back: [↓] to the island (10,6), {JUMP} → (10,4). Beanbag can't go into a bin, so if the hat lies in one, another animal fetches it and hands it over. Beanbag: {WEAR HAT}. The hat reveals a hidden lift in the castle."
+   ]
+  },
+  {
+   "q": "What is the magic word?",
+   "h": [
+    "There is a place in the woods that answers questions.",
+    "The Citizen's Advice Bureau ({CAB}) at (3,0) tells you today's word, by day and not on Sunday. The word changes every morning at 07:00.",
+    "A land animal goes into (3,0) by day and types {ASK}: \"TODAY'S SPELLWORD IS ...\". There are three possible words, and the game picks. Ask on the day before your last night: the word is good until 07:00 the next morning. A wrong word in Schark's room wakes him, and the game is over."
+   ]
+  },
+  {
+   "q": "\"SURROUND THE CENTRE\": how do I surround the castle?",
+   "h": [
+    "Four animals must stand around the castle, one on each side, at night.",
+    "The squares: north (6,14), west (8,12), east (8,16), south (10,14). Statues count.",
+    "The easy way: put four animals (Bruce, Goliath, Foghorn, Peabody) on the four squares before 21:00. At night they turn to statues and stay there, and that is enough. The west and east squares are in pockets: reach them through the castle (go in by one door and get thrown out of an exit hall) or, for the west one, through the Dwarf Dive. Beanbag doesn't stand there: he is the one who goes in."
+   ]
+  },
+  {
+   "q": "The manhole cover won't open.",
+   "h": [
+    "The Burrows lead to a manhole cover under the castle cellar. It opens only when everything is ready.",
+    "The game says what is missing: \"SURROUND CENTRE\", \"DAYTIME\" or \"NO ARCHANGEL\". You also need the fireflies on the way, and the eye burnt out.",
+    "Beanbag, wearing the {HAT}, carrying {ARCHANGEL} and {FIREFLIES}, at night, after \"THE ELECTRONIC EYE FUSES\" and with four animals around the castle. He stands at (6,27) and enters the Burrows with [↑], then [↑] [→] [↓] [↓] [↑]: \"A MANHOLE COVER ABOVE\". One more [↑]: \"I'M IN THE CELLAR / THE MANHOLE'S OPEN\"."
+   ]
+  },
+  {
+   "q": "How do I reach Schark's room and win?",
+   "h": [
+    "Schark's room is on the top floor. The way goes through a hidden lift that only the hat reveals.",
+    "From the cellar you go to the first floor, from there to the hidden lift that takes you to floor 4, and there to the bedroom. In the room: {SAY} and today's magic word. Don't dawdle: the clock runs, and at 07:00 it's over.",
+    "What worked for us, key by key, from the moment the cellar shows \"THE MANHOLE'S OPEN\" (wait about 3 seconds after each key, until the picture is finished): (1) [↓] (2) [↑] (3) [←] (4) [←] (5) [↑] (6) [↑] (7) [→] (8) [↑] (9) [↑] (10) [→] (11) [↑] (12) [↑] (13) [→] (14) [↑] (15) [→] (16) [↑] (17) [←] (18) [↑] (19) [↑] (20) [↑] (21) [↑] (22) [←] (23) [←] (24) [↑] (25) [↑] (26) [↑] (27) [←] (28) [↑] (29) [→] (30) [↑] (31) [↑] (32) [→] (33) [↑] (34) [←] (35) [↑] (36) [→] (37) [↑] (38) [↑] (39) [→] (40) [↑] (41) [↑] (42) [←] (43) [↑] (44) [↑]. The first two keys take Beanbag down to the passage and back, which turns him the right way. Now you are in the bedroom: {SAY} and the magic word, for example {SAY HADDOCK}. \"YOU DID IT. SCHARK IS BEATEN. THE WOODS ARE SAVED. THE PRINCE IS RESTORED.\""
+   ]
+  },
+  {
+   "q": "I'm running out of time.",
+   "h": [
+    "The game has a day limit, and you can ask for more time right at the start.",
+    "In a new game the game asks {EXTRA TIME?}. Answer [Y] and you get more days.",
+    "Without it you have ten days, from Friday. With it you have more, and we won on day 12. The clock runs while you think, and while the game waits for a key. Use {TIME} to skip days with nothing to do, and {SAVE} often."
+   ]
+  }
+ ]
+}
