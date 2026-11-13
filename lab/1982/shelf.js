@@ -1259,11 +1259,15 @@
       he: ['הרפתקה ביער: Schark, יזם עם כוחות קסם, רוצה לכרות את Tanglewood ולבנות משרדים. יש לכם עשרה ימים לעצור אותו.',
         'אחרי מסך הפתיחה לוחצים [1] למשחק חדש. אחר כך בוחרים דמות במספר: [1] עד [5]. אפשר להחליף ביניהן ביער.',
         'החיצים מזיזים את הדמות. פקודות כותבים באנגלית, פועל ושם עצם, ולוחצים [ENTER]: למשל GET, ‏DROP, ‏LOOK או ?.',
-        'פקודות מיוחדות: TIME מחליף בין יום ללילה, SLEEP מחזיר כוח בלילה, TRANSFER מעביר חפץ לדמות שלידכם.'],
+        'פקודות מיוחדות: TIME מחליף בין יום ללילה, SLEEP מחזיר כוח בלילה, TRANSFER מעביר חפץ לדמות שלידכם.',
+        'שמירה: כותבים {SAVE} ו-[ENTER], לוחצים מקש כלשהו, ואז [ENTER]. המשחק נשמר ב"הקלטות שלי" בשם TANGLE1, השמירה הבאה בשם TANGLE2, וכן הלאה. השמירות נשארות בדפדפן הזה.',
+        'המשך משחק שמור, גם בביקור אחר: טוענים את המשחק כרגיל, במסך הפתיחה לוחצים [ENTER], ואז [2] ומקש כלשהו. לוחצים על השמירה ב"הקלטות שלי", ואז [ENTER]. הטעינה לוקחת עד חצי דקה.'],
       en: ['An adventure in the woods: Schark, a property developer with magic powers, wants to cut down Tanglewood and build offices. You have ten days to stop him.',
         'After the title screen press [1] for a new game. Then pick a character by number: [1] to [5]. You can switch between them in the woods.',
         'The arrows move your character. Type commands in English, verb and noun, and press [ENTER]: for example GET, DROP, LOOK or ?.',
-        'Special commands: TIME switches between day and night, SLEEP restores energy at night, TRANSFER gives an object to a character next to you.']
+        'Special commands: TIME switches between day and night, SLEEP restores energy at night, TRANSFER gives an object to a character next to you.',
+        'Saving: type {SAVE} and [ENTER], press any key, then [ENTER]. The game is saved to My tapes as TANGLE1, the next save as TANGLE2, and so on. Saves stay in this browser.',
+        'Continuing a saved game, even on another visit: load the game as usual, press [ENTER] at the title screen, then [2] and any key. Click your save in My tapes, then [ENTER]. Loading takes up to half a minute.']
     },
     // נבדק במכונה (25.10): צבע, רמה, ריצה, קפיצה, ירי, ניקוד, סוף משחק ושיא
     ranger: {
@@ -1864,7 +1868,7 @@
   const statusHome = status && status.parentNode, statusNext = status && status.nextSibling;
   const baseTitle = document.title;
   const T2 = (he, en) => EN ? en : he;
-  let viewId = null, inTape = null;   // המשחק שהדף שלו פתוח, והקלטת שברשמקול (null: "הקלטות שלי" או כלום)
+  let viewId = null, inTape = null, lastGame = null;   // lastGame: המשחק האחרון שנטען מהמדף, לשם של שמירה בלי שם   // המשחק שהדף שלו פתוח, והקלטת שברשמקול (null: "הקלטות שלי" או כלום)
   // הקלידו CLOAD/CLOADM בדף של משחק, בלי שהקלטת שלו ברשמקול: המכונה עושה מה שהייתה עושה (קוראת את מה שיש ברשמקול),
   // ומתחת לכפתור האדום מופיעה תזכורת (גונן, 28.10: ?FM ERROR כשהקליד CLOADM לפני הכפתור)
   window.addEventListener('keydown', e => {
@@ -2480,6 +2484,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
     findRam();
     const id = (/^\/tape-(.+)\.cas$/.exec(path) || [])[1] || null;
     inTape = id;
+    if (id) lastGame = id;
     try {
       FS.writeFile(path, bytes);
       Module.ccall('wasm_load_file', null, ['string', 'number', 'number'], [path, 2, 0]);
@@ -2488,6 +2493,12 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       if (!auto) {
         inTape = id;
         const next = AFTER[id] ? ' ' + T2(...AFTER[id]).replace(/[\[\]{}]/g, '') : '';
+        if (mc === 'save') {
+          status.textContent = EN ? 'The saved game "' + title + '" is in the recorder. In the game choose to continue a saved game, and press the keys it asks for. Loading takes up to half a minute.'
+            : 'המשחק השמור "' + title + '" ברשמקול. במשחק בוחרים להמשיך משחק שמור, ולוחצים על המקשים שהוא מבקש. הטעינה לוקחת עד חצי דקה.';
+          document.getElementById('canvas')?.focus({ preventScroll: true });
+          return;
+        }
         status.textContent = (mc === 'a'
           ? (EN ? 'The tape "' + title + '" is in the recorder. Type CLOADM. Loading can take a few minutes: first S, then F and the tape\'s name' + (next ? '.' : ', and the game starts by itself.')
             : 'הקלטת "' + title + '" ברשמקול. הקלידו CLOADM. הטעינה יכולה לקחת כמה דקות: קודם S, אחר כך F ושם הקלטת' + (next ? '.' : ', ואז המשחק מתחיל לבד.'))
@@ -2525,13 +2536,15 @@ body.game-open .shelf > :not(.game-view) { display: none; }
 
   // ---- הקלטות שלי: CSAVE מקליט לקובץ /out.cas (XRoar כותב אותו), ומכאן כל תוכנית נשמרת בדפדפן ----
   // עד 40 קלטות (10.11: ב-20, כל שמירה של Family Budget דחפה החוצה את הקלטת הוותיקה, בלי הודעה). מה שיוצא נאמר בשורת המצב
-  const KEY = 'd32-lab-tapes', MAX = 40;
+  const KEY = 'd32-lab-tapes', MAX = 40, LONG = 4500;   // LONG: מבוא של כ-25 שניות לפני שמירה של משחק
+  // שמות לשמירות של משחקים ששומרים בלי שם (13.11, Tanglewood: CSAVEM ריק). כל שמירה מקבלת מספר משלה, כדי שכמה שמירות יישארו
+  const SAVE_NAMES = { tangle: 'TANGLE' };
   const mineBox = document.getElementById('mytapes');
   function myTapes() { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { return []; } }
   function keep(list) { try { localStorage.setItem(KEY, JSON.stringify(list.slice(-MAX))); return true; } catch (e) { return false; } }
   // קובץ CAS → תוכניות שלמות: [{ n: שם, b: [[סוג, ...נתונים], ...] }]. מדלגים על רעש ועל סיכום שגוי
   // short: גם כותרת קצרה, רק שם של 8 תווים (10.11, ‏DREAM שומר כך את הטקסט). רק בשמירות של המכונה, לא בקלטות שמעלים
-  function parseCas(bytes, short) {
+  function parseCas(bytes, short, own) {
     const files = [];
     let cur = null;
     for (let i = 0; i + 4 < bytes.length; i++) {
@@ -2545,7 +2558,8 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       const name = String.fromCharCode(...data.slice(0, 8)).replace(/[ `]+$/, "").trim();   // DREAM ממלא את השם ב-` ולא ברווחים
       // כותרת בלי שם אחרי קובץ = החלק השני של אותה קלטת (Donkey King של Microdeal: הטוען, ואחריו המשחק בלי שם).
       // נשמרים יחד, כדי שהטעינה תביא את שניהם (גונן, 1.11: "לא נטען כבר מלא זמן")
-      if (type === 0 && len >= 15 && !name && !cur && files.length) { cur = files.pop(); cur.b.push([0, ...data]); }
+      // own: שמירות של המכונה עצמה (13.11, Tanglewood שומר כל פעם בלי שם): כל כותרת היא שמירה חדשה, לא חלק שני
+      if (type === 0 && len >= 15 && !name && !cur && files.length && !own) { cur = files.pop(); cur.b.push([0, ...data]); }
       else if (type === 0 && (len >= 15 || (short && len >= 8))) cur = { n: name, b: [[0, ...data]] };
       else if (cur && type === 1) cur.b.push([1, ...data]);
       else if (cur && type === 255) { cur.b.push([255]); files.push(cur); cur = null; }
@@ -2726,7 +2740,15 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       b.querySelector('.how').textContent = how;
       b.setAttribute('aria-label', f.n + (kind === 2 ? (EN ? ', machine code: CLOADM' : ', שפת מכונה: CLOADM')
         : kind === 0 ? (EN ? ', BASIC program: CLOAD' : ', תוכנית BASIC: CLOAD') : (EN ? ', data file' : ', קובץ נתונים')));
-      b.addEventListener('click', () => { gameKeys(null, kind === 2, f.n); play(tapeBytes([f]), '/mine.cas', f.n, b, false, false, kind === 2 ? 'mine' : false); });
+      b.addEventListener('click', () => {
+        gameKeys(null, kind === 2, f.n);
+        if (!f.s) { play(tapeBytes([f]), '/mine.cas', f.n, b, false, false, kind === 2 ? 'mine' : false); return; }
+        // שמירה של משחק (13.11, Tanglewood): המשחק מדליק את המנוע כבר כשלוחצים מקש לפני הטעינה, והקלטת רצה עד שלוחצים ENTER.
+        // בקלטת אמיתית לוחצים PLAY רק אחרי המקש. כאן לפני השמירה כ-25 שניות של מבוא, כדי שהקלטת לא תעבור את השמירה לפני הטעינה
+        const t = tapeBytes([f]), all = new Uint8Array(LONG + t.length);
+        all.fill(0x55, 0, LONG); all.set(t, LONG);
+        play(all, '/mine.cas', f.n, b, false, false, 'save');
+      });
       const down = document.createElement('button');
       down.type = 'button';
       down.className = 'mini';
@@ -3031,9 +3053,22 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       return { n, b: [[0, ...Array.from(n.padEnd(8), c => c.charCodeAt(0)), 1, 0, 0, 0, 0, 0, 0]], r: btoa(bin) };
     });
     outRaw = raws.length;
-    const files = parseCas(bytes, true);
+    const files = parseCas(bytes, true, true);
     if (files.length <= outDone && !freshRaw.length) return;
     const fresh = files.slice(outDone).concat(freshRaw);
+    // שמירה בלי שם: בלי שם כל שמירה הייתה מחליפה את הקודמת (גונן, 13.11). נותנים שם ומספר, גם בכותרת עצמה
+    const taken = new Set(myTapes().map(t => t.n));
+    for (const f of fresh) {
+      if (f.n || f.r) continue;
+      const base = SAVE_NAMES[lastGame] || 'SAVE';
+      let k = 1;
+      while (taken.has(base + k)) k++;
+      f.n = base + k;
+      f.s = 1;
+      taken.add(f.n);
+      const pad = f.n.padEnd(8);
+      for (let j = 0; j < 8; j++) f.b[0][1 + j] = pad.charCodeAt(j);
+    }
     outDone = files.length;
     addTapes(fresh);
     status.textContent = (EN ? 'Saved to my tapes: ' : 'נשמר בקלטות שלי: ') + fresh.map(t => t.n).join(', ');
