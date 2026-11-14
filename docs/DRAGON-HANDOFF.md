@@ -25,7 +25,8 @@
   - **סבב 4 (14.11, Codex, `BRIEF-codex-r4.md`, תוצאות `~/Dragon-private/saves-check/r4/`). נעצר באמצע בגלל אתחול המק; אין `r4/REPORT.md`:**
     - Williamsburg: **אין שמירה.** SAVE ו-SAVE GAME עונים "I DON'T UNDERSTAND THE VERB!" (צילום `r4/williamsburg/08-save-game-response.png`).
     - El Diablero: **עובד.** הפקודה היא `CSAVE` (לא SAVE), נשמר כ-"SAVE DIA". המשך: לוחצים על השמירה ב"הקלטות שלי" ואז `CLOAD`. נבדק מקצה לקצה (המדבר עם הקקטוסים חזר). ההוראות נוספו בענף `d32/adv-saves` (`9c7e5e0`).
-    - River of Fire: **השמירה נוצרת** ("RIVER" ב"הקלטות שלי", אחרי SAVE + שם, מה-ward), **אבל הטעינה עוד לא הוכחה**: אחרי PREVIOUS GAME הגיע ל-plant room ולא ל-ward. Codex ניסה כמה דרכים ולא הצליח. צריך לברר איך PREVIOUS GAME טוען (צילומים `r4/riverfire/`).
+    - **River of Fire: עובד (14.11, נבדק מקצה לקצה, `~/Dragon-private/saves-check/r5/riverfire/`).** אין במשחק PREVIOUS GAME (ההוראות הישנות טעו). השמירה כותבת 128 בתים של מצב המשחק ($0F00), והמשחק בהתחלה ממשיך ממצב שהוא מוצא שם. לכן ממשיכים כך: קודם לוחצים על השמירה ב"הקלטות שלי" ו-`CLOADM`, ואחרי OK לוחצים על הכפתור האדום ו-`CLOADM` שוב. נשמר ב-ward, ובביקור חדש חזר ל-ward. ההוראות תוקנו בענף `d32/adv-saves` (`f01ed76`).
+    - (לפני כן) River of Fire: **השמירה נוצרת** ("RIVER" ב"הקלטות שלי", אחרי SAVE + שם, מה-ward), **אבל הטעינה עוד לא הוכחה**: אחרי PREVIOUS GAME הגיע ל-plant room ולא ל-ward. Codex ניסה כמה דרכים ולא הצליח. צריך לברר איך PREVIOUS GAME טוען (צילומים `r4/riverfire/`).
   - **נשאר לבדוק:** River of Fire (טעינה), ‏The Sword and the Sorcerer, ‏Death's Head Hole (קודם: האם יש שמירה בכלל), וטעינה ב-Daggorath (`ZLOAD`). אפשר להמשיך עם Codex מאותו תדריך (`BRIEF-codex-r4.md`, לדלג על מה שנעשה). אחר כך npm test מלא ו"מזג" אחד לשלושת הענפים.
   - הערה: Codex בארגז חול לא מצליח להריץ Chromium בפעם הראשונה (mach port); הוא עבר להרשאה מחוץ לארגז ורץ.
 - **הסרטון הארוך: נדחה.** גונן: "נחשוב על זה, כרגע זה לא דחוף".
