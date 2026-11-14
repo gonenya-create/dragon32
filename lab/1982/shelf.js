@@ -859,11 +859,15 @@
       he: ['אחרי הטעינה מקלידים EXEC ו-[ENTER]. במסך הפתיחה לוחצים על מקש כלשהו.',
         'זו הרפתקת טקסט, כמו של Scott Adams: המחשב מתאר איפה אתם, מה אתם רואים ולאן אפשר ללכת, ושואל WHAT DO I DO NOW?',
         'עונים בשתי מילים באנגלית ולוחצים [ENTER]: למשל GO WEST, ‏GET ROCK, ‏LOOK. ‏INVENTORY מראה מה יש לכם.',
-        'מתחילים במדבר, ליד בריכה קטנה של מים צהובים, על שפת קניון עמוק. כדאי לצייר מפה על דף.'],
+        'מתחילים במדבר, ליד בריכה קטנה של מים צהובים, על שפת קניון עמוק. כדאי לצייר מפה על דף.',
+        'שמירה: {CSAVE} ו-[ENTER]. המשחק נשמר ב"הקלטות שלי" בשם SAVE DIA, וממשיכים לשחק.',
+        'כדי להמשיך מאותו מקום: טוענים את המשחק, לוחצים ב"הקלטות שלי" על SAVE DIA, ואז מקלידים {CLOAD} ו-[ENTER].'],
       en: ['After loading type EXEC and [ENTER]. On the title screen press any key.',
         'It is a text adventure, like Scott Adams\'s: the computer describes where you are, what you see and where you can go, and asks WHAT DO I DO NOW?',
         'Answer in two English words and press [ENTER]: for example GO WEST, GET ROCK, LOOK. INVENTORY shows what you carry.',
-        'You start in the desert, next to a small pool of yellow water, at the edge of a deep canyon. Draw a map on paper.']
+        'You start in the desert, next to a small pool of yellow water, at the edge of a deep canyon. Draw a map on paper.',
+        'Saving: CSAVE and [ENTER]. The game is saved to My tapes as SAVE DIA, and you carry on playing.',
+        'To carry on from the same place: load the game, click SAVE DIA in My tapes, then type CLOAD and [ENTER].']
     },
     // נבדק במכונה (25.10): בחירות, תנועה, כיוון וירי, רוחות שזזות, וסוף משחק עם הניקוד
     phantom: {
