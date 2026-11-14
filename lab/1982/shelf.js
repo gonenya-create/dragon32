@@ -1004,12 +1004,12 @@
         'מרפאה משתמשת במים של אי געשי רדום, ואסון מתקרב. אפשר לעצור אותו?',
         'אות אחת מספיקה ל-{N}, ‏{E}, ‏{S} ו-{W} (צפונה, מזרחה, דרומה, מערבה), ל-{L} (להסתכל שוב) ול-{I} (מה אתם נושאים). אפשר לקצר כל מילה, אם שמים נקודה בסופה.',
         'במבוכים זזים בחיצים כש-[SHIFT] לחוץ: [SHIFT] עם חץ ימינה או שמאלה מסובב אתכם, ו-[SHIFT] עם חץ למעלה מתקדם, בלי [ENTER].',
-        'שמירה: יוצאים מהמבוך, כותבים {SAVE} ושם של עד 8 אותיות, ולוחצים [ENTER]. כדי להמשיך, טוענים את River of Fire כרגיל ובוחרים ב-PREVIOUS GAME.'],
+        'שמירה: יוצאים מהמבוך, כותבים {SAVE} ושם של עד 8 אותיות, ולוחצים [ENTER]. כדי להמשיך: בכניסה הבאה, לפני המשחק, לוחצים על השמירה ב"הקלטות שלי", מקלידים {CLOADM} ו-[ENTER], ומחכים ל-OK. אחר כך לוחצים על הכפתור האדום ומקלידים שוב {CLOADM}. המשחק נטען וממשיך מהמקום ששמרתם.'],
       en: ['Loading takes about three minutes, and the game starts by itself. On the title screen press a key. The screen splits: a picture of the place at the top, the text below it, and NEXT? at the bottom: type a command there and press [ENTER].',
         'A clinic uses the waters of a dormant volcanic island, and disaster looms. Can you stop it?',
         'One letter is enough for N, E, S and W (north, east, south, west), for L (look again) and for I (inventory). You can shorten any word, as long as it ends with a full stop.',
         'In the mazes, move with the arrows while holding [SHIFT]: [SHIFT] with the left or right arrow turns you, and [SHIFT] with the up arrow goes forward, without [ENTER].',
-        'Saving: leave the maze, type SAVE and a name of up to 8 letters, and press [ENTER]. To carry on, load River of Fire as usual and choose PREVIOUS GAME.']
+        'Saving: leave the maze, type SAVE and a name of up to 8 letters, and press [ENTER]. To carry on: next time, before the game, click your save in My tapes, type CLOADM and [ENTER], and wait for OK. Then press the red button and type CLOADM again. The game loads and carries on from where you saved.']
     },
     // נבדק במכונה (7.11): הטעינה, התמונה, הקרדיטים, טבלת השיאים והטיסה מעל הנוף. ג'ויסטיק
     starman: {
