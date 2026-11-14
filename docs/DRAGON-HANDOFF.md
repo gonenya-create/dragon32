@@ -22,7 +22,11 @@
   - Scott Adams (13): השמירה נכתבת כבלוקים בלי כותרת (סוג $43), והאתר לא קלט אותה. תוקן: נקלטת בשם ומספר (ADVENT1, COUNT1...). נבדק מקצה לקצה ב-Adventureland, ‏The Count ו-Pyramid of Doom. הוראות שמירה והמשך נוספו לכל ה-13 (he+en).
   - בדיקה חוזרת אחרי התיקון, ע"י Codex (`~/Dragon-private/saves-check/BRIEF-codex.md`, דוח `r3/REPORT.md`, צילומים נבדקו ידנית): Shenanigans ‏(SHENAN), Sea Search ‏(SEAQUEST), Trekboer ‏(TREKBOER), Vortex ‏(VORTEX), Black Sanctum ‏(T1) — **כל החמישה OK**, שמירה + טעינה בביקור חדש מחזירה לאותו מקום.
   - עובד כבר: Tanglewood, ‏Calixto (המשחק נגמר אחרי השמירה, כנראה כמו במקור), Daggorath (השמירה עובדת; השם מוצג מפוענח בענף; הטעינה עוד לא נבדקה).
-  - **נשאר לבדוק:** River of Fire, ‏Williamsburg, ‏El Diablero, ‏The Sword and the Sorcerer, ‏Death's Head Hole (קודם: האם יש שמירה בכלל), וטעינה ב-Daggorath. אחר כך npm test מלא ו"מזג".
+  - **סבב 4 (14.11, Codex, `BRIEF-codex-r4.md`, תוצאות `~/Dragon-private/saves-check/r4/`). נעצר באמצע בגלל אתחול המק; אין `r4/REPORT.md`:**
+    - Williamsburg: **אין שמירה.** SAVE ו-SAVE GAME עונים "I DON'T UNDERSTAND THE VERB!" (צילום `r4/williamsburg/08-save-game-response.png`).
+    - El Diablero: **עובד.** הפקודה היא `CSAVE` (לא SAVE), נשמר כ-"SAVE DIA". המשך: לוחצים על השמירה ב"הקלטות שלי" ואז `CLOAD`. נבדק מקצה לקצה (המדבר עם הקקטוסים חזר). ההוראות נוספו בענף `d32/adv-saves` (`9c7e5e0`).
+    - River of Fire: **השמירה נוצרת** ("RIVER" ב"הקלטות שלי", אחרי SAVE + שם, מה-ward), **אבל הטעינה עוד לא הוכחה**: אחרי PREVIOUS GAME הגיע ל-plant room ולא ל-ward. Codex ניסה כמה דרכים ולא הצליח. צריך לברר איך PREVIOUS GAME טוען (צילומים `r4/riverfire/`).
+  - **נשאר לבדוק:** River of Fire (טעינה), ‏The Sword and the Sorcerer, ‏Death's Head Hole (קודם: האם יש שמירה בכלל), וטעינה ב-Daggorath (`ZLOAD`). אפשר להמשיך עם Codex מאותו תדריך (`BRIEF-codex-r4.md`, לדלג על מה שנעשה). אחר כך npm test מלא ו"מזג" אחד לשלושת הענפים.
   - הערה: Codex בארגז חול לא מצליח להריץ Chromium בפעם הראשונה (mach port); הוא עבר להרשאה מחוץ לארגז ורץ.
 - **הסרטון הארוך: נדחה.** גונן: "נחשוב על זה, כרגע זה לא דחוף".
 - **ממצא חדש ברמזים של Tanglewood:** כשלוחצים את 44 המקשים של הסוף עם המתנה קבועה של כ-3 שניות, הניסיון נכשל במעלית (צעד 12, "I can't go that way"). כשמחכים עד שהתמונה מפסיקה להשתנות, זה עובד עד הניצחון (נבדק באתר החי, 13.11). צריך להוסיף לרמז "במעלית מחכים עד שהיא עוצרת". עוד לא תוקן.
