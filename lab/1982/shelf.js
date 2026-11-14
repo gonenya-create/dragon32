@@ -1136,12 +1136,14 @@
         'בהתחלה חושך. בתרמיל יש חרב עץ ולפיד: {PULL RIGHT TORCH} ואחר כך {USE RIGHT} מדליקים את הלפיד, ו-{PULL LEFT SWORD} שם את החרב ביד שמאל.',
         'הולכים ב-{MOVE} (או {MOVE BACK}), ומסתובבים ב-{TURN LEFT}, ‏{TURN RIGHT} או {TURN AROUND}. ‏{LOOK} מראה שוב את המסדרון, ו-{EXAMINE} מה יש בחדר ובתרמיל.',
         'כשיצור מתקרב, תוקפים ב-{ATTACK LEFT} (ביד עם החרב). ‏{GET RIGHT} מרים חפץ מהרצפה ליד ימין, ‏{STOW RIGHT} מכניס את מה שביד לתרמיל, ‏{DROP RIGHT} זורק אותו, ו-{CLIMB UP} או {CLIMB DOWN} בסולם.',
-        'שמים לב ללב: הוא דופק מהר יותר כשמתאמצים או נפגעים. כשהוא מהיר מדי, מתעלפים, אז נחים רגע לפני שממשיכים. המטרה: לרדת עד הקומה החמישית ולנצח את הקוסם.'],
+        'שמים לב ללב: הוא דופק מהר יותר כשמתאמצים או נפגעים. כשהוא מהיר מדי, מתעלפים, אז נחים רגע לפני שממשיכים. המטרה: לרדת עד הקומה החמישית ולנצח את הקוסם.',
+        'שמירה: מקלידים {ZSAVE} ושם, למשל {ZSAVE GAME1}, ולוחצים [ENTER]. השמירה מופיעה ב"הקלטות שלי". כדי להמשיך: מפעילים את המשחק, לוחצים על השמירה ב"הקלטות שלי", מקלידים {ZLOAD} עם אותו שם ולוחצים [ENTER].'],
       en: ['A command game: type a command in English and press [ENTER]. At the bottom you see what is in your left and right hands (EMPTY when nothing), and the heart in the middle.',
         'At first it is dark. Your backpack holds a wooden sword and a torch: {PULL RIGHT TORCH} and then {USE RIGHT} light the torch, and {PULL LEFT SWORD} puts the sword in your left hand.',
         'Walk with {MOVE} (or {MOVE BACK}), and turn with {TURN LEFT}, {TURN RIGHT} or {TURN AROUND}. {LOOK} shows the corridor again, and {EXAMINE} what is in the room and in your backpack.',
         'When a creature comes near, fight with {ATTACK LEFT} (the hand with the sword). {GET RIGHT} picks something up from the floor into your right hand, {STOW RIGHT} puts what it holds in the backpack, {DROP RIGHT} drops it, and {CLIMB UP} or {CLIMB DOWN} use a ladder.',
-        'Watch the heart: it beats faster when you work hard or get hurt. If it gets too fast you faint, so rest a moment before going on. The goal: go down to the fifth level and defeat the wizard.']
+        'Watch the heart: it beats faster when you work hard or get hurt. If it gets too fast you faint, so rest a moment before going on. The goal: go down to the fifth level and defeat the wizard.',
+        'Saving: type {ZSAVE} and a name, for example {ZSAVE GAME1}, and press [ENTER]. The save appears in My tapes. To carry on: start the game, click the save in My tapes, type {ZLOAD} with the same name and press [ENTER].']
     },
     // נבדק במכונה (31.10): CLOADM, ‏EXEC, מסך הפתיחה (INPUT LEVEL 0-9), המחבט הולך למקום של העכבר, והכפתור משחרר את הכדור.
     // ההוראות לפי ה-README המקורי של המחבר מ-1987 וקוד המקור (25 שלבים; המחבט קורא את הג'ויסטיק הימני, כמו ידית)
