@@ -1,0 +1,231 @@
+{
+  "note": "Places use the numbers on the map: Floor 1 is the top (start), and Floor 5 is the bottom. Columns 1–18 count from the left; rows 1–18 count from the top. Stairs, doors and the X stay in the same places. Keys, wands and pieces are placed again each game or round. Each question has three hints, from a small clue to the full answer. The game was played on the Dragon machine until all four artifacts were complete and round 2 began (14.11.2026).",
+  "where": "The game draws its display on the picture screen. The hint button cannot tell where you are, so it shows all the questions.",
+  "at": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
+  ],
+  "he": [
+    {
+      "q": "מה המטרה של המשחק?",
+      "h": [
+        "שימו לב לחפצים שנבנים בלוח הצד.",
+        "במבוך מפוזרים חלקים של ארבעה חפצים. כל חפץ מורכב מארבעה חלקים.",
+        "אספו את כל 16 החלקים בהליכה עליהם. הם מצטרפים אוטומטית לחפצים בלוח הצד ואינם תופסים מקום במלאי. השלמת ארבעת החפצים מפעילה סבב נוסף; אין צורך לחזור למקלט כדי למסור אותם."
+      ]
+    },
+    {
+      "q": "איך זזים, ולמה הדמות רק מסתובבת?",
+      "h": [
+        "שינוי כיוון ותנועה קדימה אינם תמיד אותה פעולה.",
+        "החצים או הג׳ויסטיק קובעים את הכיוון. כשפונים לכיוון חדש, הדמות מסתובבת קודם.",
+        "החזיקו את החץ בכיוון הרצוי כדי להתקדם אחרי הפנייה. אם הדרך חסומה, בדקו במפה אם לפניכם קיר או דלת. מעבר בין קומות נעשה במקשי האותיות, ולא בחצים."
+      ]
+    },
+    {
+      "q": "איך עולים או יורדים קומה?",
+      "h": [
+        "חפשו את המדרגות, ולא רק דרך לקצה המסך.",
+        "צריך לעמוד על תא המדרגות ולהשתמש באות המתאימה.",
+        "על מדרגות עולות לחצו [U], ועל יורדות לחצו [D]. נשארים באותה עמודה ושורה בקומה הבאה. לדוגמה: בקומה 1, עמודה 5, שורה 14, לחצו [D] כדי לרדת. תגיעו לקומה 2, עמודה 5, שורה 14. שם [U] מחזיר אתכם למעלה. קומה 1 היא העליונה וקומה 5 היא התחתונה."
+      ]
+    },
+    {
+      "q": "איפה המדרגות מנקודת ההתחלה?",
+      "h": [
+        "יש שלוש ירידות בקומה העליונה.",
+        "נקודת ההתחלה היא בקומה 1, עמודה 10, שורה 12. חפשו מדרגות מצפון, מדרום־מערב ומדרום־מזרח.",
+        "יש שלוש מדרגות יורדות: קומה 1, עמודה 9, שורה 4; קומה 1, עמודה 5, שורה 14; קומה 1, עמודה 16, שורה 16. עקבו אחרי המסדרונות במפה. קו ישר עשוי לעבור דרך קירות. לחצו [D] על המדרגות כדי לרדת."
+      ]
+    },
+    {
+      "q": "יש לי מפתח, אבל הדלת לא נפתחת.",
+      "h": [
+        "בדקו איזה פריט בחרתם לשימוש.",
+        "הפריט בתא השמאלי הוא זה שמשתמשים בו. לחצו [R] כדי להחליף אותו.",
+        "לחצו [R] עד שהמפתח בתא השמאלי, ואז התקדמו לעבר הדלת. המפתח נעלם והדלת נפתחת. המשיכו כדי לעבור. למשל, יש דלת בקומה 1, עמודה 18, שורה 8. כל מפתח פותח דלת אחת, וכל מפתח מתאים לכל דלת."
+      ]
+    },
+    {
+      "q": "המלאי מלא. איך אוספים עוד דברים?",
+      "h": [
+        "חלק מהדברים שאוספים לא תופסים מקום במלאי.",
+        "יש רק שלושה מקומות למפתחות ולמטות. חלקי החפצים נאספים בנפרד.",
+        "כששלושת התאים מלאים, מפתח או מטה נוסף נשארים על הרצפה. כדי לפנות מקום, פתחו דלת עם מפתח או בחרו מטה עם [R] וירו. חלקי החפצים נאספים גם כשהמלאי מלא."
+      ]
+    },
+    {
+      "q": "איך יורים, ולמה המטה נעלם?",
+      "h": [
+        "לפני הירי, בדקו לאן הדמות פונה ומה יש בתא השמאלי.",
+        "רווח או כפתור הג׳ויסטיק יורים לכיוון שאליו אתם פונים. כל מטה מספיק לירייה אחת.",
+        "לחצו רווח או על כפתור הג׳ויסטיק כדי לירות. אם יש מטה בתא השמאלי, הוא נעלם אחרי הירייה ואתם לא מאבדים כוח. בלי מטה בתא השמאלי, כל ירייה מורידה יחידת כוח אחת. אם אין מספיק כוח, אי אפשר לירות. חכו שכדור האש ייעלם לפני שתירו שוב. פגיעה ביצור מחסלת אותו."
+      ]
+    },
+    {
+      "q": "אני מאבד כוח מהר. מה לעשות?",
+      "h": [
+        "שימו לב גם למגע עם יצורים וגם לירי.",
+        "מגע עם יצור מוריד כוח. גם ירי בלי מטה בתא השמאלי מוריד כוח. התרחקו מהיצורים.",
+        "כל פגיעה מורידה יחידת כוח אחת. אם נשארים צמודים ליצור, הוא יכול לפגוע שוב ושוב. גם ירייה בלי מטה בתא השמאלי מורידה יחידת כוח אחת. חזרו לאיקס בקומה 1, עמודה 10, שורה 12, כדי למלא את הכוח."
+      ]
+    },
+    {
+      "q": "איפה אפשר לנוח ולהחזיר כוח?",
+      "h": [
+        "למקום שבו התחלתם יש תפקיד גם בהמשך.",
+        "חפשו את האיקס ואת רצפת המקלט שסביבו בקומה העליונה.",
+        "האיקס נמצא בקומה 1, עמודה 10, שורה 12. עברו עליו כדי למלא את הכוח. היצורים לא נכנסים למקלט או לאיקס. נוחו בתוך המקלט והיזהרו ליד המסדרונות."
+      ]
+    },
+    {
+      "q": "איפה נמצאים המפתחות, המטות והחלקים?",
+      "h": [
+        "המבוך נשאר אותו מבוך, אבל החפצים יכולים להופיע במקומות אחרים.",
+        "חפשו לאורך המסדרונות בכל חמש הקומות. אל תסתמכו על מקום של חפץ ממשחק קודם.",
+        "בכל משחק או סבב החפצים מפוזרים מחדש במסדרונות. לכן המפה מציגה קירות, מדרגות, דלתות ומקלט, בלי חפצים. בסבב הראשון יש 22 מפתחות, 20 מטות ו־16 חלקים. עברו על חפץ כדי לאסוף אותו. בשביל מפתח או מטה צריך מקום פנוי במלאי."
+      ]
+    },
+    {
+      "q": "איך קוראים את המפה בלי להתבלבל בין הקומות?",
+      "h": [
+        "קודם בחרו קומה, ואז בדקו את המספרים סביב הרשת.",
+        "המספר שמעל הרשת הוא העמודה; המספר בצד הוא השורה. המדרגות מחברות תאים באותו מקום בקומות סמוכות.",
+        "קומה 1 היא העליונה ובה מתחילים. קומה 5 היא התחתונה. העמודות ממוספרות מ־1 עד 18 משמאל לימין, והשורות מ־1 עד 18 מלמעלה למטה. האות [U] מסמנת מדרגות עולות, [D] מדרגות יורדות, ו־{X} את ההתחלה ומילוי הכוח. לדלתות יש סימן משלהן."
+      ]
+    },
+    {
+      "q": "השלמתי את החפצים. מה עכשיו?",
+      "h": [
+        "השלמה אינה בהכרח סוף המשחק כולו.",
+        "אחרי ארבעת החפצים מתחיל סבב נוסף באותו מבוך.",
+        "איסוף החלק האחרון משלים את הסבב ומתחיל חדש. המבוך נשאר, הדלתות חוזרות והחפצים מוצבים מחדש; הניקוד נשמר. בסבב השני יש פחות מפתחות ומטות מאשר בראשון. צריך שוב לאסוף את חלקי ארבעת החפצים."
+      ]
+    },
+    {
+      "q": "אני רוצה את מפת המבוך המלאה",
+      "h": [
+        "נסו קודם להיעזר ברמזים שלמעלה. אפשר להתקדם במבוך גם בלי לחשוף את המפה המלאה.",
+        "המפה מציגה את חמש הקומות: קומה 1 היא העליונה ובה מתחילים, וקומה 5 היא התחתונה. העמודות ממוספרות מ־1 עד 18 משמאל לימין, והשורות מ־1 עד 18 מלמעלה למטה. לחצו על המפה כדי לפתוח אותה בגודל מלא בלשונית חדשה.",
+        "img:/lab/1982/hints/wizlair-map.png|מפת המבוך המלאה: חמש קומות עם מספרי עמודות ושורות, מדרגות, דלתות ומקלט"
+      ]
+    }
+  ],
+  "en": [
+    {
+      "q": "What am I trying to do?",
+      "h": [
+        "Watch the objects taking shape in the side panel.",
+        "The maze contains pieces of four artifacts, with four pieces per artifact.",
+        "Walk over all 16 pieces to collect them. They assemble automatically in the side panel and do not use inventory slots. Completing all four artifacts starts another round; you do not need to return to the sanctuary to hand them in."
+      ]
+    },
+    {
+      "q": "How do I move, and why do I only turn?",
+      "h": [
+        "Turning and moving forward are not always the same action.",
+        "The arrow keys or joystick choose a direction. A new direction turns your character first.",
+        "Hold the direction to move after turning. If you cannot advance, check the map for a wall or door. Changing floors uses letter keys, not the direction arrows."
+      ]
+    },
+    {
+      "q": "How do I go up or down a floor?",
+      "h": [
+        "Look for stairs rather than an edge of the screen.",
+        "Stand on the stair cell and use the matching letter.",
+        "Press [U] on stairs up or [D] on stairs down. You stay at the same column and row on the next floor. For example, press [D] at Floor 1, column 5, row 14 to reach Floor 2, column 5, row 14. Press [U] there to go back up. Floor 1 is the top and Floor 5 is the bottom."
+      ]
+    },
+    {
+      "q": "Where are the stairs from the start?",
+      "h": [
+        "There are three ways down from the top floor.",
+        "You start on Floor 1, column 10, row 12. Look north, southwest and southeast for stairs.",
+        "There are three stairs down: Floor 1, column 9, row 4; Floor 1, column 5, row 14; and Floor 1, column 16, row 16. Follow the corridors on the map. A straight line may cross walls. Press [D] on the stairs to go down."
+      ]
+    },
+    {
+      "q": "I have a key, but the door will not open.",
+      "h": [
+        "Check which item you have selected.",
+        "You use the item in the leftmost slot. Press [R] to change it.",
+        "Press [R] until a key is in the leftmost slot, then move toward the door. The key is used up and the door opens; keep moving to pass through. One example is the door on Floor 1, column 18, row 8. Each key opens one door; there are no different key types to match."
+      ]
+    },
+    {
+      "q": "My inventory is full. How do I collect more?",
+      "h": [
+        "Not everything you collect uses the same storage.",
+        "There are only three slots for keys and wands. Artifact pieces are kept separately.",
+        "With all three slots occupied, another key or wand stays on the floor. Use a key to open a door, or select a wand with [R] and fire to use it up. Artifact pieces can still be collected with a full inventory."
+      ]
+    },
+    {
+      "q": "How do I fire, and why did my wand disappear?",
+      "h": [
+        "Check your facing direction and active item before firing.",
+        "Space or the joystick button fires in the direction you face. Each wand lasts for one shot.",
+        "Press Space or the joystick button to fire. A wand in the leftmost slot disappears after one shot, and you lose no power. Without a wand in that slot, each shot costs one power unit. You cannot fire if power is too low. Wait for the fireball to disappear before firing again. A hit kills a creature."
+      ]
+    },
+    {
+      "q": "I keep losing power. What should I do?",
+      "h": [
+        "Watch both contact with creatures and your own firing.",
+        "Touching a creature costs power. So does firing without a wand in the leftmost slot. Move away from creatures.",
+        "Each hit costs one power unit. If you stay against a creature, it can hit you again and again. A shot without a wand in the leftmost slot also costs one power unit. Return to the X on Floor 1, column 10, row 12 to refill power."
+      ]
+    },
+    {
+      "q": "Where can I rest and regain power?",
+      "h": [
+        "Your starting point remains useful later.",
+        "Look for the X and the sanctuary floor around it on the top floor.",
+        "The X is on Floor 1, column 10, row 12. Walking over it restores full power. Creatures cannot enter the sanctuary floor cells or the X. Rest inside and be careful at edges next to the corridor."
+      ]
+    },
+    {
+      "q": "Where are the keys, wands and pieces?",
+      "h": [
+        "The maze stays the same, but its contents do not stay put across games.",
+        "Search corridors on all five floors. Do not rely on where an item was in a previous game.",
+        "Items are placed again in the corridors at the start of each game or round. The map shows walls, stairs, doors and the sanctuary, but no items. The first round has 22 keys, 20 wands and 16 pieces. Walk over an item to collect it. You need a free slot for a key or wand."
+      ]
+    },
+    {
+      "q": "How do I read the map and keep track of floors?",
+      "h": [
+        "Choose the floor first, then check the numbers around its grid.",
+        "The number above the grid is the column; the number at the side is the row. Stairs link matching positions on adjacent floors.",
+        "Floor 1 is the top, where you start. Floor 5 is the bottom. Columns run from 1 to 18 from left to right. Rows run from 1 to 18 from top to bottom. U marks stairs up, D stairs down, and X the start and power refill. Doors have their own symbol."
+      ]
+    },
+    {
+      "q": "I completed the artifacts. What happens now?",
+      "h": [
+        "Completing them does not necessarily end the whole game.",
+        "All four completed artifacts lead to another round in the same maze.",
+        "Collecting the final piece completes the round and starts another. The maze remains, doors reset and items are placed again; your score carries over. The second round has fewer keys and wands than the first. Collect the pieces of all four artifacts again."
+      ]
+    },
+    {
+      "q": "I want the full maze map",
+      "h": [
+        "Try the hints above first. You can make progress without revealing the full map.",
+        "The map shows floors 1–5: Floor 1 is the top, where you start, and Floor 5 is the bottom. Columns 1–18 run from left to right; rows 1–18 run from top to bottom. Click the map to open the full image in a new tab.",
+        "img:/lab/1982/hints/wizlair-map.png|Full maze map: five floors with numbered columns and rows, stairs, doors and sanctuary"
+      ]
+    }
+  ]
+}

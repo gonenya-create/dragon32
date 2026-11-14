@@ -382,7 +382,7 @@
   // איך משחקים (גונן, 25.10: "לא בטוח שהמשתמשים יבינו איך משחקים"): תיבה נפתחת מתחת לכל משחק בשפת מכונה.
   // [מקש] נהיה מקש מצויר. המקשים לפי התיעוד של המחבר, ונבדקו במכונה. במק: BREAK הוא Esc, ו-CLEAR הוא Home (fn+←).
   // משחקים שיש להם רמזים (lab/1982/hints/<id>.json): רק אחרי שעברנו אותם עד הסוף במכונה
-  const HINTS = new Set(['adventureland', 'pirate', 'voodoo', 'mission', 'count', 'odyssey', 'pyramid', 'funhouse', 'ghost', 'golden', 'savage1', 'savage2', 'claymorgue', 'calixto', 'sanctum', 'shenan', 'seasearch', 'trekboer', 'williamsburg', 'vortex', 'diablero', 'sword', 'riverfire', 'daggorath', 'dhh', 'tangle']);
+  const HINTS = new Set(['adventureland', 'pirate', 'voodoo', 'mission', 'count', 'odyssey', 'pyramid', 'funhouse', 'ghost', 'golden', 'savage1', 'savage2', 'claymorgue', 'calixto', 'sanctum', 'shenan', 'seasearch', 'trekboer', 'williamsburg', 'vortex', 'diablero', 'sword', 'riverfire', 'daggorath', 'dhh', 'tangle', 'wizlair']);
   const hintData = {};
   const hintsFor = id => (hintData[id] = hintData[id] || fetch('/lab/1982/hints/' + id + '.json').then(r => { if (!r.ok) throw 0; return r.json(); }).catch(e => { delete hintData[id]; throw e; }));
   // שאלה אחת: נפתחת לרמז קטן, ובתוכו הרמז הברור, ובתוכו הפתרון. כל מדרגה מופיעה רק אחרי שפותחים את הקודמת
@@ -400,7 +400,15 @@
       const ls = document.createElement('summary');
       ls.textContent = LV[i];
       const ul = document.createElement('ul');
-      ul.appendChild(keyLine(t));
+      // מפה נחשפת רק ברמז שלה; לחיצה פותחת את התמונה בגודל מלא
+      if (t.startsWith('img:')) {
+        const [src, alt] = t.slice(4).split('|');
+        const li = document.createElement('li'), a = document.createElement('a'), img = document.createElement('img');
+        a.href = src; a.target = '_blank'; a.rel = 'noopener';
+        img.src = src; img.alt = alt || ''; img.loading = 'lazy';
+        img.style.width = '100%'; img.style.height = 'auto';
+        a.appendChild(img); li.appendChild(a); ul.appendChild(li);
+      } else ul.appendChild(keyLine(t));
       lv.append(ls, ul);
       host.appendChild(lv);
       host = lv;
