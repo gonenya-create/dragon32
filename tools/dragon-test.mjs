@@ -2102,8 +2102,9 @@ if (part('real machine lab')) {
       };
       return [d1, d2].map(d => d.join(',')).join('|');
     });
-    // בדף של משחק הקופסה בתוך .info, שמוסתר כשדף המשחק פתוח: לוחצים מהקוד
-    await p.evaluate(() => document.getElementById('tape-mic').click()); await p.waitForTimeout((await p.evaluate(() => window.__dur) + 1.8) * 1000); await p.evaluate(() => document.getElementById('tape-mic').click());
+    // בדף של משחק התיבה נמצאת בסוף "איך טוענים" (17.11), ונראית
+    const inView = await p.evaluate(() => { const b = document.getElementById('tape-mic'); return !!b.closest('.game-view .gv-pane') && !!b.offsetParent; });
+    await p.click('#tape-mic'); await p.waitForTimeout((await p.evaluate(() => window.__dur) + 1.8) * 1000); await p.click('#tape-mic');
     const msg = await p.waitForFunction(() => /✅|⚠️|לא מצאתי/.test(document.getElementById('mic-status').textContent), null, { timeout: 120000 })
       .then(() => p.evaluate(() => document.getElementById('mic-status').textContent), () => 'timeout');
     const got = await p.evaluate(() => {
@@ -2112,7 +2113,8 @@ if (part('real machine lab')) {
       for (let i = 0; i + 4 < b.length; i++) if (b[i] === 0x55 && b[i + 1] === 0x3c && b[i + 2] === 0x43) { out.push(b.slice(i + 4, i + 4 + b[i + 3]).join(',')); i += 4 + b[i + 3]; }
       return out.join('|');
     });
-    check('/lab/1982/adventureland/ 🎙️ a game save with no header (two $43 blocks, as Adventureland\'s SAVE GAME writes on a real Dragon) is read and kept in My tapes as ADVENT1, same bytes', /^✅ נקראה שמירה של משחק, "ADVENT1"/.test(msg) && got === want && !errs.length, msg + ' | ' + (got === null ? 'no ADVENT1' : got === want ? 'same' : 'different') + ' ' + errs.join(' | '));
+    const back = await p.evaluate(() => { const a = [...document.querySelectorAll('.game-view button, .game-view a')].find(x => /חזרה|Back/.test(x.textContent)); if (a) a.click(); const b = document.getElementById('tape-mic'); return !!a && !b.closest('.game-view') && !!b.closest('.info'); });
+    check('/lab/1982/adventureland/ 🎙️ the mic box is on the game page (end of "how to load"); a game save with no header (two $43 blocks, as Adventureland\'s SAVE GAME writes on a real Dragon) is read and kept in My tapes as ADVENT1, same bytes; back to the cabinet puts the box back', inView && back && /^✅ נקראה שמירה של משחק, "ADVENT1"/.test(msg) && got === want && !errs.length, msg + ' | inView ' + inView + ' back ' + back + ' | ' + (got === null ? 'no ADVENT1' : got === want ? 'same' : 'different') + ' ' + errs.join(' | '));
     await p.close();
   }
   {
@@ -2306,7 +2308,7 @@ if (part('real machine lab')) {
       && seoMain.canon === 'https://dragon1982.com' + path && seoMain.n >= 2, JSON.stringify([seo, seoMain]));
     // אחרי הטעינה: מה לוחצים (גונן, 28.10: נתקע במסך שמחכה למקש), ו-CLOADM לפני הכפתור האדום מביא תזכורת מתחתיו
     await direct.waitForFunction(() => window.d32Ready, null, { timeout: 20000 }); await direct.waitForTimeout(2500);
-    const steps = await direct.$$eval('.gv-pane ol li', l => l.map(x => x.textContent));
+    const steps = await direct.$$eval('.gv-pane > ol > li', l => l.map(x => x.textContent));
     await direct.click('#canvas');
     for (const k of [...'CLOADM', 'Enter']) { await direct.keyboard.down(k); await direct.waitForTimeout(80); await direct.keyboard.up(k); await direct.waitForTimeout(80); }
     await direct.waitForTimeout(600);

@@ -1895,6 +1895,9 @@
   view.hidden = true;
   shelfSec.appendChild(view);
   const statusHome = status && status.parentNode, statusNext = status && status.nextSibling;
+  // התיבה "קלטת אמיתית מהבית" עוברת לדף המשחק, בסוף "איך טוענים" (גונן, 17.11): משם השמירה מקבלת את שם המשחק (ADVENT1).
+  // בסגירת הדף היא חוזרת למקומה
+  const micBox = document.querySelector('.realtape'), micHome = micBox && micBox.parentNode, micNext = micBox && micBox.nextSibling;
   const baseTitle = document.title;
   const T2 = (he, en) => EN ? en : he;
   let viewId = null, inTape = null, lastGame = null;   // lastGame: המשחק האחרון שנטען מהמדף, לשם של שמירה בלי שם   // המשחק שהדף שלו פתוח, והקלטת שברשמקול (null: "הקלטות שלי" או כלום)
@@ -2127,7 +2130,7 @@
       tabs.appendChild(tb);
       panes.push(pane);
     };
-    mk(T2('איך טוענים', 'How to load'), pane => { const ol = document.createElement('ol'); for (const s of loadSteps(id, kind)) ol.appendChild(keyLine(s)); pane.appendChild(ol); });
+    mk(T2('איך טוענים', 'How to load'), pane => { const ol = document.createElement('ol'); for (const s of loadSteps(id, kind)) ol.appendChild(keyLine(s)); pane.appendChild(ol); if (micBox) pane.appendChild(micBox); });
     if (tool) {
       mk(T2('הפקודות', 'Commands'), pane => {
         const tb = document.createElement('table');
@@ -2343,6 +2346,7 @@
     viewId = null;
     document.body.classList.remove('game-open');
     if (status && statusHome) statusHome.insertBefore(status, statusNext);
+    if (micBox && micHome) micHome.insertBefore(micBox, micNext);
     document.title = baseTitle;
     if (push) history.pushState({}, '', BASE);
     const sel = buttons.find(x => x && x.classList.contains('sel'));
@@ -3179,6 +3183,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
         });
         if (good.length || saves.length) {
           micPrev = null;
+          if (saveBtn) saveBtn.hidden = true;
           // גם ל"הקלטות שלי" (גונן, 5.11 ו-17.11: "ברגע שאני לוחץ להתחיל להקליט ... הוא שומר אותה בקלטות שלי"). קודם שומרים,
           // ואחר כך מכניסים לרשמקול רק את מה שנקרא עכשיו, כדי שיהיה ראשון בקלטת
           const kept = good.map(f => ({ n: f.n, b: f.b })).concat(saves);
