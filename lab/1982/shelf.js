@@ -2248,7 +2248,7 @@
         const bq = document.createElement('blockquote');
         bq.className = 'gv-quote';
         const qp = document.createElement('p');
-        qp.textContent = T2('„תחילת הפרויקט הייתה רצון עז לשחק ב-Dragon שלי באחד ממשחקי ה-Commodore האהובים עליי, ואמונה תמימה שזה יהיה קל לביצוע. … כבר לא לוחצים על כפתור האיפוס בכל פעם שהקוד קורס…“',
+        qp.textContent = T2('„תחילת הפרויקט הייתה רצון עז לשחק ב-Dragon שלי באחד ממשחקי ה-Commodore האהובים עליי, ואמונה תמימה שזה יהיה קל לביצוע. … כבר לא לוחצים על כפתור ה-RESET בכל פעם שהקוד קורס…“',
           '\u201CThe start of this project was a strong desire to play one of my favorite Commodore games on my Dragon and a naive belief that it would be easy to pull off. \u2026 No longer pressing that reset button whenever the code crashes\u2026\u201D');
         const cite = document.createElement('footer');
         cite.textContent = '\u2014 Rolf Michelsen, 2026';
