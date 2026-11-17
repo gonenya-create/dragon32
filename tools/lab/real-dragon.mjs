@@ -42,7 +42,7 @@ function list(he) {
       const btns = `<button type="button" class="p">▶ ${he ? 'השמעה' : 'Play'}</button>` + (ONLY.has(id)
         ? `<span class="only">${he ? 'השמעה בלבד' : 'play only'}</span>`
         : `<button type="button" class="w">⬇ ${he ? 'צליל' : 'sound'}</button><a class="c" href="/lab/1982/tapes/${id}.cas" download="${esc(file)}.cas">⬇ ${he ? 'קלטת' : 'tape'}</a>`) + key;
-      out += `  <li id="${id}" data-id="${id}" data-file="${esc(file)}"><span class="rn"><bdi>${esc(name)}</bdi></span><span class="rm">${he ? 'ב-<bdi dir="ltr">Dragon</bdi> מקלידים:' : 'On the Dragon, type:'} <code dir="ltr">${cmd}</code>${L(g.load) ? '<br>' + (he ? 'טעינה: ' : 'Loading: ') + esc(L(g.load)) : ''}</span><span class="rb">${btns}</span><span class="bar"><i></i><span></span></span></li>\n`;
+      out += `  <li id="${id}" data-id="${id}" data-file="${esc(file)}"><span class="rn"><bdi>${esc(name)}</bdi></span><span class="rm">${he ? 'ב-<bdi dir="ltr">Dragon</bdi> מקלידים:' : 'On the Dragon, type:'} <code dir="ltr">${cmd}</code>${L(g.load) ? '<br>' + (he ? 'טעינה: ' : 'Loading: ') + esc(L(g.load)) : ''}${key ? '<br><b class="knote">' + (he ? '🔑 המשחק יבקש קוד מהכרטיס שהיה בקופסה. כשיופיע ENTER CODE AT LOCATION, חוזרים לכאן ולוחצים "הקוד". קישור קצר: <bdi dir="ltr">dragon1982.com/code</bdi>' : '🔑 The game will ask for a code from the card that came in the box. When ENTER CODE AT LOCATION appears, come back here and press "The code". Short link: dragon1982.com/code') + '</b>' : ''}</span><span class="rb">${btns}</span><span class="bar"><i></i><span></span></span></li>\n`;
       if (g.group !== 'tools' && g.drawer !== 'tools') n++;   // האסמבלר הוא כלי, לא משחק: לא בספירה (מ-12.11 במגירה "כלים" משלו)
     }
     out += '</ul>\n';

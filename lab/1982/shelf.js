@@ -2064,6 +2064,13 @@
       real.href = (EN ? '/en' : '') + '/lab/1982/real-dragon/#' + id;
       real.textContent = T2('🔊 יש לכם Dragon אמיתי? הורדה', '🔊 Have a real Dragon? Download');
       info.appendChild(real);
+      // מי שמוריד ל-Dragon אמיתי צריך לדעת מראש שהמשחק יבקש קוד, ואיפה מקבלים אותו (גונן, 17.11, כשבדק כ"משתמש מאנגליה")
+      if (id === 'manic' || id === 'jsw') {
+        const kn = document.createElement('p');
+        kn.className = 'gv-realcode';
+        kn.textContent = T2('ב-Dragon אמיתי המשחק יבקש קוד מהכרטיס שהיה בקופסה. את הקוד מקבלים בדף ההורדה, בכפתור 🔑 "הקוד". קישור קצר: \u2066dragon1982.com/code\u2069', 'On a real Dragon the game asks for a code from the card that came in the box. Get it on the download page, with the "🔑 The code" button (short link: dragon1982.com/code).');
+        info.appendChild(kn);
+      }
     }
     // בודקים מהקהילה (גונן, 10.11): טופס "בדקתם? ספרו לנו אם עבד" (testers.js)
     if (window.d32Testers && m.slug && !tool) { info.appendChild(window.d32Testers.button(m.slug, name)); info.appendChild(window.d32Testers.credits(m.slug)); }   // "נבדק על ידי" מתחת לכפתור, בראש הדף (גונן, 10.11)
@@ -2438,6 +2445,7 @@ body.cart-in .gv-eject { display: block; }
 .gv-pane { padding: 10px 2px 4px; line-height: 1.7; }
 .gv-pane ol, .gv-pane ul { margin: 0; padding-inline-start: 22px; display: grid; gap: 6px; }
 .gv-pane p { margin: 0 0 8px; }
+.gv-realcode { margin: 4px 0 0; font-size: 14px; color: #c9bba5; }
 .gv-quote { margin: 12px 0 4px; padding: 8px 14px; border-inline-start: 3px solid #8c6a3a; background: #1b1511; border-radius: 8px; color: #e6dcc8; }
 .gv-quote p { margin: 0 0 4px; }
 .gv-quote footer { font-size: 14px; color: #b9a98f; }
