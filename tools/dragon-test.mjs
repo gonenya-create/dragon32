@@ -1371,6 +1371,9 @@ if (part('real dragon sound')) {
     check(n + ': The Count has play, sound and tape; no cartridges or Buzzard Bait', r.count.join() === 'p,w,c' && !r.dagg && !r.buzz && r.cas === '/lab/1982/tapes/count.cas', JSON.stringify(r));
   }
   const w = await p.evaluate(async () => { const x = await (async () => window.D32Wav.casWav(new Uint8Array(await (await fetch('/lab/1982/tapes/snaker.cas')).arrayBuffer())))(); return [String.fromCharCode(...x.slice(0, 4)), String.fromCharCode(...x.slice(8, 12)), x.length]; });
+  // ‏17.11: Downland לא עלה ב-Dragon אמיתי (הטוען עוצר את המנוע בין בלוקים). בקלטות כאלה בלבד נוסף מבוא לפני כל בלוק; שאר הקלטות בלי שינוי
+  const pad = await p.evaluate(async () => { const out = {}; for (const t of ['downland', 'dungeon', 'manic', 'king', 'cuthbert']) { const c = new Uint8Array(await (await fetch('/lab/1982/tapes/' + t + '.cas')).arrayBuffer()); out[t] = Math.round((window.D32Wav.casWav(c).length - window.D32Wav.casWav(c, true).length) / 44100); } return out; });
+  check('tapes whose loader stops the motor between blocks get extra lead-in (Downland +80 s, Dungeon Raid +85 s); Manic Miner, The King and Cuthbert stay as they were', pad.downland >= 80 && pad.dungeon >= 80 && pad.manic < 2 && pad.king < 2 && pad.cuthbert < 2, JSON.stringify(pad));
   check('a shelf tape becomes a WAV sound in the browser', w[0] === 'RIFF' && w[1] === 'WAVE' && w[2] > 1000000, JSON.stringify(w));
   await p.goto(root + '/lab/1982/the-count/'); await p.waitForTimeout(2500);
   check('the game page has only a one-line link to its row on the downloads page', (await p.locator('.gv-real').getAttribute('href')) === '/lab/1982/real-dragon/#count' && !(await p.locator('.real-play').count()));

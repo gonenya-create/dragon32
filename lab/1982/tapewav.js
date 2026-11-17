@@ -3,9 +3,15 @@
 (() => {
   // קלטת מהמדף (קובץ .cas) לצליל ל-Dragon אמיתי (גונן, 9.11): אותם בתים בדיוק. אחרי בלוק השם (15 בתים) של קובץ עם הפסקות,
   // חצי שנייה שקט כמו רשמקול שעוצר ומתניע, ושאר הקלטת ברצף, כמו שהיא (גם טוענים מיוחדים ונתונים לא רגילים עוברים בלי שינוי)
+  const EXTRA = new Uint8Array(215).fill(0x55);   // כ-1.2 שניות של מבוא נוסף
   function casWav(cas, noGap) {
     const segs = [['quiet', 0.5]];
     if (noGap) return segWav(segs.concat([['bytes', cas]]));
+    // רק בקלטות שבהן כמעט כל בלוק בא עם מבוא משלו (טוען שעוצר את המנוע בין בלוקים): 10 ומעלה. בשאר הקלטות לא משנים כלום,
+    // גם לא בכמה בלוקים בודדים (Manic Miner, ‏Cuthbert ו-The King כבר נבדקו ב-Dragon אמיתי כמו שהם)
+    let inner = 0;
+    for (let k = 21; k < cas.length - 1; k++) if (cas[k] === 0x55 && cas[k + 1] === 0x3C && cas[k - 20] === 0x55 && cas[k - 1] === 0x55) { let z = k - 1; while (z > 0 && cas[z] === 0x55) z--; if (cas[z] !== 0x55 && k - 1 - z >= 20) inner++; }
+    const pad = inner >= 10;
     let from = 0, i = 0;
     while (i < cas.length - 4) {
       if (cas[i] === 0x55 && cas[i + 1] === 0x3C) {
@@ -13,6 +19,14 @@
         if (end > cas.length) break;
         // השקט רק בקובץ שהכותרת שלו מסמנת הפסקות (gap): בקובץ רציף ה-ROM לא מצפה לשקט, ושקט שם מקלקל את הטעינה (The Count, 9.11)
         if (type === 0 && len === 15 && cas[i + 4 + 10]) { segs.push(['bytes', cas.subarray(from, end)], ['quiet', 0.5]); from = end; }
+        // בלוק עם מבוא משלו באמצע קובץ (Downland, ‏17.11): הטוען מכבה את המנוע אחרי כל בלוק ומדליק אותו לפני הבא (הטיקים של הממסר).
+        // ברשמקול הקלטת נעצרת וממתינה; צליל מהמק או מהטלפון ממשיך לרוץ, וה-Dragon, שמחכה כחצי שנייה אחרי שהמנוע נדלק,
+        // פספס את רוב המבוא הקצר (כ-0.7 שניות). לכן מוסיפים לפניו עוד מבוא ($55, שה-Dragon מדלג עליו ממילא): הבתים עצמם לא משתנים
+        else if (pad && i > 0) {
+          let lead = i;
+          while (lead > from && cas[lead - 1] === 0x55) lead--;
+          if (i - lead >= 20) { segs.push(['bytes', cas.subarray(from, lead)], ['bytes', EXTRA]); from = lead; }
+        }
         i = end;
       } else i++;
     }
