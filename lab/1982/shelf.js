@@ -2839,6 +2839,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
   }
   function renderMine() {
     if (!mineBox) return;
+    stopMine();
     mineBox.textContent = '';
     const list = myTapes();
     const count = document.getElementById('mine-count');
@@ -2861,6 +2862,17 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       mineBox.appendChild(h);
       for (const f of items) addRow(f);
     }
+  }
+  // הקלטת שמנגנים עכשיו ל-Dragon אמיתי (▶ ב"הקלטות שלי"), אחת בכל פעם
+  let mineNow = null;
+  function stopMine() {
+    if (!mineNow) return;
+    const { btn, audio, url } = mineNow;
+    mineNow = null;
+    audio.pause();
+    URL.revokeObjectURL(url);
+    btn.textContent = '▶';
+    btn.classList.remove('on');
   }
   function addRow(f) {
     {
@@ -2901,6 +2913,28 @@ body.game-open .shelf > :not(.game-view) { display: none; }
       sound.setAttribute('aria-label', (EN ? 'Download as sound for a real Dragon: ' : 'הורדה כצליל ל-Dragon אמיתי: ') + f.n);
       sound.title = EN ? 'Download as sound (.wav) for a real Dragon' : 'הורדה כצליל (wav) ל-Dragon אמיתי';
       sound.addEventListener('click', () => saveFile(tapeWav(f), (f.n || 'TAPE') + '.wav', 'audio/wav'));
+      // ▶ מנגן את הקלטת ישר מהמק ל-Dragon אמיתי, דרך יציאת הצליל (גונן, 17.11: "למה לצאת מהמכונה? בואו נטען את הקובץ מהמכונה").
+      // לחיצה נוספת עוצרת. אותו צליל כמו בהורדה ב-🔊
+      const pl = document.createElement('button');
+      pl.type = 'button';
+      pl.className = 'mini mine-play';
+      pl.textContent = '▶';
+      pl.setAttribute('aria-label', (EN ? 'Play to a real Dragon: ' : 'לנגן ל-Dragon אמיתי: ') + f.n);
+      pl.title = EN ? 'Play to a real Dragon (through the computer\'s sound output)' : 'לנגן ל-Dragon אמיתי (דרך יציאת הצליל של המחשב)';
+      pl.addEventListener('click', () => {
+        const mine = mineNow && mineNow.btn === pl;
+        stopMine();
+        if (mine) return;
+        const url = URL.createObjectURL(new Blob([tapeWav(f)], { type: 'audio/wav' })), audio = new Audio(url);
+        audio.volume = 1;
+        mineNow = { btn: pl, audio, url };
+        pl.textContent = '■';
+        pl.classList.add('on');
+        status.textContent = EN ? '▶ Playing ' + f.n + ' to the Dragon… Press ENTER on the Dragon first (after CLOAD, CLOADM, or the game\'s load question).'
+          : '▶ מנגן את ' + f.n + ' ל-Dragon… קודם לוחצים ENTER ב-Dragon (אחרי CLOAD, ‏CLOADM, או השאלה של המשחק על טעינה).';
+        audio.addEventListener('ended', () => { stopMine(); status.textContent = EN ? 'Finished playing ' + f.n + '.' : 'הסתיים הניגון של ' + f.n + '.'; });
+        audio.play().catch(() => stopMine());
+      });
       const del = document.createElement('button');
       del.type = 'button';
       del.className = 'mini';
@@ -2919,7 +2953,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
         renderMine();
         insertLibrary();
       });
-      row.append(b, down, sound, del);
+      row.append(b, pl, down, sound, del);
       mineBox.appendChild(row);
     }
   }

@@ -2044,10 +2044,19 @@ if (part('real machine lab')) {
       const btn = [...document.querySelectorAll('#mytapes .mini')].some(b => b.textContent === '🔊');
       return { riff: String.fromCharCode(...w.slice(0, 4)), rate: v.getUint32(24, true), bits: v.getUint16(34, true), secs: (w.length - 44) / 44100, btn };
     });
+    // ▶ מנגן את הקלטת ישר ל-Dragon אמיתי (17.11), ולחיצה נוספת עוצרת
+    const playBtn = await p.evaluate(async () => {
+      const row = [...document.querySelectorAll('#mytapes .mytape')].find(r => r.textContent.includes('HELLO')), b = row && row.querySelector('.mine-play');
+      if (!b) return 'no button';
+      b.click(); await new Promise(r => setTimeout(r, 400));
+      const on = b.textContent === '■' && /HELLO/.test(document.getElementById('tape-status').textContent);
+      b.click(); return on && b.textContent === '▶' ? 'ok' : 'state ' + b.textContent;
+    });
     await p.evaluate(() => d32Type('NEW\nCLOAD\n'));
     const loaded = await p.waitForFunction(() => /F HELLO[\s\S]*\nOK\s*$/.test((window.d32Screen() || []).join('\n')), null, { timeout: 60000 }).then(() => true, () => false);
     await p.evaluate(() => d32Type('CLS\nLIST\n')); await p.waitForTimeout(1500);
     const list = (await p.evaluate(() => (window.d32Screen() || []).join('\n')));
+    check('/lab/1982/ ▶ in My tapes plays the tape to a real Dragon (button turns to ■; a second click stops)', playBtn === 'ok', playBtn);
     check('/lab/1982/ 🔊 a saved tape becomes a sound file (wav, 44100 Hz, 8 bit) in the Dragon\'s own format, and the machine CLOADs it back from the sound unchanged', !!info && info.riff === 'RIFF' && info.rate === 44100 && info.bits === 8 && info.btn && info.secs > 2.7 && info.secs < 3.1 && loaded && /10 PRINT "HELLO GONEN ";\n20 GOTO 10/.test(list), JSON.stringify(info) + ' ' + loaded);
     await p.close();
   }
