@@ -2124,7 +2124,27 @@ if (part('real machine lab')) {
     check(`${path} the Dragon Assembler has a tool page: how to load, commands, first program, videos (small tiles with the lesson's name; a tile opens the player and ✕ closes it, lesson 1 in the page's language, kept on the site), about; no "tried it?" button`,
       tool.tool && tool.tabs.length === 5 && tool.tiles >= 1 && tool.hiddenBefore && !!tool.video && tool.video.ok && tool.video.closes && tool.video.ownPoster && tool.video.shown && tool.video.preload === 'none' && tool.video.src.endsWith((path.startsWith('/en') ? '-en' : '-he') + '.mp4') && tool.cmds === 28 && /STA \$0400/.test(tool.code || '') && !tool.testers, JSON.stringify(tool));
     check(`${path} every game opens its own page beside the machine, at its own address, with the 3 tabs (how to load, how to play, about; + hints in a game we finished), the red button and the credit; "back to the cabinet" returns`,
-      gv.out.length === 75 && gv.out.every(g => g.id === 'dasm' ? (g.open && g.tabs === 5 && g.credit && g.go && g.url.startsWith(pre)) : g.open && g.url.startsWith(pre) && g.url.length > pre.length + 3 && g.tabs === 3 + (['adventureland', 'pirate', 'voodoo', 'mission', 'count', 'odyssey', 'pyramid', 'funhouse', 'ghost', 'golden', 'savage1', 'savage2', 'claymorgue', 'calixto', 'sanctum', 'shenan', 'seasearch', 'trekboer', 'williamsburg', 'vortex', 'diablero', 'sword', 'riverfire', 'daggorath', 'dhh', 'tangle', 'wizlair'].includes(g.id) ? 1 : 0) && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go) && gv.after === pre && gv.closed, JSON.stringify(gv.out.filter(g => !(g.open && true && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go)).slice(0, 3)));
+      gv.out.length === 75 && gv.out.every(g => g.id === 'dasm' ? (g.open && g.tabs === 5 && g.credit && g.go && g.url.startsWith(pre)) : g.open && g.url.startsWith(pre) && g.url.length > pre.length + 3 && g.tabs === 3 + (['adventureland', 'pirate', 'voodoo', 'mission', 'count', 'odyssey', 'pyramid', 'funhouse', 'ghost', 'golden', 'savage1', 'savage2', 'claymorgue', 'calixto', 'sanctum', 'shenan', 'seasearch', 'trekboer', 'williamsburg', 'vortex', 'diablero', 'sword', 'riverfire', 'daggorath', 'dhh', 'tangle', 'wizlair'].includes(g.id) ? 1 : 0) + (g.id === 'digit' ? 1 : 0) && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go) && gv.after === pre && gv.closed, JSON.stringify(gv.out.filter(g => !(g.open && true && g.load >= 2 && g.play >= 2 && g.about >= 1 && g.credit && g.go)).slice(0, 3)));
+    // מפות המערות של Dig-It (17.11, ברשות רולף מיכלסן): לשונית עם 25 כפתורים, תמונה אמיתית לכל מערה, קרדיט וקישור, וציטוט בלשונית "על המשחק"
+    {
+      const dp = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+      await dp.goto(base.replace(/\/$/, '') + path + 'dig-it/'); await dp.waitForTimeout(1500);
+      const dm = await dp.evaluate(async () => {
+        const v = document.querySelector('.game-view'), tabs = [...v.querySelectorAll('.gv-tabs button')], panes = [...v.querySelectorAll('.gv-pane')];
+        const mi = tabs.findIndex(b => /מפות המערות|Cave maps/.test(b.textContent)); if (mi < 0) return { tab: false };
+        tabs[mi].click(); const pane = panes[mi], img = pane.querySelector('.cave-img'), btns = [...pane.querySelectorAll('.cave-pick button')];
+        const load = () => new Promise(r => img.complete && img.naturalWidth ? r() : (img.onload = img.onerror = r));
+        await load(); const first = img.getAttribute('src'), w1 = img.naturalWidth;
+        btns[24].click(); await load(); const last = img.getAttribute('src'), w2 = img.naturalWidth;
+        img.click(); const z = document.querySelector('.cave-zoom img'), zw = z ? z.getBoundingClientRect().width : 0; if (z) z.click();
+        const a = pane.querySelector('.cave-credit a');
+        const about = panes.find(x => x.querySelector('.gv-quote'));
+        return { tab: true, n: btns.length, first, last, w1, w2, shown: img.getBoundingClientRect().width, zoom: zw, zoomClosed: !document.querySelector('.cave-zoom'), href: a && a.href, credit: pane.querySelector('.cave-credit').textContent, quote: about ? about.querySelector('.gv-quote').textContent : '', hints: tabs.some(b => /רמזים|Hints/.test(b.textContent)) };
+      });
+      check(`${path}dig-it has a Cave maps tab: 25 buttons, real 640px PNGs for cave 1 and 25, a click enlarges the map to full width and closes again, credit with link to Rolf's repo, his quote in About, and no hints tab`,
+        dm.tab && dm.n === 25 && /cave01\.png$/.test(dm.first) && /cave25\.png$/.test(dm.last) && dm.w1 === 640 && dm.w2 === 640 && dm.shown > 300 && dm.zoom >= 1000 && dm.zoomClosed && dm.href === 'https://github.com/rolfmichelsen/StoneRaiderII/tree/master/images' && /Rolf Michelsen/.test(dm.credit) && /Rolf Michelsen, 2026/.test(dm.quote) && (path.startsWith('/en') ? /naive belief/.test(dm.quote) : /אמונה תמימה/.test(dm.quote)) && !dm.hints, JSON.stringify(dm));
+      await dp.close();
+    }
     // העטיפה המקורית (30.10): רק במשחק שיש עליו רשות (El Diablero, מארכיון Dragon Data), בלשונית "על המשחק", עם קרדיט וקישור. התמונה נטענת
     const cv = await browser.newPage({ viewport: { width: 1280, height: 900 } });
     await cv.goto(base.replace(/\/$/, '') + path + 'el-diablero/'); await cv.waitForTimeout(1500);

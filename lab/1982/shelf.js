@@ -2243,6 +2243,87 @@
     mk(T2('על המשחק', 'About'), pane => {
       for (const s of (m.about ? m.about[EN ? 'en' : 'he'] : [])) { const p = document.createElement('p'); p.textContent = s; pane.appendChild(p); }
       // "נבדק על ידי": רק שמות שגונן אישר, ונסתר כשאין
+      // ציטוט ממחבר Dig-It, ברשותו הכתובה (רולף, 15-16.11.2026). המילים שלו, בלי שינוי; בעברית תרגום נאמן
+      if (id === 'digit') {
+        const bq = document.createElement('blockquote');
+        bq.className = 'gv-quote';
+        const qp = document.createElement('p');
+        qp.textContent = T2('„תחילת הפרויקט הייתה רצון עז לשחק ב-Dragon שלי באחד ממשחקי ה-Commodore האהובים עליי, ואמונה תמימה שזה יהיה קל לביצוע. … כבר לא לוחצים על כפתור האיפוס בכל פעם שהקוד קורס…“',
+          '\u201CThe start of this project was a strong desire to play one of my favorite Commodore games on my Dragon and a naive belief that it would be easy to pull off. \u2026 No longer pressing that reset button whenever the code crashes\u2026\u201D');
+        const cite = document.createElement('footer');
+        cite.textContent = '\u2014 Rolf Michelsen, 2026';
+        bq.append(qp, cite);
+        pane.appendChild(bq);
+      }
+    });
+    // מפות המערות (17.11): 25 המפות המלאות של רולף מיכלסן, מחבר המשחק, ברשותו הכתובה. לא לשונית רמזים
+    if (id === 'digit') mk(T2('מפות המערות', 'Cave maps'), pane => {
+      const MAPS = '/lab/1982/dig-it-maps/cave';
+      const intro = document.createElement('p');
+      intro.textContent = T2('המפה מראה את המערה כולה. על המסך רואים רק חלק ממנה. בחרו מספר מערה.', 'The map shows the whole cave. The screen shows only part of it. Pick a cave number.');
+      const pick = document.createElement('div');
+      pick.className = 'cave-pick';
+      pick.setAttribute('role', 'group');
+      pick.setAttribute('aria-label', T2('מספר מערה', 'Cave number'));
+      const nav = document.createElement('div');
+      nav.className = 'cave-nav';
+      const prev = document.createElement('button'), next = document.createElement('button');
+      prev.type = next.type = 'button';
+      prev.textContent = T2('◀ הקודמת', '◀ Previous'); next.textContent = T2('הבאה ▶', 'Next ▶');
+      const cap = document.createElement('span');
+      cap.className = 'cave-cap';
+      nav.append(prev, cap, next);
+      const img = document.createElement('img');
+      img.className = 'cave-img';
+      img.width = 640; img.height = 400;
+      img.title = T2('לחיצה מגדילה', 'Click to enlarge');
+      const hint = document.createElement('p');
+      hint.className = 'cave-hint';
+      hint.textContent = T2('לחיצה על המפה מגדילה אותה.', 'Click the map to enlarge it.');
+      const btns = [];
+      let cur = 1;
+      const show = n => {
+        cur = n;
+        const nn = String(n).padStart(2, '0');
+        img.src = MAPS + nn + '.png';
+        img.alt = T2('מפת מערה ' + n + ' מתוך 25', 'Map of cave ' + n + ' of 25');
+        cap.textContent = T2('מערה ' + n + ' מתוך 25', 'Cave ' + n + ' of 25');
+        btns.forEach((b, i) => b.setAttribute('aria-pressed', i + 1 === n ? 'true' : 'false'));
+        prev.disabled = n === 1; next.disabled = n === 25;
+      };
+      prev.addEventListener('click', () => show(cur - 1));
+      next.addEventListener('click', () => show(cur + 1));
+      for (let n = 1; n <= 25; n++) {
+        const b = document.createElement('button');
+        b.type = 'button'; b.textContent = String(n);
+        b.setAttribute('aria-label', T2('מערה ' + n, 'Cave ' + n));
+        b.addEventListener('click', () => show(n));
+        pick.appendChild(b); btns.push(b);
+      }
+      // הגדלה: המפה על כל המסך, נסגרת בלחיצה או ב-Esc
+      img.addEventListener('click', () => {
+        const ov = document.createElement('div');
+        ov.className = 'cave-zoom';
+        ov.setAttribute('role', 'dialog');
+        ov.setAttribute('aria-label', T2('מפת מערה ' + cur, 'Cave ' + cur + ' map'));
+        const big = document.createElement('img');
+        big.src = img.src; big.alt = img.alt;
+        ov.appendChild(big);
+        const close = () => { ov.remove(); document.removeEventListener('keydown', onKey); };
+        const onKey = e => { if (e.key === 'Escape') close(); };
+        ov.addEventListener('click', close);
+        document.addEventListener('keydown', onKey);
+        document.body.appendChild(ov);
+      });
+      const credit = document.createElement('p');
+      credit.className = 'cave-credit';
+      const a = document.createElement('a');
+      a.href = 'https://github.com/rolfmichelsen/StoneRaiderII/tree/master/images';
+      a.target = '_blank'; a.rel = 'noopener';
+      a.textContent = 'github.com/rolfmichelsen/StoneRaiderII';
+      credit.append(T2('המפות: Rolf Michelsen, מחבר המשחק, באדיבותו. מתוך ', 'Maps: Rolf Michelsen, the game\u2019s author, with his kind permission. From '), a);
+      pane.append(intro, nav, img, hint, pick, credit);
+      show(1);
     });
     }
     // רמזים (גונן, 7.11: "יפה"): במשחקים שעברנו עד הסוף במכונה. כל שאלה נפתחת לשלוש מדרגות, וכל מדרגה רק בלחיצה,
@@ -2390,6 +2471,22 @@ body.cart-in .gv-eject { display: block; }
 .gv-pane { padding: 10px 2px 4px; line-height: 1.7; }
 .gv-pane ol, .gv-pane ul { margin: 0; padding-inline-start: 22px; display: grid; gap: 6px; }
 .gv-pane p { margin: 0 0 8px; }
+.gv-quote { margin: 12px 0 4px; padding: 8px 14px; border-inline-start: 3px solid #8c6a3a; background: #1b1511; border-radius: 8px; color: #e6dcc8; }
+.gv-quote p { margin: 0 0 4px; }
+.gv-quote footer { font-size: 14px; color: #b9a98f; }
+.cave-nav { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 8px 0 6px; }
+.cave-nav button { font: inherit; font-size: 14px; font-weight: 700; min-height: 40px; padding: 0 12px; border: 1px solid #5a4430; border-radius: 8px; background: #1b1511; color: #d8c8a8; cursor: pointer; }
+.cave-nav button:disabled { opacity: .35; cursor: default; }
+.cave-cap { font-weight: 700; color: var(--accent, #f2d23a); text-align: center; }
+.cave-pick { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; direction: ltr; }
+.cave-pick button { font: inherit; font-size: 15px; font-weight: 700; min-width: 40px; min-height: 40px; border: 1px solid #5a4430; border-radius: 8px; background: #1b1511; color: #d8c8a8; cursor: pointer; }
+.cave-pick button[aria-pressed="true"] { background: #2a2119; color: var(--accent, #f2d23a); border-color: var(--accent, #f2d23a); }
+.cave-img { display: block; width: 100%; max-width: 960px; height: auto; aspect-ratio: 8 / 5; image-rendering: pixelated; border: 1px solid #4a3a2a; border-radius: 6px; background: #000; cursor: zoom-in; }
+.cave-hint { margin: 4px 0 0; font-size: 13px; color: #b9a98f; }
+.cave-zoom { position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,.92); display: flex; align-items: center; justify-content: center; padding: 12px; cursor: zoom-out; }
+.cave-zoom img { max-width: 100%; max-height: 100%; width: min(100%, 1280px); height: auto; aspect-ratio: 8 / 5; object-fit: contain; image-rendering: pixelated; }
+.cave-credit { margin-top: 8px; font-size: 14px; color: #c9bfae; }
+.cave-credit a { color: var(--accent, #f2d23a); overflow-wrap: anywhere; }
 .hint-q { border: 1px solid #4a3a2a; border-radius: 10px; margin: 6px 0; background: #1b1511; }
 .hint-q > summary { cursor: pointer; padding: 10px 12px; font-weight: 700; color: var(--accent, #f2d23a); min-height: 40px; display: block; }
 .hint-lv { margin: 0 12px 8px; }
