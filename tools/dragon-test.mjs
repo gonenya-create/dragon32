@@ -1377,6 +1377,75 @@ if (part('real dragon sound')) {
   await p.close();
 }
 
+// קוד הכרטיס ל-Manic Miner ול-Jet Set Willy בדף ההורדות ל-Dragon אמיתי (17.11): כפתור "🔑 הקוד" בשורה, תיבה קטנה, אותם קודים כמו בכפתור שבדפי המשחק
+// (מקור יחיד: lab/1982/codecard.js). ב-Manic Miner המשחק ביקש O7 וגונן ניסה על Dragon אמיתי (16.11): הקוד הנכון 4133
+if (part('real dragon code')) {
+  console.log('real dragon code');
+  const root = base.replace(/\/$/, '');
+  const p = await browser.newPage({ viewport: { width: 390, height: 900 } });
+  p.on('pageerror', e => pageErrors.push(e.message));
+  for (const [path, gpath, n] of [['/lab/1982/real-dragon/', '/lab/1982/', 'he'], ['/en/lab/1982/real-dragon/', '/en/lab/1982/', 'en']]) {
+    // הקודים מכפתור הקוד של דף המשחק: מדמים את המסך, ולוחצים על "🔑 הקוד" לכל משבצת (שורה אחרי שורה)
+    const ref = {};
+    for (const [id, slug] of [['manic', 'manic-miner'], ['jsw', 'jet-set-willy']]) {
+      await p.goto(root + gpath + slug + '/'); await p.waitForFunction(() => window.d32Ready && window.D32Codes, null, { timeout: 15000 });
+      await p.waitForSelector('.gv-go'); await p.evaluate(() => document.querySelector('.gv-go').click());
+      await p.waitForFunction(() => { const b = document.querySelector('.code-btn'); return b && !b.hidden; }, null, { timeout: 8000 });
+      ref[id] = await p.evaluate(id => {
+        const out = {}, btn = document.querySelector('.code-btn'), pop = document.querySelector('.code-pop'), num = pop.querySelector('.code-num');
+        const ask = (txt, key) => { window.d32Screen = () => [txt]; btn.click(); out[key] = num.hidden ? null : num.textContent; btn.click(); };
+        if (id === 'manic') for (const r of 'ABCDEFGHIJKLMNOPQR') for (let c = 1; c <= 20; c++) ask('ENTER CODE AT LOCATION ' + r + c, r + c);
+        else for (const r of 'BCDEFGHIJKLMNOPQ') for (let c = 2; c <= 10; c++) for (let g = 1; g <= 3; g++) ask('ENTER CODE AT LOCATION ' + r + ' ' + c + ' ON PAGE NUMBER ' + g, r + ' ' + c + ' ' + g);
+        return out;
+      }, id);
+    }
+    check(n + ': the in-machine "🔑 code" button on the game pages still shows 4 digits for every Manic Miner square (360) and Jet Set Willy square (432)',
+      Object.keys(ref.manic).length === 360 && Object.keys(ref.jsw).length === 432 && Object.values({ ...ref.manic, ...ref.jsw }).every(v => /^[1-4]{4}$/.test(v)), JSON.stringify(Object.values(ref.manic).slice(0, 3)));
+    check(n + ': the game page shows 4133 for Manic Miner O7 (as on the real Dragon)', ref.manic.O7 === '4133');
+
+    await p.goto(root + path); await p.waitForFunction(() => window.D32Codes, null, { timeout: 8000 });
+    const rows = await p.evaluate(() => ['manic', 'jsw'].map(id => { const li = document.getElementById(id); const k = li.querySelector('button.k'); return [!!k, k && k.getBoundingClientRect().height >= 40, !!li.querySelector('.cbox')]; }));
+    check(n + ': Manic Miner and Jet Set Willy rows each have a code button, box closed at first', JSON.stringify(rows) === '[[true,true,false],[true,true,false]]', JSON.stringify(rows));
+    // לוחצים, מקלידים כמו משתמש, ובודקים את מה שמוצג
+    const ask = async (id, text) => {
+      const li = p.locator('#' + id);
+      if (!(await li.locator('.cbox').count())) await li.locator('button.k').click();
+      await li.locator('.cbox input').fill(text); await li.locator('.cbox input').press('Enter');
+      return li.locator('.cres').innerText();
+    };
+    const t = await ask('manic', 'O7');
+    check(n + ': Manic Miner O7 shows 4133 and the colour meaning', /4133/.test(t) && (n === 'he' ? /1 אדום, 2 ירוק, 3 כחול, 4 שחור/ : /1 red, 2 green, 3 blue, 4 black/).test(t), t);
+    check(n + ': tolerant input: "o 7", " o7 " and "O 07" all give 4133', (await ask('manic', 'o 7')).includes('4133') && (await ask('manic', '  o7 ')).includes('4133') && (await ask('manic', 'O 07')).includes('4133'));
+    const j = await ask('jsw', 'L 8 3');
+    const jExp = ref.jsw['L 8 3'];
+    check(n + ': Jet Set Willy "L 8 3" shows the game-page code and the colour meaning', j.includes(jExp) && (n === 'he' ? /1 ירוק, 2 צהוב, 3 כחול, 4 אדום/ : /1 green, 2 yellow, 3 blue, 4 red/).test(j), j + ' / ' + jExp);
+    check(n + ': tolerant JSW input: "l8 3", "L 8 ON PAGE NUMBER 3", "l,8,3" give the same code', (await ask('jsw', 'l8 3')).includes(jExp) && (await ask('jsw', 'L 8 ON PAGE NUMBER 3')).includes(jExp) && (await ask('jsw', 'l,8,3')).includes(jExp));
+    // טעות בקלט: הודעה ולא ספרות
+    const bad = [];
+    for (const [id, v] of [['manic', ''], ['manic', 'Z9'], ['manic', 'A21'], ['manic', 'A0'], ['manic', '77'], ['manic', 'O7 7'], ['jsw', 'A 8 3'], ['jsw', 'L 1 3'], ['jsw', 'L 11 3'], ['jsw', 'L 8 4'], ['jsw', 'L 8'], ['jsw', 'x']]) {
+      const r = await ask(id, v);
+      if (/\d{4}/.test(r) || r.length < 8 || !(await p.locator('#' + id + ' .cres.err').count())) bad.push(id + ':' + v + ' => ' + r);
+    }
+    check(n + ': invalid input (empty, outside A–R / 1–20 / B–Q / 2–10 / 1–3, garbage) gives a message and no digits', !bad.length, bad.join('\n'));
+    check(n + ': the error message is in the page language', n === 'he' ? /[א-ת]/.test(await ask('manic', 'Z9')) : !/[א-ת]/.test(await ask('manic', 'Z9')));
+    // כל המשבצות: התיבה נותנת בדיוק מה שכפתור דף המשחק נתן
+    const all = await p.evaluate(ref => {
+      const D = window.D32Codes; let bad = 0, n = 0;
+      for (const [k, v] of Object.entries(ref.manic)) { n++; const r = D.parseManic(k.toLowerCase().replace(/^(.)/, '$1 ')); if (r.code !== v) bad++; }
+      for (const [k, v] of Object.entries(ref.jsw)) { n++; const r = D.parseJsw(k.toLowerCase()); if (r.code !== v) bad++; }
+      return { n, bad };
+    }, ref);
+    check(n + ': all 360 Manic Miner squares and all 432 Jet Set Willy squares give the same digits on the downloads page as on the game page', all.n === 792 && all.bad === 0, JSON.stringify(all));
+    // לחיצה על הכפתור פעם שנייה סוגרת, והכפתורים האחרים בשורה עדיין עובדים (השמעה נשארת)
+    const closed = await p.evaluate(() => { const li = document.getElementById('manic'); li.querySelector('button.k').click(); return [!!li.querySelector('.cbox'), li.querySelectorAll('.rb > *').length, li.querySelector('button.k').getAttribute('aria-expanded')]; });
+    check(n + ': the code button toggles the box, and the row keeps play, sound, tape', JSON.stringify(closed) === '[false,4,"false"]', JSON.stringify(closed));
+    // לא גולשים הצידה בטלפון
+    const ovf = await p.evaluate(() => { document.querySelector('#jsw button.k').click(); return document.documentElement.scrollWidth - document.documentElement.clientWidth; });
+    check(n + ': no sideways scroll on a phone (390px) with the box open', ovf <= 0, String(ovf));
+  }
+  await p.close();
+}
+
 // בודקים מהקהילה (גונן, 10.11): כפתור "בדקתם?" בכל דף משחק, טופס, "נבדק על ידי", דף התודה ודף הקריאה הפרטי.
 // ה-API מדומה כאן (route): הבדיקה לא צריכה מאגר נתונים
 if (part('testers')) {
