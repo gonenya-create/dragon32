@@ -212,8 +212,9 @@
   // structure checks, so a block that passes its checksum by chance is still refused
   function sane(t, d) {
     if (t === 0) { if (d.length < 15) return false; for (let i = 0; i < 8; i++) if (d[i] < 0x20 || d[i] > 0x7e) return false; return d[8] <= 2 && (d[9] === 0 || d[9] === 0xff) && (d[10] === 0 || d[10] === 0xff || d[10] === 1); }
-    if (t === 1) return d.length > 0;
-    return t === 0xff && d.length === 0;
+    if (t === 0xff) return d.length === 0;
+    // 1 = data; any other type is a game's own save block (Scott Adams: two blocks of type $43, no header, 17.11)
+    return d.length > 0;
   }
 
   // ---------- the whole reader ----------
@@ -274,7 +275,7 @@
       slots.push(...groupSlots(cands, sr).filter(real));
       done += b - a; if (progress) progress(done / total, 1);
     }
-    return { files: assemble(slots, calm, sr), blocks: slots, seconds: x.length / sr, calm };
+    return { files: assemble(slots, calm, sr), saves: looseSaves(slots, calm, sr), blocks: slots, seconds: x.length / sr, calm };
   }
   // runs of 1,0,1,0... (at least two leader bytes) are leader, not data
   function leaderRuns(r, base, calm) {
@@ -310,6 +311,7 @@
     const files = []; let cur = null;
     const good = slots.filter(s => s.best).map(s => s.best);
     for (const c of good) {
+      if (c.t !== 0 && c.t !== 1 && c.t !== 0xff) continue;   // a game's own save block: looseSaves
       if (c.t === 0) { if (cur) files.push(cur); cur = { n: String.fromCharCode(...c.data.slice(0, 8)).trim(), list: [c], end: false }; }
       else if (!cur) continue;
       else { cur.list.push(c); if (c.t === 0xff) { cur.end = true; files.push(cur); cur = null; } }
@@ -331,6 +333,24 @@
     }
     return files;
   }
+  // saves with no header (17.11, Gonen's real Dragon: Adventureland's SAVE GAME is two blocks of type $43; Logo and
+  // Tanglewood write data blocks and an end block). Blocks outside any file, grouped: a new save after a pause of more
+  // than a second, after an end block, or when the kind changes. ok = nothing missing between them (and the end block, for data)
+  function looseSaves(slots, calm, sr) {
+    const out = []; let inFile = false, g = null;
+    const own = c => c.t !== 0 && c.t !== 1 && c.t !== 0xff;
+    for (const c of slots.filter(s => s.best).map(s => s.best)) {
+      if (!own(c)) { if (c.t === 0) { inFile = true; continue; } if (inFile) { if (c.t === 0xff) inFile = false; continue; } }
+      const last = g && g.list[g.list.length - 1];
+      if (!g || last.t === 0xff || c.at - last.end > sr || own(last) !== own(c)) { g = { list: [] }; out.push(g); }
+      g.list.push(c);
+    }
+    return out.map(g => {
+      const gap = g.list.some((c, i) => i > 0 && holes([g.list[i - 1], c], calm, sr).length > 0);
+      const kind = own(g.list[0]);
+      return { b: g.list.map(c => [c.t, ...c.data]), ok: !gap && (kind || g.list[g.list.length - 1].t === 0xff) };
+    });
+  }
   // a second playing of the same tape fills the blocks the first one missed: same header, blocks by their place
   function merge(prev, cur) {
     if (!prev || !prev.length) return cur;
@@ -350,7 +370,7 @@
   if (typeof window !== 'undefined') window.D32TapeDecode = api;
   else if (typeof self !== 'undefined' && typeof self.postMessage === 'function' && typeof module === 'undefined') {
     // as a Web Worker: { x, sr, prev } in (prev = the files of an earlier playing), progress and the result out
-    self.onmessage = e => { const { x, sr, prev } = e.data; try { const r = decode(x, sr, (f, phase) => self.postMessage({ progress: f, phase })); self.postMessage({ result: { files: merge(prev, r.files), slots: r.blocks.map(s => ({ at: s.at / sr, ok: !!s.best, t: s.best ? s.best.t : null })), seconds: r.seconds } }); } catch (err) { self.postMessage({ error: String(err && err.message || err) }); } };
+    self.onmessage = e => { const { x, sr, prev } = e.data; try { const r = decode(x, sr, (f, phase) => self.postMessage({ progress: f, phase })); self.postMessage({ result: { files: merge(prev, r.files), slots: r.blocks.map(s => ({ at: s.at / sr, ok: !!s.best, t: s.best ? s.best.t : null })), seconds: r.seconds, saves: r.saves } }); } catch (err) { self.postMessage({ error: String(err && err.message || err) }); } };
   }
   if (typeof module !== 'undefined') module.exports = api;
 })();

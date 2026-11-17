@@ -3133,16 +3133,34 @@ body.game-open .shelf > :not(.game-view) { display: none; }
         }
         micBtn.disabled = false;
         const files = (m.result && m.result.files) || [], good = files.filter(f => f.ok);
-        if (good.length) {
+        // שמירה של משחק בלי כותרת (17.11, Adventureland מה-Dragon האמיתי: שני בלוקים מסוג $43): נשמרת כמו שהמכונה שומרת אותה,
+        // בתים כמו שהם (r) בשם המשחק ומספר (ADVENT1), כדי שהמשחק ימצא אותה כשמבקשים ממנו לטעון שמירה
+        const taken = new Set(myTapes().map(t => t.n)), game = lastGame || viewId;
+        const saves = ((m.result && m.result.saves) || []).filter(q => q.ok).map(q => {
+          const base = (game && (SAVE_NAMES[game] || game.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 6))) || 'SAVE';
+          let k = 1; while (taken.has(base + k)) k++;
+          const n = base + k; taken.add(n);
+          const bytes = new Array(128).fill(0x55).concat(...q.b.map(b => block(b[0], b.slice(1))));
+          return { n, b: [[0, ...Array.from(n.padEnd(8), c => c.charCodeAt(0)), 1, 0, 0, 0, 0, 0, 0]], r: btoa(String.fromCharCode(...bytes)) };
+        });
+        if (good.length || saves.length) {
           micPrev = null;
+          // גם ל"הקלטות שלי" (גונן, 5.11 ו-17.11: "ברגע שאני לוחץ להתחיל להקליט ... הוא שומר אותה בקלטות שלי"). קודם שומרים,
+          // ואחר כך מכניסים לרשמקול רק את מה שנקרא עכשיו, כדי שיהיה ראשון בקלטת
+          const kept = good.map(f => ({ n: f.n, b: f.b })).concat(saves);
+          addTapes(kept);
           try {
-            FS.writeFile('/mic.cas', tapeBytes(good.map(f => ({ n: f.n, b: f.b }))));
+            FS.writeFile('/mic.cas', tapeBytes(kept));
             Module.ccall('wasm_load_file', null, ['string', 'number', 'number'], ['/mic.cas', 2, 0]);
           } catch (err) { say(EN ? 'The machine is not ready yet.' : 'המכונה עוד לא מוכנה.'); return; }
-          const mc = good[0].b[0][9] === 2, names = good.map(f => '"' + f.n + '"').join(', ');
-          const [LOADW, RUNW] = mc ? ['CLOADM', 'EXEC'] : ['CLOAD', 'RUN'];
-          say(EN ? '✅ Read ' + names + ' with no errors. It is in the tape recorder: click the machine\'s screen and type ' + LOADW + ' and ENTER. When OK appears, type ' + RUNW + '.'
-            : '✅ נקראה הקלטת ' + names + ', בלי שגיאות. היא ברשמקול: לוחצים על מסך המכונה ומקלידים ' + LOADW + ' ו-ENTER. כשמופיע OK, מקלידים ' + RUNW + '.');
+          const names = kept.map(f => '"' + f.n + '"').join(', ');
+          if (good.length) {
+            const mc = good[0].b[0][9] === 2;
+            const [LOADW, RUNW] = mc ? ['CLOADM', 'EXEC'] : ['CLOAD', 'RUN'];
+            say(EN ? '✅ Read ' + names + ' with no errors and kept it in My tapes. It is in the tape recorder: click the machine\'s screen and type ' + LOADW + ' and ENTER. When OK appears, type ' + RUNW + '.'
+              : '✅ נקראה הקלטת ' + names + ', בלי שגיאות, ונשמרה ב"הקלטות שלי". היא ברשמקול: לוחצים על מסך המכונה ומקלידים ' + LOADW + ' ו-ENTER. כשמופיע OK, מקלידים ' + RUNW + '.');
+          } else say(EN ? '✅ Read a game save, ' + names + ', with no errors, and kept it in My tapes. It is in the tape recorder: in the game, ask to load a saved game and press ENTER.'
+            : '✅ נקראה שמירה של משחק, ' + names + ', בלי שגיאות, ונשמרה ב"הקלטות שלי". היא ברשמקול: בתוך המשחק מבקשים לטעון משחק שמור ולוחצים ENTER.');
           document.getElementById('canvas')?.focus({ preventScroll: true });
         } else if (files.length) {
           // חלק מהבלוקים נקראו: שומרים אותם, והקלטה נוספת של אותה קלטת תשלים

@@ -2071,7 +2071,39 @@ if (part('real machine lab')) {
     const ok = await p.waitForFunction(() => { const r = window.d32Screen?.() || []; const i = r.findIndex(x => x === 'F GUESS'); return i >= 0 && r.slice(i + 1).includes('OK'); }, null, { timeout: 60000 }).then(() => true, () => false);
     if (ok) await p.evaluate(() => window.d32Type('RUN\n'));
     const ran = ok && await p.waitForFunction(() => (window.d32Screen?.() || []).some(r => r.includes('GUESS MY NUMBER')), null, { timeout: 30000 }).then(() => true, () => false);
-    check('/lab/1982/ 🎙️ a tape played through a "phone" into the microphone is read with no errors, and CLOAD then RUN runs it', /^✅ נקראה הקלטת "GUESS"/.test(msg) && ran && !errs.length, msg + ' ' + errs.join(' | '));
+    const kept = await p.evaluate(() => JSON.parse(localStorage.getItem('d32-lab-tapes') || '[]').map(t => t.n));
+    check('/lab/1982/ 🎙️ a tape played through a "phone" into the microphone is read with no errors, kept in My tapes, and CLOAD then RUN runs it', /^✅ נקראה הקלטת "GUESS"/.test(msg) && kept.includes('GUESS') && ran && !errs.length, msg + ' | ' + kept.join(',') + ' ' + errs.join(' | '));
+    await p.close();
+  }
+  {
+    // שמירה של משחק בלי כותרת (17.11, Adventureland ב-Dragon האמיתי: SAVE GAME כותב שני בלוקים מסוג $43, והקורא דחה אותם).
+    // מנגנים שמירה כזאת דרך ה"טלפון" לדף של Adventureland: היא נשמרת ב"הקלטות שלי" כ-ADVENT1, עם אותם בתים בדיוק
+    const p = await browser.newPage({ viewport: { width: 1300, height: 900 } }); const errs = []; p.on('pageerror', e => errs.push(String(e)));
+    await p.goto(base.replace(/\/$/, '') + '/lab/1982/adventureland/'); await p.waitForFunction(() => window.d32Ready, null, { timeout: 60000 }); await p.waitForTimeout(2500);
+    const want = await p.evaluate(async () => {
+      const blk = (t, d) => { let s = t + d.length; for (const b of d) s += b; return [0x55, 0x3c, t, d.length, ...d, s & 255, 0x55]; };
+      const d1 = Array.from({ length: 255 }, (_, i) => (i * 37 + 11) & 255), d2 = Array.from({ length: 255 }, (_, i) => (i * 91 + 200) & 255);
+      const bytes = new Array(128).fill(0x55).concat(blk(0x43, d1), blk(0x43, d2));
+      const w = d32TapeWav({ n: 'X', b: [[0, 88, 32, 32, 32, 32, 32, 32, 32, 1, 0, 0, 0, 0, 0, 0]], r: btoa(String.fromCharCode(...bytes)) });
+      const ac = new AudioContext(), buf = await ac.decodeAudioData(w.buffer.slice(0));
+      navigator.mediaDevices.getUserMedia = async () => {
+        const src = ac.createBufferSource(), shelf = ac.createBiquadFilter(), hp = ac.createBiquadFilter(), g = ac.createGain(), dest = ac.createMediaStreamDestination();
+        src.buffer = buf; shelf.type = 'highshelf'; shelf.frequency.value = 1500; shelf.gain.value = -15; hp.type = 'highpass'; hp.frequency.value = 600; g.gain.value = 0.3;
+        src.connect(shelf).connect(hp).connect(g).connect(dest); setTimeout(() => src.start(), 700); window.__dur = buf.duration; return dest.stream;
+      };
+      return [d1, d2].map(d => d.join(',')).join('|');
+    });
+    // בדף של משחק הקופסה בתוך .info, שמוסתר כשדף המשחק פתוח: לוחצים מהקוד
+    await p.evaluate(() => document.getElementById('tape-mic').click()); await p.waitForTimeout((await p.evaluate(() => window.__dur) + 1.8) * 1000); await p.evaluate(() => document.getElementById('tape-mic').click());
+    const msg = await p.waitForFunction(() => /✅|⚠️|לא מצאתי/.test(document.getElementById('mic-status').textContent), null, { timeout: 120000 })
+      .then(() => p.evaluate(() => document.getElementById('mic-status').textContent), () => 'timeout');
+    const got = await p.evaluate(() => {
+      const t = JSON.parse(localStorage.getItem('d32-lab-tapes') || '[]').find(t => t.n === 'ADVENT1'); if (!t || !t.r) return null;
+      const b = Array.from(atob(t.r), c => c.charCodeAt(0)), out = [];
+      for (let i = 0; i + 4 < b.length; i++) if (b[i] === 0x55 && b[i + 1] === 0x3c && b[i + 2] === 0x43) { out.push(b.slice(i + 4, i + 4 + b[i + 3]).join(',')); i += 4 + b[i + 3]; }
+      return out.join('|');
+    });
+    check('/lab/1982/adventureland/ 🎙️ a game save with no header (two $43 blocks, as Adventureland\'s SAVE GAME writes on a real Dragon) is read and kept in My tapes as ADVENT1, same bytes', /^✅ נקראה שמירה של משחק, "ADVENT1"/.test(msg) && got === want && !errs.length, msg + ' | ' + (got === null ? 'no ADVENT1' : got === want ? 'same' : 'different') + ' ' + errs.join(' | '));
     await p.close();
   }
   {
