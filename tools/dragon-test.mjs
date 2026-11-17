@@ -1374,6 +1374,15 @@ if (part('real dragon sound')) {
   // ‏17.11: Downland לא עלה ב-Dragon אמיתי (הטוען עוצר את המנוע בין בלוקים). בקלטות כאלה בלבד נוסף מבוא לפני כל בלוק; שאר הקלטות בלי שינוי
   const pad = await p.evaluate(async () => { const out = {}; for (const t of ['downland', 'dungeon', 'manic', 'king', 'cuthbert']) { const c = new Uint8Array(await (await fetch('/lab/1982/tapes/' + t + '.cas')).arrayBuffer()); out[t] = Math.round((window.D32Wav.casWav(c).length - window.D32Wav.casWav(c, true).length) / 44100); } return out; });
   check('tapes whose loader stops the motor between blocks get extra lead-in (Downland +80 s, Dungeon Raid +85 s); Manic Miner, The King and Cuthbert stay as they were', pad.downland >= 80 && pad.dungeon >= 80 && pad.manic < 2 && pad.king < 2 && pad.cuthbert < 2, JSON.stringify(pad));
+  // ‏17.11: שבעה משחקי BASIC הוצגו עם CLOADM (?FM ERROR ב-Dragon אמיתי). לכל שורה: סוג הקובץ הראשון בקלטת עצמה מול הפקודה בדף
+  const cmd = await p.evaluate(async () => { const bad = []; let n = 0;
+    for (const li of document.querySelectorAll('.real-list li[data-id]')) {
+      const c = new Uint8Array(await (await fetch('/lab/1982/tapes/' + li.dataset.id + '.cas')).arrayBuffer());
+      let type = -1; for (let i = 0; i < c.length - 15; i++) if (c[i] === 0x55 && c[i + 1] === 0x3C && c[i + 2] === 0) { type = c[i + 12]; break; }
+      const t = li.querySelector('.rm code')?.textContent || ''; n++;
+      if ((type === 0) !== /^CLOAD(?!M)/.test(t)) bad.push(li.dataset.id + ':' + type + ':' + t);
+    } return { n, bad }; });
+  check('every game on the downloads page shows the command that fits its tape: BASIC (file type 0) → CLOAD → RUN, machine code → CLOADM', cmd.n >= 70 && !cmd.bad.length, JSON.stringify(cmd));
   check('a shelf tape becomes a WAV sound in the browser', w[0] === 'RIFF' && w[1] === 'WAVE' && w[2] > 1000000, JSON.stringify(w));
   await p.goto(root + '/lab/1982/the-count/'); await p.waitForTimeout(2500);
   check('the game page has only a one-line link to its row on the downloads page', (await p.locator('.gv-real').getAttribute('href')) === '/lab/1982/real-dragon/#count' && !(await p.locator('.real-play').count()));

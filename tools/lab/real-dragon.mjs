@@ -11,12 +11,19 @@ const gt = await readFile(join(root, 'lab/1982/games.js'), 'utf8');
 const cat = JSON.parse(gt.slice(gt.indexOf('{'), gt.lastIndexOf('}') + 1));
 const block = shelf.slice(shelf.indexOf('const TAPES = ['), shelf.indexOf('\n  ];', shelf.indexOf('const TAPES = [')));
 const rowsT = [...block.matchAll(/^\s*\['(\w+)', '((?:[^'\\]|\\.)*)', '((?:[^'\\]|\\.)*)'(?:, ('\w'|null))?/gm)];
-const kinds = new Map(rowsT.map(m => [m[1], m[4] ? m[4].replace(/'/g, '') : null]));
+// null בטבלה = תוכנית BASIC (CLOAD → RUN). עד 17.11 המילה null נקראה כסוג, ושבעה משחקים קיבלו CLOADM בטעות (?FM ERROR ב-Dragon אמיתי)
+const kinds = new Map(rowsT.map(m => [m[1], m[4] && m[4] !== 'null' ? m[4].replace(/'/g, '') : null]));
 const names = new Map(rowsT.map(m => [m[1], [m[2], m[3]].map(x => x.replace(/\\'/g, "'"))]));
 const set = name => new Set([...(shelf.match(new RegExp('const ' + name + ' = new Set\\(\\[([^\\]]*)\\]')) || ['', ''])[1].matchAll(/'(\w+)'/g)].map(m => m[1]));
 const NO = set('REAL_NO'), SHELF = set('REAL_SHELF');   // SHELF: הרשאה למדף בלבד. לא מופיעים בדף בכלל, בלי הסבר (גונן, 11.11)
 // רק השמעה, בלי הורדה (המנגנון נשאר): גונן, 10.11: רשות של מחבר מכסה הכול, גם הורדה, אז הרשימה ריקה
 const ONLY = new Set([]);
+// זמן ההשמעה ל-Dragon אמיתי בקלטות שקיבלו מבוא ארוך לפני כל בלוק (tapewav.js, 17.11): ארוך מהטעינה במכונה
+const REAL_LOAD = {
+  downland: ['כארבע דקות', 'about four minutes'], dungeon: ['כחמש דקות', 'about five minutes'],
+  cricket: ['כשש וחצי דקות, ועוד כמה דקות הכנה', 'about six and a half minutes, then a few minutes of setting up'],
+  alcatraz: ['כשלוש דקות', 'about three minutes'], nerble: ['כשתי דקות', 'about two minutes'], snaker: ['כדקה', 'about a minute'],
+};
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
 function list(he) {
   const L = a => (Array.isArray(a) ? a[he ? 0 : 1] : a) || '';
@@ -42,7 +49,7 @@ function list(he) {
       const btns = `<button type="button" class="p">▶ ${he ? 'השמעה' : 'Play'}</button>` + (ONLY.has(id)
         ? `<span class="only">${he ? 'השמעה בלבד' : 'play only'}</span>`
         : `<button type="button" class="w">⬇ ${he ? 'צליל' : 'sound'}</button><a class="c" href="/lab/1982/tapes/${id}.cas" download="${esc(file)}.cas">⬇ ${he ? 'קלטת' : 'tape'}</a>`) + key;
-      out += `  <li id="${id}" data-id="${id}" data-file="${esc(file)}"><span class="rn"><bdi>${esc(name)}</bdi></span><span class="rm">${he ? 'ב-<bdi dir="ltr">Dragon</bdi> מקלידים:' : 'On the Dragon, type:'} <code dir="ltr">${cmd}</code>${L(g.load) ? '<br>' + (he ? 'טעינה: ' : 'Loading: ') + esc(L(g.load)) : ''}${key ? '<br><b class="knote">' + (he ? '🔑 המשחק יבקש קוד מהכרטיס שהיה בקופסה. כשיופיע ENTER CODE AT LOCATION, חוזרים לכאן ולוחצים "הקוד". קישור קצר: <bdi dir="ltr">dragon1982.com/code</bdi>' : '🔑 The game will ask for a code from the card that came in the box. When ENTER CODE AT LOCATION appears, come back here and press "The code". Short link: dragon1982.com/code') + '</b>' : ''}</span><span class="rb">${btns}</span><span class="bar"><i></i><span></span></span></li>\n`;
+      out += `  <li id="${id}" data-id="${id}" data-file="${esc(file)}"><span class="rn"><bdi>${esc(name)}</bdi></span><span class="rm">${he ? 'ב-<bdi dir="ltr">Dragon</bdi> מקלידים:' : 'On the Dragon, type:'} <code dir="ltr">${cmd}</code>${(REAL_LOAD[id] || L(g.load)) ? '<br>' + (he ? 'טעינה: ' : 'Loading: ') + esc(REAL_LOAD[id] ? REAL_LOAD[id][he ? 0 : 1] : L(g.load)) : ''}${key ? '<br><b class="knote">' + (he ? '🔑 המשחק יבקש קוד מהכרטיס שהיה בקופסה. כשיופיע ENTER CODE AT LOCATION, חוזרים לכאן ולוחצים "הקוד". קישור קצר: <bdi dir="ltr">dragon1982.com/code</bdi>' : '🔑 The game will ask for a code from the card that came in the box. When ENTER CODE AT LOCATION appears, come back here and press "The code". Short link: dragon1982.com/code') + '</b>' : ''}</span><span class="rb">${btns}</span><span class="bar"><i></i><span></span></span></li>\n`;
       if (g.group !== 'tools' && g.drawer !== 'tools') n++;   // האסמבלר הוא כלי, לא משחק: לא בספירה (מ-12.11 במגירה "כלים" משלו)
     }
     out += '</ul>\n';
