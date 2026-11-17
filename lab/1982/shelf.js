@@ -3208,7 +3208,7 @@ body.game-open .shelf > :not(.game-view) { display: none; }
           say(EN ? '⚠️ Read ' + have + ' of ' + (f.end ? all : 'at least ' + all) + ' parts of "' + f.n + '"; something is missing. Play the tape again from the start and press record again: the parts already read are kept, and the new recording fills in the rest.'
             : '⚠️ נקראו ' + have + ' מתוך ' + (f.end ? all : 'לפחות ' + all) + ' חלקים של "' + f.n + '", וחסר חלק. מנגנים את הקלטת שוב מההתחלה ולוחצים שוב להקליט: מה שכבר נקרא נשמר, וההקלטה החדשה משלימה.');
         } else rawToRecorder(x, sr, EN ? 'No ordinary Dragon tape found in the recording.' : 'לא מצאתי בהקלטה קלטת Dragon רגילה.');
-        if (!good.length) offerSave(x, sr);
+        if (!good.length && !saves.length) offerSave(x, sr);   // אחרי שמירה של משחק שנקראה אין צורך בכפתור (גונן, 17.11)
       };
       reader.postMessage({ x, sr, prev: micPrev });
     }
