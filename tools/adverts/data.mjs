@@ -572,6 +572,73 @@ export const ADVERTS = [
     }
   },
   {
+    "id": "tano-software-january-1984",
+    "kind": "leaflet",
+    "year": {
+      "he": "ינואר 1984",
+      "en": "January 1984"
+    },
+    "archive": "http://dragondata.co.uk/adverts/TANO/Software-jan-1984/index.html",
+    "source": "archive",
+    "images": [
+      "tano-software-january-1984.jpg"
+    ],
+    "original": "Dragon by Tano — Software available: January 1984",
+    "he": {
+      "title": "התוכנות של Tano: ינואר 1984",
+      "summary": "דף אחד של Dragon by Tano, עם תוכנות שהוצגו כזמינות בינואר 1984. לצד ארבעה משחקים מופיעים כלי עבודה מסדרת VIP ותוכנות לימוד. אין בדף מחירים או פירוט של אמצעי האחסון.",
+      "facts": [
+        [
+          "התאריך המודפס",
+          "ינואר 1984"
+        ],
+        [
+          "משחקים",
+          "Flipper, Ninja Warrior, Pac Droids, Quizspin"
+        ],
+        [
+          "לעסקים",
+          "VIP Writer, VIP Speller, VIP Calc, VIP Filer, וגם הכיתוב More Business"
+        ],
+        [
+          "לימוד",
+          "בין השמות: Geography Pak, Type Assault, Phonics 1, Phonics 2 ו-Musica"
+        ]
+      ],
+      "translation": [
+        "**Dragon מאת Tano.**",
+        "**תוכנות.** זמינות: ינואר 1984.",
+        "**משחקים.** Flipper (פליפר); Ninja Warrior (לוחם נינג׳ה); Pac Droids; Quizspin.",
+        "**עסקים.** VIP Writer (כתיבה); VIP Speller (איות); VIP Calc (חישוב); VIP Filer (תיוק); עוד תוכנות לעסקים.",
+        "**לימוד — הטור השמאלי.** Hangmanoids and Math Lab (Hangmanoids ומעבדת מתמטיקה); Geography Pak (חבילת גאוגרפיה); Type Assault; תוכנות לימוד: אלף־בית, מתמטיקה, איות והתאמה.",
+        "**לימוד — הטור הימני.** Phonics 1 ו-Phonics 2 (לימוד קריאה בשיטה פונטית); Learn To Read Music (ללמוד לקרוא תווים); Eight-bit Bartender (ברמן בשמונה סיביות); Preread 1, 2, 3 (טרום־קריאה); Mathpack 1 (חבילת מתמטיקה); Musica.",
+        "**Tano Microcomputer Products Corp.** כתובת: 4301 Poche Court West, New Orleans, LA 70129."
+      ]
+    },
+    "en": {
+      "title": "Tano software available in January 1984",
+      "context": "A single-page Dragon by Tano software sheet dated January 1984. Four games sit alongside VIP business titles and educational software. No prices or storage formats are given.",
+      "facts": [
+        [
+          "Printed date",
+          "January 1984"
+        ],
+        [
+          "Games",
+          "Flipper, Ninja Warrior, Pac Droids, Quizspin"
+        ],
+        [
+          "Business",
+          "VIP Writer, VIP Speller, VIP Calc, VIP Filer, and the words “More Business”"
+        ],
+        [
+          "Education",
+          "Names include Geography Pak, Type Assault, Phonics 1, Phonics 2 and Musica"
+        ]
+      ]
+    }
+  },
+  {
     id: 'earls-court-1984',
     kind: 'ad',
     year: { he: '1984', en: '1984' },
