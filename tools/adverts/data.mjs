@@ -523,6 +523,55 @@ export const ADVERTS = [
     }
   },
   {
+    // בתמונה אין תאריך. שם הקובץ בארכיון ומקור נוסף מציעים נובמבר 1983,
+    // אבל לא נמצא עמוד סריקה מתוארך שמאמת זאת; לכן השנה אינה מוצגת.
+    id: 'new-hoops',
+    kind: 'ad',
+    year: null,
+    archive: 'http://dragondata.co.uk/adverts/jump-hoops.html',
+    source: 'archive',
+    images: ['new-hoops.jpg'],
+    original: 'Some new hoops for the Dragon to jump through.',
+    he: {
+      title: 'עוד חישוקים שה-Dragon יכול לקפוץ דרכם',
+      summary: 'קלטות ל-Dragon 32 מסודרות בטבעת סביב הכותרת. הפרסומת טוענת שהשימושיות של מחשב ביתי תלויה בתוכנות הזמינות לו, ומציגה כמעט מאה כותרים: משחקים, לימוד איות ומתמטיקה ולימוד הקלדה. הדוגמה המרכזית היא Cyrus Chess. באתר Dragon Data Archive מצוין שהסריקה באדיבות Rob Olive. התאריך אינו מודפס בתמונה.',
+      facts: [
+        ['המחשב שמוצג', 'Dragon 32, על עטיפות הקלטות'],
+        ['מבחר התוכנות לפי הפרסומת', 'כמעט מאה כותרים, ולא רק משחקים'],
+        ['דוגמת השחמט', 'Cyrus Chess; הפרסומת מציגה אותו כאלוף השחמט למיקרו-מחשבים'],
+        ['רמת המשחק לפי הפרסומת', 'ברמה תשע צריך להיות רב-אמן כדי לנצח'],
+        ['לימוד', 'איות, מתמטיקה והקלדה'],
+        ['איך רואים את המבחר', 'הזמנה לבקר אצל משווק Dragon מקומי']
+      ],
+      translation: [
+        '**עוד חישוקים שה-Dragon יכול לקפוץ דרכם.**',
+        'אם אינכם יודעים כבר לכתוב תוכנות, השימושיות של מחשב ביתי נקבעת במידה רבה לא לפי העוצמה שלו, אלא לפי התוכנות הזמינות לו.',
+        'אחרי הכול, מה התועלת בזיכרון גדול מאוד אם אי אפשר להשתמש בו כמו שצריך?',
+        'לכן ב-Dragon לא רק הקפדנו מאוד בתכנון המחשב עצמו, אלא גם דאגנו שמי שתכננו את התוכנות יקפידו באותה מידה.',
+        'בחרנו רק בכותבים מהשורה הראשונה ונתנו להם נושאים שמעניינים אתכם. כך הצלחנו להפיק כמה מהתוכנות הטובות ביותר שיש.',
+        'קחו למשל את תוכנת השחמט Cyrus Chess. היא תוכננה בידי רב-אמן, ולכן לא מפתיע שזכתה בתואר אלופת השחמט למיקרו-מחשבים.',
+        'כמובן, לא צריך להיות רב-אמן כדי לשחק בה, אבל ברמה תשע צריך להיות כזה כדי לנצח אותה.',
+        'וזו רק אחת מכמעט מאה תוכנות Dragon זמינות. כולן מהנות, אבל בהחלט לא כולן משחקים.',
+        'יש תוכנות שיכולות ללמד את ילדיכם איות ומתמטיקה.',
+        'תוכנה אחרת יכולה ללמד אתכם להקליד.',
+        'ואף שכמה מהכותרים שלנו מוצגים למעלה, הדרך הטובה ביותר לראות את כל מבחר התוכנות שלנו אינה להסתכל בפרסומת הזאת.',
+        'אלא לגשת למשווק Dragon הקרוב אליכם.'
+      ]
+    },
+    en: {
+      title: 'Some new hoops for the Dragon to jump through',
+      context: 'Dragon 32 cassettes form a ring around the headline. The advert argues that a home computer’s usefulness depends on its available software, promoting nearly a hundred titles covering games, spelling, mathematics and typing. Cyrus Chess is its main example. The Dragon Data Archive credits the scan to Rob Olive. No date is printed on the image.',
+      facts: [
+        ['Computer shown', 'Dragon 32, on the cassette covers'],
+        ['The software claim', 'Nearly a hundred titles, including more than games'],
+        ['Chess example', 'Cyrus Chess, promoted as Microcomputer Chess Champion'],
+        ['The difficulty claim', 'At level nine, it takes a grand master to win'],
+        ['Learning', 'Spelling, mathematics and typing'],
+        ['Seeing the range', 'An invitation to visit a local Dragon stockist']
+      ]
+    }
+  },
+  {
     id: 'earls-court-1984',
     kind: 'ad',
     year: { he: '1984', en: '1984' },
